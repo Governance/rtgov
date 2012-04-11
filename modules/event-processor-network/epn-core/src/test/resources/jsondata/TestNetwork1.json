@@ -1,0 +1,45 @@
+{
+  "name" : "Test",
+  "nodes" : {
+    "N1" : {
+      "destinations" : [ ],
+      "predicate" : {
+        "@class" : "org.savara.bam.epn.testdata.TestPredicate2",
+        "someProperty" : "TestProperty"
+      },
+      "eventProcessor" : {
+        "@class" : "org.savara.bam.epn.testdata.TestEventProcessor2"
+      },
+      "maxRetries" : 3,
+      "retryInterval" : 0
+    },
+    "N0" : {
+      "destinations" : [ {
+        "network" : "Test",
+        "node" : "N1"
+      }, {
+        "network" : "Test",
+        "node" : "N2"
+      } ],
+      "predicate" : {
+        "@class" : "org.savara.bam.epn.testdata.TestPredicate1"
+      },
+      "eventProcessor" : {
+        "@class" : "org.savara.bam.epn.testdata.TestEventProcessor1"
+      },
+      "maxRetries" : 3,
+      "retryInterval" : 0
+    },
+    "N2" : {
+      "destinations" : [ ],
+      "predicate" : null,
+      "eventProcessor" : {
+        "@class" : "org.savara.bam.epn.testdata.TestEventProcessor3"
+      },
+      "maxRetries" : 3,
+      "retryInterval" : 0
+    }
+  },
+  "timestamp" : 123456,
+  "rootNodeName" : "N0"
+}

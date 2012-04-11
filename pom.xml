@@ -1,0 +1,166 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.savara.bam</groupId>
+	<artifactId>parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Savara BAM</name>
+	<url>http://www.savara.org</url>
+	<description>
+		The SAVARA Business Activity Monitor project
+	</description>
+
+	<scm>
+		<connection>https://github.com/savara</connection>
+		<url>https://github.com/savara</url>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License</name>
+			<url>http://www.gnu.org/licenses/lgpl.html</url>
+			<distribution>repo</distribution>
+			<comments>GNU Lesser General Public License</comments>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Jeff Yu</name>
+			<id>jeff.yuchang</id>
+			<email>cyu@redhat.com</email>
+			<organization>Red Hat</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<timezone>+10</timezone>
+		</developer>
+		<developer>
+		    <name>Gary Brown</name>
+		    <id>objectiser</id>
+		    <email>gbrown@redhat.com</email>
+		    <organization>Red Hat</organization>
+		    <roles>
+		        <role>Developer</role>
+		    </roles>
+		    <timezone>+1</timezone>
+		</developer>
+	</developers>
+
+	<properties>
+		<bam.version>1.0.0-SNAPSHOT</bam.version>
+		<drools.version>5.3.0.Final</drools.version>
+		<guava.version>r06</guava.version>
+		<jackson.version>1.6.3</jackson.version>
+		<jms.version>1.1-rev-1</jms.version>
+		<junit.version>4.4</junit.version>
+		<resteasy.version>2.3.0.GA</resteasy.version>
+	</properties>
+
+	<modules>
+		<module>modules/activity-management</module>
+		<module>modules/event-processor-network</module>
+		<module>modules/active-collections</module>
+	</modules>
+
+	<build>
+		<!-- This section defines the default plugin settings inherited by child projects. -->
+		<pluginManagement>
+			<plugins>
+				<!-- Fixes how test resources of a project can be used in projects dependent on it  -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.2</version>
+					<configuration>
+						<aggregate>true</aggregate>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<!-- Specify the compiler options and settings -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+                		<version>2.0.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+					<showDeprecation>false</showDeprecation>
+					<showWarnings>false</showWarnings>
+				</configuration>
+			</plugin>
+			<!-- Produce source jars during the 'verify' phase -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>**/*TestCase.java</include>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+			</plugin>
+	    </plugins>
+	</reporting>
+	
+	<repositories>
+	    <repository>
+	        <id>jboss-developer-repository-group</id>
+	        <name>JBoss Developer Maven Repository Group</name>
+		<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
+		<releases>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</releases>
+		<snapshots>
+		  <enabled>true</enabled>
+		  <updatePolicy>never</updatePolicy>
+		</snapshots>
+	    </repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>jboss-releases-repository</id>
+			<name>JBoss Releases Repository</name>
+			<url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<snapshotRepository>
+			<id>jboss-snapshots-repository</id>
+			<name>JBoss Snapshots Repository</name>
+			<url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
+      			<uniqueVersion>false</uniqueVersion>
+		</snapshotRepository>
+	</distributionManagement>
+  
+</project>

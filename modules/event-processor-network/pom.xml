@@ -1,0 +1,25 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.savara.bam</groupId>
+	<artifactId>event-processor-network</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>Savara BAM::Modules::Event Processor Network</name>
+
+	<parent>
+		<groupId>org.savara.bam</groupId>
+		<artifactId>parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<modules>
+		<module>epn-core</module>
+		<module>epn-processor-cep</module>
+		<module>epn-container-jms</module>
+	</modules>
+
+</project>
+

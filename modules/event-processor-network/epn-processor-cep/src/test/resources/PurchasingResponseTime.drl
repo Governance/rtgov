@@ -1,0 +1,31 @@
+import org.savara.bam.activity.model.Activity
+import org.savara.bam.activity.model.MessageExchange
+
+global org.savara.bam.epn.cep.CEPServices services
+
+declare Activity
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+rule "correlate request and response"
+when
+    $req : Activity( $id : ((MessageExchange)activityType).correlation, ((MessageExchange)activityType).invocationType == MessageExchange.InvocationType.Request ) from entry-point "Purchasing" 
+    $resp : Activity( ((MessageExchange)activityType).correlation == $id, this after[0,2m20s] $req , ((MessageExchange)activityType).invocationType == MessageExchange.InvocationType.Response)  from entry-point "Purchasing"
+then
+
+	services.logInfo("REQUEST: "+$req+" WITH RESPONSE: "+$resp);
+
+	java.util.Properties props=new java.util.Properties();
+	props.put("requestId", $req.getId());
+	props.put("responseId", $resp.getId());
+
+	long responseTime=$resp.getTimestamp()-$req.getTimestamp();
+	
+	services.logDebug("CORRELATION on id '"+$id+"' response time "+responseTime);
+	
+	props.put("responseTime", responseTime);
+	
+    services.setResult(props);
+end
