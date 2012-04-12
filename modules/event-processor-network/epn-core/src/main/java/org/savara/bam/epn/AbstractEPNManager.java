@@ -183,8 +183,10 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @param networkName The network name
      * @param nodeName The node name
      * @param processed The list of processed events
+     * @throws Exception Failed to notify events processed
      */
-    protected void notifyEventsProcessed(String networkName, String nodeName, EventList processed) {
+    protected void notifyEventsProcessed(String networkName, String nodeName, EventList processed)
+                                    throws Exception {
         dispatchEventsProcessedToListeners(networkName, nodeName, processed);
     }
     

@@ -22,6 +22,8 @@ import static javax.ejb.ConcurrencyManagementType.BEAN;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Local;
@@ -74,7 +76,8 @@ public class JMSEPNManager extends AbstractEPNManager {
     
     private Connection _connection=null;
     private Session _session=null;
-    private MessageProducer _producer=null;
+    private MessageProducer _eventsProducer=null;
+    private MessageProducer _notificationsProducer=null;
     
     private java.util.Map<String, JMSChannel> _networkChannels=new java.util.HashMap<String, JMSChannel>();
     
@@ -90,13 +93,32 @@ public class JMSEPNManager extends AbstractEPNManager {
     }
     
     /**
+     * The initialize method.
+     */
+    @PostConstruct
+    public void init() {
+        LOG.info("Initialize JMS EPN Manager");
+        
+        try {
+            _connection = _connectionFactory.createConnection();
+            _session = _connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+            
+            _eventsProducer = _session.createProducer(_epnEventsDestination);
+            _notificationsProducer = _session.createProducer(_epnNotificationsDestination);
+            
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to initialize the JMS EPN Manager", e);
+        }
+    }   
+
+    /**
      * {@inheritDoc}
      */
     public void register(Network network) throws Exception {
         super.register(network);
         
         _networkChannels.put(network.getName(), new JMSChannel(_session,
-                _producer, null, new org.savara.bam.epn.Destination(network.getName(),
+                _eventsProducer, null, new org.savara.bam.epn.Destination(network.getName(),
                         network.getRootNodeName())));
     }
 
@@ -223,7 +245,7 @@ public class JMSEPNManager extends AbstractEPNManager {
             mesg.setStringProperty(JMSEPNManager.EPN_DESTINATION_NODE, nodeName);
             mesg.setStringProperty(JMSEPNManager.EPN_SOURCE_NODE, source);
             mesg.setIntProperty(JMSEPNManager.EPN_RETRIES_LEFT, retriesLeft);
-            _producer.send(mesg);
+            _eventsProducer.send(mesg);
         } else {
             // Events failed to be processed
             // TODO: Should this be reported via the manager?
@@ -235,15 +257,20 @@ public class JMSEPNManager extends AbstractEPNManager {
      * {@inheritDoc}
      */
     @Override
-    protected void notifyEventsProcessed(String networkName, String nodeName, EventList processed) {
-        
-        // TODO: Send to JMS topic
+    protected void notifyEventsProcessed(String networkName, String nodeName, EventList events)
+                                    throws Exception {
+        javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
+        mesg.setStringProperty(JMSEPNManager.EPN_NETWORK, networkName);
+        mesg.setStringProperty(JMSEPNManager.EPN_DESTINATION_NODE, nodeName);
+        _notificationsProducer.send(mesg);
     }
     
     /**
      * {@inheritDoc}
      */
+    @PreDestroy
     public void close() throws Exception {
+        LOG.info("Closing JMS EPN Manager");
         try {
             _session.close();
             _connection.close();
@@ -263,7 +290,7 @@ public class JMSEPNManager extends AbstractEPNManager {
          */
         public Channel getChannel(String source,
                 org.savara.bam.epn.Destination dest) throws Exception {
-            return new JMSChannel(_session, _producer, source, dest);
+            return new JMSChannel(_session, _eventsProducer, source, dest);
         }
 
     }
