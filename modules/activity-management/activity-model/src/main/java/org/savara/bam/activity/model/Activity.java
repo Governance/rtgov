@@ -36,73 +36,131 @@ public class Activity implements java.io.Externalizable {
     private static final int VERSION = 1;
     
     private String _id=null;
-	private long _timestamp=0;
-	
-	private Context _context=null;
-	private Component _component=null;
-	private ActivityType _activityType=null;
-	
-	/**
-	 * The default constructor.
-	 */
-	public Activity() {
-	}
-	
-	public Activity(Activity act) {
-		_id = act._id;
-		_timestamp = act._timestamp;
-		
-		if (act._context != null) {
-			_context = new Context(act._context);
-		}
-		
-		if (act._component != null) {
-			_component = new Component(act._component);
-		}
-		
-		_activityType = act._activityType;
-	}
-	
-	public void setId(String id) {
-		_id = id;
-	}
-	
-	public String getId() {
-		return (_id);
-	}
-	
-	public void setTimestamp(long timestamp) {
-		_timestamp = timestamp;
-	}
-	
-	public long getTimestamp() {
-		return (_timestamp);
-	}
-	
-	public void setContext(Context context) {
-		_context = context;
-	}
-	
-	public Context getContext() {
-		return (_context);
-	}
-	
-	public void setComponent(Component component) {
-		_component = component;
-	}
-	
-	public Component getComponent() {
-		return (_component);
-	}
-	
-	public void setActivityType(ActivityType activityType) {
-		_activityType = activityType;
-	}
-	
-	public ActivityType getActivityType() {
-		return (_activityType);
-	}
+    private long _timestamp=0;
+    
+    private Context _context=null;
+    private Component _component=null;
+    private ActivityType _activityType=null;
+    
+    /**
+     * The default constructor.
+     */
+    public Activity() {
+    }
+    
+    /**
+     * The copy constructor.
+     * 
+     * @param act The activity to copy.
+     */
+    public Activity(Activity act) {
+        _id = act._id;
+        _timestamp = act._timestamp;
+        
+        if (act._context != null) {
+            _context = new Context(act._context);
+        }
+        
+        if (act._component != null) {
+            _component = new Component(act._component);
+        }
+        
+        _activityType = act._activityType;
+    }
+    
+    /**
+     * This method sets the activity id.
+     * 
+     * @param id The id
+     */
+    public void setId(String id) {
+        _id = id;
+    }
+    
+    /**
+     * This method gets the activity id.
+     * 
+     * @return The id
+     */
+    public String getId() {
+        return (_id);
+    }
+    
+    /**
+     * This method sets the timestamp.
+     * 
+     * @param timestamp The timestamp
+     */
+    public void setTimestamp(long timestamp) {
+        _timestamp = timestamp;
+    }
+    
+    /**
+     * This method gets the timestamp.
+     * 
+     * @return The timestamp
+     */
+    public long getTimestamp() {
+        return (_timestamp);
+    }
+    
+    /**
+     * This method sets the context.
+     * 
+     * @param context The context
+     */
+    public void setContext(Context context) {
+        _context = context;
+    }
+    
+    /**
+     * This method gets the context.
+     * 
+     * @return The context
+     */
+    public Context getContext() {
+        return (_context);
+    }
+    
+    /**
+     * This method sets the component.
+     * 
+     * @param component The component
+     */
+    public void setComponent(Component component) {
+        _component = component;
+    }
+    
+    /**
+     * This method gets the component.
+     * 
+     * @return The component
+     */
+    public Component getComponent() {
+        return (_component);
+    }
+    
+    /**
+     * This method sets the activity type.
+     * 
+     * @param activityType The activity type
+     */
+    public void setActivityType(ActivityType activityType) {
+        _activityType = activityType;
+    }
+    
+    /**
+     * This method gets the activity type.
+     * 
+     * @return The activity type
+     */
+    public ActivityType getActivityType() {
+        return (_activityType);
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
@@ -113,6 +171,9 @@ public class Activity implements java.io.Externalizable {
         out.writeObject(_activityType);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
@@ -123,5 +184,5 @@ public class Activity implements java.io.Externalizable {
         _component = (Component)in.readObject();
         _activityType = (ActivityType)in.readObject();
     }
-	
+    
 }

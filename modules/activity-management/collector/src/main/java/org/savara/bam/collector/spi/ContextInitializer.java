@@ -27,12 +27,12 @@ import org.savara.bam.activity.model.Context;
  */
 public interface ContextInitializer {
 
-	/**
-	 * This method returns the Context object associated with the
-	 * current environment.
-	 * 
-	 * @return The context
-	 */
-	public Context getContext();
+    /**
+     * This method returns the Context object associated with the
+     * current environment.
+     * 
+     * @return The context
+     */
+    public Context getContext();
 
 }

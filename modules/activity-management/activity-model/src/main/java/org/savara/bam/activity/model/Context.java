@@ -35,10 +35,18 @@ public class Context implements java.io.Externalizable {
     private String _thread=null;
     private String _host=null;
     private String _port=null;
-	
+
+    /**
+     * The default constructor.
+     */
     public Context() {
     }
  
+    /**
+     * The copy constructor.
+     * 
+     * @param context The context to copy
+     */
     public Context(Context context) {
         _principal = context._principal;
         _transactionId = context._transactionId;
@@ -46,47 +54,100 @@ public class Context implements java.io.Externalizable {
         _host = context._host;
         _port = context._port;
     }
-	
+    
+    /**
+     * This method sets the principal.
+     * 
+     * @param principal The principal
+     */
     public void setPrincipal(String principal) {
         _principal = principal;
     }
     
+    /**
+     * This method gets the principal.
+     * 
+     * @return The principal
+     */
     public String getPrincipal() {
         return (_principal);
     }
     
+    /**
+     * This method sets the transaction id.
+     * 
+     * @param transactionId The transaction id
+     */
     public void setTransaction(String transactionId) {
         _transactionId = transactionId;
     }
     
+    /**
+     * This method gets the transaction id.
+     * 
+     * @return The transaction id
+     */
     public String getTransaction() {
         return (_transactionId);
     }
     
+    /**
+     * This method sets the thread.
+     * 
+     * @param thread The thread
+     */
     public void setThread(String thread) {
         _thread = thread;
     }
     
+    /**
+     * This method gets the thread.
+     * 
+     * @return The thread
+     */
     public String getThread() {
         return (_thread);
     }
     
+    /**
+     * This method sets the host.
+     * 
+     * @param host The host
+     */
     public void setHost(String host) {
         _host = host;
     }
     
+    /**
+     * This method gets the host.
+     * 
+     * @return The host
+     */
     public String getHost() {
         return (_host);
     }
     
+    /**
+     * This method sets the port.
+     * 
+     * @param port The port
+     */
     public void setPort(String port) {
         _port = port;
     }
     
+    /**
+     * This method gets the port.
+     * 
+     * @return The port
+     */
     public String getPort() {
         return (_port);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
@@ -97,6 +158,9 @@ public class Context implements java.io.Externalizable {
         out.writeUTF(_port);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now

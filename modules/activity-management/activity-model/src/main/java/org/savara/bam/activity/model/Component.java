@@ -31,52 +31,103 @@ public class Component implements java.io.Externalizable {
     private static final int VERSION = 1;
 
     private String _service=null;
-	private String _processDefinition=null;
-	private String _processInstance=null;
-	private String _task=null;
-	
-	public Component() {
-	}
-	
-	public Component(Component comp) {
-		_service = comp._service;
-		_processDefinition = comp._processDefinition;
-		_processInstance = comp._processInstance;
-		_task = comp._task;
-	}
-	
-	public void setService(String service) {
-		_service = service;
-	}
-	
-	public String getService() {
-		return (_service);
-	}
-	
-	public void setProcessDefinition(String pd) {
-		_processDefinition = pd;
-	}
-	
-	public String getProcessDefinition() {
-		return (_processDefinition);
-	}
-	
-	public void setProcessInstance(String pi) {
-		_processInstance = pi;
-	}
-	
-	public String getProcessInstance() {
-		return (_processInstance);
-	}
-	
-	public void setTask(String task) {
-		_task = task;
-	}
-	
-	public String getTask() {
-		return (_task);
-	}
+    private String _processDefinition=null;
+    private String _processInstance=null;
+    private String _task=null;
+    
+    /**
+     * The default constructor.
+     */
+    public Component() {
+    }
+    
+    /**
+     * The copy constructor.
+     * 
+     * @param comp The component to copy.
+     */
+    public Component(Component comp) {
+        _service = comp._service;
+        _processDefinition = comp._processDefinition;
+        _processInstance = comp._processInstance;
+        _task = comp._task;
+    }
+    
+    /**
+     * This method sets the service.
+     * 
+     * @param service The service
+     */
+    public void setService(String service) {
+        _service = service;
+    }
+    
+    /**
+     * This method gets the service.
+     * 
+     * @return The service
+     */
+    public String getService() {
+        return (_service);
+    }
+    
+    /**
+     * This method sets the process definition.
+     * 
+     * @param pd The process definition
+     */
+    public void setProcessDefinition(String pd) {
+        _processDefinition = pd;
+    }
+    
+    /**
+     * This method gets the process definition.
+     * 
+     * @return The process definition
+     */
+    public String getProcessDefinition() {
+        return (_processDefinition);
+    }
+    
+    /**
+     * This method sets the process instance.
+     * 
+     * @param pi The process instance
+     */
+    public void setProcessInstance(String pi) {
+        _processInstance = pi;
+    }
+    
+    /**
+     * This method gets the process instance.
+     * 
+     * @return The process instance
+     */
+    public String getProcessInstance() {
+        return (_processInstance);
+    }
+    
+    /**
+     * This method sets the task.
+     * 
+     * @param task The task
+     */
+    public void setTask(String task) {
+        _task = task;
+    }
+    
+    /**
+     * This method gets the task.
+     * 
+     * @return The task
+     */
+    public String getTask() {
+        return (_task);
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
@@ -86,6 +137,9 @@ public class Component implements java.io.Externalizable {
         out.writeUTF(_task);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now

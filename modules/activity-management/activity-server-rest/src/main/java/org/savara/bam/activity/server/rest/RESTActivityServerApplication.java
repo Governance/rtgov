@@ -22,23 +22,37 @@ import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class represents the REST application for the activity
+ * server.
+ *
+ */
 @ApplicationPath("/activity")
 public class RESTActivityServerApplication extends Application {
 
-    private Set<Object> singletons = new HashSet<Object>();
-    private Set<Class<?>> empty = new HashSet<Class<?>>();
+    private Set<Object> _singletons = new HashSet<Object>();
+    private Set<Class<?>> _empty = new HashSet<Class<?>>();
 
+    /**
+     * This is the default constructor.
+     */
     public RESTActivityServerApplication() {
-       singletons.add(new RESTActivityServer());
+       _singletons.add(new RESTActivityServer());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<Class<?>> getClasses() {
-       return empty;
+       return _empty;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<Object> getSingletons() {
-       return singletons;
+       return _singletons;
     }
 }

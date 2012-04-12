@@ -43,34 +43,34 @@ import java.util.logging.Logger;
 public class EPNNotificationServer implements MessageListener {
 
     private static final Logger LOG=Logger.getLogger(EPNNotificationServer.class.getName());
-	
-	private JMSEPNManager _epnManager;
     
-	public EPNNotificationServer() {
-	}
-	
-	@PostConstruct
-	public void init() {
-		LOG.info("Initialize EPN Notifications Server");
-		
-		try {
-			InitialContext context=new InitialContext();
-			
-			_epnManager = (JMSEPNManager)context.lookup("java:/env/EPNManager");
-		} catch(Exception e) {
-		    LOG.log(Level.SEVERE, "EPNManager was not found", e);
-		}
-	}
-	
-	@PreDestroy
-	public void close() {
-		LOG.info("Closing EPN Notifications Server");
-	}
+    private JMSEPNManager _epnManager;
+    
+    public EPNNotificationServer() {
+    }
+    
+    @PostConstruct
+    public void init() {
+        LOG.info("Initialize EPN Notifications Server");
+        
+        try {
+            InitialContext context=new InitialContext();
+            
+            _epnManager = (JMSEPNManager)context.lookup("java:/env/EPNManager");
+        } catch(Exception e) {
+            LOG.log(Level.SEVERE, "EPNManager was not found", e);
+        }
+    }
+    
+    @PreDestroy
+    public void close() {
+        LOG.info("Closing EPN Notifications Server");
+    }
 
-	public void onMessage(Message message) {
-		if (_epnManager != null) {
-			_epnManager.handleNotificationsMessage(message);
-		}
-	}
+    public void onMessage(Message message) {
+        if (_epnManager != null) {
+            _epnManager.handleNotificationsMessage(message);
+        }
+    }
 
 }

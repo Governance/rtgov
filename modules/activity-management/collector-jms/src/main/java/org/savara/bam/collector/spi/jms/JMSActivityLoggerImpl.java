@@ -42,68 +42,82 @@ import org.savara.bam.collector.spi.AbstractActivityLoggerImpl;
  */
 public class JMSActivityLoggerImpl extends AbstractActivityLoggerImpl {
 
-	private static final String ACTIVITY_MONITOR_SERVER = "ActivityMonitorServer";
+    private static final String ACTIVITY_MONITOR_SERVER = "ActivityMonitorServer";
 
-	private static final Logger LOG=Logger.getLogger(JMSActivityLoggerImpl.class.getName());
-	
-	private Connection _connection;
-	private Session _session;
-	private MessageProducer _producer;
-	private javax.jms.BytesMessage _currentMessage;
-	
-	@PostConstruct
-	public void init() {
-		super.init();
-		
-		try {
-			Queue queue = HornetQJMSClient.createQueue(ACTIVITY_MONITOR_SERVER);
+    private static final Logger LOG=Logger.getLogger(JMSActivityLoggerImpl.class.getName());
+    
+    private Connection _connection;
+    private Session _session;
+    private MessageProducer _producer;
+    private javax.jms.BytesMessage _currentMessage;
+    
+    /**
+     * This method initializes the JMS activity logger.
+     */
+    @PostConstruct
+    public void init() {
+        super.init();
+        
+        try {
+            Queue queue = HornetQJMSClient.createQueue(ACTIVITY_MONITOR_SERVER);
 
-			TransportConfiguration transportConfiguration = new TransportConfiguration(NettyConnectorFactory.class.getName());
+            TransportConfiguration transportConfiguration = new TransportConfiguration(NettyConnectorFactory.class.getName());
 
-			ConnectionFactory cf = (ConnectionFactory) HornetQJMSClient.createConnectionFactoryWithoutHA(JMSFactoryType.CF, transportConfiguration);
+            ConnectionFactory cf = (ConnectionFactory) HornetQJMSClient.createConnectionFactoryWithoutHA(JMSFactoryType.CF, transportConfiguration);
 
-			_connection = cf.createConnection();
+            _connection = cf.createConnection();
 
-			_session = _connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            _session = _connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
-			_producer = _session.createProducer(queue);
-		} catch (Exception e) {
-			LOG.log(Level.SEVERE, "Failed to setup JMS connection", e);
-		}
-	}
-	
-	protected void appendActivity(Activity act) throws Exception {
-		 byte[] mesg=ActivityUtil.serialize(act);
+            _producer = _session.createProducer(queue);
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to setup JMS connection", e);
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    protected void appendActivity(Activity act) throws Exception {
+         byte[] mesg=ActivityUtil.serialize(act);
 
-		 if (_currentMessage == null) {
-			 _currentMessage = _session.createBytesMessage();
-		 }
+         if (_currentMessage == null) {
+             _currentMessage = _session.createBytesMessage();
+         }
 
-		 _currentMessage.writeInt(mesg.length);
-		 _currentMessage.writeBytes(mesg);
-	}
-	
-	protected synchronized void sendMessage() throws Exception {
-		if (_currentMessage != null) {
-			 // Send message
-			 _currentMessage.writeInt(0);
-			 _producer.send(_currentMessage);
-			 
-			 _currentMessage = null;
-		}
-		
-		super.sendMessage();
-	}
+         _currentMessage.writeInt(mesg.length);
+         _currentMessage.writeBytes(mesg);
+    }
+    
+    /**
+     * This method sends the JMS message.
+     * 
+     * @throws Exception Failed to send the message
+     */
+    protected synchronized void sendMessage() throws Exception {
+        if (_currentMessage != null) {
+             // Send message
+             _currentMessage.writeInt(0);
+             _producer.send(_currentMessage);
+             
+             _currentMessage = null;
+        }
+        
+        super.sendMessage();
+    }
 
-	@PreDestroy
-	public void close() {
-		super.close();
-		
-		try {
-			_session.close();
-	        _connection.close();
-		} catch (Exception e) {
-			LOG.log(Level.SEVERE, "Failed to close JMS connection", e);
-		}
-	}
+    /**
+     * This method closes the JMS activity logger.
+     */
+    @PreDestroy
+    public void close() {
+        super.close();
+        
+        try {
+            _session.close();
+            _connection.close();
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to close JMS connection", e);
+        }
+    }
 }

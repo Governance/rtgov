@@ -43,35 +43,35 @@ import java.util.logging.Logger;
 public class EPNEventsServer implements MessageListener {
 
     private static final Logger LOG=Logger.getLogger(EPNEventsServer.class.getName());
-	
-	private JMSEPNManager _epnManager;
     
-	public EPNEventsServer() {
-	}
-	
-	@PostConstruct
-	public void init() {
-		LOG.info("Initialize EPN Events Server");
+    private JMSEPNManager _epnManager;
+    
+    public EPNEventsServer() {
+    }
+    
+    @PostConstruct
+    public void init() {
+        LOG.info("Initialize EPN Events Server");
 System.out.println("GPB: >>> Initialize EPN Events Server");
-		
-		try {
-			InitialContext context=new InitialContext();
-			
-			_epnManager = (JMSEPNManager)context.lookup("java:/env/EPNManager");
-		} catch(Exception e) {
-		    LOG.log(Level.SEVERE, "EPNManager was not found", e);
-		}
-	}
-	
-	@PreDestroy
-	public void close() {
-		LOG.info("Closing EPN Events Server");
-	}
+        
+        try {
+            InitialContext context=new InitialContext();
+            
+            _epnManager = (JMSEPNManager)context.lookup("java:/env/EPNManager");
+        } catch(Exception e) {
+            LOG.log(Level.SEVERE, "EPNManager was not found", e);
+        }
+    }
+    
+    @PreDestroy
+    public void close() {
+        LOG.info("Closing EPN Events Server");
+    }
 
-	public void onMessage(Message message) {
-		if (_epnManager != null) {
-			_epnManager.handleEventsMessage(message);
-		}
-	}
+    public void onMessage(Message message) {
+        if (_epnManager != null) {
+            _epnManager.handleEventsMessage(message);
+        }
+    }
 
 }

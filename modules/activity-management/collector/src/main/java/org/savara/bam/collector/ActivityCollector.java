@@ -25,24 +25,24 @@ import org.savara.bam.activity.model.ActivityType;
  */
 public interface ActivityCollector {
 
-	/**
-	 * This method associates a transaction id and optional principal
-	 * with the current thread, such that any subsequent activity
-	 * types that are recorded will be associated with this id.
-	 */
-	public void startTransaction();
-	
-	/**
-	 * This method clears the transaction id and principal associated
-	 * with the current thread.
-	 */
-	public void endTransaction();
-	
-	/**
-	 * This method records the supplied activity event.
-	 * 
-	 * @param actType The activity type
-	 */
-	public void record(ActivityType actType);
-	
+    /**
+     * This method associates a transaction id and optional principal
+     * with the current thread, such that any subsequent activity
+     * types that are recorded will be associated with this id.
+     */
+    public void startTransaction();
+    
+    /**
+     * This method clears the transaction id and principal associated
+     * with the current thread.
+     */
+    public void endTransaction();
+    
+    /**
+     * This method records the supplied activity event.
+     * 
+     * @param actType The activity type
+     */
+    public void record(ActivityType actType);
+    
 }

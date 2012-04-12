@@ -85,7 +85,7 @@ public class RESTActivityServer {
                     break;
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -99,6 +99,14 @@ public class RESTActivityServer {
         _activityServer = as;
     }
     
+    /**
+     * This method handles queries for activity events.
+     * 
+     * @param from The 'from' timestamp
+     * @param to The 'to' timestamp
+     * @return The list of activity events
+     * @throws Exception Failed to query activity events
+     */
     @GET
     @Path("/query")
     @Produces("application/json")
@@ -120,6 +128,12 @@ public class RESTActivityServer {
         return (_activityServer.query(aq));
     }
 
+    /**
+     * This method stores the supplied list of activity events.
+     * 
+     * @param activities The list of activity events
+     * @return A response indicating success or failure
+     */
     @POST
     @Path("/store")
     @Consumes("application/json")
@@ -137,7 +151,7 @@ public class RESTActivityServer {
             _activityServer.store(activities);
             
             return Response.status(Status.OK).entity("Activities stored").build();
-        } catch(Exception e) {
+        } catch (Exception e) {
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Failed to store activities: "+e).build();
         }
     }

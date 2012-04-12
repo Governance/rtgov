@@ -26,12 +26,18 @@ import org.savara.bam.activity.model.Activity;
  * model.
  *
  */
-public class ActivityUtil {
+public final class ActivityUtil {
     
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
     private static final TypeReference<java.util.List<Activity>> ACTIVITY_LIST=
-                        new TypeReference<java.util.List<Activity>>() {};
+                        new TypeReference<java.util.List<Activity>>() { };
+    
+    /**
+     * Private constructor.
+     */
+    private ActivityUtil() {
+    }
     
     /**
      * This method serializes an Activity event into a JSON representation.
@@ -51,7 +57,7 @@ public class ActivityUtil {
         
         baos.close();
         
-        return(ret);
+        return (ret);
     }
 
     /**
@@ -72,7 +78,7 @@ public class ActivityUtil {
         
         baos.close();
         
-        return(ret);
+        return (ret);
     }
 
     /**
@@ -91,13 +97,13 @@ public class ActivityUtil {
         
         bais.close();
         
-        return(ret);
+        return (ret);
     }
 
     /**
      * This method deserializes an Activity event list from a JSON representation.
      * 
-     * @param activities The JSON representation of the activity list
+     * @param act The JSON representation of the activity
      * @return The Activity event list
      * @throws Exception Failed to deserialize
      */
@@ -110,6 +116,6 @@ public class ActivityUtil {
         
         bais.close();
         
-        return(ret);
+        return (ret);
     }
 }

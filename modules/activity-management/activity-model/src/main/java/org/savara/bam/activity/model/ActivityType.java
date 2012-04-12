@@ -19,6 +19,10 @@ package org.savara.bam.activity.model;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
+/**
+ * This abstract class is the super type of all activity type classes.
+ *
+ */
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class ActivityType {
 

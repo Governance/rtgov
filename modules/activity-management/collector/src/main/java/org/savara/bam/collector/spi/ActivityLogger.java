@@ -25,11 +25,11 @@ import org.savara.bam.activity.model.Activity;
  */
 public interface ActivityLogger {
 
-	/**
-	 * This method records the supplied activity event.
-	 * 
-	 * @param act The activity event
-	 */
-	public void log(Activity act);
-	
+    /**
+     * This method records the supplied activity event.
+     * 
+     * @param act The activity event
+     */
+    public void log(Activity act);
+    
 }
