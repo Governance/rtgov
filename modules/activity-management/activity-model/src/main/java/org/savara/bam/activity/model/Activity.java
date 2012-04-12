@@ -33,8 +33,8 @@ import java.io.ObjectOutput;
  */
 public class Activity implements java.io.Externalizable {
 
-	private static final int VERSION = 1;
-	
+    private static final int VERSION = 1;
+    
     private String _id=null;
 	private long _timestamp=0;
 	

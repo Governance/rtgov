@@ -43,7 +43,7 @@ import javax.ws.rs.core.Response.Status;
  * This class represents the RESTful interface to the activity server.
  *
  */
-@Path("/activities")
+@Path("/server")
 @ApplicationScoped
 public class RESTActivityServer {
 
@@ -59,7 +59,7 @@ public class RESTActivityServer {
     public RESTActivityServer() {
         
         try {
-            // Need to obtain activity server direction, as inject does not
+            // Need to obtain activity server directly, as inject does not
             // work for REST service, and RESTeasy/CDI integration did not
             // appear to work in AS7. Directly accessing the bean manager
             // should be portable.

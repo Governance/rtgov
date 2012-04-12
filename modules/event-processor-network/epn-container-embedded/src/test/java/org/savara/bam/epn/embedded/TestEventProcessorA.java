@@ -15,30 +15,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.activity.server.rest;
+package org.savara.bam.epn.embedded;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serializable;
 
-@ApplicationPath("/activity")
-public class RESTActivityServerApplication extends Application {
+import org.savara.bam.epn.EventProcessor;
 
-    private Set<Object> singletons = new HashSet<Object>();
-    private Set<Class<?>> empty = new HashSet<Class<?>>();
+public class TestEventProcessorA extends EventProcessor {
 
-    public RESTActivityServerApplication() {
-       singletons.add(new RESTActivityServer());
+    private java.util.List<Serializable> _events=new java.util.Vector<Serializable>();
+    private java.util.List<Serializable> _retries=new java.util.Vector<Serializable>();
+    private boolean _forwardEvents=false;
+    
+    public void setForwardEvents(boolean b) {
+        _forwardEvents = b;
     }
-
-    @Override
-    public Set<Class<?>> getClasses() {
-       return empty;
+    
+    public void retry(Serializable event) {
+        _retries.add(event);
     }
+    
+    public Serializable process(String source, Serializable event,
+            int retriesLeft) throws Exception {
+        if (_retries.contains(event)) {
+            _retries.remove(event);
+            throw new Exception("Please retry this event");
+        }
 
-    @Override
-    public Set<Object> getSingletons() {
-       return singletons;
+        _events.add(event);
+
+        return _forwardEvents ? event : null;
+    }
+    
+    public java.util.List<Serializable> getEvents() {
+        return(_events);
     }
 }

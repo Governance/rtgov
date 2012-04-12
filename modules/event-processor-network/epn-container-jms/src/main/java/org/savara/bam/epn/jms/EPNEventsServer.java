@@ -19,7 +19,6 @@ package org.savara.bam.epn.jms;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.ejb.TransactionAttribute;
@@ -28,50 +27,50 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.jms.Message;
 import javax.jms.MessageListener;
+import javax.naming.InitialContext;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.savara.bam.epn.EPNManager;
-
-@MessageDriven(name = "EPNServer", messageListenerInterface = MessageListener.class,
+@MessageDriven(name = "EPNEventsServer", messageListenerInterface = MessageListener.class,
                activationConfig =
                      {
                         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-                        @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/EPNServer")
+                        @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/EPNEvents")
                      })
 @TransactionManagement(value= TransactionManagementType.CONTAINER)
 @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
-public class EPNServer implements MessageListener {
+public class EPNEventsServer implements MessageListener {
 
-    private static final Logger LOG=Logger.getLogger(EPNServer.class.getName());
+    private static final Logger LOG=Logger.getLogger(EPNEventsServer.class.getName());
 	
-    @Resource(mappedName = "java:/env/EPNManager")
-	EPNManager _epnManager;
+	private JMSEPNManager _epnManager;
     
-    private javax.jms.MessageListener _messageListener=null;
-	
-	public EPNServer() {
+	public EPNEventsServer() {
 	}
 	
 	@PostConstruct
 	public void init() {
-		LOG.info("Initialize EPN Server");
+		LOG.info("Initialize EPN Events Server");
+System.out.println("GPB: >>> Initialize EPN Events Server");
 		
-		if (_epnManager instanceof javax.jms.MessageListener) {
-		    _messageListener = (javax.jms.MessageListener)_epnManager;
-		} else {
-		    LOG.severe("EPNManager is not a JMS Message Listener");
+		try {
+			InitialContext context=new InitialContext();
+			
+			_epnManager = (JMSEPNManager)context.lookup("java:/env/EPNManager");
+		} catch(Exception e) {
+		    LOG.log(Level.SEVERE, "EPNManager was not found", e);
 		}
 	}
 	
 	@PreDestroy
 	public void close() {
-		LOG.info("Closing EPN Server");
+		LOG.info("Closing EPN Events Server");
 	}
 
 	public void onMessage(Message message) {
-		if (_messageListener != null) {
-		    _messageListener.onMessage(message);
+		if (_epnManager != null) {
+			_epnManager.handleEventsMessage(message);
 		}
 	}
 

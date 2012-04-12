@@ -15,30 +15,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.activity.server.rest;
+package org.savara.bam.epn.embedded;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import org.savara.bam.epn.Predicate;
 
-@ApplicationPath("/activity")
-public class RESTActivityServerApplication extends Application {
+public class TestPredicate2 extends Predicate {
 
-    private Set<Object> singletons = new HashSet<Object>();
-    private Set<Class<?>> empty = new HashSet<Class<?>>();
-
-    public RESTActivityServerApplication() {
-       singletons.add(new RESTActivityServer());
+    private String _someProperty=null;
+    
+    public String getSomeProperty() {
+        return(_someProperty);
+    }
+    
+    public void setSomeProperty(String prop) {
+        _someProperty = prop;
+    }
+    
+    public boolean apply(Object arg0) {
+        if (arg0 instanceof TestEvent2) {
+            TestEvent2 te=(TestEvent2)arg0;
+            
+            return te.getValue() >= 20;
+         }
+        
+        return false;
     }
 
-    @Override
-    public Set<Class<?>> getClasses() {
-       return empty;
-    }
-
-    @Override
-    public Set<Object> getSingletons() {
-       return singletons;
-    }
 }

@@ -17,10 +17,15 @@
  */
 package org.savara.bam.epn;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.savara.bam.epn.internal.EventList;
 
 
 public abstract class AbstractEPNManager implements EPNManager {
+	
+	private static final Logger LOG=Logger.getLogger(AbstractEPNManager.class.getName());
 
     private java.util.Map<String, Network> _networkMap=new java.util.HashMap<String, Network>();
     private java.util.List<NodeListener> _nodeListeners=
@@ -29,19 +34,28 @@ public abstract class AbstractEPNManager implements EPNManager {
     protected abstract EPNContext getContext();
     
     public void register(Network network) throws Exception {
+    	
+    	LOG.info("Registering EPN network '"+network.getName()+"'");
+    	
         _networkMap.put(network.getName(), network);
         
         network.init(getContext());
     }
 
     public void unregister(String networkName) throws Exception {
-        _networkMap.remove(networkName);
+    	
+    	LOG.info("Unregistering EPN network '"+networkName+"'");
+
+    	_networkMap.remove(networkName);
     }
     
     /**
      * {@inheritDoc}
      */
     public void addNodeListener(NodeListener l) {
+    	if (LOG.isLoggable(Level.FINE)) {
+    		LOG.fine("Register node listener="+l);
+    	}
         _nodeListeners.add(l);
     }
     
@@ -49,6 +63,9 @@ public abstract class AbstractEPNManager implements EPNManager {
      * {@inheritDoc}
      */
     public void removeNodeListener(NodeListener l) {
+    	if (LOG.isLoggable(Level.FINE)) {
+    		LOG.fine("Unregister node listener="+l);
+    	}
         _nodeListeners.remove(l);
     }
     
@@ -88,7 +105,12 @@ public abstract class AbstractEPNManager implements EPNManager {
     protected EventList process(String networkName, String nodeName,
                     Node node, String source, EventList events,
                             int retriesLeft) throws Exception {
-        EventList ret=node.process(getContext(), source, events, retriesLeft);
+    	if (LOG.isLoggable(Level.FINEST)) {
+    		LOG.finest("Process events on network="+networkName+" node="+nodeName+
+    				" source="+source+" retriesLeft="+retriesLeft+" events="+events);
+    	}
+
+    	EventList ret=node.process(getContext(), source, events, retriesLeft);
         
         if (node.getNotificationEnabled() &&
                 (ret == null || ret.size() < events.size())){ 
@@ -111,10 +133,15 @@ public abstract class AbstractEPNManager implements EPNManager {
             }
             
             if (notify != null) {
-                notify(networkName, nodeName, notify);
+                notifyEventsProcessed(networkName, nodeName, notify);
             }
         }
         
+    	if (LOG.isLoggable(Level.FINEST)) {
+    		LOG.finest("Processed events on network="+networkName+" node="+nodeName+
+    				" source="+source+" ret="+ret);
+    	}
+
         return (ret);
     }
 
@@ -126,7 +153,23 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @param nodeName The node name
      * @param processed The list of processed events
      */
-    protected void notify(String networkName, String nodeName, EventList processed) {
+    protected void notifyEventsProcessed(String networkName, String nodeName, EventList processed) {
+    	dispatchEventsProcessedToListeners(networkName, nodeName, processed);
+    }
+    
+    /**
+     * This method dispatches the notifications to the registered node listeners.
+     * 
+     * @param networkName The network name
+     * @param nodeName The node name
+     * @param processed The list of processed events
+     */
+    protected void dispatchEventsProcessedToListeners(String networkName, String nodeName, EventList processed) {
+    	if (LOG.isLoggable(Level.FINEST)) {
+    		LOG.finest("Notify processed events on network="+networkName+" node="+nodeName+
+    				" processed="+processed);
+    	}
+
         for (NodeListener nl : _nodeListeners) {
             nl.eventsProcessed(networkName, nodeName, processed);
         }

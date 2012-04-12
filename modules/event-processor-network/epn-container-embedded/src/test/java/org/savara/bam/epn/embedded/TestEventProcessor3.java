@@ -15,30 +15,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.activity.server.rest;
+package org.savara.bam.epn.embedded;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import org.savara.bam.epn.EventProcessor;
 
-@ApplicationPath("/activity")
-public class RESTActivityServerApplication extends Application {
+public class TestEventProcessor3 extends EventProcessor {
 
-    private Set<Object> singletons = new HashSet<Object>();
-    private Set<Class<?>> empty = new HashSet<Class<?>>();
-
-    public RESTActivityServerApplication() {
-       singletons.add(new RESTActivityServer());
+    public java.io.Serializable process(String source, java.io.Serializable event, int retriesLeft) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    @Override
-    public Set<Class<?>> getClasses() {
-       return empty;
-    }
-
-    @Override
-    public Set<Object> getSingletons() {
-       return singletons;
-    }
 }

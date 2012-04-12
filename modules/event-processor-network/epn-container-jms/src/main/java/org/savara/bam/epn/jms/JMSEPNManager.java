@@ -41,7 +41,6 @@ import org.savara.bam.epn.EPNContext;
 import org.savara.bam.epn.EPNManager;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
-import org.savara.bam.epn.NodeListener;
 import org.savara.bam.epn.internal.EventList;
 
 /**
@@ -49,17 +48,17 @@ import org.savara.bam.epn.internal.EventList;
  * the EPN Manager.
  *
  */
-@Singleton
+@Singleton(name="EPNManager")
 @ConcurrencyManagement(BEAN)
 @Startup
 @Local(EPNManager.class)
-public class JMSEPNManager extends AbstractEPNManager implements javax.jms.MessageListener {
+public class JMSEPNManager extends AbstractEPNManager {
     
     @Resource(mappedName = "java:/JmsXA")
     ConnectionFactory _connectionFactory;
     
-    @Resource(mappedName = "java:/queue/EPNServer")
-    Destination _epnServerDestination;
+    @Resource(mappedName = "java:/queue/EPNEvents")
+    Destination _epnEventsDestination;
     
     @Resource(mappedName = "java:/topic/EPNNotifications")
     Destination _epnNotificationsDestination;
@@ -107,7 +106,12 @@ public class JMSEPNManager extends AbstractEPNManager implements javax.jms.Messa
         channel.send(new EventList(events));
     }
 
-    public void onMessage(Message message) {
+    /**
+     * This method handles an events message received via JMS.
+     * 
+     * @param message The JMS message carrying the events
+     */
+    protected void handleEventsMessage(Message message) {
         if (message instanceof ObjectMessage) {
             
             if (LOG.isLoggable(Level.FINE)) {
@@ -123,6 +127,32 @@ public class JMSEPNManager extends AbstractEPNManager implements javax.jms.Messa
                 int retriesLeft=message.getIntProperty(JMSEPNManager.EPN_RETRIES_LEFT);
                 
                 dispatch(network, node, source, events, retriesLeft);
+                
+            } catch(Exception e) {
+                LOG.severe("Failed to handle events: "+e);
+            }
+        }
+    }
+
+    /**
+     * This method handles a notification message received via JMS.
+     * 
+     * @param message The JMS message carrying the notification
+     */
+    protected void handleNotificationsMessage(Message message) {
+        if (message instanceof ObjectMessage) {
+            
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("EPNManager("+this+"): Received notification batch: "+message);
+            }
+            
+            try {
+                EventList events=(EventList)((ObjectMessage)message).getObject();
+                
+                String networkName=message.getStringProperty(JMSEPNManager.EPN_NETWORK);
+                String nodeName=message.getStringProperty(JMSEPNManager.EPN_DESTINATION_NODE);
+                
+                dispatchEventsProcessedToListeners(networkName, nodeName, events);
                 
             } catch(Exception e) {
                 LOG.severe("Failed to handle events: "+e);
@@ -187,7 +217,7 @@ public class JMSEPNManager extends AbstractEPNManager implements javax.jms.Messa
      * {@inheritDoc}
      */
     @Override
-    protected void notify(String networkName, String nodeName, EventList processed) {
+    protected void notifyEventsProcessed(String networkName, String nodeName, EventList processed) {
         
         // TODO: Send to JMS topic
     }

@@ -15,30 +15,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.activity.server.rest;
+package org.savara.bam.epn.embedded;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import org.savara.bam.epn.Channel;
+import org.savara.bam.epn.Destination;
+import org.savara.bam.epn.EPNContext;
 
-@ApplicationPath("/activity")
-public class RESTActivityServerApplication extends Application {
+public class TestEPNContext implements EPNContext {
+    
+    private Channel _channel;
 
-    private Set<Object> singletons = new HashSet<Object>();
-    private Set<Class<?>> empty = new HashSet<Class<?>>();
-
-    public RESTActivityServerApplication() {
-       singletons.add(new RESTActivityServer());
+    public TestEPNContext(TestChannel ch) {
+        _channel = ch;
     }
-
-    @Override
-    public Set<Class<?>> getClasses() {
-       return empty;
+    
+    public Channel getChannel(String source, Destination dest)
+            throws Exception {
+        return _channel;
     }
-
-    @Override
-    public Set<Object> getSingletons() {
-       return singletons;
-    }
+    
 }

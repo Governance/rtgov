@@ -24,13 +24,6 @@ import org.savara.bam.epn.Destination;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.internal.EventList;
-import org.savara.bam.epn.testdata.TestEvent1;
-import org.savara.bam.epn.testdata.TestEvent2;
-import org.savara.bam.epn.testdata.TestEventProcessorA;
-import org.savara.bam.epn.testdata.TestEventProcessorB;
-import org.savara.bam.epn.testdata.TestEventProcessorC;
-import org.savara.bam.epn.testdata.TestPredicate1;
-import org.savara.bam.epn.testdata.TestPredicate2;
 
 public class EmbeddedEPNManagerTest {
 

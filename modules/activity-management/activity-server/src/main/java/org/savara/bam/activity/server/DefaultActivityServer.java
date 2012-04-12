@@ -69,7 +69,7 @@ public class DefaultActivityServer implements ActivityServer {
      * This method stores the supplied activity events.
      * 
      * @param activities The activity events
-     * @throws Failed to store the activities
+     * @throws Exception Failed to store the activities
      */
     public void store(java.util.List<Activity> activities) throws Exception {
         
@@ -96,7 +96,7 @@ public class DefaultActivityServer implements ActivityServer {
      * 
      * @param query The query
      * @return The list of activities
-     * @throws Failed to query the activities
+     * @throws Exception Failed to query the activities
      */
     public java.util.List<Activity> query(ActivityQuery query) throws Exception {
         
@@ -104,7 +104,7 @@ public class DefaultActivityServer implements ActivityServer {
             throw new Exception("Activity Store is unavailable");
         }
         
-        return(_store.query(query));
+        return (_store.query(query));
     }
     
 }

@@ -81,6 +81,9 @@ public class ActivityQuery implements java.io.Externalizable {
         return (_toTimestamp);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
@@ -88,6 +91,9 @@ public class ActivityQuery implements java.io.Externalizable {
         out.writeLong(_toTimestamp);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version number - not required at the moment

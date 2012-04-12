@@ -15,30 +15,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.activity.server.rest;
+package org.savara.bam.epn.embedded;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import java.io.Serializable;
 
-@ApplicationPath("/activity")
-public class RESTActivityServerApplication extends Application {
+import org.savara.bam.epn.Channel;
+import org.savara.bam.epn.internal.EventList;
 
-    private Set<Object> singletons = new HashSet<Object>();
-    private Set<Class<?>> empty = new HashSet<Class<?>>();
+public class TestChannel implements Channel {
+    
+    private java.util.List<Serializable> _events=new java.util.Vector<Serializable>();        
 
-    public RESTActivityServerApplication() {
-       singletons.add(new RESTActivityServer());
+    public java.util.List<Serializable> getEvents() {
+        return(_events);
     }
 
-    @Override
-    public Set<Class<?>> getClasses() {
-       return empty;
+    public void send(EventList events) throws Exception {
+        _events.addAll(events);
     }
 
-    @Override
-    public Set<Object> getSingletons() {
-       return singletons;
+    public void send(EventList events, int retriesLeft) throws Exception {
+        _events.addAll(events);
     }
+
+    public void close() throws Exception {
+    }
+    
 }
