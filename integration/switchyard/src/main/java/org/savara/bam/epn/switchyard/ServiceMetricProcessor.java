@@ -17,6 +17,11 @@
  */
 package org.savara.bam.epn.switchyard;
 
+/**
+ * This class processes metric information from Switchyard, to determine
+ * what has changed within a particular time period (by default 1 second).
+ *
+ */
 public class ServiceMetricProcessor {
 
 }

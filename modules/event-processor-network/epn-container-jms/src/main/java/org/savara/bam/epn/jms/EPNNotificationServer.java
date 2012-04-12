@@ -32,6 +32,10 @@ import javax.naming.InitialContext;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This is the JMS receiver for the Event Processor Network notifications.
+ *
+ */
 @MessageDriven(name = "EPNNotificationsServer", messageListenerInterface = MessageListener.class,
                activationConfig =
                      {
@@ -46,9 +50,15 @@ public class EPNNotificationServer implements MessageListener {
     
     private JMSEPNManager _epnManager;
     
+    /**
+     * This is the default constructor.
+     */
     public EPNNotificationServer() {
     }
     
+    /**
+     * The initialize method.
+     */
     @PostConstruct
     public void init() {
         LOG.info("Initialize EPN Notifications Server");
@@ -57,16 +67,22 @@ public class EPNNotificationServer implements MessageListener {
             InitialContext context=new InitialContext();
             
             _epnManager = (JMSEPNManager)context.lookup("java:/env/EPNManager");
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "EPNManager was not found", e);
         }
     }
     
+    /**
+     * The close method.
+     */
     @PreDestroy
     public void close() {
         LOG.info("Closing EPN Notifications Server");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void onMessage(Message message) {
         if (_epnManager != null) {
             _epnManager.handleNotificationsMessage(message);

@@ -32,6 +32,11 @@ import javax.naming.InitialContext;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is the JMS receiver for events being processed by the Event Processor
+ * Network.
+ *
+ */
 @MessageDriven(name = "EPNEventsServer", messageListenerInterface = MessageListener.class,
                activationConfig =
                      {
@@ -46,28 +51,39 @@ public class EPNEventsServer implements MessageListener {
     
     private JMSEPNManager _epnManager;
     
+    /**
+     * The default constructor.
+     */
     public EPNEventsServer() {
     }
     
+    /**
+     * The initialize method.
+     */
     @PostConstruct
     public void init() {
         LOG.info("Initialize EPN Events Server");
-System.out.println("GPB: >>> Initialize EPN Events Server");
         
         try {
             InitialContext context=new InitialContext();
             
             _epnManager = (JMSEPNManager)context.lookup("java:/env/EPNManager");
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "EPNManager was not found", e);
         }
     }
     
+    /**
+     * The close method.
+     */
     @PreDestroy
     public void close() {
         LOG.info("Closing EPN Events Server");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void onMessage(Message message) {
         if (_epnManager != null) {
             _epnManager.handleEventsMessage(message);

@@ -23,7 +23,6 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
  * This class represents the predicate applied to an
  * event being processed.
  *
- * @param <T> The event type
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class Predicate {

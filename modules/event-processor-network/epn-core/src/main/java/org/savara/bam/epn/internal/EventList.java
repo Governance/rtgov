@@ -20,7 +20,6 @@ package org.savara.bam.epn.internal;
 /**
  * This class represents a list of events that can be serialized.
  *
- * @param <T> The event type
  */
 public class EventList extends java.util.Vector<java.io.Serializable> {
 
@@ -35,6 +34,8 @@ public class EventList extends java.util.Vector<java.io.Serializable> {
     /**
      * This method represents a constructor to initialize the event list
      * from a standard Java list.
+     * 
+     * @param list The list of events
      */
     public EventList(java.util.List<? extends java.io.Serializable> list) {
         super(list);

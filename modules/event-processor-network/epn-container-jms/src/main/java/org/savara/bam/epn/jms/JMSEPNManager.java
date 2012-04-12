@@ -55,17 +55,21 @@ import org.savara.bam.epn.internal.EventList;
 public class JMSEPNManager extends AbstractEPNManager {
     
     @Resource(mappedName = "java:/JmsXA")
-    ConnectionFactory _connectionFactory;
+    private ConnectionFactory _connectionFactory;
     
     @Resource(mappedName = "java:/queue/EPNEvents")
-    Destination _epnEventsDestination;
+    private Destination _epnEventsDestination;
     
     @Resource(mappedName = "java:/topic/EPNNotifications")
-    Destination _epnNotificationsDestination;
+    private Destination _epnNotificationsDestination;
     
+    /** The EPN Network Name. **/
     public static final String EPN_NETWORK = "EPNNetwork";
+    /** The EPN Destination Node Name. **/
     public static final String EPN_DESTINATION_NODE = "EPNDestinationNode";
+    /** The EPN Source Node Name. **/
     public static final String EPN_SOURCE_NODE = "EPNSourceNode";
+    /** The EPN Number of Retries Left. **/
     public static final String EPN_RETRIES_LEFT = "EPNRetriesLeft";
     
     private Connection _connection=null;
@@ -78,10 +82,16 @@ public class JMSEPNManager extends AbstractEPNManager {
     
     private static final Logger LOG=Logger.getLogger(JMSEPNManager.class.getName());
 
+    /**
+     * {@inheritDoc}
+     */
     protected EPNContext getContext() {
-        return(_context);
+        return (_context);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void register(Network network) throws Exception {
         super.register(network);
         
@@ -90,12 +100,18 @@ public class JMSEPNManager extends AbstractEPNManager {
                         network.getRootNodeName())));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void unregister(String networkName) throws Exception {
         super.unregister(networkName);
         
         _networkChannels.remove(networkName);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void enqueue(String network, java.util.List<java.io.Serializable> events) throws Exception {
         JMSChannel channel=_networkChannels.get(network);
         
@@ -128,7 +144,7 @@ public class JMSEPNManager extends AbstractEPNManager {
                 
                 dispatch(network, node, source, events, retriesLeft);
                 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOG.severe("Failed to handle events: "+e);
             }
         }
@@ -154,7 +170,7 @@ public class JMSEPNManager extends AbstractEPNManager {
                 
                 dispatchEventsProcessedToListeners(networkName, nodeName, events);
                 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOG.severe("Failed to handle events: "+e);
             }
         }
@@ -210,6 +226,8 @@ public class JMSEPNManager extends AbstractEPNManager {
             _producer.send(mesg);
         } else {
             // Events failed to be processed
+            // TODO: Should this be reported via the manager?
+            LOG.severe("Unable to process events");
         }
     }
     
@@ -222,17 +240,27 @@ public class JMSEPNManager extends AbstractEPNManager {
         // TODO: Send to JMS topic
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void close() throws Exception {
         try {
             _session.close();
             _connection.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to close JMS", e);
         }
     }
     
+    /**
+     * This class provides the JMS implementation of the EPN context.
+     *
+     */
     protected class JMSEPNContext implements EPNContext {
 
+        /**
+         * {@inheritDoc}
+         */
         public Channel getChannel(String source,
                 org.savara.bam.epn.Destination dest) throws Exception {
             return new JMSChannel(_session, _producer, source, dest);

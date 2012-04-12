@@ -27,6 +27,8 @@ public interface NodeListener {
     /**
      * This method lists the events that have been processed.
      * 
+     * @param network The network name
+     * @param node The node name
      * @param events The events that have been processed
      */
     public void eventsProcessed(String network, String node, java.util.List<java.io.Serializable> events);

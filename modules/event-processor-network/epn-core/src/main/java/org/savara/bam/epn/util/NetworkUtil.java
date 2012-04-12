@@ -26,7 +26,7 @@ import org.savara.bam.epn.Network;
  * model.
  *
  */
-public class NetworkUtil {
+public final class NetworkUtil {
     
     private static final ObjectMapper MAPPER=new ObjectMapper();
     
@@ -34,6 +34,12 @@ public class NetworkUtil {
         MAPPER.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);
     }
 
+    /**
+     * Private constructor.
+     */
+    private NetworkUtil() {
+    }
+    
     /**
      * This method serializes an Event Processor Network into a JSON representation.
      * 
@@ -52,7 +58,7 @@ public class NetworkUtil {
         
         baos.close();
         
-        return(ret);
+        return (ret);
     }
 
     /**
@@ -71,7 +77,7 @@ public class NetworkUtil {
         
         bais.close();
         
-        return(ret);
+        return (ret);
     }
 
 }

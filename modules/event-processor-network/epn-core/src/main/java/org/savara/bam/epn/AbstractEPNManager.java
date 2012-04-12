@@ -22,7 +22,11 @@ import java.util.logging.Logger;
 
 import org.savara.bam.epn.internal.EventList;
 
-
+/**
+ * This class represents the abstract Event Process Network Manager
+ * used as the base for any concrete implementation.
+ *
+ */
 public abstract class AbstractEPNManager implements EPNManager {
     
     private static final Logger LOG=Logger.getLogger(AbstractEPNManager.class.getName());
@@ -31,8 +35,16 @@ public abstract class AbstractEPNManager implements EPNManager {
     private java.util.List<NodeListener> _nodeListeners=
                         new java.util.Vector<NodeListener>();
     
+    /**
+     * This method returns the Event Processor Network Context.
+     * 
+     * @return The context
+     */
     protected abstract EPNContext getContext();
     
+    /**
+     * {@inheritDoc}
+     */
     public void register(Network network) throws Exception {
         
         LOG.info("Registering EPN network '"+network.getName()+"'");
@@ -42,6 +54,9 @@ public abstract class AbstractEPNManager implements EPNManager {
         network.init(getContext());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void unregister(String networkName) throws Exception {
         
         LOG.info("Unregistering EPN network '"+networkName+"'");
@@ -69,10 +84,26 @@ public abstract class AbstractEPNManager implements EPNManager {
         _nodeListeners.remove(l);
     }
     
+    /**
+     * This method returns the network associated with the
+     * supplied name.
+     * 
+     * @param name The network name
+     * @return The network, or null if not found
+     */
     protected Network getNetwork(String name) {
         return (_networkMap.get(name));
     }
 
+    /**
+     * This method returns the node associated with the
+     * supplied network and node name.
+     * 
+     * @param networkName The network name
+     * @param nodeName The node name
+     * @return The node, or null if not found
+     * @throws Exception Failed to find the specified node
+     */
     protected Node getNode(String networkName, String nodeName) throws Exception {
         Network net=getNetwork(networkName);
         
@@ -106,14 +137,14 @@ public abstract class AbstractEPNManager implements EPNManager {
                     Node node, String source, EventList events,
                             int retriesLeft) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Process events on network="+networkName+" node="+nodeName+
-                    " source="+source+" retriesLeft="+retriesLeft+" events="+events);
+            LOG.finest("Process events on network="+networkName+" node="+nodeName
+                    +" source="+source+" retriesLeft="+retriesLeft+" events="+events);
         }
 
         EventList ret=node.process(getContext(), source, events, retriesLeft);
         
-        if (node.getNotificationEnabled() &&
-                (ret == null || ret.size() < events.size())){ 
+        if (node.getNotificationEnabled()
+                && (ret == null || ret.size() < events.size())) { 
             EventList notify=null;
             
             if (ret != null) {
@@ -138,8 +169,8 @@ public abstract class AbstractEPNManager implements EPNManager {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Processed events on network="+networkName+" node="+nodeName+
-                    " source="+source+" ret="+ret);
+            LOG.finest("Processed events on network="+networkName+" node="+nodeName
+                    +" source="+source+" ret="+ret);
         }
 
         return (ret);
@@ -166,8 +197,8 @@ public abstract class AbstractEPNManager implements EPNManager {
      */
     protected void dispatchEventsProcessedToListeners(String networkName, String nodeName, EventList processed) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Notify processed events on network="+networkName+" node="+nodeName+
-                    " processed="+processed);
+            LOG.finest("Notify processed events on network="+networkName+" node="+nodeName
+                    +" processed="+processed);
         }
 
         for (NodeListener nl : _nodeListeners) {
@@ -175,6 +206,9 @@ public abstract class AbstractEPNManager implements EPNManager {
         }
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public void close() throws Exception {
     }
 

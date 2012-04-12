@@ -39,7 +39,7 @@ public class JMSChannel implements Channel {
      * @param session The session
      * @param producer The producer
      * @param source The source
-     * @param destination The node destination
+     * @param dest The node destination
      */
     public JMSChannel(javax.jms.Session session, javax.jms.MessageProducer producer,
                             String source, Destination dest) {

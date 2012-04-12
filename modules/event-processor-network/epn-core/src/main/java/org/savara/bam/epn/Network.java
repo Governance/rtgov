@@ -105,7 +105,7 @@ public class Network {
     /**
      * This method sets the event processor nodes.
      * 
-     * void nodes The event processor nodes
+     * @param nodes The event processor nodes
      */
     public void setNodes(java.util.Map<String,Node> nodes) {
         _nodes = nodes;

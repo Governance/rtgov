@@ -25,12 +25,10 @@ import org.savara.bam.epn.internal.EventList;
 /**
  * This class represents a node in the Event Processor Network.
  *
- * @param <S> The source event type
- * @param <T> The target event type
  */
 public class Node {
 
-    private static Logger LOG=Logger.getLogger(Node.class.getName());
+    private static final Logger LOG=Logger.getLogger(Node.class.getName());
     
     private int _maxRetries=3;
     private long _retryInterval=0;
@@ -221,7 +219,7 @@ public class Node {
                         results.add(processed);
                     }
                     
-                } catch(Exception e) {
+                } catch (Exception e) {
                     if (LOG.isLoggable(Level.FINE)) {
                         LOG.fine("Retry event: "+event);
                     }
@@ -259,7 +257,7 @@ public class Node {
      * This method closes the node.
      * 
      * @param context The container context
-     * @oaram nodeName The node name
+     * @param nodeName The node name
      * @throws Exception Failed to close the node
      */
     protected void close(EPNContext context, String nodeName) throws Exception {
