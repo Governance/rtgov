@@ -123,4 +123,153 @@ public class NetworkLoaderTest {
             fail("Failed to unregister network: "+e);
         }
     }
+    
+    @Test
+    public void testPredicates() {
+        NetworkLoader tl=new NetworkLoader();
+        
+        Network net=tl.loadNetwork();
+        
+        java.util.List<java.io.Serializable> events=new java.util.Vector<java.io.Serializable>();
+        
+        Obj1 o1=new Obj1(15);
+        Obj1 o2=new Obj1(5);
+        Obj1 o3=new Obj1(12);
+        events.add(o1);
+        events.add(o2);
+        events.add(o3);
+        
+        try {
+            _epnManager.register(net);
+        } catch(Exception e) {
+            fail("Failed to register network: "+e);
+        }
+        
+        try {
+            _epnManager.enqueue(NetworkLoader.TEST_NETWORK, events);
+            
+            Thread.sleep(1000);
+            
+        } catch(Exception e) {
+            fail("Failed to process events: "+e);
+        }
+        
+        Node childAnode=net.getNodes().get(NetworkLoader.CHILD_A);
+        Node childBnode=net.getNodes().get(NetworkLoader.CHILD_B);
+        
+        if (childAnode == null) {
+            fail("Failed to get child A");
+        }
+        
+        if (childBnode == null) {
+            fail("Failed to get child B");
+        }
+        
+        Child childA=(Child)childAnode.getEventProcessor();
+        Child childB=(Child)childBnode.getEventProcessor();
+        
+        if (childA.events().size() != 1) {
+            fail("Child A does not have 1 event: "+childA.events().size());
+        }
+        
+        if (childB.events().size() != 2) {
+            fail("Child B does not have 2 events: "+childB.events().size());
+        }
+        
+        if (childA.retries().size() != 0) {
+            fail("Child A should have no retries: "+childA.retries().size());
+        }
+        
+        if (childB.retries().size() != 0) {
+            fail("Child B should have no retries: "+childB.retries().size());
+        }
+        
+        try {
+            _epnManager.unregister(NetworkLoader.TEST_NETWORK);
+        } catch(Exception e) {
+            fail("Failed to unregister network: "+e);
+        }
+    }
+
+    @Test
+    public void testRetries() {
+        NetworkLoader tl=new NetworkLoader();
+        
+        Network net=tl.loadNetwork();
+        
+        java.util.List<java.io.Serializable> events=new java.util.Vector<java.io.Serializable>();
+        
+        Obj1 o1=new Obj1(15);
+        Obj1 o2=new Obj1(5);
+        Obj1 o3=new Obj1(12);
+        events.add(o1);
+        events.add(o2);
+        events.add(o3);
+        
+        try {
+            _epnManager.register(net);
+        } catch(Exception e) {
+            fail("Failed to register network: "+e);
+        }
+        
+        Node childAnode=net.getNodes().get(NetworkLoader.CHILD_A);
+        Node childBnode=net.getNodes().get(NetworkLoader.CHILD_B);
+        
+        if (childAnode == null) {
+            fail("Failed to get child A");
+        }
+        
+        if (childBnode == null) {
+            fail("Failed to get child B");
+        }
+        
+        Child childA=(Child)childAnode.getEventProcessor();
+        Child childB=(Child)childBnode.getEventProcessor();
+        
+        Obj2 rej3=new Obj2(o3.getValue());
+        childB.reject(rej3);
+        
+        if (childA.events().size() != 0) {
+            fail("Child A does not have 0 event: "+childA.events().size()+" "+childA.events());
+        }
+        
+        if (childB.events().size() != 0) {
+            fail("Child B does not have 0 events: "+childB.events().size()+" "+childB.events());
+        }
+        
+        try {
+            _epnManager.enqueue(NetworkLoader.TEST_NETWORK, events);
+            
+            Thread.sleep(1000);
+            
+        } catch(Exception e) {
+            fail("Failed to process events: "+e);
+        }
+        
+        if (childA.events().size() != 1) {
+            fail("Child A does not have 1 event: "+childA.events().size()+" "+childA.events());
+        }
+        
+        if (childB.events().size() != 2) {
+            fail("Child B does not have 2 events: "+childB.events().size()+" "+childB.events());
+        }
+        
+        if (childA.retries().size() != 0) {
+            fail("Child A should have no retries: "+childA.retries().size());
+        }
+        
+        if (childB.retries().size() != 1) {
+            fail("Child B should have 1 retries: "+childB.retries().size());
+        }
+        
+        if (!childB.retries().contains(rej3)) {
+            fail("Child B retry event is wrong");
+        }
+        
+        try {
+            _epnManager.unregister(NetworkLoader.TEST_NETWORK);
+        } catch(Exception e) {
+            fail("Failed to unregister network: "+e);
+        }
+    }
 }

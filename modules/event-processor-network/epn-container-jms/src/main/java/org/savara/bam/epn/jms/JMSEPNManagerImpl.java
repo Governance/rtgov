@@ -215,10 +215,15 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             retriesLeft = node.getMaxRetries();
         }
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Dispatch "+networkName+"/"+nodeName+" ("+node+
+                    ") events="+events+" retriesLeft="+retriesLeft);
+        }
+
         EventList retries=process(networkName, nodeName, node, source, events, retriesLeft);
         
         if (retries != null) {
-            retry(networkName, nodeName, source, events, retriesLeft-1);
+            retry(networkName, nodeName, source, retries, retriesLeft-1);
         }
     }
     
@@ -235,6 +240,10 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      */
     protected void retry(String networkName, String nodeName, 
             String source, EventList events, int retriesLeft) throws Exception {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Retry "+networkName+"/"+nodeName+" events="+events+" retriesLeft="+retriesLeft);
+        }
         
         if (retriesLeft > 0) {
             javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
@@ -256,6 +265,10 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     @Override
     protected void notifyEventsProcessed(String networkName, String nodeName, EventList events)
                                     throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Notify events processed "+networkName+"/"+nodeName+" events="+events);
+        }
+
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODE, nodeName);

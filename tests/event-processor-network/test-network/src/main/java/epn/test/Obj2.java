@@ -57,4 +57,9 @@ public class Obj2 implements Serializable {
         return (obj instanceof Obj2
                 && ((Obj2)obj).getValue() == _value);
     }
+    
+    @Override
+    public String toString() {
+        return ("Obj2["+_value+"]");
+    }
 }
