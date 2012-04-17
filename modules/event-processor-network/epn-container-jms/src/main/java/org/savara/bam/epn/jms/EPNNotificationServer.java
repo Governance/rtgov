@@ -25,6 +25,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.naming.InitialContext;
@@ -48,6 +49,7 @@ public class EPNNotificationServer implements MessageListener {
 
     private static final Logger LOG=Logger.getLogger(EPNNotificationServer.class.getName());
     
+    @Inject
     private JMSEPNManager _epnManager;
     
     /**
@@ -61,15 +63,17 @@ public class EPNNotificationServer implements MessageListener {
      */
     @PostConstruct
     public void init() {
-        LOG.info("Initialize EPN Notifications Server");
+        LOG.info("Initialize EPN Notifications Server="+_epnManager);
         
+        /*
         try {
             InitialContext context=new InitialContext();
             
-            _epnManager = (JMSEPNManager)context.lookup("java:/env/EPNManager");
+            _epnManager = (JMSEPNManager)context.lookup("java:module/EPNManager");
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "EPNManager was not found", e);
         }
+        */
     }
     
     /**

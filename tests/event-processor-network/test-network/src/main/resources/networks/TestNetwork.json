@@ -1,0 +1,51 @@
+{
+  "name" : "TestNetwork",
+  "nodes" : {
+    "Root" : {
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "destinations" : [ {
+        "network" : "TestNetwork",
+        "node" : "ChildA"
+      }, {
+        "network" : "TestNetwork",
+        "node" : "ChildB"
+      } ],
+      "eventProcessor" : {
+        "@class" : "epn.test.Root"
+      },
+      "predicate" : null,
+      "notificationEnabled" : false
+    },
+    "ChildA" : {
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "destinations" : [ ],
+      "eventProcessor" : {
+        "@class" : "epn.test.Child"
+      },
+      "predicate" : {
+        "@class" : "epn.test.ChildPredicate",
+        "min" : 0,
+        "max" : 9
+      },
+      "notificationEnabled" : false
+    },
+    "ChildB" : {
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "destinations" : [ ],
+      "eventProcessor" : {
+        "@class" : "epn.test.Child"
+      },
+      "predicate" : {
+        "@class" : "epn.test.ChildPredicate",
+        "min" : 10,
+        "max" : 19
+      },
+      "notificationEnabled" : false
+    }
+  },
+  "timestamp" : 1334572641404,
+  "rootNodeName" : "Root"
+}

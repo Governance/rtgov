@@ -55,14 +55,17 @@
 		<guava.version>r06</guava.version>
 		<jackson.version>1.6.3</jackson.version>
 		<jms.version>1.1-rev-1</jms.version>
-		<junit.version>4.4</junit.version>
+		<junit.version>4.8.1</junit.version>
 		<resteasy.version>2.3.0.GA</resteasy.version>
+		<arquillian.jbossas.version>7.1.0.Final</arquillian.jbossas.version>
+		<arquillian.version>1.0.0.Final</arquillian.version>
 	</properties>
 
 	<modules>
 		<module>build</module>
 		<module>modules</module>
 		<module>integration</module>
+		<module>tests</module>
 	</modules>
 
 	<build>
