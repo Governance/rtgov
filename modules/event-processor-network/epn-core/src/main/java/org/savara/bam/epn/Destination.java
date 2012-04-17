@@ -80,4 +80,34 @@ public class Destination {
         _node = node;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object obj) {
+        boolean ret=false;
+        
+        if (obj instanceof Destination) {
+            Destination dest=(Destination)obj;
+            if (dest.getNetwork().equals(_network)
+                    && dest.getNode().equals(_node)) {
+                ret = true;
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return (_node.hashCode());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return ("["+_network+"/"+_node+"]");
+    }
 }

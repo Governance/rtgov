@@ -28,7 +28,6 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.naming.InitialContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,17 +63,9 @@ public class EPNEventsServer implements MessageListener {
      */
     @PostConstruct
     public void init() {
-        LOG.info("Initialize EPN Events Server="+_epnManager);
-        
-        /*
-        try {
-            InitialContext context=new InitialContext();
-            
-            _epnManager = (JMSEPNManager)context.lookup("java:module/EPNManager");
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "EPNManager was not found", e);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Initialize EPN Events Server with EPN Manager="+_epnManager);
         }
-        */
     }
     
     /**
@@ -82,15 +73,25 @@ public class EPNEventsServer implements MessageListener {
      */
     @PreDestroy
     public void close() {
-        LOG.info("Closing EPN Events Server");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Closing EPN Events Server");
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public void onMessage(Message message) {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Received events '"+message+"' - sending to "+_epnManager);        
+        }
+        
         if (_epnManager != null) {
-            _epnManager.handleEventsMessage(message);
+            try {
+                _epnManager.handleEventsMessage(message);
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Failed to handle events message", e);
+            }
         }
     }
 

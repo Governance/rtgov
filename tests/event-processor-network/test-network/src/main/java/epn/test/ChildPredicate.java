@@ -19,32 +19,56 @@ package epn.test;
 
 import org.savara.bam.epn.Predicate;
 
+/**
+ * This class provides the child predicate.
+ *
+ */
 public class ChildPredicate extends Predicate {
 
     private int _min=0;
     private int _max=0;
     
+    /**
+     * This method sets the min.
+     * 
+     * @param min The min
+     */
     public void setMin(int min) {
         _min = min;
     }
     
+    /**
+     * This method gets the min.
+     * 
+     * @return The min
+     */
     public int getMin() {
-        return(_min);
+        return (_min);
     }
     
+    /**
+     * This method sets the max.
+     * 
+     * @param max The max
+     */
     public void setMax(int max) {
         _max = max;
     }
     
+    /**
+     * This method gets the max.
+     * 
+     * @return The max
+     */
     public int getMax() {
-        return(_max);
+        return (_max);
     }
     
     @Override
     public boolean apply(Object event) {
-        return (event instanceof Obj2 &&
-                ((Obj2)event).getValue() >= getMin() &&
-                ((Obj2)event).getValue() <= getMax());
+        return (event instanceof Obj2
+                && ((Obj2)event).getValue() >= getMin()
+                && ((Obj2)event).getValue() <= getMax());
     }
 
 }

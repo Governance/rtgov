@@ -29,12 +29,22 @@ import org.savara.bam.epn.util.NetworkUtil;
  */
 public class NetworkLoader {
     
+    /** The root. **/
     public static final String ROOT = "Root";
+    /** The child A. **/
     public static final String CHILD_A = "ChildA";
+    /** The child B. **/
     public static final String CHILD_B = "ChildB";
+    /** The network. **/
     public static final String TEST_NETWORK = "TestNetwork";
+    /** The file. **/
     public static final String NETWORK_FILE="/networks/TestNetwork.json";
     
+    /**
+     * The main method.
+     * 
+     * @param args The list of args
+     */
     public static void main(String[] args) {
         NetworkLoader loader=new NetworkLoader();
         
@@ -51,11 +61,16 @@ public class NetworkLoader {
             fos.flush();
             
             fos.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
+    /**
+     * This method loads the network.
+     * 
+     * @return The network
+     */
     public Network loadNetwork() {
         Network ret=null;
         
@@ -69,15 +84,17 @@ public class NetworkLoader {
             
             ret = NetworkUtil.deserialize(b);
             
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         
-        return(ret);
+        return (ret);
     }
 
     /**
      * This method creates the network.
+     * 
+     * @return The new network
      */
     public Network createNetwork() {
         Network ret=new Network();
@@ -117,6 +134,6 @@ public class NetworkLoader {
         
         ret.setRootNodeName(ROOT);
         
-        return(ret);
+        return (ret);
     }
 }

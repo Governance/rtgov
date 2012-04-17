@@ -19,26 +19,42 @@ package epn.test;
 
 import java.io.Serializable;
 
+/**
+ * This class is object 1.
+ *
+ */
 public class Obj1 implements Serializable {
 
     private static final long serialVersionUID = -7692716785700403849L;
 
     private int _value=0;
     
+    /**
+     * This is the constructor.
+     * 
+     * @param val The value
+     */
     public Obj1(int val) {
         _value = val;
     }
     
+    /**
+     * This method returns the value.
+     * 
+     * @return The value
+     */
     public int getValue() {
-        return(_value);
+        return (_value);
     }
     
+    @Override
     public int hashCode() {
-        return(_value);
+        return (_value);
     }
     
+    @Override
     public boolean equals(Object obj) {
-        return (obj instanceof Obj1 &&
-                ((Obj1)obj).getValue() == _value);
+        return (obj instanceof Obj1
+                && ((Obj1)obj).getValue() == _value);
     }
 }

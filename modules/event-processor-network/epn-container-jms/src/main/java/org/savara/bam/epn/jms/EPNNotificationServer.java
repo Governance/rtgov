@@ -28,7 +28,6 @@ import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.naming.InitialContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,17 +62,9 @@ public class EPNNotificationServer implements MessageListener {
      */
     @PostConstruct
     public void init() {
-        LOG.info("Initialize EPN Notifications Server="+_epnManager);
-        
-        /*
-        try {
-            InitialContext context=new InitialContext();
-            
-            _epnManager = (JMSEPNManager)context.lookup("java:module/EPNManager");
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "EPNManager was not found", e);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Initialize EPN Notifications Server with EPN Manager="+_epnManager);
         }
-        */
     }
     
     /**
@@ -81,15 +72,25 @@ public class EPNNotificationServer implements MessageListener {
      */
     @PreDestroy
     public void close() {
-        LOG.info("Closing EPN Notifications Server");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Closing EPN Notifications Server");
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public void onMessage(Message message) {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Received notifications '"+message+"' - sending to "+_epnManager);        
+        }
+
         if (_epnManager != null) {
-            _epnManager.handleNotificationsMessage(message);
+            try {
+                _epnManager.handleNotificationsMessage(message);
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Failed to handle notification message", e);
+            }
         }
     }
 

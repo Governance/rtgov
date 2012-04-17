@@ -21,12 +21,16 @@ import java.io.Serializable;
 
 import org.savara.bam.epn.EventProcessor;
 
+/**
+ * The root class.
+ *
+ */
 public class Root extends EventProcessor {
 
     @Override
     public Serializable process(String source, Serializable event,
             int retriesLeft) throws Exception {
-        return(new Obj2(((Obj1)event).getValue()));
+        return (new Obj2(((Obj1)event).getValue()));
     }
 
 }

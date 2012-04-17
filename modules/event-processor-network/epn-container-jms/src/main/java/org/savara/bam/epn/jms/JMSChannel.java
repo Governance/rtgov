@@ -17,6 +17,9 @@
  */
 package org.savara.bam.epn.jms;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.Destination;
 import org.savara.bam.epn.internal.EventList;
@@ -27,6 +30,8 @@ import org.savara.bam.epn.internal.EventList;
  *
  */
 public class JMSChannel implements Channel {
+    
+    private static final Logger LOG=Logger.getLogger(JMSChannel.class.getName());
     
     private javax.jms.Session _session=null;
     private javax.jms.MessageProducer _producer=null;
@@ -61,10 +66,15 @@ public class JMSChannel implements Channel {
      */
     public void send(EventList events, int retriesLeft) throws Exception {
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
-        mesg.setStringProperty(JMSEPNManager.EPN_NETWORK, _destination.getNetwork());
-        mesg.setStringProperty(JMSEPNManager.EPN_DESTINATION_NODE, _destination.getNode());
-        mesg.setStringProperty(JMSEPNManager.EPN_SOURCE_NODE, _source);
-        mesg.setIntProperty(JMSEPNManager.EPN_RETRIES_LEFT, retriesLeft);
+        mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, _destination.getNetwork());
+        mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODE, _destination.getNode());
+        mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, _source);
+        mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Sending events '"+events+"' to '"+_destination+"'");
+        }
+        
         _producer.send(mesg);
     }
  
