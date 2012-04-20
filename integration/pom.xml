@@ -16,7 +16,6 @@
 
 	<modules>
 		<module>jboss-as7</module>
-		<module>switchyard</module>
 	</modules>
 
 </project>
