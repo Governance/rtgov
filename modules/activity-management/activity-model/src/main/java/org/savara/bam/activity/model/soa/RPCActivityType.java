@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,17 +15,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.activity.model;
+package org.savara.bam.activity.model.soa;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import org.savara.bam.activity.model.ActivityType;
+
 /**
- * This activity type represents a message exchange.
+ * This activity type represents a RPC activity.
  *
  */
-public class MessageExchange extends ActivityType implements java.io.Externalizable {
+public abstract class RPCActivityType extends ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
@@ -33,35 +35,6 @@ public class MessageExchange extends ActivityType implements java.io.Externaliza
     private String _operation=null;
     private String _fault=null;
 
-    /**
-     * The invocation type.
-     *
-     */
-    public enum InvocationType {
-        /** Undefined. **/
-        Undefined,
-        /** Invocation is a request. **/
-        Request,
-        /** Invocatoin is a response. **/
-        Response
-    }
-    
-    private InvocationType _invocationType=InvocationType.Undefined;
-    
-    /**
-     * The direction of the message.
-     *
-     */
-    public enum Direction {
-        /** Message is inbound. **/
-        Inbound,
-        /** Message is outbound. **/
-        Outbound
-    }
-    
-    private Direction _direction=Direction.Inbound;
-    
-    // GPB? should we support multipart messages, where on the wire we have the diff parts?
     private String _messageType=null;
     private String _content=null;
     
@@ -70,23 +43,21 @@ public class MessageExchange extends ActivityType implements java.io.Externaliza
     /**
      * The default constructor.
      */
-    public MessageExchange() {
+    public RPCActivityType() {
     }
     
     /**
      * The copy constructor.
      * 
-     * @param mex The message exchange to copy
+     * @param rpc The RPC activity to copy
      */
-    public MessageExchange(MessageExchange mex) {
-        _serviceType = mex._serviceType;
-        _operation = mex._operation;
-        _fault = mex._fault;
-        _invocationType = mex._invocationType;
-        _direction = mex._direction;
-        _messageType = mex._messageType;
-        _content = mex._content;
-        _correlation = mex._correlation;
+    public RPCActivityType(RPCActivityType rpc) {
+        _serviceType = rpc._serviceType;
+        _operation = rpc._operation;
+        _fault = rpc._fault;
+        _messageType = rpc._messageType;
+        _content = rpc._content;
+        _correlation = rpc._correlation;
     }
     
     /**
@@ -144,42 +115,6 @@ public class MessageExchange extends ActivityType implements java.io.Externaliza
     }
     
     /**
-     * This method sets the invocation type.
-     * 
-     * @param itype The invocation type
-     */
-    public void setInvocationType(InvocationType itype) {
-        _invocationType = itype;
-    }
-    
-    /**
-     * This method gets the invocation type.
-     * 
-     * @return The invocation type
-     */
-    public InvocationType getInvocationType() {
-        return (_invocationType);
-    }
-    
-    /**
-     * This method sets the direction.
-     * 
-     * @param direction The direction
-     */
-    public void setDirection(Direction direction) {
-        _direction = direction;
-    }
-    
-    /**
-     * This method gets the direction.
-     * 
-     * @return The direction
-     */
-    public Direction getDirection() {
-        return (_direction);
-    }
-    
-    /**
      * This method sets the message type.
      * 
      * @param mtype The message type
@@ -216,7 +151,15 @@ public class MessageExchange extends ActivityType implements java.io.Externaliza
     }
     
     /**
-     * This method sets the correlation.
+     * This method sets the correlation value, which
+     * should be unique within the scope of the service
+     * and operation. This field is used to locally
+     * correlate a RPC request with a response from
+     * the client or server's perspective,
+     * and should not be confused
+     * with the wider correlation performed between
+     * distributed activities based on context
+     * information recorded against activity events.
      * 
      * @param correlation The correlation
      */
@@ -242,8 +185,6 @@ public class MessageExchange extends ActivityType implements java.io.Externaliza
         out.writeUTF(_serviceType);
         out.writeUTF(_operation);
         out.writeUTF(_fault);
-        out.writeObject(_invocationType);
-        out.writeObject(_direction);
         out.writeUTF(_messageType);
         out.writeUTF(_content);
         out.writeUTF(_correlation);
@@ -259,8 +200,6 @@ public class MessageExchange extends ActivityType implements java.io.Externaliza
         _serviceType = in.readUTF();
         _operation = in.readUTF();
         _fault = in.readUTF();
-        _invocationType = (InvocationType)in.readObject();
-        _direction = (Direction)in.readObject();
         _messageType = in.readUTF();
         _content = in.readUTF();
         _correlation = in.readUTF();

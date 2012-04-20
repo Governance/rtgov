@@ -1,5 +1,6 @@
 import org.savara.bam.activity.model.Activity
-import org.savara.bam.activity.model.MessageExchange
+import org.savara.bam.activity.model.soa.RequestSent
+import org.savara.bam.activity.model.soa.ResponseReceived
 
 global org.savara.bam.epn.cep.CEPServices services
 
@@ -11,8 +12,8 @@ end
 
 rule "correlate request and response"
 when
-    $req : Activity( $id : ((MessageExchange)activityType).correlation, ((MessageExchange)activityType).invocationType == MessageExchange.InvocationType.Request ) from entry-point "Purchasing" 
-    $resp : Activity( ((MessageExchange)activityType).correlation == $id, this after[0,2m20s] $req , ((MessageExchange)activityType).invocationType == MessageExchange.InvocationType.Response)  from entry-point "Purchasing"
+    $req : Activity( $id : ((RequestSent)activityType).correlation ) from entry-point "Purchasing" 
+    $resp : Activity( ((ResponseReceived)activityType).correlation == $id, this after[0,2m20s] $req )  from entry-point "Purchasing"
 then
 
 	services.logInfo("REQUEST: "+$req+" WITH RESPONSE: "+$resp);
@@ -28,4 +29,5 @@ then
 	props.put("responseTime", responseTime);
 	
     services.setResult(props);
+
 end

@@ -23,9 +23,7 @@ import org.junit.Test;
 import org.savara.bam.activity.model.Activity;
 import org.savara.bam.activity.model.Component;
 import org.savara.bam.activity.model.Context;
-import org.savara.bam.activity.model.MessageExchange;
-import org.savara.bam.activity.model.MessageExchange.Direction;
-import org.savara.bam.activity.model.MessageExchange.InvocationType;
+import org.savara.bam.activity.model.soa.RequestSent;
 import org.savara.bam.activity.util.ActivityUtil;
 
 public class ActivityUtilTest {
@@ -53,15 +51,13 @@ public class ActivityUtilTest {
         
         act.setComponent(component);
         
-        MessageExchange me=new MessageExchange();
+        RequestSent me=new RequestSent();
         me.setContent("<tns:Order xmlns:tns=\"http://www.savara.org\" amount=\"100\" />");
-        me.setCorrelation("CorId");
-        me.setDirection(Direction.Outbound);
         me.setFault("MyFault");
-        me.setInvocationType(InvocationType.Request);
         me.setMessageType("{http://message}type");
         me.setOperation("myOp");
         me.setServiceType("{http://service}type");
+        me.setCorrelation("corr1");
         
         act.setActivityType(me);
         
