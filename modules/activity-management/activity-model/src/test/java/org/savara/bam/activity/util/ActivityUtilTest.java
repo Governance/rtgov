@@ -20,53 +20,68 @@ package org.savara.bam.activity.util;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.savara.bam.activity.model.Activity;
-import org.savara.bam.activity.model.Component;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.model.Context;
+import org.savara.bam.activity.model.ContextType;
+import org.savara.bam.activity.model.Origin;
 import org.savara.bam.activity.model.soa.RequestSent;
+import org.savara.bam.activity.model.soa.ResponseReceived;
 import org.savara.bam.activity.util.ActivityUtil;
 
 public class ActivityUtilTest {
 
-    public Activity createTestActivity(String id) {
-        Activity act=new Activity();
+    public ActivityUnit createTestActivityUnit(String id) {
+        ActivityUnit act=new ActivityUnit();
         
         act.setId(id);
-        act.setTimestamp(1000);
+
+        Origin origin=new Origin();
+        origin.setHost("MyHost");
+        origin.setPort("1010");
+        origin.setPrincipal("Me");
+        origin.setThread("MyThread");
+        origin.setTransaction("MyTxn");
+        act.setOrigin(origin);
+
+        Context c1=new Context();
+        c1.setType(ContextType.Identifier);
+        c1.setName("OrderId");
+        c1.setValue("12345");
+        act.getContext().add(c1);
         
-        Context context=new Context();
-        context.setHost("MyHost");
-        context.setPort("1010");
-        context.setPrincipal("Me");
-        context.setThread("MyThread");
-        context.setTransaction("MyTxn");
+        Context c2=new Context();
+        c2.setType(ContextType.InstanceId);
+        c2.setName("procId");
+        c2.setValue("abc123");
+        act.getContext().add(c2);
         
-        act.setContext(context);
+        RequestSent me1=new RequestSent();
+        me1.setTimestamp(1000);
+        me1.setContent("<tns:Order xmlns:tns=\"http://www.savara.org\" amount=\"100\" />");
+        me1.setMessageType("{http://message}Order");
+        me1.setOperation("myOp");
+        me1.setServiceType("{http://service}OrderService");
+        me1.setCorrelation("corr1");
         
-        Component component=new Component();
-        component.setProcessDefinition("MyProcess");
-        component.setProcessInstance("MyInstance");
-        component.setService("MyService");
-        component.setTask("MyTask");
+        act.getActivityTypes().add(me1);
         
-        act.setComponent(component);
+        ResponseReceived me2=new ResponseReceived();
+        me2.setTimestamp(2000);
+        me2.setContent("<tns:Confirmation xmlns:tns=\"http://www.savara.org\" amount=\"100\" />");
+        me2.setFault("MyFault");
+        me2.setMessageType("{http://message}Confirmation");
+        me2.setOperation("myOp");
+        me2.setServiceType("{http://service}OrderService");
+        me2.setCorrelation("corr1");
         
-        RequestSent me=new RequestSent();
-        me.setContent("<tns:Order xmlns:tns=\"http://www.savara.org\" amount=\"100\" />");
-        me.setFault("MyFault");
-        me.setMessageType("{http://message}type");
-        me.setOperation("myOp");
-        me.setServiceType("{http://service}type");
-        me.setCorrelation("corr1");
-        
-        act.setActivityType(me);
+        act.getActivityTypes().add(me2);
         
         return (act);
     }
     
     @Test
-    public void testSerialize() {
-        Activity act=createTestActivity("TestId");
+    public void testJSONSerialize() {
+        ActivityUnit act=createTestActivityUnit("TestId");
         
         try {
             byte[] b=ActivityUtil.serialize(act);
@@ -89,7 +104,7 @@ public class ActivityUtilTest {
     }
   
     @Test
-    public void testDeserialize() {
+    public void testJSONDeserialize() {
         
         try {
             java.io.InputStream is=ActivityUtilTest.class.getResourceAsStream("/json/activity.json");
@@ -97,7 +112,7 @@ public class ActivityUtilTest {
             byte[] b=new byte[is.available()];
             is.read(b);
             
-            Activity act2=ActivityUtil.deserialize(b);
+            ActivityUnit act2=ActivityUtil.deserialize(b);
             
             // Serialize
             byte[] b2=ActivityUtil.serialize(act2);
@@ -116,12 +131,12 @@ public class ActivityUtilTest {
     }
     
     @Test
-    public void testSerializeList() {
-        Activity act1=createTestActivity("TestId1");
-        Activity act2=createTestActivity("TestId2");
+    public void testJSONSerializeList() {
+        ActivityUnit act1=createTestActivityUnit("TestId1");
+        ActivityUnit act2=createTestActivityUnit("TestId2");
         
         try {
-            java.util.List<Activity> acts=new java.util.Vector<Activity>();
+            java.util.List<ActivityUnit> acts=new java.util.Vector<ActivityUnit>();
             acts.add(act1);
             acts.add(act2);
             
@@ -145,7 +160,7 @@ public class ActivityUtilTest {
     }
   
     @Test
-    public void testDeserializeList() {
+    public void testJSONDeserializeList() {
         
         try {
             java.io.InputStream is=ActivityUtilTest.class.getResourceAsStream("/json/activityList.json");
@@ -153,17 +168,17 @@ public class ActivityUtilTest {
             byte[] b=new byte[is.available()];
             is.read(b);
             
-            java.util.List<Activity> act2=ActivityUtil.deserializeList(b);
+            java.util.List<ActivityUnit> act2=ActivityUtil.deserializeList(b);
             
             if (act2.size() != 2) {
                fail("Should be two activities");
             }
             
-            if (!(act2.get(0) instanceof Activity)) {
+            if (!(act2.get(0) instanceof ActivityUnit)) {
                 fail("First element is not an activity");
             }
             
-            if (!(act2.get(1) instanceof Activity)) {
+            if (!(act2.get(1) instanceof ActivityUnit)) {
                 fail("Second element is not an activity");
             }
             

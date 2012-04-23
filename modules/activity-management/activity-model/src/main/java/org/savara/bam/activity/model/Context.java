@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -22,19 +22,18 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 /**
- * This class represents information about the context in which the component
- * executes, and in which the activities are generated.
+ * This class represents context information that can be used to
+ * correlate this (set of) activity with other activities related
+ * to the same business/service transaction.
  *
  */
 public class Context implements java.io.Externalizable {
 
     private static final int VERSION = 1;
-
-    private String _principal=null;
-    private String _transactionId=null;
-    private String _thread=null;
-    private String _host=null;
-    private String _port=null;
+    
+    private ContextType _type=ContextType.Identifier;
+    private String _name=null;
+    private String _value=null;
 
     /**
      * The default constructor.
@@ -48,101 +47,63 @@ public class Context implements java.io.Externalizable {
      * @param context The context to copy
      */
     public Context(Context context) {
-        _principal = context._principal;
-        _transactionId = context._transactionId;
-        _thread = context._thread;
-        _host = context._host;
-        _port = context._port;
+        _type = context._type;
+        _name = context._name;
+        _value = context._value;
     }
     
     /**
-     * This method sets the principal.
+     * This method returns the type.
      * 
-     * @param principal The principal
+     * @return The type
      */
-    public void setPrincipal(String principal) {
-        _principal = principal;
+    public ContextType getType() {
+        return (_type);
     }
     
     /**
-     * This method gets the principal.
+     * This method sets the type.
      * 
-     * @return The principal
+     * @param type The type
      */
-    public String getPrincipal() {
-        return (_principal);
+    public void setType(ContextType type) {
+        _type = type;
     }
     
     /**
-     * This method sets the transaction id.
+     * This method returns the name.
      * 
-     * @param transactionId The transaction id
+     * @return The name
      */
-    public void setTransaction(String transactionId) {
-        _transactionId = transactionId;
+    public String getName() {
+        return (_name);
     }
     
     /**
-     * This method gets the transaction id.
+     * This method sets the name.
      * 
-     * @return The transaction id
+     * @param name The name
      */
-    public String getTransaction() {
-        return (_transactionId);
+    public void setName(String name) {
+        _name = name;
     }
     
     /**
-     * This method sets the thread.
+     * This method returns the value.
      * 
-     * @param thread The thread
+     * @return The value
      */
-    public void setThread(String thread) {
-        _thread = thread;
+    public String getValue() {
+        return (_value);
     }
     
     /**
-     * This method gets the thread.
+     * This method sets the value.
      * 
-     * @return The thread
+     * @param value The value
      */
-    public String getThread() {
-        return (_thread);
-    }
-    
-    /**
-     * This method sets the host.
-     * 
-     * @param host The host
-     */
-    public void setHost(String host) {
-        _host = host;
-    }
-    
-    /**
-     * This method gets the host.
-     * 
-     * @return The host
-     */
-    public String getHost() {
-        return (_host);
-    }
-    
-    /**
-     * This method sets the port.
-     * 
-     * @param port The port
-     */
-    public void setPort(String port) {
-        _port = port;
-    }
-    
-    /**
-     * This method gets the port.
-     * 
-     * @return The port
-     */
-    public String getPort() {
-        return (_port);
+    public void setValue(String value) {
+        _value = value;
     }
     
     /**
@@ -151,11 +112,9 @@ public class Context implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeUTF(_principal);
-        out.writeUTF(_transactionId);
-        out.writeUTF(_thread);
-        out.writeUTF(_host);
-        out.writeUTF(_port);
+        out.writeObject(_type);
+        out.writeUTF(_name);
+        out.writeUTF(_value);
     }
 
     /**
@@ -165,10 +124,9 @@ public class Context implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _principal = in.readUTF();
-        _transactionId = in.readUTF();
-        _thread = in.readUTF();
-        _host = in.readUTF();
-        _port = in.readUTF();
+        _type = (ContextType)in.readObject();
+        _name = in.readUTF();
+        _value = in.readUTF();
     }
+
 }

@@ -17,7 +17,7 @@
  */
 package org.savara.bam.activity.server.spi;
 
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.server.ActivityQuery;
 
 /**
@@ -33,7 +33,7 @@ public interface ActivityStore {
      * @param activities The list of activity events to store
      * @throws Exception Failed to store events
      */
-    public void store(java.util.List<Activity> activities) throws Exception;
+    public void store(java.util.List<ActivityUnit> activities) throws Exception;
     
     /**
      * This method queries the persistent store for activity events
@@ -43,6 +43,6 @@ public interface ActivityStore {
      * @return The list of activities that satisfy the query
      * @throws Exception Failed to query events
      */
-    public java.util.List<Activity> query(ActivityQuery query) throws Exception;
+    public java.util.List<ActivityUnit> query(ActivityQuery query) throws Exception;
     
 }

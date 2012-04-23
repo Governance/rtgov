@@ -17,6 +17,10 @@
  */
 package org.savara.bam.activity.model;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -44,4 +48,60 @@ import org.savara.bam.activity.model.soa.ResponseSent;
     @Type(value=ProcessStarted.class)})
 public abstract class ActivityType {
 
+    private static final int VERSION = 1;
+
+    private long _timestamp=0;
+
+    /**
+     * The default constructor.
+     */
+    public ActivityType() {
+    }
+    
+    /**
+     * The copy constructor.
+     * 
+     * @param act The activity to copy.
+     */
+    public ActivityType(ActivityType act) {
+        _timestamp = act._timestamp;
+    }
+    
+    /**
+     * This method sets the timestamp.
+     * 
+     * @param timestamp The timestamp
+     */
+    public void setTimestamp(long timestamp) {
+        _timestamp = timestamp;
+    }
+    
+    /**
+     * This method gets the timestamp.
+     * 
+     * @return The timestamp
+     */
+    public long getTimestamp() {
+        return (_timestamp);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(VERSION);
+        
+        out.writeLong(_timestamp);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void readExternal(ObjectInput in) throws IOException,
+            ClassNotFoundException {
+        in.readInt(); // Consume version, as not required for now
+        
+        _timestamp = in.readLong();
+    }
+    
 }

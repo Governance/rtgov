@@ -21,7 +21,7 @@ import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.server.spi.ActivityNotifier;
 import org.savara.bam.activity.server.spi.ActivityStore;
 
@@ -71,7 +71,7 @@ public class DefaultActivityServer implements ActivityServer {
      * @param activities The activity events
      * @throws Exception Failed to store the activities
      */
-    public void store(java.util.List<Activity> activities) throws Exception {
+    public void store(java.util.List<ActivityUnit> activities) throws Exception {
         
         if (_store != null) {
             _store.store(activities);
@@ -98,7 +98,7 @@ public class DefaultActivityServer implements ActivityServer {
      * @return The list of activities
      * @throws Exception Failed to query the activities
      */
-    public java.util.List<Activity> query(ActivityQuery query) throws Exception {
+    public java.util.List<ActivityUnit> query(ActivityQuery query) throws Exception {
         
         if (_store == null) {
             throw new Exception("Activity Store is unavailable");

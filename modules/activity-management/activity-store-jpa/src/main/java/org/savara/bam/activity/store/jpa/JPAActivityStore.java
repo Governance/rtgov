@@ -19,7 +19,7 @@ package org.savara.bam.activity.store.jpa;
 
 import java.util.List;
 
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.server.ActivityQuery;
 import org.savara.bam.activity.server.spi.ActivityStore;
 
@@ -32,16 +32,16 @@ public class JPAActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public void store(List<Activity> activities) throws Exception {
+    public void store(List<ActivityUnit> activities) throws Exception {
         System.out.println("STORE="+activities);
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<Activity> query(ActivityQuery query) throws Exception {
+    public List<ActivityUnit> query(ActivityQuery query) throws Exception {
         System.out.println("QUERY="+query);
-        return new java.util.Vector<Activity>();
+        return new java.util.Vector<ActivityUnit>();
     }
 
 }

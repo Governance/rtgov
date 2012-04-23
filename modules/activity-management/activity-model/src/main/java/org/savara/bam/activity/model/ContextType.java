@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,24 +15,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.activity.server.spi;
-
-import org.savara.bam.activity.model.ActivityUnit;
+package org.savara.bam.activity.model;
 
 /**
- * This interface represents a component that should be notified when
- * an activity occurs.
+ * This enumeration represents the type of context information that
+ * may be recorded against an activity unit.
  *
  */
-public interface ActivityNotifier {
+public enum ContextType {
 
     /**
-     * This method notifies when a list of activity events have
-     * been reported.
-     * 
-     * @param activities The activities
-     * @throws Exception Failed to notify
+     * An identifier represents a value that can be used to correlate
+     * activities across distributed services.
      */
-    public void notify(java.util.List<ActivityUnit> activities) throws Exception;
+    Identifier,
     
+    /**
+     * The 'InstanceId' type represents a local id that may be associated
+     * with the executable unit enacting the service/process being monitored,
+     * and can therefore be used to correlate local activities as being
+     * part of the same executable unit.
+     */
+    InstanceId
 }

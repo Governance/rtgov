@@ -19,13 +19,10 @@ package org.savara.bam.collector;
 
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.model.ActivityType;
-import org.savara.bam.activity.model.Context;
 import org.savara.bam.collector.spi.ActivityLogger;
-import org.savara.bam.collector.spi.ContextInitializer;
+import org.savara.bam.collector.spi.OriginFactory;
 
 /**
  * This class provides a default implementation of the activity
@@ -34,41 +31,28 @@ import org.savara.bam.collector.spi.ContextInitializer;
  */
 public class DefaultActivityCollector implements ActivityCollector {
 
-    private ContextInitializer _contextInitializer=null;
+    private OriginFactory _originInitializer=null;
+    
     private ActivityLogger _activityLogger=null;
 
-    private Context _context=null;
+    private java.lang.ThreadLocal<ActivityUnit> _activityUnit=null;
     
     /**
-     * This method initializes the activity collector.
-     */
-    @PostConstruct
-    protected void init() {
-        if (_contextInitializer != null) {
-            _context = _contextInitializer.getContext();
-        }
-        
-        if (_context == null) {
-            _context = new Context();
-        }
-    }
-    
-    /**
-     * This method sets the context initializer.
+     * This method sets the origin initializer.
      * 
      * @param initializer The initializer
      */
-    public void setContextInitializer(ContextInitializer initializer) {
-        _contextInitializer = initializer;
+    public void setOriginInitializer(OriginFactory initializer) {
+        _originInitializer = initializer;
     }
     
     /**
-     * This method gets the context initializer.
+     * This method gets the origin initializer.
      * 
      * @return The initializer
      */
-    public ContextInitializer getContextInitializer() {
-        return (_contextInitializer);
+    public OriginFactory getOriginInitializer() {
+        return (_originInitializer);
     }
     
     /**
@@ -111,28 +95,61 @@ public class DefaultActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public void startTransaction() {
-        _context.setTransaction(createTransactionId());
+        _activityUnit.set(createActivityUnit());
+    }
+    
+    /**
+     * This method creates a new activity unit and
+     * initializes its origin based on the template
+     * supplied by the OriginInitializer, if
+     * available.
+     * 
+     * @return The new activity unit
+     */
+    protected ActivityUnit createActivityUnit() {
+        ActivityUnit ret=new ActivityUnit();
+        
+        ret.setOrigin(_originInitializer.createOrigin());
+        
+        return (ret);
     }
 
     /**
      * {@inheritDoc}
      */
     public void endTransaction() {
-        _context.setTransaction(null);
+        _activityUnit.remove();
     }
 
     /**
      * {@inheritDoc}
      */
     public void record(ActivityType actType) {
-        Activity act=new Activity();
-        act.setTimestamp(getTimestamp());
         
-        act.setContext(new Context(_context));
+        ActivityUnit au=_activityUnit.get();
         
-        act.setActivityType(actType);
+        // Check if need to create a single event activity unit outside of transaction scope
+        boolean transactional=true;
         
-        _activityLogger.log(act);
+        if (au == null) {
+            au = createActivityUnit();
+            transactional = false;
+        }
+        
+        // Set timestamp
+        actType.setTimestamp(getTimestamp());
+        
+        // TODO: Need to determine how best to collect context
+        // information
+        
+        // TODO: Need to also consider how to deal with filtering
+        // mechanism
+        
+        au.getActivityTypes().add(actType);
+        
+        if (!transactional) {
+            _activityLogger.log(au);
+        }
     }
 
 }

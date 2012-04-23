@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.junit.Test;
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.server.ActivityQuery;
 import org.savara.bam.activity.server.DefaultActivityServer;
 import org.savara.bam.activity.server.spi.ActivityNotifier;
@@ -42,14 +42,14 @@ public class DefaultActivityServerTest {
         as.getActivityNotifiers().add(notifier1);
         as.getActivityNotifiers().add(notifier2);
         
-        java.util.List<Activity> list1=new java.util.Vector<Activity>();
-        list1.add(new Activity());
-        list1.add(new Activity());
-        list1.add(new Activity());
+        java.util.List<ActivityUnit> list1=new java.util.Vector<ActivityUnit>();
+        list1.add(new ActivityUnit());
+        list1.add(new ActivityUnit());
+        list1.add(new ActivityUnit());
         
-        java.util.List<Activity> list2=new java.util.Vector<Activity>();
-        list2.add(new Activity());
-        list2.add(new Activity());
+        java.util.List<ActivityUnit> list2=new java.util.Vector<ActivityUnit>();
+        list2.add(new ActivityUnit());
+        list2.add(new ActivityUnit());
         
         try {
             as.store(list1);
@@ -97,14 +97,14 @@ public class DefaultActivityServerTest {
         as.getActivityNotifiers().add(notifier1);
         as.getActivityNotifiers().add(notifier2);
         
-        java.util.List<Activity> list1=new java.util.Vector<Activity>();
-        list1.add(new Activity());
-        list1.add(new Activity());
-        list1.add(new Activity());
+        java.util.List<ActivityUnit> list1=new java.util.Vector<ActivityUnit>();
+        list1.add(new ActivityUnit());
+        list1.add(new ActivityUnit());
+        list1.add(new ActivityUnit());
         
-        java.util.List<Activity> list2=new java.util.Vector<Activity>();
-        list2.add(new Activity());
-        list2.add(new Activity());
+        java.util.List<ActivityUnit> list2=new java.util.Vector<ActivityUnit>();
+        list2.add(new ActivityUnit());
+        list2.add(new ActivityUnit());
         
         try {
             as.store(list1);
@@ -148,14 +148,14 @@ public class DefaultActivityServerTest {
         as.getActivityNotifiers().add(notifier1);
         as.getActivityNotifiers().add(notifier2);
         
-        java.util.List<Activity> list1=new java.util.Vector<Activity>();
-        list1.add(new Activity());
-        list1.add(new Activity());
-        list1.add(new Activity());
+        java.util.List<ActivityUnit> list1=new java.util.Vector<ActivityUnit>();
+        list1.add(new ActivityUnit());
+        list1.add(new ActivityUnit());
+        list1.add(new ActivityUnit());
         
-        java.util.List<Activity> list2=new java.util.Vector<Activity>();
-        list2.add(new Activity());
-        list2.add(new Activity());
+        java.util.List<ActivityUnit> list2=new java.util.Vector<ActivityUnit>();
+        list2.add(new ActivityUnit());
+        list2.add(new ActivityUnit());
         
         try {
             as.store(list1);
@@ -189,36 +189,36 @@ public class DefaultActivityServerTest {
 
     public class TestStore implements ActivityStore {
 
-        private List<Activity> _store=new java.util.Vector<Activity>();
+        private List<ActivityUnit> _store=new java.util.Vector<ActivityUnit>();
         private boolean _fault=false;
         
         public void fault() {
             _fault = true;
         }
         
-        public void store(List<Activity> activities) throws Exception {
+        public void store(List<ActivityUnit> activities) throws Exception {
             if (_fault) {
                 throw new Exception("Fault in notifier");
             }
             _store.addAll(activities);
         }
 
-        public List<Activity> query(ActivityQuery query) throws Exception {
+        public List<ActivityUnit> query(ActivityQuery query) throws Exception {
             // TODO Auto-generated method stub
             return null;
         }
         
-        public List<Activity> getActivityEvents() {
+        public List<ActivityUnit> getActivityEvents() {
             return (_store);
         }
     }
 
     public class TestNotifier implements ActivityNotifier {
 
-        private List<Activity> _store=new java.util.Vector<Activity>();
+        private List<ActivityUnit> _store=new java.util.Vector<ActivityUnit>();
         private boolean _fault=false;
         
-        public List<Activity> getActivityEvents() {
+        public List<ActivityUnit> getActivityEvents() {
             return (_store);
         }
 
@@ -226,7 +226,7 @@ public class DefaultActivityServerTest {
             _fault = true;
         }
         
-        public void notify(List<Activity> activities) throws Exception {
+        public void notify(List<ActivityUnit> activities) throws Exception {
             if (_fault) {
                 throw new Exception("Fault in notifier");
             }

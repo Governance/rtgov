@@ -32,7 +32,7 @@ import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.api.jms.HornetQJMSClient;
 import org.hornetq.api.jms.JMSFactoryType;
 import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.util.ActivityUtil;
 import org.savara.bam.collector.spi.AbstractActivityLoggerImpl;
 
@@ -78,7 +78,7 @@ public class JMSActivityLoggerImpl extends AbstractActivityLoggerImpl {
     /**
      * {@inheritDoc}
      */
-    protected void appendActivity(Activity act) throws Exception {
+    protected void appendActivity(ActivityUnit act) throws Exception {
          byte[] mesg=ActivityUtil.serialize(act);
 
          if (_currentMessage == null) {

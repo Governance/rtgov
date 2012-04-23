@@ -17,7 +17,7 @@
  */
 package org.savara.bam.activity.server;
 
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 
 /**
  * This interface represents an activity server.
@@ -31,7 +31,7 @@ public interface ActivityServer {
      * @param activities The activity events
      * @throws Exception Failed to store the activities
      */
-    public void store(java.util.List<Activity> activities) throws Exception;
+    public void store(java.util.List<ActivityUnit> activities) throws Exception;
     
     /**
      * This method retrieves a set of activity events associated
@@ -41,6 +41,6 @@ public interface ActivityServer {
      * @return The list of activities
      * @throws Exception Failed to query the activities
      */
-    public java.util.List<Activity> query(ActivityQuery query) throws Exception;
+    public java.util.List<ActivityUnit> query(ActivityQuery query) throws Exception;
     
 }

@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 
 /**
  * This class provides the abstract activity logger implementation.
@@ -49,7 +49,7 @@ public abstract class AbstractActivityLoggerImpl implements ActivityLogger {
     /**
      * {@inheritDoc}
      */
-    public void log(Activity act) {
+    public void log(ActivityUnit act) {
         
         try {
              synchronized (this) {
@@ -90,7 +90,7 @@ public abstract class AbstractActivityLoggerImpl implements ActivityLogger {
      * @param act The activity event
      * @throws Exception Failed to append the activity event to the log
      */
-    protected abstract void appendActivity(Activity act) throws Exception;
+    protected abstract void appendActivity(ActivityUnit act) throws Exception;
     
     /**
      * This method sends the message. This method should be overridden

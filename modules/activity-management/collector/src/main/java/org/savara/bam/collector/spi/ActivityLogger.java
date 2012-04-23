@@ -17,7 +17,7 @@
  */
 package org.savara.bam.collector.spi;
 
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 
 /**
  * This interface represents an activity event collector.
@@ -30,6 +30,6 @@ public interface ActivityLogger {
      * 
      * @param act The activity event
      */
-    public void log(Activity act);
+    public void log(ActivityUnit act);
     
 }

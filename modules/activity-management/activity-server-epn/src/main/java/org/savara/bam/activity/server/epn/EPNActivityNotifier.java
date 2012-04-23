@@ -25,7 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.server.spi.ActivityNotifier;
 import org.savara.bam.epn.EPNManager;
 import org.savara.bam.epn.internal.EventList;
@@ -59,7 +59,7 @@ public class EPNActivityNotifier implements ActivityNotifier {
     /**
      * {@inheritDoc}
      */
-    public void notify(List<Activity> activities) throws Exception {
+    public void notify(List<ActivityUnit> activities) throws Exception {
         _epnManager.enqueue(NETWORK_NAME, new EventList(activities));
     }
 

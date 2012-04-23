@@ -19,7 +19,7 @@ package org.savara.bam.activity.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 
 /**
  * This class provides utility functions for the activity
@@ -30,8 +30,8 @@ public final class ActivityUtil {
     
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
-    private static final TypeReference<java.util.List<Activity>> ACTIVITY_LIST=
-                        new TypeReference<java.util.List<Activity>>() { };
+    private static final TypeReference<java.util.List<ActivityUnit>> ACTIVITY_LIST=
+                        new TypeReference<java.util.List<ActivityUnit>>() { };
     
     /**
      * Private constructor.
@@ -46,7 +46,7 @@ public final class ActivityUtil {
      * @return The JSON serialized representation
      * @throws Exception Failed to serialize
      */
-    public static byte[] serialize(Activity act) throws Exception {
+    public static byte[] serialize(ActivityUnit act) throws Exception {
         byte[] ret=null;
         
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
@@ -67,7 +67,7 @@ public final class ActivityUtil {
      * @return The JSON serialized representation
      * @throws Exception Failed to serialize
      */
-    public static byte[] serializeList(java.util.List<Activity> activities) throws Exception {
+    public static byte[] serializeList(java.util.List<ActivityUnit> activities) throws Exception {
         byte[] ret=null;
         
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
@@ -88,12 +88,12 @@ public final class ActivityUtil {
      * @return The Activity event
      * @throws Exception Failed to deserialize
      */
-    public static Activity deserialize(byte[] act) throws Exception {
-        Activity ret=null;
+    public static ActivityUnit deserialize(byte[] act) throws Exception {
+        ActivityUnit ret=null;
         
         java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(act);
         
-        ret = MAPPER.readValue(bais, Activity.class);
+        ret = MAPPER.readValue(bais, ActivityUnit.class);
         
         bais.close();
         
@@ -107,8 +107,8 @@ public final class ActivityUtil {
      * @return The Activity event list
      * @throws Exception Failed to deserialize
      */
-    public static java.util.List<Activity> deserializeList(byte[] act) throws Exception {
-        java.util.List<Activity> ret=null;
+    public static java.util.List<ActivityUnit> deserializeList(byte[] act) throws Exception {
+        java.util.List<ActivityUnit> ret=null;
         
         java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(act);
         

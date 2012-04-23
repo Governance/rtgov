@@ -17,22 +17,23 @@
  */
 package org.savara.bam.collector.spi;
 
-import org.savara.bam.activity.model.Context;
+import org.savara.bam.activity.model.Origin;
 
 /**
- * This interface is responsible for providing an initial
- * template for the information contained in the Context
- * object.
+ * This interface is responsible for providing the initial
+ * system wide and user related information associated with the activity
+ * event origin.
  *
  */
-public interface ContextInitializer {
+public interface OriginFactory {
 
     /**
-     * This method returns the Context object associated with the
-     * current environment.
+     * This method returns the origin with
+     * system and principal related information
+     * initialized.
      * 
-     * @return The context
+     * @return The origin
      */
-    public Context getContext();
+    public Origin createOrigin();
 
 }

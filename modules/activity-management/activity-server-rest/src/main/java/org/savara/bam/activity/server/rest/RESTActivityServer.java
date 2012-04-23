@@ -20,7 +20,7 @@ package org.savara.bam.activity.server.rest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.savara.bam.activity.model.Activity;
+import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.server.ActivityQuery;
 import org.savara.bam.activity.server.ActivityServer;
 
@@ -110,7 +110,7 @@ public class RESTActivityServer {
     @GET
     @Path("/query")
     @Produces("application/json")
-    public java.util.List<Activity> query(@DefaultValue("0") @QueryParam("from") long from,
+    public java.util.List<ActivityUnit> query(@DefaultValue("0") @QueryParam("from") long from,
                     @DefaultValue("0") @QueryParam("to") long to) throws Exception {
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -137,7 +137,7 @@ public class RESTActivityServer {
     @POST
     @Path("/store")
     @Consumes("application/json")
-    public Response store(java.util.List<Activity> activities) {
+    public Response store(java.util.List<ActivityUnit> activities) {
  
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Store "+activities.size()+" activities");        
