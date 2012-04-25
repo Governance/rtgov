@@ -26,7 +26,9 @@ public enum ContextType {
 
     /**
      * An identifier represents a value that can be used to correlate
-     * activities across distributed services.
+     * activities across distributed services. These context types
+     * will be globally unique, and may refer to values that are
+     * carried in the application message contents.
      */
     Identifier,
     
@@ -36,5 +38,17 @@ public enum ContextType {
      * and can therefore be used to correlate local activities as being
      * part of the same executable unit.
      */
-    InstanceId
+    InstanceId,
+    
+    /**
+     * This context represents an id associated with a particular message
+     * being exchanged between distributed participants.
+     */
+    MessageId,
+    
+    /**
+     * This context type represents a link to a previous 'MessageId' value.
+     */
+    ReplyTo
+    
 }
