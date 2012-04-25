@@ -1,0 +1,1 @@
+Dependencies: org.switchyard.api

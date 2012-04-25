@@ -22,7 +22,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -32,8 +32,9 @@ import static org.junit.Assert.*;
 public class BeanServiceTest {
 
     @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
+    public static WebArchive createDeployment() {
+        
+        return ShrinkWrap.create(WebArchive.class)
             .addClass(InventoryService.class)
             .addClass(InventoryServiceBean.class)
             .addClass(Item.class)
@@ -46,6 +47,9 @@ public class BeanServiceTest {
             .addClass(ExchangeInterceptor.class)
             .addAsResource("wsdl/OrderService.wsdl")
             .addAsResource("META-INF/switchyard.xml")
+            .addAsResource(EmptyAsset.INSTANCE, "META-INF/beans.xml")
+            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+            .addAsManifestResource("switchyard.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
@@ -54,7 +58,7 @@ public class BeanServiceTest {
 
     @Test
     public void submitOrder() {
-        
+
         if (_orderService == null) {
             fail("Order Service has not been set");
         }
@@ -68,6 +72,8 @@ public class BeanServiceTest {
         
         if (ack == null) {
             fail("Acknowledgement is null");
+        } else if (!ack.isAccepted()) {
+            fail("Order was not accepted");
         }
     }
 }

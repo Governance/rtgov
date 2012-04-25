@@ -20,15 +20,18 @@ package org.savara.tests.switchyard.beanservice;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangeHandler;
 import org.switchyard.HandlerException;
+import org.switchyard.handlers.MessageTrace;
 
-public class ExchangeInterceptor implements ExchangeHandler {
+public class ExchangeInterceptor extends MessageTrace implements ExchangeHandler {
 
     public void handleMessage(Exchange exchange) throws HandlerException {
         System.out.println("HANDLE MESSAGE="+exchange);
+        super.handleMessage(exchange);
     }
 
     public void handleFault(Exchange exchange) {
         System.out.println("HANDLE FAULT="+exchange);
+        super.handleFault(exchange);
     }
 
 }
