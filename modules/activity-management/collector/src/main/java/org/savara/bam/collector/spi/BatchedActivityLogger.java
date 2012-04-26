@@ -27,12 +27,13 @@ import javax.annotation.PreDestroy;
 import org.savara.bam.activity.model.ActivityUnit;
 
 /**
- * This class provides the abstract activity logger implementation.
+ * This class provides the abstract activity logger implementation that
+ * batches activity events based on time slots and size.
  *
  */
-public abstract class AbstractActivityLoggerImpl implements ActivityLogger {
+public abstract class BatchedActivityLogger implements ActivityLogger {
 
-    private static final Logger LOG=Logger.getLogger(AbstractActivityLoggerImpl.class.getName());
+    private static final Logger LOG=Logger.getLogger(BatchedActivityLogger.class.getName());
     
     private int _messageCounter=0;
     private java.util.Timer _timer;

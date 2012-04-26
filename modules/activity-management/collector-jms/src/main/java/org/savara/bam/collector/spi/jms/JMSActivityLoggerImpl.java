@@ -34,13 +34,13 @@ import org.hornetq.api.jms.JMSFactoryType;
 import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
 import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.util.ActivityUtil;
-import org.savara.bam.collector.spi.AbstractActivityLoggerImpl;
+import org.savara.bam.collector.spi.BatchedActivityLogger;
 
 /**
  * This class provides the JMS implementation of the activity logger.
  *
  */
-public class JMSActivityLoggerImpl extends AbstractActivityLoggerImpl {
+public class JMSActivityLoggerImpl extends BatchedActivityLogger {
 
     private static final String ACTIVITY_MONITOR_SERVER = "ActivityMonitorServer";
 

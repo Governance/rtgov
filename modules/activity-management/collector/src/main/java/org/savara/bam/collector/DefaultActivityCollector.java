@@ -19,6 +19,8 @@ package org.savara.bam.collector;
 
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.model.ActivityType;
 import org.savara.bam.collector.spi.ActivityLogger;
@@ -31,8 +33,10 @@ import org.savara.bam.collector.spi.OriginFactory;
  */
 public class DefaultActivityCollector implements ActivityCollector {
 
+    @Inject
     private OriginFactory _originInitializer=null;
     
+    @Inject
     private ActivityLogger _activityLogger=null;
 
     private java.lang.ThreadLocal<ActivityUnit> _activityUnit=null;

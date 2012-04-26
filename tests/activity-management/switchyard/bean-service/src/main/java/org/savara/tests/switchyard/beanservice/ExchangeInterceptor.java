@@ -17,20 +17,26 @@
  */
 package org.savara.tests.switchyard.beanservice;
 
+import javax.inject.Inject;
+
+import org.savara.bam.collector.ActivityCollector;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangeHandler;
 import org.switchyard.HandlerException;
 import org.switchyard.handlers.MessageTrace;
 
 public class ExchangeInterceptor extends MessageTrace implements ExchangeHandler {
+    
+    @Inject
+    private ActivityCollector _activityCollector=null;
 
     public void handleMessage(Exchange exchange) throws HandlerException {
-        System.out.println("HANDLE MESSAGE="+exchange);
+        System.out.println("HANDLE MESSAGE="+exchange+" COLLECTOR="+_activityCollector);
         super.handleMessage(exchange);
     }
 
     public void handleFault(Exchange exchange) {
-        System.out.println("HANDLE FAULT="+exchange);
+        System.out.println("HANDLE FAULT="+exchange+" COLLECTOR="+_activityCollector);
         super.handleFault(exchange);
     }
 
