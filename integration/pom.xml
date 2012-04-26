@@ -15,7 +15,7 @@
 	</parent>
 
 	<modules>
-		<module>jboss-as7</module>
+		<module>jbossas7</module>
 	</modules>
 
 </project>

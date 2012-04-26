@@ -15,8 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.collector.spi.jms;
+package org.savara.bam.activity.server.jms.client;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,30 +34,28 @@ import org.hornetq.api.jms.HornetQJMSClient;
 import org.hornetq.api.jms.JMSFactoryType;
 import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
 import org.savara.bam.activity.model.ActivityUnit;
-import org.savara.bam.activity.util.ActivityUtil;
-import org.savara.bam.collector.spi.BatchedActivityLogger;
+import org.savara.bam.activity.server.ActivityQuery;
+import org.savara.bam.activity.server.ActivityServer;
 
 /**
  * This class provides the JMS implementation of the activity logger.
  *
  */
-public class JMSActivityLoggerImpl extends BatchedActivityLogger {
+public class JMSActivityServer implements ActivityServer {
 
     private static final String ACTIVITY_MONITOR_SERVER = "ActivityMonitorServer";
 
-    private static final Logger LOG=Logger.getLogger(JMSActivityLoggerImpl.class.getName());
+    private static final Logger LOG=Logger.getLogger(JMSActivityServer.class.getName());
     
     private Connection _connection;
     private Session _session;
     private MessageProducer _producer;
-    private javax.jms.BytesMessage _currentMessage;
     
     /**
-     * This method initializes the JMS activity logger.
+     * This method initializes the JMS activity server client.
      */
     @PostConstruct
     public void init() {
-        super.init();
         
         try {
             Queue queue = HornetQJMSClient.createQueue(ACTIVITY_MONITOR_SERVER);
@@ -75,35 +74,23 @@ public class JMSActivityLoggerImpl extends BatchedActivityLogger {
         }
     }
     
+
     /**
      * {@inheritDoc}
      */
-    protected void appendActivity(ActivityUnit act) throws Exception {
-         byte[] mesg=ActivityUtil.serialize(act);
-
-         if (_currentMessage == null) {
-             _currentMessage = _session.createBytesMessage();
-         }
-
-         _currentMessage.writeInt(mesg.length);
-         _currentMessage.writeBytes(mesg);
-    }
-    
-    /**
-     * This method sends the JMS message.
-     * 
-     * @throws Exception Failed to send the message
-     */
-    protected synchronized void sendMessage() throws Exception {
-        if (_currentMessage != null) {
-             // Send message
-             _currentMessage.writeInt(0);
-             _producer.send(_currentMessage);
-             
-             _currentMessage = null;
-        }
+    public void store(List<ActivityUnit> activities) throws Exception {
+        javax.jms.ObjectMessage mesg=_session.createObjectMessage();
         
-        super.sendMessage();
+        mesg.setObject((java.io.Serializable)activities);
+        
+        _producer.send(mesg);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityUnit> query(ActivityQuery query) throws Exception {
+        throw new java.lang.UnsupportedOperationException();
     }
 
     /**
@@ -111,8 +98,6 @@ public class JMSActivityLoggerImpl extends BatchedActivityLogger {
      */
     @PreDestroy
     public void close() {
-        super.close();
-        
         try {
             _session.close();
             _connection.close();

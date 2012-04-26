@@ -17,23 +17,44 @@
  */
 package org.savara.bam.collector.spi;
 
-import org.savara.bam.activity.model.Origin;
+import javax.transaction.TransactionManager;
 
 /**
  * This interface is responsible for providing the initial
  * system wide and user related information associated with the activity
- * event origin.
+ * event collector.
  *
  */
-public interface OriginFactory {
+public interface CollectorContext {
 
     /**
-     * This method returns the origin with
-     * system and principal related information
-     * initialized.
+     * This method returns the caller principal associated with
+     * the current thread.
      * 
-     * @return The origin
+     * @return The principal
      */
-    public Origin createOrigin();
+    public String getPrincipal();
 
+    /**
+     * This method returns the host name.
+     * 
+     * @return The host name
+     */
+    public String getHost();
+    
+    /**
+     * This method returns the server port.
+     * 
+     * @return The server port
+     */
+    public String getServerPort();
+    
+    /**
+     * This method returns the transaction manager,
+     * if available.
+     * 
+     * @return The transaction manager, or null if not available
+     */
+    public TransactionManager getTransactionManager();
+    
 }

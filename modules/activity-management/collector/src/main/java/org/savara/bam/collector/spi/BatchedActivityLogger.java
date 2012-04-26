@@ -39,6 +39,9 @@ public abstract class BatchedActivityLogger implements ActivityLogger {
     private java.util.Timer _timer;
     private java.util.TimerTask _timerTask;
     
+    private long _maxTimeInterval=500;
+    private int _maxMessageCount=1000;
+    
     /**
      * This method initializes the activity logger.
      */
@@ -48,19 +51,63 @@ public abstract class BatchedActivityLogger implements ActivityLogger {
     }
     
     /**
+     * This method sets the maximum time interval
+     * that should be logged within a single batch.
+     * 
+     * @param max The maximum number of messages
+     */
+    public void setMaxTimeInterval(long max) {
+        _maxTimeInterval = max;
+    }
+    
+    /**
+     * This method returns the maximum time interval
+     * that should be logged within a single batch.
+     * 
+     * @return The maximum number of messages
+     */
+    public long getMaxTimeInterval() {
+        return (_maxTimeInterval);
+    }
+    
+    /**
+     * This method sets the maximum number of messages
+     * that should be logged within a single batch.
+     * 
+     * @param max The maximum number of messages
+     */
+    public void setMaxMessageCount(int max) {
+        _maxMessageCount = max;
+    }
+    
+    /**
+     * This method returns the maximum number of messages
+     * that should be logged within a single batch.
+     * 
+     * @return The maximum number of messages
+     */
+    public int getMaxMessageCount() {
+        return (_maxMessageCount);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void log(ActivityUnit act) {
         
         try {
-             synchronized (this) {
+             synchronized (_timer) {
                  
                  // Cancel any current scheduled task
                  if (_timerTask == null) {
                      _timerTask = new TimerTask() {
                             public void run() {
                                 try {
-                                    sendMessage();
+                                    synchronized(_timer) {
+                                        sendMessage();
+                                    
+                                        reset();
+                                    }
                                 } catch (Exception e) {
                                     LOG.log(Level.SEVERE, "Failed to send activity event", e);
                                 }
@@ -68,15 +115,17 @@ public abstract class BatchedActivityLogger implements ActivityLogger {
                          };
                          
                      // Schedule send
-                     _timer.schedule(_timerTask, 500);
+                     _timer.schedule(_timerTask, _maxTimeInterval);
                  }
 
                  appendActivity(act);
                  
                  _messageCounter++;
 
-                 if (_messageCounter > 1000) {
+                 if (_messageCounter > _maxMessageCount) {
                      sendMessage();
+                     
+                     reset();
                  }
              }
              
@@ -102,7 +151,12 @@ public abstract class BatchedActivityLogger implements ActivityLogger {
      * 
      * @throws Exception Failed to send the message
      */
-    protected synchronized void sendMessage() throws Exception {
+    protected abstract void sendMessage() throws Exception;
+    
+    /**
+     * This method resets the counters and timers.
+     */
+    protected void reset() {
         _messageCounter = 0;
          
         if (_timerTask != null) {

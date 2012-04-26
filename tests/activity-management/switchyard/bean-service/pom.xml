@@ -3,7 +3,7 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bam.tests.activity-management.switchyard</groupId>
-	<artifactId>bean-service</artifactId>
+	<artifactId>tests-swyd-bean-service</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Savara BAM::Tests::Activity Management::Switchyard::Bean Service</name>
@@ -30,6 +30,11 @@
 		<dependency>
 			<groupId>org.savara.bam.activity-management</groupId>
 			<artifactId>collector</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>collector-activity-server</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>

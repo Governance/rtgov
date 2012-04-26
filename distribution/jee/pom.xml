@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.savara.bam.integration</groupId>
-	<artifactId>jboss-as7</artifactId> 
+	<groupId>org.savara.bam.distribution</groupId>
+	<artifactId>distribution-jee</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>Savara BAM::Integration::JBossAS7</name>
+	<name>Savara BAM::Distribution::JEE</name>
 
 	<parent>
 		<groupId>org.savara.bam</groupId>
-		<artifactId>integration</artifactId>
+		<artifactId>distribution</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
   
@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.savara.bam.activity-management</groupId>
-			<artifactId>activity-server-rest</artifactId>
+			<artifactId>activity-server-rests</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>

@@ -31,7 +31,7 @@ public class OrderServiceBean implements OrderService {
     private InventoryService _inventory;
     
     public OrderAck submitOrder(Order order) {
-System.out.println("GPB: >> INVENTORY="+_inventory.getClass()); 
+
         // Create an order ack
         OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId());
         // Check the inventory
@@ -46,6 +46,7 @@ System.out.println("GPB: >> INVENTORY="+_inventory.getClass());
         } catch (ItemNotFoundException infEx) {
             orderAck.setAccepted(false).setStatus("Item Not Available");
         }
+        
         return orderAck;
     }
 

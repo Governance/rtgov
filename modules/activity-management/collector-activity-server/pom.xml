@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bam.activity-management</groupId>
-	<artifactId>activity-server-rest</artifactId> 
+	<artifactId>collector-activity-server</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Savara BAM::Modules::Activity Management::Activity Server REST</name>
+	<name>Savara BAM::Modules::Activity Management::Collector for Activity Server</name>
 
 	<parent>
 		<groupId>org.savara.bam</groupId>
@@ -26,28 +26,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.savara.bam.activity-management</groupId>
-			<artifactId>activity-store-jpa</artifactId>
+			<artifactId>collector</artifactId>
 			<version>${bam.version}</version>
-		</dependency>
-		
-		<!-- Ideally remove this out of war if cdi works in ear -->
-		<dependency>
-			<groupId>org.savara.bam.activity-management</groupId>
-			<artifactId>activity-server-epn</artifactId>
-			<version>${bam.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jackson-provider</artifactId>
-			<version>${resteasy.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-			<version>${resteasy.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax.enterprise</groupId>

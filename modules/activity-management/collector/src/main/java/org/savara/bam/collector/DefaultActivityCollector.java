@@ -18,13 +18,19 @@
 package org.savara.bam.collector;
 
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
+import javax.transaction.Synchronization;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.model.ActivityType;
+import org.savara.bam.activity.model.Origin;
 import org.savara.bam.collector.spi.ActivityLogger;
-import org.savara.bam.collector.spi.OriginFactory;
+import org.savara.bam.collector.spi.CollectorContext;
 
 /**
  * This class provides a default implementation of the activity
@@ -33,30 +39,32 @@ import org.savara.bam.collector.spi.OriginFactory;
  */
 public class DefaultActivityCollector implements ActivityCollector {
 
+    private static final Logger LOG=Logger.getLogger(DefaultActivityCollector.class.getName());
+    
     @Inject
-    private OriginFactory _originInitializer=null;
+    private CollectorContext _collectorContext=null;
     
     @Inject
     private ActivityLogger _activityLogger=null;
-
-    private java.lang.ThreadLocal<ActivityUnit> _activityUnit=null;
+    
+    private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();
     
     /**
-     * This method sets the origin initializer.
+     * This method sets the collector context.
      * 
-     * @param initializer The initializer
+     * @param cc The collector context
      */
-    public void setOriginInitializer(OriginFactory initializer) {
-        _originInitializer = initializer;
+    public void setCollectorContext(CollectorContext cc) {
+        _collectorContext = cc;
     }
     
     /**
-     * This method gets the origin initializer.
+     * This method gets the collector context.
      * 
-     * @return The initializer
+     * @return The collector context
      */
-    public OriginFactory getOriginInitializer() {
-        return (_originInitializer);
+    public CollectorContext getCollectorContext() {
+        return (_collectorContext);
     }
     
     /**
@@ -99,7 +107,15 @@ public class DefaultActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public void startTransaction() {
-        _activityUnit.set(createActivityUnit());
+        startTransaction(createActivityUnit());
+    }
+    
+    protected void startTransaction(ActivityUnit au) {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Start transaction");
+        }
+
+        _activityUnit.set(au);
     }
     
     /**
@@ -113,7 +129,14 @@ public class DefaultActivityCollector implements ActivityCollector {
     protected ActivityUnit createActivityUnit() {
         ActivityUnit ret=new ActivityUnit();
         
-        ret.setOrigin(_originInitializer.createOrigin());
+        Origin origin=new Origin();
+        origin.setHost(_collectorContext.getHost());
+        origin.setPort(_collectorContext.getServerPort());
+        origin.setPrincipal(_collectorContext.getPrincipal());
+        origin.setTransaction(createTransactionId());
+        origin.setThread(Thread.currentThread().getName());
+        
+        ret.setOrigin(origin);
         
         return (ret);
     }
@@ -123,6 +146,10 @@ public class DefaultActivityCollector implements ActivityCollector {
      */
     public void endTransaction() {
         _activityUnit.remove();
+
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("End transaction");
+        }
     }
 
     /**
@@ -137,10 +164,46 @@ public class DefaultActivityCollector implements ActivityCollector {
         
         if (au == null) {
             au = createActivityUnit();
-            transactional = false;
+            
+            TransactionManager tm=_collectorContext.getTransactionManager();
+            
+            if (tm != null) {
+                try {
+                    Transaction txn=tm.getTransaction();
+                    
+                    if (txn != null) {
+                        txn.registerSynchronization(
+                            new Synchronization() {
+                                public void afterCompletion(int arg0) {
+                                    endTransaction();
+                                }
+    
+                                public void beforeCompletion() {
+                                }                           
+                            });
+                    
+                        startTransaction(au);
+                        
+                    } else {
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("No transaction available");
+                        }
+                        transactional = false;
+                    }
+                    
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, "Failed to register synchronization with transaction", e);
+                    transactional = false;
+                }
+            } else {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("No transaction manager available");
+                }
+                transactional = false;
+            }
         }
         
-        // Set timestamp
+        // Set/override timestamp
         actType.setTimestamp(getTimestamp());
         
         // TODO: Need to determine how best to collect context
