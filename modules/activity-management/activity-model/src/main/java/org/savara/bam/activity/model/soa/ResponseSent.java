@@ -29,6 +29,8 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
 
     private static final int VERSION = 1;
 
+    private String _replyToId=null;
+
     /**
      * The default constructor.
      */
@@ -41,6 +43,25 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
      * @param rpc The rpc activity to copy
      */
     public ResponseSent(ResponseSent rpc) {
+        _replyToId = rpc._replyToId;
+    }
+    
+    /**
+     * This method sets the 'reply to' message id.
+     * 
+     * @param replyToId The 'reply to' message id
+     */
+    public void setReplyToId(String replyToId) {
+        _replyToId = replyToId;
+    }
+    
+    /**
+     * This method gets the 'reply to' message id.
+     * 
+     * @return The 'reply to' message id
+     */
+    public String getReplyToId() {
+        return (_replyToId);
     }
     
     /**
@@ -48,6 +69,8 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
      */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
+
+        out.writeUTF(_replyToId);
     }
 
     /**
@@ -56,5 +79,7 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
+
+        _replyToId = in.readUTF();
     }
 }

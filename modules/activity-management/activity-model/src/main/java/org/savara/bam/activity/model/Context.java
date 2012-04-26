@@ -31,7 +31,7 @@ public class Context implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
-    private ContextType _type=ContextType.Identifier;
+    private ContextType _type=ContextType.ConversationId;
     private String _name=null;
     private String _value=null;
 

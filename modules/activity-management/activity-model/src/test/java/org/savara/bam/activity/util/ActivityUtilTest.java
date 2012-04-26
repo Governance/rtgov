@@ -44,7 +44,7 @@ public class ActivityUtilTest {
         act.setOrigin(origin);
 
         Context c1=new Context();
-        c1.setType(ContextType.Identifier);
+        c1.setType(ContextType.ConversationId);
         c1.setName("OrderId");
         c1.setValue("12345");
         act.getContext().add(c1);
@@ -61,7 +61,7 @@ public class ActivityUtilTest {
         me1.setMessageType("{http://message}Order");
         me1.setOperation("myOp");
         me1.setServiceType("{http://service}OrderService");
-        me1.setCorrelation("corr1");
+        me1.setMessageId("corr1");
         
         act.getActivityTypes().add(me1);
         
@@ -72,7 +72,7 @@ public class ActivityUtilTest {
         me2.setMessageType("{http://message}Confirmation");
         me2.setOperation("myOp");
         me2.setServiceType("{http://service}OrderService");
-        me2.setCorrelation("corr1");
+        me2.setMessageId("corr1");
         
         act.getActivityTypes().add(me2);
         

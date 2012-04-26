@@ -38,7 +38,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     private String _messageType=null;
     private String _content=null;
     
-    private String _correlation=null;
+    private String _messageId=null;
     
     /**
      * The default constructor.
@@ -57,7 +57,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         _fault = rpc._fault;
         _messageType = rpc._messageType;
         _content = rpc._content;
-        _correlation = rpc._correlation;
+        _messageId = rpc._messageId;
     }
     
     /**
@@ -151,29 +151,21 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     }
     
     /**
-     * This method sets the correlation value, which
-     * should be unique within the scope of the service
-     * and operation. This field is used to locally
-     * correlate a RPC request with a response from
-     * the client or server's perspective,
-     * and should not be confused
-     * with the wider correlation performed between
-     * distributed activities based on context
-     * information recorded against activity events.
+     * This method sets the message id.
      * 
-     * @param correlation The correlation
+     * @param messageId The message id
      */
-    public void setCorrelation(String correlation) {
-        _correlation = correlation;
+    public void setMessageId(String messageId) {
+        _messageId = messageId;
     }
     
     /**
-     * This method gets the correlation.
+     * This method gets the message id.
      * 
-     * @return The correlation
+     * @return The message id
      */
-    public String getCorrelation() {
-        return (_correlation);
+    public String getMessageId() {
+        return (_messageId);
     }
     
     /**
@@ -187,7 +179,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         out.writeUTF(_fault);
         out.writeUTF(_messageType);
         out.writeUTF(_content);
-        out.writeUTF(_correlation);
+        out.writeUTF(_messageId);
     }
 
     /**
@@ -202,6 +194,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         _fault = in.readUTF();
         _messageType = in.readUTF();
         _content = in.readUTF();
-        _correlation = in.readUTF();
+        _messageId = in.readUTF();
     }
 }

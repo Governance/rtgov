@@ -41,20 +41,20 @@ public class CEPEventProcessorTest {
         e1.setId("e1");
         RequestSent me1=new RequestSent();
         me1.setTimestamp(System.currentTimeMillis());
-        me1.setCorrelation("corr1");
+        me1.setMessageId("corr1");
         e1.getActivityTypes().add(me1);
         
         ActivityUnit e2=new ActivityUnit();
         e2.setId("e2");
         ResponseReceived me2=new ResponseReceived();
-        me2.setCorrelation("corr2");
+        me2.setMessageId("corr2");
         e2.getActivityTypes().add(me2);
         
         ActivityUnit e3=new ActivityUnit();
         e3.setId("e3");
         ResponseReceived me3=new ResponseReceived();
         me3.setTimestamp(me1.getTimestamp()+TIME_INTERVAL);
-        me3.setCorrelation("corr1");
+        me3.setMessageId("corr1");
         e3.getActivityTypes().add(me3);
         
         try {            
@@ -115,14 +115,14 @@ public class CEPEventProcessorTest {
         e1.setId("e1");
         RequestSent me1=new RequestSent();
         me1.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL);
-        me1.setCorrelation("corr1");
+        me1.setMessageId("corr1");
         e1.getActivityTypes().add(me1);
         
         ActivityUnit e3=new ActivityUnit();
         e3.setId("e3");
         ResponseReceived me3=new ResponseReceived();
         me3.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL+TIME_INTERVAL);
-        me3.setCorrelation("corr1");
+        me3.setMessageId("corr1");
         e3.getActivityTypes().add(me3);
         
         try {            

@@ -25,12 +25,12 @@ package org.savara.bam.activity.model;
 public enum ContextType {
 
     /**
-     * An identifier represents a value that can be used to correlate
+     * An conversation id represents a value that can be used to correlate
      * activities across distributed services. These context types
      * will be globally unique, and may refer to values that are
      * carried in the application message contents.
      */
-    Identifier,
+    ConversationId,
     
     /**
      * The 'InstanceId' type represents a local id that may be associated
@@ -44,11 +44,6 @@ public enum ContextType {
      * This context represents an id associated with a particular message
      * being exchanged between distributed participants.
      */
-    MessageId,
-    
-    /**
-     * This context type represents a link to a previous 'MessageId' value.
-     */
-    ReplyTo
+    MessageId
     
 }
