@@ -42,6 +42,8 @@ public class NetworkLoaderTest {
 
     @Deployment
     public static WebArchive createDeployment() {
+        String version=System.getProperty("bam.version");
+
         return ShrinkWrap.create(WebArchive.class)
             .addClass(epn.test.Child.class)
             .addClass(epn.test.ChildPredicate.class)
@@ -55,8 +57,8 @@ public class NetworkLoaderTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.savara.bam.event-processor-network:epn-core:1.0.0-SNAPSHOT",
-                            "org.savara.bam.event-processor-network:epn-container-jms:1.0.0-SNAPSHOT")
+                    .artifacts("org.savara.bam.event-processor-network:epn-core:"+version,
+                            "org.savara.bam.event-processor-network:epn-container-jms:"+version)
                     .resolveAsFiles());
     }
 

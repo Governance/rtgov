@@ -40,6 +40,7 @@ public class BeanServiceTest {
 
     @Deployment
     public static WebArchive createDeployment() {
+        String version=System.getProperty("bam.version");
         
         return ShrinkWrap.create(WebArchive.class)
             .addClass(InventoryService.class)
@@ -62,9 +63,9 @@ public class BeanServiceTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.savara.bam.activity-management:collector:1.0.0-SNAPSHOT",
-                            "org.savara.bam.integration:bam-jbossas7:1.0.0-SNAPSHOT",
-                            "org.savara.bam.activity-management:collector-activity-server:1.0.0-SNAPSHOT")
+                    .artifacts("org.savara.bam.activity-management:collector:"+version,
+                            "org.savara.bam.integration:bam-jbossas7:"+version,
+                            "org.savara.bam.activity-management:collector-activity-server:"+version)
                     .resolveAsFiles());
     }
 

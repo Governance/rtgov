@@ -106,6 +106,24 @@
 					<showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemProperties>
+						<property>
+							<name>bam.version</name>
+							<value>${project.version}</value>
+						</property>
+					</systemProperties>
+					<testFailureIgnore>true</testFailureIgnore>
+					<includes>
+						<include>**/*TestCase.java</include>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+
             <plugin>
                 <groupId>org.switchyard</groupId>
                 <artifactId>switchyard-plugin</artifactId>
@@ -156,26 +174,6 @@
                     </webResources>
                 </configuration>
             </plugin>
-            <!-- 
-			<plugin>
-				<groupId>org.switchyard</groupId>
-				<artifactId>switchyard-plugin</artifactId>
-				<version>${switchyard.version}</version>
-				<configuration>
-					<scannerClassNames>
-						<param>org.switchyard.component.bean.config.model.BeanSwitchYardScanner</param>
-						<param>org.switchyard.transform.config.model.TransformSwitchYardScanner</param>
-					</scannerClassNames>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>configure</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			-->
 		</plugins>
 	</build>
 

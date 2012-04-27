@@ -107,6 +107,13 @@
 					<plugin>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
+							<systemProperties>
+								<property>
+									<name>bam.version</name>
+									<value>${project.version}</value>
+								</property>
+							</systemProperties>
+							<testFailureIgnore>true</testFailureIgnore>
 							<includes>
 								<include>**/jee/*TestCase.java</include>
 								<include>**/jee/*Test.java</include>
