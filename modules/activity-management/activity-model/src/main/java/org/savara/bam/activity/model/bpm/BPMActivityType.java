@@ -73,7 +73,7 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * 
      * @param instanceId The instance id
      */
-    public void setOperation(String instanceId) {
+    public void setInstanceId(String instanceId) {
         _instanceId = instanceId;
     }
     
@@ -82,7 +82,7 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * 
      * @return The instance id
      */
-    public String getOperation() {
+    public String getInstanceId() {
         return (_instanceId);
     }
     

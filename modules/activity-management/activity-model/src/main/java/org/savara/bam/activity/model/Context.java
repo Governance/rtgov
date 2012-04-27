@@ -42,6 +42,19 @@ public class Context implements java.io.Externalizable {
     }
  
     /**
+     * This constructor sets the fields for the context.
+     * 
+     * @param type The context type
+     * @param name The name
+     * @param value The value
+     */
+    public Context(ContextType type, String name, String value) {
+        _type = type;
+        _name = name;
+        _value = value;
+    }
+    
+    /**
      * The copy constructor.
      * 
      * @param context The context to copy

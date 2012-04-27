@@ -17,11 +17,18 @@
  */
 package org.savara.bam.activity.server;
 
+import java.util.UUID;
+
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import org.savara.bam.activity.model.ActivityType;
 import org.savara.bam.activity.model.ActivityUnit;
+import org.savara.bam.activity.model.Context;
+import org.savara.bam.activity.model.ContextType;
+import org.savara.bam.activity.model.bpm.BPMActivityType;
+import org.savara.bam.activity.model.soa.RPCActivityType;
 import org.savara.bam.activity.server.spi.ActivityNotifier;
 import org.savara.bam.activity.server.spi.ActivityStore;
 
@@ -37,6 +44,8 @@ public class DefaultActivityServer implements ActivityServer {
     private java.util.List<ActivityNotifier> _notifiers=new java.util.Vector<ActivityNotifier>();
     
     private @Inject @Any Instance<ActivityNotifier> _injectedNotifiers=null;
+    
+    private boolean _handleDuplicateIds=true;
     
     /**
      * This method sets the activity store.
@@ -66,6 +75,24 @@ public class DefaultActivityServer implements ActivityServer {
     }
     
     /**
+     * This method sets whether duplicate ids should be handled.
+     * 
+     * @param b Whether duplicates should be handled
+     */
+    public void setHandleDuplicateIds(boolean b) {
+        _handleDuplicateIds = b;
+    }
+    
+    /**
+     * This method returns whether duplicate ids should be handled.
+     * 
+     * @return Whether duplicates should be handled
+     */
+    public boolean getHandleDuplicateIds() {
+        return (_handleDuplicateIds);
+    }
+    
+    /**
      * This method stores the supplied activity events.
      * 
      * @param activities The activity events
@@ -73,12 +100,19 @@ public class DefaultActivityServer implements ActivityServer {
      */
     public void store(java.util.List<ActivityUnit> activities) throws Exception {
         
+        // Process activity units to establish consistent id info
+        for (ActivityUnit au : activities) {
+            processActivityUnit(au);
+        }
+        
+        // Store the activities
         if (_store != null) {
             _store.store(activities);
         } else {
             throw new Exception("Activity Store is unavailable");
         }
         
+        // Inform registered notifiers
         for (ActivityNotifier notifier : _notifiers) {
             notifier.notify(activities);
         }
@@ -88,6 +122,70 @@ public class DefaultActivityServer implements ActivityServer {
                 notifier.notify(activities);
             }
         }
+    }
+    
+    /**
+     * This method processes the activity unit to establish consistent
+     * context and id information across the activity unit and contained
+     * activity types.
+     * 
+     * @param au The activity unit
+     */
+    protected void processActivityUnit(ActivityUnit au) {
+        
+        // Check that activity unit has an id - and if not, create a
+        // globally unique id
+        if (au.getId() == null) {
+            au.setId(createUniqueId());
+        }
+        
+        int index=0;
+        java.util.Set<String> ids=(_handleDuplicateIds ? new java.util.HashSet<String>() : null);
+        
+        for (ActivityType at : au.getActivityTypes()) {
+            
+            at.setActivityUnitId(au.getId());
+            at.setActivityUnitIndex(index++);
+            
+            // Check if RPC activity type
+            if (at instanceof RPCActivityType) {
+ 
+                if (!_handleDuplicateIds
+                        || !ids.contains(((RPCActivityType)at).getMessageId())) {
+                    
+                    if (_handleDuplicateIds) {
+                        ids.add(((RPCActivityType)at).getMessageId());
+                    }
+                    
+                    // Copy message id to context for activity unit
+                    au.getContext().add(new Context(ContextType.MessageId,null,
+                            ((RPCActivityType)at).getMessageId()));
+                }
+            } else if (at instanceof BPMActivityType) {
+                
+                if (!_handleDuplicateIds
+                        || !ids.contains(((BPMActivityType)at).getInstanceId())) {
+                    
+                    if (_handleDuplicateIds) {
+                        ids.add(((BPMActivityType)at).getInstanceId());
+                    }
+                   
+                    // Copy instance id to context for activity unit
+                    au.getContext().add(new Context(ContextType.InstanceId,
+                            ((BPMActivityType)at).getProcessType(),
+                            ((BPMActivityType)at).getInstanceId()));                   
+                }
+            }
+        }
+    }
+    
+    /**
+     * This method creates a globally unique id for an activity unit.
+     * 
+     * @return The globally unique id
+     */
+    protected String createUniqueId() {
+        return (UUID.randomUUID().toString());
     }
     
     /**

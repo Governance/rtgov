@@ -50,6 +50,8 @@ public abstract class ActivityType {
 
     private static final int VERSION = 1;
 
+    private String _activityUnitId=null;
+    private int _activityUnitIndex=0;
     private long _timestamp=0;
 
     /**
@@ -64,6 +66,8 @@ public abstract class ActivityType {
      * @param act The activity to copy.
      */
     public ActivityType(ActivityType act) {
+        _activityUnitId = act._activityUnitId;
+        _activityUnitIndex = act._activityUnitIndex;
         _timestamp = act._timestamp;
     }
     
@@ -74,6 +78,44 @@ public abstract class ActivityType {
      */
     public void setTimestamp(long timestamp) {
         _timestamp = timestamp;
+    }
+    
+    /**
+     * This method sets the activity unit id.
+     * 
+     * @param id The activity unit id
+     */
+    public void setActivityUnitId(String id) {
+        _activityUnitId = id;
+    }
+    
+    /**
+     * This method gets the activity unit id.
+     * 
+     * @return The activity unit id
+     */
+    public String getActivityUnitId() {
+        return (_activityUnitId);
+    }
+    
+    /**
+     * This method sets the index of this activity
+     * type within the activity unit.
+     * 
+     * @param index The activity unit index
+     */
+    public void setActivityUnitIndex(int index) {
+        _activityUnitIndex = index;
+    }
+    
+    /**
+     * This method sets the index of this activity
+     * type within the activity unit.
+     * 
+     * @return The activity unit index
+     */
+    public int getActivityUnitIndex() {
+        return (_activityUnitIndex);
     }
     
     /**
@@ -91,6 +133,8 @@ public abstract class ActivityType {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
+        out.writeUTF(_activityUnitId);
+        out.writeInt(_activityUnitIndex);
         out.writeLong(_timestamp);
     }
 
@@ -101,6 +145,8 @@ public abstract class ActivityType {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
+        _activityUnitId = in.readUTF();
+        _activityUnitIndex = in.readInt();
         _timestamp = in.readLong();
     }
     
