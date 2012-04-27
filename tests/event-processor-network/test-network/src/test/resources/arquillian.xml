@@ -15,7 +15,7 @@
 		</protocol>
 
 		<configuration>
-			<property name="serverConfig">arq-standalone-full.xml</property>
+			<property name="serverConfig">standalone-full.xml</property>
 		</configuration>
 	</container>
  

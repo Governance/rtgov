@@ -51,6 +51,7 @@ public class NetworkLoaderTest {
             .addClass(epn.test.Root.class)
             .addAsResource("networks/TestNetwork.json")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+            .addAsManifestResource("bam-epn-hornetq-jms.xml")
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
