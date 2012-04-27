@@ -145,10 +145,16 @@ public class DefaultActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public void endTransaction() {
-        _activityUnit.remove();
+        ActivityUnit au=_activityUnit.get();
 
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("End transaction");
+            LOG.finest("End transaction for ActivityUnit="+au);
+        }
+        
+        if (au != null) {
+            _activityLogger.log(au);
+
+            _activityUnit.remove();
         }
     }
 

@@ -70,6 +70,9 @@ public class ActivityServerCollector extends BatchedActivityLogger {
     protected void sendMessage() throws Exception {
         if (_activities != null) {
             _activityServer.store(_activities);
+            
+            // Clear the list
+            _activities.clear();
         }
     }
 

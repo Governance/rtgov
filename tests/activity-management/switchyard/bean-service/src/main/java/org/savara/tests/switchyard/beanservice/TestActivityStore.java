@@ -30,6 +30,16 @@ public class TestActivityStore implements ActivityStore {
     private static int _storeCount=0;
     
     /**
+     * This method resets the test information.
+     */
+    public static void reset() {
+        synchronized(_activities) {
+            _activities.clear();
+            _storeCount = 0;
+        }
+    }
+    
+    /**
      * This method returns the number of times the store method was
      * invoked.
      * 

@@ -18,6 +18,7 @@
 package org.savara.tests.switchyard.beanservice;
 
 import javax.inject.Inject;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -72,12 +73,17 @@ public class BeanServiceTest {
     @Inject
     org.savara.tests.switchyard.beanservice.OrderService _orderService;
 
+    @Inject
+    org.savara.bam.collector.spi.CollectorContext _collectorContext;
+
     @Test
     public void submitOrderDirectNoTxn() {
 
         if (_orderService == null) {
             fail("Order Service has not been set");
         }
+        
+        TestActivityStore.reset();
         
         Order order=new Order();
         order.setOrderId("abc");
@@ -142,6 +148,90 @@ public class BeanServiceTest {
                 fail("Txn id should be unique");
             }
             txnIds.add(au.getOrigin().getTransaction());
+        }
+    }
+    
+    @Test
+    public void submitOrderDirectTxn() {
+
+        if (_orderService == null) {
+            fail("Order Service has not been set");
+        }
+        
+        if (_collectorContext == null) {
+            fail("Collector context not available");
+        }
+        
+        TestActivityStore.reset();
+        
+        Order order=new Order();
+        order.setOrderId("abc");
+        order.setItemId("BUTTER");
+        order.setQuantity(10);
+        
+        // Start a transaction
+        try {
+            _collectorContext.getTransactionManager().begin();
+            
+            if (_collectorContext.getTransactionManager().getTransaction() == null) {
+                fail("Transaction was not started");
+            }
+        } catch (Exception e) {
+            fail("Failed to begin transaction");
+        }
+        
+        OrderAck ack=_orderService.submitOrder(order);
+        
+        try {
+            _collectorContext.getTransactionManager().commit();
+        } catch (Exception e) {
+            fail("Failed to commit transaction");
+        }
+        
+        if (ack == null) {
+            fail("Acknowledgement is null");
+        } else if (!ack.isAccepted()) {
+            fail("Order was not accepted");
+        }
+        
+        // Delay awaiting results
+        try {
+            Thread.sleep(1000);
+        } catch(Exception e) {
+            fail("Failed to wait for events: "+e);
+        }
+        
+        // Check that store method only called once
+        if (TestActivityStore.getStoreCount() != 1) {
+            fail("Store count was not 1: "+TestActivityStore.getStoreCount());
+        }
+        
+        // Check that the four expected activity units occurred
+        if (TestActivityStore.getActivities().size() != 1) {
+            fail("Activity count should be 1: "+TestActivityStore.getActivities().size());
+        }
+        
+        ActivityUnit au=TestActivityStore.getActivities().get(0);
+        
+        // Check that single activity unit has four activity types
+        if (au.getActivityTypes().size() != 4) {
+            fail("Activity unit does not have 4 activity types: "+au.getActivityTypes().size());
+        }
+        
+        if (!(au.getActivityTypes().get(0) instanceof RequestSent)) {
+            fail("Expected 'RequestSent'");
+        }
+        
+        if (!(au.getActivityTypes().get(1) instanceof RequestReceived)) {
+            fail("Expected 'RequestReceived'");
+        }
+        
+        if (!(au.getActivityTypes().get(2) instanceof ResponseSent)) {
+            fail("Expected 'ResponseSent'");
+        }
+        
+        if (!(au.getActivityTypes().get(3) instanceof ResponseReceived)) {
+            fail("Expected 'ResponseReceived'");
         }
     }
 }

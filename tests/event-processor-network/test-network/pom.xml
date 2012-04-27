@@ -113,7 +113,6 @@
 									<value>${project.version}</value>
 								</property>
 							</systemProperties>
-							<testFailureIgnore>true</testFailureIgnore>
 							<includes>
 								<include>**/jee/*TestCase.java</include>
 								<include>**/jee/*Test.java</include>
