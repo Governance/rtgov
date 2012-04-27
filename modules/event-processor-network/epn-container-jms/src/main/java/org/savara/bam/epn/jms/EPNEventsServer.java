@@ -41,7 +41,7 @@ import java.util.logging.Logger;
                activationConfig =
                      {
                         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
-                        @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/EPNEvents")
+                        @ActivationConfigProperty(propertyName = "destination", propertyValue = "EPNEvents")
                      })
 @TransactionManagement(value= TransactionManagementType.CONTAINER)
 @TransactionAttribute(value= TransactionAttributeType.REQUIRED)

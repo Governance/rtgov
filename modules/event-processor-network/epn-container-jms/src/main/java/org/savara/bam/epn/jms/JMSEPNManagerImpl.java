@@ -50,10 +50,10 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     @Resource(mappedName = "java:/JmsXA")
     private ConnectionFactory _connectionFactory;
     
-    @Resource(mappedName = "java:/queue/EPNEvents")
+    @Resource(mappedName = "java:/EPNEvents")
     private Destination _epnEventsDestination;
     
-    @Resource(mappedName = "java:/topic/EPNNotifications")
+    @Resource(mappedName = "java:/EPNNotifications")
     private Destination _epnNotificationsDestination;
     
     /** The EPN Network Name. **/
