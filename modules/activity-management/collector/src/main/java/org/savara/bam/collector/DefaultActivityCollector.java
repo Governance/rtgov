@@ -106,13 +106,20 @@ public class DefaultActivityCollector implements ActivityCollector {
     /**
      * {@inheritDoc}
      */
-    public void startTransaction() {
-        startTransaction(createActivityUnit());
+    public boolean startScope() {
+        ActivityUnit au=_activityUnit.get();
+        
+        if (au == null) {
+            startScope(createActivityUnit());
+            return true;
+        }
+        
+        return false;
     }
     
-    protected void startTransaction(ActivityUnit au) {
+    protected void startScope(ActivityUnit au) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Start transaction");
+            LOG.finest("Start scope");
         }
 
         _activityUnit.set(au);
@@ -144,17 +151,19 @@ public class DefaultActivityCollector implements ActivityCollector {
     /**
      * {@inheritDoc}
      */
-    public void endTransaction() {
+    public void endScope() {
         ActivityUnit au=_activityUnit.get();
 
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("End transaction for ActivityUnit="+au);
+            LOG.finest("End scope for ActivityUnit="+au);
         }
         
         if (au != null) {
             _activityLogger.log(au);
 
             _activityUnit.remove();
+        } else {
+            LOG.severe("End scope called but no ActivityUnit available");
         }
     }
 
@@ -181,14 +190,14 @@ public class DefaultActivityCollector implements ActivityCollector {
                         txn.registerSynchronization(
                             new Synchronization() {
                                 public void afterCompletion(int arg0) {
-                                    endTransaction();
+                                    endScope();
                                 }
     
                                 public void beforeCompletion() {
                                 }                           
                             });
                     
-                        startTransaction(au);
+                        startScope(au);
                         
                     } else {
                         if (LOG.isLoggable(Level.FINEST)) {
