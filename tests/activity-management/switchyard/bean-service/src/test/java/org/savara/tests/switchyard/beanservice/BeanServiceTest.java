@@ -18,6 +18,10 @@
 package org.savara.tests.switchyard.beanservice;
 
 import javax.inject.Inject;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPConnection;
+import javax.xml.soap.SOAPConnectionFactory;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -232,6 +236,126 @@ public class BeanServiceTest {
         
         if (!(au.getActivityTypes().get(3) instanceof ResponseReceived)) {
             fail("Expected 'ResponseReceived'");
+        }
+    }
+    
+    @Test
+    public void submitOrderSOAPNoTxn() {
+
+        if (_orderService == null) {
+            fail("Order Service has not been set");
+        }
+        
+        TestActivityStore.reset();
+        
+
+        try {
+            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
+            SOAPConnection con=factory.createConnection();
+            
+            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/quickstart-bean/OrderService");
+            
+            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
+                        "   <soap:Body>"+
+                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart:bean-service:1.0\">"+
+                        "            <order>"+
+                        "                <orderId>PO-19838-XYZ</orderId>"+
+                        "                <itemId>BUTTER</itemId>"+
+                        "                <quantity>200</quantity>"+
+                        "            </order>"+
+                        "        </orders:submitOrder>"+
+                        "    </soap:Body>"+
+                        "</soap:Envelope>";
+            
+            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
+            
+            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
+            
+            is.close();
+            
+            SOAPMessage response=con.call(request, url);
+
+            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+            
+            response.writeTo(baos);
+            
+            String resp=baos.toString();
+
+            baos.close();
+            
+            if (!resp.contains("<accepted>true</accepted>")) {
+                fail("Order was not accepted: "+resp);
+            }
+        } catch (Exception e) {
+            fail("Failed to invoke service via SOAP: "+e);
+        }
+        
+        // Delay awaiting results
+        try {
+            Thread.sleep(1000);
+        } catch(Exception e) {
+            fail("Failed to wait for events: "+e);
+        }
+        
+        // Check that store method only called once
+        if (TestActivityStore.getStoreCount() != 1) {
+            fail("Store count was not 1: "+TestActivityStore.getStoreCount());
+        }
+        
+        // Check that the eight expected activity units occurred
+        if (TestActivityStore.getActivities().size() != 8) {
+            fail("Activity count should be 8: "+TestActivityStore.getActivities().size());
+        }
+        
+        // Check that each activity unit only has a single event
+        for (ActivityUnit au : TestActivityStore.getActivities()) {
+            if (au.getActivityTypes().size() != 1) {
+                fail("Activity unit does not have single activity type: "+au.getActivityTypes().size());
+            }
+        }
+        
+        if (!(TestActivityStore.getActivities().get(0).getActivityTypes().get(0) instanceof RequestSent)) {
+            fail("Expected 'RequestSent'");
+        }
+        
+        if (!(TestActivityStore.getActivities().get(1).getActivityTypes().get(0) instanceof RequestReceived)) {
+            fail("Expected 'RequestReceived'");
+        }
+        
+        if (!(TestActivityStore.getActivities().get(2).getActivityTypes().get(0) instanceof RequestSent)) {
+            fail("Expected 2nd 'RequestSent'");
+        }
+        
+        if (!(TestActivityStore.getActivities().get(3).getActivityTypes().get(0) instanceof RequestReceived)) {
+            fail("Expected 2nd 'RequestReceived'");
+        }
+        
+        if (!(TestActivityStore.getActivities().get(4).getActivityTypes().get(0) instanceof ResponseSent)) {
+            fail("Expected 'ResponseSent'");
+        }
+        
+        if (!(TestActivityStore.getActivities().get(5).getActivityTypes().get(0) instanceof ResponseReceived)) {
+            fail("Expected 'ResponseReceived'");
+        }
+        
+        if (!(TestActivityStore.getActivities().get(6).getActivityTypes().get(0) instanceof ResponseSent)) {
+            fail("Expected 2nd 'ResponseSent'");
+        }
+        
+        if (!(TestActivityStore.getActivities().get(7).getActivityTypes().get(0) instanceof ResponseReceived)) {
+            fail("Expected 2nd 'ResponseReceived'");
+        }
+        
+        // Check that all the events had different transaction ids, as a
+        // transaction manager is available, but the method is not performed
+        // within the scope of a transaction
+        java.util.List<String> txnIds=new java.util.Vector<String>();
+        
+        for (ActivityUnit au : TestActivityStore.getActivities()) {
+            if (txnIds.contains(au.getOrigin().getTransaction())) {
+                fail("Txn id should be unique");
+            }
+            txnIds.add(au.getOrigin().getTransaction());
         }
     }
 }
