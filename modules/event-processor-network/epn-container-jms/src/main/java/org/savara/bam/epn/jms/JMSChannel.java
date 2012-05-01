@@ -67,7 +67,7 @@ public class JMSChannel implements Channel {
     public void send(EventList events, int retriesLeft) throws Exception {
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, _destination.getNetwork());
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODE, _destination.getNode());
+        mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, _destination.getNode());
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, _source);
         mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
         

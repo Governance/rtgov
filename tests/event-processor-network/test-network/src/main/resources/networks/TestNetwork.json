@@ -1,5 +1,6 @@
 {
   "name" : "TestNetwork",
+  "subjects" : [ "TestSubject" ],
   "nodes" : {
     "Root" : {
       "maxRetries" : 3,
@@ -46,6 +47,6 @@
       "notificationEnabled" : false
     }
   },
-  "timestamp" : 1334572641404,
+  "timestamp" : 1335871725299,
   "rootNodeName" : "Root"
 }

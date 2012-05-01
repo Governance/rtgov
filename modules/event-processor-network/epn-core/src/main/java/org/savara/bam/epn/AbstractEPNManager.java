@@ -32,6 +32,8 @@ public abstract class AbstractEPNManager implements EPNManager {
     private static final Logger LOG=Logger.getLogger(AbstractEPNManager.class.getName());
 
     private java.util.Map<String, Network> _networkMap=new java.util.HashMap<String, Network>();
+    private java.util.Map<String, java.util.List<Network>> _subjectMap=
+                        new java.util.HashMap<String, java.util.List<Network>>();
     private java.util.List<NodeListener> _nodeListeners=
                         new java.util.Vector<NodeListener>();
     
@@ -49,7 +51,20 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         LOG.info("Registering EPN network '"+network.getName()+"'");
         
-        _networkMap.put(network.getName(), network);
+        synchronized (_networkMap) {
+            _networkMap.put(network.getName(), network);
+            
+            for (String subject : network.getSubjects()) {
+                java.util.List<Network> networks=_subjectMap.get(subject);
+                
+                if (networks == null) {
+                    networks = new java.util.ArrayList<Network>();
+                    _subjectMap.put(subject, networks);
+                }
+                
+                networks.add(network);
+            }
+        }
         
         network.init(getContainer());
     }
@@ -61,7 +76,24 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         LOG.info("Unregistering EPN network '"+networkName+"'");
 
-        _networkMap.remove(networkName);
+        synchronized (_networkMap) {
+            Network network=_networkMap.get(networkName);
+            
+            if (network != null) {
+                for (String subject : network.getSubjects()) {
+                    java.util.List<Network> networks=_subjectMap.get(subject);
+                    
+                    if (networks != null) {
+                        networks.remove(network);
+                        if (networks.size() == 0) {
+                            _subjectMap.remove(subject);
+                        }
+                    }
+                }
+            }
+            
+            _networkMap.remove(networkName);
+        }
     }
     
     /**
@@ -94,13 +126,24 @@ public abstract class AbstractEPNManager implements EPNManager {
     protected Network getNetwork(String name) {
         return (_networkMap.get(name));
     }
+    
+    /**
+     * This method returns the list of networks that subscribe to
+     * the supplied subject.
+     * 
+     * @param subject The subject
+     * @return The list of networks, or null of no networks subscribe to the subject
+     */
+    protected java.util.List<Network> getNetworksForSubject(String subject) {
+        return (_subjectMap.get(subject));
+    }
 
     /**
      * This method returns the node associated with the
      * supplied network and node name.
      * 
      * @param networkName The network name
-     * @param nodeName The node name
+     * @param nodeName The node name, or null if wanting the root node
      * @return The node, or null if not found
      * @throws Exception Failed to find the specified node
      */
@@ -109,6 +152,11 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         if (net == null) {
             throw new Exception("No network '"+networkName+"' was found");
+        }
+        
+        // Check if node name has been specified, if not use root node name
+        if (nodeName == null) {
+            nodeName = net.getRootNodeName();
         }
         
         Node node=net.getNodes().get(nodeName);

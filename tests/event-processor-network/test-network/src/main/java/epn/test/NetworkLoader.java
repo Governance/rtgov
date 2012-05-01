@@ -36,7 +36,7 @@ public class NetworkLoader {
     /** The child B. **/
     public static final String CHILD_B = "ChildB";
     /** The subject. **/
-    public static final String TEST_SUBJECT = "TestNetwork";
+    public static final String TEST_SUBJECT = "TestSubject";
     /** The network. **/
     public static final String TEST_NETWORK = "TestNetwork";
     /** The file. **/
@@ -102,6 +102,8 @@ public class NetworkLoader {
         Network ret=new Network();
         ret.setName(TEST_NETWORK);
         ret.setTimestamp(System.currentTimeMillis());
+        
+        ret.getSubjects().add(TEST_SUBJECT);
         
         Root rootep=new Root();
         Child childAep=new Child();

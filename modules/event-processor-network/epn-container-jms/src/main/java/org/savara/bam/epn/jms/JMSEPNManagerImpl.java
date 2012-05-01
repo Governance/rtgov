@@ -56,10 +56,12 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     @Resource(mappedName = "java:/EPNNotifications")
     private Destination _epnNotificationsDestination;
     
+    /** The subscription subjects. **/
+    public static final String EPN_SUBJECTS = "EPNSubjects";
     /** The EPN Network Name. **/
     public static final String EPN_NETWORK = "EPNNetwork";
-    /** The EPN Destination Node Name. **/
-    public static final String EPN_DESTINATION_NODE = "EPNDestinationNode";
+    /** The EPN Destination Node Names. **/
+    public static final String EPN_DESTINATION_NODES = "EPNDestinationNodes";
     /** The EPN Source Node Name. **/
     public static final String EPN_SOURCE_NODE = "EPNSourceNode";
     /** The EPN Number of Retries Left. **/
@@ -69,8 +71,6 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     private Session _session=null;
     private MessageProducer _eventsProducer=null;
     private MessageProducer _notificationsProducer=null;
-    
-    private java.util.Map<String, JMSChannel> _networkChannels=new java.util.HashMap<String, JMSChannel>();
     
     private EPNContainer _context=new JMSEPNContext();
     
@@ -111,38 +111,15 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     /**
      * {@inheritDoc}
      */
-    public void register(Network network) throws Exception {
-        super.register(network);
-        
-        _networkChannels.put(network.getName(), new JMSChannel(_session,
-                _eventsProducer, null, new org.savara.bam.epn.Destination(network.getName(),
-                        network.getRootNodeName())));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void unregister(String networkName) throws Exception {
-        super.unregister(networkName);
-        
-        _networkChannels.remove(networkName);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public void publish(String subject, java.util.List<java.io.Serializable> events) throws Exception {
-        JMSChannel channel=_networkChannels.get(subject);
-        
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Enqueue "+events+" on network "+subject+" channel="+channel);
+            LOG.finest("Publish "+events+" to subject '"+subject+"'");
         }
         
-        if (channel == null) {
-            throw new Exception("Unable to find channel for network '"+subject+"'");
-        }
+        javax.jms.ObjectMessage mesg=_session.createObjectMessage(new EventList(events));
+        mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, subject);
         
-        channel.send(new EventList(events));
+        _eventsProducer.send(mesg);
     }
 
     /**
@@ -160,14 +137,75 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             
             EventList events=(EventList)((ObjectMessage)message).getObject();
             
-            String network=message.getStringProperty(JMSEPNManagerImpl.EPN_NETWORK);
-            String node=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODE);
-            String source=message.getStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE);
-            int retriesLeft=message.getIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT);
+            if (message.propertyExists(EPN_SUBJECTS)) {
+                dispatchToSubjects(message.getStringProperty(EPN_SUBJECTS), events);
+            }
             
-            dispatch(network, node, source, events, retriesLeft);
+            if (message.propertyExists(EPN_NETWORK)) {
+                String network=message.getStringProperty(JMSEPNManagerImpl.EPN_NETWORK);
+                String node=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES);
+                String source=message.getStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE);
+                int retriesLeft=message.getIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT);
+                
+                dispatchToNodes(network, node, source, events, retriesLeft);
+            }
         } else {
             LOG.severe("Unsupport message '"+message+"' received");
+        }
+    }
+    
+    /**
+     * This method dispatches the events to any network that has subscribed to any one of
+     * the supplied list of subjects.
+     * 
+     * @param subjectList The subject list
+     * @param events The list of events
+     * @throws Exception Failed to dispatch events to the networks associated with the
+     *                          supplied list of subjects
+     */
+    protected void dispatchToSubjects(String subjectList, EventList events) throws Exception {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Dispatch to subjects="+subjectList);
+        }
+
+        String[] subjects=subjectList.split(",");
+        for (String subject : subjects) {
+            java.util.List<Network> networks=getNetworksForSubject(subject);
+            
+            if (networks == null) {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("No networks exist for subject="+subject);
+                }
+            } else {
+                for (Network network : networks) {
+                    dispatch(network.getName(), null, null, events, -1);
+                }
+            }
+        }
+    }
+
+    /**
+     * This method dispatches the events to the list of nodes that are associated with
+     * the named network.
+     * 
+     * @param networkName The name of the network
+     * @param nodeList The list of nodes
+     * @param source The source node, or null if sending to root
+     * @param events The list of events to be processed
+     * @param retriesLeft The number of retries left, or -1 if should be max value
+     * @throws Exception Failed to dispatch the events for processing
+     */
+    protected void dispatchToNodes(String networkName, String nodeList, String source,
+                        EventList events, int retriesLeft) throws Exception {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Dispatch to network="+networkName+" and nodes="+nodeList);
+        }
+
+        String[] nodes=nodeList.split(",");
+        for (String nodeName : nodes) {
+            dispatch(networkName, nodeName, source, events, retriesLeft);
         }
     }
 
@@ -187,7 +225,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             EventList events=(EventList)((ObjectMessage)message).getObject();
             
             String networkName=message.getStringProperty(JMSEPNManagerImpl.EPN_NETWORK);
-            String nodeName=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODE);
+            String nodeName=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES);
             
             dispatchEventsProcessedToListeners(networkName, nodeName, events);
         } else {
@@ -248,7 +286,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         if (retriesLeft > 0) {
             javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
             mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODE, nodeName);
+            mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
             mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, source);
             mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
             _eventsProducer.send(mesg);
@@ -271,7 +309,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
 
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODE, nodeName);
+        mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
         _notificationsProducer.send(mesg);
     }
     
