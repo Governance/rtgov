@@ -56,6 +56,15 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     }
     
     /**
+     * This method provides access to the registered channels against subjects.
+     * 
+     * @return The entry points
+     */
+    protected java.util.Map<String,java.util.List<EmbeddedChannel>> getEntryPoints() {
+        return (_entryPoints);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void register(Network network) throws Exception {
@@ -93,7 +102,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                     
                     if (channels != null) {
                         for (EmbeddedChannel ch : channels) {
-                            if (ch._networkName.equals(networkName)) {
+                            if (ch.getNetworkName().equals(networkName)) {
                                 channels.remove(ch);
                                 if (channels.size() == 0) {
                                     _entryPoints.remove(subject);
@@ -171,6 +180,15 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
             _nodeName = nodeName;
             _node = node;
             _source = source;
+        }
+        
+        /**
+         * This method returns the network name.
+         * 
+         * @return The network name
+         */
+        protected String getNetworkName() {
+            return (_networkName);
         }
 
         /**
