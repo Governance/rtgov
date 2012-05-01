@@ -336,9 +336,16 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         /**
          * {@inheritDoc}
          */
-        public Channel getChannel(String source,
-                org.savara.bam.epn.Destination dest) throws Exception {
-            return new JMSChannel(_session, _eventsProducer, source, dest);
+        public Channel getChannel(String networkName, String source, String dest)
+                throws Exception {
+            return new JMSChannel(_session, _eventsProducer, networkName, source, dest);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public Channel getChannel(String subject) throws Exception {
+            return new JMSChannel(_session, _eventsProducer, subject);
         }
 
     }

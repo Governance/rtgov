@@ -141,7 +141,22 @@ public class Network {
     protected void init(EPNContainer container) throws Exception {
         for (String name : _nodes.keySet()) {
             Node node=_nodes.get(name);
-            node.init(container, name);
+            
+            // Initialize channels
+            if (node.getDestinationNodes() != null) {
+                for (String nodeName : node.getDestinationNodes()) {
+                    node.getChannels().add(container.getChannel(getName(), name, nodeName));
+                }
+            }
+            
+            if (node.getDestinationSubjects() != null) {
+                for (String subject : node.getDestinationSubjects()) {
+                    node.getChannels().add(container.getChannel(subject));
+                }
+            }
+            
+            // Initialize the node
+            node.init(container);
             
             if (name.equals(getRootNodeName())) {
                 _root = node;                

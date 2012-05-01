@@ -163,7 +163,7 @@ public class NodeTest {
         
         node.setEventProcessor(ep);
         
-        node.getDestinations().add(new Destination("TestNet", "TestNode"));
+        node.getDestinationNodes().add("TestNode");
         
         EventList events=new EventList();
         
@@ -180,7 +180,9 @@ public class NodeTest {
         ep.setForwardEvents(true);
         
         try {
-            node.init(context, "TestNode");
+            node.getChannels().add(channel);
+            
+            node.init(context);
             
             EventList retry=node.process(context, null, events, 1);
             
@@ -215,7 +217,7 @@ public class NodeTest {
         
         node.setEventProcessor(ep);
         
-        node.getDestinations().add(new Destination("TestNet", "TestNode"));
+        node.getDestinationNodes().add("TestNode");
         
         EventList events=new EventList();
         
@@ -233,7 +235,9 @@ public class NodeTest {
         ep.retry(te2);
         
         try {
-            node.init(context, "TestNode");
+            node.getChannels().add(channel);
+            
+            node.init(context);
             
             EventList retry=node.process(context, null, events, 1);
             

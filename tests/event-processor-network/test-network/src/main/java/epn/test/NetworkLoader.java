@@ -17,7 +17,6 @@
  */
 package epn.test;
 
-import org.savara.bam.epn.Destination;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.util.NetworkUtil;
@@ -117,13 +116,10 @@ public class NetworkLoader {
         childBpred.setMin(10);
         childBpred.setMax(19);
         
-        java.util.List<Destination> destinations=new java.util.Vector<Destination>();
-        destinations.add(new Destination(TEST_NETWORK, CHILD_A));
-        destinations.add(new Destination(TEST_NETWORK, CHILD_B));
-        
         Node root=new Node();
         root.setEventProcessor(rootep);
-        root.setDestinations(destinations);
+        root.getDestinationNodes().add(CHILD_A);
+        root.getDestinationNodes().add(CHILD_B);
         ret.getNodes().put(ROOT, root);
         
         Node childA=new Node();

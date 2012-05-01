@@ -32,12 +32,25 @@ public interface EPNContainer {
      * reason, then an exception will be thrown indicating the
      * problem.
      * 
+     * @param networkName The name of the network
      * @param source The source node
-     * @param dest The destination
+     * @param dest The destination node
      * @return The channel
      * @throws Exception Channel cannot be created
      */
-    public Channel getChannel(String source, Destination dest) throws Exception;
+    public Channel getChannel(String networkName, String source, String dest) throws Exception;
+
+    /**
+     * This method returns the channel associated with the supplied
+     * subject. If a channel cannot be established for any
+     * reason, then an exception will be thrown indicating the
+     * problem.
+     * 
+     * @param subject The subject on which the events will be published
+     * @return The channel
+     * @throws Exception Channel cannot be created
+     */
+    public Channel getChannel(String subject) throws Exception;
 
     /**
      * This method sends the supplied events to the supplied list

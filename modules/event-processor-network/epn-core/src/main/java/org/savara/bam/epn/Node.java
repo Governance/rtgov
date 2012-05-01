@@ -34,7 +34,8 @@ public class Node {
     private long _retryInterval=0;
     private EventProcessor _eventProcessor=null;
     private Predicate _predicate=null;
-    private java.util.List<Destination> _destinations=new java.util.Vector<Destination>();
+    private java.util.List<String> _destinationNodes=new java.util.ArrayList<String>();
+    private java.util.List<String> _destinationSubjects=new java.util.ArrayList<String>();
     private boolean _notificationEnabled=false;
     
     private java.util.List<Channel> _channels=new java.util.Vector<Channel>();
@@ -89,21 +90,39 @@ public class Node {
     }
     
     /**
-     * This method returns the list of destinations.
+     * This method returns the list of destination nodes.
      * 
-     * @return The destinations
+     * @return The destination nodes
      */
-    public java.util.List<Destination> getDestinations() {
-        return (_destinations);
+    public java.util.List<String> getDestinationNodes() {
+        return (_destinationNodes);
     }
     
     /**
      * This method sets the list of destinations.
      * 
-     * @param destinations The destinations
+     * @param destinations The destination nodes
      */
-    public void setDestinations(java.util.List<Destination> destinations) {
-        _destinations = destinations;
+    public void setDestinationNodes(java.util.List<String> destinations) {
+        _destinationNodes = destinations;
+    }
+    
+    /**
+     * This method returns the list of destination subjects.
+     * 
+     * @return The destination subjects
+     */
+    public java.util.List<String> getDestinationSubjects() {
+        return (_destinationSubjects);
+    }
+    
+    /**
+     * This method sets the list of destination subjects.
+     * 
+     * @param destinations The destination subjects
+     */
+    public void setDestinationSubjects(java.util.List<String> destinations) {
+        _destinationSubjects = destinations;
     }
     
     /**
@@ -165,27 +184,29 @@ public class Node {
     }
     
     /**
+     * This method returns the list of channels associated with this
+     * node.
+     * 
+     * @return The channels
+     */
+    protected java.util.List<Channel> getChannels() {
+        return (_channels);
+    }
+    
+    /**
      * This method initializes the node.
      * 
      * @param container The container
-     * @param nodeName The node's name
      * @throws Exception Failed to initialize the node
      */
-    protected void init(EPNContainer container, String nodeName) throws Exception {
-        
-        // Obtain the channels associated with the specified destinations
-        if (_destinations != null) {
-            for (Destination d : _destinations) {
-                _channels.add(container.getChannel(nodeName, d));
-            }
-        }
+    protected void init(EPNContainer container) throws Exception {
         
         if (getPredicate() != null) {
             getPredicate().init();
         }
         
         if (getEventProcessor() == null) {
-            throw new Exception("Event Processor has not been configured for node '"+nodeName+"'");
+            throw new Exception("Event Processor has not been configured for node");
         }
         
         getEventProcessor().init();

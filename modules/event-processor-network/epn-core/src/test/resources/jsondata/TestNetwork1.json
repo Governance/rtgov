@@ -2,7 +2,8 @@
   "name" : "Test",
   "nodes" : {
     "N1" : {
-      "destinations" : [ ],
+      "destinationNodes" : [ ],
+      "destinationSubjects" : [ ],
       "predicate" : {
         "@class" : "org.savara.bam.epn.testdata.TestPredicate2",
         "someProperty" : "TestProperty"
@@ -14,13 +15,8 @@
       "retryInterval" : 0
     },
     "N0" : {
-      "destinations" : [ {
-        "network" : "Test",
-        "node" : "N1"
-      }, {
-        "network" : "Test",
-        "node" : "N2"
-      } ],
+      "destinationNodes" : [ "N1", "N2" ],
+      "destinationSubjects" : [ ],
       "predicate" : {
         "@class" : "org.savara.bam.epn.testdata.TestPredicate1"
       },
@@ -31,7 +27,8 @@
       "retryInterval" : 0
     },
     "N2" : {
-      "destinations" : [ ],
+      "destinationNodes" : [ ],
+      "destinationSubjects" : [ ],
       "predicate" : null,
       "eventProcessor" : {
         "@class" : "org.savara.bam.epn.testdata.TestEventProcessor3"

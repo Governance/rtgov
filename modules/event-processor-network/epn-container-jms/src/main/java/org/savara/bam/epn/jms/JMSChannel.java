@@ -21,7 +21,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.savara.bam.epn.Channel;
-import org.savara.bam.epn.Destination;
 import org.savara.bam.epn.internal.EventList;
 
 /**
@@ -35,23 +34,42 @@ public class JMSChannel implements Channel {
     
     private javax.jms.Session _session=null;
     private javax.jms.MessageProducer _producer=null;
-    private Destination _destination=null;
-    private String _source=null;
+    private String _networkName=null;
+    private String _destinationNode=null;
+    private String _sourceNode=null;
+    private String _subject=null;
 
     /**
      * This is the constructor for the JMS channel.
      * 
      * @param session The session
      * @param producer The producer
-     * @param source The source
+     * @param networkName The network name
+     * @param sourceNode The source node name
+     * @param destNode The destination node name
      * @param dest The node destination
      */
     public JMSChannel(javax.jms.Session session, javax.jms.MessageProducer producer,
-                            String source, Destination dest) {
+                            String networkName, String sourceNode, String destNode) {
         _session = session;
         _producer = producer;
-        _source = source;
-        _destination = dest;
+        _networkName = networkName;
+        _destinationNode = destNode;
+        _sourceNode = sourceNode;
+    }
+    
+    /**
+     * This is the constructor for the JMS channel.
+     * 
+     * @param session The session
+     * @param producer The producer
+     * @param subject The subject
+     */
+    public JMSChannel(javax.jms.Session session, javax.jms.MessageProducer producer,
+                            String subject) {
+        _session = session;
+        _producer = producer;
+        _subject = subject;
     }
     
     /**
@@ -66,13 +84,22 @@ public class JMSChannel implements Channel {
      */
     public void send(EventList events, int retriesLeft) throws Exception {
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, _destination.getNetwork());
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, _destination.getNode());
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, _source);
-        mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
         
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Sending events '"+events+"' to '"+_destination+"'");
+        if (_subject != null) {
+            mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, _subject);
+           
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Sending events '"+events+"' to subject="+_subject);
+            }
+        } else {
+            mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, _networkName);
+            mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, _destinationNode);
+            mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, _sourceNode);
+            mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Sending events '"+events+"' to network="+_networkName+" node="+_destinationNode);
+            }
         }
         
         _producer.send(mesg);

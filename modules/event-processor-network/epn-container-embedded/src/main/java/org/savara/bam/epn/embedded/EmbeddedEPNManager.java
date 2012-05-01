@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 
 import org.savara.bam.epn.AbstractEPNManager;
 import org.savara.bam.epn.Channel;
-import org.savara.bam.epn.Destination;
 import org.savara.bam.epn.EPNContainer;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
@@ -148,10 +147,18 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         /**
          * {@inheritDoc}
          */
-        public Channel getChannel(String source, Destination dest)
+        public Channel getChannel(String networkName, String source, String dest)
                 throws Exception {
-            return (new EmbeddedChannel(dest.getNetwork(), dest.getNode(),
-                        getNode(dest.getNetwork(),dest.getNode()), source));
+            return (new EmbeddedChannel(networkName, dest,
+                    getNode(networkName, dest), source));
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public Channel getChannel(String subject) throws Exception {
+            // TODO Auto-generated method stub
+            return null;
         }
         
     }
@@ -166,6 +173,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         private String _nodeName=null;
         private Node _node=null;
         private String _source=null;
+        private String _subject=null;
         
         /**
          * The constructor.
@@ -173,13 +181,22 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * @param networkName The network name
          * @param nodeName The node name
          * @param node The node
-         * @param source The source node name
+         * @param sourceNode The source node name
          */
-        public EmbeddedChannel(String networkName, String nodeName, Node node, String source) {
+        public EmbeddedChannel(String networkName, String nodeName, Node node, String sourceNode) {
             _networkName = networkName;
             _nodeName = nodeName;
             _node = node;
-            _source = source;
+            _source = sourceNode;
+        }
+        
+        /**
+         * The constructor.
+         * 
+         * @param subject The subject
+         */
+        public EmbeddedChannel(String subject) {
+            _subject = subject;
         }
         
         /**
@@ -202,8 +219,12 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * {@inheritDoc}
          */
         public void send(EventList events, int retriesLeft) throws Exception {
-            _executor.execute(new EPNTask(_networkName, _nodeName,
+            if (_subject != null) {
+                publish(_subject, events);
+            } else {
+                _executor.execute(new EPNTask(_networkName, _nodeName,
                         _node, _source, events, retriesLeft, this));
+            }
         }
 
         /**

@@ -20,7 +20,6 @@ package org.savara.bam.epn.util;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.savara.bam.epn.Destination;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.testdata.TestEventProcessor1;
@@ -41,21 +40,12 @@ public class NetworkUtilTest {
         epn.setTimestamp(123456);
         epn.setRootNodeName("N0");
         
-        // Event destinations
-        Destination ed1=new Destination();
-        ed1.setNetwork("Test");
-        ed1.setNode("N1");
-        
-        Destination ed2=new Destination();
-        ed2.setNetwork("Test");
-        ed2.setNode("N2");
-        
         // Node 0
         Node n0=new Node();
         epn.getNodes().put("N0", n0);
         
-        n0.getDestinations().add(ed1);
-        n0.getDestinations().add(ed2);
+        n0.getDestinationNodes().add("N1");
+        n0.getDestinationNodes().add("N2");
         n0.setEventProcessor(new TestEventProcessor1());
         n0.setPredicate(new TestPredicate1());    
         

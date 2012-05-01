@@ -20,7 +20,6 @@ package org.savara.bam.epn.embedded;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.savara.bam.epn.Destination;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.embedded.EmbeddedEPNManager.EmbeddedChannel;
@@ -48,7 +47,7 @@ public class EmbeddedEPNManagerTest {
         Node n1=new Node();
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        n1.getDestinations().add(new Destination(TEST_NETWORK, N2));
+        n1.getDestinationNodes().add(N2);
         net.getNodes().put(N1, n1);
         
         Node n2=new Node();
@@ -103,7 +102,7 @@ public class EmbeddedEPNManagerTest {
         Node n1=new Node();
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        n1.getDestinations().add(new Destination(TEST_NETWORK, N2));
+        n1.getDestinationNodes().add(N2);
         net.getNodes().put(N1, n1);
         
         Node n2=new Node();

@@ -18,7 +18,6 @@
 package org.savara.bam.epn.testdata;
 
 import org.savara.bam.epn.Channel;
-import org.savara.bam.epn.Destination;
 import org.savara.bam.epn.EPNContainer;
 
 public class TestEPNContext implements EPNContainer {
@@ -29,8 +28,12 @@ public class TestEPNContext implements EPNContainer {
         _channel = ch;
     }
     
-    public Channel getChannel(String source, Destination dest)
+    public Channel getChannel(String networkName, String source, String dest)
             throws Exception {
+        return _channel;
+    }
+
+    public Channel getChannel(String subject) throws Exception {
         return _channel;
     }
     

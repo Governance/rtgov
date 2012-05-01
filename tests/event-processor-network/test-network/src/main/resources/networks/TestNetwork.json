@@ -3,15 +3,10 @@
   "subjects" : [ "TestSubject" ],
   "nodes" : {
     "Root" : {
+      "destinationNodes" : [ "ChildA", "ChildB" ],
+      "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
-      "destinations" : [ {
-        "network" : "TestNetwork",
-        "node" : "ChildA"
-      }, {
-        "network" : "TestNetwork",
-        "node" : "ChildB"
-      } ],
       "eventProcessor" : {
         "@class" : "epn.test.Root"
       },
@@ -19,9 +14,10 @@
       "notificationEnabled" : false
     },
     "ChildA" : {
+      "destinationNodes" : [ ],
+      "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
-      "destinations" : [ ],
       "eventProcessor" : {
         "@class" : "epn.test.Child"
       },
@@ -33,9 +29,10 @@
       "notificationEnabled" : false
     },
     "ChildB" : {
+      "destinationNodes" : [ ],
+      "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
-      "destinations" : [ ],
       "eventProcessor" : {
         "@class" : "epn.test.Child"
       },
@@ -47,6 +44,6 @@
       "notificationEnabled" : false
     }
   },
-  "timestamp" : 1335871725299,
+  "timestamp" : 1335878346078,
   "rootNodeName" : "Root"
 }
