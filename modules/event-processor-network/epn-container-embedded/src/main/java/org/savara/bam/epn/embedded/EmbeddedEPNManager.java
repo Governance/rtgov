@@ -17,6 +17,7 @@
  */
 package org.savara.bam.epn.embedded;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +43,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     private static final int MAX_THREADS = 10;
 
     private ExecutorService _executor=Executors.newFixedThreadPool(MAX_THREADS);
-    private EPNContainer _context=new EmbeddedEPNContainer();
+    private EPNContainer _container=new EmbeddedEPNContainer();
     
     private java.util.Map<String,java.util.List<EmbeddedChannel>> _entryPoints=
                         new java.util.HashMap<String,java.util.List<EmbeddedChannel>>();
@@ -51,7 +52,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
      * {@inheritDoc}
      */
     protected EPNContainer getContainer() {
-        return (_context);
+        return (_container);
     }
     
     /**
@@ -157,14 +158,35 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * {@inheritDoc}
          */
         public Channel getChannel(String subject) throws Exception {
-            // TODO Auto-generated method stub
-            return null;
+            return (new EmbeddedChannel(subject));
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void send(EventList events, List<Channel> channels)
+                throws Exception {
+            send(events, -1, channels);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void send(EventList events, int retriesLeft,
+                List<Channel> channels) throws Exception {
+            for (Channel channel : channels) {
+                if (channel instanceof EmbeddedChannel) {
+                    ((EmbeddedChannel)channel).send(events, retriesLeft);
+                } else {
+                    LOG.severe("Unknown channel type '"+channel+"'");
+                }
+            }
         }
         
     }
     
     /**
-     * This is the embedded implementation of the Context interface.
+     * This is the embedded implementation of the Channel interface.
      *
      */
     protected class EmbeddedChannel implements Channel {
@@ -222,6 +244,9 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
             if (_subject != null) {
                 publish(_subject, events);
             } else {
+                if (retriesLeft == -1) {
+                    retriesLeft = _node.getMaxRetries();
+                }
                 _executor.execute(new EPNTask(_networkName, _nodeName,
                         _node, _source, events, retriesLeft, this));
             }
@@ -248,7 +273,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         private String _source=null;
         private EventList _events=null;
         private int _retriesLeft=0;
-        private Channel _channel=null;
+        private EmbeddedChannel _channel=null;
         
         /**
          * This is the constructor for the task.
@@ -262,7 +287,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * @param channel The channel
          */
         public EPNTask(String networkName, String nodeName, Node node,
-                String source, EventList events, int retriesLeft, Channel channel) {
+                String source, EventList events, int retriesLeft, EmbeddedChannel channel) {
             _networkName = networkName;
             _nodeName = nodeName;
             _node = node;

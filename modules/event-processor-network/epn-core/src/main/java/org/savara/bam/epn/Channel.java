@@ -17,34 +17,12 @@
  */
 package org.savara.bam.epn;
 
-import org.savara.bam.epn.internal.EventList;
-
 /**
  * This interface provides the channel through which a
  * set of events will be sent to another destination.
  *
  */
 public interface Channel {
-
-    /**
-     * This method sends the supplied events to a destination
-     * associated with the channel.
-     * 
-     * @param events The events
-     * @throws Exception Failed to send the events
-     */
-    public void send(EventList events) throws Exception;
-
-    /**
-     * This method sends the supplied events to a destination
-     * associated with the channel, specifying the number of
-     * retries remaining.
-     * 
-     * @param events The events
-     * @param retriesLeft The number of retries left
-     * @throws Exception Failed to send the events
-     */
-    public void send(EventList events, int retriesLeft) throws Exception;
 
     /**
      * This method closes the channel.

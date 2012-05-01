@@ -268,10 +268,7 @@ public class Node {
      * @throws Exception Failed to forward results
      */
     protected void forward(EPNContainer container, EventList results) throws Exception {
-        
-        for (Channel ch : _channels) {
-            ch.send(results);
-        }
+        container.send(results, _channels);
     }
 
     /**

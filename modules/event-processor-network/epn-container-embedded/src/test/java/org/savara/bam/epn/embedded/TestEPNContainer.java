@@ -17,14 +17,17 @@
  */
 package org.savara.bam.epn.embedded;
 
+import java.util.List;
+
 import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.EPNContainer;
+import org.savara.bam.epn.internal.EventList;
 
-public class TestEPNContext implements EPNContainer {
+public class TestEPNContainer implements EPNContainer {
     
     private Channel _channel;
 
-    public TestEPNContext(TestChannel ch) {
+    public TestEPNContainer(TestChannel ch) {
         _channel = ch;
     }
     
@@ -35,6 +38,13 @@ public class TestEPNContext implements EPNContainer {
 
     public Channel getChannel(String subject) throws Exception {
         return _channel;
+    }
+
+    public void send(EventList events, List<Channel> channels) throws Exception {
+    }
+
+    public void send(EventList events, int retriesLeft, List<Channel> channels)
+            throws Exception {
     }
     
 }

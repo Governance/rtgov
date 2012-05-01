@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.savara.bam.epn.internal.EventList;
 import org.savara.bam.epn.testdata.TestChannel;
-import org.savara.bam.epn.testdata.TestEPNContext;
+import org.savara.bam.epn.testdata.TestEPNContainer;
 import org.savara.bam.epn.testdata.TestEvent1;
 import org.savara.bam.epn.testdata.TestEvent2;
 import org.savara.bam.epn.testdata.TestEventProcessorA;
@@ -175,16 +175,16 @@ public class NodeTest {
 
         TestChannel channel=new TestChannel();
         
-        TestEPNContext context=new TestEPNContext(channel);
+        TestEPNContainer container=new TestEPNContainer(channel);
         
         ep.setForwardEvents(true);
         
         try {
             node.getChannels().add(channel);
             
-            node.init(context);
+            node.init(container);
             
-            EventList retry=node.process(context, null, events, 1);
+            EventList retry=node.process(container, null, events, 1);
             
             if (retry != null) {
                 fail("Should be no retries");
@@ -229,7 +229,7 @@ public class NodeTest {
 
         TestChannel channel=new TestChannel();
         
-        TestEPNContext context=new TestEPNContext(channel);
+        TestEPNContainer container=new TestEPNContainer(channel);
         
         ep.setForwardEvents(true);
         ep.retry(te2);
@@ -237,9 +237,9 @@ public class NodeTest {
         try {
             node.getChannels().add(channel);
             
-            node.init(context);
+            node.init(container);
             
-            EventList retry=node.process(context, null, events, 1);
+            EventList retry=node.process(container, null, events, 1);
             
             if (retry == null) {
                 fail("Should be retries");

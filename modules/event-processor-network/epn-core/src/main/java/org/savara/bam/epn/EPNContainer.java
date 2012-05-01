@@ -17,7 +17,7 @@
  */
 package org.savara.bam.epn;
 
-//import org.savara.bam.epn.internal.EventList;
+import org.savara.bam.epn.internal.EventList;
 
 /**
  * This interface represents the container in which the network will be
@@ -60,8 +60,8 @@ public interface EPNContainer {
      * @param channels The list of channels
      * @throws Exception Failed to send the events
      */
-    //public void send(EventList events,
-     //               java.util.List<Channel> channels) throws Exception;
+    public void send(EventList events,
+                    java.util.List<Channel> channels) throws Exception;
 
     /**
      * This method sends the supplied events to the supplied list
@@ -72,7 +72,7 @@ public interface EPNContainer {
      * @param channels The list of channels
      * @throws Exception Failed to send the events
      */
-    //public void send(EventList events, int retriesLeft,
-     //               java.util.List<Channel> channels) throws Exception;
+    public void send(EventList events, int retriesLeft,
+                    java.util.List<Channel> channels) throws Exception;
 
 }

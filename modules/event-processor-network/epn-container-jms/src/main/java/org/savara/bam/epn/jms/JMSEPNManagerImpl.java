@@ -17,6 +17,7 @@
  */
 package org.savara.bam.epn.jms;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,7 +73,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     private MessageProducer _eventsProducer=null;
     private MessageProducer _notificationsProducer=null;
     
-    private EPNContainer _context=new JMSEPNContext();
+    private EPNContainer _container=new JMSEPNContainer();
     
     private static final Logger LOG=Logger.getLogger(JMSEPNManagerImpl.class.getName());
 
@@ -80,7 +81,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * {@inheritDoc}
      */
     protected EPNContainer getContainer() {
-        return (_context);
+        return (_container);
     }
     
     /**
@@ -328,10 +329,10 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     }
     
     /**
-     * This class provides the JMS implementation of the EPN context.
+     * This class provides the JMS implementation of the EPN container.
      *
      */
-    protected class JMSEPNContext implements EPNContainer {
+    protected class JMSEPNContainer implements EPNContainer {
 
         /**
          * {@inheritDoc}
@@ -346,6 +347,69 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
          */
         public Channel getChannel(String subject) throws Exception {
             return new JMSChannel(_session, _eventsProducer, subject);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void send(EventList events, List<Channel> channels)
+                throws Exception {
+            send(events, -1, channels);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void send(EventList events, int retriesLeft,
+                List<Channel> channels) throws Exception {
+            javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
+            
+            String subjects=null;
+            String destNodes=null;
+            String networkName=null;
+            String sourceNode=null;
+            
+            for (Channel channel : channels) {
+                if (channel instanceof JMSChannel) {
+                    if (((JMSChannel)channel).getSubject() != null) {
+                        if (subjects == null) {
+                            subjects = ((JMSChannel)channel).getSubject();
+                        } else {
+                            subjects += ","+((JMSChannel)channel).getSubject();
+                        }
+                    } else {
+                        if (destNodes == null) {
+                            destNodes = ((JMSChannel)channel).getDestinationNode();
+                            networkName = ((JMSChannel)channel).getNetworkName();
+                            sourceNode = ((JMSChannel)channel).getSourceNode();
+                        } else {
+                            destNodes += ","+((JMSChannel)channel).getDestinationNode();
+                        }
+                    }
+                } else {
+                    LOG.severe("Unexpected channel type '"+channel+"'");
+                }
+            }
+            
+            if (subjects != null) {
+                mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, subjects);
+            }
+            
+            if (destNodes != null) {
+                mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
+                mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, destNodes);
+                mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, sourceNode);   
+                mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
+            }
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Send events network="+networkName+
+                        " sourceNode="+sourceNode+
+                        " nodes="+destNodes+
+                        " subjects="+subjects+" events="+events);
+            }
+
+            _eventsProducer.send(mesg);  
         }
 
     }

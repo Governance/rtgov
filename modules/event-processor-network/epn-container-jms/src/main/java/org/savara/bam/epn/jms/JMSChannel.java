@@ -73,6 +73,42 @@ public class JMSChannel implements Channel {
     }
     
     /**
+     * This method returns the subject.
+     * 
+     * @return The subject
+     */
+    public String getSubject() {
+        return (_subject);
+    }
+    
+    /**
+     * This method returns the network name.
+     * 
+     * @return The network name
+     */
+    public String getNetworkName() {
+        return (_networkName);
+    }
+    
+    /**
+     * This method returns the destination node.
+     * 
+     * @return The destination node
+     */
+    public String getDestinationNode() {
+        return (_destinationNode);
+    }
+    
+    /**
+     * This method returns the source node.
+     * 
+     * @return The source node
+     */
+    public String getSourceNode() {
+        return (_sourceNode);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void send(EventList events) throws Exception {
