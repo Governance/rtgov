@@ -117,7 +117,7 @@ public class Network {
      * @param context The container context
      * @throws Exception Failed to initialize the network
      */
-    protected void init(EPNContext context) throws Exception {
+    protected void init(EPNContainer context) throws Exception {
         for (String name : _nodes.keySet()) {
             Node node=_nodes.get(name);
             node.init(context, name);
@@ -140,7 +140,7 @@ public class Network {
      * @param events The list of events to be processed
      * @throws Exception Failed to process events, and should result in transaction rollback
      */
-    protected void process(EPNContext context, EventList events) throws Exception {
+    protected void process(EPNContainer context, EventList events) throws Exception {
  
         if (_root != null) {
             _root.process(context, null, events, _root.getMaxRetries());
@@ -153,7 +153,7 @@ public class Network {
      * @param context The container context
      * @throws Exception Failed to close the network
      */
-    protected void close(EPNContext context) throws Exception {
+    protected void close(EPNContainer context) throws Exception {
         for (String name : _nodes.keySet()) {
             Node node=_nodes.get(name);
             node.close(context, name);

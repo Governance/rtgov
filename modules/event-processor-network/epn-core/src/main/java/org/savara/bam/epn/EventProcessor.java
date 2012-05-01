@@ -31,10 +31,9 @@ public abstract class EventProcessor {
     /**
      * This method initializes the event processor.
      * 
-     * @param context The container context
      * @throws Exception Failed to initialize
      */
-    public void init(EPNContext context) throws Exception {
+    public void init() throws Exception {
     }
     
     /**
@@ -58,10 +57,9 @@ public abstract class EventProcessor {
     /**
      * This method closes the event processor.
      * 
-     * @param context The container context
      * @throws Exception Failed to close
      */
-    public void close(EPNContext context) throws Exception {
+    public void close() throws Exception {
     }
 
 }

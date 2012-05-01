@@ -40,7 +40,7 @@ public class AbstractEPNManagerTest {
                     java.util.List<java.io.Serializable> events) throws Exception {
             }
             
-            public EPNContext getContext() {
+            public EPNContainer getContext() {
                 return null;
             }
         });

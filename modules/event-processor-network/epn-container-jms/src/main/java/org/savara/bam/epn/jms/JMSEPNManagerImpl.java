@@ -34,7 +34,7 @@ import javax.jms.Session;
 
 import org.savara.bam.epn.AbstractEPNManager;
 import org.savara.bam.epn.Channel;
-import org.savara.bam.epn.EPNContext;
+import org.savara.bam.epn.EPNContainer;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.internal.EventList;
@@ -72,14 +72,14 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     
     private java.util.Map<String, JMSChannel> _networkChannels=new java.util.HashMap<String, JMSChannel>();
     
-    private EPNContext _context=new JMSEPNContext();
+    private EPNContainer _context=new JMSEPNContext();
     
     private static final Logger LOG=Logger.getLogger(JMSEPNManagerImpl.class.getName());
 
     /**
      * {@inheritDoc}
      */
-    protected EPNContext getContext() {
+    protected EPNContainer getContext() {
         return (_context);
     }
     
@@ -293,7 +293,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * This class provides the JMS implementation of the EPN context.
      *
      */
-    protected class JMSEPNContext implements EPNContext {
+    protected class JMSEPNContext implements EPNContainer {
 
         /**
          * {@inheritDoc}

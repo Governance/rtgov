@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import org.savara.bam.epn.AbstractEPNManager;
 import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.Destination;
-import org.savara.bam.epn.EPNContext;
+import org.savara.bam.epn.EPNContainer;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.internal.EventList;
@@ -43,14 +43,14 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     private static final int MAX_THREADS = 10;
 
     private ExecutorService _executor=Executors.newFixedThreadPool(MAX_THREADS);
-    private EPNContext _context=new EmbeddedEPNContext();
+    private EPNContainer _context=new EmbeddedEPNContext();
     
     private java.util.Map<String,Channel> _entryPoints=new java.util.HashMap<String,Channel>();
     
     /**
      * {@inheritDoc}
      */
-    protected EPNContext getContext() {
+    protected EPNContainer getContext() {
         return (_context);
     }
     
@@ -100,7 +100,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
      * The embedded implementation of the EPNContext.
      *
      */
-    protected class EmbeddedEPNContext implements EPNContext {
+    protected class EmbeddedEPNContext implements EPNContainer {
 
         /**
          * {@inheritDoc}

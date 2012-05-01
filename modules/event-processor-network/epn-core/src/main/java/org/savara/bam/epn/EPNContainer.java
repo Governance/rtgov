@@ -18,12 +18,11 @@
 package org.savara.bam.epn;
 
 /**
- * This interface provides the context in which the network will be
- * initialized. The context will be implemented by a container
- * implementation.
+ * This interface represents the container in which the network will be
+ * initialized and processed.
  *
  */
-public interface EPNContext {
+public interface EPNContainer {
 
     /**
      * This method returns the channel associated with the supplied

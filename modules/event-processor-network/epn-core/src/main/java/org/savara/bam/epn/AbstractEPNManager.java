@@ -40,7 +40,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * 
      * @return The context
      */
-    protected abstract EPNContext getContext();
+    protected abstract EPNContainer getContext();
     
     /**
      * {@inheritDoc}

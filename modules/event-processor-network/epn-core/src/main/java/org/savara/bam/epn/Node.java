@@ -167,28 +167,28 @@ public class Node {
     /**
      * This method initializes the node.
      * 
-     * @param context The context
+     * @param container The container
      * @param nodeName The node's name
      * @throws Exception Failed to initialize the node
      */
-    protected void init(EPNContext context, String nodeName) throws Exception {
+    protected void init(EPNContainer container, String nodeName) throws Exception {
         
         // Obtain the channels associated with the specified destinations
         if (_destinations != null) {
             for (Destination d : _destinations) {
-                _channels.add(context.getChannel(nodeName, d));
+                _channels.add(container.getChannel(nodeName, d));
             }
         }
         
         if (getPredicate() != null) {
-            getPredicate().init(context);
+            getPredicate().init();
         }
         
         if (getEventProcessor() == null) {
             throw new Exception("Event Processor has not been configured for node '"+nodeName+"'");
         }
         
-        getEventProcessor().init(context);
+        getEventProcessor().init();
     }
     
     /**
@@ -197,14 +197,14 @@ public class Node {
      * which transformed events should be forwarded, and which need
      * to be returned to be retried.
      * 
-     * @param context The context
+     * @param container The container
      * @param source The source node that generated the event
      * @param events The list of events to be processed
      * @param retriesLeft The number of remaining retries
      * @return The events to retry, or null if no retries necessary
      * @throws Exception Failed to process events, and should result in transaction rollback
      */
-    protected EventList process(EPNContext context, String source,
+    protected EventList process(EPNContainer container, String source,
                       EventList events, int retriesLeft) throws Exception {
         EventList retries=null;
         EventList results=new EventList();
@@ -232,7 +232,7 @@ public class Node {
         }
         
         if (results.size() > 0) {
-            forward(context, results);
+            forward(container, results);
         }
         
         return (retries);
@@ -242,11 +242,11 @@ public class Node {
      * This method forwards the results to any destinations that have been
      * defined.
      * 
-     * @param context The context
+     * @param container The container
      * @param results The results
      * @throws Exception Failed to forward results
      */
-    protected void forward(EPNContext context, EventList results) throws Exception {
+    protected void forward(EPNContainer container, EventList results) throws Exception {
         
         for (Channel ch : _channels) {
             ch.send(results);
@@ -256,22 +256,22 @@ public class Node {
     /**
      * This method closes the node.
      * 
-     * @param context The container context
+     * @param container The container
      * @param nodeName The node name
      * @throws Exception Failed to close the node
      */
-    protected void close(EPNContext context, String nodeName) throws Exception {
+    protected void close(EPNContainer container, String nodeName) throws Exception {
         
         for (Channel ch : _channels) {
             ch.close();
         }
         
         if (getPredicate() != null) {
-            getPredicate().close(context);
+            getPredicate().close();
         }
         
         if (getEventProcessor() == null) {
-            getEventProcessor().close(context);
+            getEventProcessor().close();
         }
     }
     

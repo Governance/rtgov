@@ -19,9 +19,9 @@ package org.savara.bam.epn.testdata;
 
 import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.Destination;
-import org.savara.bam.epn.EPNContext;
+import org.savara.bam.epn.EPNContainer;
 
-public class TestEPNContext implements EPNContext {
+public class TestEPNContext implements EPNContainer {
     
     private Channel _channel;
 
