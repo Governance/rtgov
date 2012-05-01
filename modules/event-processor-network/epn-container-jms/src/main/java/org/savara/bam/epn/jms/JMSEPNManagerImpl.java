@@ -79,7 +79,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     /**
      * {@inheritDoc}
      */
-    protected EPNContainer getContext() {
+    protected EPNContainer getContainer() {
         return (_context);
     }
     

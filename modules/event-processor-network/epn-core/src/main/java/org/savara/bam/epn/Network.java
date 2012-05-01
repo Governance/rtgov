@@ -27,6 +27,7 @@ public class Network {
 
     private String _name=null;
     private long _timestamp=0;
+    private java.util.List<String> _subjects=new java.util.ArrayList<String>();
     private String _rootNodeName=null;
     private java.util.Map<String,Node> _nodes=new java.util.HashMap<String,Node>();
     
@@ -76,6 +77,26 @@ public class Network {
     }
     
     /**
+     * This method returns the list of subjects that the network will subscribe
+     * to for events.
+     * 
+     * @return The list of subjects
+     */
+    public java.util.List<String> getSubjects() {
+        return (_subjects);
+    }
+    
+    /**
+     * This method sets the list of subjects that the network will subscribe
+     * to for events.
+     * 
+     * @param subjects The list of subjects
+     */
+    public void setSubjects(java.util.List<String> subjects) {
+        _subjects = subjects;
+    }
+    
+    /**
      * This method returns the root node name.
      * 
      * @return The root node name
@@ -114,13 +135,13 @@ public class Network {
     /**
      * This method initializes the network.
      * 
-     * @param context The container context
+     * @param container The container
      * @throws Exception Failed to initialize the network
      */
-    protected void init(EPNContainer context) throws Exception {
+    protected void init(EPNContainer container) throws Exception {
         for (String name : _nodes.keySet()) {
             Node node=_nodes.get(name);
-            node.init(context, name);
+            node.init(container, name);
             
             if (name.equals(getRootNodeName())) {
                 _root = node;                
@@ -136,27 +157,27 @@ public class Network {
      * This method processes the supplied list of events against the root
      * event processor node associated with the network.
      * 
-     * @param context The context
+     * @param container The container
      * @param events The list of events to be processed
      * @throws Exception Failed to process events, and should result in transaction rollback
      */
-    protected void process(EPNContainer context, EventList events) throws Exception {
+    protected void process(EPNContainer container, EventList events) throws Exception {
  
         if (_root != null) {
-            _root.process(context, null, events, _root.getMaxRetries());
+            _root.process(container, null, events, _root.getMaxRetries());
         }
     }
 
     /**
      * This method closes the network.
      * 
-     * @param context The container context
+     * @param container The container
      * @throws Exception Failed to close the network
      */
-    protected void close(EPNContainer context) throws Exception {
+    protected void close(EPNContainer container) throws Exception {
         for (String name : _nodes.keySet()) {
             Node node=_nodes.get(name);
-            node.close(context, name);
+            node.close(container, name);
         }
     }
     

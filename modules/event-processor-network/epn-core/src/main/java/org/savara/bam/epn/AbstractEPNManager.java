@@ -36,11 +36,11 @@ public abstract class AbstractEPNManager implements EPNManager {
                         new java.util.Vector<NodeListener>();
     
     /**
-     * This method returns the Event Processor Network Context.
+     * This method returns the Event Processor Network Container.
      * 
-     * @return The context
+     * @return The container
      */
-    protected abstract EPNContainer getContext();
+    protected abstract EPNContainer getContainer();
     
     /**
      * {@inheritDoc}
@@ -51,7 +51,7 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         _networkMap.put(network.getName(), network);
         
-        network.init(getContext());
+        network.init(getContainer());
     }
 
     /**
@@ -141,7 +141,7 @@ public abstract class AbstractEPNManager implements EPNManager {
                     +" source="+source+" retriesLeft="+retriesLeft+" events="+events);
         }
 
-        EventList ret=node.process(getContext(), source, events, retriesLeft);
+        EventList ret=node.process(getContainer(), source, events, retriesLeft);
         
         if (node.getNotificationEnabled()
                 && (ret == null || ret.size() < events.size())) { 

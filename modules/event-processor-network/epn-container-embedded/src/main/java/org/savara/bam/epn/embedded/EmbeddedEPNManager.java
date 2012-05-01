@@ -45,12 +45,13 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     private ExecutorService _executor=Executors.newFixedThreadPool(MAX_THREADS);
     private EPNContainer _context=new EmbeddedEPNContainer();
     
-    private java.util.Map<String,Channel> _entryPoints=new java.util.HashMap<String,Channel>();
+    private java.util.Map<String,java.util.List<EmbeddedChannel>> _entryPoints=
+                        new java.util.HashMap<String,java.util.List<EmbeddedChannel>>();
     
     /**
      * {@inheritDoc}
      */
-    protected EPNContainer getContext() {
+    protected EPNContainer getContainer() {
         return (_context);
     }
     
@@ -60,32 +61,65 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     public void register(Network network) throws Exception {
         super.register(network);
         
-        Node rootNode=network.getNodes().get(network.getRootNodeName());
-        
-        _entryPoints.put(network.getName(), new EmbeddedChannel(network.getName(),
-                network.getRootNodeName(), rootNode, null));
+        synchronized (_entryPoints) {
+            Node rootNode=network.getNodes().get(network.getRootNodeName());
+            
+            for (String subject : network.getSubjects()) {
+                java.util.List<EmbeddedChannel> channels=_entryPoints.get(subject);
+                
+                if (channels == null) {
+                    channels = new java.util.ArrayList<EmbeddedChannel>();
+                    _entryPoints.put(subject, channels);
+                }
+                
+                channels.add(new EmbeddedChannel(network.getName(),
+                        network.getRootNodeName(), rootNode, null));
+            }
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public void unregister(String networkName) throws Exception {
-        super.unregister(networkName);
         
-        _entryPoints.remove(networkName);
+        Network network=getNetwork(networkName);
+        
+        if (network != null) {
+            
+            synchronized (_entryPoints) {
+                for (String subject : network.getSubjects()) {
+                    java.util.List<EmbeddedChannel> channels=_entryPoints.get(subject);
+                    
+                    if (channels != null) {
+                        for (EmbeddedChannel ch : channels) {
+                            if (ch._networkName.equals(networkName)) {
+                                channels.remove(ch);
+                                if (channels.size() == 0) {
+                                    _entryPoints.remove(subject);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        super.unregister(networkName);
     }
 
     /**
      * {@inheritDoc}
      */
     public void publish(String subject, java.util.List<java.io.Serializable> events) throws Exception {
-        Channel channel=_entryPoints.get(subject);
+        java.util.List<EmbeddedChannel> channels=_entryPoints.get(subject);
         
-        if (channel == null) {
-            throw new Exception("No channel for subject '"+subject+"'");
+        if (channels != null) {
+            for (EmbeddedChannel channel : channels) {
+                channel.send(new EventList(events));                
+            }
         }
-        
-        channel.send(new EventList(events));
     }
 
     /**

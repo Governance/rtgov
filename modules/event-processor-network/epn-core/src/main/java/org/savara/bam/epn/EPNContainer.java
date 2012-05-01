@@ -17,6 +17,8 @@
  */
 package org.savara.bam.epn;
 
+//import org.savara.bam.epn.internal.EventList;
+
 /**
  * This interface represents the container in which the network will be
  * initialized and processed.
@@ -36,5 +38,28 @@ public interface EPNContainer {
      * @throws Exception Channel cannot be created
      */
     public Channel getChannel(String source, Destination dest) throws Exception;
+
+    /**
+     * This method sends the supplied events to the supplied list
+     * of channels.
+     * 
+     * @param events The events
+     * @param channels The list of channels
+     * @throws Exception Failed to send the events
+     */
+    //public void send(EventList events,
+     //               java.util.List<Channel> channels) throws Exception;
+
+    /**
+     * This method sends the supplied events to the supplied list
+     * of channels, specifying the number of retries remaining.
+     * 
+     * @param events The events
+     * @param retriesLeft The number of retries left
+     * @param channels The list of channels
+     * @throws Exception Failed to send the events
+     */
+    //public void send(EventList events, int retriesLeft,
+     //               java.util.List<Channel> channels) throws Exception;
 
 }
