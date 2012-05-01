@@ -30,19 +30,19 @@ public class EmbeddedEPNManagerTest {
     private static final int MAX_RETRIES = 4;
     private static final String N1 = "N1";
     private static final String N2 = "N2";
-    private static final String TEST_NETWORK = "TestNetwork";
+    private static final String TEST_SUBJECT = "TestSubject";
 
     @Test
     public void testEventTransformedForChild() {
         Network net=new Network();
-        net.setName(TEST_NETWORK);
+        net.setName(TEST_SUBJECT);
         net.setRootNodeName(N1);
         net.setTimestamp(0);
         
         Node n1=new Node();
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        n1.getDestinations().add(new Destination(TEST_NETWORK, N2));
+        n1.getDestinations().add(new Destination(TEST_SUBJECT, N2));
         net.getNodes().put(N1, n1);
         
         Node n2=new Node();
@@ -62,7 +62,7 @@ public class EmbeddedEPNManagerTest {
             TestEvent1 te1=new TestEvent1(25);
             events.add(te1);
             
-            mgr.enqueue(TEST_NETWORK, events);
+            mgr.publish(TEST_SUBJECT, events);
             
             // Need to delay awaiting processing via other threads
             Thread.sleep(1000);
@@ -88,14 +88,14 @@ public class EmbeddedEPNManagerTest {
     @Test
     public void testEventRetries() {
         Network net=new Network();
-        net.setName(TEST_NETWORK);
+        net.setName(TEST_SUBJECT);
         net.setRootNodeName(N1);
         net.setTimestamp(0);
         
         Node n1=new Node();
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        n1.getDestinations().add(new Destination(TEST_NETWORK, N2));
+        n1.getDestinations().add(new Destination(TEST_SUBJECT, N2));
         net.getNodes().put(N1, n1);
         
         Node n2=new Node();
@@ -116,7 +116,7 @@ public class EmbeddedEPNManagerTest {
             TestEvent1 te1=new TestEvent1(25);
             events.add(te1);
             
-            mgr.enqueue(TEST_NETWORK, events);
+            mgr.publish(TEST_SUBJECT, events);
             
             // Need to delay awaiting processing via other threads
             Thread.sleep(1000);

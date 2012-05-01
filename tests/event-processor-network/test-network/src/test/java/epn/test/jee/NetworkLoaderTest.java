@@ -91,7 +91,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.enqueue(NetworkLoader.TEST_NETWORK, events);
+            _epnManager.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             
@@ -121,7 +121,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK);
+            _epnManager.unregister(NetworkLoader.TEST_SUBJECT);
         } catch(Exception e) {
             fail("Failed to unregister network: "+e);
         }
@@ -149,7 +149,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.enqueue(NetworkLoader.TEST_NETWORK, events);
+            _epnManager.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             
@@ -188,7 +188,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK);
+            _epnManager.unregister(NetworkLoader.TEST_SUBJECT);
         } catch(Exception e) {
             fail("Failed to unregister network: "+e);
         }
@@ -241,7 +241,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.enqueue(NetworkLoader.TEST_NETWORK, events);
+            _epnManager.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             
@@ -270,7 +270,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK);
+            _epnManager.unregister(NetworkLoader.TEST_SUBJECT);
         } catch(Exception e) {
             fail("Failed to unregister network: "+e);
         }

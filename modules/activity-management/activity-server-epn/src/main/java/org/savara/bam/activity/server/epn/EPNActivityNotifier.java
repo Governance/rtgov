@@ -39,7 +39,7 @@ import org.savara.bam.epn.internal.EventList;
  */
 public class EPNActivityNotifier implements ActivityNotifier {
 
-    private static final String NETWORK_NAME = "activities";
+    private static final String SUBJECT_NAME = "ActivityUnits";
 
     private static final Logger LOG=Logger.getLogger(EPNActivityNotifier.class.getName());
     
@@ -60,7 +60,7 @@ public class EPNActivityNotifier implements ActivityNotifier {
      * {@inheritDoc}
      */
     public void notify(List<ActivityUnit> activities) throws Exception {
-        _epnManager.enqueue(NETWORK_NAME, new EventList(activities));
+        _epnManager.publish(SUBJECT_NAME, new EventList(activities));
     }
 
     /**

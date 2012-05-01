@@ -43,7 +43,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     private static final int MAX_THREADS = 10;
 
     private ExecutorService _executor=Executors.newFixedThreadPool(MAX_THREADS);
-    private EPNContainer _context=new EmbeddedEPNContext();
+    private EPNContainer _context=new EmbeddedEPNContainer();
     
     private java.util.Map<String,Channel> _entryPoints=new java.util.HashMap<String,Channel>();
     
@@ -78,11 +78,11 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     /**
      * {@inheritDoc}
      */
-    public void enqueue(String network, java.util.List<java.io.Serializable> events) throws Exception {
-        Channel channel=_entryPoints.get(network);
+    public void publish(String subject, java.util.List<java.io.Serializable> events) throws Exception {
+        Channel channel=_entryPoints.get(subject);
         
         if (channel == null) {
-            throw new Exception("No channel for network '"+network+"'");
+            throw new Exception("No channel for subject '"+subject+"'");
         }
         
         channel.send(new EventList(events));
@@ -97,10 +97,10 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     }
     
     /**
-     * The embedded implementation of the EPNContext.
+     * The embedded implementation of the EPNContainer.
      *
      */
-    protected class EmbeddedEPNContext implements EPNContainer {
+    protected class EmbeddedEPNContainer implements EPNContainer {
 
         /**
          * {@inheritDoc}

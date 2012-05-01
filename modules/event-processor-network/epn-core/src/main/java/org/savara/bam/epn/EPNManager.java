@@ -55,14 +55,14 @@ public interface EPNManager {
     public void removeNodeListener(NodeListener l);
     
     /**
-     * This method queues up the supplied events to be processed
-     * by the specified network.
+     * This method publishes the supplied events to be processed
+     * by any network subscribed to the nominated subject.
      * 
-     * @param network The name of the network
+     * @param subject The subject upon which to publish the events
      * @param events The list of events to be processed
-     * @throws Exception Failed to enqueue the events
+     * @throws Exception Failed to publish the events
      */
-    public void enqueue(String network,
+    public void publish(String subject,
                  java.util.List<java.io.Serializable> events) throws Exception;
     
     /**

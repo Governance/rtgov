@@ -35,6 +35,8 @@ public class NetworkLoader {
     public static final String CHILD_A = "ChildA";
     /** The child B. **/
     public static final String CHILD_B = "ChildB";
+    /** The subject. **/
+    public static final String TEST_SUBJECT = "TestNetwork";
     /** The network. **/
     public static final String TEST_NETWORK = "TestNetwork";
     /** The file. **/

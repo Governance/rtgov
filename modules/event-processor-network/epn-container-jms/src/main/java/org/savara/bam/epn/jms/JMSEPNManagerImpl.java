@@ -131,15 +131,15 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     /**
      * {@inheritDoc}
      */
-    public void enqueue(String network, java.util.List<java.io.Serializable> events) throws Exception {
-        JMSChannel channel=_networkChannels.get(network);
+    public void publish(String subject, java.util.List<java.io.Serializable> events) throws Exception {
+        JMSChannel channel=_networkChannels.get(subject);
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Enqueue "+events+" on network "+network+" channel="+channel);
+            LOG.finest("Enqueue "+events+" on network "+subject+" channel="+channel);
         }
         
         if (channel == null) {
-            throw new Exception("Unable to find channel for network '"+network+"'");
+            throw new Exception("Unable to find channel for network '"+subject+"'");
         }
         
         channel.send(new EventList(events));

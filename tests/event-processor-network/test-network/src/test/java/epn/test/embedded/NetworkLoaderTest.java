@@ -76,7 +76,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            mgr.enqueue(NetworkLoader.TEST_NETWORK, events);
+            mgr.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             
@@ -130,7 +130,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            mgr.enqueue(NetworkLoader.TEST_NETWORK, events);
+            mgr.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             
@@ -210,7 +210,7 @@ public class NetworkLoaderTest {
         childB.reject(rej3);
         
         try {
-            mgr.enqueue(NetworkLoader.TEST_NETWORK, events);
+            mgr.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             

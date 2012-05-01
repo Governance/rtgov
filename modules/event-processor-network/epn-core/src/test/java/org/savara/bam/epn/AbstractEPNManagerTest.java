@@ -36,7 +36,7 @@ public class AbstractEPNManagerTest {
     protected AbstractEPNManager getManager() {
         return(new AbstractEPNManager() {
             
-            public void enqueue(String network,
+            public void publish(String subject,
                     java.util.List<java.io.Serializable> events) throws Exception {
             }
             
