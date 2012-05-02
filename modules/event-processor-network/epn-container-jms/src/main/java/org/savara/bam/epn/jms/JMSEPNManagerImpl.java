@@ -61,6 +61,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     public static final String EPN_SUBJECTS = "EPNSubjects";
     /** The EPN Network Name. **/
     public static final String EPN_NETWORK = "EPNNetwork";
+    /** The EPN Timestamp. **/
+    public static final String EPN_TIMESTAMP = "EPNTimestamp";
     /** The EPN Destination Node Names. **/
     public static final String EPN_DESTINATION_NODES = "EPNDestinationNodes";
     /** The EPN Source Node Name. **/
@@ -144,11 +146,12 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             
             if (message.propertyExists(EPN_NETWORK)) {
                 String network=message.getStringProperty(JMSEPNManagerImpl.EPN_NETWORK);
+                long timestamp=message.getLongProperty(JMSEPNManagerImpl.EPN_TIMESTAMP);
                 String node=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES);
                 String source=message.getStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE);
                 int retriesLeft=message.getIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT);
                 
-                dispatchToNodes(network, node, source, events, retriesLeft);
+                dispatchToNodes(network, timestamp, node, source, events, retriesLeft);
             }
         } else {
             LOG.severe("Unsupport message '"+message+"' received");
@@ -180,7 +183,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                 }
             } else {
                 for (Network network : networks) {
-                    dispatch(network.getName(), null, null, events, -1);
+                    // Dispatch to root node for latest version of named network
+                    dispatch(network.getName(), 0, null, null, events, -1);
                 }
             }
         }
@@ -191,13 +195,14 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * the named network.
      * 
      * @param networkName The name of the network
+     * @param timestamp The timestamp, or 0 for current
      * @param nodeList The list of nodes
      * @param source The source node, or null if sending to root
      * @param events The list of events to be processed
      * @param retriesLeft The number of retries left, or -1 if should be max value
      * @throws Exception Failed to dispatch the events for processing
      */
-    protected void dispatchToNodes(String networkName, String nodeList, String source,
+    protected void dispatchToNodes(String networkName, long timestamp, String nodeList, String source,
                         EventList events, int retriesLeft) throws Exception {
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -206,7 +211,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
 
         String[] nodes=nodeList.split(",");
         for (String nodeName : nodes) {
-            dispatch(networkName, nodeName, source, events, retriesLeft);
+            dispatch(networkName, timestamp, nodeName, source, events, retriesLeft);
         }
     }
 
@@ -226,9 +231,10 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             EventList events=(EventList)((ObjectMessage)message).getObject();
             
             String networkName=message.getStringProperty(JMSEPNManagerImpl.EPN_NETWORK);
+            long timestamp=message.getLongProperty(JMSEPNManagerImpl.EPN_TIMESTAMP);
             String nodeName=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES);
             
-            dispatchEventsProcessedToListeners(networkName, nodeName, events);
+            dispatchEventsProcessedToListeners(networkName, timestamp, nodeName, events);
         } else {
             LOG.severe("Unsupport message '"+message+"' received");
         }
@@ -240,29 +246,32 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * be dispatched to the 'root' node of the network.
      * 
      * @param networkName The name of the network
+     * @param timestamp The timestamp, or 0 if current
      * @param nodeName The optional node name, or root node if not specified
      * @param source The source node, or null if sending to root
      * @param events The list of events to be processed
      * @param retriesLeft The number of retries left, or -1 if should be max value
      * @throws Exception Failed to dispatch the events for processing
      */
-    protected void dispatch(String networkName, String nodeName, String source, EventList events,
+    protected void dispatch(String networkName, long timestamp, String nodeName,
+                            String source, EventList events,
                             int retriesLeft) throws Exception {
-        Node node=getNode(networkName, nodeName);
+        Node node=getNode(networkName, timestamp, nodeName);
         
         if (retriesLeft == -1) {
             retriesLeft = node.getMaxRetries();
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Dispatch "+networkName+"/"+nodeName+" ("+node+
+            LOG.finest("Dispatch "+networkName+"/"+timestamp+"/"+nodeName+" ("+node+
                     ") events="+events+" retriesLeft="+retriesLeft);
         }
 
-        EventList retries=process(networkName, nodeName, node, source, events, retriesLeft);
+        EventList retries=process(networkName, timestamp, nodeName, node,
+                            source, events, retriesLeft);
         
         if (retries != null) {
-            retry(networkName, nodeName, source, retries, retriesLeft-1);
+            retry(networkName, timestamp, nodeName, source, retries, retriesLeft-1);
         }
     }
     
@@ -271,13 +280,14 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * retries left is greater than 0.
      * 
      * @param networkName The name of the network
+     * @param timestamp The timestamp
      * @param nodeName The optional node name, or root node if not specified
      * @param source The source
      * @param events The events
      * @param retriesLeft The number of retries now remaining after this failure to process them
      * @throws Exception Failed to retry the events processing
      */
-    protected void retry(String networkName, String nodeName, 
+    protected void retry(String networkName, long timestamp, String nodeName, 
             String source, EventList events, int retriesLeft) throws Exception {
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -287,6 +297,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         if (retriesLeft > 0) {
             javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
             mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
+            mesg.setLongProperty(JMSEPNManagerImpl.EPN_TIMESTAMP, timestamp);
             mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
             mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, source);
             mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
@@ -302,14 +313,15 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * {@inheritDoc}
      */
     @Override
-    protected void notifyEventsProcessed(String networkName, String nodeName, EventList events)
-                                    throws Exception {
+    protected void notifyEventsProcessed(String networkName, long timestamp,
+                    String nodeName, EventList events) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Notify events processed "+networkName+"/"+nodeName+" events="+events);
+            LOG.finest("Notify events processed "+networkName+"/"+timestamp+"/"+nodeName+" events="+events);
         }
 
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
+        mesg.setLongProperty(JMSEPNManagerImpl.EPN_TIMESTAMP, timestamp);
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
         _notificationsProducer.send(mesg);
     }
@@ -337,9 +349,9 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         /**
          * {@inheritDoc}
          */
-        public Channel getChannel(String networkName, String source, String dest)
+        public Channel getChannel(String networkName, long timestamp, String source, String dest)
                 throws Exception {
-            return new JMSChannel(_session, _eventsProducer, networkName, source, dest);
+            return new JMSChannel(_session, _eventsProducer, networkName, timestamp, source, dest);
         }
 
         /**
@@ -367,6 +379,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             String subjects=null;
             String destNodes=null;
             String networkName=null;
+            long timestamp=0;
             String sourceNode=null;
             
             for (Channel channel : channels) {
@@ -381,6 +394,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                         if (destNodes == null) {
                             destNodes = ((JMSChannel)channel).getDestinationNode();
                             networkName = ((JMSChannel)channel).getNetworkName();
+                            timestamp = ((JMSChannel)channel).getTimestamp();
                             sourceNode = ((JMSChannel)channel).getSourceNode();
                         } else {
                             destNodes += ","+((JMSChannel)channel).getDestinationNode();
@@ -397,6 +411,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             
             if (destNodes != null) {
                 mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
+                mesg.setLongProperty(JMSEPNManagerImpl.EPN_TIMESTAMP, timestamp);
                 mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, destNodes);
                 mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, sourceNode);   
                 mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
@@ -404,6 +419,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Send events network="+networkName+
+                        " timestamp="+timestamp+
                         " sourceNode="+sourceNode+
                         " nodes="+destNodes+
                         " subjects="+subjects+" events="+events);

@@ -32,6 +32,10 @@ public class AbstractEPNManagerTest {
     private static final String N2 = "N2";
     private static final String N3 = "N3";
     private static final String TEST_NETWORK = "TestNetwork";
+    private static final String TEST_SUBJECT1 = "TestSubject1";
+    private static final String TEST_SUBJECT2 = "TestSubject2";
+    private static final long TS1 = 1L;
+    private static final long TS2 = 2L;
 
     protected AbstractEPNManager getManager() {
         return(new AbstractEPNManager() {
@@ -113,18 +117,18 @@ public class AbstractEPNManagerTest {
             fail("Failed to register network: "+e);
         }
         
-        if (mgr.getNetwork(TEST_NETWORK) != net) {
+        if (mgr.getNetwork(TEST_NETWORK, 0) != net) {
             fail("Failed to find test network");
         }
         
         try {
-            if (mgr.getNode(TEST_NETWORK, N1) != n1) {
+            if (mgr.getNode(TEST_NETWORK, 0, N1) != n1) {
                 fail("Failed to find node n1");
             }
-            if (mgr.getNode(TEST_NETWORK, N2) != n2) {
+            if (mgr.getNode(TEST_NETWORK, 0, N2) != n2) {
                 fail("Failed to find node n2");
             }
-            if (mgr.getNode(TEST_NETWORK, N3) != n3) {
+            if (mgr.getNode(TEST_NETWORK, 0, N3) != n3) {
                 fail("Failed to find node n3");
             }
         } catch(Exception e) {
@@ -163,7 +167,7 @@ public class AbstractEPNManagerTest {
             
             tep.retry(te2);
             
-            EventList retries=mgr.process(TEST_NETWORK, N1, n1, null, el, 3);
+            EventList retries=mgr.process(TEST_NETWORK, 0, N1, n1, null, el, 3);
             
             if (retries == null) {
                 fail("Retries is null");
@@ -193,6 +197,101 @@ public class AbstractEPNManagerTest {
                 fail("Processed Event node name incorrect");
             }
             
+        } catch(Exception e) {
+            fail("Failed with exception: "+e);
+        }
+    }
+
+    @Test
+    public void testRegisterMultipleNetworkVersions() {
+        Network net1=new Network();
+        net1.setName(TEST_NETWORK);
+        net1.setTimestamp(TS1);
+        net1.setRootNodeName(N1);
+        net1.getSubjects().add(TEST_SUBJECT1);
+        
+        TestEventProcessorA tep=new TestEventProcessorA();
+        
+        Node n1=new Node();
+        n1.setEventProcessor(tep);
+        net1.getNodes().put(N1, n1);
+        
+        Network net2=new Network();
+        net2.setName(TEST_NETWORK);
+        net2.setTimestamp(TS2);
+        net2.setRootNodeName(N2);
+        net2.getSubjects().add(TEST_SUBJECT2);
+        
+        Node n2=new Node();
+        n2.setEventProcessor(tep);
+        net2.getNodes().put(N2, n2);
+        
+        AbstractEPNManager mgr=getManager();
+        
+        try {
+            mgr.register(net1);
+            
+            // Check if network subscribed to subject
+            java.util.List<Network> res1=mgr.getNetworksForSubject(TEST_SUBJECT1);
+            
+            if (res1 == null) {
+                fail("Network list is null");
+            }
+            
+            if (res1.size() != 1) {
+                fail("Network list should have 1 entry: "+res1.size());
+            }
+            
+            if (res1.get(0) != net1) {
+                fail("Network should be net1");
+            }
+            
+            mgr.register(net2);
+            
+            // Refresh subject list
+            res1 = mgr.getNetworksForSubject(TEST_SUBJECT1);
+            
+            if (res1 != null) {
+                fail("List for subject1 should now be null");
+            }
+            
+            // Check if network subscribed to subject
+            java.util.List<Network> res2=mgr.getNetworksForSubject(TEST_SUBJECT2);
+            
+            if (res2 == null) {
+                fail("Network list2 is null");
+            }
+            
+            if (res2.size() != 1) {
+                fail("Network list2 should have 1 entry: "+res2.size());
+            }
+            
+            if (res2.get(0) != net2) {
+                fail("Network should be net2");
+            }
+            
+            // Finally check that unsubscribing the current version will reinstate the old subjects
+            mgr.unregister(net2.getName(), net2.getTimestamp());
+            
+            res2 = mgr.getNetworksForSubject(TEST_SUBJECT2);
+            
+            if (res2 != null) {
+                fail("List for subject2 should now be null");
+            }
+            
+            res1 = mgr.getNetworksForSubject(TEST_SUBJECT1);
+            
+            if (res1 == null) {
+                fail("List for subject1 should now be available again");
+            }
+            
+            if (res1.size() != 1) {
+                fail("Network list1 should have 1 entry again: "+res1.size());
+            }
+            
+            if (res1.get(0) != net1) {
+                fail("Network should be net1 again");
+            }
         } catch(Exception e) {
             fail("Failed with exception: "+e);
         }

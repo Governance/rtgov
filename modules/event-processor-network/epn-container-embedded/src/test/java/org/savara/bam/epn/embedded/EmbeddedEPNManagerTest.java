@@ -34,6 +34,8 @@ public class EmbeddedEPNManagerTest {
     private static final String TEST_SUBJECT = "TestSubject";
     private static final String TEST_NETWORK2 = "TestNetwork2";
     private static final String TEST_SUBJECT2 = "TestSubject2";
+    private static final long TS1 = 1L;
+    private static final long TS2 = 2L;    
 
     @Test
     public void testEventTransformedForChild() {
@@ -283,7 +285,7 @@ public class EmbeddedEPNManagerTest {
             
             mgr.register(net2);
             
-            mgr.unregister(TEST_NETWORK);
+            mgr.unregister(TEST_NETWORK, 0);
             
             java.util.List<EmbeddedChannel> ch1=mgr.getEntryPoints().get(TEST_SUBJECT);
             
@@ -293,7 +295,7 @@ public class EmbeddedEPNManagerTest {
                 fail("Number of channels for test subject should be 1: "+ch1.size());
             }
             
-            mgr.unregister(TEST_NETWORK2);
+            mgr.unregister(TEST_NETWORK2, 0);
             
             java.util.List<EmbeddedChannel> ch2=mgr.getEntryPoints().get(TEST_SUBJECT);
             
@@ -306,4 +308,172 @@ public class EmbeddedEPNManagerTest {
         }
     }
 
+    @Test
+    public void testMultipleVersionEntryPoints1() {
+        Network net1=new Network();
+        net1.setName(TEST_NETWORK);
+        net1.setRootNodeName(N1);
+        net1.setTimestamp(TS1);
+        
+        net1.getSubjects().add(TEST_SUBJECT);
+        
+        Node n1=new Node();
+        n1.setPredicate(new TestPredicate1());
+        n1.setEventProcessor(new TestEventProcessorB());
+        net1.getNodes().put(N1, n1);
+        
+        Network net2=new Network();
+        net2.setName(TEST_NETWORK);
+        net2.setRootNodeName(N2);
+        net2.setTimestamp(TS2);
+        
+        net2.getSubjects().add(TEST_SUBJECT);
+        
+        Node n2=new Node();
+        n2.setPredicate(new TestPredicate2());
+        n2.setMaxRetries(MAX_RETRIES);
+        
+        TestEventProcessorC tea=new TestEventProcessorC();
+        n2.setEventProcessor(tea);
+        net2.getNodes().put(N2, n2);
+        
+        EmbeddedEPNManager mgr=new EmbeddedEPNManager();
+        
+        try {
+            mgr.register(net1);
+            
+            java.util.List<EmbeddedChannel> ch1=mgr.getEntryPoints().get(TEST_SUBJECT);
+            
+            if (ch1 == null) {
+                fail("Failed to get channels for test subject");
+            } else if (ch1.size() != 1) {
+                fail("Number of channels for test subject should be 1: "+ch1.size());
+            }
+            
+            if (!ch1.get(0).getNodeName().equals(N1)) {
+                fail("Expected N1");
+            }
+            
+            mgr.register(net2);
+            
+            java.util.List<EmbeddedChannel> ch2=mgr.getEntryPoints().get(TEST_SUBJECT);
+            
+            if (ch2 == null) {
+                fail("Failed to get channels(2) for test subject");
+            } else if (ch2.size() != 1) {
+                fail("Number of channels(2) for test subject should be 1: "+ch2.size());
+            }
+            
+            if (!ch2.get(0).getNodeName().equals(N2)) {
+                fail("Expected N2");
+            }
+            
+            // This should revert the entry point back to N1
+            mgr.unregister(TEST_NETWORK, 0);
+
+            java.util.List<EmbeddedChannel> ch3=mgr.getEntryPoints().get(TEST_SUBJECT);
+            
+            if (ch3 == null) {
+                fail("Failed to get channels(3) for test subject");
+            } else if (ch3.size() != 1) {
+                fail("Number of channels(3) for test subject should be 1: "+ch3.size());
+            }
+            
+            if (!ch3.get(0).getNodeName().equals(N1)) {
+                fail("Expected N1 again");
+            }
+            
+            // This should revert the entry point back to N2
+            mgr.unregister(TEST_NETWORK, 0);
+
+            java.util.List<EmbeddedChannel> ch4=mgr.getEntryPoints().get(TEST_SUBJECT);
+            
+            if (ch4 != null) {
+                fail("Should be no channels for subject");
+            }
+            
+        } catch(Exception e) {
+            fail("Test failed: "+e);
+        }
+    }
+
+    @Test
+    public void testMultipleVersionEntryPoints2() {
+        Network net1=new Network();
+        net1.setName(TEST_NETWORK);
+        net1.setRootNodeName(N1);
+        net1.setTimestamp(TS1);
+        
+        net1.getSubjects().add(TEST_SUBJECT);
+        
+        Node n1=new Node();
+        n1.setPredicate(new TestPredicate1());
+        n1.setEventProcessor(new TestEventProcessorB());
+        net1.getNodes().put(N1, n1);
+        
+        Network net2=new Network();
+        net2.setName(TEST_NETWORK);
+        net2.setRootNodeName(N2);
+        net2.setTimestamp(TS2);
+        
+        net2.getSubjects().add(TEST_SUBJECT);
+        
+        Node n2=new Node();
+        n2.setPredicate(new TestPredicate2());
+        n2.setMaxRetries(MAX_RETRIES);
+        
+        TestEventProcessorC tea=new TestEventProcessorC();
+        n2.setEventProcessor(tea);
+        net2.getNodes().put(N2, n2);
+        
+        EmbeddedEPNManager mgr=new EmbeddedEPNManager();
+        
+        try {
+            mgr.register(net1);
+            
+            java.util.List<EmbeddedChannel> ch1=mgr.getEntryPoints().get(TEST_SUBJECT);
+            
+            if (ch1 == null) {
+                fail("Failed to get channels for test subject");
+            } else if (ch1.size() != 1) {
+                fail("Number of channels for test subject should be 1: "+ch1.size());
+            }
+            
+            if (!ch1.get(0).getNodeName().equals(N1)) {
+                fail("Expected N1");
+            }
+            
+            mgr.register(net2);
+            
+            java.util.List<EmbeddedChannel> ch2=mgr.getEntryPoints().get(TEST_SUBJECT);
+            
+            if (ch2 == null) {
+                fail("Failed to get channels(2) for test subject");
+            } else if (ch2.size() != 1) {
+                fail("Number of channels(2) for test subject should be 1: "+ch2.size());
+            }
+            
+            if (!ch2.get(0).getNodeName().equals(N2)) {
+                fail("Expected N2");
+            }
+            
+            // This should NOT revert the entry point back to N1
+            mgr.unregister(TEST_NETWORK, TS1);
+
+            java.util.List<EmbeddedChannel> ch3=mgr.getEntryPoints().get(TEST_SUBJECT);
+            
+            if (ch3 == null) {
+                fail("Failed to get channels(3) for test subject");
+            } else if (ch3.size() != 1) {
+                fail("Number of channels(3) for test subject should be 1: "+ch3.size());
+            }
+            
+            if (!ch3.get(0).getNodeName().equals(N2)) {
+                fail("Expected N2 still");
+            }
+            
+        } catch(Exception e) {
+            fail("Test failed: "+e);
+        }
+    }
 }

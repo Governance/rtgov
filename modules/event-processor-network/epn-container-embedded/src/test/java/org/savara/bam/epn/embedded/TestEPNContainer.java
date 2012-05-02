@@ -31,7 +31,7 @@ public class TestEPNContainer implements EPNContainer {
         _channel = ch;
     }
     
-    public Channel getChannel(String networkName, String source, String dest)
+    public Channel getChannel(String networkName, long timestamp, String source, String dest)
             throws Exception {
         return _channel;
     }

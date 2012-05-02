@@ -26,8 +26,8 @@ public class TestNodeListener implements NodeListener {
 
     private java.util.List<Entry> _entries=new java.util.Vector<Entry>();
     
-    public void eventsProcessed(String network, String node, List<Serializable> events) {
-        _entries.add(new Entry(network, node, events));
+    public void eventsProcessed(String network, long timestamp, String node, List<Serializable> events) {
+        _entries.add(new Entry(network, timestamp, node, events));
     }
 
     public java.util.List<Entry> getEntries() {
@@ -36,17 +36,23 @@ public class TestNodeListener implements NodeListener {
     
     public class Entry {
         private String _network=null;
+        private long _timestamp=0;
         private String _node=null;
         private List<Serializable> _events=null;
         
-        public Entry(String network, String node, List<Serializable> events) {
+        public Entry(String network, long timestamp, String node, List<Serializable> events) {
             _network = network;
+            _timestamp = timestamp;
             _node = node;
             _events = events;
         }
         
         public String getNetwork() {
             return(_network);
+        }
+        
+        public long getTimestamp() {
+            return (_timestamp);
         }
         
         public String getNode() {

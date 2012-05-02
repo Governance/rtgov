@@ -33,12 +33,14 @@ public interface EPNManager {
     public void register(Network network) throws Exception;
     
     /**
-     * This method unregisters a network.
+     * This method unregisters a network, associated with
+     * the supplied name and timestamp.
      * 
      * @param networkName The network name
+     * @param timestamp The timestamp, or 0 if current
      * @throws Exception Failed to unregister the network
      */
-    public void unregister(String networkName) throws Exception;
+    public void unregister(String networkName, long timestamp) throws Exception;
     
     /**
      * This method registers a node listener.

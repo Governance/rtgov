@@ -145,7 +145,8 @@ public class Network {
             // Initialize channels
             if (node.getDestinationNodes() != null) {
                 for (String nodeName : node.getDestinationNodes()) {
-                    node.getChannels().add(container.getChannel(getName(), name, nodeName));
+                    node.getChannels().add(container.getChannel(getName(),
+                                    getTimestamp(), name, nodeName));
                 }
             }
             
