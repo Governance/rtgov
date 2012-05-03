@@ -37,6 +37,6 @@
       "retryInterval" : 0
     }
   },
-  "timestamp" : 123456,
+  "version" : "123456",
   "rootNodeName" : "N0"
 }

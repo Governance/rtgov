@@ -34,8 +34,8 @@ public class AbstractEPNManagerTest {
     private static final String TEST_NETWORK = "TestNetwork";
     private static final String TEST_SUBJECT1 = "TestSubject1";
     private static final String TEST_SUBJECT2 = "TestSubject2";
-    private static final long TS1 = 1L;
-    private static final long TS2 = 2L;
+    private static final String VER1 = "1";
+    private static final String VER2 = "2";
 
     protected AbstractEPNManager getManager() {
         return(new AbstractEPNManager() {
@@ -117,18 +117,18 @@ public class AbstractEPNManagerTest {
             fail("Failed to register network: "+e);
         }
         
-        if (mgr.getNetwork(TEST_NETWORK, 0) != net) {
+        if (mgr.getNetwork(TEST_NETWORK, null) != net) {
             fail("Failed to find test network");
         }
         
         try {
-            if (mgr.getNode(TEST_NETWORK, 0, N1) != n1) {
+            if (mgr.getNode(TEST_NETWORK, null, N1) != n1) {
                 fail("Failed to find node n1");
             }
-            if (mgr.getNode(TEST_NETWORK, 0, N2) != n2) {
+            if (mgr.getNode(TEST_NETWORK, null, N2) != n2) {
                 fail("Failed to find node n2");
             }
-            if (mgr.getNode(TEST_NETWORK, 0, N3) != n3) {
+            if (mgr.getNode(TEST_NETWORK, null, N3) != n3) {
                 fail("Failed to find node n3");
             }
         } catch(Exception e) {
@@ -167,7 +167,7 @@ public class AbstractEPNManagerTest {
             
             tep.retry(te2);
             
-            EventList retries=mgr.process(TEST_NETWORK, 0, N1, n1, null, el, 3);
+            EventList retries=mgr.process(TEST_NETWORK, null, N1, n1, null, el, 3);
             
             if (retries == null) {
                 fail("Retries is null");
@@ -206,7 +206,7 @@ public class AbstractEPNManagerTest {
     public void testRegisterMultipleNetworkVersions() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setTimestamp(TS1);
+        net1.setVersion(VER1);
         net1.setRootNodeName(N1);
         net1.getSubjects().add(TEST_SUBJECT1);
         
@@ -218,7 +218,7 @@ public class AbstractEPNManagerTest {
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK);
-        net2.setTimestamp(TS2);
+        net2.setVersion(VER2);
         net2.setRootNodeName(N2);
         net2.getSubjects().add(TEST_SUBJECT2);
         
@@ -271,7 +271,7 @@ public class AbstractEPNManagerTest {
             }
             
             // Finally check that unsubscribing the current version will reinstate the old subjects
-            mgr.unregister(net2.getName(), net2.getTimestamp());
+            mgr.unregister(net2.getName(), net2.getVersion());
             
             res2 = mgr.getNetworksForSubject(TEST_SUBJECT2);
             

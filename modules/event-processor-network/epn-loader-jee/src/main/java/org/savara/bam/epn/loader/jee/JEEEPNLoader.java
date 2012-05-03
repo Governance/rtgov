@@ -92,7 +92,7 @@ public class JEEEPNLoader {
         
         if (_epnManager != null && _network != null) {
             try {
-                _epnManager.unregister(_network.getName(), _network.getTimestamp());
+                _epnManager.unregister(_network.getName(), _network.getVersion());
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Failed to unregister network", e);
             }

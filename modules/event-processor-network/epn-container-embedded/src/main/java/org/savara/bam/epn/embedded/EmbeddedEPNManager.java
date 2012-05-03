@@ -124,7 +124,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                     _entryPoints.put(subject, channels);
                 }
                 
-                channels.add(new EmbeddedChannel(network.getName(), network.getTimestamp(),
+                channels.add(new EmbeddedChannel(network.getName(), network.getVersion(),
                         network.getRootNodeName(), rootNode, null));
             }
         }
@@ -162,10 +162,10 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         /**
          * {@inheritDoc}
          */
-        public Channel getChannel(String networkName, long timestamp, String source, String dest)
+        public Channel getChannel(String networkName, String version, String source, String dest)
                 throws Exception {
-            return (new EmbeddedChannel(networkName, timestamp, dest,
-                    getNode(networkName, timestamp, dest), source));
+            return (new EmbeddedChannel(networkName, version, dest,
+                    getNode(networkName, version, dest), source));
         }
 
         /**
@@ -206,7 +206,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     protected class EmbeddedChannel implements Channel {
         
         private String _networkName=null;
-        private long _timestamp=0;
+        private String _version=null;
         private String _nodeName=null;
         private Node _node=null;
         private String _source=null;
@@ -216,15 +216,15 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * The constructor.
          * 
          * @param networkName The network name
-         * @param timestamp The timestamp
+         * @param version The version
          * @param nodeName The node name
          * @param node The node
          * @param sourceNode The source node name
          */
-        public EmbeddedChannel(String networkName, long timestamp,
+        public EmbeddedChannel(String networkName, String version,
                         String nodeName, Node node, String sourceNode) {
             _networkName = networkName;
-            _timestamp = timestamp;
+            _version = version;
             _nodeName = nodeName;
             _node = node;
             _source = sourceNode;
@@ -249,12 +249,12 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         }
 
         /**
-         * This method returns the network timestamp.
+         * This method returns the network version.
          * 
-         * @return The network timestamp
+         * @return The network version
          */
-        protected long getTimestamp() {
-            return (_timestamp);
+        protected String getVersion() {
+            return (_version);
         }
 
         /**
@@ -283,7 +283,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                 if (retriesLeft == -1) {
                     retriesLeft = _node.getMaxRetries();
                 }
-                _executor.execute(new EPNTask(_networkName, _timestamp, _nodeName,
+                _executor.execute(new EPNTask(_networkName, _version, _nodeName,
                         _node, _source, events, retriesLeft, this));
             }
         }
@@ -304,7 +304,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     protected class EPNTask implements Runnable {
         
         private String _networkName=null;
-        private long _timestamp=0;
+        private String _version=null;
         private String _nodeName=null;
         private Node _node=null;
         private String _source=null;
@@ -316,7 +316,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * This is the constructor for the task.
          * 
          * @param networkName The network name
-         * @param timestamp The timestamp
+         * @param version The version
          * @param nodeName The node name
          * @param node The node
          * @param source The source node name
@@ -324,10 +324,10 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * @param retriesLeft The number of retries left
          * @param channel The channel
          */
-        public EPNTask(String networkName, long timestamp, String nodeName, Node node,
+        public EPNTask(String networkName, String version, String nodeName, Node node,
                 String source, EventList events, int retriesLeft, EmbeddedChannel channel) {
             _networkName = networkName;
-            _timestamp = timestamp;
+            _version = version;
             _nodeName = nodeName;
             _node = node;
             _source = source;
@@ -343,7 +343,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
             EventList retries=null;
      
             try {
-                retries = process(_networkName, _timestamp, _nodeName, _node,
+                retries = process(_networkName, _version, _nodeName, _node,
                                 _source, _events, _retriesLeft);            
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Failed to handle events", e);

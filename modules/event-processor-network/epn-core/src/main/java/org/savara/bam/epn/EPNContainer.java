@@ -33,13 +33,13 @@ public interface EPNContainer {
      * problem.
      * 
      * @param networkName The name of the network
-     * @param timestamp The timestamp
+     * @param version The version
      * @param source The source node
      * @param dest The destination node
      * @return The channel
      * @throws Exception Channel cannot be created
      */
-    public Channel getChannel(String networkName, long timestamp,
+    public Channel getChannel(String networkName, String version,
                         String source, String dest) throws Exception;
 
     /**

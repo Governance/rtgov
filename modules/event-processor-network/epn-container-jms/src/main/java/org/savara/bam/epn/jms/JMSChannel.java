@@ -35,7 +35,7 @@ public class JMSChannel implements Channel {
     private javax.jms.Session _session=null;
     private javax.jms.MessageProducer _producer=null;
     private String _networkName=null;
-    private long _timestamp=0;
+    private String _version=null;
     private String _destinationNode=null;
     private String _sourceNode=null;
     private String _subject=null;
@@ -46,17 +46,17 @@ public class JMSChannel implements Channel {
      * @param session The session
      * @param producer The producer
      * @param networkName The network name
-     * @param timestamp The timestamp
+     * @param version The version
      * @param sourceNode The source node name
      * @param destNode The destination node name
      * @param dest The node destination
      */
     public JMSChannel(javax.jms.Session session, javax.jms.MessageProducer producer,
-                            String networkName, long timestamp, String sourceNode, String destNode) {
+                            String networkName, String version, String sourceNode, String destNode) {
         _session = session;
         _producer = producer;
         _networkName = networkName;
-        _timestamp = timestamp;
+        _version = version;
         _destinationNode = destNode;
         _sourceNode = sourceNode;
     }
@@ -94,12 +94,12 @@ public class JMSChannel implements Channel {
     }
     
     /**
-     * This method returns the timestamp.
+     * This method returns the version.
      * 
-     * @return The timestamp
+     * @return The version
      */
-    public long getTimestamp() {
-        return (_timestamp);
+    public String getVersion() {
+        return (_version);
     }
     
     /**

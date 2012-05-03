@@ -26,7 +26,7 @@ import org.savara.bam.epn.internal.EventList;
 public class Network {
 
     private String _name=null;
-    private long _timestamp=0;
+    private String _version=null;
     private java.util.List<String> _subjects=new java.util.ArrayList<String>();
     private String _rootNodeName=null;
     private java.util.Map<String,Node> _nodes=new java.util.HashMap<String,Node>();
@@ -59,21 +59,21 @@ public class Network {
     }
     
     /**
-     * This method returns the timestamp associated with the network.
+     * This method returns the version associated with the network.
      * 
-     * @return The timestamp
+     * @return The version
      */
-    public long getTimestamp() {
-        return (_timestamp);
+    public String getVersion() {
+        return (_version);
     }
     
     /**
-     * This method sets the timestamp associated with the network.
+     * This method sets the version associated with the network.
      * 
-     * @param timestamp The timestamp
+     * @param version The version
      */
-    public void setTimestamp(long timestamp) {
-        _timestamp = timestamp;
+    public void setVersion(String version) {
+        _version = version;
     }
     
     /**
@@ -146,7 +146,7 @@ public class Network {
             if (node.getDestinationNodes() != null) {
                 for (String nodeName : node.getDestinationNodes()) {
                     node.getChannels().add(container.getChannel(getName(),
-                                    getTimestamp(), name, nodeName));
+                                    getVersion(), name, nodeName));
                 }
             }
             

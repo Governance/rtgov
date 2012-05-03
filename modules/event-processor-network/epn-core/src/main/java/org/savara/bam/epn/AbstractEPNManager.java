@@ -50,7 +50,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      */
     public void register(Network network) throws Exception {
         
-        LOG.info("Registering EPN network '"+network.getName()+"' timestamp["+network.getTimestamp()+"]");
+        LOG.info("Registering EPN network '"+network.getName()+"' timestamp["+network.getVersion()+"]");
         
         synchronized (_networkMap) {
             NetworkList nl=_networkMap.get(network.getName());
@@ -78,15 +78,15 @@ public abstract class AbstractEPNManager implements EPNManager {
     /**
      * {@inheritDoc}
      */
-    public void unregister(String networkName, long timestamp) throws Exception {
+    public void unregister(String networkName, String version) throws Exception {
         
-        LOG.info("Unregistering EPN network '"+networkName+"' timestamp["+timestamp+"]");
+        LOG.info("Unregistering EPN network '"+networkName+"' version["+version+"]");
 
         synchronized (_networkMap) {
             NetworkList nl=_networkMap.get(networkName);
             
             if (nl != null) {
-                Network network=(timestamp == 0 ? nl.getCurrent() : nl.getVersion(timestamp));
+                Network network=(version == null ? nl.getCurrent() : nl.getVersion(version));
                 
                 if (network != null) {
                     Network oldcur=nl.getCurrent();
@@ -188,15 +188,15 @@ public abstract class AbstractEPNManager implements EPNManager {
      * supplied name.
      * 
      * @param name The network name
-     * @param timestamp The timestamp, or 0 for current version
+     * @param version The version, or null for current version
      * @return The network, or null if not found
      */
-    protected Network getNetwork(String name, long timestamp) {
+    protected Network getNetwork(String name, String version) {
         Network ret=null;
         NetworkList nl=_networkMap.get(name);
         
         if (nl != null) {
-            ret = (timestamp == 0 ? nl.getCurrent() : nl.getVersion(timestamp));
+            ret = (version == null ? nl.getCurrent() : nl.getVersion(version));
         }
         
         return (ret);
@@ -218,16 +218,16 @@ public abstract class AbstractEPNManager implements EPNManager {
      * supplied network and node name.
      * 
      * @param networkName The network name
-     * @param timestamp The timestamp, or 0 for current
+     * @param version The version, or null for current
      * @param nodeName The node name, or null if wanting the root node
      * @return The node, or null if not found
      * @throws Exception Failed to find the specified node
      */
-    protected Node getNode(String networkName, long timestamp, String nodeName) throws Exception {
-        Network net=getNetwork(networkName, timestamp);
+    protected Node getNode(String networkName, String version, String nodeName) throws Exception {
+        Network net=getNetwork(networkName, version);
         
         if (net == null) {
-            throw new Exception("No network '"+networkName+"' timestamp["+timestamp+"] was found");
+            throw new Exception("No network '"+networkName+"' version["+version+"] was found");
         }
         
         // Check if node name has been specified, if not use root node name
@@ -239,7 +239,7 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         if (node == null) {
             throw new Exception("No node '"+nodeName+"' was found in network '"+networkName+
-                            "' timestamp["+timestamp+"");
+                            "' version["+version+"");
         }
         
         return (node);
@@ -250,7 +250,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * node.
      * 
      * @param networkName The network name
-     * @param timestamp The timestamp
+     * @param version The version
      * @param nodeName The node name
      * @param node The node
      * @param source The source node, or null if sending to root
@@ -259,7 +259,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @return The events to retry, or null if no retries necessary
      * @throws Exception Failed to dispatch the events for processing
      */
-    protected EventList process(String networkName, long timestamp, String nodeName,
+    protected EventList process(String networkName, String version, String nodeName,
                     Node node, String source, EventList events,
                             int retriesLeft) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
@@ -290,13 +290,13 @@ public abstract class AbstractEPNManager implements EPNManager {
             }
             
             if (notify != null) {
-                notifyEventsProcessed(networkName, timestamp, nodeName, notify);
+                notifyEventsProcessed(networkName, version, nodeName, notify);
             }
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Processed events on network="+networkName+
-                    " timestamp="+timestamp+" node="+nodeName
+                    " version="+version+" node="+nodeName
                     +" source="+source+" ret="+ret);
         }
 
@@ -308,25 +308,25 @@ public abstract class AbstractEPNManager implements EPNManager {
      * been processed by the named network and node.
      * 
      * @param networkName The network name
-     * @param timestamp The timestamp
+     * @param version The version
      * @param nodeName The node name
      * @param processed The list of processed events
      * @throws Exception Failed to notify events processed
      */
-    protected void notifyEventsProcessed(String networkName, long timestamp,
+    protected void notifyEventsProcessed(String networkName, String version,
                     String nodeName, EventList processed) throws Exception {
-        dispatchEventsProcessedToListeners(networkName, timestamp, nodeName, processed);
+        dispatchEventsProcessedToListeners(networkName, version, nodeName, processed);
     }
     
     /**
      * This method dispatches the notifications to the registered node listeners.
      * 
      * @param networkName The network name
-     * @param timestamp The timestamp
+     * @param version The version
      * @param nodeName The node name
      * @param processed The list of processed events
      */
-    protected void dispatchEventsProcessedToListeners(String networkName, long timestamp,
+    protected void dispatchEventsProcessedToListeners(String networkName, String version,
                     String nodeName, EventList processed) {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Notify processed events on network="+networkName+" node="+nodeName
@@ -334,7 +334,7 @@ public abstract class AbstractEPNManager implements EPNManager {
         }
 
         for (NodeListener nl : _nodeListeners) {
-            nl.eventsProcessed(networkName, timestamp, nodeName, processed);
+            nl.eventsProcessed(networkName, version, nodeName, processed);
         }
     }
     
@@ -368,9 +368,8 @@ public abstract class AbstractEPNManager implements EPNManager {
             synchronized (_networks) {
                 boolean f_inserted=false;
                 for (int i=0; i < _networks.size(); i++) {
-                    //if (NetworkUtil.isNewerVersion(_networks.get(i).getTimestamp(),
-                    //                network.getTimestamp()) {
-                    if (_networks.get(i).getTimestamp() < network.getTimestamp()) {
+                    if (NetworkUtil.isNewerVersion(_networks.get(i).getVersion(),
+                                    network.getVersion())) {
                         _networks.add(i, network);
                         f_inserted = true;
                         break;
@@ -412,17 +411,17 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         /**
          * This method returns the network instance associated with
-         * the supplied timestamp.
+         * the supplied version.
          * 
-         * @param timestamp The timestamp
+         * @param version The version
          * @return The network instance, or null if not found
          */
-        public Network getVersion(long timestamp) {
+        public Network getVersion(String version) {
             Network ret=null;
             
             synchronized (_networks) {
                 for (Network network : _networks) {
-                    if (network.getTimestamp() == timestamp) {
+                    if (network.getVersion().equals(version)) {
                         ret = network;
                         break;
                     }

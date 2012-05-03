@@ -34,15 +34,15 @@ public class EmbeddedEPNManagerTest {
     private static final String TEST_SUBJECT = "TestSubject";
     private static final String TEST_NETWORK2 = "TestNetwork2";
     private static final String TEST_SUBJECT2 = "TestSubject2";
-    private static final long TS1 = 1L;
-    private static final long TS2 = 2L;    
+    private static final String VER1 = "1";
+    private static final String VER2 = "2";    
 
     @Test
     public void testEventTransformedForChild() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
         net.setRootNodeName(N1);
-        net.setTimestamp(0);
+        net.setVersion(null);
         
         net.getSubjects().add(TEST_SUBJECT);
         
@@ -97,7 +97,7 @@ public class EmbeddedEPNManagerTest {
         Network net=new Network();
         net.setName(TEST_NETWORK);
         net.setRootNodeName(N1);
-        net.setTimestamp(0);
+        net.setVersion(null);
         
         net.getSubjects().add(TEST_SUBJECT);
         
@@ -143,7 +143,7 @@ public class EmbeddedEPNManagerTest {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
         net1.setRootNodeName(N1);
-        net1.setTimestamp(0);
+        net1.setVersion(null);
         
         net1.getSubjects().add(TEST_SUBJECT);
         
@@ -155,7 +155,7 @@ public class EmbeddedEPNManagerTest {
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
         net2.setRootNodeName(N2);
-        net2.setTimestamp(0);
+        net2.setVersion(null);
         
         net2.getSubjects().add(TEST_SUBJECT);
         
@@ -196,7 +196,7 @@ public class EmbeddedEPNManagerTest {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
         net1.setRootNodeName(N1);
-        net1.setTimestamp(0);
+        net1.setVersion(null);
         
         net1.getSubjects().add(TEST_SUBJECT);
         
@@ -208,7 +208,7 @@ public class EmbeddedEPNManagerTest {
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
         net2.setRootNodeName(N2);
-        net2.setTimestamp(0);
+        net2.setVersion(null);
         
         net2.getSubjects().add(TEST_SUBJECT2);
         
@@ -254,7 +254,7 @@ public class EmbeddedEPNManagerTest {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
         net1.setRootNodeName(N1);
-        net1.setTimestamp(0);
+        net1.setVersion(null);
         
         net1.getSubjects().add(TEST_SUBJECT);
         
@@ -266,7 +266,7 @@ public class EmbeddedEPNManagerTest {
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
         net2.setRootNodeName(N2);
-        net2.setTimestamp(0);
+        net2.setVersion(null);
         
         net2.getSubjects().add(TEST_SUBJECT);
         
@@ -285,7 +285,7 @@ public class EmbeddedEPNManagerTest {
             
             mgr.register(net2);
             
-            mgr.unregister(TEST_NETWORK, 0);
+            mgr.unregister(TEST_NETWORK, null);
             
             java.util.List<EmbeddedChannel> ch1=mgr.getEntryPoints().get(TEST_SUBJECT);
             
@@ -295,7 +295,7 @@ public class EmbeddedEPNManagerTest {
                 fail("Number of channels for test subject should be 1: "+ch1.size());
             }
             
-            mgr.unregister(TEST_NETWORK2, 0);
+            mgr.unregister(TEST_NETWORK2, null);
             
             java.util.List<EmbeddedChannel> ch2=mgr.getEntryPoints().get(TEST_SUBJECT);
             
@@ -313,7 +313,7 @@ public class EmbeddedEPNManagerTest {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
         net1.setRootNodeName(N1);
-        net1.setTimestamp(TS1);
+        net1.setVersion(VER1);
         
         net1.getSubjects().add(TEST_SUBJECT);
         
@@ -325,7 +325,7 @@ public class EmbeddedEPNManagerTest {
         Network net2=new Network();
         net2.setName(TEST_NETWORK);
         net2.setRootNodeName(N2);
-        net2.setTimestamp(TS2);
+        net2.setVersion(VER2);
         
         net2.getSubjects().add(TEST_SUBJECT);
         
@@ -369,7 +369,7 @@ public class EmbeddedEPNManagerTest {
             }
             
             // This should revert the entry point back to N1
-            mgr.unregister(TEST_NETWORK, 0);
+            mgr.unregister(TEST_NETWORK, null);
 
             java.util.List<EmbeddedChannel> ch3=mgr.getEntryPoints().get(TEST_SUBJECT);
             
@@ -384,7 +384,7 @@ public class EmbeddedEPNManagerTest {
             }
             
             // This should revert the entry point back to N2
-            mgr.unregister(TEST_NETWORK, 0);
+            mgr.unregister(TEST_NETWORK, null);
 
             java.util.List<EmbeddedChannel> ch4=mgr.getEntryPoints().get(TEST_SUBJECT);
             
@@ -402,7 +402,7 @@ public class EmbeddedEPNManagerTest {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
         net1.setRootNodeName(N1);
-        net1.setTimestamp(TS1);
+        net1.setVersion(VER1);
         
         net1.getSubjects().add(TEST_SUBJECT);
         
@@ -414,7 +414,7 @@ public class EmbeddedEPNManagerTest {
         Network net2=new Network();
         net2.setName(TEST_NETWORK);
         net2.setRootNodeName(N2);
-        net2.setTimestamp(TS2);
+        net2.setVersion(VER2);
         
         net2.getSubjects().add(TEST_SUBJECT);
         
@@ -458,7 +458,7 @@ public class EmbeddedEPNManagerTest {
             }
             
             // This should NOT revert the entry point back to N1
-            mgr.unregister(TEST_NETWORK, TS1);
+            mgr.unregister(TEST_NETWORK, VER1);
 
             java.util.List<EmbeddedChannel> ch3=mgr.getEntryPoints().get(TEST_SUBJECT);
             

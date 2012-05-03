@@ -100,7 +100,7 @@ public class NetworkLoader {
     public Network createNetwork() {
         Network ret=new Network();
         ret.setName(TEST_NETWORK);
-        ret.setTimestamp(System.currentTimeMillis());
+        ret.setVersion(""+System.currentTimeMillis());
         
         ret.getSubjects().add(TEST_SUBJECT);
         

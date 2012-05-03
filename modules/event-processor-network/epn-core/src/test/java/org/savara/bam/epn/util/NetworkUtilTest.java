@@ -37,7 +37,7 @@ public class NetworkUtilTest {
         Network epn=new Network();
         
         epn.setName("Test");
-        epn.setTimestamp(123456);
+        epn.setVersion("123456");
         epn.setRootNodeName("N0");
         
         // Node 0

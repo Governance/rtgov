@@ -121,7 +121,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK, 0);
+            _epnManager.unregister(NetworkLoader.TEST_NETWORK, null);
         } catch(Exception e) {
             fail("Failed to unregister network: "+e);
         }
@@ -188,7 +188,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK, 0);
+            _epnManager.unregister(NetworkLoader.TEST_NETWORK, null);
         } catch(Exception e) {
             fail("Failed to unregister network: "+e);
         }
@@ -270,7 +270,7 @@ public class NetworkLoaderTest {
         }
         
         try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK, 0);
+            _epnManager.unregister(NetworkLoader.TEST_NETWORK, null);
         } catch(Exception e) {
             fail("Failed to unregister network: "+e);
         }
