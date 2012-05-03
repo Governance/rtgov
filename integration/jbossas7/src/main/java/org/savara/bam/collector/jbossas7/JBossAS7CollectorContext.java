@@ -33,6 +33,8 @@ import org.savara.bam.collector.spi.CollectorContext;
  */
 public class JBossAS7CollectorContext implements CollectorContext {
 
+    private static final String TRANSACTION_MANAGER = "java:jboss/TransactionManager";
+
     private static final Logger LOG=Logger.getLogger(JBossAS7CollectorContext.class.getName());
 
     private TransactionManager _transactionManager=null;
@@ -42,7 +44,7 @@ public class JBossAS7CollectorContext implements CollectorContext {
         try {
             InitialContext ctx=new InitialContext();
             
-            _transactionManager = (TransactionManager)ctx.lookup("java:jboss/TransactionManager");
+            _transactionManager = (TransactionManager)ctx.lookup(TRANSACTION_MANAGER);
             
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to initialize the transaction manager", e);

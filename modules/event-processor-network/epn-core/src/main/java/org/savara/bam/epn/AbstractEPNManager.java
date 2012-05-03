@@ -49,7 +49,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      */
     public void register(Network network) throws Exception {
         
-        LOG.info("Registering EPN network '"+network.getName()+"'");
+        LOG.info("Registering EPN network '"+network.getName()+"' timestamp["+network.getTimestamp()+"]");
         
         synchronized (_networkMap) {
             NetworkList nl=_networkMap.get(network.getName());
