@@ -50,7 +50,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      */
     public void register(Network network) throws Exception {
         
-        LOG.info("Registering EPN network '"+network.getName()+"' timestamp["+network.getVersion()+"]");
+        LOG.info("Registering EPN network '"+network.getName()+"' version["+network.getVersion()+"]");
         
         synchronized (_networkMap) {
             NetworkList nl=_networkMap.get(network.getName());
@@ -346,7 +346,7 @@ public abstract class AbstractEPNManager implements EPNManager {
 
     /**
      * This class represents a list of Network instances
-     * for the same name, but different versions (timestamps).
+     * for the same name, but different versions.
      *
      */
     public class NetworkList {
