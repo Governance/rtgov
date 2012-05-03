@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.savara.bam.epn.internal.EventList;
+import org.savara.bam.epn.util.NetworkUtil;
 
 /**
  * This class represents the abstract Event Process Network Manager
@@ -367,6 +368,8 @@ public abstract class AbstractEPNManager implements EPNManager {
             synchronized (_networks) {
                 boolean f_inserted=false;
                 for (int i=0; i < _networks.size(); i++) {
+                    //if (NetworkUtil.isNewerVersion(_networks.get(i).getTimestamp(),
+                    //                network.getTimestamp()) {
                     if (_networks.get(i).getTimestamp() < network.getTimestamp()) {
                         _networks.add(i, network);
                         f_inserted = true;

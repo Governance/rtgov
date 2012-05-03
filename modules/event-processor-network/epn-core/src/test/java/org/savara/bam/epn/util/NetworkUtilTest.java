@@ -141,6 +141,40 @@ public class NetworkUtilTest {
             e.printStackTrace();
             fail("Failed to deserialize: "+e);
         }
-
+    }
+    
+    @Test
+    public void testIsNewerVersionNumeric() {
+        if (!NetworkUtil.isNewerVersion("1", "2")) {
+            fail("Wrong result 1");
+        }
+        
+        if (!NetworkUtil.isNewerVersion(""+System.currentTimeMillis(),
+                         ""+System.currentTimeMillis()+2000)) {
+            fail("Wrong result 2");
+        }
+    }
+    
+    @Test
+    public void testIsNewerVersionLexical() {
+        if (!NetworkUtil.isNewerVersion("1.1.0.Final", "1.1.1.Final")) {
+            fail("Wrong result 1");
+        }
+        
+        if (!NetworkUtil.isNewerVersion("1.1.0.Final", "1.10.0.Final")) {
+            fail("Wrong result 2");
+        }
+        
+        if (!NetworkUtil.isNewerVersion("1.2.0.Final", "1.10.0.Final")) {
+            fail("Wrong result 3");
+        }
+        
+        if (!NetworkUtil.isNewerVersion("1.2.0.Final", "2.1.0.Final")) {
+            fail("Wrong result 4");
+        }
+        
+        if (!NetworkUtil.isNewerVersion("1.2.0.Final", "1.2.0.GA")) {
+            fail("Wrong result 5");
+        }
     }
 }
