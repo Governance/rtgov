@@ -10,4 +10,9 @@
             </binding.soap>
         </service>
     </composite>
+    <domain name="TestDomain">
+        <handlers>
+            <handler class="org.switchyard.quickstarts.demos.orders.ExchangeInterceptor" name="handler1"/>
+        </handlers>
+    </domain>
 </switchyard>

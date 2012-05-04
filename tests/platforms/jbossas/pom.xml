@@ -16,6 +16,7 @@
 
 	<modules>
 		<module>orders</module>
+		<module>tester</module>
 	</modules>
 
 </project>

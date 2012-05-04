@@ -37,71 +37,45 @@
 			<groupId>org.savara.bam.activity-management</groupId>
 			<artifactId>collector</artifactId>
 			<version>${bam.version}</version>
+			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.switchyard</groupId>
-            <artifactId>switchyard-api</artifactId>
-	    	<version>${switchyard.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.switchyard</groupId>
-            <artifactId>switchyard-plugin</artifactId>
-	    <version>${switchyard.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.switchyard.components</groupId>
-            <artifactId>switchyard-component-bean</artifactId>
-	    <version>${switchyard.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.switchyard.components</groupId>
-            <artifactId>switchyard-component-soap</artifactId>
-	    <version>${switchyard.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.switchyard</groupId>
-            <artifactId>switchyard-test</artifactId>
-	    <version>${switchyard.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-<!--
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.annotation</groupId>
-            <artifactId>jboss-annotations-api_1.1_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.faces</groupId>
-            <artifactId>jboss-jsf-api_2.1_spec</artifactId>
-            <scope>provided</scope>
-        </dependency>
--->
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+		<dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-api</artifactId>
+			<version>${switchyard.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-plugin</artifactId>
+			<version>${switchyard.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard.components</groupId>
+			<artifactId>switchyard-component-bean</artifactId>
+			<version>${switchyard.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard.components</groupId>
+			<artifactId>switchyard-component-soap</artifactId>
+			<version>${switchyard.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-test</artifactId>
+			<version>${switchyard.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-<!--
-        <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <scope>test</scope>
-        </dependency>
--->
-    </dependencies>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
     <build>
         <finalName>${project.artifactId}</finalName>
@@ -150,6 +124,11 @@
                             <directory>target/switchyard_xml</directory>
                         </resource>
                     </webResources>
+					<archive>
+						<manifestEntries>
+							<Dependencies>deployment.savara-bam.war</Dependencies>
+						</manifestEntries>
+					</archive>
                 </configuration>
             </plugin>
         </plugins>

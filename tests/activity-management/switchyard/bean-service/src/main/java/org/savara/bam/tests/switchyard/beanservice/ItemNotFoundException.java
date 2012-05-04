@@ -17,9 +17,13 @@
  * 02110-1301, USA.
  */
 
-package org.savara.tests.switchyard.beanservice;
+package org.savara.bam.tests.switchyard.beanservice;
 
-public interface InventoryService {
+public class ItemNotFoundException extends Exception {
 
-    Item lookupItem(String itemId) throws ItemNotFoundException;
+    private static final long serialVersionUID = -5606765308041390300L;
+
+    public ItemNotFoundException(String msg) {
+        super(msg);
+    }
 }

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.tests.switchyard.beanservice;
+package org.savara.bam.tests.switchyard.beanservice;
 
 import javax.inject.Inject;
 import javax.xml.soap.MessageFactory;
@@ -37,6 +37,17 @@ import org.savara.bam.activity.model.soa.RequestReceived;
 import org.savara.bam.activity.model.soa.RequestSent;
 import org.savara.bam.activity.model.soa.ResponseReceived;
 import org.savara.bam.activity.model.soa.ResponseSent;
+import org.savara.bam.tests.switchyard.beanservice.ExchangeInterceptor;
+import org.savara.bam.tests.switchyard.beanservice.InventoryService;
+import org.savara.bam.tests.switchyard.beanservice.InventoryServiceBean;
+import org.savara.bam.tests.switchyard.beanservice.Item;
+import org.savara.bam.tests.switchyard.beanservice.ItemNotFoundException;
+import org.savara.bam.tests.switchyard.beanservice.Order;
+import org.savara.bam.tests.switchyard.beanservice.OrderAck;
+import org.savara.bam.tests.switchyard.beanservice.OrderService;
+import org.savara.bam.tests.switchyard.beanservice.OrderServiceBean;
+import org.savara.bam.tests.switchyard.beanservice.TestActivityStore;
+import org.savara.bam.tests.switchyard.beanservice.Transformers;
 
 import static org.junit.Assert.*;
 
@@ -75,7 +86,7 @@ public class BeanServiceTest {
     }
 
     @Inject
-    org.savara.tests.switchyard.beanservice.OrderService _orderService;
+    org.savara.bam.tests.switchyard.beanservice.OrderService _orderService;
 
     @Inject
     org.savara.bam.collector.spi.CollectorContext _collectorContext;

@@ -17,7 +17,7 @@
  * MA  02110-1301, USA.
  */
 
-package org.savara.tests.switchyard.beanservice;
+package org.savara.bam.tests.switchyard.beanservice;
 
 import javax.inject.Inject;
 

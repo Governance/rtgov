@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-package org.savara.tests.switchyard.beanservice;
+package org.savara.bam.tests.switchyard.beanservice;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;

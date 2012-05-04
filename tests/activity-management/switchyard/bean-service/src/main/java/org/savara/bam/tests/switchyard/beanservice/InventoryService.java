@@ -17,38 +17,9 @@
  * 02110-1301, USA.
  */
 
-package org.savara.tests.switchyard.beanservice;
+package org.savara.bam.tests.switchyard.beanservice;
 
-public class Order {
+public interface InventoryService {
 
-    private String _orderId;
-    private String _itemId;
-    private int _quantity;
-    
-    public Order setItemId(String itemId) {
-        _itemId = itemId;
-        return this;
-    }
-    
-    public Order setOrderId(String orderId) {
-        _orderId = orderId;
-        return this;
-    }
-
-    public Order setQuantity(int quantity) {
-        _quantity = quantity;
-        return this;
-    }
-
-    public String getOrderId() {
-        return _orderId;
-    }
-    
-    public String getItemId() {
-        return _itemId;
-    }
-    
-    public int getQuantity() {
-        return _quantity;
-    }
+    Item lookupItem(String itemId) throws ItemNotFoundException;
 }

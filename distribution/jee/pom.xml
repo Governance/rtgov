@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bam.distribution</groupId>
-	<artifactId>distribution-jee</artifactId> 
+	<artifactId>savara-bam</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Savara BAM::Distribution::JEE</name>
@@ -17,6 +17,24 @@
 		<dependency>
 			<groupId>org.savara.bam.activity-management</groupId>
 			<artifactId>activity-model</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>collector</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		
+		<!-- JBossAS Specific -->
+		<dependency>
+			<groupId>org.savara.bam.integration</groupId>
+			<artifactId>bam-jbossas7</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>collector-activity-server</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
@@ -62,9 +80,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
-	<build>
-		<finalName>savara-bam</finalName>
-	</build>
 	
 </project>

@@ -17,36 +17,32 @@
  * 02110-1301, USA.
  */
 
-package org.savara.tests.switchyard.beanservice;
+package org.savara.bam.tests.switchyard.beanservice;
 
-public class Item {
-    private String _itemId;
-    private String _name;
-    private int _quantity;
+import java.util.HashMap;
+import java.util.Map;
 
-    public String getName() {
-        return _name;
-    }
+import org.switchyard.component.bean.Service;
+
+@Service(InventoryService.class)
+public class InventoryServiceBean implements InventoryService {
+
+    private final Map<String, Item> _inventory = new HashMap<String, Item>();
     
-    public String getItemId() {
-        return _itemId;
+    public InventoryServiceBean() {
+        Item butter = new Item()
+            .setItemId("BUTTER")
+            .setName("Not Parkay")
+            .setQuantity(1000);
+        _inventory.put(butter.getItemId(), butter);
     }
-    public int getQuantity() {
-        return _quantity;
-    }
-    
-    public Item setName(String name) {
-        _name = name;
-        return this;
-    }
-    
-    public Item setItemId(String itemId) {
-        _itemId = itemId;
-        return this;
-    }
-    
-    public Item setQuantity(int quantity) {
-        _quantity = quantity;
-        return this;
+
+    public Item lookupItem(String itemId) throws ItemNotFoundException {
+        Item item = _inventory.get(itemId);
+        if (item == null) {
+            throw new ItemNotFoundException("We don't got any " + itemId);
+        }
+        
+        return item;
     }
 }

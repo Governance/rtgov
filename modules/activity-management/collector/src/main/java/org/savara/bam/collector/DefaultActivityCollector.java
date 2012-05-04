@@ -21,6 +21,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
@@ -37,6 +38,7 @@ import org.savara.bam.collector.spi.CollectorContext;
  * collector interface.
  *
  */
+@Singleton(name="ActivityCollector")
 public class DefaultActivityCollector implements ActivityCollector {
 
     private static final Logger LOG=Logger.getLogger(DefaultActivityCollector.class.getName());

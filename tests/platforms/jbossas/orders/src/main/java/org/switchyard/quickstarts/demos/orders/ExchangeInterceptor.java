@@ -20,9 +20,7 @@ package org.switchyard.quickstarts.demos.orders;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
+import javax.annotation.PostConstruct;
 import javax.naming.InitialContext;
 
 import org.savara.bam.activity.model.soa.RequestReceived;
@@ -39,39 +37,26 @@ public class ExchangeInterceptor implements ExchangeHandler {
     
     private static final Logger LOG=Logger.getLogger(ExchangeInterceptor.class.getName());
     
+    private static final String ACTIVITY_COLLECTOR = "java:global/savara-bam/ActivityCollector";
+
     private ActivityCollector _activityCollector=null;
     
     private boolean _initialized=false;
     
+    @PostConstruct
     protected void init() {
         if (_activityCollector == null) {
             try {
                 InitialContext ctx=new InitialContext();
-            
-                BeanManager beanManager=(BeanManager)ctx.lookup("java:comp/BeanManager");
                 
-                if (beanManager == null) {
-                    LOG.severe("Failed to lookup BeanManager from JNDI");
-                } else {
-                    java.util.Set<Bean<?>> beans=
-                                beanManager.getBeans(ActivityCollector.class);
-                    
-                    if (beans.size() == 0) {
-                        LOG.severe("No ActivityCollector beans were found");
-                    } else {
-                        @SuppressWarnings("unchecked")
-                        Bean<ActivityCollector> bean=(Bean<ActivityCollector>)
-                                            beans.iterator().next();
-                        CreationalContext<ActivityCollector> cc =
-                                    beanManager.createCreationalContext(bean);
-                        _activityCollector = (ActivityCollector)
-                                    beanManager.getReference(bean, ActivityCollector.class, cc);
-                    }
-                }
+                _activityCollector = (ActivityCollector)ctx.lookup(ACTIVITY_COLLECTOR);
+            
             } catch(Exception e) {
                 LOG.log(Level.SEVERE, "Failed to initialize activity collector", e);
             }
         }
+        
+        LOG.info("*********** Exchange Interceptor Initialized with collector="+_activityCollector);
         
         _initialized = true;
     }
@@ -80,6 +65,8 @@ public class ExchangeInterceptor implements ExchangeHandler {
         if (!_initialized) {
             init();
         }
+        
+        LOG.info("********* (init="+_initialized+") HANDLE MESSAGE FOR EXCHANGE="+exchange);
         
         if (_activityCollector != null) {
             if (exchange.getPhase() == ExchangePhase.IN) {

@@ -17,13 +17,38 @@
  * 02110-1301, USA.
  */
 
-package org.savara.tests.switchyard.beanservice;
+package org.savara.bam.tests.switchyard.beanservice;
 
-public class ItemNotFoundException extends Exception {
+public class Order {
 
-    private static final long serialVersionUID = -5606765308041390300L;
+    private String _orderId;
+    private String _itemId;
+    private int _quantity;
+    
+    public Order setItemId(String itemId) {
+        _itemId = itemId;
+        return this;
+    }
+    
+    public Order setOrderId(String orderId) {
+        _orderId = orderId;
+        return this;
+    }
 
-    public ItemNotFoundException(String msg) {
-        super(msg);
+    public Order setQuantity(int quantity) {
+        _quantity = quantity;
+        return this;
+    }
+
+    public String getOrderId() {
+        return _orderId;
+    }
+    
+    public String getItemId() {
+        return _itemId;
+    }
+    
+    public int getQuantity() {
+        return _quantity;
     }
 }
