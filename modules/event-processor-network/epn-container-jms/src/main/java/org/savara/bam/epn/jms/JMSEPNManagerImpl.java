@@ -263,8 +263,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Dispatch "+networkName+"/"+version+"/"+nodeName+" ("+node+
-                    ") events="+events+" retriesLeft="+retriesLeft);
+            LOG.finest("Dispatch "+networkName+"/"+version+"/"+nodeName+" ("+node
+                    +") events="+events+" retriesLeft="+retriesLeft);
         }
 
         EventList retries=process(networkName, version, nodeName, node,
@@ -349,9 +349,9 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         /**
          * {@inheritDoc}
          */
-        public Channel getChannel(String networkName, String version, String source, String dest)
+        public Channel getChannel(Network network, String source, String dest)
                 throws Exception {
-            return new JMSChannel(_session, _eventsProducer, networkName, version, source, dest);
+            return new JMSChannel(_session, _eventsProducer, network, source, dest);
         }
 
         /**
@@ -418,11 +418,11 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             }
             
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Send events network="+networkName+
-                        " version="+version+
-                        " sourceNode="+sourceNode+
-                        " nodes="+destNodes+
-                        " subjects="+subjects+" events="+events);
+                LOG.finest("Send events network="+networkName
+                        +" version="+version
+                        +" sourceNode="+sourceNode
+                        +" nodes="+destNodes
+                        +" subjects="+subjects+" events="+events);
             }
 
             _eventsProducer.send(mesg);  

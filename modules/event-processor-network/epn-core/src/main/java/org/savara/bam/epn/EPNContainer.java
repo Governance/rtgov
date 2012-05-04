@@ -32,15 +32,13 @@ public interface EPNContainer {
      * reason, then an exception will be thrown indicating the
      * problem.
      * 
-     * @param networkName The name of the network
-     * @param version The version
+     * @param network The network
      * @param source The source node
      * @param dest The destination node
      * @return The channel
      * @throws Exception Channel cannot be created
      */
-    public Channel getChannel(String networkName, String version,
-                        String source, String dest) throws Exception;
+    public Channel getChannel(Network network, String source, String dest) throws Exception;
 
     /**
      * This method returns the channel associated with the supplied

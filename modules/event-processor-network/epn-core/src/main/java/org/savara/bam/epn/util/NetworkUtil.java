@@ -103,7 +103,7 @@ public final class NetworkUtil {
             
             ret = (v2 > v1);
             
-        } catch(Exception e) {
+        } catch (Exception e) {
             
             // Check if dot-notation
             if (ver1.indexOf('.') != -1 && ver2.indexOf('.') != -1) {
@@ -131,10 +131,10 @@ public final class NetworkUtil {
                         cur++;
                     }
                     
-                } catch(Exception e2) {
+                } catch (Exception e2) {
                     if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.log(Level.FINEST, "Skipping version check for '"+
-                                    ver1+"' against '"+ver2+"'", e);
+                        LOG.log(Level.FINEST, "Skipping version check for '"
+                                    +ver1+"' against '"+ver2+"'", e);
                     }
                 }
             } else {          

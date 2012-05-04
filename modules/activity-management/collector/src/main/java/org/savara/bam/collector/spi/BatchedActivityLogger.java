@@ -103,7 +103,7 @@ public abstract class BatchedActivityLogger implements ActivityLogger {
                      _timerTask = new TimerTask() {
                             public void run() {
                                 try {
-                                    synchronized(_timer) {
+                                    synchronized (_timer) {
                                         sendMessage();
                                     
                                         reset();

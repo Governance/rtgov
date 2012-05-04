@@ -117,6 +117,11 @@ public class DefaultActivityCollector implements ActivityCollector {
         return false;
     }
     
+    /**
+     * This method starts the scope associated with the supplied activity unit.
+     * 
+     * @param au The activity unit
+     */
     protected void startScope(ActivityUnit au) {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Start scope");

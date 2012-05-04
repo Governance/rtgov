@@ -238,8 +238,8 @@ public abstract class AbstractEPNManager implements EPNManager {
         Node node=net.getNodes().get(nodeName);
         
         if (node == null) {
-            throw new Exception("No node '"+nodeName+"' was found in network '"+networkName+
-                            "' version["+version+"");
+            throw new Exception("No node '"+nodeName+"' was found in network '"+networkName
+                    +"' version["+version+"");
         }
         
         return (node);
@@ -295,8 +295,8 @@ public abstract class AbstractEPNManager implements EPNManager {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Processed events on network="+networkName+
-                    " version="+version+" node="+nodeName
+            LOG.finest("Processed events on network="+networkName
+                    +" version="+version+" node="+nodeName
                     +" source="+source+" ret="+ret);
         }
 
@@ -366,16 +366,16 @@ public abstract class AbstractEPNManager implements EPNManager {
          */
         public void add(Network network) {
             synchronized (_networks) {
-                boolean f_inserted=false;
+                boolean inserted=false;
                 for (int i=0; i < _networks.size(); i++) {
                     if (NetworkUtil.isNewerVersion(_networks.get(i).getVersion(),
                                     network.getVersion())) {
                         _networks.add(i, network);
-                        f_inserted = true;
+                        inserted = true;
                         break;
                     }
                 }
-                if (!f_inserted) {
+                if (!inserted) {
                     _networks.add(network);
                 }
             }

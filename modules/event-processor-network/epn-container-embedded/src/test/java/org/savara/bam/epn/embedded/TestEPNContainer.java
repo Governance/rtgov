@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.EPNContainer;
+import org.savara.bam.epn.Network;
 import org.savara.bam.epn.internal.EventList;
 
 public class TestEPNContainer implements EPNContainer {
@@ -31,7 +32,7 @@ public class TestEPNContainer implements EPNContainer {
         _channel = ch;
     }
     
-    public Channel getChannel(String networkName, String version, String source, String dest)
+    public Channel getChannel(Network network, String source, String dest)
             throws Exception {
         return _channel;
     }

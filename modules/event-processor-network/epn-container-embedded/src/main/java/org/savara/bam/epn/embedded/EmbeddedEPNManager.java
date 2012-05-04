@@ -124,7 +124,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                     _entryPoints.put(subject, channels);
                 }
                 
-                channels.add(new EmbeddedChannel(network.getName(), network.getVersion(),
+                channels.add(new EmbeddedChannel(network,
                         network.getRootNodeName(), rootNode, null));
             }
         }
@@ -162,10 +162,10 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         /**
          * {@inheritDoc}
          */
-        public Channel getChannel(String networkName, String version, String source, String dest)
+        public Channel getChannel(Network network, String source, String dest)
                 throws Exception {
-            return (new EmbeddedChannel(networkName, version, dest,
-                    getNode(networkName, version, dest), source));
+            return (new EmbeddedChannel(network, dest,
+                    getNode(network.getName(), network.getVersion(), dest), source));
         }
 
         /**
@@ -205,8 +205,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
      */
     protected class EmbeddedChannel implements Channel {
         
-        private String _networkName=null;
-        private String _version=null;
+        private Network _network=null;
         private String _nodeName=null;
         private Node _node=null;
         private String _source=null;
@@ -215,16 +214,14 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         /**
          * The constructor.
          * 
-         * @param networkName The network name
-         * @param version The version
+         * @param network The network
          * @param nodeName The node name
          * @param node The node
          * @param sourceNode The source node name
          */
-        public EmbeddedChannel(String networkName, String version,
+        public EmbeddedChannel(Network network,
                         String nodeName, Node node, String sourceNode) {
-            _networkName = networkName;
-            _version = version;
+            _network = network;
             _nodeName = nodeName;
             _node = node;
             _source = sourceNode;
@@ -245,7 +242,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * @return The network name
          */
         protected String getNetworkName() {
-            return (_networkName);
+            return (_network.getName());
         }
 
         /**
@@ -254,7 +251,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * @return The network version
          */
         protected String getVersion() {
-            return (_version);
+            return (_network.getVersion());
         }
 
         /**
@@ -283,7 +280,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                 if (retriesLeft == -1) {
                     retriesLeft = _node.getMaxRetries();
                 }
-                _executor.execute(new EPNTask(_networkName, _version, _nodeName,
+                _executor.execute(new EPNTask(_network, _nodeName,
                         _node, _source, events, retriesLeft, this));
             }
         }
@@ -315,8 +312,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         /**
          * This is the constructor for the task.
          * 
-         * @param networkName The network name
-         * @param version The version
+         * @param network The network
          * @param nodeName The node name
          * @param node The node
          * @param source The source node name
@@ -324,10 +320,10 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * @param retriesLeft The number of retries left
          * @param channel The channel
          */
-        public EPNTask(String networkName, String version, String nodeName, Node node,
+        public EPNTask(Network network, String nodeName, Node node,
                 String source, EventList events, int retriesLeft, EmbeddedChannel channel) {
-            _networkName = networkName;
-            _version = version;
+            _networkName = network.getName();
+            _version = network.getVersion();
             _nodeName = nodeName;
             _node = node;
             _source = source;

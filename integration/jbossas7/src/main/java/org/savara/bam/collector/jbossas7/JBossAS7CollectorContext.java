@@ -39,6 +39,9 @@ public class JBossAS7CollectorContext implements CollectorContext {
 
     private TransactionManager _transactionManager=null;
 
+    /**
+     * This method initializes the collector context.
+     */
     @PostConstruct
     public void init() {
         try {

@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.savara.bam.epn.Channel;
+import org.savara.bam.epn.Network;
 import org.savara.bam.epn.internal.EventList;
 
 /**
@@ -34,8 +35,7 @@ public class JMSChannel implements Channel {
     
     private javax.jms.Session _session=null;
     private javax.jms.MessageProducer _producer=null;
-    private String _networkName=null;
-    private String _version=null;
+    private Network _network=null;
     private String _destinationNode=null;
     private String _sourceNode=null;
     private String _subject=null;
@@ -45,18 +45,15 @@ public class JMSChannel implements Channel {
      * 
      * @param session The session
      * @param producer The producer
-     * @param networkName The network name
-     * @param version The version
+     * @param network The network
      * @param sourceNode The source node name
      * @param destNode The destination node name
-     * @param dest The node destination
      */
     public JMSChannel(javax.jms.Session session, javax.jms.MessageProducer producer,
-                            String networkName, String version, String sourceNode, String destNode) {
+                            Network network, String sourceNode, String destNode) {
         _session = session;
         _producer = producer;
-        _networkName = networkName;
-        _version = version;
+        _network = network;
         _destinationNode = destNode;
         _sourceNode = sourceNode;
     }
@@ -90,7 +87,7 @@ public class JMSChannel implements Channel {
      * @return The network name
      */
     public String getNetworkName() {
-        return (_networkName);
+        return (_network.getName());
     }
     
     /**
@@ -99,7 +96,7 @@ public class JMSChannel implements Channel {
      * @return The version
      */
     public String getVersion() {
-        return (_version);
+        return (_network.getVersion());
     }
     
     /**
@@ -140,13 +137,15 @@ public class JMSChannel implements Channel {
                 LOG.finest("Sending events '"+events+"' to subject="+_subject);
             }
         } else {
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, _networkName);
+            mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, _network.getName());
+            mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, _network.getVersion());
             mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, _destinationNode);
             mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, _sourceNode);
             mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
             
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Sending events '"+events+"' to network="+_networkName+" node="+_destinationNode);
+                LOG.finest("Sending events '"+events+"' to network="+_network.getName()
+                        +" version="+_network.getVersion()+" node="+_destinationNode);
             }
         }
         
