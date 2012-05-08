@@ -258,7 +258,6 @@ public class BeanServiceTest {
         }
         
         TestActivityStore.reset();
-        
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
