@@ -13,6 +13,21 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
+	<profiles>
+		<profile>
+			<id>jbossas</id>
+			<properties>
+				<platform>jbossas</platform>
+			</properties>
+		</profile>
+		<profile>
+			<id>glassfish</id>
+			<properties>
+				<platform>glassfish</platform>
+			</properties>
+		</profile>
+	</profiles>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -30,6 +45,14 @@
 			<groupId>org.savara.bam.tests.platforms.jbossas</groupId>
 			<artifactId>tests-jbossas-orders</artifactId>
 			<type>war</type>
+			<version>${bam.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.savara.bam.distribution</groupId>
+			<artifactId>savara-bam</artifactId>
+			<type>war</type>
+			<classifier>${platform}</classifier>
 			<version>${bam.version}</version>
 		</dependency>
 
@@ -83,6 +106,10 @@
 						<property>
 							<name>bam.version</name>
 							<value>${project.version}</value>
+						</property>
+						<property>
+							<name>bam.platform</name>
+							<value>${platform}</value>
 						</property>
 					</systemProperties>
 					<includes>

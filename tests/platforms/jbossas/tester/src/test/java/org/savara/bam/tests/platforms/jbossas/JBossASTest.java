@@ -23,11 +23,10 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-//import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class JBossASTest {
@@ -35,16 +34,54 @@ public class JBossASTest {
     @Deployment
     public static WebArchive createDeployment() {
         String version=System.getProperty("bam.version");
+        String platform=System.getProperty("bam.platform");
+System.out.println(">>>> GPB: version="+version+" platform="+platform);        
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.distribution:savara-bam:war:"+version)
+                .artifacts("org.savara.bam.distribution:savara-bam:war:"+platform+":"+version)
                 .resolveAsFiles();
         
-        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                copyToTmpFile(archiveFiles[0],"savara-bam.war"));
+    }
+    
+    private static java.io.File copyToTmpFile(java.io.File source, String filename) {
+        String tmpdir=System.getProperty("java.io.tmpdir");
+        java.io.File dir=new java.io.File(tmpdir+java.io.File.separator+"bamtests"+System.currentTimeMillis());
+        
+        dir.mkdir();
+        
+        dir.deleteOnExit();
+        
+        java.io.File ret=new java.io.File(dir, filename);
+        ret.deleteOnExit();
+        
+        // Copy contents to the tmp file
+        try {
+            java.io.FileInputStream fis=new java.io.FileInputStream(source);
+            java.io.FileOutputStream fos=new java.io.FileOutputStream(ret);
+            
+            byte[] b=new byte[10240];
+            int len=0;
+            
+            while ((len=fis.read(b)) > 0) {
+                fos.write(b, 0, len);
+            }
+            
+            fis.close();
+            
+            fos.flush();
+            fos.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to copy file '"+filename+"': "+e);
+        }
+        
+        return(ret);
     }
 
     @Test
-    @Ignore
     public void testMethod() {
         
     }
