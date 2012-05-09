@@ -38,7 +38,7 @@ public class ActivityUnit implements java.io.Externalizable {
     private String _id=null;
     
     private Origin _origin=null;
-    private java.util.List<Context> _context=new java.util.Vector<Context>();
+    private java.util.List<Context> _contexts=new java.util.Vector<Context>();
     private java.util.List<ActivityType> _activityTypes=new java.util.Vector<ActivityType>();
     
     /**
@@ -59,8 +59,8 @@ public class ActivityUnit implements java.io.Externalizable {
             _origin = new Origin(act._origin);
         }
         
-        for (Context context : act._context) {
-            _context.add(new Context(context));
+        for (Context context : act._contexts) {
+            _contexts.add(new Context(context));
         }
         
         for (ActivityType actType : _activityTypes) {
@@ -123,7 +123,7 @@ public class ActivityUnit implements java.io.Externalizable {
      * @param context The context
      */
     public void setContext(java.util.List<Context> context) {
-        _context = context;
+        _contexts = context;
     }
     
     /**
@@ -132,7 +132,7 @@ public class ActivityUnit implements java.io.Externalizable {
      * @return The context
      */
     public java.util.List<Context> getContext() {
-        return (_context);
+        return (_contexts);
     }
     
     /**
@@ -156,17 +156,24 @@ public class ActivityUnit implements java.io.Externalizable {
     /**
      * {@inheritDoc}
      */
+    public String toString() {
+        return("ActivityUnit["+_id+"] origin="+_origin+" contexts="+_contexts+" activityTypes="+_activityTypes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
         out.writeObject(_id);
         out.writeObject(_origin);
         
-        int len=_context.size();
+        int len=_contexts.size();
         
         out.writeInt(len);
         for (int i=0; i < len; i++) {
-            out.writeObject(_context.get(i));
+            out.writeObject(_contexts.get(i));
         }
         
         len = _activityTypes.size();
@@ -176,7 +183,7 @@ public class ActivityUnit implements java.io.Externalizable {
             out.writeObject(_activityTypes.get(i));
         }
     }
-
+    
     /**
      * {@inheritDoc}
      */
@@ -190,7 +197,7 @@ public class ActivityUnit implements java.io.Externalizable {
         int len=in.readInt();
         
         for (int i=0; i < len; i++) {
-            _context.add((Context)in.readObject());
+            _contexts.add((Context)in.readObject());
         }
         
         len = in.readInt();

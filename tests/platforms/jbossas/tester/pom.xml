@@ -73,6 +73,14 @@
 			<version>${bam.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>activity-model</artifactId>
+			<version>${bam.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.jboss.as</groupId>
 			<artifactId>jboss-as-arquillian-container-managed</artifactId>

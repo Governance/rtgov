@@ -171,7 +171,22 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     /**
      * {@inheritDoc}
      */
+    public String toString() {
+        return(getClass().getSimpleName()+":"
+                +" serviceType="+_serviceType
+                +" operation="+_operation
+                +" fault="+_fault
+                +" messageType="+_messageType
+                +" content="+_content
+                +" messageId="+_messageId);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+        
         out.writeInt(VERSION);
         
         out.writeObject(_serviceType);
@@ -187,6 +202,8 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
+        super.readExternal(in);
+        
         in.readInt(); // Consume version, as not required for now
         
         _serviceType = (String)in.readObject();

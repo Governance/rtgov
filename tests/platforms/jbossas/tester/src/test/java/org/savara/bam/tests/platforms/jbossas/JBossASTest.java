@@ -43,6 +43,9 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class JBossASTest {
 
+    // NOTE: Had to use resource, as injection didn't seem to work when there
+    // was multiple deployments, even though the method defined the
+    // 'savara-bam' as the deployment it should operate on.
     @Resource(mappedName="java:global/savara-bam/EPNManager")
     org.savara.bam.epn.EPNManager _epnManager;
 
@@ -118,7 +121,7 @@ public class JBossASTest {
     }
 
     @Test @OperateOnDeployment("savara-bam")
-    public void testMethod() {
+    public void testActivityEventsProcessed() {
         
         TestListener tl=new TestListener();
         
@@ -169,6 +172,13 @@ public class JBossASTest {
             if (tl.getProcessed().size() != 8) {
                 fail("Expecting 8 processed events, but got: "+tl.getProcessed().size());
             }
+            
+            for (Serializable s : tl.getProcessed()) {
+                if (s instanceof org.savara.bam.activity.model.ActivityType) {
+                    System.out.println("ActivityType="+s);
+                }
+            }
+            
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }

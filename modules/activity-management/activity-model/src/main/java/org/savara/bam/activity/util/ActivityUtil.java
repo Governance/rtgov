@@ -67,6 +67,27 @@ public final class ActivityUtil {
     }
 
     /**
+     * This method serializes an object into a JSON string representation.
+     * 
+     * @param obj The object
+     * @return The JSON serialized string representation
+     * @throws Exception Failed to serialize
+     */
+    public static String objectToJSONString(Object obj) throws Exception {
+        String ret=null;
+        
+        java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+        
+        MAPPER.writeValue(baos, obj);
+        
+        ret = new String(baos.toByteArray());
+        
+        baos.close();
+        
+        return (ret);
+    }
+
+    /**
      * This method serializes an Activity event list into a JSON representation.
      * 
      * @param activities The activity list

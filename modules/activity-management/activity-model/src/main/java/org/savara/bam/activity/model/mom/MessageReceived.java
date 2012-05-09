@@ -47,6 +47,8 @@ public class MessageReceived extends MessageExchange implements java.io.External
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+        
         out.writeInt(VERSION);
     }
 
@@ -55,6 +57,8 @@ public class MessageReceived extends MessageExchange implements java.io.External
      */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
+        super.readExternal(in);
+        
         in.readInt(); // Consume version, as not required for now
     }
 }

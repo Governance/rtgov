@@ -68,6 +68,8 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+        
         out.writeInt(VERSION);
         
         out.writeObject(_version);
@@ -78,6 +80,8 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
      */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
+        super.readExternal(in);
+        
         in.readInt(); // Consume version, as not required for now
         
         _version = (String)in.readObject();

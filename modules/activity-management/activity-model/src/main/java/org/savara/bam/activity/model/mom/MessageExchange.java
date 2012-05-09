@@ -111,6 +111,8 @@ public abstract class MessageExchange extends ActivityType implements java.io.Ex
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+        
         out.writeInt(VERSION);
         
         out.writeObject(_messageType);
@@ -123,6 +125,8 @@ public abstract class MessageExchange extends ActivityType implements java.io.Ex
      */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
+        super.readExternal(in);
+        
         in.readInt(); // Consume version, as not required for now
         
         _messageType = (String)in.readObject();

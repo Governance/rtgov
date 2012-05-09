@@ -78,6 +78,8 @@ public class ProcessCompleted extends BPMActivityType implements java.io.Externa
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
+        super.writeExternal(out);
+        
         out.writeInt(VERSION);
         
         out.writeObject(_status);
@@ -88,6 +90,8 @@ public class ProcessCompleted extends BPMActivityType implements java.io.Externa
      */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
+        super.readExternal(in);
+        
         in.readInt(); // Consume version, as not required for now
         
         _status = (Status)in.readObject();

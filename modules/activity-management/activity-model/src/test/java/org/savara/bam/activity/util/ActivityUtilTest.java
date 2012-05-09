@@ -152,17 +152,31 @@ public class ActivityUtilTest {
   
     @Test
     public void testJSONBinarySerialization() {
-        ActivityUnit act=createTestActivityUnit("TestId");
+        ActivityUnit act1=createTestActivityUnit("TestId");
         
         try {
             java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
             java.io.ObjectOutputStream oos=new java.io.ObjectOutputStream(os);
             
-            oos.writeObject(act);
+            oos.writeObject(act1);
             
             oos.close();
             os.close();
+            
+            java.io.ByteArrayInputStream is=new java.io.ByteArrayInputStream(os.toByteArray());
+            java.io.ObjectInputStream ois=new java.io.ObjectInputStream(is);
+            
+            ActivityUnit act2=(ActivityUnit)ois.readObject();
+            
+            ois.close();
+            is.close();
+            
+            String s1=new String(ActivityUtil.serialize(act1));
+            String s2=new String(ActivityUtil.serialize(act2));
 
+            if (!s1.equals(s2)) {
+                fail("Representations are different: s1="+s1+" s2="+s2);
+            }
         } catch(Exception e) {
             e.printStackTrace();
             fail("Failed to serialize: "+e);
