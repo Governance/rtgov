@@ -157,7 +157,8 @@ public class ActivityUnit implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public String toString() {
-        return("ActivityUnit["+_id+"] origin="+_origin+" contexts="+_contexts+" activityTypes="+_activityTypes);
+        return ("ActivityUnit["+_id+"] origin="+_origin+" contexts="
+                    +_contexts+" activityTypes="+_activityTypes);
     }
 
     /**

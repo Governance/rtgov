@@ -68,7 +68,7 @@ public class ResponseReceived extends RPCActivityType implements java.io.Externa
      * {@inheritDoc}
      */
     public String toString() {
-        return(super.toString()
+        return (super.toString()
                 +" replyToId="+_replyToId);
     }
     

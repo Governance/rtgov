@@ -45,7 +45,7 @@ import org.savara.bam.activity.model.soa.ResponseSent;
     @Type(value=ResponseReceived.class),
     @Type(value=ResponseSent.class),
     @Type(value=ProcessCompleted.class),
-    @Type(value=ProcessStarted.class)})
+    @Type(value=ProcessStarted.class) })
 public abstract class ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;

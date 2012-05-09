@@ -68,7 +68,7 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
      * {@inheritDoc}
      */
     public String toString() {
-        return(super.toString()
+        return (super.toString()
                 +" replyToId="+_replyToId);
     }
     

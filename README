@@ -1,0 +1,30 @@
+SAVARA BAM
+==========
+
+
+Setting the environment
+-----------------------
+
+When building the distribution, Arquillian is used to run tests within the target platform. The following environment needs to be setup for the selected target platform:
+
+
+JBossAS7/Switchyard:
+
+The 'jbossas' target platform requires JBossAS7 with Switchyard. This can be obtained from: http://www.jboss.org/switchyard/downloads
+
+(Note: currently been tested with switchyard-0.5-SNAPSHOT).
+
+Once installed, set the JBOSS_HOME environment variable to point to the root of the switchyard installation.
+
+
+Building the distribution
+-------------------------
+
+From the root folder, build the distribution using:
+
+mvn clean install -P<platform>
+
+where platform can be: jbossas 
+
+
+Once the build has completed, the distribution can be found in the distribution/jee/target folder.

@@ -172,7 +172,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      * {@inheritDoc}
      */
     public String toString() {
-        return(getClass().getSimpleName()+":"
+        return (getClass().getSimpleName()+":"
                 +" serviceType="+_serviceType
                 +" operation="+_operation
                 +" fault="+_fault
