@@ -50,12 +50,23 @@ public class JBossASTest {
                 copyToTmpFile(archiveFiles[0],"savara-bam.war"));
     }
     
-    @Deployment(name="orders-epn", order=2)
+    @Deployment(name="orders", order=2)
     public static WebArchive createDeployment2() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
                 .artifacts("org.savara.bam.tests.platforms.jbossas:tests-jbossas-orders:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+    }
+    
+    @Deployment(name="epn", order=3)
+    public static WebArchive createDeployment3() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.savara.bam.tests.platforms:tests-platforms-epn:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -139,6 +150,10 @@ public class JBossASTest {
             if (!resp.contains("<accepted>true</accepted>")) {
                 fail("Order was not accepted: "+resp);
             }
+            
+            // Wait for events to propagate
+            Thread.sleep(2000);
+            
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }

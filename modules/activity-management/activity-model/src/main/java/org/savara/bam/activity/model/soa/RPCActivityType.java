@@ -174,12 +174,12 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeUTF(_serviceType);
-        out.writeUTF(_operation);
-        out.writeUTF(_fault);
-        out.writeUTF(_messageType);
-        out.writeUTF(_content);
-        out.writeUTF(_messageId);
+        out.writeObject(_serviceType);
+        out.writeObject(_operation);
+        out.writeObject(_fault);
+        out.writeObject(_messageType);
+        out.writeObject(_content);
+        out.writeObject(_messageId);
     }
 
     /**
@@ -189,11 +189,11 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _serviceType = in.readUTF();
-        _operation = in.readUTF();
-        _fault = in.readUTF();
-        _messageType = in.readUTF();
-        _content = in.readUTF();
-        _messageId = in.readUTF();
+        _serviceType = (String)in.readObject();
+        _operation = (String)in.readObject();
+        _fault = (String)in.readObject();
+        _messageType = (String)in.readObject();
+        _content = (String)in.readObject();
+        _messageId = (String)in.readObject();
     }
 }

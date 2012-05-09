@@ -70,7 +70,7 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
 
-        out.writeUTF(_replyToId);
+        out.writeObject(_replyToId);
     }
 
     /**
@@ -80,6 +80,6 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
 
-        _replyToId = in.readUTF();
+        _replyToId = (String)in.readObject();
     }
 }

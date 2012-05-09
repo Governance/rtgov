@@ -17,11 +17,14 @@
  */
 package org.savara.bam.epn.loader.jee;
 
+import static javax.ejb.ConcurrencyManagementType.BEAN;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
@@ -39,6 +42,7 @@ import org.savara.bam.epn.util.NetworkUtil;
 @ApplicationScoped
 @Singleton
 @Startup
+@ConcurrencyManagement(BEAN)
 public class JEEEPNLoader {
     
     private static final Logger LOG=Logger.getLogger(JEEEPNLoader.class.getName());

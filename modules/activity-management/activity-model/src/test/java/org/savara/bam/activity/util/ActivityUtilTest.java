@@ -80,23 +80,32 @@ public class ActivityUtilTest {
     }
     
     @Test
-    public void testJSONSerialize() {
+    public void testJSONCompareActivityUnit() {
         ActivityUnit act=createTestActivityUnit("TestId");
         
         try {
             byte[] b=ActivityUtil.serialize(act);
             
+            if (b == null) {
+                fail("null returned");
+            }
+            
             java.io.InputStream is=ActivityUtilTest.class.getResourceAsStream("/json/activity.json");
-            byte[] b2=new byte[is.available()];
-            is.read(b2);
+            byte[] inb2=new byte[is.available()];
+            is.read(inb2);
             is.close();
+            
+            ActivityUnit act2=ActivityUtil.deserialize(inb2);
+            
+            byte[] b2=ActivityUtil.serialize(act2);            
             
             String s1=new String(b);
             String s2=new String(b2);
             
             if (!s1.equals(s2)) {
-                fail("Test json is different: generated="+s1+" expected="+s2);
+                fail("JSON is different: created="+s1+" stored="+s2);
             }
+
         } catch(Exception e) {
             e.printStackTrace();
             fail("Failed to serialize: "+e);
@@ -104,34 +113,7 @@ public class ActivityUtilTest {
     }
   
     @Test
-    public void testJSONDeserialize() {
-        
-        try {
-            java.io.InputStream is=ActivityUtilTest.class.getResourceAsStream("/json/activity.json");
-
-            byte[] b=new byte[is.available()];
-            is.read(b);
-            
-            ActivityUnit act2=ActivityUtil.deserialize(b);
-            
-            // Serialize
-            byte[] b2=ActivityUtil.serialize(act2);
-            
-            String s1=new String(b);
-            String s2=new String(b2);
-            
-            if (!s1.equals(s2)) {
-                fail("Test json is different: generated="+s1+" expected="+s2);
-            }
-            
-        } catch(Exception e) {
-            e.printStackTrace();
-            fail("Failed to deserialize: "+e);
-        }
-    }
-    
-    @Test
-    public void testJSONSerializeList() {
+    public void testJSONCompareActivityUnitList() {
         ActivityUnit act1=createTestActivityUnit("TestId1");
         ActivityUnit act2=createTestActivityUnit("TestId2");
         
@@ -140,19 +122,28 @@ public class ActivityUtilTest {
             acts.add(act1);
             acts.add(act2);
             
-            byte[] b1=ActivityUtil.serializeList(acts);
+            byte[] b=ActivityUtil.serializeList(acts);
+            
+            if (b == null) {
+                fail("null returned");
+            }
             
             java.io.InputStream is=ActivityUtilTest.class.getResourceAsStream("/json/activityList.json");
-            byte[] b2=new byte[is.available()];
-            is.read(b2);
+            byte[] inb2=new byte[is.available()];
+            is.read(inb2);
             is.close();
             
-            String s1=new String(b1);
+            java.util.List<ActivityUnit> acts2=ActivityUtil.deserializeList(inb2);
+            
+            byte[] b2=ActivityUtil.serializeList(acts2);            
+            
+            String s1=new String(b);
             String s2=new String(b2);
             
             if (!s1.equals(s2)) {
-                fail("Test json is different: generated="+s1+" expected="+s2);
+                fail("JSON is different: created="+s1+" stored="+s2);
             }
+
         } catch(Exception e) {
             e.printStackTrace();
             fail("Failed to serialize: "+e);
@@ -160,42 +151,22 @@ public class ActivityUtilTest {
     }
   
     @Test
-    public void testJSONDeserializeList() {
+    public void testJSONBinarySerialization() {
+        ActivityUnit act=createTestActivityUnit("TestId");
         
         try {
-            java.io.InputStream is=ActivityUtilTest.class.getResourceAsStream("/json/activityList.json");
+            java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
+            java.io.ObjectOutputStream oos=new java.io.ObjectOutputStream(os);
+            
+            oos.writeObject(act);
+            
+            oos.close();
+            os.close();
 
-            byte[] b=new byte[is.available()];
-            is.read(b);
-            
-            java.util.List<ActivityUnit> act2=ActivityUtil.deserializeList(b);
-            
-            if (act2.size() != 2) {
-               fail("Should be two activities");
-            }
-            
-            if (!(act2.get(0) instanceof ActivityUnit)) {
-                fail("First element is not an activity");
-            }
-            
-            if (!(act2.get(1) instanceof ActivityUnit)) {
-                fail("Second element is not an activity");
-            }
-            
-            // Serialize
-            byte[] b2=ActivityUtil.serializeList(act2);
-            
-            String s1=new String(b);
-            String s2=new String(b2);
-            
-            if (!s1.equals(s2)) {
-                fail("Test json is different: generated="+s1+" expected="+s2);
-            }
-            
         } catch(Exception e) {
             e.printStackTrace();
-            fail("Failed to deserialize: "+e);
+            fail("Failed to serialize: "+e);
         }
     }
-    
+  
 }

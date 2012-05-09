@@ -46,7 +46,7 @@ import org.savara.bam.activity.model.soa.ResponseSent;
     @Type(value=ResponseSent.class),
     @Type(value=ProcessCompleted.class),
     @Type(value=ProcessStarted.class)})
-public abstract class ActivityType {
+public abstract class ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
@@ -133,7 +133,7 @@ public abstract class ActivityType {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeUTF(_activityUnitId);
+        out.writeObject(_activityUnitId);
         out.writeInt(_activityUnitIndex);
         out.writeLong(_timestamp);
     }
@@ -145,7 +145,7 @@ public abstract class ActivityType {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _activityUnitId = in.readUTF();
+        _activityUnitId = (String)in.readObject();
         _activityUnitIndex = in.readInt();
         _timestamp = in.readLong();
     }

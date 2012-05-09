@@ -151,11 +151,11 @@ public class Origin implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeUTF(_principal);
-        out.writeUTF(_transactionId);
-        out.writeUTF(_thread);
-        out.writeUTF(_host);
-        out.writeUTF(_port);
+        out.writeObject(_principal);
+        out.writeObject(_transactionId);
+        out.writeObject(_thread);
+        out.writeObject(_host);
+        out.writeObject(_port);
     }
 
     /**
@@ -165,10 +165,10 @@ public class Origin implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _principal = in.readUTF();
-        _transactionId = in.readUTF();
-        _thread = in.readUTF();
-        _host = in.readUTF();
-        _port = in.readUTF();
+        _principal = (String)in.readObject();
+        _transactionId = (String)in.readObject();
+        _thread = (String)in.readObject();
+        _host = (String)in.readObject();
+        _port = (String)in.readObject();
     }
 }

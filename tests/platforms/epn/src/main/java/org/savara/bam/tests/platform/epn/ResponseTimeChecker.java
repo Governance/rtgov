@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,29 +15,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.epn.internal;
+package org.savara.bam.tests.platform.epn;
+
+import java.io.Serializable;
 
 /**
- * This class represents a list of events that can be serialized.
+ * This class provides a placeholder for response time checking.
  *
  */
-public class EventList extends java.util.Vector<java.io.Serializable> implements java.io.Serializable {
-
-    private static final long serialVersionUID = -2940973962085558684L;
+public class ResponseTimeChecker extends org.savara.bam.epn.EventProcessor {
 
     /**
-     * This method represents the default constructor.
+     * {@inheritDoc}
      */
-    public EventList() {
+    @Override
+    public Serializable process(String source, Serializable event,
+            int retriesLeft) throws Exception {
+        Serializable ret=null;
+        
+        System.out.println(">>> CHECK RESPONSE TIME FOR EVENT="+event);
+        
+        return (ret);
     }
 
-    /**
-     * This method represents a constructor to initialize the event list
-     * from a standard Java list.
-     * 
-     * @param list The list of events
-     */
-    public EventList(java.util.List<? extends java.io.Serializable> list) {
-        super(list);
-    }
 }

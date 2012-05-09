@@ -18,12 +18,15 @@
 package org.savara.bam.epn.jms;
 
 import java.util.List;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
+import static javax.ejb.ConcurrencyManagementType.BEAN;
+import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -46,6 +49,7 @@ import org.savara.bam.epn.internal.EventList;
  *
  */
 @Singleton(name="EPNManager")
+@ConcurrencyManagement(BEAN)
 public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManager {
     
     @Resource(mappedName = "java:/JmsXA")

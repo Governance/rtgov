@@ -17,10 +17,13 @@
  */
 package org.savara.bam.collector;
 
+import static javax.ejb.ConcurrencyManagementType.BEAN;
+
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.transaction.Synchronization;
@@ -39,6 +42,7 @@ import org.savara.bam.collector.spi.CollectorContext;
  *
  */
 @Singleton(name="ActivityCollector")
+@ConcurrencyManagement(BEAN)
 public class DefaultActivityCollector implements ActivityCollector {
 
     private static final Logger LOG=Logger.getLogger(DefaultActivityCollector.class.getName());

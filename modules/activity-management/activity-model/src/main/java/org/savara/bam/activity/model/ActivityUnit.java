@@ -159,19 +159,19 @@ public class ActivityUnit implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeUTF(_id);
+        out.writeObject(_id);
         out.writeObject(_origin);
         
         int len=_context.size();
         
-        out.write(len);
+        out.writeInt(len);
         for (int i=0; i < len; i++) {
             out.writeObject(_context.get(i));
         }
         
         len = _activityTypes.size();
         
-        out.write(len);
+        out.writeInt(len);
         for (int i=0; i < len; i++) {
             out.writeObject(_activityTypes.get(i));
         }
@@ -184,7 +184,7 @@ public class ActivityUnit implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _id = in.readUTF();
+        _id = (String)in.readObject();
         _origin = (Origin)in.readObject();
         
         int len=in.readInt();

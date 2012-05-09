@@ -47,6 +47,12 @@
 			<type>war</type>
 			<version>${bam.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.tests.platforms</groupId>
+			<artifactId>tests-platforms-epn</artifactId>
+			<type>war</type>
+			<version>${bam.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.savara.bam.distribution</groupId>

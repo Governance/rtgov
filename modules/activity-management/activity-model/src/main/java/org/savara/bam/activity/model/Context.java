@@ -126,8 +126,8 @@ public class Context implements java.io.Externalizable {
         out.writeInt(VERSION);
         
         out.writeObject(_type);
-        out.writeUTF(_name);
-        out.writeUTF(_value);
+        out.writeObject(_name);
+        out.writeObject(_value);
     }
 
     /**
@@ -138,8 +138,8 @@ public class Context implements java.io.Externalizable {
         in.readInt(); // Consume version, as not required for now
         
         _type = (ContextType)in.readObject();
-        _name = in.readUTF();
-        _value = in.readUTF();
+        _name = (String)in.readObject();
+        _value = (String)in.readObject();
     }
 
 }

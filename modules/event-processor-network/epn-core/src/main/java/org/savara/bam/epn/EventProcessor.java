@@ -39,7 +39,10 @@ public abstract class EventProcessor {
     /**
      * This method processes the supplied event, and optionally
      * returns a transformed representation to be forwarded to
-     * other processors. If the event cannot be processed at
+     * other processors. If multiple objects result from the,
+     * transformation, then they should be returned in a collection.
+     * <p>
+     * If the event cannot be processed at
      * this time, then an exception should be thrown to initiate
      * a retry. The number of remaining retries is supplied,
      * to enable the processor to take appropriate error

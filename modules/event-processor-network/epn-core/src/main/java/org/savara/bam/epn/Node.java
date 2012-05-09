@@ -225,6 +225,7 @@ public class Node {
      * @return The events to retry, or null if no retries necessary
      * @throws Exception Failed to process events, and should result in transaction rollback
      */
+    @SuppressWarnings("unchecked")
     protected EventList process(EPNContainer container, String source,
                       EventList events, int retriesLeft) throws Exception {
         EventList retries=null;
@@ -237,7 +238,11 @@ public class Node {
                     java.io.Serializable processed=getEventProcessor().process(source, event, retriesLeft);
                     
                     if (processed != null) {
-                        results.add(processed);
+                        if (processed instanceof java.util.Collection<?>) {
+                            results.addAll((java.util.Collection<? extends java.io.Serializable>)processed);
+                        } else {
+                            results.add(processed);
+                        }
                     }
                     
                 } catch (Exception e) {

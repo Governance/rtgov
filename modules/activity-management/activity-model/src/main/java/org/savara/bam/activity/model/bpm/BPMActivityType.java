@@ -92,8 +92,8 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeUTF(_processType);
-        out.writeUTF(_instanceId);
+        out.writeObject(_processType);
+        out.writeObject(_instanceId);
     }
 
     /**
@@ -103,7 +103,7 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _processType = in.readUTF();
-        _instanceId = in.readUTF();
+        _processType = (String)in.readObject();
+        _instanceId = (String)in.readObject();
     }
 }
