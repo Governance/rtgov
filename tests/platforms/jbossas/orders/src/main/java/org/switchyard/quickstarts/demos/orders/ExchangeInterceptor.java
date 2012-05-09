@@ -56,7 +56,9 @@ public class ExchangeInterceptor implements ExchangeHandler {
             }
         }
         
-        LOG.info("*********** Exchange Interceptor Initialized with collector="+_activityCollector);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("*********** Exchange Interceptor Initialized with collector="+_activityCollector);
+        }
         
         _initialized = true;
     }
@@ -66,7 +68,9 @@ public class ExchangeInterceptor implements ExchangeHandler {
             init();
         }
         
-        LOG.info("********* (init="+_initialized+") HANDLE MESSAGE FOR EXCHANGE="+exchange);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("********* Exchange="+exchange);
+        }
         
         if (_activityCollector != null) {
             if (exchange.getPhase() == ExchangePhase.IN) {
@@ -94,6 +98,11 @@ public class ExchangeInterceptor implements ExchangeHandler {
         if (!_initialized) {
             init();
         }
+        
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("********* Fault="+exchange);
+        }
+        
     }
 
 }

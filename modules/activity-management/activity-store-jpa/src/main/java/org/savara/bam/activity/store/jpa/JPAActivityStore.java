@@ -18,6 +18,8 @@
 package org.savara.bam.activity.store.jpa;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.server.ActivityQuery;
@@ -29,18 +31,21 @@ import org.savara.bam.activity.server.spi.ActivityStore;
  */
 public class JPAActivityStore implements ActivityStore {
 
+    private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
+    
     /**
      * {@inheritDoc}
      */
     public void store(List<ActivityUnit> activities) throws Exception {
-        System.out.println("STORE="+activities);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Store="+activities);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public List<ActivityUnit> query(ActivityQuery query) throws Exception {
-        System.out.println("QUERY="+query);
         return new java.util.Vector<ActivityUnit>();
     }
 

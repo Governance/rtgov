@@ -41,6 +41,7 @@ import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.EPNContainer;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
+import org.savara.bam.epn.NotifyType;
 import org.savara.bam.epn.internal.EventList;
 
 /**
@@ -73,6 +74,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     public static final String EPN_SOURCE_NODE = "EPNSourceNode";
     /** The EPN Number of Retries Left. **/
     public static final String EPN_RETRIES_LEFT = "EPNRetriesLeft";
+    /** The EPN notification type. **/
+    public static final String EPN_NOTIFY_TYPE = "EPNNotifyType";
     
     private Connection _connection=null;
     private Session _session=null;
@@ -237,8 +240,9 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             String networkName=message.getStringProperty(JMSEPNManagerImpl.EPN_NETWORK);
             String version=message.getStringProperty(JMSEPNManagerImpl.EPN_VERSION);
             String nodeName=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES);
+            NotifyType type=NotifyType.valueOf(message.getStringProperty(JMSEPNManagerImpl.EPN_NOTIFY_TYPE));
             
-            dispatchEventsProcessedToListeners(networkName, version, nodeName, events);
+            dispatchNotificationToListeners(networkName, version, nodeName, type, events);
         } else {
             LOG.severe("Unsupport message '"+message+"' received");
         }
@@ -317,8 +321,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * {@inheritDoc}
      */
     @Override
-    protected void notifyEventsProcessed(String networkName, String version,
-                    String nodeName, EventList events) throws Exception {
+    protected void notify(String networkName, String version,
+                    String nodeName, NotifyType type, EventList events) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Notify events processed "+networkName+"/"+version+"/"+nodeName+" events="+events);
         }
@@ -327,6 +331,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, version);
         mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
+        mesg.setStringProperty(JMSEPNManagerImpl.EPN_NOTIFY_TYPE, type.name());
         _notificationsProducer.send(mesg);
     }
     

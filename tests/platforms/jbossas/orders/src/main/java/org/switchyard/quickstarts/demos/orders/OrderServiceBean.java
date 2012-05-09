@@ -34,7 +34,6 @@ public class OrderServiceBean implements OrderService {
     
     @Override
     public OrderAck submitOrder(Order order) {
-System.out.println("RECEIVED ORDER="+order);        
         // Create an order ack
         OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId());
         // Check the inventory

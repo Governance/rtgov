@@ -33,8 +33,6 @@ public class ResponseTimeChecker extends org.savara.bam.epn.EventProcessor {
             int retriesLeft) throws Exception {
         Serializable ret=null;
         
-        System.out.println(">>> CHECK RESPONSE TIME FOR EVENT="+event);
-        
         return (ret);
     }
 

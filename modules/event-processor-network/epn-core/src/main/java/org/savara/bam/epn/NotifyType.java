@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -18,24 +18,21 @@
 package org.savara.bam.epn;
 
 /**
- * This interface represents a listener interested in information
- * about an Event Processor Network Node.
+ * This enumeration represents the types of node notification that may
+ * occur.
  *
  */
-public interface NodeListener {
+public enum NotifyType {
 
     /**
-     * This method notifies the listener when a situation occurs
-     * on the identified network/version/node concerning a list
-     * of events.
-     * 
-     * @param network The network name
-     * @param version The version of the network that processed the events
-     * @param node The node name
-     * @param type The type of notification
-     * @param events The events that have been processed
+     * This type represents the list of processed events. If the node defined
+     * a predicate, then these events would have passed that predicate.
      */
-    public void notify(String network, String version,
-                    String node, NotifyType type, java.util.List<java.io.Serializable> events);
+    Processed,
     
+    /**
+     * This type represents the list of results produced following
+     * the processing of the events.
+     */
+    Results
 }

@@ -17,6 +17,10 @@
  */
 package org.savara.bam.tests.platforms.jbossas;
 
+import java.io.Serializable;
+import java.util.List;
+
+import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
@@ -31,11 +35,16 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.savara.bam.epn.NodeListener;
+import org.savara.bam.epn.NotifyType;
 
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class JBossASTest {
+
+    @Resource(mappedName="java:global/savara-bam/EPNManager")
+    org.savara.bam.epn.EPNManager _epnManager;
 
     @Deployment(name="savara-bam", order=1)
     public static WebArchive createDeployment1() {
@@ -111,7 +120,9 @@ public class JBossASTest {
     @Test @OperateOnDeployment("savara-bam")
     public void testMethod() {
         
-        // TODO: Register node listener to check that epn events are processed
+        TestListener tl=new TestListener();
+        
+        _epnManager.addNodeListener(tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -154,8 +165,38 @@ public class JBossASTest {
             // Wait for events to propagate
             Thread.sleep(2000);
             
+            // Check that all events have been processed
+            if (tl.getProcessed().size() != 8) {
+                fail("Expecting 8 processed events, but got: "+tl.getProcessed().size());
+            }
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
+        }
+    }
+    
+    public class TestListener implements NodeListener {
+        
+        private java.util.List<Serializable> _processed=new java.util.Vector<Serializable>();
+        private java.util.List<Serializable> _results=new java.util.Vector<Serializable>();
+
+        /**
+         * {@inheritDoc}
+         */
+        public void notify(String network, String version, String node,
+                NotifyType type, List<Serializable> events) {
+            if (type == NotifyType.Processed) {
+                _processed.addAll(events);
+            } else if (type == NotifyType.Results) {
+                _results.addAll(events);
+            }
+        }
+        
+        public java.util.List<Serializable> getProcessed() {
+            return (_processed);
+        }
+        
+        public java.util.List<Serializable> getResults() {
+            return (_processed);
         }
     }
 }

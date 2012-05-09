@@ -40,6 +40,9 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class NetworkLoaderTest {
 
+    @Inject
+    org.savara.bam.epn.EPNManager _epnManager;
+
     @Deployment
     public static WebArchive createDeployment() {
         String version=System.getProperty("bam.version");
@@ -61,9 +64,6 @@ public class NetworkLoaderTest {
                             "org.savara.bam.event-processor-network:epn-container-jms:"+version)
                     .resolveAsFiles());
     }
-
-    @Inject
-    org.savara.bam.epn.EPNManager _epnManager;
 
     @Test
     public void checkEPNManagerAvailable() {

@@ -271,7 +271,7 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         if (node.getNotificationEnabled()
                 && (ret == null || ret.size() < events.size())) { 
-            EventList notify=null;
+            EventList notifyList=null;
             
             if (ret != null) {
                 EventList processed = new EventList();
@@ -283,14 +283,14 @@ public abstract class AbstractEPNManager implements EPNManager {
                 }
                 
                 if (processed.size() > 0) {
-                    notify = processed;
+                    notifyList = processed;
                 }
             } else {
-                notify = events;
+                notifyList = events;
             }
             
-            if (notify != null) {
-                notifyEventsProcessed(networkName, version, nodeName, notify);
+            if (notifyList != null) {
+                notify(networkName, version, nodeName, NotifyType.Processed, notifyList);
             }
         }
         
@@ -304,18 +304,19 @@ public abstract class AbstractEPNManager implements EPNManager {
     }
 
     /**
-     * This method sends a notification that the supplied list of events have
-     * been processed by the named network and node.
+     * This method sends a notification to any registered listeners that
+     * a situation has occurred on the named network/version/node.
      * 
      * @param networkName The network name
      * @param version The version
      * @param nodeName The node name
-     * @param processed The list of processed events
-     * @throws Exception Failed to notify events processed
+     * @param type The type of notification
+     * @param events The list of events
+     * @throws Exception Failed to notify
      */
-    protected void notifyEventsProcessed(String networkName, String version,
-                    String nodeName, EventList processed) throws Exception {
-        dispatchEventsProcessedToListeners(networkName, version, nodeName, processed);
+    protected void notify(String networkName, String version,
+                    String nodeName, NotifyType type, EventList events) throws Exception {
+        dispatchNotificationToListeners(networkName, version, nodeName, type, events);
     }
     
     /**
@@ -324,17 +325,18 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @param networkName The network name
      * @param version The version
      * @param nodeName The node name
-     * @param processed The list of processed events
+     * @param type The type of notification
+     * @param events The list of events
      */
-    protected void dispatchEventsProcessedToListeners(String networkName, String version,
-                    String nodeName, EventList processed) {
+    protected void dispatchNotificationToListeners(String networkName, String version,
+                    String nodeName, NotifyType type, EventList events) {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Notify processed events on network="+networkName+" node="+nodeName
-                    +" processed="+processed);
+                    +"type="+type+" events="+events);
         }
 
         for (NodeListener nl : _nodeListeners) {
-            nl.eventsProcessed(networkName, version, nodeName, processed);
+            nl.notify(networkName, version, nodeName, type, events);
         }
     }
     

@@ -21,12 +21,13 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.savara.bam.epn.NodeListener;
+import org.savara.bam.epn.NotifyType;
 
 public class TestNodeListener implements NodeListener {
 
     private java.util.List<Entry> _entries=new java.util.Vector<Entry>();
     
-    public void eventsProcessed(String network, String version, String node, List<Serializable> events) {
+    public void notify(String network, String version, String node, NotifyType type, List<Serializable> events) {
         _entries.add(new Entry(network, version, node, events));
     }
 
