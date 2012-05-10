@@ -15,8 +15,7 @@
 	</parent>
 
 	<modules>
-		<module>orders</module>
-		<module>tester</module>
+		<module>slamonitor</module>
 	</modules>
 
 </project>

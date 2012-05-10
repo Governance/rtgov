@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.tests.platforms.jbossas;
+package org.savara.bam.tests.platforms.jbossas.slamonitor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -41,7 +41,7 @@ import org.savara.bam.epn.NotifyType;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class JBossASTest {
+public class JBossASSLAMonitorTest {
 
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
@@ -67,7 +67,7 @@ public class JBossASTest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.tests.platforms.jbossas:tests-jbossas-orders:war:"+version)
+                .artifacts("org.savara.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-orders:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -78,7 +78,7 @@ public class JBossASTest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.tests.platforms:tests-platforms-epn:war:"+version)
+                .artifacts("org.savara.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-epn:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);

@@ -23,9 +23,5 @@
 		</profile>
 	</profiles>
 
-	<modules>
-		<module>epn</module>
-	</modules>
-
 </project>
 

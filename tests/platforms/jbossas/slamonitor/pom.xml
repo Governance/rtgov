@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bam.tests.platform.jbossas</groupId>
-	<artifactId>tests-jbossas-tester</artifactId> 
+	<artifactId>tests-jbossas-slamonitor</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Savara BAM::Tests::Platform::JBossAS::Tester</name>
+	<name>Savara BAM::Tests::Platforms::JBossAS::SLAMonitor</name>
 
 	<parent>
 		<groupId>org.savara.bam.tests.platforms</groupId>
@@ -18,12 +18,6 @@
 			<id>jbossas</id>
 			<properties>
 				<platform>jbossas</platform>
-			</properties>
-		</profile>
-		<profile>
-			<id>glassfish</id>
-			<properties>
-				<platform>glassfish</platform>
 			</properties>
 		</profile>
 	</profiles>
@@ -42,14 +36,14 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.savara.bam.tests.platforms.jbossas</groupId>
-			<artifactId>tests-jbossas-orders</artifactId>
+			<groupId>org.savara.bam.samples.jbossas.slamonitor</groupId>
+			<artifactId>samples-jbossas-slamonitor-orders</artifactId>
 			<type>war</type>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.savara.bam.tests.platforms</groupId>
-			<artifactId>tests-platforms-epn</artifactId>
+			<groupId>org.savara.bam.samples.jbossas.slamonitor</groupId>
+			<artifactId>samples-jbossas-slamonitor-epn</artifactId>
 			<type>war</type>
 			<version>${bam.version}</version>
 		</dependency>
