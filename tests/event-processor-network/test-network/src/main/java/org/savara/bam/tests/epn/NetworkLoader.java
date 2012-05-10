@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package epn.test;
+package org.savara.bam.tests.epn;
 
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;

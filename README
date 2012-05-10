@@ -28,3 +28,29 @@ where platform can be: jbossas
 
 
 Once the build has completed, the distribution can be found in the distribution/jee/target folder.
+
+
+
+
+
+Contributing
+------------
+
+Before submitting a pull request, please perform the following command from the root folder, to check for style issues:
+
+mvn checkstyle:checkstyle
+
+If any errors are reported, then they should be fixed before submitting the pull request.
+
+
+
+Generating Javadocs
+-------------------
+
+An aggregate set of javadocs can be generated from the root folder using the following command:
+
+mvn javadoc:javadoc
+
+The javadocs will be generated to the target/site folder.
+
+

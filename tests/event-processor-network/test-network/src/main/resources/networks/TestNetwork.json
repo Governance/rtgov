@@ -8,7 +8,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "epn.test.Root"
+        "@class" : "org.savara.bam.tests.epn.Root"
       },
       "predicate" : null,
       "notificationEnabled" : false
@@ -19,10 +19,10 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "epn.test.Child"
+        "@class" : "org.savara.bam.tests.epn.Child"
       },
       "predicate" : {
-        "@class" : "epn.test.ChildPredicate",
+        "@class" : "org.savara.bam.tests.epn.ChildPredicate",
         "min" : 0,
         "max" : 9
       },
@@ -34,10 +34,10 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "epn.test.Child"
+        "@class" : "org.savara.bam.tests.epn.Child"
       },
       "predicate" : {
-        "@class" : "epn.test.ChildPredicate",
+        "@class" : "org.savara.bam.tests.epn.ChildPredicate",
         "min" : 10,
         "max" : 19
       },

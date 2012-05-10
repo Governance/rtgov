@@ -15,51 +15,60 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package epn.test;
+package org.savara.bam.tests.epn;
 
-import java.io.Serializable;
+import org.savara.bam.epn.Predicate;
 
 /**
- * This is object 2 class.
+ * This class provides the child predicate.
  *
  */
-public class Obj2 implements Serializable {
+public class ChildPredicate extends Predicate {
 
-    private static final long serialVersionUID = -3530824983315376813L;
-
-    private int _value=0;
+    private int _min=0;
+    private int _max=0;
     
     /**
-     * The constructor.
+     * This method sets the min.
      * 
-     * @param val The value
+     * @param min The min
      */
-    public Obj2(int val) {
-        _value = val;
+    public void setMin(int min) {
+        _min = min;
     }
     
     /**
-     * This method returns the value.
+     * This method gets the min.
      * 
-     * @return The value
+     * @return The min
      */
-    public int getValue() {
-        return (_value);
+    public int getMin() {
+        return (_min);
+    }
+    
+    /**
+     * This method sets the max.
+     * 
+     * @param max The max
+     */
+    public void setMax(int max) {
+        _max = max;
+    }
+    
+    /**
+     * This method gets the max.
+     * 
+     * @return The max
+     */
+    public int getMax() {
+        return (_max);
     }
     
     @Override
-    public int hashCode() {
-        return (_value);
+    public boolean apply(Object event) {
+        return (event instanceof Obj2
+                && ((Obj2)event).getValue() >= getMin()
+                && ((Obj2)event).getValue() <= getMax());
     }
-    
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof Obj2
-                && ((Obj2)obj).getValue() == _value);
-    }
-    
-    @Override
-    public String toString() {
-        return ("Obj2["+_value+"]");
-    }
+
 }

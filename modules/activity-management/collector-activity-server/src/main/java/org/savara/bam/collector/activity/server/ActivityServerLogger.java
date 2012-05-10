@@ -34,9 +34,9 @@ import org.savara.bam.collector.spi.BatchedActivityLogger;
  * configured activity server.
  *
  */
-public class ActivityServerCollector extends BatchedActivityLogger {
+public class ActivityServerLogger extends BatchedActivityLogger {
 
-    private static final Logger LOG=Logger.getLogger(ActivityServerCollector.class.getName());
+    private static final Logger LOG=Logger.getLogger(ActivityServerLogger.class.getName());
     
     @Inject
     private ActivityServer _activityServer=null;
@@ -44,12 +44,12 @@ public class ActivityServerCollector extends BatchedActivityLogger {
     private java.util.List<ActivityUnit> _activities=null;
     
     /**
-     * This method initializes the Collector Activity Server.
+     * This method initializes the Activity Server Logger.
      */
     @PostConstruct
     public void init() {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Initialize Collector for Activity Server: "+_activityServer);
+            LOG.fine("Initialize Logger for Activity Server: "+_activityServer);
         }
         super.init();
     }
@@ -77,12 +77,12 @@ public class ActivityServerCollector extends BatchedActivityLogger {
     }
 
     /**
-     * This method closes the Collector Activity Server.
+     * This method closes the Activity Server Logger.
      */
     @PreDestroy
     public void close() {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Initialize Collector for Activity Server: "+_activityServer);
+            LOG.fine("Close Logger for Activity Server: "+_activityServer);
         }
         super.close();
     }

@@ -15,22 +15,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package epn.test;
+package org.savara.bam.tests.epn;
 
 import java.io.Serializable;
 
-import org.savara.bam.epn.EventProcessor;
-
 /**
- * The root class.
+ * This is object 2 class.
  *
  */
-public class Root extends EventProcessor {
+public class Obj2 implements Serializable {
 
-    @Override
-    public Serializable process(String source, Serializable event,
-            int retriesLeft) throws Exception {
-        return (new Obj2(((Obj1)event).getValue()));
+    private static final long serialVersionUID = -3530824983315376813L;
+
+    private int _value=0;
+    
+    /**
+     * The constructor.
+     * 
+     * @param val The value
+     */
+    public Obj2(int val) {
+        _value = val;
     }
-
+    
+    /**
+     * This method returns the value.
+     * 
+     * @return The value
+     */
+    public int getValue() {
+        return (_value);
+    }
+    
+    @Override
+    public int hashCode() {
+        return (_value);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Obj2
+                && ((Obj2)obj).getValue() == _value);
+    }
+    
+    @Override
+    public String toString() {
+        return ("Obj2["+_value+"]");
+    }
 }

@@ -15,62 +15,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package epn.test.jee;
-
-import javax.inject.Inject;
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.savara.bam.epn.Network;
-import org.savara.bam.epn.Node;
-
-import epn.test.Child;
-import epn.test.NetworkLoader;
-import epn.test.Obj1;
-import epn.test.Obj2;
+package org.savara.bam.tests.epn.embedded;
 
 import static org.junit.Assert.*;
 
-@RunWith(Arquillian.class)
+import org.junit.Test;
+import org.savara.bam.epn.EPNManager;
+import org.savara.bam.epn.Network;
+import org.savara.bam.epn.Node;
+import org.savara.bam.tests.epn.Child;
+import org.savara.bam.tests.epn.NetworkLoader;
+import org.savara.bam.tests.epn.Obj1;
+import org.savara.bam.tests.epn.Obj2;
+
+
 public class NetworkLoaderTest {
 
-    @Inject
-    org.savara.bam.epn.EPNManager _epnManager;
-
-    @Deployment
-    public static WebArchive createDeployment() {
-        String version=System.getProperty("bam.version");
-
-        return ShrinkWrap.create(WebArchive.class)
-            .addClass(epn.test.Child.class)
-            .addClass(epn.test.ChildPredicate.class)
-            .addClass(epn.test.NetworkLoader.class)
-            .addClass(epn.test.Obj1.class)
-            .addClass(epn.test.Obj2.class)
-            .addClass(epn.test.Root.class)
-            .addAsResource("networks/TestNetwork.json")
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addAsManifestResource("bam-epn-hornetq-jms.xml")
-            .addAsLibraries(
-                    DependencyResolvers
-                    .use(MavenDependencyResolver.class)
-                    .artifacts("org.savara.bam.event-processor-network:epn-core:"+version,
-                            "org.savara.bam.event-processor-network:epn-container-jms:"+version)
-                    .resolveAsFiles());
-    }
-
     @Test
-    public void checkEPNManagerAvailable() {
+    public void testLoadNetwork() {
+        NetworkLoader tl=new NetworkLoader();
         
-        if (_epnManager == null) {
-            fail("EPN Manager has not been set");
+        Network net=tl.loadNetwork();
+        
+        if (net == null) {
+            fail("Failed to load network");
         }
+    }
+    
+    protected EPNManager getEPNManager() {
+        EPNManager ret=null;
+        
+        try {
+            Class<?> cls=
+                    NetworkLoaderTest.class.getClassLoader().loadClass("org.savara.bam.epn.embedded.EmbeddedEPNManager");
+            ret = (EPNManager)cls.newInstance();
+            
+        } catch(Exception e) {
+            fail("Failed to get EPNManager: "+e);
+        }
+        return(ret);
     }
 
     @Test
@@ -84,14 +67,16 @@ public class NetworkLoaderTest {
         Obj1 o1=new Obj1(5);
         events.add(o1);
         
+        EPNManager mgr=getEPNManager();
+        
         try {
-            _epnManager.register(net);
+            mgr.register(net);
         } catch(Exception e) {
             fail("Failed to register network: "+e);
         }
         
         try {
-            _epnManager.publish(NetworkLoader.TEST_SUBJECT, events);
+            mgr.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             
@@ -119,14 +104,8 @@ public class NetworkLoaderTest {
         if (((Obj2)childA.events().get(0)).getValue() != 5) {
             fail("Child A event has wrong value: "+((Obj2)childA.events().get(0)).getValue());
         }
-        
-        try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK, null);
-        } catch(Exception e) {
-            fail("Failed to unregister network: "+e);
-        }
     }
-    
+
     @Test
     public void testPredicates() {
         NetworkLoader tl=new NetworkLoader();
@@ -142,14 +121,16 @@ public class NetworkLoaderTest {
         events.add(o2);
         events.add(o3);
         
+        EPNManager mgr=getEPNManager();
+        
         try {
-            _epnManager.register(net);
+            mgr.register(net);
         } catch(Exception e) {
             fail("Failed to register network: "+e);
         }
         
         try {
-            _epnManager.publish(NetworkLoader.TEST_SUBJECT, events);
+            mgr.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             
@@ -186,12 +167,6 @@ public class NetworkLoaderTest {
         if (childB.retries().size() != 0) {
             fail("Child B should have no retries: "+childB.retries().size());
         }
-        
-        try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK, null);
-        } catch(Exception e) {
-            fail("Failed to unregister network: "+e);
-        }
     }
 
     @Test
@@ -209,8 +184,10 @@ public class NetworkLoaderTest {
         events.add(o2);
         events.add(o3);
         
+        EPNManager mgr=getEPNManager();
+        
         try {
-            _epnManager.register(net);
+            mgr.register(net);
         } catch(Exception e) {
             fail("Failed to register network: "+e);
         }
@@ -232,16 +209,8 @@ public class NetworkLoaderTest {
         Obj2 rej3=new Obj2(o3.getValue());
         childB.reject(rej3);
         
-        if (childA.events().size() != 0) {
-            fail("Child A does not have 0 event: "+childA.events().size()+" "+childA.events());
-        }
-        
-        if (childB.events().size() != 0) {
-            fail("Child B does not have 0 events: "+childB.events().size()+" "+childB.events());
-        }
-        
         try {
-            _epnManager.publish(NetworkLoader.TEST_SUBJECT, events);
+            mgr.publish(NetworkLoader.TEST_SUBJECT, events);
             
             Thread.sleep(1000);
             
@@ -250,11 +219,11 @@ public class NetworkLoaderTest {
         }
         
         if (childA.events().size() != 1) {
-            fail("Child A does not have 1 event: "+childA.events().size()+" "+childA.events());
+            fail("Child A does not have 1 event: "+childA.events().size());
         }
         
         if (childB.events().size() != 2) {
-            fail("Child B does not have 2 events: "+childB.events().size()+" "+childB.events());
+            fail("Child B does not have 2 events: "+childB.events().size());
         }
         
         if (childA.retries().size() != 0) {
@@ -267,12 +236,6 @@ public class NetworkLoaderTest {
         
         if (!childB.retries().contains(rej3)) {
             fail("Child B retry event is wrong");
-        }
-        
-        try {
-            _epnManager.unregister(NetworkLoader.TEST_NETWORK, null);
-        } catch(Exception e) {
-            fail("Failed to unregister network: "+e);
         }
     }
 }
