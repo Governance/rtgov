@@ -37,10 +37,10 @@ public class ActivityUtilTest {
 
         Origin origin=new Origin();
         origin.setHost("MyHost");
+        origin.setNode("MyNode");
         origin.setPort("1010");
         origin.setPrincipal("Me");
         origin.setThread("MyThread");
-        origin.setTransaction("MyTxn");
         act.setOrigin(origin);
 
         Context c1=new Context();

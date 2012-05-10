@@ -152,18 +152,6 @@ public class BeanServiceTest {
         if (!(TestActivityStore.getActivities().get(3).getActivityTypes().get(0) instanceof ResponseReceived)) {
             fail("Expected 'ResponseReceived'");
         }
-        
-        // Check that all the events had different transaction ids, as a
-        // transaction manager is available, but the method is not performed
-        // within the scope of a transaction
-        java.util.List<String> txnIds=new java.util.Vector<String>();
-        
-        for (ActivityUnit au : TestActivityStore.getActivities()) {
-            if (txnIds.contains(au.getOrigin().getTransaction())) {
-                fail("Txn id should be unique");
-            }
-            txnIds.add(au.getOrigin().getTransaction());
-        }
     }
     
     @Test
@@ -354,18 +342,6 @@ public class BeanServiceTest {
         
         if (!(TestActivityStore.getActivities().get(7).getActivityTypes().get(0) instanceof ResponseReceived)) {
             fail("Expected 2nd 'ResponseReceived'");
-        }
-        
-        // Check that all the events had different transaction ids, as a
-        // transaction manager is available, but the method is not performed
-        // within the scope of a transaction
-        java.util.List<String> txnIds=new java.util.Vector<String>();
-        
-        for (ActivityUnit au : TestActivityStore.getActivities()) {
-            if (txnIds.contains(au.getOrigin().getTransaction())) {
-                fail("Txn id should be unique");
-            }
-            txnIds.add(au.getOrigin().getTransaction());
         }
     }
 }

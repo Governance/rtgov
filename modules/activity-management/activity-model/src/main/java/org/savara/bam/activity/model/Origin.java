@@ -31,9 +31,9 @@ public class Origin implements java.io.Externalizable {
     private static final int VERSION = 1;
 
     private String _principal=null;
-    private String _transactionId=null;
     private String _thread=null;
     private String _host=null;
+    private String _node=null;
     private String _port=null;
 
     /**
@@ -49,9 +49,9 @@ public class Origin implements java.io.Externalizable {
      */
     public Origin(Origin origin) {
         _principal = origin._principal;
-        _transactionId = origin._transactionId;
         _thread = origin._thread;
         _host = origin._host;
+        _node = origin._node;
         _port = origin._port;
     }
     
@@ -71,24 +71,6 @@ public class Origin implements java.io.Externalizable {
      */
     public String getPrincipal() {
         return (_principal);
-    }
-    
-    /**
-     * This method sets the transaction id.
-     * 
-     * @param transactionId The transaction id
-     */
-    public void setTransaction(String transactionId) {
-        _transactionId = transactionId;
-    }
-    
-    /**
-     * This method gets the transaction id.
-     * 
-     * @return The transaction id
-     */
-    public String getTransaction() {
-        return (_transactionId);
     }
     
     /**
@@ -128,6 +110,28 @@ public class Origin implements java.io.Externalizable {
     }
     
     /**
+     * This method sets the name of the node.
+     * This name may identify the environment
+     * within a clustered configuration.
+     * 
+     * @param node The node
+     */
+    public void setNode(String node) {
+        _node = node;
+    }
+    
+    /**
+     * This method gets the name of the node.
+     * This name may identify the environment
+     * within a clustered configuration.
+     * 
+     * @return The node
+     */
+    public String getNode() {
+        return (_node);
+    }
+    
+    /**
      * This method sets the port.
      * 
      * @param port The port
@@ -152,9 +156,9 @@ public class Origin implements java.io.Externalizable {
         out.writeInt(VERSION);
         
         out.writeObject(_principal);
-        out.writeObject(_transactionId);
         out.writeObject(_thread);
         out.writeObject(_host);
+        out.writeObject(_node);
         out.writeObject(_port);
     }
 
@@ -166,9 +170,9 @@ public class Origin implements java.io.Externalizable {
         in.readInt(); // Consume version, as not required for now
         
         _principal = (String)in.readObject();
-        _transactionId = (String)in.readObject();
         _thread = (String)in.readObject();
         _host = (String)in.readObject();
+        _node = (String)in.readObject();
         _port = (String)in.readObject();
     }
 }

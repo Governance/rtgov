@@ -43,11 +43,23 @@ public interface CollectorContext {
     public String getHost();
     
     /**
-     * This method returns the server port.
+     * This method returns the name of the node.
+     * If running in a clustered environment, this
+     * name will uniquely identify the environment
+     * within the cluster.
+     * 
+     * @return The node name
+     */
+    public String getNode();
+    
+    /**
+     * This method returns the server port. If multiple
+     * servers are started on the same host, then this
+     * may provide the information to distinguish them.
      * 
      * @return The server port
      */
-    public String getServerPort();
+    public String getPort();
     
     /**
      * This method returns the transaction manager,

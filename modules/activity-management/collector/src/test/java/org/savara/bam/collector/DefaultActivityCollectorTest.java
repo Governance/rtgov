@@ -183,8 +183,12 @@ public class DefaultActivityCollectorTest {
             return null;
         }
 
-        public String getServerPort() {
-             return null;
+        public String getNode() {
+            return null;
+        }
+
+        public String getPort() {
+            return null;
         }
 
         public TransactionManager getTransactionManager() {

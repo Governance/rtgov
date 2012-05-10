@@ -56,7 +56,15 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
     }
     
     /**
-     * This method gets the 'reply to' message id.
+     * This method gets the 'reply to' message id. When used
+     * for correlation against a request, it should
+     * only be used to correlate against the
+     * sending or receiving action performed in the
+     * same service - not in the endpoint being
+     * communicated with, as the message id may not
+     * be carried with the message content, as is
+     * therefore only relevant in the local service
+     * context.
      * 
      * @return The 'reply to' message id
      */

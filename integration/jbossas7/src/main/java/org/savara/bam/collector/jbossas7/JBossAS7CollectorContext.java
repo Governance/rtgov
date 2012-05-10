@@ -71,7 +71,14 @@ public class JBossAS7CollectorContext implements CollectorContext {
     /**
      * {@inheritDoc}
      */
-    public String getServerPort() {
+    public String getNode() {
+        return ("MyNode");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getPort() {
         return ("8080");
     }
 
