@@ -62,6 +62,15 @@
 		<arquillian.version>1.0.0.Final</arquillian.version>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>jbossas</id>
+			<properties>
+				<platform>jbossas</platform>
+			</properties>
+		</profile>
+	</profiles>
+
 	<modules>
 		<module>build</module>
 		<module>modules</module>

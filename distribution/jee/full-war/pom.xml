@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.savara.bam.distribution.jee</groupId>
+	<artifactId>savara-bam</artifactId> 
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>Savara BAM::Distribution::JEE::Full-War</name>
+
+	<parent>
+		<groupId>org.savara.bam.distribution</groupId>
+		<artifactId>jee</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<profiles>
+		<profile>
+			<id>jbossas</id>
+			<properties>
+				<platform>jbossas</platform>
+			</properties>
+		</profile>
+		<profile>
+			<id>glassfish</id>
+			<properties>
+				<platform>glassfish</platform>
+			</properties>
+		</profile>
+	</profiles>
+  
+	<dependencies>
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>activity-model</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>collector</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		
+		<!-- JBossAS Specific -->
+		<dependency>
+			<groupId>org.savara.bam.integration</groupId>
+			<artifactId>bam-jbossas7</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>collector-activity-server</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>activity-server</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>activity-server-rests</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>activity-store-jpa</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-management</groupId>
+			<artifactId>activity-server-epn</artifactId>
+			<version>${bam.version}</version>
+		</dependency>		
+		<dependency>
+			<groupId>org.savara.bam.event-processor-network</groupId>
+			<artifactId>epn-core</artifactId>
+			<version>${bam.version}</version>
+		</dependency>		
+		<dependency>
+			<groupId>org.savara.bam.event-processor-network</groupId>
+			<artifactId>epn-container-jms</artifactId>
+			<version>${bam.version}</version>
+		</dependency>		
+		<dependency>
+			<groupId>org.savara.bam.event-processor-network</groupId>
+			<artifactId>epn-processor-cep</artifactId>
+			<version>${bam.version}</version>
+		</dependency>		
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+           		<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<classifier>${platform}</classifier>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
