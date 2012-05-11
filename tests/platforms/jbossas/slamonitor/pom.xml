@@ -49,7 +49,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.savara.bam.distribution</groupId>
+			<groupId>org.savara.bam.distribution.jee</groupId>
 			<artifactId>savara-bam</artifactId>
 			<type>war</type>
 			<classifier>${platform}</classifier>

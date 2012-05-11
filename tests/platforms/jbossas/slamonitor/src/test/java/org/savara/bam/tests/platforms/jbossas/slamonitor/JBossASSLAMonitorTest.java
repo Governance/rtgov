@@ -55,7 +55,7 @@ public class JBossASSLAMonitorTest {
         String platform=System.getProperty("bam.platform");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.distribution:savara-bam:war:"+platform+":"+version)
+                .artifacts("org.savara.bam.distribution.jee:savara-bam:war:"+platform+":"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,

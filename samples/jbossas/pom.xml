@@ -107,9 +107,9 @@
 	
 	<repositories>
 	    <repository>
-	        <id>jboss-developer-repository-group</id>
-	        <name>JBoss Developer Maven Repository Group</name>
-		<url>https://repository.jboss.org/nexus/content/groups/developer/</url>
+	        <id>jboss-public-repository-group</id>
+	        <name>JBoss Public Maven Repository Group</name>
+		<url>https://repository.jboss.org/nexus/content/groups/public/</url>
 		<releases>
 		  <enabled>true</enabled>
 		  <updatePolicy>never</updatePolicy>
@@ -120,5 +120,20 @@
 		</snapshots>
 	    </repository>
 	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Maven Repository Group</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+			<layout>default</layout>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
   
 </project>

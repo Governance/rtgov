@@ -43,7 +43,7 @@
 		<!-- JBossAS Specific -->
 		<dependency>
 			<groupId>org.savara.bam.integration</groupId>
-			<artifactId>bam-jbossas7</artifactId>
+			<artifactId>bam-jbossas</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		

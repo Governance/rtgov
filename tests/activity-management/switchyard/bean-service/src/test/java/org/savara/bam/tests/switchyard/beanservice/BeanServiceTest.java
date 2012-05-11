@@ -80,7 +80,7 @@ public class BeanServiceTest {
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
                     .artifacts("org.savara.bam.activity-management:collector:"+version,
-                            "org.savara.bam.integration:bam-jbossas7:"+version,
+                            "org.savara.bam.integration:bam-jbossas:"+version,
                             "org.savara.bam.activity-management:collector-activity-server:"+version)
                     .resolveAsFiles());
     }
