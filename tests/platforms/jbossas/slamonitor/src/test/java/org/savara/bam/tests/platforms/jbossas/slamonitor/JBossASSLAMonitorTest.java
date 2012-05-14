@@ -178,6 +178,65 @@ public class JBossASSLAMonitorTest {
         }
     }
     
+
+    @Test @OperateOnDeployment("savara-bam")
+    public void testActivityEventsResults() {
+        
+        TestListener tl=new TestListener();
+        
+        _epnManager.addNodeListener(tl);
+
+        try {
+            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
+            SOAPConnection con=factory.createConnection();
+            
+            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/demo-orders/OrderService");
+            
+            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
+                        "   <soap:Body>"+
+                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
+                        "            <order>"+
+                        "                <orderId>PO-13739-ABC</orderId>"+
+                        "                <itemId>JAM</itemId>"+
+                        "                <quantity>50</quantity>"+
+                        "            </order>"+
+                        "        </orders:submitOrder>"+
+                        "    </soap:Body>"+
+                        "</soap:Envelope>";
+            
+            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
+            
+            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
+            
+            is.close();
+            
+            SOAPMessage response=con.call(request, url);
+
+            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+            
+            response.writeTo(baos);
+            
+            String resp=baos.toString();
+
+            baos.close();
+            
+            if (!resp.contains("<accepted>true</accepted>")) {
+                fail("Order was not accepted: "+resp);
+            }
+            
+            // Wait for events to propagate
+            Thread.sleep(2000);
+            
+            // Check that all events have been processed
+            if (tl.getProcessed().size() != 8) {
+                fail("Expecting 8 processed events, but got: "+tl.getProcessed().size());
+            }
+            
+        } catch (Exception e) {
+            fail("Failed to invoke service via SOAP: "+e);
+        }
+    }
+    
     public class TestListener implements NodeListener {
         
         private java.util.List<Serializable> _processed=new java.util.Vector<Serializable>();

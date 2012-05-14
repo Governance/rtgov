@@ -33,7 +33,7 @@ then
 	rt.setResponseTime(responseTime);
 	
 	if (responseTime > 200) {
-		epn.logError("RESPONSE TIME="+responseTime);
+		epn.logError("**** RESPONSE TIME "+responseTime+"ms EXCEEDED SLA ****");
 	}
 	
     epn.forward(rt);

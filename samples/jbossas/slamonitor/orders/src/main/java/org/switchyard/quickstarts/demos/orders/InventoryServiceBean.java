@@ -35,6 +35,12 @@ public class InventoryServiceBean implements InventoryService {
             .setName("Not Parkay")
             .setQuantity(1000);
         _inventory.put(butter.getItemId(), butter);
+        
+        Item jam = new Item()
+            .setItemId("JAM")
+            .setName("Strawberry Jam")
+            .setQuantity(500);
+        _inventory.put(jam.getItemId(), jam);
     }
 
     @Override
