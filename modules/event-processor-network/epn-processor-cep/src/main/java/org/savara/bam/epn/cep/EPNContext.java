@@ -19,25 +19,20 @@ package org.savara.bam.epn.cep;
 
 /**
  * This interface provides services to the CEP rules that process
- * notifications regarding event processors.
+ * events.
  *
  */
-public interface CEPServices {
+public interface EPNContext {
 
     /**
-     * This method is used to set the result obtained
-     * from the evaluation of a CEP rule.
+     * This method is used to forward the result obtained
+     * from the evaluation of a CEP rule to other nodes
+     * within the network. This method can only be called
+     * once per event being processed.
      * 
      * @param result The result
      */
-    public void setResult(Object result);
-
-    /**
-     * This method returns the result.
-     * 
-     * @return The result
-     */
-    public Object getResult();
+    public void forward(Object result);
 
     /**
      * This method logs information.

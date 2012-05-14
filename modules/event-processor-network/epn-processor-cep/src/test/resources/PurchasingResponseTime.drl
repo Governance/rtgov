@@ -1,10 +1,15 @@
-import org.savara.bam.activity.model.Activity
-import org.savara.bam.activity.model.soa.RequestSent
-import org.savara.bam.activity.model.soa.ResponseReceived
+import org.savara.bam.activity.model.soa.RequestReceived
+import org.savara.bam.activity.model.soa.ResponseSent
 
-global org.savara.bam.epn.cep.CEPServices services
+global org.savara.bam.epn.cep.EPNContext epn
 
-declare Activity
+declare RequestReceived
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+declare ResponseSent
     @role( event )
     @timestamp( timestamp )
     @expires( 2m20s )
@@ -12,22 +17,22 @@ end
 
 rule "correlate request and response"
 when
-    $req : Activity( $id : ((RequestSent)activityType).correlation ) from entry-point "Purchasing" 
-    $resp : Activity( ((ResponseReceived)activityType).correlation == $id, this after[0,2m20s] $req )  from entry-point "Purchasing"
+    $req : RequestReceived( $id : messageId ) from entry-point "Purchasing" 
+    $resp : ResponseSent( replyToId == $id, this after[0,2m20s] $req )  from entry-point "Purchasing"
 then
 
-	services.logInfo("REQUEST: "+$req+" WITH RESPONSE: "+$resp);
+	epn.logInfo("REQUEST: "+$req+" WITH RESPONSE: "+$resp);
 
 	java.util.Properties props=new java.util.Properties();
-	props.put("requestId", $req.getId());
-	props.put("responseId", $resp.getId());
+	props.put("requestId", $req.getMessageId());
+	props.put("responseId", $resp.getMessageId());
 
 	long responseTime=$resp.getTimestamp()-$req.getTimestamp();
 	
-	services.logDebug("CORRELATION on id '"+$id+"' response time "+responseTime);
+	epn.logDebug("CORRELATION on id '"+$id+"' response time "+responseTime);
 	
 	props.put("responseTime", responseTime);
 	
-    services.setResult(props);
+    epn.forward(props);
 
 end

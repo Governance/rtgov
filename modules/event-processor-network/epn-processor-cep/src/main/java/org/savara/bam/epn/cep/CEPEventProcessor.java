@@ -42,7 +42,7 @@ public class CEPEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(CEPEventProcessor.class.getName());
 
-    private static final CEPServices SERVICES=new CEPServicesImpl();
+    private static final EPNContextImpl EPN_CONTEXT=new EPNContextImpl();
     private static final java.util.Map<String,StatefulKnowledgeSession> SESSIONS=
                 new java.util.HashMap<String,StatefulKnowledgeSession>();
     private StatefulKnowledgeSession _session=null;
@@ -74,23 +74,12 @@ public class CEPEventProcessor extends EventProcessor {
     }
     
     /**
-     * This method sets the services used by the CEP rule engine.
+     * This method gets the EPN context used by the CEP rule engine.
      * 
-     * @param services The services
+     * @return The EPN context
      */
-    /*
-    public void setServices(CEPServices services) {
-        SERVICES = services;
-    }
-    */
-
-    /**
-     * This method gets the services used by the CEP rule engine.
-     * 
-     * @return The services
-     */
-    public CEPServices getServices() {
-        return (SERVICES);
+    public EPNContext getEPNContext() {
+        return (EPN_CONTEXT);
     }
 
     /**
@@ -99,7 +88,7 @@ public class CEPEventProcessor extends EventProcessor {
     public java.io.Serializable process(String source,
                 java.io.Serializable event, int retriesLeft) throws Exception {
         
-        SERVICES.setResult(null);
+        EPN_CONTEXT.forward(null);
         
         // Get entry point
         // TODO: If not simple lookup, then may want to cache this
@@ -118,7 +107,7 @@ public class CEPEventProcessor extends EventProcessor {
                     +"' on CEP Event Processor '"+getRuleName()+"'");
         }
         
-        return (java.io.Serializable)SERVICES.getResult();
+        return (java.io.Serializable)EPN_CONTEXT.getResult();
     }
 
     /**
@@ -140,7 +129,7 @@ public class CEPEventProcessor extends EventProcessor {
                     ret = kbase.newStatefulKnowledgeSession();
 
                     if (ret != null) {
-                        ret.setGlobal("services", SERVICES);
+                        ret.setGlobal("epn", EPN_CONTEXT);
                         ret.fireAllRules();
                         
                         SESSIONS.put(getRuleName(), ret);
@@ -196,17 +185,17 @@ public class CEPEventProcessor extends EventProcessor {
     }
 
     /**
-     * This class implements the CEP Services interface provided to the CEP
+     * This class implements the EPNContext interface provided to the CEP
      * rules.
      */
-    public static class CEPServicesImpl implements CEPServices {
+    public static class EPNContextImpl implements EPNContext {
 
         private ThreadLocal<Object> _result=new ThreadLocal<Object>();
         
         /**
          * The default constructor.
          */
-        public CEPServicesImpl() {
+        public EPNContextImpl() {
         }
         
         /**
@@ -235,12 +224,14 @@ public class CEPEventProcessor extends EventProcessor {
         /**
          * {@inheritDoc}
          */
-        public void setResult(Object result) {
+        public void forward(Object result) {
             _result.set(result);
         }
 
         /**
-         * {@inheritDoc}
+         * This method retrieves the result forwarded by the rule.
+         * 
+         * @return The result, or null if not defined
          */
         public Object getResult() {
             return _result.get();
