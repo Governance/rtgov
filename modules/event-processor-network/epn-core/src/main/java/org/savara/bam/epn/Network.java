@@ -32,6 +32,7 @@ public class Network {
     private java.util.Map<String,Node> _nodes=new java.util.HashMap<String,Node>();
     
     private Node _root=null;
+    private boolean _preinitialized=false;
     
     /**
      * The default constructor.
@@ -131,6 +132,28 @@ public class Network {
     public void setNodes(java.util.Map<String,Node> nodes) {
         _nodes = nodes;
     }
+    
+    /**
+     * This method is called on occasions where the network's
+     * event processors need to be initialized in a different
+     * classloader context to the container related configuration
+     * (i.e. channels between nodes).
+     * 
+     * @throws Exception Failed to pre-initialize the network
+     */
+    protected void preInit() throws Exception {
+        
+        if (!_preinitialized) {
+            _preinitialized = true;
+            
+            for (String name : _nodes.keySet()) {
+                Node node=_nodes.get(name);
+                
+                // Initialize the node
+                node.init();
+            }
+        }
+    }
 
     /**
      * This method initializes the network.
@@ -155,8 +178,10 @@ public class Network {
                 }
             }
             
-            // Initialize the node
-            node.init(container);
+            if (!_preinitialized) {
+                // Initialize the node
+                node.init();
+            }
             
             if (name.equals(getRootNodeName())) {
                 _root = node;                

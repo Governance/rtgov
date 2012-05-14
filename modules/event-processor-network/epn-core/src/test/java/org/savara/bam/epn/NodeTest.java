@@ -182,7 +182,7 @@ public class NodeTest {
         try {
             node.getChannels().add(channel);
             
-            node.init(container);
+            node.init();
             
             EventList retry=node.process(container, null, events, 1);
             
@@ -237,7 +237,7 @@ public class NodeTest {
         try {
             node.getChannels().add(channel);
             
-            node.init(container);
+            node.init();
             
             EventList retry=node.process(container, null, events, 1);
             

@@ -21,43 +21,22 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonSubTypes.Type;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.savara.bam.activity.model.bpm.ProcessCompleted;
-import org.savara.bam.activity.model.bpm.ProcessStarted;
-import org.savara.bam.activity.model.mom.MessageReceived;
-import org.savara.bam.activity.model.mom.MessageSent;
-import org.savara.bam.activity.model.soa.RequestReceived;
-import org.savara.bam.activity.model.soa.RequestSent;
-import org.savara.bam.activity.model.soa.ResponseReceived;
-import org.savara.bam.activity.model.soa.ResponseSent;
-
 /**
- * This abstract class is the super type of all activity type classes.
+ * This class represents a reference to an ActivityType contained within an
+ * ActivityUnit.
  *
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="typeName")
-@JsonSubTypes({@Type(value=MessageReceived.class),
-    @Type(value=MessageSent.class),
-    @Type(value=RequestReceived.class),
-    @Type(value=RequestSent.class),
-    @Type(value=ResponseReceived.class),
-    @Type(value=ResponseSent.class),
-    @Type(value=ProcessCompleted.class),
-    @Type(value=ProcessStarted.class) })
-public abstract class ActivityType implements java.io.Externalizable {
+public class ActivityTypeRef implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
     private String _activityUnitId=null;
     private int _activityUnitIndex=0;
-    private long _timestamp=0;
 
     /**
      * The default constructor.
      */
-    public ActivityType() {
+    public ActivityTypeRef() {
     }
     
     /**
@@ -65,10 +44,21 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @param act The activity to copy.
      */
-    public ActivityType(ActivityType act) {
+    public ActivityTypeRef(ActivityTypeRef act) {
         _activityUnitId = act._activityUnitId;
         _activityUnitIndex = act._activityUnitIndex;
-        _timestamp = act._timestamp;
+    }
+    
+    /**
+     * This constructor initializes the id and index
+     * for the reference.
+     * 
+     * @param id The activity unit id
+     * @param index The activity type index within the unit
+     */
+    public ActivityTypeRef(String id, int index) {
+        _activityUnitId = id;
+        _activityUnitIndex = index;
     }
     
     /**
@@ -110,24 +100,6 @@ public abstract class ActivityType implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the timestamp.
-     * 
-     * @param timestamp The timestamp
-     */
-    public void setTimestamp(long timestamp) {
-        _timestamp = timestamp;
-    }
-    
-    /**
-     * This method gets the timestamp.
-     * 
-     * @return The timestamp
-     */
-    public long getTimestamp() {
-        return (_timestamp);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -135,7 +107,6 @@ public abstract class ActivityType implements java.io.Externalizable {
         
         out.writeObject(_activityUnitId);
         out.writeInt(_activityUnitIndex);
-        out.writeLong(_timestamp);
     }
 
     /**
@@ -147,7 +118,6 @@ public abstract class ActivityType implements java.io.Externalizable {
         
         _activityUnitId = (String)in.readObject();
         _activityUnitIndex = in.readInt();
-        _timestamp = in.readLong();
     }
     
 }

@@ -30,6 +30,7 @@ import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
 
+import org.savara.bam.epn.AbstractEPNLoader;
 import org.savara.bam.epn.EPNManager;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.util.NetworkUtil;
@@ -43,7 +44,7 @@ import org.savara.bam.epn.util.NetworkUtil;
 @Singleton
 @Startup
 @ConcurrencyManagement(BEAN)
-public class JEEEPNLoader {
+public class JEEEPNLoader extends AbstractEPNLoader {
     
     private static final Logger LOG=Logger.getLogger(JEEEPNLoader.class.getName());
     
@@ -80,6 +81,13 @@ public class JEEEPNLoader {
                 is.close();
                 
                 _network=NetworkUtil.deserialize(b);
+                
+                // Pre-initialize the network to avoid any contextual class
+                // loading issues. Within JEE, the registration of the network
+                // will be done in the context of the core war, while as the
+                // event processors require the classloading context associated
+                // with the network deployment.
+                preInit(_network);
                 
                 _epnManager.register(_network);
             }

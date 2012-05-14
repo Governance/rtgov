@@ -173,12 +173,6 @@ public class JBossASSLAMonitorTest {
                 fail("Expecting 8 processed events, but got: "+tl.getProcessed().size());
             }
             
-            for (Serializable s : tl.getProcessed()) {
-                if (s instanceof org.savara.bam.activity.model.ActivityType) {
-                    System.out.println("ActivityType="+s);
-                }
-            }
-            
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }
@@ -206,7 +200,7 @@ public class JBossASSLAMonitorTest {
         }
         
         public java.util.List<Serializable> getResults() {
-            return (_processed);
+            return (_results);
         }
     }
 }

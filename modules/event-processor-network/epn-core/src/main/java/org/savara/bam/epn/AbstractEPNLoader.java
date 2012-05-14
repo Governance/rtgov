@@ -15,25 +15,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.tests.platform.epn;
-
-import java.io.Serializable;
+package org.savara.bam.epn;
 
 /**
- * This class provides a placeholder for response time checking.
+ * This class provides an abstract base class for EPN loaders.
  *
  */
-public class ResponseTimeChecker extends org.savara.bam.epn.EventProcessor {
+public abstract class AbstractEPNLoader {
 
     /**
-     * {@inheritDoc}
+     * This method pre-initializes the network before it is
+     * registered with the container. This is sometimes required
+     * if the loader and container are associated with different
+     * contextual classloaders.
+     * 
+     * @param network The network to pre-initialize
+     * @throws Exception Failed to pre-initialize network
      */
-    @Override
-    public Serializable process(String source, Serializable event,
-            int retriesLeft) throws Exception {
-        Serializable ret=null;
-        
-        return (ret);
+    protected void preInit(Network network) throws Exception {
+        network.preInit();
     }
-
 }

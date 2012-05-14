@@ -31,6 +31,12 @@
 			<version>${bam.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-analysis</groupId>
+			<artifactId>service-analytics</artifactId>
+			<version>${bam.version}</version>
+			<scope>provided</scope>
+		</dependency>
 		
 		<dependency>
 			<groupId>javax</groupId>

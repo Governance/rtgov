@@ -1,0 +1,41 @@
+import org.savara.bam.activity.model.soa.RequestReceived
+import org.savara.bam.activity.model.soa.ResponseSent
+import org.savara.bam.activity.model.ActivityTypeRef
+import org.savara.bam.analytics.service.ResponseTime
+
+global org.savara.bam.epn.cep.EPNContext epn
+
+declare RequestReceived
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+declare ResponseSent
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+rule "correlate request and response"
+when
+    $req : RequestReceived( $id : messageId ) from entry-point "Root" 
+    $resp : ResponseSent( replyToId == $id, this after[0,2m20s] $req )  from entry-point "Root"
+then
+
+	ResponseTime rt=new ResponseTime();
+	
+	rt.setRequestReference(new ActivityTypeRef($req.getActivityUnitId(),$req.getActivityUnitIndex()));
+	rt.setResponseReference(new ActivityTypeRef($resp.getActivityUnitId(),$resp.getActivityUnitIndex()));
+	
+	long responseTime=$resp.getTimestamp()-$req.getTimestamp();
+	
+	rt.setResponseTime(responseTime);
+	
+	if (responseTime > 200) {
+		epn.logError("RESPONSE TIME="+responseTime);
+	}
+	
+    epn.forward(rt);
+
+end

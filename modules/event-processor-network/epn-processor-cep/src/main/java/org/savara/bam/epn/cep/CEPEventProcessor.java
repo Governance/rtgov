@@ -87,7 +87,7 @@ public class CEPEventProcessor extends EventProcessor {
      */
     public java.io.Serializable process(String source,
                 java.io.Serializable event, int retriesLeft) throws Exception {
-        
+
         EPN_CONTEXT.forward(null);
         
         // Get entry point
@@ -95,6 +95,12 @@ public class CEPEventProcessor extends EventProcessor {
         WorkingMemoryEntryPoint entryPoint=_session.getWorkingMemoryEntryPoint(source);
         
         if (entryPoint != null) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Insert event '"+event+" from source '"+source
+                        +"' on CEP Event Processor '"+getRuleName()
+                        +"' into entry point "+entryPoint);
+            }
+            
             entryPoint.insert(event);
             
             // TODO: Not sure if possible to delay evaluation, until after
@@ -158,9 +164,10 @@ public class CEPEventProcessor extends EventProcessor {
             if (is == null) {
                 is = Thread.currentThread().getContextClassLoader().getResourceAsStream(cepRuleBase);
             }
-            
+
             builder.add(ResourceFactory.newInputStreamResource(is),
                     ResourceType.determineResourceType(cepRuleBase));
+            
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Loaded CEP rules '"+cepRuleBase+"'");     
             }

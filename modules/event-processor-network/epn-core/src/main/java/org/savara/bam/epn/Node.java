@@ -196,10 +196,9 @@ public class Node {
     /**
      * This method initializes the node.
      * 
-     * @param container The container
      * @throws Exception Failed to initialize the node
      */
-    protected void init(EPNContainer container) throws Exception {
+    protected void init() throws Exception {
         
         if (getPredicate() != null) {
             getPredicate().init();

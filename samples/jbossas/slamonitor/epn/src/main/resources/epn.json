@@ -19,7 +19,8 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.savara.bam.tests.platform.epn.ResponseTimeChecker"
+        "@class" : "org.savara.bam.epn.cep.CEPEventProcessor",
+        "ruleName" : "ResponseTime"
       },
       "predicate" : null,
       "notificationEnabled" : true

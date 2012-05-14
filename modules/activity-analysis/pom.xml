@@ -3,22 +3,19 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bam</groupId>
-	<artifactId>modules</artifactId>
+	<artifactId>activity-analysis</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>Savara BAM::Modules</name>
+	<name>Savara BAM::Modules::Activity Analysis</name>
 
 	<parent>
 		<groupId>org.savara.bam</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>modules</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<modules>
-		<module>activity-management</module>
-		<module>activity-analysis</module>
-		<module>event-processor-network</module>
-		<module>active-collections</module>
+		<module>service-analytics</module>
 	</modules>
 
 </project>

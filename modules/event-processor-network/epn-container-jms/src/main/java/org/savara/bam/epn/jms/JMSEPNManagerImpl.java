@@ -383,58 +383,61 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
          */
         public void send(EventList events, int retriesLeft,
                 List<Channel> channels) throws Exception {
-            javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
             
-            String subjects=null;
-            String destNodes=null;
-            String networkName=null;
-            String version=null;
-            String sourceNode=null;
-            
-            for (Channel channel : channels) {
-                if (channel instanceof JMSChannel) {
-                    if (((JMSChannel)channel).getSubject() != null) {
-                        if (subjects == null) {
-                            subjects = ((JMSChannel)channel).getSubject();
+            if (channels.size() > 0) {
+                javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
+                
+                String subjects=null;
+                String destNodes=null;
+                String networkName=null;
+                String version=null;
+                String sourceNode=null;
+                
+                for (Channel channel : channels) {
+                    if (channel instanceof JMSChannel) {
+                        if (((JMSChannel)channel).getSubject() != null) {
+                            if (subjects == null) {
+                                subjects = ((JMSChannel)channel).getSubject();
+                            } else {
+                                subjects += ","+((JMSChannel)channel).getSubject();
+                            }
                         } else {
-                            subjects += ","+((JMSChannel)channel).getSubject();
+                            if (destNodes == null) {
+                                destNodes = ((JMSChannel)channel).getDestinationNode();
+                                networkName = ((JMSChannel)channel).getNetworkName();
+                                version = ((JMSChannel)channel).getVersion();
+                                sourceNode = ((JMSChannel)channel).getSourceNode();
+                            } else {
+                                destNodes += ","+((JMSChannel)channel).getDestinationNode();
+                            }
                         }
                     } else {
-                        if (destNodes == null) {
-                            destNodes = ((JMSChannel)channel).getDestinationNode();
-                            networkName = ((JMSChannel)channel).getNetworkName();
-                            version = ((JMSChannel)channel).getVersion();
-                            sourceNode = ((JMSChannel)channel).getSourceNode();
-                        } else {
-                            destNodes += ","+((JMSChannel)channel).getDestinationNode();
-                        }
+                        LOG.severe("Unexpected channel type '"+channel+"'");
                     }
-                } else {
-                    LOG.severe("Unexpected channel type '"+channel+"'");
                 }
+                
+                if (subjects != null) {
+                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, subjects);
+                }
+                
+                if (destNodes != null) {
+                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
+                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, version);
+                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, destNodes);
+                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, sourceNode);   
+                    mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
+                }
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Send events network="+networkName
+                            +" version="+version
+                            +" sourceNode="+sourceNode
+                            +" nodes="+destNodes
+                            +" subjects="+subjects+" events="+events);
+                }
+    
+                _eventsProducer.send(mesg);  
             }
-            
-            if (subjects != null) {
-                mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, subjects);
-            }
-            
-            if (destNodes != null) {
-                mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
-                mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, version);
-                mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, destNodes);
-                mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, sourceNode);   
-                mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
-            }
-            
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Send events network="+networkName
-                        +" version="+version
-                        +" sourceNode="+sourceNode
-                        +" nodes="+destNodes
-                        +" subjects="+subjects+" events="+events);
-            }
-
-            _eventsProducer.send(mesg);  
         }
 
     }

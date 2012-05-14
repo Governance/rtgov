@@ -40,6 +40,13 @@
 			<version>${bam.version}</version>
 		</dependency>
 		
+		<!-- Domain specific event models -->
+		<dependency>
+			<groupId>org.savara.bam.activity-analysis</groupId>
+			<artifactId>service-analytics</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		
 		<!-- JBossAS Specific -->
 		<dependency>
 			<groupId>org.savara.bam.integration</groupId>
@@ -81,12 +88,12 @@
 			<groupId>org.savara.bam.event-processor-network</groupId>
 			<artifactId>epn-container-jms</artifactId>
 			<version>${bam.version}</version>
-		</dependency>		
+		</dependency>	
 		<dependency>
 			<groupId>org.savara.bam.event-processor-network</groupId>
 			<artifactId>epn-processor-cep</artifactId>
 			<version>${bam.version}</version>
-		</dependency>		
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
