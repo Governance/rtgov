@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.model.Context;
-import org.savara.bam.activity.model.ContextType;
 import org.savara.bam.activity.model.Origin;
 import org.savara.bam.activity.model.soa.RequestSent;
 import org.savara.bam.activity.model.soa.ResponseReceived;
@@ -44,13 +43,13 @@ public class ActivityUtilTest {
         act.setOrigin(origin);
 
         Context c1=new Context();
-        c1.setType(ContextType.ConversationId);
+        c1.setType(Context.CONVERSATION_ID);
         c1.setName("OrderId");
         c1.setValue("12345");
         act.getContext().add(c1);
         
         Context c2=new Context();
-        c2.setType(ContextType.InstanceId);
+        c2.setType(Context.INSTANCE_ID);
         c2.setName("procId");
         c2.setValue("abc123");
         act.getContext().add(c2);

@@ -31,7 +31,29 @@ public class Context implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
-    private ContextType _type=ContextType.ConversationId;
+    /**
+     * A 'conversation id' represents a value that can be used to correlate
+     * activities across distributed services. These context types
+     * will be globally unique, and may refer to values that are
+     * carried in the application message contents.
+     */
+    public static final short CONVERSATION_ID=0;
+    
+    /**
+     * The 'instance id' type represents a local id that may be associated
+     * with the executable unit enacting the service/process being monitored,
+     * and can therefore be used to correlate local activities as being
+     * part of the same executable unit.
+     */
+    public static final short INSTANCE_ID=1;
+    
+    /**
+     * This context type represents an id associated with a particular message
+     * being exchanged between distributed participants.
+     */
+    public static final short MESSAGE_ID=2;
+    
+    private short _type=CONVERSATION_ID;
     private String _name=null;
     private String _value=null;
 
@@ -48,7 +70,7 @@ public class Context implements java.io.Externalizable {
      * @param name The name
      * @param value The value
      */
-    public Context(ContextType type, String name, String value) {
+    public Context(short type, String name, String value) {
         _type = type;
         _name = name;
         _value = value;
@@ -70,7 +92,7 @@ public class Context implements java.io.Externalizable {
      * 
      * @return The type
      */
-    public ContextType getType() {
+    public short getType() {
         return (_type);
     }
     
@@ -79,7 +101,7 @@ public class Context implements java.io.Externalizable {
      * 
      * @param type The type
      */
-    public void setType(ContextType type) {
+    public void setType(short type) {
         _type = type;
     }
     
@@ -125,7 +147,7 @@ public class Context implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_type);
+        out.writeShort(_type);
         out.writeObject(_name);
         out.writeObject(_value);
     }
@@ -137,7 +159,7 @@ public class Context implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _type = (ContextType)in.readObject();
+        _type = in.readShort();
         _name = (String)in.readObject();
         _value = (String)in.readObject();
     }

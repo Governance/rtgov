@@ -26,7 +26,6 @@ import javax.inject.Inject;
 import org.savara.bam.activity.model.ActivityType;
 import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.model.Context;
-import org.savara.bam.activity.model.ContextType;
 import org.savara.bam.activity.model.bpm.BPMActivityType;
 import org.savara.bam.activity.model.soa.RPCActivityType;
 import org.savara.bam.activity.server.spi.ActivityNotifier;
@@ -158,7 +157,7 @@ public class DefaultActivityServer implements ActivityServer {
                     }
                     
                     // Copy message id to context for activity unit
-                    au.getContext().add(new Context(ContextType.MessageId,null,
+                    au.getContext().add(new Context(Context.MESSAGE_ID, null,
                             ((RPCActivityType)at).getMessageId()));
                 }
             } else if (at instanceof BPMActivityType) {
@@ -171,7 +170,7 @@ public class DefaultActivityServer implements ActivityServer {
                     }
                    
                     // Copy instance id to context for activity unit
-                    au.getContext().add(new Context(ContextType.InstanceId,
+                    au.getContext().add(new Context(Context.INSTANCE_ID,
                             ((BPMActivityType)at).getProcessType(),
                             ((BPMActivityType)at).getInstanceId()));                   
                 }
