@@ -74,6 +74,12 @@
 			<version>${bam.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.activity-analysis</groupId>
+			<artifactId>service-analytics</artifactId>
+			<version>${bam.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.as</groupId>

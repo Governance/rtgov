@@ -41,7 +41,7 @@ public class OrderServiceBean implements OrderService {
             
             if (order.getItemId().equals("JAM")) {
                 try {
-                    Thread.sleep(200);
+                    Thread.sleep(500);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

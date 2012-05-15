@@ -38,7 +38,62 @@ public class ResponseTime implements java.io.Externalizable {
     private ActivityTypeRef _requestRef=null;
     private ActivityTypeRef _responseRef=null;
     private long _responseTime=0;
+    private boolean _slaViolation=false;
 
+    /**
+     * This method sets the service type.
+     * 
+     * @param serviceType The service type
+     */
+    public void setServiceType(String serviceType) {
+        _serviceType = serviceType;
+    }
+    
+    /**
+     * This method gets the service type.
+     * 
+     * @return The service type
+     */
+    public String getServiceType() {
+        return (_serviceType);
+    }
+    
+    /**
+     * This method sets the operation.
+     * 
+     * @param operation The operation
+     */
+    public void setOperation(String operation) {
+        _operation = operation;
+    }
+    
+    /**
+     * This method gets the operation.
+     * 
+     * @return The operation
+     */
+    public String getOperation() {
+        return (_operation);
+    }
+    
+    /**
+     * This method sets the optional fault.
+     * 
+     * @param fault The fault
+     */
+    public void setFault(String fault) {
+        _fault = fault;
+    }
+    
+    /**
+     * This method gets the optional fault.
+     * 
+     * @return The optional fault
+     */
+    public String getFault() {
+        return (_fault);
+    }
+    
     /**
      * This method sets the request reference.
      * 
@@ -92,6 +147,26 @@ public class ResponseTime implements java.io.Externalizable {
     public long getResponseTime() {
         return (_responseTime);
     }
+    
+    /**
+     * This method sets whether this response time
+     * violates a Service Level Agreement.
+     * 
+     * @param violates Whether this violates a SLA
+     */
+    public void setSLAViolation(boolean violates) {
+        _slaViolation = violates;
+    }
+
+    /**
+     * This method returns whether this response time
+     * violates a Service Level Agreement.
+     * 
+     * @return Whether this violates a SLA
+     */
+    public boolean isSLAViolation() {
+        return (_slaViolation);
+    }
 
     /**
      * {@inheritDoc}
@@ -105,6 +180,7 @@ public class ResponseTime implements java.io.Externalizable {
         out.writeObject(_requestRef);
         out.writeObject(_responseRef);
         out.writeLong(_responseTime);
+        out.writeBoolean(_slaViolation);
     }
 
     /**
@@ -120,5 +196,6 @@ public class ResponseTime implements java.io.Externalizable {
         _requestRef = (ActivityTypeRef)in.readObject();
         _responseRef = (ActivityTypeRef)in.readObject();
         _responseTime = in.readLong();
+        _slaViolation = in.readBoolean();
     }
 }

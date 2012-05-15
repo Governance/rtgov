@@ -290,7 +290,7 @@ public abstract class AbstractEPNManager implements EPNManager {
             }
             
             if (notifyList != null) {
-                notify(networkName, version, nodeName, NotifyType.Processed, notifyList);
+                notifyListeners(networkName, version, nodeName, NotifyType.Processed, notifyList);
             }
         }
         
@@ -314,7 +314,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @param events The list of events
      * @throws Exception Failed to notify
      */
-    protected void notify(String networkName, String version,
+    protected void notifyListeners(String networkName, String version,
                     String nodeName, NotifyType type, EventList events) throws Exception {
         dispatchNotificationToListeners(networkName, version, nodeName, type, events);
     }

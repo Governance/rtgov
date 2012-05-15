@@ -321,7 +321,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * {@inheritDoc}
      */
     @Override
-    protected void notify(String networkName, String version,
+    protected void notifyListeners(String networkName, String version,
                     String nodeName, NotifyType type, EventList events) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Notify events processed "+networkName+"/"+version+"/"+nodeName+" events="+events);
@@ -366,6 +366,14 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         /**
          * {@inheritDoc}
          */
+        public Channel getChannel(Network network, String source)
+                throws Exception {
+            return new JMSChannel(_session, _eventsProducer, network, source, null);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         public Channel getChannel(String subject) throws Exception {
             return new JMSChannel(_session, _eventsProducer, subject);
         }
@@ -375,14 +383,6 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
          */
         public void send(EventList events, List<Channel> channels)
                 throws Exception {
-            send(events, -1, channels);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void send(EventList events, int retriesLeft,
-                List<Channel> channels) throws Exception {
             
             if (channels.size() > 0) {
                 javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
@@ -392,23 +392,32 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                 String networkName=null;
                 String version=null;
                 String sourceNode=null;
+                boolean notification=false;
                 
                 for (Channel channel : channels) {
                     if (channel instanceof JMSChannel) {
-                        if (((JMSChannel)channel).getSubject() != null) {
+                        JMSChannel jmsc=(JMSChannel)channel;
+                        
+                        if (jmsc.getSubject() != null) {
                             if (subjects == null) {
-                                subjects = ((JMSChannel)channel).getSubject();
+                                subjects = jmsc.getSubject();
                             } else {
-                                subjects += ","+((JMSChannel)channel).getSubject();
+                                subjects += ","+jmsc.getSubject();
                             }
+                        } else if (jmsc.isNotificationChannel()) {
+                            notification = true;
+                            networkName = jmsc.getNetworkName();
+                            version = jmsc.getVersion();
+                            sourceNode = jmsc.getSourceNode();
+                            
                         } else {
                             if (destNodes == null) {
-                                destNodes = ((JMSChannel)channel).getDestinationNode();
-                                networkName = ((JMSChannel)channel).getNetworkName();
-                                version = ((JMSChannel)channel).getVersion();
-                                sourceNode = ((JMSChannel)channel).getSourceNode();
+                                destNodes = jmsc.getDestinationNode();
+                                networkName = jmsc.getNetworkName();
+                                version = jmsc.getVersion();
+                                sourceNode = jmsc.getSourceNode();
                             } else {
-                                destNodes += ","+((JMSChannel)channel).getDestinationNode();
+                                destNodes += ","+jmsc.getDestinationNode();
                             }
                         }
                     } else {
@@ -416,8 +425,11 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                     }
                 }
                 
+                boolean sendResults=false;
+                
                 if (subjects != null) {
                     mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, subjects);
+                    sendResults = true;
                 }
                 
                 if (destNodes != null) {
@@ -425,20 +437,27 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                     mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, version);
                     mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, destNodes);
                     mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, sourceNode);   
-                    mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
+                    mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, -1);
+                    sendResults = true;
                 }
                 
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("Send events network="+networkName
-                            +" version="+version
-                            +" sourceNode="+sourceNode
-                            +" nodes="+destNodes
-                            +" subjects="+subjects+" events="+events);
+                if (sendResults) {
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Send events network="+networkName
+                                +" version="+version
+                                +" sourceNode="+sourceNode
+                                +" nodes="+destNodes
+                                +" subjects="+subjects+" events="+events);
+                    }
+        
+                    _eventsProducer.send(mesg);  
                 }
-    
-                _eventsProducer.send(mesg);  
+                
+                if (notification) {
+                    notifyListeners(networkName, version, sourceNode, NotifyType.Results, events);
+                }
+
             }
         }
-
     }
 }

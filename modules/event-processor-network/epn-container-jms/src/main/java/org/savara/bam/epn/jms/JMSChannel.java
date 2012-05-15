@@ -82,6 +82,16 @@ public class JMSChannel implements Channel {
     }
     
     /**
+     * This method determines whether this channel is a notification
+     * channel.
+     * 
+     * @return Whether this is a notification channel
+     */
+    public boolean isNotificationChannel() {
+        return (_destinationNode == null);
+    }
+    
+    /**
      * This method returns the network name.
      * 
      * @return The network name

@@ -29,6 +29,7 @@ import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.EPNContainer;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
+import org.savara.bam.epn.NotifyType;
 import org.savara.bam.epn.internal.EventList;
 
 /**
@@ -171,6 +172,14 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         /**
          * {@inheritDoc}
          */
+        public Channel getChannel(Network network, String source)
+                throws Exception {
+            return (new EmbeddedChannel(network, source));
+        }
+
+        /**
+         * {@inheritDoc}
+         */
         public Channel getChannel(String subject) throws Exception {
             return (new EmbeddedChannel(subject));
         }
@@ -180,17 +189,9 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          */
         public void send(EventList events, List<Channel> channels)
                 throws Exception {
-            send(events, -1, channels);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void send(EventList events, int retriesLeft,
-                List<Channel> channels) throws Exception {
             for (Channel channel : channels) {
                 if (channel instanceof EmbeddedChannel) {
-                    ((EmbeddedChannel)channel).send(events, retriesLeft);
+                    ((EmbeddedChannel)channel).send(events);
                 } else {
                     LOG.severe("Unknown channel type '"+channel+"'");
                 }
@@ -228,12 +229,33 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         }
         
         /**
+         * The constructor for the notification channel.
+         * 
+         * @param network The network
+         * @param sourceNode The source node name
+         */
+        public EmbeddedChannel(Network network, String sourceNode) {
+            _network = network;
+            _source = sourceNode;
+        }
+        
+        /**
          * The constructor.
          * 
          * @param subject The subject
          */
         public EmbeddedChannel(String subject) {
             _subject = subject;
+        }
+        
+        /**
+         * This method determines whether this channel is used for
+         * notifications.
+         * 
+         * @return Whether this is a notification channel
+         */
+        public boolean isNotificationChannel() {
+            return (_subject == null && _node == null);
         }
         
         /**
@@ -267,7 +289,12 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * {@inheritDoc}
          */
         public void send(EventList events) throws Exception {
-            send(events, _node.getMaxRetries());
+            if (isNotificationChannel()) {
+                notifyListeners(_network.getName(), _network.getVersion(),
+                                _source, NotifyType.Results, events);
+            } else {
+                send(events, _node.getMaxRetries());
+            }
         }
 
         /**

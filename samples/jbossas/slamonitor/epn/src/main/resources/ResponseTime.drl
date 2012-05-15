@@ -25,6 +25,9 @@ then
 
 	ResponseTime rt=new ResponseTime();
 	
+	rt.setServiceType($req.getServiceType());
+	rt.setOperation($req.getOperation());
+	rt.setFault($resp.getFault());
 	rt.setRequestReference(new ActivityTypeRef($req.getActivityUnitId(),$req.getActivityUnitIndex()));
 	rt.setResponseReference(new ActivityTypeRef($resp.getActivityUnitId(),$resp.getActivityUnitIndex()));
 	
@@ -33,7 +36,9 @@ then
 	rt.setResponseTime(responseTime);
 	
 	if (responseTime > 200) {
-		epn.logError("**** RESPONSE TIME "+responseTime+"ms EXCEEDED SLA ****");
+		epn.logError("**** RESPONSE TIME "+responseTime+"ms EXCEEDED SLA FOR "+$req.getServiceType()+" ****");
+		
+		rt.setSLAViolation(true);
 	}
 	
     epn.forward(rt);

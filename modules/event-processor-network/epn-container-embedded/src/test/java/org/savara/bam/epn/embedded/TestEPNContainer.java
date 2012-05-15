@@ -37,6 +37,11 @@ public class TestEPNContainer implements EPNContainer {
         return _channel;
     }
 
+    public Channel getChannel(Network network, String source)
+            throws Exception {
+        return _channel;
+    }
+
     public Channel getChannel(String subject) throws Exception {
         return _channel;
     }

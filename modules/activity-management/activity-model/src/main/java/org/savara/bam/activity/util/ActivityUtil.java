@@ -18,6 +18,7 @@
 package org.savara.bam.activity.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.TypeReference;
 import org.savara.bam.activity.model.ActivityUnit;
@@ -35,8 +36,11 @@ public final class ActivityUtil {
                         new TypeReference<java.util.List<ActivityUnit>>() { };
     
     static {
-        MAPPER.getSerializationConfig().setSerializationInclusion(JsonSerialize.Inclusion.NON_NULL);
-        MAPPER.getSerializationConfig().setSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+        SerializationConfig config=MAPPER.getSerializationConfig()
+                .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
+                .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+        
+        MAPPER.setSerializationConfig(config);
     }
     
     /**

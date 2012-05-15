@@ -198,6 +198,7 @@ public class AbstractEPNManagerTest {
             }
             
         } catch(Exception e) {
+            e.printStackTrace();
             fail("Failed with exception: "+e);
         }
     }

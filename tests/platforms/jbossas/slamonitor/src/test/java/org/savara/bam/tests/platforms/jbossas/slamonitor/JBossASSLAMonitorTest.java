@@ -35,6 +35,7 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.savara.bam.analytics.service.ResponseTime;
 import org.savara.bam.epn.NodeListener;
 import org.savara.bam.epn.NotifyType;
 
@@ -172,7 +173,26 @@ public class JBossASSLAMonitorTest {
             if (tl.getProcessed().size() != 8) {
                 fail("Expecting 8 processed events, but got: "+tl.getProcessed().size());
             }
+           
+            if (tl.getResults().size() != 2) {
+                fail("Expecting 2 results events, but got: "+tl.getResults().size());
+            }
+
+            // Check that no SLAs were violated
+            int violations=0;
+            for (Object result : tl.getResults()) {
+                if (result instanceof ResponseTime) {
+                    if (((ResponseTime)result).isSLAViolation()) {
+                        violations++;
+                    }
+                } else {
+                    fail("Result is not of type ResponseType");
+                }
+            }
             
+            if (violations > 0) {
+                fail("Should be no SLA violations");
+            }
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }
@@ -232,6 +252,25 @@ public class JBossASSLAMonitorTest {
                 fail("Expecting 8 processed events, but got: "+tl.getProcessed().size());
             }
             
+            if (tl.getResults().size() != 2) {
+                fail("Expecting 2 results events, but got: "+tl.getResults().size());
+            }
+            
+            // Check that no SLAs were violated
+            int violations=0;
+            for (Object result : tl.getResults()) {
+                if (result instanceof ResponseTime) {
+                    if (((ResponseTime)result).isSLAViolation()) {
+                        violations++;
+                    }
+                } else {
+                    fail("Result is not of type ResponseType");
+                }
+            }
+            
+            if (violations != 1) {
+                fail("Should be one SLA violation: "+violations);
+            }
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }

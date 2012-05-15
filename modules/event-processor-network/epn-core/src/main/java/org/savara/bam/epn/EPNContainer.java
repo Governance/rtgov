@@ -41,6 +41,19 @@ public interface EPNContainer {
     public Channel getChannel(Network network, String source, String dest) throws Exception;
 
     /**
+     * This method returns the notification channel associated with 
+     * the supplied network and source. If a node emits notifications,
+     * then a notification channel will be created to notify registered
+     * listeners of the results produced by the node.
+     * 
+     * @param network The network
+     * @param source The source node
+     * @return The notification channel
+     * @throws Exception Channel cannot be created
+     */
+    public Channel getChannel(Network network, String source) throws Exception;
+
+    /**
      * This method returns the channel associated with the supplied
      * subject. If a channel cannot be established for any
      * reason, then an exception will be thrown indicating the
@@ -54,25 +67,14 @@ public interface EPNContainer {
 
     /**
      * This method sends the supplied events to the supplied list
-     * of channels.
+     * of channels. These events represent the results of a node
+     * processing another groups of events.
      * 
      * @param events The events
      * @param channels The list of channels
      * @throws Exception Failed to send the events
      */
     public void send(EventList events,
-                    java.util.List<Channel> channels) throws Exception;
-
-    /**
-     * This method sends the supplied events to the supplied list
-     * of channels, specifying the number of retries remaining.
-     * 
-     * @param events The events
-     * @param retriesLeft The number of retries left
-     * @param channels The list of channels
-     * @throws Exception Failed to send the events
-     */
-    public void send(EventList events, int retriesLeft,
                     java.util.List<Channel> channels) throws Exception;
 
 }

@@ -36,7 +36,9 @@ public final class NetworkUtil {
     private static final ObjectMapper MAPPER=new ObjectMapper();
     
     static {
-        MAPPER.getSerializationConfig().set(SerializationConfig.Feature.INDENT_OUTPUT, true);
+        SerializationConfig config=MAPPER.getSerializationConfig().with(SerializationConfig.Feature.INDENT_OUTPUT);
+        
+        MAPPER.setSerializationConfig(config);
     }
 
     /**

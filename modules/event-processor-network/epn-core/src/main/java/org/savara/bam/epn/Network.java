@@ -172,6 +172,10 @@ public class Network {
                 }
             }
             
+            if (node.getNotificationEnabled() && container != null) {
+                node.getChannels().add(container.getChannel(this, name));
+            }
+            
             if (node.getDestinationSubjects() != null) {
                 for (String subject : node.getDestinationSubjects()) {
                     node.getChannels().add(container.getChannel(subject));
