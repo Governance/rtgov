@@ -7,7 +7,8 @@ communications and report them to the BAM infrastructure.
 An example Event Processor Network (EPN) has been defined to check the response time of the service
 and report issues to an active collection.
 
-TODO: UPDATE WHEN FININSHED EXAMPLE.
+NOTE: The active collection phase has not currently been implemented, so instead when an SLA
+violation is detected, the fact will be reported as a SEVERE log message to the console.
 
 
 Deploying the example
@@ -77,7 +78,8 @@ which should result in an 'order accepted'. Then send the following message:
 which should result in an 'insufficient quantity' response.
 
 
-TODO: Need to describe how to view the SLA monitor output - and also how to vary the message
-to trigger SLA violations.
+To perform a request that will result in an SLA violation, change the <itemId> value to JAM
+and re-issue the request.
+
 
 
