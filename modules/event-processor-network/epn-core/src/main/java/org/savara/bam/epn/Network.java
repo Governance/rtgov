@@ -17,6 +17,8 @@
  */
 package org.savara.bam.epn;
 
+import java.util.logging.Logger;
+
 import org.savara.bam.epn.internal.EventList;
 
 /**
@@ -33,6 +35,8 @@ public class Network {
     
     private Node _root=null;
     private boolean _preinitialized=false;
+    
+    private static final Logger LOG=Logger.getLogger(Network.class.getName());
     
     /**
      * The default constructor.
@@ -166,9 +170,16 @@ public class Network {
             Node node=_nodes.get(name);
             
             // Initialize channels
-            if (node.getDestinationNodes() != null) {
-                for (String nodeName : node.getDestinationNodes()) {
-                    node.getChannels().add(container.getChannel(this, name, nodeName));
+            if (node.getSourceNodes() != null) {
+                for (String nodeName : node.getSourceNodes()) {
+                    Node sourceNode=_nodes.get(nodeName);
+                    
+                    if (sourceNode == null) {
+                        LOG.severe("Network '"+getName()+"' version '"+getVersion()+
+                                "' node '"+name+"' has unknown source node '"+nodeName+"'");
+                    } else {
+                        sourceNode.getChannels().add(container.getChannel(this, nodeName, name));
+                    }
                 }
             }
             

@@ -49,7 +49,6 @@ public class EmbeddedEPNManagerTest {
         Node n1=new Node();
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        n1.getDestinationNodes().add(N2);
         net.getNodes().put(N1, n1);
         
         Node n2=new Node();
@@ -57,6 +56,7 @@ public class EmbeddedEPNManagerTest {
         
         TestEventProcessorA tea=new TestEventProcessorA();
         n2.setEventProcessor(tea);
+        n2.getSourceNodes().add(N1);
         net.getNodes().put(N2, n2);
         
         EmbeddedEPNManager mgr=new EmbeddedEPNManager();
@@ -104,12 +104,12 @@ public class EmbeddedEPNManagerTest {
         Node n1=new Node();
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        n1.getDestinationNodes().add(N2);
         net.getNodes().put(N1, n1);
         
         Node n2=new Node();
         n2.setPredicate(new TestPredicate2());
         n2.setMaxRetries(MAX_RETRIES);
+        n2.getSourceNodes().add(N1);
         
         TestEventProcessorC tea=new TestEventProcessorC();
         n2.setEventProcessor(tea);

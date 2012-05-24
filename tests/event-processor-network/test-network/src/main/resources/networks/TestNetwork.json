@@ -3,7 +3,7 @@
   "subjects" : [ "TestSubject" ],
   "nodes" : {
     "Root" : {
-      "destinationNodes" : [ "ChildA", "ChildB" ],
+      "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
@@ -14,7 +14,7 @@
       "notificationEnabled" : false
     },
     "ChildA" : {
-      "destinationNodes" : [ ],
+      "sourceNodes" : [ "Root" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
@@ -29,7 +29,7 @@
       "notificationEnabled" : false
     },
     "ChildB" : {
-      "destinationNodes" : [ ],
+      "sourceNodes" : [ "Root" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,

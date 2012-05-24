@@ -163,7 +163,7 @@ public class NodeTest {
         
         node.setEventProcessor(ep);
         
-        node.getDestinationNodes().add("TestNode");
+        node.getSourceNodes().add("TestNode");
         
         EventList events=new EventList();
         
@@ -217,7 +217,7 @@ public class NodeTest {
         
         node.setEventProcessor(ep);
         
-        node.getDestinationNodes().add("TestNode");
+        node.getSourceNodes().add("TestNode");
         
         EventList events=new EventList();
         

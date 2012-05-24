@@ -44,14 +44,13 @@ public class NetworkUtilTest {
         Node n0=new Node();
         epn.getNodes().put("N0", n0);
         
-        n0.getDestinationNodes().add("N1");
-        n0.getDestinationNodes().add("N2");
         n0.setEventProcessor(new TestEventProcessor1());
         n0.setPredicate(new TestPredicate1());    
         
         // Node 1
         Node n1=new Node();
         epn.getNodes().put("N1", n1);
+        n1.getSourceNodes().add("N0");
         
         TestEventProcessor2 ep2=new TestEventProcessor2();
         n1.setEventProcessor(ep2);
@@ -62,6 +61,7 @@ public class NetworkUtilTest {
         // Node 2
         Node n2=new Node();
         epn.getNodes().put("N2", n2);
+        n2.getSourceNodes().add("N0");
         
         TestEventProcessor3 ep3=new TestEventProcessor3();
         n2.setEventProcessor(ep3);

@@ -34,7 +34,7 @@ public class Node {
     private long _retryInterval=0;
     private EventProcessor _eventProcessor=null;
     private Predicate _predicate=null;
-    private java.util.List<String> _destinationNodes=new java.util.ArrayList<String>();
+    private java.util.List<String> _sourceNodes=new java.util.ArrayList<String>();
     private java.util.List<String> _destinationSubjects=new java.util.ArrayList<String>();
     private boolean _notificationEnabled=false;
     
@@ -90,21 +90,21 @@ public class Node {
     }
     
     /**
-     * This method returns the list of destination nodes.
+     * This method returns the list of source nodes.
      * 
-     * @return The destination nodes
+     * @return The source nodes
      */
-    public java.util.List<String> getDestinationNodes() {
-        return (_destinationNodes);
+    public java.util.List<String> getSourceNodes() {
+        return (_sourceNodes);
     }
     
     /**
-     * This method sets the list of destinations.
+     * This method sets the list of sources.
      * 
-     * @param destinations The destination nodes
+     * @param sources The source nodes
      */
-    public void setDestinationNodes(java.util.List<String> destinations) {
-        _destinationNodes = destinations;
+    public void setSourceNodes(java.util.List<String> sources) {
+        _sourceNodes = sources;
     }
     
     /**

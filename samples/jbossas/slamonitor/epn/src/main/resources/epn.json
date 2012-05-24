@@ -3,7 +3,7 @@
   "subjects" : [ "ActivityUnits" ],
   "nodes" : {
     "Root" : {
-      "destinationNodes" : [ "SOAEvents" ],
+      "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
@@ -14,7 +14,7 @@
       "notificationEnabled" : false
     },
     "SOAEvents" : {
-      "destinationNodes" : [ ],
+      "sourceNodes" : [ "Root" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,

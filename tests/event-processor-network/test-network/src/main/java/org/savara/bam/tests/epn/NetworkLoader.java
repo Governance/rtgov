@@ -118,18 +118,18 @@ public class NetworkLoader {
         
         Node root=new Node();
         root.setEventProcessor(rootep);
-        root.getDestinationNodes().add(CHILD_A);
-        root.getDestinationNodes().add(CHILD_B);
         ret.getNodes().put(ROOT, root);
         
         Node childA=new Node();
         childA.setPredicate(childApred);
         childA.setEventProcessor(childAep);
+        childA.getSourceNodes().add(ROOT);
         ret.getNodes().put(CHILD_A, childA);
 
         Node childB=new Node();
         childB.setPredicate(childBpred);
         childB.setEventProcessor(childBep);
+        childB.getSourceNodes().add(ROOT);
         ret.getNodes().put(CHILD_B, childB);
         
         ret.setRootNodeName(ROOT);

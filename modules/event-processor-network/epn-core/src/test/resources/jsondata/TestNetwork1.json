@@ -2,7 +2,7 @@
   "name" : "Test",
   "nodes" : {
     "N1" : {
-      "destinationNodes" : [ ],
+      "sourceNodes" : [ "N0" ],
       "destinationSubjects" : [ ],
       "predicate" : {
         "@class" : "org.savara.bam.epn.testdata.TestPredicate2",
@@ -15,7 +15,7 @@
       "retryInterval" : 0
     },
     "N0" : {
-      "destinationNodes" : [ "N1", "N2" ],
+      "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "predicate" : {
         "@class" : "org.savara.bam.epn.testdata.TestPredicate1"
@@ -27,7 +27,7 @@
       "retryInterval" : 0
     },
     "N2" : {
-      "destinationNodes" : [ ],
+      "sourceNodes" : [ "N0" ],
       "destinationSubjects" : [ ],
       "predicate" : null,
       "eventProcessor" : {
