@@ -17,7 +17,6 @@
  */
 package org.savara.bam.epn;
 
-import org.savara.bam.epn.internal.EventList;
 
 /**
  * This interface represents the container in which the network will be

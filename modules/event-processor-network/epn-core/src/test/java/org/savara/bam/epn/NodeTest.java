@@ -19,8 +19,9 @@ package org.savara.bam.epn;
 
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
+
 import org.junit.Test;
-import org.savara.bam.epn.internal.EventList;
 import org.savara.bam.epn.testdata.TestChannel;
 import org.savara.bam.epn.testdata.TestEPNContainer;
 import org.savara.bam.epn.testdata.TestEvent1;
@@ -43,13 +44,14 @@ public class NodeTest {
         
         node.setEventProcessor(ep);
         
-        EventList events=new EventList();
+        java.util.List<Serializable> eventsList=new java.util.ArrayList<Serializable>();
+        EventList events=new EventList(eventsList);
         
         TestEvent1 te1=new TestEvent1(1);
         TestEvent2 te2=new TestEvent2(2);
         
-        events.add(te1);
-        events.add(te2);
+        eventsList.add(te1);
+        eventsList.add(te2);
         
         try {
             EventList retry=node.process(null, null, events, 1);
@@ -81,13 +83,14 @@ public class NodeTest {
         
         node.setEventProcessor(ep);
         
-        EventList events=new EventList();
+        java.util.List<Serializable> eventsList=new java.util.ArrayList<Serializable>();
+        EventList events=new EventList(eventsList);
         
         TestEvent1 te1=new TestEvent1(1);
         TestEvent2 te2=new TestEvent2(2);
         
-        events.add(te1);
-        events.add(te2);
+        eventsList.add(te1);
+        eventsList.add(te2);
         
         try {
             EventList retry=node.process(null, null, events, 1);
@@ -119,13 +122,14 @@ public class NodeTest {
         
         node.setEventProcessor(ep);
         
-        EventList events=new EventList();
+        java.util.List<Serializable> eventsList=new java.util.ArrayList<Serializable>();
+        EventList events=new EventList(eventsList);
         
         TestEvent1 te1=new TestEvent1(1);
         TestEvent2 te2=new TestEvent2(2);
         
-        events.add(te1);
-        events.add(te2);
+        eventsList.add(te1);
+        eventsList.add(te2);
         
         ep.retry(te1);
         
@@ -165,13 +169,14 @@ public class NodeTest {
         
         node.getSourceNodes().add("TestNode");
         
-        EventList events=new EventList();
+        java.util.List<Serializable> eventsList=new java.util.ArrayList<Serializable>();
+        EventList events=new EventList(eventsList);
         
         TestEvent1 te1=new TestEvent1(1);
         TestEvent2 te2=new TestEvent2(2);
         
-        events.add(te1);
-        events.add(te2);
+        eventsList.add(te1);
+        eventsList.add(te2);
 
         TestChannel channel=new TestChannel();
         
@@ -219,13 +224,14 @@ public class NodeTest {
         
         node.getSourceNodes().add("TestNode");
         
-        EventList events=new EventList();
+        java.util.List<Serializable> eventsList=new java.util.ArrayList<Serializable>();
+        EventList events=new EventList(eventsList);
         
         TestEvent1 te1=new TestEvent1(1);
         TestEvent2 te2=new TestEvent2(2);
         
-        events.add(te1);
-        events.add(te2);
+        eventsList.add(te1);
+        eventsList.add(te2);
 
         TestChannel channel=new TestChannel();
         

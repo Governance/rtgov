@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.EPNContainer;
+import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.Network;
-import org.savara.bam.epn.internal.EventList;
 
 public class TestEPNContainer implements EPNContainer {
     

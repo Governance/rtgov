@@ -39,10 +39,10 @@ import javax.jms.Session;
 import org.savara.bam.epn.AbstractEPNManager;
 import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.EPNContainer;
+import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.NotifyType;
-import org.savara.bam.epn.internal.EventList;
 
 /**
  * This class provides the JMS implementation of
@@ -116,12 +116,14 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to initialize the JMS EPN Manager", e);
         }
+        
+        setUsePrePostEventListProcessing(true);
     }   
 
     /**
      * {@inheritDoc}
      */
-    public void publish(String subject, java.util.List<java.io.Serializable> events) throws Exception {
+    public void publish(String subject, java.util.List<? extends java.io.Serializable> events) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Publish "+events+" to subject '"+subject+"'");
         }
@@ -190,8 +192,12 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                 }
             } else {
                 for (Network network : networks) {
+                    preProcessEvents(events, network);
+                    
                     // Dispatch to root node for latest version of named network
                     dispatch(network.getName(), null, null, null, events, -1);
+                    
+                    postProcessEvents(events);
                 }
             }
         }
@@ -215,10 +221,24 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Dispatch to network="+networkName+" and nodes="+nodeList);
         }
+        
+        Network network=getNetwork(networkName, version);
+        
+        if (network == null) {
+            String mesg="Unable to find network '"+networkName+"' version '"+version+"'";
+            
+            LOG.severe(mesg);
+            
+            throw new IllegalArgumentException(mesg);
+        } else {
+            preProcessEvents(events, network);
 
-        String[] nodes=nodeList.split(",");
-        for (String nodeName : nodes) {
-            dispatch(networkName, version, nodeName, source, events, retriesLeft);
+            String[] nodes=nodeList.split(",");
+            for (String nodeName : nodes) {
+                dispatch(networkName, version, nodeName, source, events, retriesLeft);
+            }
+            
+            postProcessEvents(events);
         }
     }
 

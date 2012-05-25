@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,29 +15,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.epn.internal;
+package org.savara.bam.tests.platforms.jbossas.customevent.data;
+
+import org.savara.bam.activity.model.ActivityType;
 
 /**
- * This class represents a list of events that can be serialized.
+ * This class provides a custom event to be passed between nodes
+ * locally defined in the EPN.
  *
  */
-public class EventList extends java.util.Vector<java.io.Serializable> implements java.io.Serializable {
+public class CustomActivityEvent implements java.io.Serializable {
 
-    private static final long serialVersionUID = -2940973962085558684L;
+    private static final long serialVersionUID = -5932057374131602070L;
 
+    private ActivityType _activityType=null;
+    
     /**
-     * This method represents the default constructor.
-     */
-    public EventList() {
-    }
-
-    /**
-     * This method represents a constructor to initialize the event list
-     * from a standard Java list.
+     * This is the constructor used to initialize the
+     * associated activity type.
      * 
-     * @param list The list of events
+     * @param actType The activity type
      */
-    public EventList(java.util.List<? extends java.io.Serializable> list) {
-        super(list);
+    public CustomActivityEvent(ActivityType actType) {
+        _activityType = actType;
+    }
+    
+    /**
+     * This method returns the activity type.
+     * 
+     * @return The activity type
+     */
+    public ActivityType getActivityType() {
+        return (_activityType);
     }
 }

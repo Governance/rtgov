@@ -19,11 +19,13 @@ package org.savara.bam.epn.embedded;
 
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
+
 import org.junit.Test;
+import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.embedded.EmbeddedEPNManager.EmbeddedChannel;
-import org.savara.bam.epn.internal.EventList;
 
 public class EmbeddedEPNManagerTest {
 
@@ -64,10 +66,11 @@ public class EmbeddedEPNManagerTest {
         try {
             mgr.register(net);
             
-            EventList events=new EventList();
+            java.util.List<Serializable> eventsList=new java.util.ArrayList<Serializable>();
+            EventList events=new EventList(eventsList);
             
             TestEvent1 te1=new TestEvent1(25);
-            events.add(te1);
+            eventsList.add(te1);
             
             mgr.publish(TEST_SUBJECT, events);
             
@@ -120,10 +123,11 @@ public class EmbeddedEPNManagerTest {
         try {
             mgr.register(net);
             
-            EventList events=new EventList();
+            java.util.List<Serializable> eventsList=new java.util.ArrayList<Serializable>();
+            EventList events=new EventList(eventsList);
             
             TestEvent1 te1=new TestEvent1(25);
-            events.add(te1);
+            eventsList.add(te1);
             
             mgr.publish(TEST_SUBJECT, events);
             

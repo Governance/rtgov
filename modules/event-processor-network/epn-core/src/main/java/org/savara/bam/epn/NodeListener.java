@@ -36,6 +36,6 @@ public interface NodeListener {
      * @param events The events that have been processed
      */
     public void notify(String network, String version,
-                    String node, NotifyType type, java.util.List<java.io.Serializable> events);
+                    String node, NotifyType type, EventList events);
     
 }

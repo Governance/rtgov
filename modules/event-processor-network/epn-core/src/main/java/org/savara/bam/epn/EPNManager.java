@@ -65,7 +65,7 @@ public interface EPNManager {
      * @throws Exception Failed to publish the events
      */
     public void publish(String subject,
-                 java.util.List<java.io.Serializable> events) throws Exception;
+                 java.util.List<? extends java.io.Serializable> events) throws Exception;
     
     /**
      * This method closes the manager.

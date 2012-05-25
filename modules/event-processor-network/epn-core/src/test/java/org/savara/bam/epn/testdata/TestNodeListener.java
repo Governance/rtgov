@@ -17,9 +17,7 @@
  */
 package org.savara.bam.epn.testdata;
 
-import java.io.Serializable;
-import java.util.List;
-
+import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.NodeListener;
 import org.savara.bam.epn.NotifyType;
 
@@ -27,7 +25,7 @@ public class TestNodeListener implements NodeListener {
 
     private java.util.List<Entry> _entries=new java.util.Vector<Entry>();
     
-    public void notify(String network, String version, String node, NotifyType type, List<Serializable> events) {
+    public void notify(String network, String version, String node, NotifyType type, EventList events) {
         _entries.add(new Entry(network, version, node, events));
     }
 
@@ -39,9 +37,9 @@ public class TestNodeListener implements NodeListener {
         private String _network=null;
         private String _version=null;
         private String _node=null;
-        private List<Serializable> _events=null;
+        private EventList _events=null;
         
-        public Entry(String network, String version, String node, List<Serializable> events) {
+        public Entry(String network, String version, String node, EventList events) {
             _network = network;
             _version = version;
             _node = node;
@@ -60,7 +58,7 @@ public class TestNodeListener implements NodeListener {
             return(_node);
         }
         
-        public List<Serializable> getEvents() {
+        public EventList getEvents() {
             return(_events);
         }
     }

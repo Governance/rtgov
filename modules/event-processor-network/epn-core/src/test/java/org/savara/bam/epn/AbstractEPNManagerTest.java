@@ -19,8 +19,9 @@ package org.savara.bam.epn;
 
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
+
 import org.junit.Test;
-import org.savara.bam.epn.internal.EventList;
 import org.savara.bam.epn.testdata.TestEvent1;
 import org.savara.bam.epn.testdata.TestEvent2;
 import org.savara.bam.epn.testdata.TestEventProcessorA;
@@ -41,7 +42,7 @@ public class AbstractEPNManagerTest {
         return(new AbstractEPNManager() {
             
             public void publish(String subject,
-                    java.util.List<java.io.Serializable> events) throws Exception {
+                    java.util.List<? extends java.io.Serializable> events) throws Exception {
             }
             
             public EPNContainer getContainer() {
@@ -161,9 +162,10 @@ public class AbstractEPNManagerTest {
             TestEvent1 te1=new TestEvent1(2);
             TestEvent2 te2=new TestEvent2(5);
             
-            EventList el=new EventList();
-            el.add(te1);
-            el.add(te2);
+            java.util.List<Serializable> elList=new java.util.ArrayList<Serializable>();
+            EventList el=new EventList(elList);
+            elList.add(te1);
+            elList.add(te2);
             
             tep.retry(te2);
             

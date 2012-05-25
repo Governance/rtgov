@@ -28,7 +28,6 @@ import javax.inject.Inject;
 import org.savara.bam.activity.model.ActivityUnit;
 import org.savara.bam.activity.server.spi.ActivityNotifier;
 import org.savara.bam.epn.EPNManager;
-import org.savara.bam.epn.internal.EventList;
 
 /**
  * This class provides a bridge between the Activity Server, where
@@ -60,7 +59,7 @@ public class EPNActivityNotifier implements ActivityNotifier {
      * {@inheritDoc}
      */
     public void notify(List<ActivityUnit> activities) throws Exception {
-        _epnManager.publish(SUBJECT_NAME, new EventList(activities));
+        _epnManager.publish(SUBJECT_NAME, activities);
     }
 
     /**

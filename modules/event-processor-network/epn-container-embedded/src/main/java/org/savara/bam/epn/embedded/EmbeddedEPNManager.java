@@ -27,10 +27,10 @@ import java.util.logging.Logger;
 import org.savara.bam.epn.AbstractEPNManager;
 import org.savara.bam.epn.Channel;
 import org.savara.bam.epn.EPNContainer;
+import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.Network;
 import org.savara.bam.epn.Node;
 import org.savara.bam.epn.NotifyType;
-import org.savara.bam.epn.internal.EventList;
 
 /**
  * This class provides the embedded implementation of
@@ -134,13 +134,24 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     /**
      * {@inheritDoc}
      */
-    public void publish(String subject, java.util.List<java.io.Serializable> events) throws Exception {
+    public void publish(String subject, java.util.List<? extends java.io.Serializable> events) throws Exception {
+        publish(subject, new EventList(events));
+    }
+    
+    /**
+     * This method publishes the event list to the specific subject.
+     * 
+     * @param subject The subject
+     * @param events The events
+     * @throws Exception Failed to publish events
+     */
+    protected void publish(String subject, EventList events) throws Exception {
         synchronized (_entryPoints) {
             java.util.List<EmbeddedChannel> channels=_entryPoints.get(subject);
             
             if (channels != null) {
                 for (EmbeddedChannel channel : channels) {
-                    channel.send(new EventList(events));                
+                    channel.send(events);                
                 }
             }   
         }

@@ -1,0 +1,30 @@
+{
+  "name" : "CustomEventsEPN",
+  "subjects" : [ "ActivityUnits" ],
+  "nodes" : {
+    "Root" : {
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.savara.bam.tests.platforms.jbossas.customevent.epn.SOAActivityTypeEventDetector"
+      },
+      "predicate" : null,
+      "notificationEnabled" : false
+    },
+    "SOAEvents" : {
+      "sourceNodes" : [ "Root" ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.savara.bam.tests.platforms.jbossas.customevent.epn.CustomActivityEventProcessor"
+      },
+      "predicate" : null,
+      "notificationEnabled" : true
+    }
+  },
+  "version" : "1",
+  "rootNodeName" : "Root"
+}

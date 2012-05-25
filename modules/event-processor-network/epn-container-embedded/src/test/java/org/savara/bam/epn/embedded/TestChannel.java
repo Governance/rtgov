@@ -20,7 +20,7 @@ package org.savara.bam.epn.embedded;
 import java.io.Serializable;
 
 import org.savara.bam.epn.Channel;
-import org.savara.bam.epn.internal.EventList;
+import org.savara.bam.epn.EventList;
 
 public class TestChannel implements Channel {
     
@@ -31,11 +31,15 @@ public class TestChannel implements Channel {
     }
 
     public void send(EventList events) throws Exception {
-        _events.addAll(events);
+        for (Serializable event : events) {
+            _events.add(event);            
+        }
     }
 
     public void send(EventList events, int retriesLeft) throws Exception {
-        _events.addAll(events);
+        for (Serializable event : events) {
+            _events.add(event);            
+        }
     }
 
     public void close() throws Exception {

@@ -20,7 +20,6 @@ package org.savara.bam.epn;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.savara.bam.epn.internal.EventList;
 import org.savara.bam.epn.util.NetworkUtil;
 
 /**
@@ -37,6 +36,7 @@ public abstract class AbstractEPNManager implements EPNManager {
                         new java.util.HashMap<String, java.util.List<Network>>();
     private java.util.List<NodeListener> _nodeListeners=
                         new java.util.Vector<NodeListener>();
+    private boolean _usePrePostEventListProcessing=false;
     
     /**
      * This method returns the Event Processor Network Container.
@@ -246,6 +246,53 @@ public abstract class AbstractEPNManager implements EPNManager {
     }
 
     /**
+     * This method sets whether to use pre/post event list processing.
+     * 
+     * @param b Whether to use pre/post event list processing
+     */
+    protected void setUsePrePostEventListProcessing(boolean b) {
+        _usePrePostEventListProcessing = b;
+    }
+    
+    /**
+     * This method deserializes the events in the context of the supplied
+     * network. This method is only relevant for EPN manager implementations
+     * that load EPN networks in their own classloader context.
+     * 
+     * @param events The events
+     * @param network The network
+     */
+    protected void preProcessEvents(EventList events, Network network) {
+        preProcessEvents(events, network.contextClassLoader());
+    }
+    
+    /**
+     * This method deserializes the events in the context of the supplied
+     * classloader. This method is only relevant for EPN manager implementations
+     * that load EPN networks in their own classloader context.
+     * 
+     * @param events The events
+     * @param classloader The classloader
+     */
+    protected void preProcessEvents(EventList events, ClassLoader classloader) {
+        if (classloader != null) {
+            events.resolve(classloader);
+        }
+    }
+    
+    /**
+     * This method resets the events, to enable them to be used in the
+     * context of another classloader. This method is only relevant for EPN
+     * manager implementations that load EPN networks in their own 
+     * classloader context.
+     * 
+     * @param events The events
+     */
+    protected void postProcessEvents(EventList events) {
+        events.reset();
+    }
+    
+    /**
      * This method dispatches a set of events directly to the supplied
      * node.
      * 
@@ -274,7 +321,7 @@ public abstract class AbstractEPNManager implements EPNManager {
             EventList notifyList=null;
             
             if (ret != null) {
-                EventList processed = new EventList();
+                java.util.List<java.io.Serializable> processed = new java.util.ArrayList<java.io.Serializable>();
                 
                 for (java.io.Serializable event : events) {
                     if (!ret.contains(event)) {
@@ -283,7 +330,7 @@ public abstract class AbstractEPNManager implements EPNManager {
                 }
                 
                 if (processed.size() > 0) {
-                    notifyList = processed;
+                    notifyList = new EventList(processed);
                 }
             } else {
                 notifyList = events;
@@ -336,7 +383,16 @@ public abstract class AbstractEPNManager implements EPNManager {
         }
 
         for (NodeListener nl : _nodeListeners) {
+            
+            if (_usePrePostEventListProcessing) {
+                preProcessEvents(events, nl.getClass().getClassLoader());
+            }
+            
             nl.notify(networkName, version, nodeName, type, events);
+            
+            if (_usePrePostEventListProcessing) {
+                postProcessEvents(events);
+            }
         }
     }
     

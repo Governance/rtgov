@@ -17,9 +17,9 @@
  */
 package org.savara.bam.epn;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.savara.bam.epn.internal.EventList;
 
 /**
  * This class represents an Event Processor Network.
@@ -35,6 +35,7 @@ public class Network {
     
     private Node _root=null;
     private boolean _preinitialized=false;
+    private ClassLoader _contextClassLoader=null;
     
     private static final Logger LOG=Logger.getLogger(Network.class.getName());
     
@@ -156,7 +157,25 @@ public class Network {
                 // Initialize the node
                 node.init();
             }
+            
+            // Cache context classloader for us deserializing
+            // events in this context
+            _contextClassLoader = Thread.currentThread().getContextClassLoader();
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Pre-initialized '"+_name+"/"+_version+"': classloader="+_contextClassLoader);
+            }
         }
+    }
+    
+    /**
+     * This method returns the context class loader
+     * in which the network was pre-initialized.
+     * 
+     * @return The context classloader, or null if not relevant
+     */
+    protected ClassLoader contextClassLoader() {
+        return (_contextClassLoader);
     }
 
     /**
@@ -201,6 +220,11 @@ public class Network {
             if (name.equals(getRootNodeName())) {
                 _root = node;                
             }
+        }
+        
+        // If classloader not set, then use current one
+        if (_contextClassLoader == null) {
+            _contextClassLoader = Thread.currentThread().getContextClassLoader();
         }
         
         if (_root == null) {

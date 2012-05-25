@@ -21,8 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.savara.bam.epn.Channel;
+import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.Network;
-import org.savara.bam.epn.internal.EventList;
 
 /**
  * This class represents a JMS implementation of the event destination

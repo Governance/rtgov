@@ -18,7 +18,6 @@
 package org.savara.bam.tests.platforms.jbossas.slamonitor;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
@@ -36,6 +35,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.savara.bam.analytics.service.ResponseTime;
+import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.NodeListener;
 import org.savara.bam.epn.NotifyType;
 
@@ -285,11 +285,15 @@ public class JBossASSLAMonitorTest {
          * {@inheritDoc}
          */
         public void notify(String network, String version, String node,
-                NotifyType type, List<Serializable> events) {
+                NotifyType type, EventList events) {
             if (type == NotifyType.Processed) {
-                _processed.addAll(events);
+                for (Serializable event : events) {
+                    _processed.add(event);
+                }
             } else if (type == NotifyType.Results) {
-                _results.addAll(events);
+                for (Serializable event : events) {
+                    _results.add(event);
+                }
             }
         }
         

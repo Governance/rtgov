@@ -13,15 +13,6 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<profiles>
-		<profile>
-			<id>jbossas</id>
-			<properties>
-				<platform>jbossas</platform>
-			</properties>
-		</profile>
-	</profiles>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

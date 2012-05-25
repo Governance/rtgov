@@ -17,10 +17,10 @@
  */
 package org.savara.bam.epn;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.savara.bam.epn.internal.EventList;
 
 /**
  * This class represents a node in the Event Processor Network.
@@ -227,8 +227,8 @@ public class Node {
     @SuppressWarnings("unchecked")
     protected EventList process(EPNContainer container, String source,
                       EventList events, int retriesLeft) throws Exception {
-        EventList retries=null;
-        EventList results=new EventList();
+        java.util.List<Serializable> retries=null;
+        java.util.List<Serializable> results=null;
         
         for (java.io.Serializable event : events) {
             
@@ -237,6 +237,9 @@ public class Node {
                     java.io.Serializable processed=getEventProcessor().process(source, event, retriesLeft);
                     
                     if (processed != null) {
+                        if (results == null) {
+                            results = new java.util.ArrayList<Serializable>();
+                        }
                         if (processed instanceof java.util.Collection<?>) {
                             results.addAll((java.util.Collection<? extends java.io.Serializable>)processed);
                         } else {
@@ -249,18 +252,18 @@ public class Node {
                         LOG.fine("Retry event: "+event);
                     }
                     if (retries == null) {
-                        retries = new EventList();
+                        retries = new java.util.ArrayList<Serializable>();
                     }
                     retries.add(event);
                 }
             }
         }
         
-        if (results.size() > 0) {
-            forward(container, results);
+        if (results != null) {
+            forward(container, new EventList(results));
         }
         
-        return (retries);
+        return (retries != null ? new EventList(retries) : null);
     }
     
     /**
