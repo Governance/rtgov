@@ -45,12 +45,6 @@
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.savara.bam.tests.platform.jbossas.custom_events</groupId>
-			<artifactId>tests-jbossas-custom-events-data</artifactId>
-			<version>${bam.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.savara.bam.distribution.jee</groupId>
 			<artifactId>savara-bam</artifactId>
 			<type>war</type>
@@ -81,6 +75,17 @@
 			<artifactId>service-analytics</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+           	<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+           	<version>${jackson.version}</version>
 		</dependency>
 
 		<dependency>

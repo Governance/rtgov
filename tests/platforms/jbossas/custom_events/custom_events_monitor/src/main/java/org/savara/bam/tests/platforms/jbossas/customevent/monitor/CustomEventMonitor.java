@@ -17,47 +17,43 @@
  */
 package org.savara.bam.tests.platforms.jbossas.customevent.monitor;
 
-import static javax.ejb.ConcurrencyManagementType.BEAN;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.Local;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 import org.savara.bam.epn.EPNManager;
 import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.NodeListener;
 import org.savara.bam.epn.NotifyType;
 import org.savara.bam.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
-import org.savara.bam.tests.platforms.jbossas.customevent.data.CustomEventMonitor;
 
+/**
+ * This is the custom event monitor that receives node notifications
+ * from the EPN, and makes the events available via a REST API.
+ *
+ */
+@Path("/monitor")
 @ApplicationScoped
-@Singleton(name="CustomEventMonitor")
-@Startup
-@ConcurrencyManagement(BEAN)
-@Local(CustomEventMonitor.class)
-public class CustomEventMonitorImpl implements CustomEventMonitor, NodeListener {
+public class CustomEventMonitor implements NodeListener {
 
-    private static final Logger LOG=Logger.getLogger(CustomEventMonitorImpl.class.getName());
+    private static final Logger LOG=Logger.getLogger(CustomEventMonitor.class.getName());
     
     private static final String EPN_MANAGER = "java:global/savara-bam/EPNManager";
 
     private EPNManager _epnManager=null;
     
-    private java.util.List<CustomActivityEvent> _customEvents=new java.util.ArrayList<CustomActivityEvent>();
+    private java.util.List<CustomActivityEvent> _customEvents=
+                        new java.util.ArrayList<CustomActivityEvent>();
     
     /**
-     * This method initializes the custom event monitor.
+     * This is the default constructor.
      */
-    @PostConstruct
-    public void init() {
+    public CustomEventMonitor() {
         
         try {
             InitialContext ctx=new InitialContext();
@@ -73,23 +69,20 @@ public class CustomEventMonitorImpl implements CustomEventMonitor, NodeListener 
     }
     
     /**
-     * This method closes the custom event monitor.
-     */
-    @PreDestroy
-    public void close() {
-        
-        if (_epnManager != null) {
-            _epnManager.removeNodeListener(this);
-        }
-    }
-    
-    /**
-     * This method returns the list of custom activity events.
+     * This method returns the list of custom activity events
+     * and then resets the list.
      * 
      * @return The custom activity events
      */
+    @GET
+    @Path("/events")
+    @Produces("application/json")
     public java.util.List<CustomActivityEvent> getCustomActivityEvents() {
-        return (_customEvents);
+        java.util.List<CustomActivityEvent> ret=new java.util.ArrayList<CustomActivityEvent>(_customEvents);
+        
+        _customEvents.clear();
+        
+        return (ret);
     }
 
     /**
@@ -97,7 +90,7 @@ public class CustomEventMonitorImpl implements CustomEventMonitor, NodeListener 
      */
     public void notify(String network, String version, String node,
             NotifyType type, EventList events) {
-        System.out.println(">>> CUSTOM EVENT MONITOR:");
+        System.out.println(">>> CUSTOM EVENT MONITOR: ("+type+")");
         
         for (java.io.Serializable event : events) {
             System.out.println("\t"+event);

@@ -17,13 +17,15 @@
  */
 package org.savara.bam.tests.platforms.jbossas.customevent.data;
 
-public interface CustomEventMonitor {
+import java.util.ArrayList;
 
-    /**
-     * This method returns the list of custom activity events.
-     * 
-     * @return The custom activity events
-     */
-    public java.util.List<CustomActivityEvent> getCustomActivityEvents();
+/**
+ * This class provides a typed list that can be used during de-serialization
+ * of the JSON encoded event list.
+ *
+ */
+public class CustomActivityEventList extends ArrayList<CustomActivityEvent> {
+
+     private static final long serialVersionUID = 1L;
 
 }

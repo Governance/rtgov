@@ -19,6 +19,7 @@ package org.savara.bam.tests.platforms.jbossas.customevent.epn;
 
 import java.io.Serializable;
 
+import org.savara.bam.activity.model.soa.RequestSent;
 import org.savara.bam.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
 
 /**
@@ -39,6 +40,14 @@ public class CustomActivityEventProcessor extends org.savara.bam.epn.EventProces
         if (event instanceof CustomActivityEvent) {
             System.out.println(">>> CUSTOM ACTIVITY ASSOCIATED WITH: "+
                     ((CustomActivityEvent)event).getActivityType());
+            
+            if (((CustomActivityEvent)event).getActivityType() instanceof RequestSent) {
+                RequestSent rs=(RequestSent)((CustomActivityEvent)event).getActivityType();
+                
+                if (rs.getContent().indexOf("JAM") != -1) {
+                    ret = event;
+                }
+            }
         }
         
         return (ret);
