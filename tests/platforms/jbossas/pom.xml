@@ -15,9 +15,6 @@
 	</parent>
 
 	<modules>
-		<module>custom_events_data</module>
-		<module>custom_events_epn</module>
-		<module>custom_events_monitor</module>
 		<module>custom_events</module>
 		<module>slamonitor</module>
 	</modules>

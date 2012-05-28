@@ -46,7 +46,7 @@ public class JBossASCustomEventsTest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.tests.platform.jbossas:tests-jbossas-custom-events-monitor:war:"+version)
+                .artifacts("org.savara.bam.tests.platform.jbossas.custom_events:tests-jbossas-custom-events-monitor:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
@@ -82,7 +82,7 @@ public class JBossASCustomEventsTest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.tests.platform.jbossas:tests-jbossas-custom-events-epn:war:"+version)
+                .artifacts("org.savara.bam.tests.platform.jbossas.custom_events:tests-jbossas-custom-events-epn:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
