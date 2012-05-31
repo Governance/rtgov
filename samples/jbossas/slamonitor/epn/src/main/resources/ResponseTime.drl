@@ -19,8 +19,8 @@ end
 
 rule "correlate request and response"
 when
-    $req : RequestReceived( $id : messageId ) from entry-point "Root" 
-    $resp : ResponseSent( replyToId == $id, this after[0,2m20s] $req )  from entry-point "Root"
+    $req : RequestReceived( $id : messageId ) from entry-point "SOAEvents" 
+    $resp : ResponseSent( replyToId == $id, this after[0,2m20s] $req )  from entry-point "SOAEvents"
 then
 
 	ResponseTime rt=new ResponseTime();
@@ -28,18 +28,13 @@ then
 	rt.setServiceType($req.getServiceType());
 	rt.setOperation($req.getOperation());
 	rt.setFault($resp.getFault());
+	rt.setTimestamp($req.getTimestamp());
 	rt.setRequestReference(new ActivityTypeRef($req.getActivityUnitId(),$req.getActivityUnitIndex()));
 	rt.setResponseReference(new ActivityTypeRef($resp.getActivityUnitId(),$resp.getActivityUnitIndex()));
 	
 	long responseTime=$resp.getTimestamp()-$req.getTimestamp();
 	
-	rt.setResponseTime(responseTime);
-	
-	if (responseTime > 200) {
-		epn.logError("**** RESPONSE TIME "+responseTime+"ms EXCEEDED SLA FOR "+$req.getServiceType()+" ****");
-		
-		rt.setSLAViolation(true);
-	}
+	rt.setDuration(responseTime);
 	
     epn.forward(rt);
 

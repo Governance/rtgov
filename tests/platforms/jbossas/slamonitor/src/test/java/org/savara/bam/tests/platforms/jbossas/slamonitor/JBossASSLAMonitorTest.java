@@ -34,7 +34,6 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.savara.bam.analytics.service.ResponseTime;
 import org.savara.bam.epn.EventList;
 import org.savara.bam.epn.NodeListener;
 import org.savara.bam.epn.NotifyType;
@@ -44,6 +43,8 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class JBossASSLAMonitorTest {
 
+    private static final String SLA_VIOLATIONS = "SLAViolations";
+    private static final String RESPONSE_TIMES = "ResponseTimes";
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
     // 'savara-bam' as the deployment it should operate on.
@@ -170,29 +171,22 @@ public class JBossASSLAMonitorTest {
             Thread.sleep(2000);
             
             // Check that all events have been processed
-            if (tl.getProcessed().size() != 8) {
-                fail("Expecting 8 processed events, but got: "+tl.getProcessed().size());
+            if (tl.getProcessed(RESPONSE_TIMES).size() != 8) {
+                fail("Expecting 8 (response time) processed events, but got: "+tl.getProcessed(RESPONSE_TIMES).size());
             }
            
-            if (tl.getResults().size() != 2) {
-                fail("Expecting 2 results events, but got: "+tl.getResults().size());
+            if (tl.getResults(RESPONSE_TIMES).size() != 2) {
+                fail("Expecting 2 (response time) results events, but got: "+tl.getResults(RESPONSE_TIMES).size());
             }
 
-            // Check that no SLAs were violated
-            int violations=0;
-            for (Object result : tl.getResults()) {
-                if (result instanceof ResponseTime) {
-                    if (((ResponseTime)result).isSLAViolation()) {
-                        violations++;
-                    }
-                } else {
-                    fail("Result is not of type ResponseType");
-                }
+            if (tl.getProcessed(SLA_VIOLATIONS).size() != 2) {
+                fail("Expecting 2 (sla violations) processed events, but got: "+tl.getProcessed(SLA_VIOLATIONS).size());
             }
-            
-            if (violations > 0) {
-                fail("Should be no SLA violations");
+           
+            if (tl.getResults(SLA_VIOLATIONS) != null) {
+                fail("Expecting 0 (sla violations) results events, but got: "+tl.getResults(SLA_VIOLATIONS).size());
             }
+
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }
@@ -248,29 +242,22 @@ public class JBossASSLAMonitorTest {
             Thread.sleep(2000);
             
             // Check that all events have been processed
-            if (tl.getProcessed().size() != 8) {
-                fail("Expecting 8 processed events, but got: "+tl.getProcessed().size());
+            if (tl.getProcessed(RESPONSE_TIMES).size() != 8) {
+                fail("Expecting 8 (response time) processed events, but got: "+tl.getProcessed(RESPONSE_TIMES).size());
             }
-            
-            if (tl.getResults().size() != 2) {
-                fail("Expecting 2 results events, but got: "+tl.getResults().size());
+           
+            if (tl.getResults(RESPONSE_TIMES).size() != 2) {
+                fail("Expecting 2 (response time) results events, but got: "+tl.getResults(RESPONSE_TIMES).size());
             }
-            
-            // Check that no SLAs were violated
-            int violations=0;
-            for (Object result : tl.getResults()) {
-                if (result instanceof ResponseTime) {
-                    if (((ResponseTime)result).isSLAViolation()) {
-                        violations++;
-                    }
-                } else {
-                    fail("Result is not of type ResponseType");
-                }
+
+            if (tl.getProcessed(SLA_VIOLATIONS).size() != 2) {
+                fail("Expecting 2 (sla violations) processed events, but got: "+tl.getProcessed(SLA_VIOLATIONS).size());
             }
-            
-            if (violations != 1) {
-                fail("Should be one SLA violation: "+violations);
+           
+            if (tl.getResults(SLA_VIOLATIONS).size() != 1) {
+                fail("Expecting 1 (sla violations) results events, but got: "+tl.getResults(SLA_VIOLATIONS).size());
             }
+
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }
@@ -278,8 +265,10 @@ public class JBossASSLAMonitorTest {
     
     public class TestListener implements NodeListener {
         
-        private java.util.List<Serializable> _processed=new java.util.Vector<Serializable>();
-        private java.util.List<Serializable> _results=new java.util.Vector<Serializable>();
+        private java.util.Map<String, java.util.List<Serializable>> _processed=
+                    new java.util.HashMap<String, java.util.List<Serializable>>();
+        private java.util.Map<String, java.util.List<Serializable>> _results=
+                    new java.util.HashMap<String, java.util.List<Serializable>>();
 
         /**
          * {@inheritDoc}
@@ -287,22 +276,32 @@ public class JBossASSLAMonitorTest {
         public void notify(String network, String version, String node,
                 NotifyType type, EventList events) {
             if (type == NotifyType.Processed) {
+                java.util.List<Serializable> list=_processed.get(node);
+                if (list == null) {
+                    list = new java.util.ArrayList<Serializable>();
+                    _processed.put(node, list);
+                }
                 for (Serializable event : events) {
-                    _processed.add(event);
+                    list.add(event);
                 }
             } else if (type == NotifyType.Results) {
+                java.util.List<Serializable> list=_results.get(node);
+                if (list == null) {
+                    list = new java.util.ArrayList<Serializable>();
+                    _results.put(node, list);
+                }
                 for (Serializable event : events) {
-                    _results.add(event);
+                    list.add(event);
                 }
             }
         }
         
-        public java.util.List<Serializable> getProcessed() {
-            return (_processed);
+        public java.util.List<Serializable> getProcessed(String node) {
+            return (_processed.get(node));
         }
         
-        public java.util.List<Serializable> getResults() {
-            return (_results);
+        public java.util.List<Serializable> getResults(String node) {
+            return (_results.get(node));
         }
     }
 }

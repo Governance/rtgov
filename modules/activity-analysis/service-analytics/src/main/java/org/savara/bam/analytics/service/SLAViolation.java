@@ -24,23 +24,19 @@ import java.io.ObjectOutput;
 import org.savara.bam.activity.model.ActivityTypeRef;
 
 /**
- * This class represents response time information associated with
- * the invocation of a service.
+ * This class represents the occurance of an SLA violation.
  *
  */
-public class ResponseTime implements java.io.Externalizable {
+public class SLAViolation implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
     private String _serviceType=null;
     private String _operation=null;
-    private String _fault=null;
+    private String _violation=null;
     private long _timestamp=0;
-    private long _duration=0;
-    private long _max=0;
-    private long _min=0;
-    private ActivityTypeRef _requestRef=null;
-    private ActivityTypeRef _responseRef=null;
+    private java.util.List<ActivityTypeRef> _activityTypeRefs=
+                        new java.util.ArrayList<ActivityTypeRef>();
 
     /**
      * This method sets the service type.
@@ -79,57 +75,21 @@ public class ResponseTime implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the optional fault.
+     * This method sets the violation.
      * 
-     * @param fault The fault
+     * @param violation The violation
      */
-    public void setFault(String fault) {
-        _fault = fault;
+    public void setViolation(String violation) {
+        _violation = violation;
     }
     
     /**
-     * This method gets the optional fault.
+     * This method gets the violation.
      * 
-     * @return The optional fault
+     * @return The violation
      */
-    public String getFault() {
-        return (_fault);
-    }
-    
-    /**
-     * This method sets the request reference.
-     * 
-     * @param actTypeRef The request reference
-     */
-    public void setRequestReference(ActivityTypeRef actTypeRef) {
-        _requestRef = actTypeRef;
-    }
-    
-    /**
-     * This method returns the request reference.
-     * 
-     * @return The request reference
-     */
-    public ActivityTypeRef getRequestReference() {
-        return (_requestRef);
-    }
-    
-    /**
-     * This method sets the response reference.
-     * 
-     * @param actTypeRef The response reference
-     */
-    public void setResponseReference(ActivityTypeRef actTypeRef) {
-        _responseRef = actTypeRef;
-    }
-    
-    /**
-     * This method returns the response reference.
-     * 
-     * @return The response reference
-     */
-    public ActivityTypeRef getResponseeference() {
-        return (_responseRef);
+    public String getViolation() {
+        return (_violation);
     }
     
     /**
@@ -151,57 +111,13 @@ public class ResponseTime implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the duration.
+     * This method returns the list of activity type references
+     * associated with the violation.
      * 
-     * @param time The duration
+     * @return The related activity type refs
      */
-    public void setDuration(long time) {
-        _duration = time;
-    }
-    
-    /**
-     * This method returns the duration.
-     * 
-     * @return The duration
-     */
-    public long getDuration() {
-        return (_duration);
-    }
-    
-    /**
-     * This method sets the maximum duration.
-     * 
-     * @param time The maximum duration
-     */
-    public void setMax(long time) {
-        _max = time;
-    }
-    
-    /**
-     * This method returns the maximum duration.
-     * 
-     * @return The maximum duration
-     */
-    public long getMax() {
-        return (_max);
-    }
-    
-    /**
-     * This method sets the minimum duration.
-     * 
-     * @param time The minimum duration
-     */
-    public void setMin(long time) {
-        _duration = time;
-    }
-    
-    /**
-     * This method returns the minimum duration.
-     * 
-     * @return The minimum duration
-     */
-    public long getMin() {
-        return (_duration);
+    public java.util.List<ActivityTypeRef> getActivityTypeRefs() {
+        return (_activityTypeRefs);
     }
     
     /**
@@ -212,13 +128,13 @@ public class ResponseTime implements java.io.Externalizable {
         
         out.writeObject(_serviceType);
         out.writeObject(_operation);
-        out.writeObject(_fault);
+        out.writeObject(_violation);
         out.writeLong(_timestamp);
-        out.writeLong(_duration);
-        out.writeLong(_max);
-        out.writeLong(_min);
-        out.writeObject(_requestRef);
-        out.writeObject(_responseRef);
+        
+        out.writeInt(_activityTypeRefs.size());
+        for (int i=0; i < _activityTypeRefs.size(); i++) {
+            out.writeObject(_activityTypeRefs.get(i));            
+        }
     }
 
     /**
@@ -230,12 +146,12 @@ public class ResponseTime implements java.io.Externalizable {
         
         _serviceType = (String)in.readObject();
         _operation = (String)in.readObject();
-        _fault = (String)in.readObject();
+        _violation = (String)in.readObject();
         _timestamp = in.readLong();
-        _duration = in.readLong();
-        _max = in.readLong();
-        _min = in.readLong();
-        _requestRef = (ActivityTypeRef)in.readObject();
-        _responseRef = (ActivityTypeRef)in.readObject();
+        
+        int len=in.readInt();
+        for (int i=0; i < len; i++) {
+            _activityTypeRefs.add((ActivityTypeRef)in.readObject());
+        }
     }
 }

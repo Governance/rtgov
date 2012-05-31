@@ -2,7 +2,7 @@
   "name" : "TestEPN",
   "subjects" : [ "ActivityUnits" ],
   "nodes" : {
-    "Root" : {
+    "SOAEvents" : {
       "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -13,8 +13,8 @@
       "predicate" : null,
       "notificationEnabled" : false
     },
-    "SOAEvents" : {
-      "sourceNodes" : [ "Root" ],
+    "ResponseTimes" : {
+      "sourceNodes" : [ "SOAEvents" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
@@ -24,8 +24,20 @@
       },
       "predicate" : null,
       "notificationEnabled" : true
+    },
+    "SLAViolations" : {
+      "sourceNodes" : [ "ResponseTimes" ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.savara.bam.epn.cep.CEPEventProcessor",
+        "ruleName" : "SLAViolation"
+      },
+      "predicate" : null,
+      "notificationEnabled" : true
     }
   },
   "version" : "1",
-  "rootNodeName" : "Root"
+  "rootNodeName" : "SOAEvents"
 }

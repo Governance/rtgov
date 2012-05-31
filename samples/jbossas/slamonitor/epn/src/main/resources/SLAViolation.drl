@@ -1,0 +1,28 @@
+import org.savara.bam.activity.model.ActivityTypeRef
+import org.savara.bam.analytics.service.ResponseTime
+import org.savara.bam.analytics.service.SLAViolation
+
+global org.savara.bam.epn.cep.EPNContext epn
+
+declare ResponseTime
+    @role( event )
+end
+
+rule "check for SLA violations"
+when
+    $rt : ResponseTime() from entry-point "ResponseTimes" 
+then
+
+	if ($rt.getDuration() > 200) {
+		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getDuration()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
+		
+		SLAViolation sv=new SLAViolation();
+		
+		sv.setServiceType($rt.getServiceType());
+		sv.setOperation($rt.getOperation());
+		sv.setTimestamp($rt.getTimestamp());
+		
+		epn.forward(sv);
+	}	
+
+end
