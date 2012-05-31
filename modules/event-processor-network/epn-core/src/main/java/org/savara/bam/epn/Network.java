@@ -194,8 +194,8 @@ public class Network {
                     Node sourceNode=_nodes.get(nodeName);
                     
                     if (sourceNode == null) {
-                        LOG.severe("Network '"+getName()+"' version '"+getVersion()+
-                                "' node '"+name+"' has unknown source node '"+nodeName+"'");
+                        LOG.severe("Network '"+getName()+"' version '"+getVersion()
+                                +"' node '"+name+"' has unknown source node '"+nodeName+"'");
                     } else {
                         sourceNode.getChannels().add(container.getChannel(this, nodeName, name));
                     }

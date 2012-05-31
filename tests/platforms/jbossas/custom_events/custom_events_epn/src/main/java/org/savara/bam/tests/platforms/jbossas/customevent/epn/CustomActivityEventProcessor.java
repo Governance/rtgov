@@ -38,8 +38,8 @@ public class CustomActivityEventProcessor extends org.savara.bam.epn.EventProces
         Serializable ret=null;
         
         if (event instanceof CustomActivityEvent) {
-            System.out.println(">>> CUSTOM ACTIVITY ASSOCIATED WITH: "+
-                    ((CustomActivityEvent)event).getActivityType());
+            System.out.println(">>> CUSTOM ACTIVITY ASSOCIATED WITH: "
+                    +((CustomActivityEvent)event).getActivityType());
             
             if (((CustomActivityEvent)event).getActivityType() instanceof RequestSent) {
                 RequestSent rs=(RequestSent)((CustomActivityEvent)event).getActivityType();

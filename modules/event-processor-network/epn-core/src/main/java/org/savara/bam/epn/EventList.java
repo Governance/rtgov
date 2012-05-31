@@ -86,7 +86,7 @@ public class EventList implements java.io.Serializable, java.lang.Iterable<java.
             java.io.ObjectInputStream ois=new java.io.ObjectInputStream(bais) {
                 protected Class<?> resolveClass(ObjectStreamClass desc)
                         throws IOException, ClassNotFoundException {
-                    return(Class.forName(desc.getName(), false, cl));
+                    return (Class.forName(desc.getName(), false, cl));
                 }
             };
             
