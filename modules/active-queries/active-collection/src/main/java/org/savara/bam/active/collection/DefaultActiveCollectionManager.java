@@ -24,11 +24,35 @@ package org.savara.bam.active.collection;
  */
 public class DefaultActiveCollectionManager implements ActiveCollectionManager {
 
+    private java.util.Map<String, ActiveCollection> _activeCollections=
+                new java.util.HashMap<String, ActiveCollection>();
+    
     /**
      * {@inheritDoc}
      */
     public void register(ActiveCollectionSource acs) throws Exception {
         
+        // Check whether active collection for name has already been created
+        synchronized (_activeCollections) {
+            if (_activeCollections.containsKey(acs.getName())) {
+                throw new IllegalArgumentException("Active collection already exists for '"
+                        +acs.getName()+"'");
+            }
+            
+            if (acs.getType() == ActiveCollectionType.List) {
+                ActiveList list=new ActiveList(acs.getName());
+                
+                _activeCollections.put(acs.getName(), list);
+                
+                acs.setActiveCollection(list);
+                
+                // Initialize the active collection source
+                acs.init();
+                
+            } else {
+                throw new IllegalArgumentException("Active collection type not currently supported");
+            }
+        }
     }
     
     /**
@@ -36,6 +60,42 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
      */
     public void unregister(ActiveCollectionSource acs) throws Exception {
         
+        synchronized (_activeCollections) {
+            if (!_activeCollections.containsKey(acs.getName())) {
+                throw new IllegalArgumentException("Active collection '"
+                        +acs.getName()+"' is not registered");
+            }
+            
+            // Close the active collection source
+            acs.close();
+          
+            acs.setActiveCollection(null);
+            
+            _activeCollections.remove(acs.getName());
+        }
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    public ActiveCollection getActiveCollection(String name) {
+        return (_activeCollections.get(name));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ActiveCollection create(ActiveCollection parent, Predicate predicate)
+            throws Exception {
+        // TODO:
+        // 1) Need to create a key for a locally maintained ac map that contains
+        //    the name of the parent collection and the predicate
+        // 2) Predicates will need hashCode and equals implemented
+        // 3) Have a weak ref valued map, so that child acolls are automatically
+        //    cleared up when not used, but also available for shared use if
+        //    multiple interested parties - but might need a cleanup thread
+        //    to check keys that no longer have a referenced value.
+        return null;
+    }
+
 }

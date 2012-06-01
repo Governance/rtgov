@@ -35,7 +35,7 @@ public class NodeTest {
         Node node=new Node();
         
         node.setPredicate(new Predicate() {
-            public boolean apply(Object event) {
+            public boolean evaluate(Object event) {
                 return true;
             }
         });
@@ -74,7 +74,7 @@ public class NodeTest {
         Node node=new Node();
         
         node.setPredicate(new Predicate() {
-            public boolean apply(Object event) {
+            public boolean evaluate(Object event) {
                 return false;
             }
         });
@@ -113,7 +113,7 @@ public class NodeTest {
         Node node=new Node();
         
         node.setPredicate(new Predicate() {
-            public boolean apply(Object event) {
+            public boolean evaluate(Object event) {
                 return true;
             }
         });
@@ -158,7 +158,7 @@ public class NodeTest {
         Node node=new Node();
         
         node.setPredicate(new Predicate() {
-            public boolean apply(Object event) {
+            public boolean evaluate(Object event) {
                 return true;
             }
         });
@@ -213,7 +213,7 @@ public class NodeTest {
         Node node=new Node();
         
         node.setPredicate(new Predicate() {
-            public boolean apply(Object event) {
+            public boolean evaluate(Object event) {
                 return true;
             }
         });

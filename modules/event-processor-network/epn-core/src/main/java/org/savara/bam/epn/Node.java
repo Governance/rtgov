@@ -232,7 +232,7 @@ public class Node {
         
         for (java.io.Serializable event : events) {
             
-            if (getPredicate() == null || getPredicate().apply(event)) {
+            if (getPredicate() == null || getPredicate().evaluate(event)) {
                 try {
                     java.io.Serializable processed=getEventProcessor().process(source, event, retriesLeft);
                     

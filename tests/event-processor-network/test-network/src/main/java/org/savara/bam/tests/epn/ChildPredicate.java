@@ -65,7 +65,7 @@ public class ChildPredicate extends Predicate {
     }
     
     @Override
-    public boolean apply(Object event) {
+    public boolean evaluate(Object event) {
         return (event instanceof Obj2
                 && ((Obj2)event).getValue() >= getMin()
                 && ((Obj2)event).getValue() <= getMax());

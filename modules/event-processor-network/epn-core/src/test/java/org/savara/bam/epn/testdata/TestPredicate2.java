@@ -31,7 +31,7 @@ public class TestPredicate2 extends Predicate {
         _someProperty = prop;
     }
     
-    public boolean apply(Object arg0) {
+    public boolean evaluate(Object arg0) {
         if (arg0 instanceof TestEvent2) {
             TestEvent2 te=(TestEvent2)arg0;
             

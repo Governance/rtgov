@@ -76,4 +76,50 @@ public interface ActiveCollectionSource {
      */
     public void setActiveCollection(ActiveCollection ac);
     
+    /**
+     * This method initializes the active collection source.
+     * 
+     * @throws Exception Failed to initialize source
+     */
+    public void init() throws Exception;
+    
+    /**
+     * This method adds the supplied object to the active collection.
+     * If the optional key is provided, it can either be an index
+     * if inserting into a particular position in a list (otherwise
+     * default is to add to the end of the list), or a specific value
+     * intended to be the key for a map.
+     * 
+     * @param key The optional key
+     * @param value The value
+     */
+    public void insert(Object key, Object value);
+    
+    /**
+     * This method updates the supplied value within the active collection,
+     * based on the supplied key. If the active collection is a list, then
+     * the key will be an integer reflecting the index of the element being
+     * updated. If the active collection is a map, then the key will be
+     * associated with the element to be updated.
+     * 
+     * @param key The key
+     * @param value The value
+     */
+    public void update(Object key, Object value);
+    
+    /**
+     * This method removes the supplied object from the active collection.
+     * 
+     * @param key The optional key, not required for lists
+     * @param value The value
+     */
+    public void remove(Object key, Object value);
+    
+    /**
+     * This method closes the active collection source.
+     * 
+     * @throws Exception Failed to close source
+     */
+    public void close() throws Exception;
+    
 }

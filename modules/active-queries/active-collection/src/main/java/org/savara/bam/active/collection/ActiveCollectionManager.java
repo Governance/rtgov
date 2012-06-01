@@ -43,4 +43,27 @@ public interface ActiveCollectionManager {
      */
     public void unregister(ActiveCollectionSource acs) throws Exception;
     
+    /**
+     * This method returns the active collection associated with the
+     * supplied name, or null if not found.
+     * 
+     * @param name The name
+     * @return The active collection, or null if not found
+     */
+    public ActiveCollection getActiveCollection(String name);
+    
+    /**
+     * This method derives a local active collection, from the supplied
+     * parent active collection, with the supplied predicate to filter
+     * results from the parent collection.
+     * 
+     * @param parent The parent active collection
+     * @param predicate The predicate used to filter results from the parent
+     *                  before they are applied to the child
+     * @return The newly created active collection
+     * @throws Exception Failed to create the locally derived active collection
+     */
+    public ActiveCollection create(ActiveCollection parent, Predicate predicate)
+                                throws Exception;
+    
 }

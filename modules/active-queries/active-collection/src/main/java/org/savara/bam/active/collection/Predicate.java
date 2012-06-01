@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,30 +15,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.epn.embedded;
+package org.savara.bam.active.collection;
 
-import org.savara.bam.epn.Predicate;
+/**
+ * This interface is used to determine whether a changed item
+ * in a parent active collection is relevant to a child collection.
+ *
+ */
+public interface Predicate {
 
-public class TestPredicate2 extends Predicate {
-
-    private String _someProperty=null;
+    /**
+     * This method evaluates the supplied item against
+     * the predicate.
+     * 
+     * @param item The item
+     * @return Whether the predicate is true or false for this item
+     */
+    public boolean evaluate(Object item);
     
-    public String getSomeProperty() {
-        return(_someProperty);
-    }
-    
-    public void setSomeProperty(String prop) {
-        _someProperty = prop;
-    }
-    
-    public boolean evaluate(Object arg0) {
-        if (arg0 instanceof TestEvent2) {
-            TestEvent2 te=(TestEvent2)arg0;
-            
-            return te.getValue() >= 20;
-         }
-        
-        return false;
-    }
-
 }

@@ -21,7 +21,7 @@ import org.savara.bam.epn.Predicate;
 
 public class TestPredicate1 extends Predicate {
 
-    public boolean apply(Object arg0) {
+    public boolean evaluate(Object arg0) {
         if (arg0 instanceof TestEvent1) {
             TestEvent1 te=(TestEvent1)arg0;
             

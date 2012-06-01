@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,41 +15,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.epn;
-
-import org.codehaus.jackson.annotate.JsonTypeInfo;
+package org.savara.bam.active.collection;
 
 /**
- * This class represents the predicate applied to an
- * event being processed.
+ * This interface can be used to listen for changes to the
+ * active collections.
  *
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
-public abstract class Predicate {
+public interface ActiveChangeListener {
 
     /**
-     * This method initializes the predicate.
+     * This method notifies the listener that an object has been
+     * inserted.
      * 
-     * @throws Exception Failed to initialize the predicate
+     * @param key The key, which for a list will be an index
+     * @param value The value
      */
-    public void init() throws Exception {
-    }
+    public void inserted(Object key, Object value);
     
     /**
-     * This method evaluates the predicate against the supplied
-     * event to determine if it should be processed.
+     * This method notifies the listener that an object has been
+     * inserted.
      * 
-     * @param event The event
-     * @return Whether the event should be processed
+     * @param key The key, which for a list will be an index
+     * @param value The value
      */
-    public abstract boolean evaluate(Object event);
-
+    public void updated(Object key, Object value);
+    
     /**
-     * This method closes the predicate.
+     * This method notifies the listener that an object has been
+     * inserted.
      * 
-     * @throws Exception Failed to close the predicate
+     * @param key The key, which for a list will be an index
+     * @param value The value
      */
-    protected void close() throws Exception {
-    }
+    public void removed(Object key, Object value);
     
 }

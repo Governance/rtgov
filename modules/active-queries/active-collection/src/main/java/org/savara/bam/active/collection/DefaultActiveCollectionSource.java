@@ -20,12 +20,11 @@ package org.savara.bam.active.collection;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 /**
- * This abstract class provides the base definition for an Active Collection Source.
- * @author gbrown
+ * This class provides the base definition for an Active Collection Source.
  *
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
-public class AbstractActiveCollectionSource implements ActiveCollectionSource {
+public class DefaultActiveCollectionSource implements ActiveCollectionSource {
 
     private String _name=null;
     private ActiveCollectionType _type=ActiveCollectionType.List;
@@ -113,5 +112,41 @@ public class AbstractActiveCollectionSource implements ActiveCollectionSource {
      */
     public void setActiveCollection(ActiveCollection ac) {
         _activeCollection = ac;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void init() throws Exception {
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void close() throws Exception {
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void insert(Object key, Object value) {
+        _activeCollection.insert(key, value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void update(Object key, Object value) {
+        _activeCollection.update(key, value);
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void remove(Object key, Object value) {
+        _activeCollection.remove(key, value);
     }
 }
