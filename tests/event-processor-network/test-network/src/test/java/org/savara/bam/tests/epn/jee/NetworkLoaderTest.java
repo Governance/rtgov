@@ -61,7 +61,7 @@ public class NetworkLoaderTest {
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
                     .artifacts("org.savara.bam.event-processor-network:epn-core:"+version,
-                            "org.savara.bam.event-processor-network:epn-container-jms:"+version)
+                            "org.savara.bam.event-processor-network:epn-container-jee:"+version)
                     .resolveAsFiles());
     }
 

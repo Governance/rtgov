@@ -59,7 +59,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.savara.bam.event-processor-network</groupId>
-			<artifactId>epn-container-jms</artifactId>
+			<artifactId>epn-container-jee</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
 		</dependency>

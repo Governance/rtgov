@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.epn.jms;
+package org.savara.bam.epn.jee;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -141,17 +141,17 @@ public class JMSChannel implements Channel {
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
         
         if (_subject != null) {
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, _subject);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_SUBJECTS, _subject);
            
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Sending events '"+events+"' to subject="+_subject);
             }
         } else {
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, _network.getName());
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, _network.getVersion());
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, _destinationNode);
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, _sourceNode);
-            mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, _network.getName());
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, _network.getVersion());
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, _destinationNode);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE_NODE, _sourceNode);
+            mesg.setIntProperty(JEEEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
             
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Sending events '"+events+"' to network="+_network.getName()

@@ -18,7 +18,7 @@
 		<module>activity-management</module>
 		<module>activity-analysis</module>
 		<module>event-processor-network</module>
-		<module>active-collections</module>
+		<module>active-queries</module>
 	</modules>
 
 </project>

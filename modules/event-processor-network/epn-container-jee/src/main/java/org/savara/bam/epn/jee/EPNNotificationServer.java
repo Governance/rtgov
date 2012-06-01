@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.epn.jms;
+package org.savara.bam.epn.jee;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -49,7 +49,7 @@ public class EPNNotificationServer implements MessageListener {
     private static final Logger LOG=Logger.getLogger(EPNNotificationServer.class.getName());
     
     @Inject
-    private JMSEPNManager _epnManager;
+    private JEEEPNManager _epnManager;
     
     /**
      * This is the default constructor.

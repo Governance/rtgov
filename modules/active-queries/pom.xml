@@ -3,10 +3,10 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.savara.bam</groupId>
-	<artifactId>active-collections</artifactId>
+	<artifactId>active-queries</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>Savara BAM::Modules::Active Collections</name>
+	<name>Savara BAM::Modules::Active Queries</name>
 
 	<parent>
 		<groupId>org.savara.bam</groupId>
@@ -15,6 +15,9 @@
 	</parent>
 
 	<modules>
+		<module>active-collection</module>
+		<module>acs-epn</module>
+		<module>acs-loader-jee</module>
 	</modules>
 
 </project>

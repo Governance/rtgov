@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.epn.jms;
+package org.savara.bam.epn.jee;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ import org.savara.bam.epn.NotifyType;
  */
 @Singleton(name="EPNManager")
 @ConcurrencyManagement(BEAN)
-public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManager {
+public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManager {
     
     @Resource(mappedName = "java:/JmsXA")
     private ConnectionFactory _connectionFactory;
@@ -84,7 +84,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     
     private EPNContainer _container=new JMSEPNContainer();
     
-    private static final Logger LOG=Logger.getLogger(JMSEPNManagerImpl.class.getName());
+    private static final Logger LOG=Logger.getLogger(JEEEPNManagerImpl.class.getName());
 
     /**
      * {@inheritDoc}
@@ -129,7 +129,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         }
         
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(new EventList(events));
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, subject);
+        mesg.setStringProperty(JEEEPNManagerImpl.EPN_SUBJECTS, subject);
         
         _eventsProducer.send(mesg);
     }
@@ -154,11 +154,11 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             }
             
             if (message.propertyExists(EPN_NETWORK)) {
-                String network=message.getStringProperty(JMSEPNManagerImpl.EPN_NETWORK);
-                String version=message.getStringProperty(JMSEPNManagerImpl.EPN_VERSION);
-                String node=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES);
-                String source=message.getStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE);
-                int retriesLeft=message.getIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT);
+                String network=message.getStringProperty(JEEEPNManagerImpl.EPN_NETWORK);
+                String version=message.getStringProperty(JEEEPNManagerImpl.EPN_VERSION);
+                String node=message.getStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES);
+                String source=message.getStringProperty(JEEEPNManagerImpl.EPN_SOURCE_NODE);
+                int retriesLeft=message.getIntProperty(JEEEPNManagerImpl.EPN_RETRIES_LEFT);
                 
                 dispatchToNodes(network, version, node, source, events, retriesLeft);
             }
@@ -257,10 +257,10 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
             
             EventList events=(EventList)((ObjectMessage)message).getObject();
             
-            String networkName=message.getStringProperty(JMSEPNManagerImpl.EPN_NETWORK);
-            String version=message.getStringProperty(JMSEPNManagerImpl.EPN_VERSION);
-            String nodeName=message.getStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES);
-            NotifyType type=NotifyType.valueOf(message.getStringProperty(JMSEPNManagerImpl.EPN_NOTIFY_TYPE));
+            String networkName=message.getStringProperty(JEEEPNManagerImpl.EPN_NETWORK);
+            String version=message.getStringProperty(JEEEPNManagerImpl.EPN_VERSION);
+            String nodeName=message.getStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES);
+            NotifyType type=NotifyType.valueOf(message.getStringProperty(JEEEPNManagerImpl.EPN_NOTIFY_TYPE));
             
             dispatchNotificationToListeners(networkName, version, nodeName, type, events);
         } else {
@@ -324,11 +324,11 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         
         if (retriesLeft > 0) {
             javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, version);
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
-            mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, source);
-            mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, networkName);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, version);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE_NODE, source);
+            mesg.setIntProperty(JEEEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
             _eventsProducer.send(mesg);
         } else {
             // Events failed to be processed
@@ -348,10 +348,10 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         }
 
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, version);
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
-        mesg.setStringProperty(JMSEPNManagerImpl.EPN_NOTIFY_TYPE, type.name());
+        mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, networkName);
+        mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, version);
+        mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
+        mesg.setStringProperty(JEEEPNManagerImpl.EPN_NOTIFY_TYPE, type.name());
         _notificationsProducer.send(mesg);
     }
     
@@ -448,16 +448,16 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                 boolean sendResults=false;
                 
                 if (subjects != null) {
-                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_SUBJECTS, subjects);
+                    mesg.setStringProperty(JEEEPNManagerImpl.EPN_SUBJECTS, subjects);
                     sendResults = true;
                 }
                 
                 if (destNodes != null) {
-                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_NETWORK, networkName);
-                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_VERSION, version);
-                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_DESTINATION_NODES, destNodes);
-                    mesg.setStringProperty(JMSEPNManagerImpl.EPN_SOURCE_NODE, sourceNode);   
-                    mesg.setIntProperty(JMSEPNManagerImpl.EPN_RETRIES_LEFT, -1);
+                    mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, networkName);
+                    mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, version);
+                    mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, destNodes);
+                    mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE_NODE, sourceNode);   
+                    mesg.setIntProperty(JEEEPNManagerImpl.EPN_RETRIES_LEFT, -1);
                     sendResults = true;
                 }
                 
