@@ -8,7 +8,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.savara.bam.tests.platform.epn.SOAActivityTypeEventSplitter"
+        "@class" : "org.savara.bam.samples.jbossas.slamonitor.epn.SOAActivityTypeEventSplitter"
       },
       "predicate" : null,
       "notificationEnabled" : false

@@ -1,0 +1,7 @@
+{
+  "@class" : "org.savara.bam.samples.jbossas.slamonitor.acs.ResponseTimeACS",
+  "name" : "ServiceResponseTime",
+  "type" : "List",
+  "itemExpiration" : 0,
+  "maxItems" : 0
+}

@@ -17,15 +17,35 @@
  */
 package org.savara.bam.active.collection;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 /**
- * This interface defines an Active Collection Source that is
+ * This class defines an Active Collection Source that is
  * responsible for retrieving the data (with optional pre-
  * processing) to be placed within an associated active
  * collection, and then maintaining that information with
  * subsequent updates and eventual removal.
  *
  */
-public interface ActiveCollectionSource {
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+public class ActiveCollectionSource {
+
+    private String _name=null;
+    private ActiveCollectionType _type=ActiveCollectionType.List;
+    private long _itemExpiration=0;
+    private int _maxItems=0;
+    private ActiveCollection _activeCollection=null;
+
+    /**
+     * This method sets the name of the active collection that
+     * this source represents.
+     * 
+     * @param name The active collection name
+     */
+    public void setName(String name) {
+        _name = name;
+    }
 
     /**
      * This method returns the name of the active collection associated
@@ -33,24 +53,49 @@ public interface ActiveCollectionSource {
      * 
      * @return The name
      */
-    public String getName();
-    
+    public String getName() {
+        return (_name);
+    }
+
     /**
      * This method returns the active collection type associated
      * with the source.
      * 
      * @return The type
      */
-    public ActiveCollectionType getType();
+    public ActiveCollectionType getType() {
+        return (_type);
+    }
     
+    /**
+     * This method sets the active collection type.
+     * 
+     * @param type The type
+     */
+    public void setType(ActiveCollectionType type) {
+        _type = type;
+    }
+
     /**
      * This method returns the item expiration duration.
      * 
      * @return The number of milliseconds that the item should remain
      *          in the active collection, or 0 if not relevant
      */
-    public long getItemExpiration();
+    public long getItemExpiration() {
+        return (_itemExpiration);
+    }
     
+    /**
+     * This method sets the item expiration duration.
+     * 
+     * @param expire The item expiration duration, or zero
+     *              for no expiration duration
+     */
+    public void setItemExpiration(long expire) {
+        _itemExpiration = expire;
+    }
+
     /**
      * This method returns the maximum number of items that should be
      * contained within the active collection. The default policy will
@@ -58,31 +103,60 @@ public interface ActiveCollectionSource {
      * 
      * @return The maximum number of items, or 0 if not relevant
      */
-    public int getMaxItems();
- 
+    public int getMaxItems() {
+        return (_maxItems);
+    }
+
+    /**
+     * This method sets the maximum number of items
+     * that will be in the active collection.
+     * 
+     * @param max The maximum number of items, or zero
+     *              for no limit
+     */
+    public void setMaxItems(int max) {
+        _maxItems = max;
+    }
+    
     /**
      * This method returns the Active Collection associated with the
      * source.
      * 
      * @return The active collection
      */
-    public ActiveCollection getActiveCollection();
-    
+    @JsonIgnore
+    public ActiveCollection getActiveCollection() {
+        return (_activeCollection);
+    }
+
     /**
      * This method sets the Active Collection associated with the
      * source.
      * 
      * @param ac The active collection
      */
-    public void setActiveCollection(ActiveCollection ac);
-    
+    public void setActiveCollection(ActiveCollection ac) {
+        _activeCollection = ac;
+    }
+
     /**
      * This method initializes the active collection source.
      * 
      * @throws Exception Failed to initialize source
      */
-    public void init() throws Exception;
-    
+    public void init() throws Exception {
+        
+    }
+
+    /**
+     * This method closes the active collection source.
+     * 
+     * @throws Exception Failed to close source
+     */
+    public void close() throws Exception {
+        
+    }
+
     /**
      * This method adds the supplied object to the active collection.
      * If the optional key is provided, it can either be an index
@@ -93,8 +167,10 @@ public interface ActiveCollectionSource {
      * @param key The optional key
      * @param value The value
      */
-    public void insert(Object key, Object value);
-    
+    public void insert(Object key, Object value) {
+        _activeCollection.insert(key, value);
+    }
+
     /**
      * This method updates the supplied value within the active collection,
      * based on the supplied key. If the active collection is a list, then
@@ -105,21 +181,18 @@ public interface ActiveCollectionSource {
      * @param key The key
      * @param value The value
      */
-    public void update(Object key, Object value);
-    
+    public void update(Object key, Object value) {
+        _activeCollection.update(key, value);
+        
+    }
+
     /**
      * This method removes the supplied object from the active collection.
      * 
      * @param key The optional key, not required for lists
      * @param value The value
      */
-    public void remove(Object key, Object value);
-    
-    /**
-     * This method closes the active collection source.
-     * 
-     * @throws Exception Failed to close source
-     */
-    public void close() throws Exception;
-    
+    public void remove(Object key, Object value) {
+        _activeCollection.remove(key, value);
+    }
 }

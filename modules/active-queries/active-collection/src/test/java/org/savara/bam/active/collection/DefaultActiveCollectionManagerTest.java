@@ -29,7 +29,7 @@ public class DefaultActiveCollectionManagerTest {
     public void testRegisterACS() {
         ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
         
-        DefaultActiveCollectionSource acs=new DefaultActiveCollectionSource();
+        ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
         
         try {
@@ -52,7 +52,7 @@ public class DefaultActiveCollectionManagerTest {
     public void testAlreadyRegisteredACS() {
         ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
         
-        DefaultActiveCollectionSource acs=new DefaultActiveCollectionSource();
+        ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
         
         try {
@@ -73,7 +73,7 @@ public class DefaultActiveCollectionManagerTest {
     public void testUnregisterACS() {
         ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
         
-        DefaultActiveCollectionSource acs=new DefaultActiveCollectionSource();
+        ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
         
         try {
@@ -102,7 +102,7 @@ public class DefaultActiveCollectionManagerTest {
     public void testAlreadyUnregisteredACS() {
         ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
         
-        DefaultActiveCollectionSource acs=new DefaultActiveCollectionSource();
+        ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
         
         try {

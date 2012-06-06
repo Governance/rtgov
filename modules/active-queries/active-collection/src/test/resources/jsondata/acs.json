@@ -1,0 +1,7 @@
+{
+  "@class" : "org.savara.bam.active.collection.ActiveCollectionSource",
+  "name" : "TestACS",
+  "type" : "List",
+  "itemExpiration" : 200,
+  "maxItems" : 1000
+}
