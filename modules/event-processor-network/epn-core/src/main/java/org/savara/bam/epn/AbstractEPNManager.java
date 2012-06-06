@@ -34,8 +34,8 @@ public abstract class AbstractEPNManager implements EPNManager {
     private java.util.Map<String, NetworkList> _networkMap=new java.util.HashMap<String, NetworkList>();
     private java.util.Map<String, java.util.List<Network>> _subjectMap=
                         new java.util.HashMap<String, java.util.List<Network>>();
-    private java.util.List<NodeListener> _nodeListeners=
-                        new java.util.Vector<NodeListener>();
+    private java.util.Map<String, java.util.List<NodeListener>> _nodeListeners=
+                        new java.util.HashMap<String, java.util.List<NodeListener>>();
     private boolean _usePrePostEventListProcessing=false;
     
     /**
@@ -166,21 +166,42 @@ public abstract class AbstractEPNManager implements EPNManager {
     /**
      * {@inheritDoc}
      */
-    public void addNodeListener(NodeListener l) {
+    public void addNodeListener(String network, NodeListener l) {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Register node listener="+l);
+            LOG.fine("Register node listener="+l+" on network="+network);
         }
-        _nodeListeners.add(l);
+        
+        synchronized (_nodeListeners) {
+            java.util.List<NodeListener> listeners=_nodeListeners.get(network);
+            
+            if (listeners == null) {
+                listeners = new java.util.ArrayList<NodeListener>();
+                _nodeListeners.put(network, listeners);
+            }
+            
+            listeners.add(l);
+        }
     }
     
     /**
      * {@inheritDoc}
      */
-    public void removeNodeListener(NodeListener l) {
+    public void removeNodeListener(String network, NodeListener l) {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Unregister node listener="+l);
+            LOG.fine("Unregister node listener="+l+" on network="+network);
         }
-        _nodeListeners.remove(l);
+        
+        synchronized (_nodeListeners) {
+            java.util.List<NodeListener> listeners=_nodeListeners.get(network);
+            
+            if (listeners != null) {                
+                listeners.remove(l);
+                
+                if (listeners.size() == 0) {
+                    _nodeListeners.remove(network);
+                }
+            }
+        }
     }
     
     /**
@@ -381,17 +402,22 @@ public abstract class AbstractEPNManager implements EPNManager {
             LOG.finest("Notify processed events on network="+networkName+" node="+nodeName
                     +"type="+type+" events="+events);
         }
+        
+        java.util.List<NodeListener> listeners=_nodeListeners.get(networkName);
 
-        for (NodeListener nl : _nodeListeners) {
-            
-            if (_usePrePostEventListProcessing) {
-                preProcessEvents(events, nl.getClass().getClassLoader());
-            }
-            
-            nl.notify(networkName, version, nodeName, type, events);
-            
-            if (_usePrePostEventListProcessing) {
-                postProcessEvents(events);
+        if (listeners != null) {
+            for (int i=0; i < listeners.size(); i++) {
+                NodeListener nl=listeners.get(i);
+                
+                if (_usePrePostEventListProcessing) {
+                    preProcessEvents(events, nl.getClass().getClassLoader());
+                }
+                
+                nl.notify(networkName, version, nodeName, type, events);
+                
+                if (_usePrePostEventListProcessing) {
+                    postProcessEvents(events);
+                }
             }
         }
     }

@@ -41,6 +41,8 @@ import org.savara.bam.tests.platforms.jbossas.customevent.data.CustomActivityEve
 @ApplicationScoped
 public class CustomEventMonitor implements NodeListener {
 
+    private static final String CUSTOM_EVENTS_EPN = "CustomEventsEPN";
+
     private static final Logger LOG=Logger.getLogger(CustomEventMonitor.class.getName());
     
     private static final String EPN_MANAGER = "java:global/savara-bam/EPNManager";
@@ -60,7 +62,7 @@ public class CustomEventMonitor implements NodeListener {
             
             _epnManager = (EPNManager)ctx.lookup(EPN_MANAGER);
 
-            _epnManager.addNodeListener(this);
+            _epnManager.addNodeListener(CUSTOM_EVENTS_EPN, this);
             
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to initialize custom event monitor", e);

@@ -43,6 +43,7 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class JBossASSLAMonitorTest {
 
+    private static final String TEST_EPN = "TestEPN";
     private static final String SLA_VIOLATIONS = "SLAViolations";
     private static final String RESPONSE_TIMES = "ResponseTimes";
     // NOTE: Had to use resource, as injection didn't seem to work when there
@@ -127,7 +128,7 @@ public class JBossASSLAMonitorTest {
         
         TestListener tl=new TestListener();
         
-        _epnManager.addNodeListener(tl);
+        _epnManager.addNodeListener(TEST_EPN, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -198,7 +199,7 @@ public class JBossASSLAMonitorTest {
         
         TestListener tl=new TestListener();
         
-        _epnManager.addNodeListener(tl);
+        _epnManager.addNodeListener(TEST_EPN, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();

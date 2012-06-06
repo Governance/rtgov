@@ -29,6 +29,7 @@ import org.savara.bam.epn.testdata.TestNodeListener;
 
 public class AbstractEPNManagerTest {
 
+    private static final String DUMMY_NETWORK = "DummyNetwork";
     private static final String N1 = "N1";
     private static final String N2 = "N2";
     private static final String N3 = "N3";
@@ -157,7 +158,11 @@ public class AbstractEPNManagerTest {
             
             TestNodeListener nl=new TestNodeListener();
             
-            mgr.addNodeListener(nl);
+            mgr.addNodeListener(TEST_NETWORK, nl);
+            
+            TestNodeListener anothernl=new TestNodeListener();
+            
+            mgr.addNodeListener(DUMMY_NETWORK, anothernl);
             
             TestEvent1 te1=new TestEvent1(2);
             TestEvent2 te2=new TestEvent2(5);
@@ -197,6 +202,10 @@ public class AbstractEPNManagerTest {
             
             if (!nl.getEntries().get(0).getNode().equals(N1)) {
                 fail("Processed Event node name incorrect");
+            }
+            
+            if (anothernl.getEntries().size() > 0) {
+                fail("Should be no entries in other listener");
             }
             
         } catch(Exception e) {

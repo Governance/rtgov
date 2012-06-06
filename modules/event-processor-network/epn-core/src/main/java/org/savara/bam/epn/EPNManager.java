@@ -43,18 +43,20 @@ public interface EPNManager {
     public void unregister(String networkName, String version) throws Exception;
     
     /**
-     * This method registers a node listener.
+     * This method registers a node listener for the specified network.
      * 
+     * @param network The network to listen to
      * @param l The listener
      */
-    public void addNodeListener(NodeListener l);
+    public void addNodeListener(String network, NodeListener l);
     
     /**
-     * This method unregisters a node listener.
+     * This method unregisters a node listener for the specified network.
      * 
+     * @param network The network was listening to
      * @param l The listener
      */
-    public void removeNodeListener(NodeListener l);
+    public void removeNodeListener(String network, NodeListener l);
     
     /**
      * This method publishes the supplied events to be processed
