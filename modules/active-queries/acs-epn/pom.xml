@@ -20,14 +20,9 @@
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-           		<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-           		<version>${jackson.version}</version>
+			<groupId>org.savara.bam.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
