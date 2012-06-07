@@ -215,8 +215,18 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
         }
         
         if (_aggregationScript != null) {
-            // Compile expression
-            _aggregationScriptExpression = MVEL.compileExpression(_aggregationScript);
+            java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
+            
+            if (is == null) {
+                LOG.severe("Unable to locate '"+_aggregationScript+"'");
+            } else {
+                byte[] b=new byte[is.available()];
+                is.read(b);
+                is.close();
+
+                // Compile expression
+                _aggregationScriptExpression = MVEL.compileExpression(new String(b));
+            }
         }
     }
 

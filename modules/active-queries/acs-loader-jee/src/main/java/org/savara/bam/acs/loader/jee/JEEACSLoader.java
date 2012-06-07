@@ -32,6 +32,7 @@ import javax.naming.InitialContext;
 
 import org.savara.bam.active.collection.ActiveCollectionManager;
 import org.savara.bam.active.collection.ActiveCollectionSource;
+import org.savara.bam.active.collection.util.ActiveCollectionUtil;
 
 /**
  * This class provides the capability to load an Active Collection Source from a
@@ -78,18 +79,7 @@ public class JEEACSLoader {
                 is.read(b);
                 is.close();
                 
-                /*
-                _network=NetworkUtil.deserialize(b);
-                
-                // Pre-initialize the network to avoid any contextual class
-                // loading issues. Within JEE, the registration of the network
-                // will be done in the context of the core war, while as the
-                // event processors require the classloading context associated
-                // with the network deployment.
-                preInit(_network);
-                
-                _acmManager.register(_network);
-                */
+                _activeCollectionSource = ActiveCollectionUtil.deserialize(b);
             }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to load network", e);

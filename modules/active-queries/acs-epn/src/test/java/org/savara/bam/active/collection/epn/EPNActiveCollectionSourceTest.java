@@ -229,25 +229,7 @@ public class EPNActiveCollectionSourceTest {
         acs.setAggregationDuration(1000);
         acs.setGroupBy("name");
         
-        acs.setAggregationScript("org.savara.bam.active.collection.epn.TestObject " +
-        		    "result=new org.savara.bam.active.collection.epn.TestObject();" +
-                "int total=0;"+
-                "int min=0, max=0;"+
-        		"for (i=0; i < events.size(); i++) {" +
-                    "to = events.get(i);"+
-                    "result.setName(to.getName());"+
-                    "total += to.getAvg();"+
-                    "if (min == 0 || to.getAvg() < min) {"+
-                        "min = to.getAvg();"+
-                    "}"+
-                    "if (max == 0 || to.getAvg() > max) {"+
-                        "max = to.getAvg();"+
-                    "}"+
-        		"}"+
-                "result.setAvg(total/events.size());"+
-        		"result.setMin(min);"+
-                "result.setMax(max);"+
-        		"result;");
+        acs.setAggregationScript("scripts/Aggregate.mvel");
         
         TestEPNManager mgr=new TestEPNManager();
         acs.setEPNManager(mgr);
