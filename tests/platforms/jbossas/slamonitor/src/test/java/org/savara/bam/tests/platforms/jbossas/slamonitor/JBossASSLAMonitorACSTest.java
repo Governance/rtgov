@@ -17,7 +17,8 @@
  */
 package org.savara.bam.tests.platforms.jbossas.slamonitor;
 
-import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
@@ -25,6 +26,7 @@ import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPMessage;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -32,27 +34,26 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.savara.bam.epn.EventList;
-import org.savara.bam.epn.NodeListener;
-import org.savara.bam.epn.NotifyType;
+import org.savara.bam.active.collection.ActiveList;
 
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class JBossASSLAMonitorTest {
+public class JBossASSLAMonitorACSTest {
 
-    private static final String TEST_EPN = "TestEPN";
-    private static final String SLA_VIOLATIONS = "SLAViolations";
-    private static final String RESPONSE_TIMES = "ResponseTimes";
+    private static final ObjectMapper MAPPER=new ObjectMapper();
+
+    private static final String SERVICE_RESPONSE_TIME = "ServiceResponseTime";
     
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
     // 'savara-bam' as the deployment it should operate on.
-    @Resource(mappedName="java:global/savara-bam/EPNManager")
-    org.savara.bam.epn.EPNManager _epnManager;
-    
+    @Resource(mappedName="java:global/savara-bam/ActiveCollectionManager")
+    org.savara.bam.active.collection.ActiveCollectionManager _activeCollectionManager;
+
     @Deployment(name="savara-bam", order=1)
     public static WebArchive createDeployment1() {
         String version=System.getProperty("bam.version");
@@ -86,6 +87,29 @@ public class JBossASSLAMonitorTest {
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+    }
+    
+    @Deployment(name="acs", order=4)
+    public static WebArchive createDeployment4() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.savara.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-acs:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+    }
+    
+    @Deployment(name="monitor", order=5)
+    public static WebArchive createDeployment5() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.savara.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-monitor:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                        copyToTmpFile(archiveFiles[0],"slamonitor.war"));
     }
     
     private static java.io.File copyToTmpFile(java.io.File source, String filename) {
@@ -125,12 +149,15 @@ public class JBossASSLAMonitorTest {
     }
 
     @Test @OperateOnDeployment("savara-bam")
-    public void testActivityEventsProcessed() {
+    @Ignore
+    public void testResponseTimes() {
         
-        TestListener tl=new TestListener();
+        ActiveList al=(ActiveList)_activeCollectionManager.getActiveCollection(SERVICE_RESPONSE_TIME);
         
-        _epnManager.addNodeListener(TEST_EPN, tl);
-
+        if (al == null) {
+            fail("Active collection for '"+SERVICE_RESPONSE_TIME+"' was not found");
+        }
+        
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
@@ -170,140 +197,47 @@ public class JBossASSLAMonitorTest {
             }
             
             // Wait for events to propagate
-            Thread.sleep(2000);
+            Thread.sleep(4000);
             
-            // Check that all events have been processed
-            if (tl.getProcessed(RESPONSE_TIMES).size() != 8) {
-                fail("Expecting 8 (response time) processed events, but got: "+tl.getProcessed(RESPONSE_TIMES).size());
+            java.util.List<?> respTimes=getResponseTimes();
+            
+            if (respTimes == null) {
+                fail("No events returned");
             }
-           
-            if (tl.getResults(RESPONSE_TIMES).size() != 2) {
-                fail("Expecting 2 (response time) results events, but got: "+tl.getResults(RESPONSE_TIMES).size());
+            
+            if (respTimes.size() != 2) {
+                fail("8 events expected, but got: "+respTimes.size());
             }
-
-            if (tl.getProcessed(SLA_VIOLATIONS).size() != 2) {
-                fail("Expecting 2 (sla violations) processed events, but got: "+tl.getProcessed(SLA_VIOLATIONS).size());
-            }
-           
-            if (tl.getResults(SLA_VIOLATIONS) != null) {
-                fail("Expecting 0 (sla violations) results events, but got: "+tl.getResults(SLA_VIOLATIONS).size());
-            }
+            
+            System.out.println("RESPONSE TIMES="+respTimes);
 
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }
     }
     
+    /**
+     * This method deserializes the events into a list of hashmaps. The
+     * actual objects are not deserialized, as this would require the
+     * domain objects to be included in all deployments, which would
+     * make verifying classloading/isolation difficult.
+     * 
+     * @return The list of objects representing events
+     * @throws Exception Failed to deserialize the events
+     */
+    protected java.util.List<?> getResponseTimes() throws Exception {
+        java.util.List<?> ret=null;
+         
+        URL getUrl = new URL("http://localhost:8080/slamonitor/monitor/responseTimes");
+        HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
+        connection.setRequestMethod("GET");
+        System.out.println("Content-Type: " + connection.getContentType());
 
-    @Test @OperateOnDeployment("savara-bam")
-    public void testActivityEventsResults() {
+        java.io.InputStream is=connection.getInputStream();
         
-        TestListener tl=new TestListener();
-        
-        _epnManager.addNodeListener(TEST_EPN, tl);
-
-        try {
-            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
-            SOAPConnection con=factory.createConnection();
-            
-            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/demo-orders/OrderService");
-            
-            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
-                        "   <soap:Body>"+
-                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
-                        "            <order>"+
-                        "                <orderId>PO-13739-ABC</orderId>"+
-                        "                <itemId>JAM</itemId>"+
-                        "                <quantity>50</quantity>"+
-                        "            </order>"+
-                        "        </orders:submitOrder>"+
-                        "    </soap:Body>"+
-                        "</soap:Envelope>";
-            
-            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
-            
-            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
-            
-            is.close();
-            
-            SOAPMessage response=con.call(request, url);
-
-            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-            
-            response.writeTo(baos);
-            
-            String resp=baos.toString();
-
-            baos.close();
-            
-            if (!resp.contains("<accepted>true</accepted>")) {
-                fail("Order was not accepted: "+resp);
-            }
-            
-            // Wait for events to propagate
-            Thread.sleep(2000);
-            
-            // Check that all events have been processed
-            if (tl.getProcessed(RESPONSE_TIMES).size() != 8) {
-                fail("Expecting 8 (response time) processed events, but got: "+tl.getProcessed(RESPONSE_TIMES).size());
-            }
-           
-            if (tl.getResults(RESPONSE_TIMES).size() != 2) {
-                fail("Expecting 2 (response time) results events, but got: "+tl.getResults(RESPONSE_TIMES).size());
-            }
-
-            if (tl.getProcessed(SLA_VIOLATIONS).size() != 2) {
-                fail("Expecting 2 (sla violations) processed events, but got: "+tl.getProcessed(SLA_VIOLATIONS).size());
-            }
-           
-            if (tl.getResults(SLA_VIOLATIONS).size() != 1) {
-                fail("Expecting 1 (sla violations) results events, but got: "+tl.getResults(SLA_VIOLATIONS).size());
-            }
-
-        } catch (Exception e) {
-            fail("Failed to invoke service via SOAP: "+e);
-        }
+        ret = MAPPER.readValue(is, java.util.List.class);
+       
+        return (ret);
     }
-    
-    public class TestListener implements NodeListener {
-        
-        private java.util.Map<String, java.util.List<Serializable>> _processed=
-                    new java.util.HashMap<String, java.util.List<Serializable>>();
-        private java.util.Map<String, java.util.List<Serializable>> _results=
-                    new java.util.HashMap<String, java.util.List<Serializable>>();
 
-        /**
-         * {@inheritDoc}
-         */
-        public void notify(String network, String version, String node,
-                NotifyType type, EventList events) {
-            if (type == NotifyType.Processed) {
-                java.util.List<Serializable> list=_processed.get(node);
-                if (list == null) {
-                    list = new java.util.ArrayList<Serializable>();
-                    _processed.put(node, list);
-                }
-                for (Serializable event : events) {
-                    list.add(event);
-                }
-            } else if (type == NotifyType.Results) {
-                java.util.List<Serializable> list=_results.get(node);
-                if (list == null) {
-                    list = new java.util.ArrayList<Serializable>();
-                    _results.put(node, list);
-                }
-                for (Serializable event : events) {
-                    list.add(event);
-                }
-            }
-        }
-        
-        public java.util.List<Serializable> getProcessed(String node) {
-            return (_processed.get(node));
-        }
-        
-        public java.util.List<Serializable> getResults(String node) {
-            return (_results.get(node));
-        }
-    }
 }

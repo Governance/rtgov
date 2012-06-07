@@ -1,7 +1,10 @@
 {
-  "@class" : "org.savara.bam.samples.jbossas.slamonitor.acs.ResponseTimeACS",
+  "@class" : "org.savara.bam.active.collection.epn.EPNActiveCollectionSource",
   "name" : "ServiceResponseTime",
   "type" : "List",
   "itemExpiration" : 0,
-  "maxItems" : 0
+  "maxItems" : 0,
+  "aggregationDuration" : 1000,
+  "groupBy" : "serviceType",
+  "aggregationScript" : "ServiceResponseTime.mvel"
 }

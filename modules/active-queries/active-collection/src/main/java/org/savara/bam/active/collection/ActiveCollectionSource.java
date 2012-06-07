@@ -140,6 +140,19 @@ public class ActiveCollectionSource {
     }
 
     /**
+     * This method pre-initializes the active collection source
+     * in situations where it needs to be initialized before
+     * registration with the manager. This may be required
+     * where the registration is performed in a different
+     * contextual classloader than the source was loaded.
+     * 
+     * @throws Exception Failed to pre-initialize
+     */
+    protected void preInit() throws Exception {
+        
+    }
+    
+    /**
      * This method initializes the active collection source.
      * 
      * @throws Exception Failed to initialize source

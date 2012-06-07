@@ -30,6 +30,7 @@
 		<bam.version>1.0.0-SNAPSHOT</bam.version>
 		<switchyard.version>0.5.0-SNAPSHOT</switchyard.version>
 		<jackson.version>1.9.2</jackson.version>
+		<resteasy.version>2.3.0.GA</resteasy.version>
 		<junit.version>4.8.1</junit.version>
 	</properties>
 

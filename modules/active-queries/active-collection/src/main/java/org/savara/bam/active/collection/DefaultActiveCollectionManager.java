@@ -17,11 +17,18 @@
  */
 package org.savara.bam.active.collection;
 
+import static javax.ejb.ConcurrencyManagementType.BEAN;
+
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.Singleton;
+
 /**
  * This class provides the default implementation of the ActiveCollectionManager
  * interface.
  *
  */
+@Singleton(name="ActiveCollectionManager")
+@ConcurrencyManagement(BEAN)
 public class DefaultActiveCollectionManager implements ActiveCollectionManager {
 
     private java.util.Map<String, ActiveCollection> _activeCollections=

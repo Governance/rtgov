@@ -214,7 +214,22 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
             }
         }
         
-        if (_aggregationScript != null) {
+        preInit();
+    }
+    
+    /**
+     * This method pre-initializes the active collection source
+     * in situations where it needs to be initialized before
+     * registration with the manager. This may be required
+     * where the registration is performed in a different
+     * contextual classloader than the source was loaded.
+     * 
+     * @throws Exception Failed to pre-initialize
+     */
+    protected void preInit() throws Exception {
+        
+        // Only initialize if the script is specified, but not yet compiled
+        if (_aggregationScript != null && _aggregationScriptExpression == null) {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
             
             if (is == null) {

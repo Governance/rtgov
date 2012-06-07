@@ -15,19 +15,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.savara.bam.samples.jbossas.slamonitor.acs;
-
-import org.savara.bam.active.collection.ActiveCollectionSource;
+package org.savara.bam.active.collection;
 
 /**
- * This class provides the active collection source for the Response Time
- * service metric information.
+ * This class provides an abstract base class for ACS loaders.
  *
  */
-public class ResponseTimeACS extends ActiveCollectionSource {
+public abstract class AbstractACSLoader {
 
-    public ResponseTimeACS() {
-        setName("ServiceResponseTime");
+    /**
+     * This method pre-initializes the Active Collection Source
+     * before it is registered with the manager. This is sometimes
+     * required if the loader and manager are associated with different
+     * contextual classloaders.
+     * 
+     * @param acs The active collection source to pre-initialize
+     * @throws Exception Failed to pre-initialize source
+     */
+    protected void preInit(ActiveCollectionSource acs) throws Exception {
+        acs.preInit();
     }
-    
 }

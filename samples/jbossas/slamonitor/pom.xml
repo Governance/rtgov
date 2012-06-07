@@ -18,6 +18,7 @@
 		<module>orders</module>
 		<module>acs</module>
 		<module>epn</module>
+		<module>monitor</module>
 	</modules>
 
 </project>

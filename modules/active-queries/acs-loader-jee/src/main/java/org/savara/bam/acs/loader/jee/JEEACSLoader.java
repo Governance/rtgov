@@ -30,6 +30,7 @@ import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
 
+import org.savara.bam.active.collection.AbstractACSLoader;
 import org.savara.bam.active.collection.ActiveCollectionManager;
 import org.savara.bam.active.collection.ActiveCollectionSource;
 import org.savara.bam.active.collection.util.ActiveCollectionUtil;
@@ -43,7 +44,7 @@ import org.savara.bam.active.collection.util.ActiveCollectionUtil;
 @Singleton
 @Startup
 @ConcurrencyManagement(BEAN)
-public class JEEACSLoader {
+public class JEEACSLoader extends AbstractACSLoader {
     
     private static final Logger LOG=Logger.getLogger(JEEACSLoader.class.getName());
     
@@ -80,6 +81,15 @@ public class JEEACSLoader {
                 is.close();
                 
                 _activeCollectionSource = ActiveCollectionUtil.deserialize(b);
+                
+                // Pre-initialize the source to avoid any contextual class
+                // loading issues. Within JEE, the registration of the source
+                // will be done in the context of the core war, while as the
+                // source requires the classloading context associated
+                // with the ActiveCollectionSource deployment.
+                preInit(_activeCollectionSource);
+                
+                _acmManager.register(_activeCollectionSource);
             }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to load network", e);

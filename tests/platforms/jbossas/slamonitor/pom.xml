@@ -38,6 +38,12 @@
 			<type>war</type>
 			<version>${bam.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.savara.bam.samples.jbossas.slamonitor</groupId>
+			<artifactId>samples-jbossas-slamonitor-acs</artifactId>
+			<type>war</type>
+			<version>${bam.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.savara.bam.distribution.jee</groupId>
@@ -57,6 +63,12 @@
 			<artifactId>epn-container-jee</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.savara.bam.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${bam.version}</version>
 		</dependency>
 
 		<dependency>
