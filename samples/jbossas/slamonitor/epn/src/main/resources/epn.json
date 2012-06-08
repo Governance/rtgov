@@ -8,7 +8,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.savara.bam.samples.jbossas.slamonitor.epn.SOAActivityTypeEventSplitter"
+        "@class" : "org.overlord.bam.samples.jbossas.slamonitor.epn.SOAActivityTypeEventSplitter"
       },
       "predicate" : null,
       "notificationEnabled" : false
@@ -19,7 +19,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.savara.bam.epn.cep.CEPEventProcessor",
+        "@class" : "org.overlord.bam.epn.cep.CEPEventProcessor",
         "ruleName" : "ResponseTime"
       },
       "predicate" : null,
@@ -31,7 +31,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.savara.bam.epn.cep.CEPEventProcessor",
+        "@class" : "org.overlord.bam.epn.cep.CEPEventProcessor",
         "ruleName" : "SLAViolation"
       },
       "predicate" : null,

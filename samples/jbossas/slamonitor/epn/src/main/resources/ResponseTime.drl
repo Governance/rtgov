@@ -1,9 +1,9 @@
-import org.savara.bam.activity.model.soa.RequestReceived
-import org.savara.bam.activity.model.soa.ResponseSent
-import org.savara.bam.activity.model.ActivityTypeRef
-import org.savara.bam.analytics.service.ResponseTime
+import org.overlord.bam.activity.model.soa.RequestReceived
+import org.overlord.bam.activity.model.soa.ResponseSent
+import org.overlord.bam.activity.model.ActivityTypeRef
+import org.overlord.bam.analytics.service.ResponseTime
 
-global org.savara.bam.epn.cep.EPNContext epn
+global org.overlord.bam.epn.cep.EPNContext epn
 
 declare RequestReceived
     @role( event )

@@ -1,8 +1,8 @@
-import org.savara.bam.activity.model.ActivityTypeRef
-import org.savara.bam.analytics.service.ResponseTime
-import org.savara.bam.analytics.service.SLAViolation
+import org.overlord.bam.activity.model.ActivityTypeRef
+import org.overlord.bam.analytics.service.ResponseTime
+import org.overlord.bam.analytics.service.SLAViolation
 
-global org.savara.bam.epn.cep.EPNContext epn
+global org.overlord.bam.epn.cep.EPNContext epn
 
 declare ResponseTime
     @role( event )

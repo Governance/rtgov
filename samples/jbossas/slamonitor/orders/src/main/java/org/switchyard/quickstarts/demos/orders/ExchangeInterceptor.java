@@ -24,12 +24,12 @@ import javax.annotation.PostConstruct;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 
-import org.savara.bam.activity.model.soa.RequestReceived;
-import org.savara.bam.activity.model.soa.RequestSent;
-import org.savara.bam.activity.model.soa.ResponseReceived;
-import org.savara.bam.activity.model.soa.ResponseSent;
-import org.savara.bam.activity.util.ActivityUtil;
-import org.savara.bam.collector.ActivityCollector;
+import org.overlord.bam.activity.model.soa.RequestReceived;
+import org.overlord.bam.activity.model.soa.RequestSent;
+import org.overlord.bam.activity.model.soa.ResponseReceived;
+import org.overlord.bam.activity.model.soa.ResponseSent;
+import org.overlord.bam.activity.util.ActivityUtil;
+import org.overlord.bam.collector.ActivityCollector;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangeHandler;
 import org.switchyard.ExchangePhase;

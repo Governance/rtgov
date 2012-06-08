@@ -1,4 +1,4 @@
-org.savara.bam.active.collection.epn.TestObject result=new org.savara.bam.active.collection.epn.TestObject();
+org.overlord.bam.active.collection.epn.TestObject result=new org.overlord.bam.active.collection.epn.TestObject();
 
 int total=0;
 int min=0, max=0;

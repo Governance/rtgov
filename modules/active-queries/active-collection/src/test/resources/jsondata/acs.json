@@ -1,5 +1,5 @@
 {
-  "@class" : "org.savara.bam.active.collection.ActiveCollectionSource",
+  "@class" : "org.overlord.bam.active.collection.ActiveCollectionSource",
   "name" : "TestACS",
   "type" : "List",
   "itemExpiration" : 200,

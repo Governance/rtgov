@@ -5,11 +5,11 @@
       "sourceNodes" : [ "N0" ],
       "destinationSubjects" : [ ],
       "predicate" : {
-        "@class" : "org.savara.bam.epn.testdata.TestPredicate2",
+        "@class" : "org.overlord.bam.epn.testdata.TestPredicate2",
         "someProperty" : "TestProperty"
       },
       "eventProcessor" : {
-        "@class" : "org.savara.bam.epn.testdata.TestEventProcessor2"
+        "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor2"
       },
       "maxRetries" : 3,
       "retryInterval" : 0
@@ -18,10 +18,10 @@
       "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "predicate" : {
-        "@class" : "org.savara.bam.epn.testdata.TestPredicate1"
+        "@class" : "org.overlord.bam.epn.testdata.TestPredicate1"
       },
       "eventProcessor" : {
-        "@class" : "org.savara.bam.epn.testdata.TestEventProcessor1"
+        "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor1"
       },
       "maxRetries" : 3,
       "retryInterval" : 0
@@ -31,7 +31,7 @@
       "destinationSubjects" : [ ],
       "predicate" : null,
       "eventProcessor" : {
-        "@class" : "org.savara.bam.epn.testdata.TestEventProcessor3"
+        "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor3"
       },
       "maxRetries" : 3,
       "retryInterval" : 0

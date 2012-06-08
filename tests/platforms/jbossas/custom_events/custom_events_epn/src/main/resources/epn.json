@@ -8,7 +8,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.savara.bam.tests.platforms.jbossas.customevent.epn.SOAActivityTypeEventDetector"
+        "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.SOAActivityTypeEventDetector"
       },
       "predicate" : null,
       "notificationEnabled" : false
@@ -19,7 +19,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.savara.bam.tests.platforms.jbossas.customevent.epn.CustomActivityEventProcessor"
+        "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.CustomActivityEventProcessor"
       },
       "predicate" : null,
       "notificationEnabled" : true
