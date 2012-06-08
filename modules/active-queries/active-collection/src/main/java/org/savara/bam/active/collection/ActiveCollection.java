@@ -161,5 +161,15 @@ public abstract class ActiveCollection {
             }
         }
     }
+
+    /**
+     * This method derives a child active collection with contents filtered
+     * against the supplied predicate.
+     * 
+     * @param name The name of the derived active collection
+     * @param predicate The predicate
+     * @return The derived active collection
+     */
+    protected abstract ActiveCollection derive(String name, Predicate predicate);
     
 }

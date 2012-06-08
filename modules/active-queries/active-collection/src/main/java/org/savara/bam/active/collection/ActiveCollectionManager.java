@@ -57,13 +57,14 @@ public interface ActiveCollectionManager {
      * parent active collection, with the supplied predicate to filter
      * results from the parent collection.
      * 
+     * @param name The name of the locally maintained collection
      * @param parent The parent active collection
      * @param predicate The predicate used to filter results from the parent
      *                  before they are applied to the child
      * @return The newly created active collection
      * @throws Exception Failed to create the locally derived active collection
      */
-    public ActiveCollection create(ActiveCollection parent, Predicate predicate)
-                                throws Exception;
+    public ActiveCollection create(String name, ActiveCollection parent,
+                    Predicate predicate) throws Exception;
     
 }

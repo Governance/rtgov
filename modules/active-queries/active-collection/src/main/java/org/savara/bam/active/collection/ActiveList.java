@@ -154,4 +154,21 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected ActiveCollection derive(String name, Predicate predicate) {
+        ActiveList ret=new ActiveList(name);
+        
+        synchronized (_list) {
+            for (Object value : _list) {
+                if (predicate.evaluate(value)) {
+                    ret.insert(null, value);
+                }
+            }
+        }
+        
+        return (ret);
+    }
+    
 }
