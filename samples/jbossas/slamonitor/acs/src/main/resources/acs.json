@@ -8,6 +8,6 @@
   "node" : "ResponseTimes",
   "notifyType" : "Results",
   "aggregationDuration" : 1000,
-  "groupBy" : "serviceType",
+  "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
   "aggregationScript" : "ServiceResponseTime.mvel"
 }

@@ -367,8 +367,16 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
             
             for (java.io.Serializable event : events) {
                 
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Aggregating event: "+event);
+                }
+                
                 // Derive key
                 Object key=MVEL.executeExpression(_groupByExpression, event);
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Derived key '"+key+"' for event: "+event);
+                }
                 
                 if (key == null) {
                     LOG.severe("Failed to evaluate expression '"+_groupBy+"' on event: "+event);
