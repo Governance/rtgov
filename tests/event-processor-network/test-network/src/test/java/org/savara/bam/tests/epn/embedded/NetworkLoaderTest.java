@@ -47,7 +47,7 @@ public class NetworkLoaderTest {
         
         try {
             Class<?> cls=
-                    NetworkLoaderTest.class.getClassLoader().loadClass("org.savara.bam.epn.embedded.EmbeddedEPNManager");
+                    NetworkLoaderTest.class.getClassLoader().loadClass("org.overlord.bam.epn.embedded.EmbeddedEPNManager");
             ret = (EPNManager)cls.newInstance();
             
         } catch(Exception e) {

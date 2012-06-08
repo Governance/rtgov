@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.savara.bam.tests.platforms</groupId>
+	<groupId>org.overlord.bam.tests.platforms</groupId>
 	<artifactId>jbossas</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>Savara BAM::Tests::Platforms::JBossAS</name>
+	<name>Overlord BAM::Tests::Platforms::JBossAS</name>
 
 	<parent>
-		<groupId>org.savara.bam.tests</groupId>
+		<groupId>org.overlord.bam.tests</groupId>
 		<artifactId>platforms</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>

@@ -1,33 +1,33 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.savara.bam.activity-analysis</groupId>
+	<groupId>org.overlord.bam.activity-analysis</groupId>
 	<artifactId>service-analytics</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Savara BAM::Modules::Activity Analysis::Service Analytics</name>
+	<name>Overlord BAM::Modules::Activity Analysis::Service Analytics</name>
 
 	<parent>
-		<groupId>org.savara.bam</groupId>
+		<groupId>org.overlord.bam</groupId>
 		<artifactId>activity-analysis</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.savara.bam.activity-management</groupId>
+			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity-model</artifactId>
-           	<version>${bam.version}</version>
+           		<version>${bam.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
-           	<version>${jackson.version}</version>
+           		<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
-           	<version>${jackson.version}</version>
+           		<version>${jackson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

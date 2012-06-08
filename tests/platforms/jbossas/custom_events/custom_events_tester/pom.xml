@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.savara.bam.tests.platform.jbossas.custom_events</groupId>
+	<groupId>org.overlord.bam.tests.platform.jbossas.custom_events</groupId>
 	<artifactId>tests-jbossas-custom-events-tester</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Savara BAM::Tests::Platforms::JBossAS::CustomEvents::Tester</name>
+	<name>Overlord BAM::Tests::Platforms::JBossAS::CustomEvents::Tester</name>
 
 	<parent>
-		<groupId>org.savara.bam.tests.platforms.jbossas</groupId>
+		<groupId>org.overlord.bam.tests.platforms.jbossas</groupId>
 		<artifactId>custom_events</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
@@ -27,51 +27,51 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.savara.bam.samples.jbossas.slamonitor</groupId>
+			<groupId>org.overlord.bam.samples.jbossas.slamonitor</groupId>
 			<artifactId>samples-jbossas-slamonitor-orders</artifactId>
 			<type>war</type>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.savara.bam.tests.platform.jbossas.custom_events</groupId>
+			<groupId>org.overlord.bam.tests.platform.jbossas.custom_events</groupId>
 			<artifactId>tests-jbossas-custom-events-epn</artifactId>
 			<type>war</type>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.savara.bam.tests.platform.jbossas.custom_events</groupId>
+			<groupId>org.overlord.bam.tests.platform.jbossas.custom_events</groupId>
 			<artifactId>tests-jbossas-custom-events-monitor</artifactId>
 			<type>war</type>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.savara.bam.distribution.jee</groupId>
-			<artifactId>savara-bam</artifactId>
+			<groupId>org.overlord.bam.distribution.jee</groupId>
+			<artifactId>overlord-bam</artifactId>
 			<type>war</type>
 			<classifier>${platform}</classifier>
 			<version>${bam.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.savara.bam.event-processor-network</groupId>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.savara.bam.event-processor-network</groupId>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.savara.bam.activity-management</groupId>
+			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity-model</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.savara.bam.activity-analysis</groupId>
+			<groupId>org.overlord.bam.activity-analysis</groupId>
 			<artifactId>service-analytics</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>

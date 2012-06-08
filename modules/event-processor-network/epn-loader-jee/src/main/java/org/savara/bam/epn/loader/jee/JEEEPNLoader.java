@@ -49,7 +49,7 @@ public class JEEEPNLoader extends AbstractEPNLoader {
     private static final Logger LOG=Logger.getLogger(JEEEPNLoader.class.getName());
     
     private static final String EPN_JSON = "epn.json";
-    private static final String EPN_MANAGER = "java:global/savara-bam/EPNManager";
+    private static final String EPN_MANAGER = "java:global/overlord-bam/EPNManager";
 
     private EPNManager _epnManager=null;
     private Network _network=null;

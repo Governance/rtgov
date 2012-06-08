@@ -1,26 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.savara.bam.active-queries</groupId>
+	<groupId>org.overlord.bam.active-queries</groupId>
 	<artifactId>acs-epn</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Savara BAM::Modules::Active Queries::ACS EPN</name>
+	<name>Overlord BAM::Modules::Active Queries::ACS EPN</name>
 
 	<parent>
-		<groupId>org.savara.bam</groupId>
+		<groupId>org.overlord.bam</groupId>
 		<artifactId>active-queries</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.savara.bam.event-processor-network</groupId>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.savara.bam.active-queries</groupId>
+			<groupId>org.overlord.bam.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
 			<version>${bam.version}</version>
 		</dependency>

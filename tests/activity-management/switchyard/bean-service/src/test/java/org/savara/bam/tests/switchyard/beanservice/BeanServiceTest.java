@@ -79,9 +79,9 @@ public class BeanServiceTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.savara.bam.activity-management:collector:"+version,
-                            "org.savara.bam.integration:bam-jbossas:"+version,
-                            "org.savara.bam.activity-management:collector-activity-server:"+version)
+                    .artifacts("org.overlord.bam.activity-management:collector:"+version,
+                            "org.overlord.bam.integration:bam-jbossas:"+version,
+                            "org.overlord.bam.activity-management:collector-activity-server:"+version)
                     .resolveAsFiles());
     }
 

@@ -49,21 +49,21 @@ public class JBossASSLAMonitorACSTest {
     
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
-    // 'savara-bam' as the deployment it should operate on.
-    @Resource(mappedName="java:global/savara-bam/ActiveCollectionManager")
+    // 'overlord-bam' as the deployment it should operate on.
+    @Resource(mappedName="java:global/overlord-bam/ActiveCollectionManager")
     org.savara.bam.active.collection.ActiveCollectionManager _activeCollectionManager;
 
-    @Deployment(name="savara-bam", order=1)
+    @Deployment(name="overlord-bam", order=1)
     public static WebArchive createDeployment1() {
         String version=System.getProperty("bam.version");
         String platform=System.getProperty("bam.platform");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.distribution.jee:savara-bam:war:"+platform+":"+version)
+                .artifacts("org.overlord.bam.distribution.jee:overlord-bam:war:"+platform+":"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
-                copyToTmpFile(archiveFiles[0],"savara-bam.war"));
+                copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
     }
     
     @Deployment(name="orders", order=2)
@@ -71,7 +71,7 @@ public class JBossASSLAMonitorACSTest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-orders:war:"+version)
+                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-orders:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -82,7 +82,7 @@ public class JBossASSLAMonitorACSTest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-epn:war:"+version)
+                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-epn:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -93,7 +93,7 @@ public class JBossASSLAMonitorACSTest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-acs:war:"+version)
+                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-acs:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -104,7 +104,7 @@ public class JBossASSLAMonitorACSTest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.savara.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-monitor:war:"+version)
+                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-monitor:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
@@ -147,7 +147,7 @@ public class JBossASSLAMonitorACSTest {
         return(ret);
     }
 
-    @Test @OperateOnDeployment("savara-bam")
+    @Test @OperateOnDeployment("overlord-bam")
     public void testResponseTimes() {
         
         ActiveList al=(ActiveList)_activeCollectionManager.getActiveCollection(SERVICE_RESPONSE_TIME);

@@ -2,19 +2,19 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.savara.bam</groupId>
+	<groupId>org.overlord.bam</groupId>
 	<artifactId>parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Savara BAM</name>
-	<url>http://www.savara.org</url>
+	<name>Overlord BAM</name>
+	<url>http://www.jboss.org/overlord</url>
 	<description>
-		The SAVARA Business Activity Monitor project
+		The Business Activity Monitor project
 	</description>
 
 	<scm>
-		<connection>https://github.com/savara</connection>
-		<url>https://github.com/savara</url>
+		<connection>https://github.com/Governance</connection>
+		<url>https://github.com/Governance</url>
 	</scm>
 
 	<licenses>
@@ -97,7 +97,7 @@
 					<version>2.8.1</version>
 					<configuration>
 						<aggregate>true</aggregate>
-						<excludePackageNames>org.savara.bam.tests.*:*.internal.*</excludePackageNames>
+						<excludePackageNames>org.overlord.bam.tests.*:*.internal.*</excludePackageNames>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -151,7 +151,7 @@
 				</configuration>
 				<dependencies>
 					<dependency>
-						<groupId>org.savara.bam</groupId>
+						<groupId>org.overlord.bam</groupId>
 						<artifactId>build</artifactId>
 						<version>${project.version}</version>
 					</dependency>

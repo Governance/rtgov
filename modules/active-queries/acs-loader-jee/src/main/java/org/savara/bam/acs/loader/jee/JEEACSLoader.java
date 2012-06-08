@@ -49,7 +49,7 @@ public class JEEACSLoader extends AbstractACSLoader {
     private static final Logger LOG=Logger.getLogger(JEEACSLoader.class.getName());
     
     private static final String ACS_JSON = "acs.json";
-    private static final String ACT_COLL_MANAGER = "java:global/savara-bam/ActiveCollectionManager";
+    private static final String ACT_COLL_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
     private ActiveCollectionSource _activeCollectionSource=null;

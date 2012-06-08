@@ -39,11 +39,11 @@ import org.switchyard.Property;
 
 public class ExchangeInterceptor implements ExchangeHandler {
     
-    private static final String START_SCOPE = "org.savara.bam.activity.collector.startScope";
+    private static final String START_SCOPE = "org.overlord.bam.activity.collector.startScope";
 
     private static final Logger LOG=Logger.getLogger(ExchangeInterceptor.class.getName());
     
-    private static final String ACTIVITY_COLLECTOR = "java:global/savara-bam/ActivityCollector";
+    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-bam/ActivityCollector";
 
     private ActivityCollector _activityCollector=null;
     

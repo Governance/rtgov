@@ -43,7 +43,7 @@ public class SLAMonitor {
 
     private static final Logger LOG=Logger.getLogger(SLAMonitor.class.getName());
     
-    private static final String ACM_MANAGER = "java:global/savara-bam/ActiveCollectionManager";
+    private static final String ACM_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
     private ActiveList _serviceResponseTime=null;

@@ -22,7 +22,7 @@ Deploying the example
 
 This starts the full configuration, as this includes JMS.
 
-3) Deploy the savara-bam.war from the ${bam}/modules folder into the ${as7}/standalone/deployments folder
+3) Deploy the overlord-bam.war from the ${bam}/modules folder into the ${as7}/standalone/deployments folder
 
 4) Build the SLA Monitor sample, using the following command from the $bam/samples/slamonitor folder:
 

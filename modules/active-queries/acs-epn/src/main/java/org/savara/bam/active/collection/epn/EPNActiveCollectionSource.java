@@ -39,7 +39,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
 
     private static final Logger LOG=Logger.getLogger(EPNActiveCollectionSource.class.getName());
 
-    private static final String EPN_MANAGER = "java:global/savara-bam/EPNManager";
+    private static final String EPN_MANAGER = "java:global/overlord-bam/EPNManager";
 
     private EPNManager _epnManager=null;
     private String _network=null;
