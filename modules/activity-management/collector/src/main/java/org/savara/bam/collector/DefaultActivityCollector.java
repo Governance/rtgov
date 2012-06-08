@@ -166,7 +166,7 @@ public class DefaultActivityCollector implements ActivityCollector {
         ActivityUnit au=_activityUnit.get();
 
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("End scope for ActivityUnit="+au);
+            LOG.finest("End scope for: "+au);
         }
         
         if (au != null) {

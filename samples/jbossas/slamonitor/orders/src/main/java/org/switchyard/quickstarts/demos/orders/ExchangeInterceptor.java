@@ -39,6 +39,8 @@ import org.switchyard.Property;
 
 public class ExchangeInterceptor implements ExchangeHandler {
     
+    private static final String START_SCOPE = "org.savara.bam.activity.collector.startScope";
+
     private static final Logger LOG=Logger.getLogger(ExchangeInterceptor.class.getName());
     
     private static final String ACTIVITY_COLLECTOR = "java:global/savara-bam/ActivityCollector";
@@ -78,8 +80,6 @@ public class ExchangeInterceptor implements ExchangeHandler {
         
         if (_activityCollector != null) {
             
-            // TODO: Where to get the operation name from?
-            
             // TODO: If message is transformed, then should the contentType
             // be updated to reflect the transformed type?
             
@@ -100,9 +100,15 @@ public class ExchangeInterceptor implements ExchangeHandler {
             }
             
             if (exchange.getPhase() == ExchangePhase.IN) {
+                
+                if (_activityCollector.startScope()) {
+                    exchange.getContext().setProperty(START_SCOPE, Boolean.TRUE);
+                }
+                
                 RequestSent sent=new RequestSent();
                 
-                sent.setServiceType(exchange.getServiceName().toString());                
+                sent.setServiceType(exchange.getServiceName().toString());   
+                sent.setOperation(exchange.getContract().getServiceOperation().getName());
                 sent.setContent(content);
                 sent.setMessageType(contentType);
                 sent.setMessageId(messageId);
@@ -112,6 +118,7 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 RequestReceived recvd=new RequestReceived();
                 
                 recvd.setServiceType(exchange.getServiceName().toString());                
+                recvd.setOperation(exchange.getContract().getServiceOperation().getName());
                 recvd.setContent(content);
                 recvd.setMessageType(contentType);
                 recvd.setMessageId(messageId);
@@ -122,6 +129,7 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 ResponseSent sent=new ResponseSent();
                                 
                 sent.setServiceType(exchange.getServiceName().toString());                
+                sent.setOperation(exchange.getContract().getServiceOperation().getName());
                 sent.setContent(content);
                 sent.setMessageType(contentType);
                 sent.setMessageId(messageId);
@@ -132,12 +140,18 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 ResponseReceived recvd=new ResponseReceived();
                 
                 recvd.setServiceType(exchange.getServiceName().toString());                
+                recvd.setOperation(exchange.getContract().getServiceOperation().getName());
                 recvd.setContent(content);
                 recvd.setMessageType(contentType);
                 recvd.setMessageId(messageId);
                 recvd.setReplyToId(relatesTo);
                 
                 _activityCollector.record(recvd);
+                
+                if (exchange.getContext().getProperty(START_SCOPE) != null) {
+                    _activityCollector.endScope();
+                }
+
             }
         }
     }
@@ -151,6 +165,7 @@ public class ExchangeInterceptor implements ExchangeHandler {
             LOG.fine("********* Fault="+exchange);
         }
         
+        // TODO: Handle faults
     }
 
     /**

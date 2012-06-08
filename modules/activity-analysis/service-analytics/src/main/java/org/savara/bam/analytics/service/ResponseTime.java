@@ -207,6 +207,14 @@ public class ResponseTime implements java.io.Externalizable {
     /**
      * {@inheritDoc}
      */
+    public String toString() {
+        return ("ResponseTime[service="+_serviceType+" op="+_operation+" fault="+_fault
+                    +" timestamp="+_timestamp+" duration="+_duration+" min="+_min+" max="+_max+"]");
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
