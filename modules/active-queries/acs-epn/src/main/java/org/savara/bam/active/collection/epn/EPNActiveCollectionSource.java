@@ -189,6 +189,10 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      */
     public void init() throws Exception {
         
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Initializing EPN Active Collection Source");
+        }
+
         if (_epnManager == null) {
             try {
                 InitialContext ctx=new InitialContext();
@@ -202,6 +206,10 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
             }
         }
         
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Register node listener for network="+_network);
+        }
+
         _epnManager.addNodeListener(_network, this);
         
         if (_groupBy != null) {
@@ -228,6 +236,11 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      */
     protected void preInit() throws Exception {
         
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Pre-Initializing EPN Active Collection Source (script="+_aggregationScript
+                    +" compiled="+_aggregationScriptExpression+")");
+        }
+
         // Only initialize if the script is specified, but not yet compiled
         if (_aggregationScript != null && _aggregationScriptExpression == null) {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
@@ -249,6 +262,10 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      * {@inheritDoc}
      */
     public void close() throws Exception {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Closing EPN Active Collection Source");
+        }
+
         if (_aggregator != null) {
             _aggregator.cancel();
         }
@@ -281,6 +298,11 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      */
     protected boolean isRelevant(String network, String version, String node,
                             NotifyType type) {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("isRelevant network="+network+" version="+version+" node="+node+" type="+type+"?");
+        }
+        
         if (_network != null && !network.equals(_network)) {
             return (false);
         }
@@ -290,6 +312,11 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
         if (_notifyType != null && !type.equals(_notifyType)) {
             return (false);
         }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("isRelevant network="+network+" version="+version+" node="+node+" type="+type+" TRUE");
+        }
+        
         return (true);
     }
     
@@ -305,6 +332,11 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      */
     protected void processNotification(String network, String version, String node,
                             NotifyType type, EventList events) {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("processNotification network="+network+" version="+version
+                    +" node="+node+" type="+type+" events="+events);
+        }
         
         // Default behaviour is to simply add all events to the
         // active collection
@@ -325,6 +357,11 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      */
     protected void aggregateEvents(String network, String version, String node,
                             NotifyType type, EventList events) {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("aggregateEvents network="+network+" version="+version
+                    +" node="+node+" type="+type+" events="+events);
+        }
         
         synchronized (_groupedEvents) {
             
@@ -373,6 +410,11 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
                         new java.util.HashMap<String, java.util.List<Object>>();
 
                 for (java.util.List<Object> list : source.values()) {
+
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("publishAggregateEvents list="+list);
+                    }
+                    
                     vars.clear();
                     vars.put("events", list);
                     
@@ -386,6 +428,10 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
                             LOG.finest("List of Events="+list);
                         }
                     } else {
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("publishAggregateEvents result="+result);
+                        }
+                        
                         insert(null, result);
                     }
                 }

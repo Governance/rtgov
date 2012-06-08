@@ -34,7 +34,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.savara.bam.active.collection.ActiveList;
@@ -149,7 +148,6 @@ public class JBossASSLAMonitorACSTest {
     }
 
     @Test @OperateOnDeployment("savara-bam")
-    @Ignore
     public void testResponseTimes() {
         
         ActiveList al=(ActiveList)_activeCollectionManager.getActiveCollection(SERVICE_RESPONSE_TIME);
@@ -206,7 +204,7 @@ public class JBossASSLAMonitorACSTest {
             }
             
             if (respTimes.size() != 2) {
-                fail("8 events expected, but got: "+respTimes.size());
+                fail("2 events expected, but got: "+respTimes.size());
             }
             
             System.out.println("RESPONSE TIMES="+respTimes);

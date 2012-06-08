@@ -1,5 +1,5 @@
 {
-  "name" : "TestEPN",
+  "name" : "SLAMonitorEPN",
   "subjects" : [ "ActivityUnits" ],
   "nodes" : {
     "SOAEvents" : {

@@ -43,7 +43,7 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class JBossASSLAMonitorTest {
 
-    private static final String TEST_EPN = "TestEPN";
+    private static final String SLA_MONITOR_EPN = "SLAMonitorEPN";
     private static final String SLA_VIOLATIONS = "SLAViolations";
     private static final String RESPONSE_TIMES = "ResponseTimes";
     
@@ -129,7 +129,7 @@ public class JBossASSLAMonitorTest {
         
         TestListener tl=new TestListener();
         
-        _epnManager.addNodeListener(TEST_EPN, tl);
+        _epnManager.addNodeListener(SLA_MONITOR_EPN, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -200,7 +200,7 @@ public class JBossASSLAMonitorTest {
         
         TestListener tl=new TestListener();
         
-        _epnManager.addNodeListener(TEST_EPN, tl);
+        _epnManager.addNodeListener(SLA_MONITOR_EPN, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();

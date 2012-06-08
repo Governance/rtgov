@@ -17,6 +17,9 @@
  */
 package org.savara.bam.active.collection;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
@@ -31,6 +34,8 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public class ActiveCollectionSource {
 
+    private static final Logger LOG=Logger.getLogger(ActiveCollectionSource.class.getName());
+    
     private String _name=null;
     private ActiveCollectionType _type=ActiveCollectionType.List;
     private long _itemExpiration=0;
@@ -181,6 +186,9 @@ public class ActiveCollectionSource {
      * @param value The value
      */
     public void insert(Object key, Object value) {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("insert key="+key+" value="+value);
+        }
         _activeCollection.insert(key, value);
     }
 
@@ -195,8 +203,10 @@ public class ActiveCollectionSource {
      * @param value The value
      */
     public void update(Object key, Object value) {
-        _activeCollection.update(key, value);
-        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("update key="+key+" value="+value);
+        }
+        _activeCollection.update(key, value);        
     }
 
     /**
@@ -206,6 +216,9 @@ public class ActiveCollectionSource {
      * @param value The value
      */
     public void remove(Object key, Object value) {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("remove key="+key+" value="+value);
+        }
         _activeCollection.remove(key, value);
     }
 }
