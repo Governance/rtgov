@@ -43,18 +43,6 @@ public class JBossASCustomEventsTest {
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
-    @Deployment(name="monitor", order=2)
-    public static WebArchive createDeployment2() {
-        String version=System.getProperty("bam.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.tests.platform.jbossas.custom_events:tests-jbossas-custom-events-monitor:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class,
-                        copyToTmpFile(archiveFiles[0],"custom-events-monitor.war"));
-    }
-    
     @Deployment(name="overlord-bam", order=1)
     public static WebArchive createDeployment1() {
         String version=System.getProperty("bam.version");
@@ -68,8 +56,8 @@ public class JBossASCustomEventsTest {
                 copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
     }
     
-    @Deployment(name="orders", order=4)
-    public static WebArchive createDeployment4() {
+    @Deployment(name="orders", order=2)
+    public static WebArchive createDeployment2() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -88,6 +76,30 @@ public class JBossASCustomEventsTest {
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+    }
+    
+    @Deployment(name="acs", order=4)
+    public static WebArchive createDeployment4() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.tests.platform.jbossas.custom_events:tests-jbossas-custom-events-acs:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class, 
+                copyToTmpFile(archiveFiles[0],"tests-jbossas-custom-events-acs.war"));
+    }
+    
+    @Deployment(name="monitor", order=5)
+    public static WebArchive createDeployment5() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.tests.platform.jbossas.custom_events:tests-jbossas-custom-events-monitor:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                        copyToTmpFile(archiveFiles[0],"custom-events-monitor.war"));
     }
     
     private static java.io.File copyToTmpFile(java.io.File source, String filename) {
@@ -186,6 +198,16 @@ public class JBossASCustomEventsTest {
                 fail("8 events expected, but got: "+events.size());
             }
             
+            java.util.List<?> acsresults=getACSEvents();
+            
+            if (acsresults == null) {
+                fail("No acsresults returned");
+            }
+            
+            if (acsresults.size() != 0) {
+                fail("0 acsresults expected, but got: "+acsresults.size());
+            }
+            
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }
@@ -212,6 +234,31 @@ public class JBossASCustomEventsTest {
         
         ret = MAPPER.readValue(is, java.util.List.class);
        
+        return (ret);
+    }
+
+    /**
+     * This method deserializes the events into a list of hashmaps. The
+     * actual objects are not deserialized, as this would require the
+     * domain objects to be included in all deployments, which would
+     * make verifying classloading/isolation difficult.
+     * 
+     * @return The list of objects representing events
+     * @throws Exception Failed to deserialize the events
+     */
+    protected java.util.List<?> getACSEvents() throws Exception {
+        java.util.List<?> ret=null;
+         
+        URL getUrl = new URL("http://localhost:8080/custom-events-monitor/monitor/acsresults");
+        HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
+        connection.setRequestMethod("GET");
+        System.out.println("Content-Type: " + connection.getContentType());
+
+        java.io.InputStream is=connection.getInputStream();
+        
+        ret = MAPPER.readValue(is, java.util.List.class);
+
+System.out.println("RET="+ret);
         return (ret);
     }
 
@@ -272,6 +319,16 @@ public class JBossASCustomEventsTest {
             // Should be 8 processed events and 2 result
             if (events.size() != 10) {
                 fail("10 events expected, but got: "+events.size());
+            }
+            
+            java.util.List<?> acsresults=getACSEvents();
+            
+            if (acsresults == null) {
+                fail("No acsresults returned");
+            }
+            
+            if (acsresults.size() != 2) {
+                fail("2 acsresults expected, but got: "+acsresults.size());
             }
             
         } catch (Exception e) {

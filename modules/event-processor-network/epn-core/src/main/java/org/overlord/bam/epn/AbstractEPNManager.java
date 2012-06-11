@@ -400,7 +400,7 @@ public abstract class AbstractEPNManager implements EPNManager {
                     String nodeName, NotifyType type, EventList events) {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Notify processed events on network="+networkName+" node="+nodeName
-                    +"type="+type+" events="+events);
+                    +" type="+type+" events="+events);
         }
         
         java.util.List<NodeListener> listeners=_nodeListeners.get(networkName);
@@ -410,7 +410,14 @@ public abstract class AbstractEPNManager implements EPNManager {
                 NodeListener nl=listeners.get(i);
                 
                 if (_usePrePostEventListProcessing) {
-                    preProcessEvents(events, nl.getClass().getClassLoader());
+                	try {
+                		preProcessEvents(events, nl.getClass().getClassLoader());
+                	} catch (Throwable t) {
+                		LOG.log(Level.SEVERE, "Unable to dispatch events to listener '"+nl.getClass().getName()+"'", t);
+                		
+                		// Don't attempt to send events to the node listener
+                		continue;
+                	}
                 }
                 
                 nl.notify(networkName, version, nodeName, type, events);

@@ -2,7 +2,7 @@
   "name" : "CustomEventsEPN",
   "subjects" : [ "ActivityUnits" ],
   "nodes" : {
-    "Root" : {
+    "SOAEvents" : {
       "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -13,8 +13,8 @@
       "predicate" : null,
       "notificationEnabled" : false
     },
-    "SOAEvents" : {
-      "sourceNodes" : [ "Root" ],
+    "CustomEvents" : {
+      "sourceNodes" : [ "SOAEvents" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
@@ -26,5 +26,5 @@
     }
   },
   "version" : "1",
-  "rootNodeName" : "Root"
+  "rootNodeName" : "SOAEvents"
 }

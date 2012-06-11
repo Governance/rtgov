@@ -187,7 +187,7 @@ public class ActiveCollectionSource {
      */
     public void insert(Object key, Object value) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("insert key="+key+" value="+value);
+            LOG.finest("insert key="+key+" value="+value+" ac="+_activeCollection);
         }
         _activeCollection.insert(key, value);
     }
@@ -204,7 +204,7 @@ public class ActiveCollectionSource {
      */
     public void update(Object key, Object value) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("update key="+key+" value="+value);
+            LOG.finest("update key="+key+" value="+value+" ac="+_activeCollection);
         }
         _activeCollection.update(key, value);        
     }
@@ -217,7 +217,7 @@ public class ActiveCollectionSource {
      */
     public void remove(Object key, Object value) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("remove key="+key+" value="+value);
+            LOG.finest("remove key="+key+" value="+value+" ac="+_activeCollection);
         }
         _activeCollection.remove(key, value);
     }

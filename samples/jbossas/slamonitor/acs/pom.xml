@@ -26,6 +26,11 @@
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>acs-epn</artifactId>
+			<version>${bam.version}</version>
+		</dependency>		
+		<dependency>
 			<groupId>org.overlord.bam.activity-analysis</groupId>
 			<artifactId>service-analytics</artifactId>
 			<version>${bam.version}</version>

@@ -26,6 +26,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.overlord.bam.active.collection.ActiveCollectionManager;
+import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.NodeListener;
@@ -41,16 +43,21 @@ import org.overlord.bam.tests.platforms.jbossas.customevent.data.CustomActivityE
 @ApplicationScoped
 public class CustomEventMonitor implements NodeListener {
 
-    private static final String CUSTOM_EVENTS_EPN = "CustomEventsEPN";
+    private static final String ACS_NAME = "CustomEvents";
+
+	private static final String CUSTOM_EVENTS_EPN = "CustomEventsEPN";
 
     private static final Logger LOG=Logger.getLogger(CustomEventMonitor.class.getName());
     
     private static final String EPN_MANAGER = "java:global/overlord-bam/EPNManager";
+    private static final String ACS_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
 
     private EPNManager _epnManager=null;
+    private ActiveCollectionManager _activeCollectionManager;
     
     private java.util.List<CustomActivityEvent> _customEvents=
                         new java.util.ArrayList<CustomActivityEvent>();
+    private ActiveList _customEventsACS=null;
     
     /**
      * This is the default constructor.
@@ -63,6 +70,12 @@ public class CustomEventMonitor implements NodeListener {
             _epnManager = (EPNManager)ctx.lookup(EPN_MANAGER);
 
             _epnManager.addNodeListener(CUSTOM_EVENTS_EPN, this);
+            
+            _activeCollectionManager = (ActiveCollectionManager)ctx.lookup(ACS_MANAGER);
+            
+            _customEventsACS = (ActiveList)_activeCollectionManager.getActiveCollection(ACS_NAME);
+            
+            LOG.info("Custom Active Collection="+_customEventsACS+" Name="+ACS_NAME);
             
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to initialize custom event monitor", e);
@@ -83,6 +96,28 @@ public class CustomEventMonitor implements NodeListener {
         java.util.List<CustomActivityEvent> ret=new java.util.ArrayList<CustomActivityEvent>(_customEvents);
         
         _customEvents.clear();
+        
+        return (ret);
+    }
+
+    /**
+     * This method returns the list of custom events from the active collection.
+     * 
+     * @return The custom events
+     */
+    @GET
+    @Path("/acsresults")
+    @Produces("application/json")
+    public java.util.List<CustomActivityEvent> getACSResults() {
+        java.util.List<CustomActivityEvent> ret=new java.util.ArrayList<CustomActivityEvent>();
+
+        LOG.info("Returning Custom Active Collection results (size="+_customEventsACS.size()+") ac="+_customEventsACS);
+        
+        for (Object obj : _customEventsACS) {
+            if (obj instanceof CustomActivityEvent) {
+                ret.add((CustomActivityEvent)obj);
+            }
+        }
         
         return (ret);
     }
