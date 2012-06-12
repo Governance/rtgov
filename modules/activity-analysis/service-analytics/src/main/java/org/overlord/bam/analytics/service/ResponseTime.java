@@ -192,7 +192,7 @@ public class ResponseTime implements java.io.Externalizable {
      * @param time The minimum duration
      */
     public void setMin(long time) {
-        _duration = time;
+        _min = time;
     }
     
     /**
@@ -201,7 +201,7 @@ public class ResponseTime implements java.io.Externalizable {
      * @return The minimum duration
      */
     public long getMin() {
-        return (_duration);
+        return (_min);
     }
     
     /**

@@ -1,0 +1,28 @@
+import org.overlord.bam.activity.model.ActivityTypeRef
+import org.overlord.bam.analytics.service.ResponseTime
+import org.overlord.bam.analytics.service.SLAViolation
+
+global org.overlord.bam.epn.cep.EPNContext epn
+
+declare ResponseTime
+    @role( event )
+end
+
+rule "check for SLA violations"
+when
+    $rt : ResponseTime() from entry-point "ResponseTimes" 
+then
+
+	if ($rt.getDuration() > 200) {
+		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getDuration()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
+		
+		SLAViolation sv=new SLAViolation();
+		
+		sv.setServiceType($rt.getServiceType());
+		sv.setOperation($rt.getOperation());
+		sv.setTimestamp($rt.getTimestamp());
+		
+		epn.forward(sv);
+	}	
+
+end

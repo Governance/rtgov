@@ -78,6 +78,7 @@
 		<module>integration</module>
 		<module>samples</module>
 		<module>tests</module>
+		<module>performance</module>
 		<module>distribution</module>
 	</modules>
 

@@ -1,0 +1,41 @@
+import org.overlord.bam.activity.model.soa.RequestReceived
+import org.overlord.bam.activity.model.soa.ResponseSent
+import org.overlord.bam.activity.model.ActivityTypeRef
+import org.overlord.bam.analytics.service.ResponseTime
+
+global org.overlord.bam.epn.cep.EPNContext epn
+
+declare RequestReceived
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+declare ResponseSent
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+rule "correlate request and response"
+when
+    $req : RequestReceived( $id : messageId ) from entry-point "SOAEvents" 
+    $resp : ResponseSent( replyToId == $id, this after[0,2m20s] $req )  from entry-point "SOAEvents"
+then
+
+	ResponseTime rt=new ResponseTime();
+	
+	rt.setServiceType($req.getServiceType());
+	rt.setOperation($req.getOperation());
+	rt.setFault($resp.getFault());
+	rt.setTimestamp($req.getTimestamp());
+	rt.setRequestReference(new ActivityTypeRef($req.getActivityUnitId(),$req.getActivityUnitIndex()));
+	rt.setResponseReference(new ActivityTypeRef($resp.getActivityUnitId(),$resp.getActivityUnitIndex()));
+	
+	long responseTime=$resp.getTimestamp()-$req.getTimestamp();
+	
+	rt.setDuration(responseTime);
+	
+    epn.forward(rt);
+
+end

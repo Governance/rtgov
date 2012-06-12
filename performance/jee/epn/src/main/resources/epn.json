@@ -1,0 +1,43 @@
+{
+  "name" : "JEEMonitorEPN",
+  "subjects" : [ "ActivityUnits" ],
+  "nodes" : {
+    "SOAEvents" : {
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.bam.performance.jee.epn.SOAActivityTypeEventSplitter"
+      },
+      "predicate" : null,
+      "notificationEnabled" : false
+    },
+    "ResponseTimes" : {
+      "sourceNodes" : [ "SOAEvents" ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.bam.epn.cep.CEPEventProcessor",
+        "ruleName" : "ResponseTime"
+      },
+      "predicate" : null,
+      "notificationEnabled" : true
+    },
+    "SLAViolations" : {
+      "sourceNodes" : [ "ResponseTimes" ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.bam.epn.cep.CEPEventProcessor",
+        "ruleName" : "SLAViolation"
+      },
+      "predicate" : null,
+      "notificationEnabled" : true
+    }
+  },
+  "version" : "1",
+  "rootNodeName" : "SOAEvents"
+}

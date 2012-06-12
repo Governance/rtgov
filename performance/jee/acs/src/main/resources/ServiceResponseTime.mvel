@@ -1,0 +1,31 @@
+result=new org.overlord.bam.analytics.service.ResponseTime();
+
+int total=0;
+int min=0, max=0;
+
+firstEvent = events.get(0);
+
+result.setServiceType(firstEvent.getServiceType());
+result.setOperation(firstEvent.getOperation());
+result.setFault(firstEvent.getFault());
+result.setTimestamp(firstEvent.getTimestamp());
+
+for (i=0; i < events.size(); i++) {
+	to = events.get(i);
+
+	total += to.getDuration();
+	
+	if (min == 0 || to.getDuration() < min) {
+		min = to.getDuration();
+	}
+	
+	if (max == 0 || to.getDuration() > max) {
+		max = to.getDuration();
+	}
+}
+
+result.setDuration(total/events.size());
+result.setMin(min);
+result.setMax(max);
+
+result;
