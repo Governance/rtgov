@@ -13,7 +13,7 @@ when
     $rt : ResponseTime() from entry-point "ResponseTimes" 
 then
 
-	if ($rt.getDuration() > 200) {
+	if ($rt.getDuration() > 1000) {
 		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getDuration()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
 		
 		SLAViolation sv=new SLAViolation();

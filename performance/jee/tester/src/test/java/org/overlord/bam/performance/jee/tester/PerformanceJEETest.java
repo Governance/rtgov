@@ -19,6 +19,9 @@ package org.overlord.bam.performance.jee.tester;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -150,23 +153,42 @@ public class PerformanceJEETest {
             is.close();
             connection.disconnect();
 
-            int max_txns=10;
+            int max_txns=100000;
+            
+            ExecutorService executor=Executors.newFixedThreadPool(100);
             
             for (int i=0; i < max_txns; i++) {
-	            // Create transactions
-	            getUrl = new URL("http://localhost:8080/jeeapp/app/create?id="+i);
-	            connection = (HttpURLConnection) getUrl.openConnection();
-	            connection.setRequestMethod("GET");
-	
-	            is=connection.getInputStream();
-	            
-	            b=new byte[is.available()];
-	            is.read(b);
-	           
-	            is.close();
-	            connection.disconnect();
+            	final int txn=i;
+            	
+            	java.lang.Runnable task=new java.lang.Runnable() {
+            		public void run() {
+            			try {
+	        	            // Create transactions
+	            			URL getUrl = new URL("http://localhost:8080/jeeapp/app/create?id="+txn);
+	            			HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
+	        	            connection.setRequestMethod("GET");
+	        	
+	        	            java.io.InputStream is=connection.getInputStream();
+	        	            
+	        	            byte[] b=new byte[is.available()];
+	        	            is.read(b);
+	        	           
+	        	            is.close();
+	        	            connection.disconnect(); 
+            			} catch (Exception e) {
+            				fail("Failed to invoke app: "+e);
+            			}
+            		}
+            	};
+            	
+            	executor.execute(task);
             }
             
+            executor.shutdown();
+            
+            executor.awaitTermination(10, TimeUnit.MINUTES);
+            
+            // Wait for latency to be returned, indicating completion of processing
             long latency=0;
             int count=0;
             
