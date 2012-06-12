@@ -249,7 +249,7 @@ public class Node {
                     
                 } catch (Exception e) {
                     if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine("Retry event: "+event);
+                        LOG.log(Level.FINE, "Retry event: "+event, e);
                     }
                     if (retries == null) {
                         retries = new java.util.ArrayList<Serializable>();
