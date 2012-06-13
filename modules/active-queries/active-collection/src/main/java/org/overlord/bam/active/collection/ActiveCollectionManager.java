@@ -62,9 +62,19 @@ public interface ActiveCollectionManager {
      * @param predicate The predicate used to filter results from the parent
      *                  before they are applied to the child
      * @return The newly created active collection
-     * @throws Exception Failed to create the locally derived active collection
      */
     public ActiveCollection create(String name, ActiveCollection parent,
-                    Predicate predicate) throws Exception;
+                    Predicate predicate);
+    
+    /**
+     * This method explicitly removes the named derived active collection
+     * making it unavailable to other clients. Care should be taken
+     * not to remove a collection that may be used by other clients
+     * in a shared environment. In a shared environment, it should be
+     * left to the manager to clear up unused derived collections.
+     * 
+     * @param name The name of the derived collection to be removed
+     */
+    public void remove(String name);
     
 }

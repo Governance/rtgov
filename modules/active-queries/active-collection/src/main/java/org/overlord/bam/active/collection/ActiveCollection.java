@@ -26,6 +26,7 @@ public abstract class ActiveCollection {
     private String _name=null;
     private java.util.List<ActiveChangeListener> _listeners=
                     new java.util.ArrayList<ActiveChangeListener>();
+    private ActiveCollectionAdapter _adapter=null;
     
     /**
      * This constructor initializes the active collection.
@@ -36,6 +37,20 @@ public abstract class ActiveCollection {
         _name = name;
     }
     
+    /**
+     * This constructor initializes the active collection as a derived
+     * version of the supplied collection, that applies the supplied predicate.
+     * 
+     * @param name The name
+     * @param parent The parent collection
+     * @param predicate The predicate
+     */
+    protected ActiveCollection(String name, ActiveCollection parent, Predicate predicate) {
+        this(name);
+        
+        _adapter = new ActiveCollectionAdapter(parent, predicate);
+    }
+
     /**
      * This method returns the name of the active collection.
      * 
@@ -163,13 +178,87 @@ public abstract class ActiveCollection {
     }
 
     /**
-     * This method derives a child active collection with contents filtered
-     * against the supplied predicate.
+     * {@inheritDoc}
+     */
+    protected void finalize() throws Throwable {
+    	super.finalize();
+    	
+    	if (_adapter != null) {
+    		_adapter.close();
+    	}
+    }
+    
+    /**
+     * This method derives a child active collection from this parent collection,
+     * with the specified name, and filtered using the supplied predicate.
      * 
-     * @param name The name of the derived active collection
+     * @param name The derived collection name
      * @param predicate The predicate
-     * @return The derived active collection
+     * @return The derived collection
      */
     protected abstract ActiveCollection derive(String name, Predicate predicate);
     
+    /**
+     * This class provides a bridge between the parent and derived active
+     * collections.
+     *
+     */
+    public class ActiveCollectionAdapter implements ActiveChangeListener {
+        
+        private ActiveCollection _parent=null; // Strong ref to ensure not garbage collected
+                                                // while child still needs it
+        private Predicate _predicate=null;
+        
+        /**
+         * This constructor initializes the fields within the adapter.
+         * 
+         * @param parent The parent active collection
+         * @param predicate The predicate used to filter changes applied to the
+         *                          active collection
+         */
+        public ActiveCollectionAdapter(ActiveCollection parent,
+                            Predicate predicate) {
+            _parent = parent;
+            _predicate = predicate;
+            
+            // Register to receive change notifications from parent
+            // active collection
+            _parent.addActiveChangeListener(this);
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        public void inserted(Object key, Object value) { 
+            if (_predicate.evaluate(value)) {
+                insert(key, value);
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void updated(Object key, Object value) {
+            if (_predicate.evaluate(value)) {
+                update(key, value);
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void removed(Object key, Object value) {
+            if (_predicate.evaluate(value)) {
+                remove(key, value);
+            }
+        }
+        
+        /**
+         * This method closes the adapter.
+         */
+        public void close() {
+            _parent.removeActiveChangeListener(this);
+            _parent = null;
+        }
+    }
 }

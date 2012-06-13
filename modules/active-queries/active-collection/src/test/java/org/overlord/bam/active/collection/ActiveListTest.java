@@ -26,6 +26,7 @@ import org.overlord.bam.active.collection.ActiveList;
 public class ActiveListTest {
 
     private static final String TEST_ACTIVE_COLLECTION = "TestActiveCollection";
+    private static final String TEST_DERIVED_ACTIVE_COLLECTION = "TestDerivedActiveCollection";
 
     @Test
     public void testInsertFirstObject() {
@@ -181,7 +182,7 @@ public class ActiveListTest {
             // Ignore
         }
     }
-   
+    
     @Test
     public void testCopyOnReadTrue() {
         
@@ -224,6 +225,73 @@ public class ActiveListTest {
             }
         } catch (java.util.ConcurrentModificationException cme) {
             fail("Not expecting it to throw concurrent mod exception");
+        }
+    }
+    
+    @Test
+    public void testDerivedList() {
+        
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        list.setCopyOnRead(true);
+        
+        // Create initial list entries
+        for (int i=0; i < 10; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        Predicate predicate=new Predicate() {
+
+			public boolean evaluate(Object item) {
+				return (((TestObject)item).getNumber() % 2 == 0);
+			}
+        	
+        };
+        
+        ActiveList derived=new ActiveList(TEST_DERIVED_ACTIVE_COLLECTION, list, predicate);
+        
+        if (derived.size() != 5) {
+        	fail("Should be 5 entries in derived: "+derived.size());
+        }
+    }
+    
+    @Test
+    public void testDerivedListWithInsert() {
+        
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        list.setCopyOnRead(true);
+        
+        // Create initial list entries
+        for (int i=0; i < 10; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        Predicate predicate=new Predicate() {
+
+			public boolean evaluate(Object item) {
+				return (((TestObject)item).getNumber() % 2 == 0);
+			}
+        	
+        };
+        
+        ActiveList derived=new ActiveList(TEST_DERIVED_ACTIVE_COLLECTION, list, predicate);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        
+        derived.addActiveChangeListener(l);
+        
+        list.insert(null, new TestObject(11));
+        list.insert(null, new TestObject(12));
+        
+        if (derived.size() != 6) {
+        	fail("Derived list should have 6 items: "+derived.size());
+        }
+        
+        if (l._insertedValue.size() != 1) {
+        	fail("Listener should have 1 value: "+l._insertedValue.size());
+        }
+        
+        if (((TestObject)l._insertedValue.get(0)).getNumber() != 12) {
+        	fail("Expecting test object 12: "+l._insertedValue.get(0));
         }
     }
 

@@ -19,8 +19,6 @@ package org.overlord.bam.active.collection;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
-import java.lang.ref.WeakReference;
-
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 
@@ -35,8 +33,8 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
 
     private java.util.Map<String, ActiveCollection> _activeCollections=
                 new java.util.HashMap<String, ActiveCollection>();
-    private java.util.Map<String, ActiveCollectionAdapter> _derivedActiveCollections=
-                new java.util.HashMap<String, ActiveCollectionAdapter>();
+    private java.util.Map<String, java.lang.ref.SoftReference<ActiveCollection>> _derivedActiveCollections=
+                new java.util.HashMap<String, java.lang.ref.SoftReference<ActiveCollection>>();
     
     /**
      * {@inheritDoc}
@@ -93,10 +91,10 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
         ActiveCollection ret=_activeCollections.get(name);
         
         if (ret == null) {
-            ActiveCollectionAdapter adapter=_derivedActiveCollections.get(name);
+        	java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
             
-            if (adapter != null) {
-                ret = adapter.getActiveCollection();
+            if (ref != null) {
+                ret = ref.get();
             }
         }
         
@@ -107,32 +105,25 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
      * {@inheritDoc}
      */
     public ActiveCollection create(String name, ActiveCollection parent,
-                    Predicate predicate) throws Exception {
+                    Predicate predicate) {
         ActiveCollection ret=null;
         
         synchronized (_derivedActiveCollections) {
             // Check if collection already exists
-            ActiveCollectionAdapter adapter=_derivedActiveCollections.get(name);
+        	java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
             
-            if (adapter != null) {
-                ret = adapter.getActiveCollection();
+            if (ref != null) {
+                ret = ref.get();
                 
-                if (ret == null) {
-                    // Remove adapter
-                    adapter.close();
-                    
+                if (ret == null) {                    
                     _derivedActiveCollections.remove(name);
-                    
-                    adapter = null;
                 }
             }
             
-            if (adapter == null) {
-                adapter = new ActiveCollectionAdapter(name, parent, predicate);
+            if (ret == null) {
+                ret = parent.derive(name, predicate);
                 
-                _derivedActiveCollections.put(name, adapter);
-                
-                ret = adapter.getActiveCollection();
+                _derivedActiveCollections.put(name, new java.lang.ref.SoftReference<ActiveCollection>(ret));
             }
         }
         
@@ -140,96 +131,12 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
     }
 
     /**
-     * This class provides a bridge between the parent and derived active
-     * collections.
-     *
+     * {@inheritDoc}
      */
-    public class ActiveCollectionAdapter implements ActiveChangeListener {
-        
-        private String _name=null;
-        private ActiveCollection _parent=null; // Strong ref to ensure not garbage collected
-                                                // while child still needs it
-        private Predicate _predicate=null;
-        private WeakReference<ActiveCollection> _activeCollection=null;
-        
-        /**
-         * This constructor initializes the fields within the adapter.
-         * 
-         * @param name The derived active collection name
-         * @param parent The parent active collection
-         * @param predicate The predicate used to filter changes applied to the
-         *                          active collection
-         */
-        public ActiveCollectionAdapter(String name, ActiveCollection parent,
-                            Predicate predicate) {
-            _name = name;
-            _parent = parent;
-            _predicate = predicate;
-            _activeCollection = new WeakReference<ActiveCollection>(parent.derive(name, predicate));
-            
-            // Register to receive change notifications from parent
-            // active collection
-            _parent.addActiveChangeListener(this);
-        }
-        
-        /**
-         * The name of the derived active collection being maintained by
-         * this adapter.
-         * 
-         * @return The name
-         */
-        public String getName() {
-            return (_name);
-        }
-        
-        /**
-         * This method returns the active collection associated with the adapter.
-         * 
-         * @return The active collection
-         */
-        public ActiveCollection getActiveCollection() {
-            return (_activeCollection.get());
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void inserted(Object key, Object value) {
-            ActiveCollection ac=_activeCollection.get();
-            
-            if (ac != null && _predicate.evaluate(value)) {
-                ac.insert(key, value);
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void updated(Object key, Object value) {
-            ActiveCollection ac=_activeCollection.get();
-            
-            if (ac != null && _predicate.evaluate(value)) {
-                ac.update(key, value);
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void removed(Object key, Object value) {
-            ActiveCollection ac=_activeCollection.get();
-            
-            if (ac != null && _predicate.evaluate(value)) {
-                ac.remove(key, value);
-            }
-        }
-        
-        /**
-         * This method closes the adapter.
-         */
-        public void close() {
-            _parent.removeActiveChangeListener(this);
-            _parent = null;
+    public void remove(String name) {
+        synchronized (_derivedActiveCollections) {
+        	_derivedActiveCollections.remove(name);
         }
     }
+
 }

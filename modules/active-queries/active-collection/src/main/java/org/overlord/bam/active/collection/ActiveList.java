@@ -42,6 +42,25 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
     }
     
     /**
+     * This constructor initializes the active list as a derived
+     * version of the supplied collection, that applies the supplied predicate.
+     * 
+     * @param name The name
+     * @param parent The parent collection
+     * @param predicate The predicate
+     */
+    protected ActiveList(String name, ActiveCollection parent, Predicate predicate) {
+        super(name, parent, predicate);
+        
+        // Filter the parent list items, to determine which pass the predicate
+        for (Object value : (ActiveList)parent) {
+            if (predicate.evaluate(value)) {
+                insert(null, value);
+            }
+        }
+    }
+    
+    /**
      * This method sets the copy on read flag.
      * 
      * @param b Whether to 'copy on read'
@@ -158,17 +177,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      * {@inheritDoc}
      */
     protected ActiveCollection derive(String name, Predicate predicate) {
-        ActiveList ret=new ActiveList(name);
-        
-        synchronized (_list) {
-            for (Object value : _list) {
-                if (predicate.evaluate(value)) {
-                    ret.insert(null, value);
-                }
-            }
-        }
-        
-        return (ret);
+        return (new ActiveList(name, this, predicate));
     }
     
 }

@@ -25,9 +25,11 @@ import javax.naming.InitialContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveList;
+import org.overlord.bam.active.collection.Predicate;
 import org.overlord.bam.analytics.service.ResponseTime;
 
 /**
@@ -70,15 +72,23 @@ public class SLAMonitor {
     /**
      * This method returns the list of response times.
      * 
+     * @param serviceType The optional service type
+     * @param operation The optional operation
+     * @param fault The optional fault
      * @return The response times
      */
     @GET
     @Path("/responseTimes")
     @Produces("application/json")
-    public java.util.List<ResponseTime> getResponseTimes() {
+    public java.util.List<ResponseTime> getResponseTimes(
+    					@QueryParam("serviceType") String serviceType,
+    					@QueryParam("operation") String operation,
+    					@QueryParam("fault") String fault) {
         java.util.List<ResponseTime> ret=new java.util.ArrayList<ResponseTime>();
 
-        for (Object obj : _serviceResponseTime) {
+        ActiveList list=getResponseTimeList(serviceType, operation, fault);
+        
+        for (Object obj : list) {
             if (obj instanceof ResponseTime) {
                 ret.add((ResponseTime)obj);
             }
@@ -87,4 +97,30 @@ public class SLAMonitor {
         return (ret);
     }
 
+    /**
+     * This method returns the active list for the response times
+     * associated with the supplied query parameters.
+     * 
+     * @param serviceType The optional service type
+     * @param operation The optional operation
+     * @param fault The optional fault
+     * @return The active list of response times
+     */
+    protected ActiveList getResponseTimeList(String serviceType, String operation, String fault) {
+    	ActiveList ret=_serviceResponseTime;
+    	
+    	if (serviceType != null || operation != null || fault != null) {
+        	String alname="RespTime:"+serviceType+":"+operation+":"+fault;
+
+        	ret = (ActiveList)_acmManager.getActiveCollection(alname);
+        	
+        	if (ret == null) {
+        		Predicate predicate=null;
+        		
+        		ret = (ActiveList)_acmManager.create(alname, _serviceResponseTime, predicate);
+        	}
+    	}
+    	
+    	return (ret);
+    }
 }

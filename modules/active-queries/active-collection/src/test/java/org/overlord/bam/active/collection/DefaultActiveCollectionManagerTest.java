@@ -26,7 +26,8 @@ import org.overlord.bam.active.collection.DefaultActiveCollectionManager;
 
 public class DefaultActiveCollectionManagerTest {
     
-    private static final String TEST_AC="TestActiveCollection";
+    private static final String DERIVED_AC = "DerivedAC";
+	private static final String TEST_AC="TestActiveCollection";
 
     @Test
     public void testRegisterACS() {
@@ -125,6 +126,44 @@ public class DefaultActiveCollectionManagerTest {
             fail("Should have thrown exception as already unregistered");
         } catch (Exception e) {
             // Ignore
+        }
+    }
+    
+    @Test
+    public void testCreateAndRemoveDerivedCollection() {
+        ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        acs.setName(TEST_AC);
+        
+        try {
+            mgr.register(acs);
+        } catch (Exception e) {
+            fail("Failed to register active collection source: "+e);
+        }
+        
+        ActiveCollection parent=mgr.getActiveCollection(TEST_AC);
+        
+        if (parent == null) {
+        	fail("Failed to get parent collection");
+        }
+        
+        Predicate predicate=new Predicate() {
+			public boolean evaluate(Object item) {
+				return true;
+			}
+        };
+        
+        mgr.create(DERIVED_AC, parent, predicate);
+        
+        if (mgr.getActiveCollection(DERIVED_AC) == null) {
+        	fail("Failed to retrieve derived ac");
+        }
+        
+        mgr.remove(DERIVED_AC);
+        
+        if (mgr.getActiveCollection(DERIVED_AC) != null) {
+        	fail("Derived ac should no longer exist");
         }
     }
 }
