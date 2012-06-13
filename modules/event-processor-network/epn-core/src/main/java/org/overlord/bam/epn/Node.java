@@ -253,6 +253,11 @@ public class Node {
                     }
                     if (retries == null) {
                         retries = new java.util.ArrayList<Serializable>();
+                        
+                        if (retriesLeft == 0) {
+                        	LOG.log(Level.WARNING, "No more retries left, but processing failed again " +
+                        			"(just showing the first failure within the group of events)", e);
+                        }
                     }
                     retries.add(event);
                 }
