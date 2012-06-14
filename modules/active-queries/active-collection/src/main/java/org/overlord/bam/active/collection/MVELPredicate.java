@@ -34,6 +34,22 @@ public class MVELPredicate implements Predicate {
     private java.io.Serializable _expressionCompiled=null;
 
     /**
+     * This is the default constructor for the MVEL predicate.
+     */
+    public MVELPredicate() {
+    }
+    
+    /**
+     * This constructor initializes the expression for the MVEL
+     * predicate.
+     * 
+     * @param expr The predicate
+     */
+    public MVELPredicate(String expr) {
+        setExpression(expr);
+    }
+    
+    /**
      * This method sets the expression.
      * 
      * @param expr The expression

@@ -29,6 +29,7 @@ import javax.ws.rs.QueryParam;
 
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveList;
+import org.overlord.bam.active.collection.MVELPredicate;
 import org.overlord.bam.active.collection.Predicate;
 import org.overlord.bam.analytics.service.ResponseTime;
 
@@ -115,12 +116,37 @@ public class SLAMonitor {
         	ret = (ActiveList)_acmManager.getActiveCollection(alname);
         	
         	if (ret == null) {
-        		Predicate predicate=null;
+        	    String expr=expressionBuilder(null, "serviceType", serviceType);
+                expr = expressionBuilder(expr, "operation", operation);
+                expr = expressionBuilder(expr, "fault", fault);
+        	    
+        		Predicate predicate=new MVELPredicate(expr);        		
         		
         		ret = (ActiveList)_acmManager.create(alname, _serviceResponseTime, predicate);
         	}
     	}
     	
     	return (ret);
+    }
+    
+    /**
+     * This method builds an expression based on the supplied property and value.
+     * 
+     * @param expr The initial expression
+     * @param prop The property being built
+     * @param value The optional property value
+     * @return The new expression, taking into account the supplied property information if relevant
+     */
+    protected static String expressionBuilder(String expr, String prop, String value) {
+        if (value != null) {
+            String subexpr=prop+" == \""+value+"\"";
+            if (expr == null) {
+                expr = subexpr;
+            } else {
+                expr += " && "+subexpr;
+            }
+        }
+        
+        return (expr);
     }
 }

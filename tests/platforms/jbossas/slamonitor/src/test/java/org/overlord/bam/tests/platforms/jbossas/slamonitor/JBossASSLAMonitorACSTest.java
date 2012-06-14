@@ -197,17 +197,33 @@ public class JBossASSLAMonitorACSTest {
             // Wait for events to propagate
             Thread.sleep(4000);
             
-            java.util.List<?> respTimes=getResponseTimes();
+            java.util.List<?> respTimes1=getResponseTimes(null);
             
-            if (respTimes == null) {
+            if (respTimes1 == null) {
                 fail("No events returned");
             }
             
-            if (respTimes.size() != 2) {
-                fail("2 events expected, but got: "+respTimes.size());
+            if (respTimes1.size() != 2) {
+                fail("2 events expected, but got: "+respTimes1.size());
             }
             
-            System.out.println("RESPONSE TIMES="+respTimes);
+            System.out.println("RESPONSE TIMES="+respTimes1);
+
+            // TODO: Sort out encoding to be able to pass fully qualified name of serviceType
+            
+            // {urn:switchyard-quickstart-demo:orders:0.1.0}OrderService
+            java.util.List<?> respTimes2=getResponseTimes(//"serviceType={urn%3Aswitchyard-quickstart-demo%3Aorders%3A0.1.0}OrderService&"+
+            		        "operation=submitOrder");
+            
+            if (respTimes2 == null) {
+                fail("No events returned");
+            }
+            
+            if (respTimes2.size() != 1) {
+                fail("1 event expected, but got: "+respTimes2.size());
+            }
+            
+            System.out.println("RESPONSE TIMES (buy)="+respTimes2);
 
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
@@ -220,13 +236,21 @@ public class JBossASSLAMonitorACSTest {
      * domain objects to be included in all deployments, which would
      * make verifying classloading/isolation difficult.
      * 
+     * @param query The query string to supply when requesting response times
      * @return The list of objects representing events
      * @throws Exception Failed to deserialize the events
      */
-    protected java.util.List<?> getResponseTimes() throws Exception {
+    protected java.util.List<?> getResponseTimes(String query) throws Exception {
         java.util.List<?> ret=null;
-         
-        URL getUrl = new URL("http://localhost:8080/slamonitor/monitor/responseTimes");
+        
+        String urlStr="http://localhost:8080/slamonitor/monitor/responseTimes";
+        
+        if (query != null) {
+            urlStr += "?"+query;
+        }
+        
+        URL getUrl = new URL(urlStr);
+        
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("GET");
         System.out.println("Content-Type: " + connection.getContentType());
