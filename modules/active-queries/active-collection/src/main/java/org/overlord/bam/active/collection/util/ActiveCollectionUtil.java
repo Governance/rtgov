@@ -19,6 +19,7 @@ package org.overlord.bam.active.collection.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.type.TypeReference;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
 
 /**
@@ -29,6 +30,9 @@ import org.overlord.bam.active.collection.ActiveCollectionSource;
 public final class ActiveCollectionUtil {
     
     private static final ObjectMapper MAPPER=new ObjectMapper();
+    
+    private static final TypeReference<java.util.List<ActiveCollectionSource>> TYPEREF=
+                        new TypeReference<java.util.List<ActiveCollectionSource>>() { };
     
     static {
         SerializationConfig config=MAPPER.getSerializationConfig().with(SerializationConfig.Feature.INDENT_OUTPUT);
@@ -43,14 +47,14 @@ public final class ActiveCollectionUtil {
     }
     
     /**
-     * This method serializes an Active Collection Source
+     * This method serializes a list of Active Collection Sources
      * into a JSON representation.
      * 
-     * @param acs The active collection source
+     * @param acs The active collection source list
      * @return The JSON serialized representation
      * @throws Exception Failed to serialize
      */
-    public static byte[] serialize(ActiveCollectionSource acs) throws Exception {
+    public static byte[] serialize(java.util.List<ActiveCollectionSource> acs) throws Exception {
         byte[] ret=null;
         
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
@@ -65,18 +69,19 @@ public final class ActiveCollectionUtil {
     }
 
     /**
-     * This method deserializes an Active Collection Source from a JSON representation.
+     * This method deserializes a list of Active Collection Sources from a JSON representation.
      * 
-     * @param acs The JSON representation of the Active Collection Source
-     * @return The Active Collection Source
+     * @param acs The JSON representation of the Active Collection Sources
+     * @return The Active Collection Source list
      * @throws Exception Failed to deserialize
      */
-    public static ActiveCollectionSource deserialize(byte[] acs) throws Exception {
-        ActiveCollectionSource ret=null;
+    @SuppressWarnings("unchecked")
+    public static java.util.List<ActiveCollectionSource> deserialize(byte[] acs) throws Exception {
+        java.util.List<ActiveCollectionSource> ret=null;
         
         java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(acs);
         
-        ret = MAPPER.readValue(bais, ActiveCollectionSource.class);
+        ret = (java.util.List<ActiveCollectionSource>)MAPPER.readValue(bais, TYPEREF);
         
         bais.close();
         

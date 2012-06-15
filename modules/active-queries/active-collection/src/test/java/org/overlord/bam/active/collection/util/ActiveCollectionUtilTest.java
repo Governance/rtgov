@@ -27,10 +27,11 @@ public class ActiveCollectionUtilTest {
 
     @Test
     public void testSerializeACS() {
-        ActiveCollectionSource acs=new TestActiveCollectionSource();
+        java.util.List<ActiveCollectionSource> list=new java.util.Vector<ActiveCollectionSource>();
+        list.add(new TestActiveCollectionSource());
        
         try {
-            ActiveCollectionUtil.serialize(acs);            
+            ActiveCollectionUtil.serialize(list);            
         } catch(Exception e) {
             fail("Failed to serialize: "+e);
         }
@@ -46,18 +47,22 @@ public class ActiveCollectionUtilTest {
             
             is.close();
             
-            ActiveCollectionSource acs=ActiveCollectionUtil.deserialize(b);
+            java.util.List<ActiveCollectionSource> acslist=ActiveCollectionUtil.deserialize(b);
+            
+            if (acslist.size() != 1) {
+                fail("List should have 1 source: "+acslist.size());
+            }
 
-            if (!acs.getName().equals("TestACS")) {
-                fail("Name is not correct: "+acs.getName());
+            if (!acslist.get(0).getName().equals("TestACS")) {
+                fail("Name is not correct: "+acslist.get(0).getName());
             }
             
-            if (acs.getItemExpiration() != 200) {
-                fail("Item expiration is not correct: "+acs.getItemExpiration());
+            if (acslist.get(0).getItemExpiration() != 200) {
+                fail("Item expiration is not correct: "+acslist.get(0).getItemExpiration());
             }
             
-            if (acs.getMaxItems() != 1000) {
-                fail("Max items is not correct: "+acs.getMaxItems());
+            if (acslist.get(0).getMaxItems() != 1000) {
+                fail("Max items is not correct: "+acslist.get(0).getMaxItems());
             }
             
         } catch(Exception e) {

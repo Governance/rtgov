@@ -52,7 +52,7 @@ public class JEEACSLoader extends AbstractACSLoader {
     private static final String ACT_COLL_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
-    private ActiveCollectionSource _activeCollectionSource=null;
+    private java.util.List<ActiveCollectionSource> _activeCollectionSources=null;
     
     /**
      * The constructor.
@@ -80,19 +80,25 @@ public class JEEACSLoader extends AbstractACSLoader {
                 is.read(b);
                 is.close();
                 
-                _activeCollectionSource = ActiveCollectionUtil.deserialize(b);
+                _activeCollectionSources = ActiveCollectionUtil.deserialize(b);
                 
-                // Pre-initialize the source to avoid any contextual class
-                // loading issues. Within JEE, the registration of the source
-                // will be done in the context of the core war, while as the
-                // source requires the classloading context associated
-                // with the ActiveCollectionSource deployment.
-                preInit(_activeCollectionSource);
-                
-                _acmManager.register(_activeCollectionSource);
+                if (_activeCollectionSources == null) {
+                    LOG.severe("Failed to load active collection sources");
+                } else {
+                    for (ActiveCollectionSource acs : _activeCollectionSources) {
+                        // Pre-initialize the source to avoid any contextual class
+                        // loading issues. Within JEE, the registration of the source
+                        // will be done in the context of the core war, while as the
+                        // source requires the classloading context associated
+                        // with the ActiveCollectionSource deployment.
+                        preInit(acs);
+                        
+                        _acmManager.register(acs);
+                    }
+                }
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to load network", e);
+            LOG.log(Level.SEVERE, "Failed to register active collection sources", e);
         }
     }
     
@@ -102,9 +108,11 @@ public class JEEACSLoader extends AbstractACSLoader {
     @PreDestroy
     public void close() {
         
-        if (_acmManager != null) {
+        if (_acmManager != null && _activeCollectionSources != null) {
             try {
-                _acmManager.unregister(_activeCollectionSource);
+                for (ActiveCollectionSource acs : _activeCollectionSources) {
+                    _acmManager.unregister(acs);
+                }
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Failed to unregister active collection source", e);
             }
