@@ -24,7 +24,7 @@ import java.io.ObjectOutput;
 import org.overlord.bam.activity.model.ActivityTypeRef;
 
 /**
- * This class represents the occurance of an SLA violation.
+ * This class represents the occurrence of an SLA violation.
  *
  */
 public class SLAViolation implements java.io.Externalizable {

@@ -11,5 +11,15 @@
     "aggregationDuration" : 1000,
     "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
     "aggregationScript" : "ServiceResponseTime.mvel"
+  },
+  {
+    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "ServiceViolations",
+    "type" : "List",
+    "itemExpiration" : 0,
+    "maxItems" : 0,
+    "network" : "SLAMonitorEPN",
+    "node" : "SLAViolations",
+    "notifyType" : "Results"
   }
 ]

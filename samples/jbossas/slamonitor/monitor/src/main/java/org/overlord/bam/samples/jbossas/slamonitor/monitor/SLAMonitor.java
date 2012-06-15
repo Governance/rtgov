@@ -32,6 +32,7 @@ import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.active.collection.MVELPredicate;
 import org.overlord.bam.active.collection.Predicate;
 import org.overlord.bam.analytics.service.ResponseTime;
+import org.overlord.bam.analytics.service.SLAViolation;
 
 /**
  * This is the custom event monitor that receives node notifications
@@ -43,6 +44,7 @@ import org.overlord.bam.analytics.service.ResponseTime;
 public class SLAMonitor {
 
     private static final String SERVICE_RESPONSE_TIME = "ServiceResponseTime";
+    private static final String SERVICE_VIOLATIONS = "ServiceViolations";
 
     private static final Logger LOG=Logger.getLogger(SLAMonitor.class.getName());
     
@@ -50,6 +52,7 @@ public class SLAMonitor {
 
     private ActiveCollectionManager _acmManager=null;
     private ActiveList _serviceResponseTime=null;
+    private ActiveList _serviceViolations=null;
     
     /**
      * This is the default constructor.
@@ -62,8 +65,11 @@ public class SLAMonitor {
             _acmManager = (ActiveCollectionManager)ctx.lookup(ACM_MANAGER);
 
             _serviceResponseTime = (ActiveList)
-                        _acmManager.getActiveCollection(SERVICE_RESPONSE_TIME);
-            
+                    _acmManager.getActiveCollection(SERVICE_RESPONSE_TIME);
+        
+            _serviceViolations = (ActiveList)
+                    _acmManager.getActiveCollection(SERVICE_VIOLATIONS);
+        
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to initialize active collection manager", e);
         }
@@ -149,4 +155,25 @@ public class SLAMonitor {
         
         return (expr);
     }
+    
+    /**
+     * This method returns the list of SLA violations.
+     * 
+     * @return The SLA violations
+     */
+    @GET
+    @Path("/violations")
+    @Produces("application/json")
+    public java.util.List<SLAViolation> getViolations() {
+        java.util.List<SLAViolation> ret=new java.util.ArrayList<SLAViolation>();
+
+        for (Object obj : _serviceViolations) {
+            if (obj instanceof SLAViolation) {
+                ret.add((SLAViolation)obj);
+            }
+        }
+        
+        return (ret);
+    }
+    
 }

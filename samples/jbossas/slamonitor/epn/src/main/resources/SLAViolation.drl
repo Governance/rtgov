@@ -21,6 +21,7 @@ then
 		sv.setServiceType($rt.getServiceType());
 		sv.setOperation($rt.getOperation());
 		sv.setTimestamp($rt.getTimestamp());
+		sv.setViolation("Service exceeded maximum response time of 200 ms");
 		
 		epn.forward(sv);
 	}	
