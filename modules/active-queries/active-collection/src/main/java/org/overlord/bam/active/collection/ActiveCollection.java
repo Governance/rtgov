@@ -181,11 +181,11 @@ public abstract class ActiveCollection {
      * {@inheritDoc}
      */
     protected void finalize() throws Throwable {
-    	super.finalize();
-    	
-    	if (_adapter != null) {
-    		_adapter.close();
-    	}
+        super.finalize();
+        
+        if (_adapter != null) {
+            _adapter.close();
+        }
     }
     
     /**

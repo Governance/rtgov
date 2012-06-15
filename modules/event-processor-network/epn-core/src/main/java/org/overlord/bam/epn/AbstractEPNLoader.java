@@ -28,7 +28,7 @@ public abstract class AbstractEPNLoader {
      * registered with the container. This is sometimes required
      * if the loader and container are associated with different
      * contextual classloaders.
-     * 
+     *
      * @param network The network to pre-initialize
      * @throws Exception Failed to pre-initialize network
      */

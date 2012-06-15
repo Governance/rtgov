@@ -91,7 +91,7 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
         ActiveCollection ret=_activeCollections.get(name);
         
         if (ret == null) {
-        	java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
+            java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
             
             if (ref != null) {
                 ret = ref.get();
@@ -110,7 +110,7 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
         
         synchronized (_derivedActiveCollections) {
             // Check if collection already exists
-        	java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
+            java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
             
             if (ref != null) {
                 ret = ref.get();
@@ -135,7 +135,7 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
      */
     public void remove(String name) {
         synchronized (_derivedActiveCollections) {
-        	_derivedActiveCollections.remove(name);
+            _derivedActiveCollections.remove(name);
         }
     }
 
