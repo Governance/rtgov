@@ -5,10 +5,8 @@ This example demonstrates how a Switchyard application can be instrumented, to i
 communications and report them to the BAM infrastructure.
 
 An example Event Processor Network (EPN) has been defined to check the response time of the service
-and report issues to an active collection.
-
-NOTE: The active collection phase has not currently been implemented, so instead when an SLA
-violation is detected, the fact will be reported as a SEVERE log message to the console.
+and report issues to an active collection, which accumulates the results and can be used to provide
+active updates to any interested listeners.
 
 
 Deploying the example
@@ -24,18 +22,28 @@ This starts the full configuration, as this includes JMS.
 
 3) Deploy the overlord-bam.war from the ${bam}/modules folder into the ${as7}/standalone/deployments folder
 
-4) Build the SLA Monitor sample, using the following command from the $bam/samples/slamonitor folder:
+4) Build the SLA Monitor sample, using the following command from the ${bam}/samples/slamonitor folder:
 
 mvn clean install
 
-5) Copy the ${bam}/samples/slamonitor/epn/target/samples-jbossas-slamonitor-epn-<version>.war file
-into the ${as7}/standalone/deployments folder. This deployable artifact represents the samples
-Event Processor Network (EPN), used to detect SLA violations.
+5) Copy the sample archives for each of the components (acs, epn, monitor and orders) from
+${bam}/samples/slamonitor/${component}/target/slamonitor-${component}.war file
+into the ${as7}/standalone/deployments folder.
 
-6) Copy the ${bam}/samples/slamonitor/epn/target/samples-jbossas-slamonitor-orders-<version>.war file
-into the ${as7}/standalone/deployments folder. This deployable artifact represents the Switchyard
-application with additional 'Exchange Handler' used to intercept service communications and report
-them to the BAM infrastructure.
+NOTE: The components are as follows:
+
+- acs: this component represents the active collections responsible for collecting the information
+to be presented via the REST service.
+
+- epn: this component represents the Event Processor Network (EPN) used to calculate response times
+and detect SLA violations.
+
+- monitor: this component provides the REST service for colating the response time and SLA violation
+information for access by a client application
+
+- orders: this component represents the Switchyard application with additional 'Exchange Handler'
+used to intercept service communications and report them to the BAM infrastructure.
+
 
 
 Running the example
@@ -80,6 +88,17 @@ which should result in an 'insufficient quantity' response.
 
 To perform a request that will result in an SLA violation, change the <itemId> value to JAM
 and re-issue the request.
+
+
+To access the information being accumulated in the active collections, you will need a REST
+client, e.g. http://restclient.net/ to issue requests from a browser. Use the following
+URLs to obtain information from the REST service:
+
+http://localhost:8080/slamonitor-monitor/monitor/responseTimes - returns all response times
+
+http://localhost:8080/slamonitor-monitor/monitor/responseTimes?operation=submitOrder - returns only response times for this operation
+
+http://localhost:8080/slamonitor-monitor/monitor/violations - returns all SLA violations
 
 
 

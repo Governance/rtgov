@@ -53,6 +53,7 @@
 	</dependencies>
 	
 	<build>
+		<finalName>slamonitor-monitor</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>

@@ -128,7 +128,7 @@ public class ResponseTime implements java.io.Externalizable {
      * 
      * @return The response reference
      */
-    public ActivityTypeRef getResponseeference() {
+    public ActivityTypeRef getResponseReference() {
         return (_responseRef);
     }
     
