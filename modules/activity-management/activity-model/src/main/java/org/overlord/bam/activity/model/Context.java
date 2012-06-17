@@ -40,18 +40,27 @@ public class Context implements java.io.Externalizable {
     public static final short CONVERSATION_ID=0;
     
     /**
-     * The 'instance id' type represents a local id that may be associated
+     * The 'endpoint id' type represents an id that may be associated
      * with the executable unit enacting the service/process being monitored,
      * and can therefore be used to correlate local activities as being
      * part of the same executable unit.
      */
-    public static final short INSTANCE_ID=1;
+    public static final short ENDPOINT_ID=1;
     
     /**
      * This context type represents an id associated with a particular message
      * being exchanged between distributed participants.
      */
     public static final short MESSAGE_ID=2;
+    
+    /**
+     * This context type represents a property value extracted from some
+     * business activity. Properties are not used for strict correlation of
+     * conversations or endpoint instances, but may be able to loosely
+     * relate different business transactions around a particular piece
+     * of information.
+     */
+    public static final short PROPERTY_ID=3;
     
     private short _type=CONVERSATION_ID;
     private String _name=null;

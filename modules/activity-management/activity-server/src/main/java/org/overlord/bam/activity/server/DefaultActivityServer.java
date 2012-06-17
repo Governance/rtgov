@@ -170,7 +170,7 @@ public class DefaultActivityServer implements ActivityServer {
                     }
                    
                     // Copy instance id to context for activity unit
-                    au.getContext().add(new Context(Context.INSTANCE_ID,
+                    au.getContext().add(new Context(Context.ENDPOINT_ID,
                             ((BPMActivityType)at).getProcessType(),
                             ((BPMActivityType)at).getInstanceId()));                   
                 }

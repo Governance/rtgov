@@ -49,7 +49,7 @@ public class ActivityUtilTest {
         act.getContext().add(c1);
         
         Context c2=new Context();
-        c2.setType(Context.INSTANCE_ID);
+        c2.setType(Context.ENDPOINT_ID);
         c2.setName("procId");
         c2.setValue("abc123");
         act.getContext().add(c2);
