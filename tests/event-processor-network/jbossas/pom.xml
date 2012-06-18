@@ -2,26 +2,21 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.bam.tests</groupId>
-	<artifactId>activity-management</artifactId>
+	<groupId>org.overlord.bam.tests.event-processor-network</groupId>
+	<artifactId>jbossas</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>Overlord BAM::Tests::Activity Management</name>
+	<name>Overlord BAM::Tests::Event Processor Network::JBossAS</name>
 
 	<parent>
-		<groupId>org.overlord.bam</groupId>
-		<artifactId>tests</artifactId>
+		<groupId>org.overlord.bam.tests</groupId>
+		<artifactId>event-processor-network</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<profiles>
-		<profile>
-			<id>jbossas</id>
-			<modules>
-				<module>jbossas</module>
-			</modules>
-		</profile>
-	</profiles>
+	<modules>
+		<module>test-network</module>
+	</modules>
 
 </project>
 

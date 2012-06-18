@@ -3,10 +3,10 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.tests.activity-management</groupId>
-	<artifactId>switchyard</artifactId>
+	<artifactId>jbossas</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>Overlord BAM::Tests::Activity Management::Switchyard</name>
+	<name>Overlord BAM::Tests::Activity Management::JBossAS</name>
 
 	<parent>
 		<groupId>org.overlord.bam.tests</groupId>
