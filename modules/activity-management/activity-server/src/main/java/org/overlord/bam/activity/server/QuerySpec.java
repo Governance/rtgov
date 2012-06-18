@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
 
 /**
@@ -163,6 +164,72 @@ public class QuerySpec implements java.io.Externalizable {
      */
     public boolean isContextAND() {
         return (_contextAND);
+    }
+    
+    /**
+     * This method applies the query spec to the supplied list of activity units, returning
+     * the subset that pass the query criteria.
+     * 
+     * @param activities The list of activity units to evaluate
+     * @return The list of activity units that pass the query criteria, or null if none
+     */
+    public java.util.List<ActivityUnit> evaluate(java.util.List<ActivityUnit> activities) {
+        java.util.List<ActivityUnit> ret=null;
+        
+        for (ActivityUnit au : activities) {
+            if (evaluate(au)) {
+                if (ret == null) {
+                    ret = new java.util.ArrayList<ActivityUnit>();
+                }
+                ret.add(au);
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method evaluates the supplied activity unit against the
+     * criteria defined by this query spec.
+     * 
+     * @param au The activity unit
+     * @return Whether the activity unit matches the query spec
+     */
+    protected boolean evaluate(ActivityUnit au) {
+        boolean ret=true;
+        
+        if (_id != null && !_id.equals(au.getId())) {
+            ret = false;
+        } else if (_fromTimestamp != 0 && au.getActivityTypes().size() > 0
+                && _fromTimestamp > au.getActivityTypes().get(au.getActivityTypes().size()-1).getTimestamp()) {
+            ret = false;
+        } else if (_toTimestamp != 0 && au.getActivityTypes().size() > 0
+                && _toTimestamp < au.getActivityTypes().get(0).getTimestamp()) {
+            ret = false;
+        }
+        
+        // Evaluate the context details
+        if (ret && _contexts.size() > 0) {
+            boolean onematch=false;
+            
+            for (Context c : _contexts) {
+                if (au.getContext().contains(c)) {
+                    onematch = true;
+                    if (!_contextAND) {
+                        break;
+                    }
+                } else if (_contextAND) {
+                    ret = false;
+                    break;
+                }
+            }
+            
+            if (!_contextAND && !onematch) {
+                ret = false;
+            }
+        }
+        
+        return (ret);
     }
     
     /**
