@@ -31,7 +31,7 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.activity.server.ActivityQuery;
+import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.server.DefaultActivityServer;
 import org.overlord.bam.activity.server.spi.ActivityNotifier;
 import org.overlord.bam.activity.server.spi.ActivityStore;
@@ -485,7 +485,7 @@ public class DefaultActivityServerTest {
             _store.addAll(activities);
         }
 
-        public List<ActivityUnit> query(ActivityQuery query) throws Exception {
+        public List<ActivityUnit> query(QuerySpec query) throws Exception {
             // TODO Auto-generated method stub
             return null;
         }

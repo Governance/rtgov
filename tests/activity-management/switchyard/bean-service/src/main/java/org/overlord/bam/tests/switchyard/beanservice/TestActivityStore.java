@@ -21,7 +21,7 @@ import java.util.List;
 
 
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityQuery;
+import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.server.spi.ActivityStore;
 
 public class TestActivityStore implements ActivityStore {
@@ -71,7 +71,7 @@ public class TestActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityUnit> query(ActivityQuery query) throws Exception {
+    public List<ActivityUnit> query(QuerySpec query) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }

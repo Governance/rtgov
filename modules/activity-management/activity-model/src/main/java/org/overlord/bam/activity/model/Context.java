@@ -62,6 +62,16 @@ public class Context implements java.io.Externalizable {
      */
     public static final short PROPERTY_ID=3;
     
+    /**
+     * The type names.
+     */
+    public static final String[] TYPE_NAME={
+        "Conversation",
+        "Endpoint",
+        "Message",
+        "Property"
+    };
+    
     private short _type=CONVERSATION_ID;
     private String _name=null;
     private String _value=null;
@@ -148,6 +158,37 @@ public class Context implements java.io.Externalizable {
      */
     public void setValue(String value) {
         _value = value;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return (_value.hashCode());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object obj) {
+        if (obj instanceof Context) {
+            Context ctx=(Context)obj;
+            
+            if (ctx._type == _type
+                    && ctx._value.equals(_value)
+                    && ctx._name.equals(_name)) {
+                return (true);
+            }
+        }
+        
+        return (false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return ("Context["+TYPE_NAME[_type]+":"+_name+"="+_value+"]");
     }
     
     /**

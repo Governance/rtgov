@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityQuery;
+import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.server.spi.ActivityStore;
 
 /**
@@ -45,7 +45,7 @@ public class JPAActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityUnit> query(ActivityQuery query) throws Exception {
+    public List<ActivityUnit> query(QuerySpec query) throws Exception {
         return new java.util.Vector<ActivityUnit>();
     }
 

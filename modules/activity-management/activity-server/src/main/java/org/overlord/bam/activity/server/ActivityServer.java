@@ -41,6 +41,6 @@ public interface ActivityServer {
      * @return The list of activities
      * @throws Exception Failed to query the activities
      */
-    public java.util.List<ActivityUnit> query(ActivityQuery query) throws Exception;
+    public java.util.List<ActivityUnit> query(QuerySpec query) throws Exception;
     
 }

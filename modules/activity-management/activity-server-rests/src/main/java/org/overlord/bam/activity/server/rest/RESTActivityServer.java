@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityQuery;
+import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.server.ActivityServer;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -121,7 +121,7 @@ public class RESTActivityServer {
             throw new Exception("Activity Server is not available");
         }
         
-        ActivityQuery aq=new ActivityQuery();
+        QuerySpec aq=new QuerySpec();
         aq.setFromTimestamp(from);
         aq.setToTimestamp(to);
         
