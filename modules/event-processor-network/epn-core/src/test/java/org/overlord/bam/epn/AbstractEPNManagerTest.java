@@ -152,17 +152,16 @@ public class AbstractEPNManagerTest {
     }
 
     @Test
-    public void testRegisterNodeListener() {
+    public void testRegisterNodeListenerNotifyProcessed() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
-        //net.setRootNodeName(N1);
         
         TestEventProcessorA tep=new TestEventProcessorA();
         
         Node n1=new Node();
         n1.setName(N1);
         n1.setEventProcessor(tep);
-        n1.setNotificationEnabled(true);
+        n1.getNotifyTypes().add(NotificationType.Processed.name());
         net.getNodes().add(n1);
         
         AbstractEPNManager mgr=getManager();
@@ -216,6 +215,70 @@ public class AbstractEPNManagerTest {
             
             if (!nl.getEntries().get(0).getNode().equals(N1)) {
                 fail("Processed Event node name incorrect");
+            }
+            
+            if (anothernl.getEntries().size() > 0) {
+                fail("Should be no entries in other listener");
+            }
+            
+        } catch(Exception e) {
+            e.printStackTrace();
+            fail("Failed with exception: "+e);
+        }
+    }
+
+    @Test
+    public void testRegisterNodeListenerDontNotifyProcessed() {
+        Network net=new Network();
+        net.setName(TEST_NETWORK);
+        
+        TestEventProcessorA tep=new TestEventProcessorA();
+        
+        Node n1=new Node();
+        n1.setName(N1);
+        n1.setEventProcessor(tep);
+        n1.getNotifyTypes().add(NotificationType.Results.name());
+        net.getNodes().add(n1);
+        
+        AbstractEPNManager mgr=getManager();
+        
+        try {
+            mgr.register(net);
+            
+            TestNodeListener nl=new TestNodeListener();
+            
+            mgr.addNodeListener(TEST_NETWORK, nl);
+            
+            TestNodeListener anothernl=new TestNodeListener();
+            
+            mgr.addNodeListener(DUMMY_NETWORK, anothernl);
+            
+            TestEvent1 te1=new TestEvent1(2);
+            TestEvent2 te2=new TestEvent2(5);
+            
+            java.util.List<Serializable> elList=new java.util.ArrayList<Serializable>();
+            EventList el=new EventList(elList);
+            elList.add(te1);
+            elList.add(te2);
+            
+            tep.retry(te2);
+            
+            EventList retries=mgr.process(net, n1, null, el, 3);
+            
+            if (retries == null) {
+                fail("Retries is null");
+            }
+            
+            if (retries.size() != 1) {
+                fail("Retries should have 1 event: "+retries.size());
+            }
+            
+            if (!retries.contains(te2)) {
+                fail("Retries did not contain te2");
+            }
+            
+            if (nl.getEntries().size() != 0) {
+                fail("Node listener should have 0 processed event: "+nl.getEntries().size());
             }
             
             if (anothernl.getEntries().size() > 0) {

@@ -36,6 +36,6 @@ public interface NodeListener {
      * @param events The events that have been processed
      */
     public void notify(String network, String version,
-                    String node, NotifyType type, EventList events);
+                    String node, NotificationType type, EventList events);
     
 }

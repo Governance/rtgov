@@ -15,7 +15,7 @@
         "@class" : "org.overlord.bam.tests.epn.Root"
       },
       "predicate" : null,
-      "notificationEnabled" : false
+      "notifyTypes" : [ ]
     },{
       "name" : "ChildA",
       "sourceNodes" : [ "Root" ],
@@ -30,7 +30,7 @@
         "min" : 0,
         "max" : 9
       },
-      "notificationEnabled" : false
+      "notifyTypes" : [ ]
     },{
       "name" : "ChildB",
       "sourceNodes" : [ "Root" ],
@@ -45,7 +45,7 @@
         "min" : 10,
         "max" : 19
       },
-      "notificationEnabled" : false
+      "notifyTypes" : [ ]
     }
   ],
   "version" : "1335878346078"

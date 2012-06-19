@@ -28,7 +28,7 @@ import org.overlord.bam.active.collection.ActiveCollectionSource;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.NodeListener;
-import org.overlord.bam.epn.NotifyType;
+import org.overlord.bam.epn.NotificationType;
 
 /**
  * This class provides the Active Collection Source for listening to
@@ -44,7 +44,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
     private EPNManager _epnManager=null;
     private String _network=null;
     private String _node=null;
-    private NotifyType _notifyType=null;
+    private NotificationType _notifyType=null;
     
     private long _aggregationDuration=0;
     private String _groupBy=null;
@@ -117,7 +117,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      * 
      * @param type The notification type
      */
-    public void setNotifyType(NotifyType type) {
+    public void setNotifyType(NotificationType type) {
         _notifyType = type;
     }
     
@@ -126,7 +126,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      * 
      * @return The notification type
      */
-    public NotifyType getNotifyType() {
+    public NotificationType getNotifyType() {
         return (_notifyType);
     }
     
@@ -275,7 +275,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      * {@inheritDoc}
      */
     public void notify(String network, String version, String node,
-            NotifyType type, EventList events) {
+            NotificationType type, EventList events) {
         if (isRelevant(network, version, node, type)) {
             
             if (_aggregationDuration > 0 && _groupByExpression != null) {
@@ -297,7 +297,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      * @return Whether the notification is relevant
      */
     protected boolean isRelevant(String network, String version, String node,
-                            NotifyType type) {
+                            NotificationType type) {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("isRelevant network="+network+" version="+version+" node="+node+" type="+type+"?");
@@ -331,7 +331,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      * @param events The list of events to be processed
      */
     protected void processNotification(String network, String version, String node,
-                            NotifyType type, EventList events) {
+                            NotificationType type, EventList events) {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("processNotification network="+network+" version="+version
@@ -356,7 +356,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      * @param events The list of events to be processed
      */
     protected void aggregateEvents(String network, String version, String node,
-                            NotifyType type, EventList events) {
+                            NotificationType type, EventList events) {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("aggregateEvents network="+network+" version="+version

@@ -42,7 +42,7 @@ import org.overlord.bam.epn.EPNContainer;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.Node;
-import org.overlord.bam.epn.NotifyType;
+import org.overlord.bam.epn.NotificationType;
 
 /**
  * This class provides the JMS implementation of
@@ -267,7 +267,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             String networkName=message.getStringProperty(JEEEPNManagerImpl.EPN_NETWORK);
             String version=message.getStringProperty(JEEEPNManagerImpl.EPN_VERSION);
             String nodeName=message.getStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES);
-            NotifyType type=NotifyType.valueOf(message.getStringProperty(JEEEPNManagerImpl.EPN_NOTIFY_TYPE));
+            NotificationType type=NotificationType.valueOf(message.getStringProperty(JEEEPNManagerImpl.EPN_NOTIFY_TYPE));
             
             dispatchNotificationToListeners(networkName, version, nodeName, type, events);
         } else {
@@ -347,7 +347,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
      */
     @Override
     protected void notifyListeners(String networkName, String version,
-                    String nodeName, NotifyType type, EventList events) throws Exception {
+                    String nodeName, NotificationType type, EventList events) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Notify events processed "+networkName+"/"+version+"/"+nodeName+" events="+events);
         }
@@ -479,7 +479,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                 }
                 
                 if (notification) {
-                    notifyListeners(networkName, version, sourceNode, NotifyType.Results, events);
+                    notifyListeners(networkName, version, sourceNode, NotificationType.Results, events);
                 }
 
             }

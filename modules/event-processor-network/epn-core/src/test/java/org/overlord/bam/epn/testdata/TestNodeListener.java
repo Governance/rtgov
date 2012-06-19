@@ -19,13 +19,13 @@ package org.overlord.bam.epn.testdata;
 
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.NodeListener;
-import org.overlord.bam.epn.NotifyType;
+import org.overlord.bam.epn.NotificationType;
 
 public class TestNodeListener implements NodeListener {
 
     private java.util.List<Entry> _entries=new java.util.Vector<Entry>();
     
-    public void notify(String network, String version, String node, NotifyType type, EventList events) {
+    public void notify(String network, String version, String node, NotificationType type, EventList events) {
         _entries.add(new Entry(network, version, node, events));
     }
 

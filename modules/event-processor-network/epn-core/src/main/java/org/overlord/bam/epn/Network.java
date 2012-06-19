@@ -219,7 +219,9 @@ public class Network {
                 }
             }
             
-            if (node.getNotificationEnabled() && container != null) {
+            // If results should be notified, then add a channel to be sent the results
+            if (node.getNotifyTypes().contains(NotificationType.Results.name())
+                                && container != null) {
                 node.getChannels().add(container.getChannel(this, node.getName()));
             }
             

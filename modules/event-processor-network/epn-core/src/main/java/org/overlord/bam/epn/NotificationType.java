@@ -22,7 +22,7 @@ package org.overlord.bam.epn;
  * occur.
  *
  */
-public enum NotifyType {
+public enum NotificationType {
 
     /**
      * This type represents the list of processed events. If the node defined

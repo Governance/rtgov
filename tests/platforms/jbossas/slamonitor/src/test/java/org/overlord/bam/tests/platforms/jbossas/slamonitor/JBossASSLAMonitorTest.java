@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.NodeListener;
-import org.overlord.bam.epn.NotifyType;
+import org.overlord.bam.epn.NotificationType;
 
 import static org.junit.Assert.*;
 
@@ -276,8 +276,8 @@ public class JBossASSLAMonitorTest {
          * {@inheritDoc}
          */
         public void notify(String network, String version, String node,
-                NotifyType type, EventList events) {
-            if (type == NotifyType.Processed) {
+                NotificationType type, EventList events) {
+            if (type == NotificationType.Processed) {
                 java.util.List<Serializable> list=_processed.get(node);
                 if (list == null) {
                     list = new java.util.ArrayList<Serializable>();
@@ -286,7 +286,7 @@ public class JBossASSLAMonitorTest {
                 for (Serializable event : events) {
                     list.add(event);
                 }
-            } else if (type == NotifyType.Results) {
+            } else if (type == NotificationType.Results) {
                 java.util.List<Serializable> list=_results.get(node);
                 if (list == null) {
                     list = new java.util.ArrayList<Serializable>();

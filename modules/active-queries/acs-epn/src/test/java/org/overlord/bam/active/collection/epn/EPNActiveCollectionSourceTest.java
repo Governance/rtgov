@@ -30,7 +30,7 @@ import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.NodeListener;
-import org.overlord.bam.epn.NotifyType;
+import org.overlord.bam.epn.NotificationType;
 
 public class EPNActiveCollectionSourceTest {
 
@@ -52,7 +52,7 @@ public class EPNActiveCollectionSourceTest {
         acs.setNetwork(TEST_NETWORK);
         acs.setNode(TEST_NODE1);
         
-        acs.setNotifyType(NotifyType.Results);
+        acs.setNotifyType(NotificationType.Results);
         
         acs.setType(ActiveCollectionType.List);
         
@@ -76,7 +76,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events=new EventList(eventList);
         
-        mgr.publish(TEST_NODE1, NotifyType.Results, events);
+        mgr.publish(TEST_NODE1, NotificationType.Results, events);
         
         java.util.List<Serializable> eventList2=new java.util.ArrayList<Serializable>();
         eventList2.add(new TestObject("TObj21", 21));
@@ -85,7 +85,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events2=new EventList(eventList2);
         
-        mgr.publish(TEST_NODE2, NotifyType.Results, events2);
+        mgr.publish(TEST_NODE2, NotificationType.Results, events2);
         
         java.util.List<Serializable> eventList3=new java.util.ArrayList<Serializable>();
         eventList3.add(new TestObject("TObj31", 31));
@@ -96,7 +96,7 @@ public class EPNActiveCollectionSourceTest {
 
         EventList events3=new EventList(eventList3);
         
-        mgr.publish(TEST_NODE1, NotifyType.Results, events3);
+        mgr.publish(TEST_NODE1, NotificationType.Results, events3);
         
         java.util.List<Serializable> eventList4=new java.util.ArrayList<Serializable>();
         eventList4.add(new TestObject("TObj41", 41));
@@ -105,7 +105,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events4=new EventList(eventList4);
         
-        mgr.publish(TEST_NODE1, NotifyType.Processed, events4);
+        mgr.publish(TEST_NODE1, NotificationType.Processed, events4);
         
         // Review results
         ActiveList al=(ActiveList)acs.getActiveCollection();
@@ -134,7 +134,7 @@ public class EPNActiveCollectionSourceTest {
         acs.setNetwork(TEST_NETWORK);
         acs.setNode(TEST_NODE1);
         
-        acs.setNotifyType(NotifyType.Results);
+        acs.setNotifyType(NotificationType.Results);
         
         acs.setType(ActiveCollectionType.List);
         
@@ -166,7 +166,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events=new EventList(eventList);
         
-        mgr.publish(TEST_NODE1, NotifyType.Results, events);
+        mgr.publish(TEST_NODE1, NotificationType.Results, events);
 
         java.util.Map<Object, java.util.List<Object>> groupedEvents=acs.getGroupedEvents();
         
@@ -223,7 +223,7 @@ public class EPNActiveCollectionSourceTest {
         acs.setNetwork(TEST_NETWORK);
         acs.setNode(TEST_NODE1);
         
-        acs.setNotifyType(NotifyType.Results);
+        acs.setNotifyType(NotificationType.Results);
         
         acs.setType(ActiveCollectionType.List);
         
@@ -292,7 +292,7 @@ public class EPNActiveCollectionSourceTest {
             _nodeListeners.remove(l);
         }
         
-        public void publish(String node, NotifyType type, EventList events) {
+        public void publish(String node, NotificationType type, EventList events) {
             for (NodeListener l : _nodeListeners) {
                 l.notify(TEST_NETWORK, null, node, type, events);
             }

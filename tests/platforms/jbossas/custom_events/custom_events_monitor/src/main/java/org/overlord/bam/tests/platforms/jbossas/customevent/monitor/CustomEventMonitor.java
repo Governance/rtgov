@@ -31,7 +31,7 @@ import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.NodeListener;
-import org.overlord.bam.epn.NotifyType;
+import org.overlord.bam.epn.NotificationType;
 import org.overlord.bam.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
 
 /**
@@ -126,7 +126,7 @@ public class CustomEventMonitor implements NodeListener {
      * {@inheritDoc}
      */
     public void notify(String network, String version, String node,
-            NotifyType type, EventList events) {
+            NotificationType type, EventList events) {
         System.out.println(">>> CUSTOM EVENT MONITOR: ("+type+")");
         
         for (java.io.Serializable event : events) {
