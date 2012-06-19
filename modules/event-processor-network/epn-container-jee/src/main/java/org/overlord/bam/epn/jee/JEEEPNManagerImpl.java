@@ -300,7 +300,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                     +") events="+events+" retriesLeft="+retriesLeft);
         }
 
-        EventList retries=process(network.getName(), network.getVersion(), node.getName(), node,
+        EventList retries=process(network, node,
                             source, events, retriesLeft);
         
         if (retries != null) {

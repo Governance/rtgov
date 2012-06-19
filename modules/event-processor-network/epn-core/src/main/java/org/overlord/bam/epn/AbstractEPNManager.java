@@ -312,9 +312,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * This method dispatches a set of events directly to the supplied
      * node.
      * 
-     * @param networkName The network name
-     * @param version The version
-     * @param nodeName The node name
+     * @param network The network
      * @param node The node
      * @param source The source node, or null if sending to root
      * @param events The list of events to be processed
@@ -322,11 +320,10 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @return The events to retry, or null if no retries necessary
      * @throws Exception Failed to dispatch the events for processing
      */
-    protected EventList process(String networkName, String version, String nodeName,
-                    Node node, String source, EventList events,
+    protected EventList process(Network network, Node node, String source, EventList events,
                             int retriesLeft) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Process events on network="+networkName+" node="+nodeName
+            LOG.finest("Process events on network="+network.getName()+" node="+node.getName()
                     +" source="+source+" retriesLeft="+retriesLeft+" events="+events);
         }
 
@@ -353,18 +350,19 @@ public abstract class AbstractEPNManager implements EPNManager {
             }
             
             if (notifyList != null) {
-                notifyListeners(networkName, version, nodeName, NotifyType.Processed, notifyList);
+                notifyListeners(network.getName(), network.getVersion(),
+                        node.getName(), NotifyType.Processed, notifyList);
             }
         }
 
         if (ret != null) {
-            LOG.warning("Processed events on network="+networkName
-                    +" version="+version+" node="+nodeName
+            LOG.warning("Processed events on network="+network.getName()
+                    +" version="+network.getVersion()+" node="+node.getName()
                     +" source="+source+" ret="+ret);
             
         } else if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Processed events on network="+networkName
-                    +" version="+version+" node="+nodeName
+            LOG.finest("Processed events on network="+network.getName()
+                    +" version="+network.getVersion()+" node="+node.getName()
                     +" source="+source+": no retries");
         }
 

@@ -337,8 +337,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
      */
     protected class EPNTask implements Runnable {
         
-        private String _networkName=null;
-        private String _version=null;
+        private Network _network=null;
         private Node _node=null;
         private String _source=null;
         private EventList _events=null;
@@ -357,8 +356,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          */
         public EPNTask(Network network, Node node,
                 String source, EventList events, int retriesLeft, EmbeddedChannel channel) {
-            _networkName = network.getName();
-            _version = network.getVersion();
+            _network = network;
             _node = node;
             _source = source;
             _events = events;
@@ -373,7 +371,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
             EventList retries=null;
      
             try {
-                retries = process(_networkName, _version, _node.getName(), _node,
+                retries = process(_network, _node,
                                 _source, _events, _retriesLeft);            
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Failed to handle events", e);

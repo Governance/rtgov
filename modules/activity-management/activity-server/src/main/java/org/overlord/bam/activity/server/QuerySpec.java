@@ -136,8 +136,9 @@ public class QuerySpec implements java.io.Externalizable {
     
     /**
      * This method returns the list of contexts to be
-     * matched within the retrieved 
-     * @return
+     * matched by the activity units.
+     * 
+     * @return The list of contexts
      */
     public java.util.List<Context> getContexts() {
         return (_contexts);

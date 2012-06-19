@@ -100,8 +100,7 @@ public class RESTActivityServer {
     /**
      * This method handles queries for activity events.
      * 
-     * @param from The 'from' timestamp
-     * @param to The 'to' timestamp
+     * @param qs The query spec
      * @return The list of activity events
      * @throws Exception Failed to query activity events
      */

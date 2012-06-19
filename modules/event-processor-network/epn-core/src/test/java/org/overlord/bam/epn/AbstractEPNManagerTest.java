@@ -188,7 +188,7 @@ public class AbstractEPNManagerTest {
             
             tep.retry(te2);
             
-            EventList retries=mgr.process(TEST_NETWORK, null, N1, n1, null, el, 3);
+            EventList retries=mgr.process(net, n1, null, el, 3);
             
             if (retries == null) {
                 fail("Retries is null");
