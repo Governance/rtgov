@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.Node;
+import org.overlord.bam.epn.Subscription;
 import org.overlord.bam.epn.testdata.TestEventProcessor1;
 import org.overlord.bam.epn.testdata.TestEventProcessor2;
 import org.overlord.bam.epn.testdata.TestEventProcessor3;
@@ -37,18 +38,30 @@ public class NetworkUtilTest {
         
         epn.setName("Test");
         epn.setVersion("123456");
-        epn.setRootNodeName("N0");
+        //epn.setRootNodeName("N0");
+        
+        Subscription sub1=new Subscription();
+        sub1.setNodeName("N0");
+        sub1.setSubject("First");
+        epn.getSubscriptions().add(sub1);
+        
+        Subscription sub2=new Subscription();
+        sub2.setNodeName("N1");
+        sub2.setSubject("Second");
+        epn.getSubscriptions().add(sub2);
         
         // Node 0
         Node n0=new Node();
-        epn.getNodes().put("N0", n0);
+        n0.setName("N0");
+        epn.getNodes().add(n0);
         
         n0.setEventProcessor(new TestEventProcessor1());
         n0.setPredicate(new TestPredicate1());    
         
         // Node 1
         Node n1=new Node();
-        epn.getNodes().put("N1", n1);
+        n1.setName("N1");
+        epn.getNodes().add(n1);
         n1.getSourceNodes().add("N0");
         
         TestEventProcessor2 ep2=new TestEventProcessor2();
@@ -59,14 +72,17 @@ public class NetworkUtilTest {
         
         // Node 2
         Node n2=new Node();
-        epn.getNodes().put("N2", n2);
+        n2.setName("N2");
+        epn.getNodes().add(n2);
         n2.getSourceNodes().add("N0");
         
         TestEventProcessor3 ep3=new TestEventProcessor3();
         n2.setEventProcessor(ep3);
         
         try {
-            NetworkUtil.serialize(epn);            
+            byte[] b=NetworkUtil.serialize(epn);   
+            
+            System.out.println("Serialized network="+new String(b));
         } catch(Exception e) {
             fail("Failed to serialize: "+e);
         }
@@ -88,9 +104,9 @@ public class NetworkUtilTest {
                 fail("Number of nodes not 3: "+network.getNodes().size());
             }
             
-            Node n1=network.getNodes().get("N0");
-            Node n2=network.getNodes().get("N1");
-            Node n3=network.getNodes().get("N2");
+            Node n1=network.getNodes().get(0);
+            Node n2=network.getNodes().get(1);
+            Node n3=network.getNodes().get(2);
             
             if (n1.getPredicate() == null) {
                 fail("Predicate 1 should not be null");

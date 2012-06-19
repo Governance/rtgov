@@ -52,6 +52,8 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         LOG.info("Registering EPN network '"+network.getName()+"' version["+network.getVersion()+"]");
         
+        network.init(getContainer());
+        
         synchronized (_networkMap) {
             NetworkList nl=_networkMap.get(network.getName());
             
@@ -71,8 +73,6 @@ public abstract class AbstractEPNManager implements EPNManager {
                 currentNetworkChanged(oldnet, network);
             }
         }
-        
-        network.init(getContainer());
     }
     
     /**
@@ -132,7 +132,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @param network The network
      */
     protected void registerSubjects(Network network) {
-        for (String subject : network.getSubjects()) {
+        for (String subject : network.subjects()) {
             java.util.List<Network> networks=_subjectMap.get(subject);
             
             if (networks == null) {
@@ -151,7 +151,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @param network The network
      */
     protected void unregisterSubjects(Network network) {
-        for (String subject : network.getSubjects()) {
+        for (String subject : network.subjects()) {
             java.util.List<Network> networks=_subjectMap.get(subject);
             
             if (networks != null) {
@@ -240,7 +240,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * 
      * @param networkName The network name
      * @param version The version, or null for current
-     * @param nodeName The node name, or null if wanting the root node
+     * @param nodeName The node name
      * @return The node, or null if not found
      * @throws Exception Failed to find the specified node
      */
@@ -251,12 +251,7 @@ public abstract class AbstractEPNManager implements EPNManager {
             throw new Exception("No network '"+networkName+"' version["+version+"] was found");
         }
         
-        // Check if node name has been specified, if not use root node name
-        if (nodeName == null) {
-            nodeName = net.getRootNodeName();
-        }
-        
-        Node node=net.getNodes().get(nodeName);
+        Node node=net.getNode(nodeName);
         
         if (node == null) {
             throw new Exception("No node '"+nodeName+"' was found in network '"+networkName

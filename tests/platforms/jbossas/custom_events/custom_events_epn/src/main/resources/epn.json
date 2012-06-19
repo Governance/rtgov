@@ -1,8 +1,12 @@
 {
   "name" : "CustomEventsEPN",
-  "subjects" : [ "ActivityUnits" ],
-  "nodes" : {
-    "SOAEvents" : {
+  "subscriptions" : [ {
+    "nodeName" : "SOAEvents",
+    "subject" : "ActivityUnits"
+  } ],
+  "nodes" : [
+    {
+      "name" : "SOAEvents",
       "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -12,8 +16,8 @@
       },
       "predicate" : null,
       "notificationEnabled" : false
-    },
-    "CustomEvents" : {
+    },{
+      "name" : "CustomEvents",
       "sourceNodes" : [ "SOAEvents" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -24,7 +28,6 @@
       "predicate" : null,
       "notificationEnabled" : true
     }
-  },
-  "version" : "1",
-  "rootNodeName" : "SOAEvents"
+  ],
+  "version" : "1"
 }

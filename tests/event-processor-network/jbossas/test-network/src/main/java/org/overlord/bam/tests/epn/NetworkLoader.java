@@ -19,6 +19,7 @@ package org.overlord.bam.tests.epn;
 
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.Node;
+import org.overlord.bam.epn.Subscription;
 import org.overlord.bam.epn.util.NetworkUtil;
 
 /**
@@ -102,7 +103,7 @@ public class NetworkLoader {
         ret.setName(TEST_NETWORK);
         ret.setVersion(""+System.currentTimeMillis());
         
-        ret.getSubjects().add(TEST_SUBJECT);
+        ret.subjects().add(TEST_SUBJECT);
         
         Root rootep=new Root();
         Child childAep=new Child();
@@ -117,22 +118,28 @@ public class NetworkLoader {
         childBpred.setMax(19);
         
         Node root=new Node();
+        root.setName(ROOT);
         root.setEventProcessor(rootep);
-        ret.getNodes().put(ROOT, root);
+        ret.getNodes().add(root);
         
         Node childA=new Node();
+        childA.setName(CHILD_A);
         childA.setPredicate(childApred);
         childA.setEventProcessor(childAep);
         childA.getSourceNodes().add(ROOT);
-        ret.getNodes().put(CHILD_A, childA);
+        ret.getNodes().add(childA);
 
         Node childB=new Node();
+        childB.setName(CHILD_B);
         childB.setPredicate(childBpred);
         childB.setEventProcessor(childBep);
         childB.getSourceNodes().add(ROOT);
-        ret.getNodes().put(CHILD_B, childB);
+        ret.getNodes().add(childB);
         
-        ret.setRootNodeName(ROOT);
+        Subscription sub=new Subscription();
+        sub.setNodeName(ROOT);
+        sub.setSubject(TEST_SUBJECT);
+        ret.getSubscriptions().add(sub);
         
         return (ret);
     }

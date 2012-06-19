@@ -63,11 +63,15 @@ public class AbstractEPNManagerTest {
         net.setName(TEST_NETWORK);
         
         // Root should be incorrect, to test exception
-        net.setRootNodeName(N2);
+        Subscription sub=new Subscription();
+        sub.setNodeName(N2);
+        sub.setSubject(TEST_SUBJECT1);
+        net.getSubscriptions().add(sub);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setEventProcessor(new TestEventProcessorA());
-        net.getNodes().put(N1, n1);
+        net.getNodes().add(n1);
         
         AbstractEPNManager mgr=getManager();
         
@@ -83,10 +87,11 @@ public class AbstractEPNManagerTest {
     public void testRegisterNetworkNodeNoEventProcessor() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
-        net.setRootNodeName(N1);
+        //net.setRootNodeName(N1);
         
         Node n1=new Node();
-        net.getNodes().put(N1, n1);
+        n1.setName(N1);
+        net.getNodes().add(n1);
         
         AbstractEPNManager mgr=getManager();
         
@@ -102,19 +107,22 @@ public class AbstractEPNManagerTest {
     public void testNetworkAndNodeLookup() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
-        net.setRootNodeName(N1);
+        //net.setRootNodeName(N1);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setEventProcessor(new TestEventProcessorA());
-        net.getNodes().put(N1, n1);
+        net.getNodes().add(n1);
         
         Node n2=new Node();
+        n2.setName(N2);
         n2.setEventProcessor(new TestEventProcessorA());
-        net.getNodes().put("N2", n2);
+        net.getNodes().add(n2);
         
         Node n3=new Node();
+        n3.setName(N3);
         n3.setEventProcessor(new TestEventProcessorA());
-        net.getNodes().put("N3", n3);
+        net.getNodes().add(n3);
         
         AbstractEPNManager mgr=getManager();
         
@@ -147,14 +155,15 @@ public class AbstractEPNManagerTest {
     public void testRegisterNodeListener() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
-        net.setRootNodeName(N1);
+        //net.setRootNodeName(N1);
         
         TestEventProcessorA tep=new TestEventProcessorA();
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setEventProcessor(tep);
         n1.setNotificationEnabled(true);
-        net.getNodes().put(N1, n1);
+        net.getNodes().add(n1);
         
         AbstractEPNManager mgr=getManager();
         
@@ -224,24 +233,32 @@ public class AbstractEPNManagerTest {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
         net1.setVersion(VER1);
-        net1.setRootNodeName(N1);
-        net1.getSubjects().add(TEST_SUBJECT1);
+        
+        Subscription sub1=new Subscription();
+        sub1.setNodeName(N1);
+        sub1.setSubject(TEST_SUBJECT1);
+        net1.getSubscriptions().add(sub1);
         
         TestEventProcessorA tep=new TestEventProcessorA();
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setEventProcessor(tep);
-        net1.getNodes().put(N1, n1);
+        net1.getNodes().add(n1);
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK);
         net2.setVersion(VER2);
-        net2.setRootNodeName(N2);
-        net2.getSubjects().add(TEST_SUBJECT2);
+        
+        Subscription sub2=new Subscription();
+        sub2.setNodeName(N2);
+        sub2.setSubject(TEST_SUBJECT2);
+        net2.getSubscriptions().add(sub2);
         
         Node n2=new Node();
+        n2.setName(N2);
         n2.setEventProcessor(tep);
-        net2.getNodes().put(N2, n2);
+        net2.getNodes().add(n2);
         
         AbstractEPNManager mgr=getManager();
         

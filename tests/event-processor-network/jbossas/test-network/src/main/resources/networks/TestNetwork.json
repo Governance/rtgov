@@ -1,8 +1,12 @@
 {
   "name" : "TestNetwork",
-  "subjects" : [ "TestSubject" ],
-  "nodes" : {
-    "Root" : {
+  "subscriptions" : [ {
+    "nodeName" : "Root",
+    "subject" : "TestSubject"
+  } ],
+  "nodes" : [
+    {
+      "name" : "Root",
       "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -12,8 +16,8 @@
       },
       "predicate" : null,
       "notificationEnabled" : false
-    },
-    "ChildA" : {
+    },{
+      "name" : "ChildA",
       "sourceNodes" : [ "Root" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -27,8 +31,8 @@
         "max" : 9
       },
       "notificationEnabled" : false
-    },
-    "ChildB" : {
+    },{
+      "name" : "ChildB",
       "sourceNodes" : [ "Root" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -43,7 +47,6 @@
       },
       "notificationEnabled" : false
     }
-  },
-  "version" : "1335878346078",
-  "rootNodeName" : "Root"
+  ],
+  "version" : "1335878346078"
 }

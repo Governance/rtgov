@@ -30,6 +30,7 @@ public class Node {
 
     private static final Logger LOG=Logger.getLogger(Node.class.getName());
     
+    private String _name=null;
     private int _maxRetries=3;
     private long _retryInterval=0;
     private EventProcessor _eventProcessor=null;
@@ -45,6 +46,24 @@ public class Node {
      * 
      */
     public Node() {
+    }
+    
+    /**
+     * This method returns the node name.
+     * 
+     * @return The name
+     */
+    public String getName() {
+        return (_name);
+    }
+    
+    /**
+     * This method sets the node name.
+     * 
+     * @param name The name
+     */
+    public void setName(String name) {
+        _name = name;
     }
     
     /**
@@ -287,10 +306,9 @@ public class Node {
      * This method closes the node.
      * 
      * @param container The container
-     * @param nodeName The node name
      * @throws Exception Failed to close the node
      */
-    protected void close(EPNContainer container, String nodeName) throws Exception {
+    protected void close(EPNContainer container) throws Exception {
         
         for (Channel ch : _channels) {
             ch.close();

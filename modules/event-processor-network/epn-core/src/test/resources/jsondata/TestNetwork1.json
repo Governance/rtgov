@@ -1,42 +1,50 @@
 {
   "name" : "Test",
-  "nodes" : {
-    "N1" : {
-      "sourceNodes" : [ "N0" ],
-      "destinationSubjects" : [ ],
-      "predicate" : {
-        "@class" : "org.overlord.bam.epn.testdata.TestPredicate2",
-        "someProperty" : "TestProperty"
-      },
-      "eventProcessor" : {
-        "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor2"
-      },
-      "maxRetries" : 3,
-      "retryInterval" : 0
-    },
-    "N0" : {
-      "sourceNodes" : [ ],
-      "destinationSubjects" : [ ],
-      "predicate" : {
-        "@class" : "org.overlord.bam.epn.testdata.TestPredicate1"
-      },
-      "eventProcessor" : {
-        "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor1"
-      },
-      "maxRetries" : 3,
-      "retryInterval" : 0
-    },
-    "N2" : {
-      "sourceNodes" : [ "N0" ],
-      "destinationSubjects" : [ ],
-      "predicate" : null,
-      "eventProcessor" : {
-        "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor3"
-      },
-      "maxRetries" : 3,
-      "retryInterval" : 0
-    }
-  },
   "version" : "123456",
-  "rootNodeName" : "N0"
+  "subscriptions" : [ {
+    "nodeName" : "N0",
+    "subject" : "First"
+  }, {
+    "nodeName" : "N1",
+    "subject" : "Second"
+  } ],
+  "nodes" : [ {
+    "name" : "N0",
+    "eventProcessor" : {
+      "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor1"
+    },
+    "predicate" : {
+      "@class" : "org.overlord.bam.epn.testdata.TestPredicate1"
+    },
+    "sourceNodes" : [ ],
+    "notificationEnabled" : false,
+    "destinationSubjects" : [ ],
+    "maxRetries" : 3,
+    "retryInterval" : 0
+  }, {
+    "name" : "N1",
+    "eventProcessor" : {
+      "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor2"
+    },
+    "predicate" : {
+      "@class" : "org.overlord.bam.epn.testdata.TestPredicate2",
+      "someProperty" : "TestProperty"
+    },
+    "sourceNodes" : [ "N0" ],
+    "notificationEnabled" : false,
+    "destinationSubjects" : [ ],
+    "maxRetries" : 3,
+    "retryInterval" : 0
+  }, {
+    "name" : "N2",
+    "eventProcessor" : {
+      "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor3"
+    },
+    "predicate" : null,
+    "sourceNodes" : [ "N0" ],
+    "notificationEnabled" : false,
+    "destinationSubjects" : [ ],
+    "maxRetries" : 3,
+    "retryInterval" : 0
+  } ]
 }

@@ -192,12 +192,17 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                 }
             } else {
                 for (Network network : networks) {
-                    preProcessEvents(events, network);
-                    
-                    // Dispatch to root node for latest version of named network
-                    dispatch(network.getName(), null, null, null, events, -1);
-                    
-                    postProcessEvents(events);
+                    java.util.List<Node> nodes=network.getNodesForSubject(subject);
+
+                    if (nodes != null) {
+                        preProcessEvents(events, network);
+                        
+                        for (int i=0; i < nodes.size(); i++) {
+                            dispatch(network, nodes.get(i), null, events, -1);
+                        }
+                        
+                        postProcessEvents(events);
+                    }
                 }
             }
         }
@@ -235,7 +240,9 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
 
             String[] nodes=nodeList.split(",");
             for (String nodeName : nodes) {
-                dispatch(networkName, version, nodeName, source, events, retriesLeft);
+                Node node=network.getNode(nodeName);
+                
+                dispatch(network, node, source, events, retriesLeft);
             }
             
             postProcessEvents(events);
@@ -269,37 +276,35 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
     }
 
     /**
-     * This method dispatches a set of events directly to the named
-     * network and node. If the node is not specified, then it will
-     * be dispatched to the 'root' node of the network.
+     * This method dispatches a set of events directly to the supplied
+     * network and node.
      * 
-     * @param networkName The name of the network
-     * @param version The version, or null if current
-     * @param nodeName The optional node name, or root node if not specified
+     * @param network The network
+     * @param node The node
      * @param source The source node, or null if sending to root
      * @param events The list of events to be processed
      * @param retriesLeft The number of retries left, or -1 if should be max value
      * @throws Exception Failed to dispatch the events for processing
      */
-    protected void dispatch(String networkName, String version, String nodeName,
+    protected void dispatch(Network network, Node node,
                             String source, EventList events,
                             int retriesLeft) throws Exception {
-        Node node=getNode(networkName, version, nodeName);
         
         if (retriesLeft == -1) {
             retriesLeft = node.getMaxRetries();
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Dispatch "+networkName+"/"+version+"/"+nodeName+" ("+node
+            LOG.finest("Dispatch "+network.getName()+"/"+network.getVersion()
+                    +"/"+node.getName()+" ("+node
                     +") events="+events+" retriesLeft="+retriesLeft);
         }
 
-        EventList retries=process(networkName, version, nodeName, node,
+        EventList retries=process(network.getName(), network.getVersion(), node.getName(), node,
                             source, events, retriesLeft);
         
         if (retries != null) {
-            retry(networkName, version, nodeName, source, retries, retriesLeft-1);
+            retry(network.getName(), network.getVersion(), node.getName(), source, retries, retriesLeft-1);
         }
     }
     

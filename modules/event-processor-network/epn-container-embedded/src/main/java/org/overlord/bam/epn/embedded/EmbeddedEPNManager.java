@@ -89,7 +89,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
      */
     protected void unregisterEntryPoints(Network network) {
         synchronized (_entryPoints) {
-            for (String subject : network.getSubjects()) {
+            for (String subject : network.subjects()) {
                 java.util.List<EmbeddedChannel> channels=_entryPoints.get(subject);
                 
                 if (channels != null) {
@@ -115,9 +115,8 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
      */
     protected void registerEntryPoints(Network network) {
         synchronized (_entryPoints) {
-            Node rootNode=network.getNodes().get(network.getRootNodeName());
             
-            for (String subject : network.getSubjects()) {
+            for (String subject : network.subjects()) {
                 java.util.List<EmbeddedChannel> channels=_entryPoints.get(subject);
                 
                 if (channels == null) {
@@ -125,8 +124,13 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                     _entryPoints.put(subject, channels);
                 }
                 
-                channels.add(new EmbeddedChannel(network,
-                        network.getRootNodeName(), rootNode, null));
+                java.util.List<Node> nodes=network.getNodesForSubject(subject);
+                
+                if (nodes != null) {
+                    for (Node node : nodes) {
+                        channels.add(new EmbeddedChannel(network, node, null));                        
+                    }
+                }
             }
         }
     }
@@ -176,8 +180,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          */
         public Channel getChannel(Network network, String source, String dest)
                 throws Exception {
-            return (new EmbeddedChannel(network, dest,
-                    getNode(network.getName(), network.getVersion(), dest), source));
+            return (new EmbeddedChannel(network, network.getNode(dest), source));
         }
 
         /**
@@ -218,7 +221,6 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
     protected class EmbeddedChannel implements Channel {
         
         private Network _network=null;
-        private String _nodeName=null;
         private Node _node=null;
         private String _source=null;
         private String _subject=null;
@@ -227,14 +229,11 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * The constructor.
          * 
          * @param network The network
-         * @param nodeName The node name
          * @param node The node
          * @param sourceNode The source node name
          */
-        public EmbeddedChannel(Network network,
-                        String nodeName, Node node, String sourceNode) {
+        public EmbeddedChannel(Network network, Node node, String sourceNode) {
             _network = network;
-            _nodeName = nodeName;
             _node = node;
             _source = sourceNode;
         }
@@ -293,7 +292,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * @return The node name
          */
         protected String getNodeName() {
-            return (_nodeName);
+            return (_node.getName());
         }
 
         /**
@@ -318,7 +317,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                 if (retriesLeft == -1) {
                     retriesLeft = _node.getMaxRetries();
                 }
-                _executor.execute(new EPNTask(_network, _nodeName,
+                _executor.execute(new EPNTask(_network,
                         _node, _source, events, retriesLeft, this));
             }
         }
@@ -340,7 +339,6 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         
         private String _networkName=null;
         private String _version=null;
-        private String _nodeName=null;
         private Node _node=null;
         private String _source=null;
         private EventList _events=null;
@@ -351,18 +349,16 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * This is the constructor for the task.
          * 
          * @param network The network
-         * @param nodeName The node name
          * @param node The node
          * @param source The source node name
          * @param events The list of events
          * @param retriesLeft The number of retries left
          * @param channel The channel
          */
-        public EPNTask(Network network, String nodeName, Node node,
+        public EPNTask(Network network, Node node,
                 String source, EventList events, int retriesLeft, EmbeddedChannel channel) {
             _networkName = network.getName();
             _version = network.getVersion();
-            _nodeName = nodeName;
             _node = node;
             _source = source;
             _events = events;
@@ -377,7 +373,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
             EventList retries=null;
      
             try {
-                retries = process(_networkName, _version, _nodeName, _node,
+                retries = process(_networkName, _version, _node.getName(), _node,
                                 _source, _events, _retriesLeft);            
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Failed to handle events", e);

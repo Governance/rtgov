@@ -1,8 +1,12 @@
 {
   "name" : "SLAMonitorEPN",
-  "subjects" : [ "ActivityUnits" ],
-  "nodes" : {
-    "SOAEvents" : {
+  "subscriptions" : [ {
+    "nodeName" : "SOAEvents",
+    "subject" : "ActivityUnits"
+  } ],
+  "nodes" : [
+    {
+      "name" : "SOAEvents",
       "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -12,8 +16,8 @@
       },
       "predicate" : null,
       "notificationEnabled" : false
-    },
-    "ResponseTimes" : {
+    },{
+      "name" : "ResponseTimes",
       "sourceNodes" : [ "SOAEvents" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -24,8 +28,8 @@
       },
       "predicate" : null,
       "notificationEnabled" : true
-    },
-    "SLAViolations" : {
+    },{
+      "name" : "SLAViolations",
       "sourceNodes" : [ "ResponseTimes" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
@@ -37,7 +41,6 @@
       "predicate" : null,
       "notificationEnabled" : true
     }
-  },
-  "version" : "1",
-  "rootNodeName" : "SOAEvents"
+  ],
+  "version" : "1"
 }

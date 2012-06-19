@@ -29,11 +29,12 @@ public class Network {
 
     private String _name=null;
     private String _version=null;
-    private java.util.List<String> _subjects=new java.util.ArrayList<String>();
-    private String _rootNodeName=null;
-    private java.util.Map<String,Node> _nodes=new java.util.HashMap<String,Node>();
+    private java.util.List<Subscription> _subscriptions=new java.util.ArrayList<Subscription>();
+    private java.util.List<Node> _nodes=new java.util.ArrayList<Node>();
+    private java.util.Map<String,Node> _namedNodes=new java.util.HashMap<String,Node>();
+    private java.util.Map<String,java.util.List<Node>> _subjectNodes=
+                        new java.util.HashMap<String,java.util.List<Node>>();
     
-    private Node _root=null;
     private boolean _preinitialized=false;
     private ClassLoader _contextClassLoader=null;
     
@@ -83,41 +84,44 @@ public class Network {
     }
     
     /**
-     * This method returns the list of subjects that the network will subscribe
+     * This method returns the list of subscriptions that the network will subscribe
      * to for events.
      * 
-     * @return The list of subjects
+     * @return The list of subscriptions
      */
-    public java.util.List<String> getSubjects() {
-        return (_subjects);
+    public java.util.List<Subscription> getSubscriptions() {
+        return (_subscriptions);
     }
     
     /**
-     * This method sets the list of subjects that the network will subscribe
+     * This method sets the list of subscriptions that the network will subscribe
      * to for events.
      * 
-     * @param subjects The list of subjects
+     * @param subscriptions The list of subscriptions
      */
-    public void setSubjects(java.util.List<String> subjects) {
-        _subjects = subjects;
+    public void setSubscriptions(java.util.List<Subscription> subscriptions) {
+        _subscriptions = subscriptions;
     }
     
     /**
-     * This method returns the root node name.
+     * This method returns the list of nodes associated with the specified
+     * subject.
      * 
-     * @return The root node name
+     * @param subject The subject 
+     * @return The list of nodes, or null if none associated with the subject
      */
-    public String getRootNodeName() {
-        return (_rootNodeName);
+    public java.util.List<Node> getNodesForSubject(String subject) {
+        return (_subjectNodes.get(subject));
     }
     
     /**
-     * This method sets the root node name.
+     * This method returns the set of subjects that this network
+     * subscribes to.
      * 
-     * @param rootNodeName The root node name
+     * @return The set of subscription subjects
      */
-    public void setRootNodeName(String rootNodeName) {
-        _rootNodeName = rootNodeName;
+    public java.util.Set<String> subjects() {
+        return (_subjectNodes.keySet());
     }
     
     /**
@@ -125,7 +129,7 @@ public class Network {
      * 
      * @return The event processor nodes
      */
-    public java.util.Map<String,Node> getNodes() {
+    public java.util.List<Node> getNodes() {
         return (_nodes);
     }
     
@@ -134,8 +138,19 @@ public class Network {
      * 
      * @param nodes The event processor nodes
      */
-    public void setNodes(java.util.Map<String,Node> nodes) {
+    public void setNodes(java.util.List<Node> nodes) {
         _nodes = nodes;
+    }
+    
+    /**
+     * This method returns the node associated with the
+     * supplied name.
+     * 
+     * @param name The name
+     * @return The node, or null if not found
+     */
+    public Node getNode(String name) {
+        return (_namedNodes.get(name));
     }
     
     /**
@@ -151,8 +166,7 @@ public class Network {
         if (!_preinitialized) {
             _preinitialized = true;
             
-            for (String name : _nodes.keySet()) {
-                Node node=_nodes.get(name);
+            for (Node node : _nodes) {
                 
                 // Initialize the node
                 node.init();
@@ -185,25 +199,28 @@ public class Network {
      * @throws Exception Failed to initialize the network
      */
     protected void init(EPNContainer container) throws Exception {
-        for (String name : _nodes.keySet()) {
-            Node node=_nodes.get(name);
+        // Initialize mapping from name to node
+        for (Node node : _nodes) {
+            _namedNodes.put(node.getName(), node);
+        }
             
-            // Initialize channels
+        for (Node node : _nodes) {
+           // Initialize channels
             if (node.getSourceNodes() != null) {
                 for (String nodeName : node.getSourceNodes()) {
-                    Node sourceNode=_nodes.get(nodeName);
+                    Node sourceNode=getNode(nodeName);
                     
                     if (sourceNode == null) {
                         LOG.severe("Network '"+getName()+"' version '"+getVersion()
-                                +"' node '"+name+"' has unknown source node '"+nodeName+"'");
+                                +"' node '"+node.getName()+"' has unknown source node '"+nodeName+"'");
                     } else {
-                        sourceNode.getChannels().add(container.getChannel(this, nodeName, name));
+                        sourceNode.getChannels().add(container.getChannel(this, nodeName, node.getName()));
                     }
                 }
             }
             
             if (node.getNotificationEnabled() && container != null) {
-                node.getChannels().add(container.getChannel(this, name));
+                node.getChannels().add(container.getChannel(this, node.getName()));
             }
             
             if (node.getDestinationSubjects() != null) {
@@ -216,9 +233,24 @@ public class Network {
                 // Initialize the node
                 node.init();
             }
+        }
+        
+        // Initialize subject/node mapping
+        for (Subscription sub : _subscriptions) {
+            Node node=getNode(sub.getNodeName());
             
-            if (name.equals(getRootNodeName())) {
-                _root = node;                
+            if (node == null) {
+                throw new Exception("Network '"+getName()+"' version '"+getVersion()
+                        +"' subscription has unknown node name '"+sub.getNodeName()+"'");
+            } else {
+                java.util.List<Node> nodes=_subjectNodes.get(sub.getSubject());
+                
+                if (nodes == null) {
+                    nodes = new java.util.ArrayList<Node>();
+                    _subjectNodes.put(sub.getSubject(), nodes);
+                }
+                
+                nodes.add(node);
             }
         }
         
@@ -226,27 +258,8 @@ public class Network {
         if (_contextClassLoader == null) {
             _contextClassLoader = Thread.currentThread().getContextClassLoader();
         }
-        
-        if (_root == null) {
-            throw new Exception("Network does not contain a root node of name '"+getRootNodeName()+"'");
-        }
     }
     
-    /**
-     * This method processes the supplied list of events against the root
-     * event processor node associated with the network.
-     * 
-     * @param container The container
-     * @param events The list of events to be processed
-     * @throws Exception Failed to process events, and should result in transaction rollback
-     */
-    protected void process(EPNContainer container, EventList events) throws Exception {
- 
-        if (_root != null) {
-            _root.process(container, null, events, _root.getMaxRetries());
-        }
-    }
-
     /**
      * This method closes the network.
      * 
@@ -254,9 +267,8 @@ public class Network {
      * @throws Exception Failed to close the network
      */
     protected void close(EPNContainer container) throws Exception {
-        for (String name : _nodes.keySet()) {
-            Node node=_nodes.get(name);
-            node.close(container, name);
+        for (Node node : _nodes) {
+            node.close(container);
         }
     }
     

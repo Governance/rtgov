@@ -100,7 +100,7 @@ public class NetworkLoaderTest {
         }
         
         // Check that event was transformed into Obj2 at ChildA (due to predicate)
-        Node childAnode=net.getNodes().get(NetworkLoader.CHILD_A);
+        Node childAnode=net.getNode(NetworkLoader.CHILD_A);
         
         if (childAnode == null) {
             fail("Failed to get child A");
@@ -157,8 +157,8 @@ public class NetworkLoaderTest {
             fail("Failed to process events: "+e);
         }
         
-        Node childAnode=net.getNodes().get(NetworkLoader.CHILD_A);
-        Node childBnode=net.getNodes().get(NetworkLoader.CHILD_B);
+        Node childAnode=net.getNode(NetworkLoader.CHILD_A);
+        Node childBnode=net.getNode(NetworkLoader.CHILD_B);
         
         if (childAnode == null) {
             fail("Failed to get child A");
@@ -215,8 +215,8 @@ public class NetworkLoaderTest {
             fail("Failed to register network: "+e);
         }
         
-        Node childAnode=net.getNodes().get(NetworkLoader.CHILD_A);
-        Node childBnode=net.getNodes().get(NetworkLoader.CHILD_B);
+        Node childAnode=net.getNode(NetworkLoader.CHILD_A);
+        Node childBnode=net.getNode(NetworkLoader.CHILD_B);
         
         if (childAnode == null) {
             fail("Failed to get child A");

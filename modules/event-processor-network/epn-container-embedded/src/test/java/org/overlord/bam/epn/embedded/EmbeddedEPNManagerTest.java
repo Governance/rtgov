@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.Node;
+import org.overlord.bam.epn.Subscription;
 import org.overlord.bam.epn.embedded.EmbeddedEPNManager;
 import org.overlord.bam.epn.embedded.EmbeddedEPNManager.EmbeddedChannel;
 
@@ -44,23 +45,27 @@ public class EmbeddedEPNManagerTest {
     public void testEventTransformedForChild() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
-        net.setRootNodeName(N1);
         net.setVersion(null);
         
-        net.getSubjects().add(TEST_SUBJECT);
+        Subscription sub=new Subscription();
+        sub.setSubject(TEST_SUBJECT);
+        sub.setNodeName(N1);
+        net.getSubscriptions().add(sub);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        net.getNodes().put(N1, n1);
+        net.getNodes().add(n1);
         
         Node n2=new Node();
         n2.setPredicate(new TestPredicate2());
         
         TestEventProcessorA tea=new TestEventProcessorA();
+        n2.setName(N2);
         n2.setEventProcessor(tea);
         n2.getSourceNodes().add(N1);
-        net.getNodes().put(N2, n2);
+        net.getNodes().add( n2);
         
         EmbeddedEPNManager mgr=new EmbeddedEPNManager();
         
@@ -92,6 +97,7 @@ public class EmbeddedEPNManagerTest {
                 fail("Incorrect event type: "+tea.getEvents().get(0).getClass());
             }
         } catch(Exception e) {
+            e.printStackTrace();
             fail("Test failed: "+e);
         }
     }
@@ -100,24 +106,28 @@ public class EmbeddedEPNManagerTest {
     public void testEventRetries() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
-        net.setRootNodeName(N1);
         net.setVersion(null);
         
-        net.getSubjects().add(TEST_SUBJECT);
+        Subscription sub=new Subscription();
+        sub.setSubject(TEST_SUBJECT);
+        sub.setNodeName(N1);
+        net.getSubscriptions().add(sub);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        net.getNodes().put(N1, n1);
+        net.getNodes().add(n1);
         
         Node n2=new Node();
+        n2.setName(N2);
         n2.setPredicate(new TestPredicate2());
         n2.setMaxRetries(MAX_RETRIES);
         n2.getSourceNodes().add(N1);
         
         TestEventProcessorC tea=new TestEventProcessorC();
         n2.setEventProcessor(tea);
-        net.getNodes().put(N2, n2);
+        net.getNodes().add(n2);
         
         EmbeddedEPNManager mgr=new EmbeddedEPNManager();
         
@@ -147,30 +157,36 @@ public class EmbeddedEPNManagerTest {
     public void testMultipleEntryPointsForSameSubject() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setRootNodeName(N1);
         net1.setVersion(null);
         
-        net1.getSubjects().add(TEST_SUBJECT);
+        Subscription sub1=new Subscription();
+        sub1.setSubject(TEST_SUBJECT);
+        sub1.setNodeName(N1);
+        net1.getSubscriptions().add(sub1);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        net1.getNodes().put(N1, n1);
+        net1.getNodes().add(n1);
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
-        net2.setRootNodeName(N2);
         net2.setVersion(null);
         
-        net2.getSubjects().add(TEST_SUBJECT);
+        Subscription sub2=new Subscription();
+        sub2.setSubject(TEST_SUBJECT);
+        sub2.setNodeName(N2);
+        net2.getSubscriptions().add(sub2);
         
         Node n2=new Node();
+        n2.setName(N2);
         n2.setPredicate(new TestPredicate2());
         n2.setMaxRetries(MAX_RETRIES);
         
         TestEventProcessorC tea=new TestEventProcessorC();
         n2.setEventProcessor(tea);
-        net2.getNodes().put(N2, n2);
+        net2.getNodes().add(n2);
         
         EmbeddedEPNManager mgr=new EmbeddedEPNManager();
         
@@ -200,30 +216,36 @@ public class EmbeddedEPNManagerTest {
     public void testEntryPointsForDifferentSubjects() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setRootNodeName(N1);
         net1.setVersion(null);
         
-        net1.getSubjects().add(TEST_SUBJECT);
+        Subscription sub1=new Subscription();
+        sub1.setSubject(TEST_SUBJECT);
+        sub1.setNodeName(N1);
+        net1.getSubscriptions().add(sub1);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        net1.getNodes().put(N1, n1);
+        net1.getNodes().add(n1);
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
-        net2.setRootNodeName(N2);
         net2.setVersion(null);
         
-        net2.getSubjects().add(TEST_SUBJECT2);
+        Subscription sub2=new Subscription();
+        sub2.setSubject(TEST_SUBJECT2);
+        sub2.setNodeName(N2);
+        net2.getSubscriptions().add(sub2);
         
         Node n2=new Node();
+        n2.setName(N2);
         n2.setPredicate(new TestPredicate2());
         n2.setMaxRetries(MAX_RETRIES);
         
         TestEventProcessorC tea=new TestEventProcessorC();
         n2.setEventProcessor(tea);
-        net2.getNodes().put(N2, n2);
+        net2.getNodes().add(n2);
         
         EmbeddedEPNManager mgr=new EmbeddedEPNManager();
         
@@ -258,30 +280,36 @@ public class EmbeddedEPNManagerTest {
     public void testMultipleEntryPointsForSameSubjectRemoved() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setRootNodeName(N1);
         net1.setVersion(null);
         
-        net1.getSubjects().add(TEST_SUBJECT);
+        Subscription sub1=new Subscription();
+        sub1.setSubject(TEST_SUBJECT);
+        sub1.setNodeName(N1);
+        net1.getSubscriptions().add(sub1);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        net1.getNodes().put(N1, n1);
+        net1.getNodes().add(n1);
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
-        net2.setRootNodeName(N2);
         net2.setVersion(null);
         
-        net2.getSubjects().add(TEST_SUBJECT);
+        Subscription sub2=new Subscription();
+        sub2.setSubject(TEST_SUBJECT);
+        sub2.setNodeName(N2);
+        net2.getSubscriptions().add(sub2);
         
         Node n2=new Node();
+        n2.setName(N2);
         n2.setPredicate(new TestPredicate2());
         n2.setMaxRetries(MAX_RETRIES);
         
         TestEventProcessorC tea=new TestEventProcessorC();
         n2.setEventProcessor(tea);
-        net2.getNodes().put(N2, n2);
+        net2.getNodes().add(n2);
         
         EmbeddedEPNManager mgr=new EmbeddedEPNManager();
         
@@ -317,30 +345,36 @@ public class EmbeddedEPNManagerTest {
     public void testMultipleVersionEntryPoints1() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setRootNodeName(N1);
         net1.setVersion(VER1);
         
-        net1.getSubjects().add(TEST_SUBJECT);
+        Subscription sub1=new Subscription();
+        sub1.setSubject(TEST_SUBJECT);
+        sub1.setNodeName(N1);
+        net1.getSubscriptions().add(sub1);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        net1.getNodes().put(N1, n1);
+        net1.getNodes().add(n1);
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK);
-        net2.setRootNodeName(N2);
         net2.setVersion(VER2);
         
-        net2.getSubjects().add(TEST_SUBJECT);
+        Subscription sub2=new Subscription();
+        sub2.setSubject(TEST_SUBJECT);
+        sub2.setNodeName(N2);
+        net2.getSubscriptions().add(sub2);
         
         Node n2=new Node();
+        n2.setName(N2);
         n2.setPredicate(new TestPredicate2());
         n2.setMaxRetries(MAX_RETRIES);
         
         TestEventProcessorC tea=new TestEventProcessorC();
         n2.setEventProcessor(tea);
-        net2.getNodes().put(N2, n2);
+        net2.getNodes().add(n2);
         
         EmbeddedEPNManager mgr=new EmbeddedEPNManager();
         
@@ -406,30 +440,36 @@ public class EmbeddedEPNManagerTest {
     public void testMultipleVersionEntryPoints2() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setRootNodeName(N1);
         net1.setVersion(VER1);
         
-        net1.getSubjects().add(TEST_SUBJECT);
+        Subscription sub1=new Subscription();
+        sub1.setSubject(TEST_SUBJECT);
+        sub1.setNodeName(N1);
+        net1.getSubscriptions().add(sub1);
         
         Node n1=new Node();
+        n1.setName(N1);
         n1.setPredicate(new TestPredicate1());
         n1.setEventProcessor(new TestEventProcessorB());
-        net1.getNodes().put(N1, n1);
+        net1.getNodes().add(n1);
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK);
-        net2.setRootNodeName(N2);
         net2.setVersion(VER2);
         
-        net2.getSubjects().add(TEST_SUBJECT);
+        Subscription sub2=new Subscription();
+        sub2.setSubject(TEST_SUBJECT);
+        sub2.setNodeName(N2);
+        net2.getSubscriptions().add(sub2);
         
         Node n2=new Node();
+        n2.setName(N2);
         n2.setPredicate(new TestPredicate2());
         n2.setMaxRetries(MAX_RETRIES);
         
         TestEventProcessorC tea=new TestEventProcessorC();
         n2.setEventProcessor(tea);
-        net2.getNodes().put(N2, n2);
+        net2.getNodes().add(n2);
         
         EmbeddedEPNManager mgr=new EmbeddedEPNManager();
         
