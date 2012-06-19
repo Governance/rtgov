@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-11, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,32 +15,58 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.actmgmt.jbossas.actsvrrest;
+package org.overlord.bam.activity.store.mem;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.inject.Singleton;
 
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.server.spi.ActivityStore;
 
-public class TestActivityStore implements ActivityStore {
+/**
+ * This class provides the in-memory implementation of the Activity Store.
+ *
+ */
+@Singleton
+public class MemActivityStore implements ActivityStore {
+    
+    private static final Logger LOG=Logger.getLogger(MemActivityStore.class.getName());
 
-    private static List<ActivityUnit> _activities=new java.util.ArrayList<ActivityUnit>();
+    private List<ActivityUnit> _activities=new java.util.ArrayList<ActivityUnit>();
+    
+    /**
+     * This method clears the activity store.
+     */
+    public void clear() {
+        _activities.clear();
+    }
     
     /**
      * {@inheritDoc}
      */
-    @Override
     public void store(List<ActivityUnit> activities) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Store ("+this+") = "+activities);
+        }
+        
         _activities.addAll(activities);
     }
 
     /**
      * {@inheritDoc}
      */
-    @Override
     public List<ActivityUnit> query(QuerySpec query) throws Exception {
-        return (query.evaluate(_activities));
+        List<ActivityUnit> ret=query.evaluate(_activities);
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Query ("+this+") "+query+" = "+ret);
+        }
+        
+        return (ret);
     }
 
 }

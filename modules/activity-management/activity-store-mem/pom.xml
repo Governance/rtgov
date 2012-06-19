@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.activity-management</groupId>
-	<artifactId>activity-server-rests</artifactId> 
+	<artifactId>activity-store-mem</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Overlord BAM::Modules::Activity Management::Activity Server REST Server</name>
+	<name>Overlord BAM::Modules::Activity Management::Activity Store Memory</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
@@ -26,22 +26,10 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jackson-provider</artifactId>
-			<version>${resteasy.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.resteasy</groupId>
-			<artifactId>resteasy-jaxrs</artifactId>
-			<version>${resteasy.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.enterprise</groupId>
-			<artifactId>cdi-api</artifactId>
-			<version>1.0</version>
-			<scope>provided</scope>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-api</artifactId>
+		    <version>6.0</version>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

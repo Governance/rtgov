@@ -19,6 +19,7 @@ package org.overlord.bam.activity.server;
 
 import static org.junit.Assert.*;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
@@ -210,6 +211,54 @@ public class QuerySpecTest {
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
+        }
+    }
+    
+    @Test
+    public void testQuerySerialize() {
+        QuerySpec qs=new QuerySpec()
+                .setId("TestId")
+                .setFromTimestamp(500)
+                .setToTimestamp(600)
+                .addContext(new Context(Context.CONVERSATION_ID,"txnId","123"))
+                .addContext(new Context(Context.MESSAGE_ID,"mid","5"))
+                .setContextAND(false);
+        
+        ObjectMapper mapper=new ObjectMapper();
+        
+        try {
+            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+            
+            mapper.writeValue(baos, qs);
+            
+            baos.close();
+            
+            System.out.println("QUERY SPEC=\r\n"+new String(baos.toByteArray()));
+            
+        } catch(Exception e) {
+            fail("Failed to serialize: "+e);
+        }
+    }
+    
+    @Test
+    public void testQueryDeserialize() {
+        ObjectMapper mapper=new ObjectMapper();
+        
+        String qspec="{\"id\":\"TestId\",\"fromTimestamp\":500,\"toTimestamp\":600," +
+        		"\"contextAND\":false,\"contexts\":[{\"name\":\"txnId\",\"value\":\"123\"," +
+        		"\"type\":0},{\"name\":\"mid\",\"value\":\"5\",\"type\":2}]}";
+        
+        try {
+            java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(qspec.getBytes());
+            
+            QuerySpec qs=mapper.readValue(bais, QuerySpec.class);
+            
+            bais.close();
+            
+            System.out.println("QUERY SPEC="+qs);
+            
+        } catch(Exception e) {
+            fail("Failed to deserialize: "+e);
         }
     }
 }

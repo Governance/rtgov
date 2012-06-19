@@ -171,16 +171,13 @@ public class QuerySpec implements java.io.Externalizable {
      * the subset that pass the query criteria.
      * 
      * @param activities The list of activity units to evaluate
-     * @return The list of activity units that pass the query criteria, or null if none
+     * @return The list of activity units that pass the query criteria
      */
     public java.util.List<ActivityUnit> evaluate(java.util.List<ActivityUnit> activities) {
-        java.util.List<ActivityUnit> ret=null;
+        java.util.List<ActivityUnit> ret=new java.util.ArrayList<ActivityUnit>();
         
         for (ActivityUnit au : activities) {
             if (evaluate(au)) {
-                if (ret == null) {
-                    ret = new java.util.ArrayList<ActivityUnit>();
-                }
                 ret.add(au);
             }
         }
@@ -230,6 +227,14 @@ public class QuerySpec implements java.io.Externalizable {
         }
         
         return (ret);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return ("QuerySpec[id="+_id+" from="+_fromTimestamp+" to="+_toTimestamp
+                +" contexts="+_contexts+" contextAND="+_contextAND+"]");
     }
     
     /**

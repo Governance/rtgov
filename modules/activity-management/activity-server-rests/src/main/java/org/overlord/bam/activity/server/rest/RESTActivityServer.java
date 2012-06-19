@@ -30,12 +30,9 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -96,6 +93,7 @@ public class RESTActivityServer {
      * @param as The activity server
      */
     public void setActivityServer(ActivityServer as) {
+        LOG.info("Set Activity Server="+as);
         _activityServer = as;
     }
     
@@ -107,25 +105,21 @@ public class RESTActivityServer {
      * @return The list of activity events
      * @throws Exception Failed to query activity events
      */
-    @GET
+    @POST
     @Path("/query")
     @Produces("application/json")
-    public java.util.List<ActivityUnit> query(@DefaultValue("0") @QueryParam("from") long from,
-                    @DefaultValue("0") @QueryParam("to") long to) throws Exception {
+    @Consumes("application/json")
+    public java.util.List<ActivityUnit> query(QuerySpec qs) throws Exception {
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Query from="+from+" to="+to);        
+            LOG.finest("Query="+qs);        
         }
         
         if (_activityServer == null) {
             throw new Exception("Activity Server is not available");
         }
         
-        QuerySpec aq=new QuerySpec();
-        aq.setFromTimestamp(from);
-        aq.setToTimestamp(to);
-        
-        return (_activityServer.query(aq));
+        return (_activityServer.query(qs));
     }
 
     /**
