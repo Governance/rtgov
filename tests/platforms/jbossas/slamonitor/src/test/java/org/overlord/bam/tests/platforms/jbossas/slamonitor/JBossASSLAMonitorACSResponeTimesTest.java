@@ -41,12 +41,11 @@ import org.overlord.bam.active.collection.ActiveList;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class JBossASSLAMonitorACSTest {
+public class JBossASSLAMonitorACSResponeTimesTest {
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
     private static final String SERVICE_RESPONSE_TIME = "ServiceResponseTime";
-    private static final String SERVICE_VIOLATIONS = "ServiceViolations";
     
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
@@ -64,7 +63,7 @@ public class JBossASSLAMonitorACSTest {
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
-                copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
     }
     
     @Deployment(name="orders", order=2)
@@ -109,45 +108,9 @@ public class JBossASSLAMonitorACSTest {
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
-                        copyToTmpFile(archiveFiles[0],"slamonitor.war"));
+                        TestUtils.copyToTmpFile(archiveFiles[0],"slamonitor.war"));
     }
     
-    private static java.io.File copyToTmpFile(java.io.File source, String filename) {
-        String tmpdir=System.getProperty("java.io.tmpdir");
-        java.io.File dir=new java.io.File(tmpdir+java.io.File.separator+"bamtests"+System.currentTimeMillis());
-        
-        dir.mkdir();
-        
-        dir.deleteOnExit();
-        
-        java.io.File ret=new java.io.File(dir, filename);
-        ret.deleteOnExit();
-        
-        // Copy contents to the tmp file
-        try {
-            java.io.FileInputStream fis=new java.io.FileInputStream(source);
-            java.io.FileOutputStream fos=new java.io.FileOutputStream(ret);
-            
-            byte[] b=new byte[10240];
-            int len=0;
-            
-            while ((len=fis.read(b)) > 0) {
-                fos.write(b, 0, len);
-            }
-            
-            fis.close();
-            
-            fos.flush();
-            fos.close();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Failed to copy file '"+filename+"': "+e);
-        }
-        
-        return(ret);
-    }
-
     @Test @OperateOnDeployment("overlord-bam")
     public void testResponseTimes() {
         
@@ -263,97 +226,4 @@ public class JBossASSLAMonitorACSTest {
         return (ret);
     }
 
-    @Test @OperateOnDeployment("overlord-bam")
-    public void testViolations() {
-        
-        ActiveList al=(ActiveList)_activeCollectionManager.getActiveCollection(SERVICE_VIOLATIONS);
-        
-        if (al == null) {
-            fail("Active collection for '"+SERVICE_VIOLATIONS+"' was not found");
-        }
-        
-        try {
-            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
-            SOAPConnection con=factory.createConnection();
-            
-            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/demo-orders/OrderService");
-            
-            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
-                        "   <soap:Body>"+
-                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
-                        "            <order>"+
-                        "                <orderId>PO-19838-XYZ</orderId>"+
-                        "                <itemId>JAM</itemId>"+
-                        "                <quantity>200</quantity>"+
-                        "            </order>"+
-                        "        </orders:submitOrder>"+
-                        "    </soap:Body>"+
-                        "</soap:Envelope>";
-            
-            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
-            
-            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
-            
-            is.close();
-            
-            SOAPMessage response=con.call(request, url);
-
-            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-            
-            response.writeTo(baos);
-            
-            String resp=baos.toString();
-
-            baos.close();
-            
-            if (!resp.contains("<accepted>true</accepted>")) {
-                fail("Order was not accepted: "+resp);
-            }
-            
-            // Wait for events to propagate
-            Thread.sleep(4000);
-            
-            java.util.List<?> violations=getViolations();
-            
-            if (violations == null) {
-                fail("No violations returned");
-            }
-            
-            if (violations.size() != 1) {
-                fail("1 violation expected, but got: "+violations.size());
-            }
-            
-            System.out.println("VIOLATIONS="+violations);
-
-        } catch (Exception e) {
-            fail("Failed to invoke service: "+e);
-        }
-    }
-    
-    /**
-     * This method deserializes the events into a list of hashmaps. The
-     * actual objects are not deserialized, as this would require the
-     * domain objects to be included in all deployments, which would
-     * make verifying classloading/isolation difficult.
-     * 
-     * @return The list of objects representing violations
-     * @throws Exception Failed to deserialize the violations
-     */
-    protected java.util.List<?> getViolations() throws Exception {
-        java.util.List<?> ret=null;
-        
-        String urlStr="http://localhost:8080/slamonitor/monitor/violations";
-        
-        URL getUrl = new URL(urlStr);
-        
-        HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
-        connection.setRequestMethod("GET");
-        System.out.println("Content-Type: " + connection.getContentType());
-
-        java.io.InputStream is=connection.getInputStream();
-        
-        ret = MAPPER.readValue(is, java.util.List.class);
-       
-        return (ret);
-    }
 }

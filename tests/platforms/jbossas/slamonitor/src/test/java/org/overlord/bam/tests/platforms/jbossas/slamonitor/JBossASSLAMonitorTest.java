@@ -63,7 +63,7 @@ public class JBossASSLAMonitorTest {
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
-                copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
     }
     
     @Deployment(name="orders", order=2)
@@ -88,42 +88,6 @@ public class JBossASSLAMonitorTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    private static java.io.File copyToTmpFile(java.io.File source, String filename) {
-        String tmpdir=System.getProperty("java.io.tmpdir");
-        java.io.File dir=new java.io.File(tmpdir+java.io.File.separator+"bamtests"+System.currentTimeMillis());
-        
-        dir.mkdir();
-        
-        dir.deleteOnExit();
-        
-        java.io.File ret=new java.io.File(dir, filename);
-        ret.deleteOnExit();
-        
-        // Copy contents to the tmp file
-        try {
-            java.io.FileInputStream fis=new java.io.FileInputStream(source);
-            java.io.FileOutputStream fos=new java.io.FileOutputStream(ret);
-            
-            byte[] b=new byte[10240];
-            int len=0;
-            
-            while ((len=fis.read(b)) > 0) {
-                fos.write(b, 0, len);
-            }
-            
-            fis.close();
-            
-            fos.flush();
-            fos.close();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Failed to copy file '"+filename+"': "+e);
-        }
-        
-        return(ret);
-    }
-
     @Test @OperateOnDeployment("overlord-bam")
     public void testActivityEventsProcessed() {
         
