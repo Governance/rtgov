@@ -41,6 +41,8 @@ public class ActiveCollectionSource {
     private long _itemExpiration=0;
     private int _maxItems=0;
     private ActiveCollection _activeCollection=null;
+    private java.util.List<AbstractActiveChangeListener> _listeners=
+                    new java.util.ArrayList<AbstractActiveChangeListener>();
 
     /**
      * This method sets the name of the active collection that
@@ -145,6 +147,28 @@ public class ActiveCollectionSource {
     }
 
     /**
+     * This method returns the list of active change listeners to be
+     * automatically registered against the active collection associated
+     * with this source..
+     * 
+     * @return The list of active change listeners
+     */
+    public java.util.List<AbstractActiveChangeListener> getActiveChangeListeners() {
+        return (_listeners);
+    }
+
+    /**
+     * This method returns the list of active change listeners to be
+     * automatically registered against the active collection associated
+     * with this source..
+     * 
+     * @param listeners The list of active change listeners
+     */
+    public void setActiveChangeListeners(java.util.List<AbstractActiveChangeListener> listeners) {
+        _listeners = listeners;
+    }
+
+    /**
      * This method pre-initializes the active collection source
      * in situations where it needs to be initialized before
      * registration with the manager. This may be required
@@ -164,6 +188,20 @@ public class ActiveCollectionSource {
      */
     public void init() throws Exception {
         
+        // If active change listeners defined, then instantiate them
+        // and add them to the active collection
+        if (_listeners.size() > 0) {
+            
+            // Check that active collection has been set
+            if (_activeCollection == null) {
+                throw new Exception("Active collection has not been associated with the '"
+                                    +getName()+"' source");
+            }
+            
+            for (AbstractActiveChangeListener l : _listeners) {
+                _activeCollection.addActiveChangeListener(l);
+            }
+        }
     }
 
     /**
@@ -173,6 +211,13 @@ public class ActiveCollectionSource {
      */
     public void close() throws Exception {
         
+        // Unregister any pre-defined listeners
+        if (_listeners.size() > 0) {
+                        
+            for (AbstractActiveChangeListener l : _listeners) {
+                _activeCollection.removeActiveChangeListener(l);
+            }
+        }
     }
 
     /**

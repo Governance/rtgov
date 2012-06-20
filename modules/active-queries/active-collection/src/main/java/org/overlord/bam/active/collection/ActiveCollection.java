@@ -84,6 +84,15 @@ public abstract class ActiveCollection {
     }
     
     /**
+     * This method returns the list of active change listeners.
+     * 
+     * @return The list of active change listeners
+     */
+    protected java.util.List<ActiveChangeListener> getActiveChangeListeners() {
+        return (_listeners);
+    }
+    
+    /**
      * This method returns the size of the active collection.
      * 
      * @return The size
