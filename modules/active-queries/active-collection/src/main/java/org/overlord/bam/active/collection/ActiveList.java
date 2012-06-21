@@ -29,6 +29,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
     private static final Logger LOG=Logger.getLogger(ActiveList.class.getName());
     
     private java.util.List<Object> _list=new java.util.ArrayList<Object>();
+    private java.util.List<Long> _listTimestamps=new java.util.ArrayList<Long>();
     private java.util.List<Object> _readCopy=null;
     private boolean _copyOnRead=true;
 
@@ -87,8 +88,16 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
         synchronized (_list) {
             if (key == null) {
                 _list.add(value);
+                
+                if (getItemExpiration() > 0) {
+                    _listTimestamps.add(System.currentTimeMillis());
+                }
             } else if (key instanceof Integer) {
-                _list.add(((Integer)key).intValue(), value);
+                _list.add((Integer)key, value);
+                
+                if (getItemExpiration() > 0) {
+                    _listTimestamps.add((Integer)key, System.currentTimeMillis());
+                }
             } else {
                 LOG.severe("Unknown key type '"+key+"' - should be integer");
             }
@@ -107,7 +116,11 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
         synchronized (_list) {
             if (key != null) {
                 if (key instanceof Integer) {
-                    _list.set(((Integer)key).intValue(), value);
+                    _list.set((Integer)key, value);
+                    
+                    if (getItemExpiration() > 0) {
+                        _listTimestamps.set((Integer)key, System.currentTimeMillis());
+                    }
                     
                     updated(key, value);
                 } else {
@@ -122,6 +135,10 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                     LOG.severe("Unable to find list entry for value in list '"+getName()+"': "+value);
                 } else {
                     _list.set(index, value);
+                    
+                    if (getItemExpiration() > 0) {
+                        _listTimestamps.set(index, System.currentTimeMillis());
+                    }
                     
                     updated(index, value);
                 }
@@ -139,10 +156,18 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
         int pos=-1;
         
         synchronized (_list) {
-            pos = _list.indexOf(value);
+            if (key instanceof Integer) {
+                pos = (Integer)key;
+            } else {
+                pos = _list.indexOf(value);
+            }
             
             if (pos != -1) {
                 _list.remove(pos);
+                
+                if (getItemExpiration() > 0) {
+                    _listTimestamps.remove(pos);
+                }
             } else {
                 LOG.severe("Unable to remove value from list '"+getName()+"': "+value);
             }
@@ -180,4 +205,47 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
         return (new ActiveList(name, this, predicate));
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    protected void cleanup() {
+        
+        // TODO: Provide some separate cleanup policy class to enable
+        // different policies to be used. For now just have a simple
+        // directly implemented mechanism.
+        
+        if (getMaxItems() > 0) {
+            
+            synchronized (_list) {
+                int num=size()-getMaxItems();
+                
+                if (num > 0) {
+                    for (int i=size()-1; i >= getMaxItems(); i--) {
+                        // TODO: Could do bulk remove and then
+                        // send notifications all at once???
+                        remove(i, null);
+                    }
+                }
+            }
+        }
+        
+        if (getItemExpiration() > 0) {
+            
+            synchronized (_list) {
+                // Calculate expiration time
+                long expiration = System.currentTimeMillis()-getItemExpiration();
+                
+                // Work through list backwards to determine if the entry
+                // has expired
+                for (int i=size()-1; i >= 0; i--) {
+                    if (_listTimestamps.get(i) < expiration) {
+                        // TODO: Could do bulk remove and then
+                        // send notifications all at once???
+                        remove(i, null);
+                    }
+                }
+            }
+        }
+    }
+
 }

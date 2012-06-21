@@ -19,6 +19,11 @@ package org.overlord.bam.active.collection;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 
@@ -30,11 +35,51 @@ import javax.ejb.Singleton;
 @Singleton(name="ActiveCollectionManager")
 @ConcurrencyManagement(BEAN)
 public class DefaultActiveCollectionManager implements ActiveCollectionManager {
+    
+    private static final Logger LOG=Logger.getLogger(DefaultActiveCollectionManager.class.getName());
 
     private java.util.Map<String, ActiveCollection> _activeCollections=
                 new java.util.HashMap<String, ActiveCollection>();
     private java.util.Map<String, java.lang.ref.SoftReference<ActiveCollection>> _derivedActiveCollections=
                 new java.util.HashMap<String, java.lang.ref.SoftReference<ActiveCollection>>();
+    private long _houseKeepingInterval=10000;
+    private HouseKeeper _houseKeeper=null;
+    
+    /**
+     * This method initializes the Active Collection Manager.
+     */
+    @PostConstruct
+    public void init() {
+        _houseKeeper = new HouseKeeper();
+    }
+    
+    /**
+     * This method closes the Active Collection Manager.
+     */
+    @PreDestroy
+    public void close() {
+        if (_houseKeeper != null) {
+            _houseKeeper.cancel();
+        }
+    }
+    
+    /**
+     * This method sets the house keeping interval.
+     * 
+     * @param interval The interval
+     */
+    public void setHouseKeepingInterval(long interval) {
+        _houseKeepingInterval = interval;
+    }
+    
+    /**
+     * This method gets the house keeping interval.
+     * 
+     * @return The interval
+     */
+    public long getHouseKeepingInterval() {
+        return (_houseKeepingInterval);
+    }
     
     /**
      * {@inheritDoc}
@@ -51,12 +96,19 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
             if (acs.getType() == ActiveCollectionType.List) {
                 ActiveList list=new ActiveList(acs.getName());
                 
+                // Copy configuration
+                list.setItemExpiration(acs.getItemExpiration());
+                list.setMaxItems(acs.getMaxItems());
+                list.setHighWaterMark(acs.getHighWaterMark());
+                
                 _activeCollections.put(acs.getName(), list);
                 
                 acs.setActiveCollection(list);
                 
                 // Initialize the active collection source
                 acs.init();
+                
+                LOG.info("Registered active collection for source '"+acs.getName()+"'");
                 
             } else {
                 throw new IllegalArgumentException("Active collection type not currently supported");
@@ -81,6 +133,8 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
             acs.setActiveCollection(null);
             
             _activeCollections.remove(acs.getName());
+            
+            LOG.info("Unregistered active collection for source '"+acs.getName()+"'");
         }
     }
 
@@ -117,6 +171,10 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
                 
                 if (ret == null) {                    
                     _derivedActiveCollections.remove(name);
+                    
+                    if (LOG.isLoggable(Level.FINER)) {
+                        LOG.finer("Removing soft reference to active collection '"+name+"'");
+                    }
                 }
             }
             
@@ -124,6 +182,10 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
                 ret = parent.derive(name, predicate);
                 
                 _derivedActiveCollections.put(name, new java.lang.ref.SoftReference<ActiveCollection>(ret));
+                
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.finer("Derived active collection '"+name+"' with predicate: "+predicate);
+                }
             }
         }
         
@@ -136,6 +198,80 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
     public void remove(String name) {
         synchronized (_derivedActiveCollections) {
             _derivedActiveCollections.remove(name);
+            
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.finer("Removed derived active collection '"+name+"'");
+            }
+        }
+    }
+    
+    /**
+     * This method performs the cleanup task on the top level
+     * active collections.
+     */
+    protected void cleanup() {
+               
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Running active collection cleanup ....");
+        }
+        
+        synchronized (_activeCollections) {
+            for (ActiveCollection ac : _activeCollections.values()) {
+                ac.cleanup();
+                
+                // Check whether the high water mark has been breached
+                if (ac.getHighWaterMark() > 0) {
+                    
+                    if (ac.getHighWaterMarkWarningIssued()) {
+                        
+                        if (ac.size() < ac.getHighWaterMark()) {
+                            // TODO: Currently log message, but should also
+                            // report via MBean when implemented
+                            LOG.info("Active collection '"+ac.getName()
+                                    +"' has returned below its high water mark ("
+                                    +ac.getHighWaterMark()+")");
+
+                            // Reset warning indicator
+                            ac.setHighWaterMarkWarningIssued(false);
+                        }
+                    } else if (ac.size() > ac.getHighWaterMark()) {
+                        
+                        // Issue warning
+                        // TODO: Currently log message, but should also
+                        // report via MBean when implemented
+                        LOG.warning("Active collection '"+ac.getName()
+                                +"' has exceeded its high water mark ("
+                                +ac.getHighWaterMark()+")");
+                        
+                        ac.setHighWaterMarkWarningIssued(true);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * This class implements the housekeeping functionality to
+     * cleanup the top level active collections periodically.
+     *
+     */
+    public class HouseKeeper extends java.util.TimerTask {
+
+        private java.util.Timer _timer=new java.util.Timer();
+        
+        /**
+         * This is the constructor.
+         */
+        public HouseKeeper() {
+            _timer.scheduleAtFixedRate(this, getHouseKeepingInterval(), getHouseKeepingInterval());
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run() {
+            cleanup();
         }
     }
 

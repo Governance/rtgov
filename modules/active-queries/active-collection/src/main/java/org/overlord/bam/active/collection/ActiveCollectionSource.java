@@ -40,6 +40,7 @@ public class ActiveCollectionSource {
     private ActiveCollectionType _type=ActiveCollectionType.List;
     private long _itemExpiration=0;
     private int _maxItems=0;
+    private int _highWaterMark=0;
     private ActiveCollection _activeCollection=null;
     private java.util.List<AbstractActiveChangeListener> _listeners=
                     new java.util.ArrayList<AbstractActiveChangeListener>();
@@ -123,6 +124,26 @@ public class ActiveCollectionSource {
      */
     public void setMaxItems(int max) {
         _maxItems = max;
+    }
+    
+    /**
+     * This method gets the high water mark, used to indicate
+     * when a warning should be issued.
+     * 
+     * @return The high water mark, or 0 if not relevant
+     */
+    public int getHighWaterMark() {
+        return (_highWaterMark);
+    }
+
+    /**
+     * This method sets the high water mark, used to indicate
+     * when a warning should be issued.
+     * 
+     * @param highWaterMark The high water mark
+     */
+    public void setHighWaterMark(int highWaterMark) {
+        _highWaterMark = highWaterMark;
     }
     
     /**

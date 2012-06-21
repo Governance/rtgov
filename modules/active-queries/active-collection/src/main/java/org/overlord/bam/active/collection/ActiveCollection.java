@@ -27,6 +27,10 @@ public abstract class ActiveCollection {
     private java.util.List<ActiveChangeListener> _listeners=
                     new java.util.ArrayList<ActiveChangeListener>();
     private ActiveCollectionAdapter _adapter=null;
+    private long _itemExpiration=0;
+    private int _maxItems=0;
+    private int _highWaterMark=0;
+    private boolean _highWaterMarkWarningIssued=false;
     
     /**
      * This constructor initializes the active collection.
@@ -60,6 +64,95 @@ public abstract class ActiveCollection {
         return (_name);
     }
 
+    /**
+     * This method returns the item expiration duration.
+     * 
+     * @return The number of milliseconds that the item should remain
+     *          in the active collection, or 0 if not relevant
+     */
+    protected long getItemExpiration() {
+        return (_itemExpiration);
+    }
+    
+    /**
+     * This method sets the item expiration duration.
+     * 
+     * @param expire The item expiration duration, or zero
+     *              for no expiration duration
+     */
+    protected void setItemExpiration(long expire) {
+        _itemExpiration = expire;
+    }
+
+    /**
+     * This method returns the maximum number of items that should be
+     * contained within the active collection. The default policy will
+     * be to remove oldest entry when maximum number is reached.
+     * 
+     * @return The maximum number of items, or 0 if not relevant
+     */
+    protected int getMaxItems() {
+        return (_maxItems);
+    }
+
+    /**
+     * This method sets the maximum number of items
+     * that will be in the active collection.
+     * 
+     * @param max The maximum number of items, or zero
+     *              for no limit
+     */
+    protected void setMaxItems(int max) {
+        _maxItems = max;
+    }
+    
+    /**
+     * This method gets the high water mark, used to indicate
+     * when a warning should be issued.
+     * 
+     * @return The high water mark, or 0 if not relevant
+     */
+    protected int getHighWaterMark() {
+        return (_highWaterMark);
+    }
+
+    /**
+     * This method sets the high water mark, used to indicate
+     * when a warning should be issued.
+     * 
+     * @param highWaterMark The high water mark
+     */
+    protected void setHighWaterMark(int highWaterMark) {
+        _highWaterMark = highWaterMark;
+    }
+    
+    /**
+     * This method determines whether the high water mark
+     * warning has been issued.
+     * 
+     * @return Whether the high water mark has been issued
+     */
+    protected boolean getHighWaterMarkWarningIssued() {
+        return (_highWaterMarkWarningIssued);
+    }
+
+    /**
+     * This method sets whether the high water mark
+     * warning has been issued.
+     * 
+     * @param issued Whether the high water mark has been issued
+     */
+    protected void setHighWaterMarkWarningIssued(boolean issued) {
+        _highWaterMarkWarningIssued = issued;
+    }
+    
+    /**
+     * This method performs any required cleanup, associated with
+     * the active collection, related to the max items and item
+     * expiration properties.
+     */
+    protected abstract void cleanup();
+    
     /**
      * This method adds an Active Change Listener to listen
      * for notifications of change to the active collection.
@@ -162,8 +255,11 @@ public abstract class ActiveCollection {
     
     /**
      * This method removes the supplied object from the active collection.
+     * Generally the key should be provided, as this will be the most
+     * efficient means to identify the item to be removed. However if
+     * not provided, then the value will be used to locate the item.
      * 
-     * @param key The optional key, not required for lists
+     * @param key The optional key
      * @param value The value
      */
     protected abstract void remove(Object key, Object value);

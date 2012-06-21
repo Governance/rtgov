@@ -295,6 +295,113 @@ public class ActiveListTest {
         }
     }
 
+    @Test
+    public void testCleanupMaxItems() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        list.setMaxItems(10);
+        
+        for (int i=0; i < 15; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        if (list.size() != 15) {
+            fail("List should have 15 items: "+list.size());
+        }
+        
+        list.cleanup();
+        
+        if (list.size() != 10) {
+            fail("List should have 10 items: "+list.size());
+        }
+        
+        if (l._removedKey.size() != 5) {
+            fail("Removed key size should be 5: "+l._removedKey.size());
+        }
+    }
+
+    @Test
+    public void testInsertionExpirationPerformance() {
+        int testSize=10000000;
+        
+        // Run first test without expiration        
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        long startTime=System.currentTimeMillis();
+        
+        for (int i=0; i < testSize; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        long without=(System.currentTimeMillis()-startTime);
+        
+        // Run second test with expiration
+        list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        list.setItemExpiration(1000);
+        
+        startTime=System.currentTimeMillis();
+        
+        for (int i=0; i < testSize; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        long with=(System.currentTimeMillis()-startTime);
+        
+        double diff=(double)with/(double)without;
+        
+        System.out.println("INSERT PERTFORMANCE:\r\nWithout expiry = "
+                            +without+"\r\nWith expiry = "+with
+                            +"\r\nDifference % = "+diff);
+        
+        if (diff > 3.0) {
+            fail("Insert performance with expiration set is too slow!");
+        }
+    }
+
+    @Test
+    public void testCleanupItemExpiration() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        list.setItemExpiration(2000);
+        
+        for (int i=0; i < 5; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        try {
+            synchronized (this) {
+                wait(3000);
+            }
+        } catch(Exception e) {
+            fail("Failed to wait");
+        }
+        
+        for (int i=0; i < 10; i++) {
+            list.insert(null, new TestObject(5+i));
+        }
+        
+        if (list.size() != 15) {
+            fail("List should have 15 items: "+list.size());
+        }
+        
+        list.cleanup();
+        
+        if (list.size() != 10) {
+            fail("List should have 10 items: "+list.size());
+        }
+        
+        if (l._removedKey.size() != 5) {
+            fail("Removed key size should be 5: "+l._removedKey.size());
+        }
+    }
+
     public static class TestObject {
         
         private int _number=0;

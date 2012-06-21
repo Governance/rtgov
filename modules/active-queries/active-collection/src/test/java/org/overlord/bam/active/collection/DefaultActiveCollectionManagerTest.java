@@ -166,4 +166,57 @@ public class DefaultActiveCollectionManagerTest {
         	fail("Derived ac should no longer exist");
         }
     }
+    
+    @Test
+    public void testRegisterACSWithHighWaterMark() {
+        DefaultActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        acs.setName(TEST_AC);
+        acs.setHighWaterMark(10);
+        
+        try {
+            mgr.register(acs);
+        } catch (Exception e) {
+            fail("Failed to register active collection source: "+e);
+        }
+        
+        // Check that the active collection for this source has been created
+        if (acs.getActiveCollection() == null) {
+            fail("Active collection on source has not been set");
+        }
+        
+        ActiveCollection ac=mgr.getActiveCollection(TEST_AC);
+        
+        if (ac == null) {
+            fail("Unable to obtain active collection from manager");
+        }
+        
+        if (ac.getHighWaterMarkWarningIssued()) {
+            fail("Warning should not have been issued yet");
+        }
+        
+        for (int i=0; i < 12; i++) {
+            ac.insert(null, new String("Object "+i));
+        }
+        
+        mgr.cleanup();
+        
+        if (!ac.getHighWaterMarkWarningIssued()) {
+            fail("Warning should have been issued");
+        }
+        
+        ac.remove(0, null);
+        ac.remove(0, null);
+        ac.remove(0, null);
+        
+        // Perform cleanup again - which should cause the warning flag to be removed
+        mgr.cleanup();
+        
+        if (ac.getHighWaterMarkWarningIssued()) {
+            fail("Warning should no longer have be issued");
+        }
+        
+    }
+
 }
