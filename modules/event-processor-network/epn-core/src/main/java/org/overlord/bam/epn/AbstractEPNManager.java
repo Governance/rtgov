@@ -205,6 +205,17 @@ public abstract class AbstractEPNManager implements EPNManager {
     }
     
     /**
+     * This method sets the last accessed timestamp on the supplied
+     * network.
+     * 
+     * @param network The network
+     * @param timestamp The timestamp
+     */
+    protected void setLastAccessed(Network network, long timestamp) {
+        network.lastAccessed(timestamp);
+    }
+    
+    /**
      * This method returns the network associated with the
      * supplied name.
      * 
@@ -430,6 +441,21 @@ public abstract class AbstractEPNManager implements EPNManager {
     /**
      * {@inheritDoc}
      */
+    public java.util.List<NetworkInfo> getNetworkInfo() {
+        java.util.List<NetworkInfo> ret=new java.util.ArrayList<NetworkInfo>();
+        
+        for (NetworkList nl : _networkMap.values()) {
+            for (Network n : nl.getNetworks()) {
+                ret.add(new NetworkInfo(n));
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void close() throws Exception {
     }
 
@@ -440,7 +466,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      */
     public class NetworkList {
         
-        private java.util.List<Network> _networks=new java.util.LinkedList<Network>();
+        private java.util.List<Network> _networks=new java.util.ArrayList<Network>();
         
         /**
          * The constructor.
@@ -518,6 +544,15 @@ public abstract class AbstractEPNManager implements EPNManager {
             }
 
             return (ret);
+        }
+        
+        /**
+         * This method returns the list of networks.
+         * 
+         * @return The list of networks
+         */
+        public java.util.List<Network> getNetworks() {
+            return (_networks);
         }
         
         /**

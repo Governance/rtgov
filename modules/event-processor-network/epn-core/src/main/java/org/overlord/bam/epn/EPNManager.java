@@ -70,6 +70,14 @@ public interface EPNManager {
                  java.util.List<? extends java.io.Serializable> events) throws Exception;
     
     /**
+     * This method returns the information associated with the networks
+     * managed by this manager.
+     * 
+     * @return The network information
+     */
+    public java.util.List<NetworkInfo> getNetworkInfo();
+    
+    /**
      * This method closes the manager.
      * 
      * @throws Exception Failed to close manager

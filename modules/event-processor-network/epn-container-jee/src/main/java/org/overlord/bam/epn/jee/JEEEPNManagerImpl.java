@@ -183,6 +183,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
         }
 
         String[] subjects=subjectList.split(",");
+        long timestamp=System.currentTimeMillis();
+        
         for (String subject : subjects) {
             java.util.List<Network> networks=getNetworksForSubject(subject);
             
@@ -202,6 +204,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                         }
                         
                         postProcessEvents(events);
+                        
+                        setLastAccessed(network, timestamp);
                     }
                 }
             }
@@ -246,6 +250,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             }
             
             postProcessEvents(events);
+            
+            setLastAccessed(network, System.currentTimeMillis());
         }
     }
 

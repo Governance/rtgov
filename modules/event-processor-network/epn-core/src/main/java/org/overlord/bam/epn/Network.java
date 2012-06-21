@@ -34,6 +34,7 @@ public class Network {
     private java.util.Map<String,Node> _namedNodes=new java.util.HashMap<String,Node>();
     private java.util.Map<String,java.util.List<Node>> _subjectNodes=
                         new java.util.HashMap<String,java.util.List<Node>>();
+    private long _lastAccessed=0;
     
     private boolean _preinitialized=false;
     private ClassLoader _contextClassLoader=null;
@@ -81,6 +82,26 @@ public class Network {
      */
     public void setVersion(String version) {
         _version = version;
+    }
+    
+    /**
+     * This method returns the timestamp the network was
+     * last accessed.
+     * 
+     * @return When the network was last accessed
+     */
+    protected long lastAccessed() {
+        return (_lastAccessed);
+    }
+    
+    /**
+     * This method sets the timestamp the network was
+     * last accessed.
+     * 
+     * @param timestamp When the network was last accessed
+     */
+    protected void lastAccessed(long timestamp) {
+        _lastAccessed = timestamp;
     }
     
     /**

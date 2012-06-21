@@ -29,6 +29,7 @@ import org.overlord.bam.active.collection.epn.EPNActiveCollectionSource;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
+import org.overlord.bam.epn.NetworkInfo;
 import org.overlord.bam.epn.NodeListener;
 import org.overlord.bam.epn.NotificationType;
 
@@ -303,6 +304,10 @@ public class EPNActiveCollectionSourceTest {
         }
 
         public void close() throws Exception {
+        }
+
+        public List<NetworkInfo> getNetworkInfo() {
+            return null;
         }
         
     }
