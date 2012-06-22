@@ -23,6 +23,11 @@ package org.overlord.bam.epn;
  *
  */
 public interface EPNManager {
+    
+    /**
+     * The URI for the EPNManager registered in JNDI.
+     */
+    public static final String URI="java:global/overlord-bam/EPNManager";
 
     /**
      * This method registers a network.
@@ -41,6 +46,20 @@ public interface EPNManager {
      * @throws Exception Failed to unregister the network
      */
     public void unregister(String networkName, String version) throws Exception;
+    
+    /**
+     * This method registers a network listener.
+     * 
+     * @param l The listener
+     */
+    public void addNetworkListener(NetworkListener l);
+    
+    /**
+     * This method unregisters a network listener.
+     * 
+     * @param l The listener
+     */
+    public void removeNetworkListener(NetworkListener l);
     
     /**
      * This method registers a node listener for the specified network.
@@ -68,14 +87,6 @@ public interface EPNManager {
      */
     public void publish(String subject,
                  java.util.List<? extends java.io.Serializable> events) throws Exception;
-    
-    /**
-     * This method returns the information associated with the networks
-     * managed by this manager.
-     * 
-     * @return The network information
-     */
-    public java.util.List<NetworkInfo> getNetworkInfo();
     
     /**
      * This method closes the manager.

@@ -29,7 +29,7 @@ import org.overlord.bam.active.collection.epn.EPNActiveCollectionSource;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.NetworkInfo;
+import org.overlord.bam.epn.NetworkListener;
 import org.overlord.bam.epn.NodeListener;
 import org.overlord.bam.epn.NotificationType;
 
@@ -277,6 +277,7 @@ public class EPNActiveCollectionSourceTest {
     public class TestEPNManager implements EPNManager {
         
         private java.util.List<NodeListener> _nodeListeners=new java.util.ArrayList<NodeListener>();
+        private java.util.List<NetworkListener> _networkListeners=new java.util.ArrayList<NetworkListener>();
 
         public void register(Network network) throws Exception {
         }
@@ -293,6 +294,14 @@ public class EPNActiveCollectionSourceTest {
             _nodeListeners.remove(l);
         }
         
+        public void addNetworkListener(NetworkListener l) {
+            _networkListeners.add(l);
+        }
+
+        public void removeNetworkListener(NetworkListener l) {
+            _networkListeners.remove(l);
+        }
+        
         public void publish(String node, NotificationType type, EventList events) {
             for (NodeListener l : _nodeListeners) {
                 l.notify(TEST_NETWORK, null, node, type, events);
@@ -304,10 +313,6 @@ public class EPNActiveCollectionSourceTest {
         }
 
         public void close() throws Exception {
-        }
-
-        public List<NetworkInfo> getNetworkInfo() {
-            return null;
         }
         
     }

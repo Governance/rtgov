@@ -34,6 +34,7 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.NodeListener;
 import org.overlord.bam.epn.NotificationType;
@@ -50,7 +51,7 @@ public class JBossASSLAMonitorTest {
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
     // 'overlord-bam' as the deployment it should operate on.
-    @Resource(mappedName="java:global/overlord-bam/EPNManager")
+    @Resource(mappedName=EPNManager.URI)
     org.overlord.bam.epn.EPNManager _epnManager;
     
     @Deployment(name="overlord-bam", order=1)

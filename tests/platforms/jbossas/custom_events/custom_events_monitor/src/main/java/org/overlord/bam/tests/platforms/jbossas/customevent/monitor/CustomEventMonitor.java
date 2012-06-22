@@ -49,7 +49,6 @@ public class CustomEventMonitor implements NodeListener {
 
     private static final Logger LOG=Logger.getLogger(CustomEventMonitor.class.getName());
     
-    private static final String EPN_MANAGER = "java:global/overlord-bam/EPNManager";
     private static final String ACS_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
 
     private EPNManager _epnManager=null;
@@ -67,7 +66,7 @@ public class CustomEventMonitor implements NodeListener {
         try {
             InitialContext ctx=new InitialContext();
             
-            _epnManager = (EPNManager)ctx.lookup(EPN_MANAGER);
+            _epnManager = (EPNManager)ctx.lookup(EPNManager.URI);
 
             _epnManager.addNodeListener(CUSTOM_EVENTS_EPN, this);
             

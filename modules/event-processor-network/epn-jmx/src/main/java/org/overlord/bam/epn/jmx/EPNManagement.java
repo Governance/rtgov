@@ -29,12 +29,16 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.naming.InitialContext;
 
 import org.overlord.bam.epn.EPNManager;
-import org.overlord.bam.epn.NetworkInfo;
+import org.overlord.bam.epn.Network;
+import org.overlord.bam.epn.NetworkListener;
 
 /**
  * This class provides the capability to manage the EPN Manager.
@@ -45,14 +49,17 @@ import org.overlord.bam.epn.NetworkInfo;
 @Startup
 @ConcurrencyManagement(BEAN)
 public class EPNManagement extends javax.management.NotificationBroadcasterSupport
-                        implements EPNManagementMBean {
+                        implements EPNManagementMBean, NetworkListener {
     
-    private static final String OBJECT_NAME = "bam.epn:name=EPNManager";
+    private static final String OBJECT_NAME_DOMAIN = "org.overlord.bam.epn";    
+    private static final String OBJECT_NAME_MANAGER = ":name=EPNManager";
     
     private static final Logger LOG=Logger.getLogger(EPNManagement.class.getName());
     
     @Inject
     private EPNManager _epnManager;
+    
+    private int _numOfNetworks=0;
 
     /**
      * The constructor.
@@ -65,46 +72,98 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
      */
     @PostConstruct
     public void init() {
-        LOG.info("Register the EPNManager MBean: "+_epnManager);
+        LOG.info("Register the EPNManagement MBean: "+_epnManager);
         
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
-            ObjectName objname=new ObjectName(OBJECT_NAME);
+            ObjectName objname=new ObjectName(OBJECT_NAME_DOMAIN+OBJECT_NAME_MANAGER);
             
             mbs.registerMBean(this, objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register MBean for EPNManager", e);
-        }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public java.util.List<String> getNetworks() {
-        java.util.List<String> ret=new java.util.ArrayList<String>();
-        
-        for (NetworkInfo ni : _epnManager.getNetworkInfo()) {
-            ret.add(ni.toString());
+            LOG.log(Level.SEVERE, "Failed to register MBean for EPNManagement", e);
         }
         
-        return (ret);
+        _epnManager.addNetworkListener(this);
     }
-
 
     /**
      * {@inheritDoc}
      */
     @PreDestroy
     public void close() throws Exception {
-        LOG.info("Unregister the EPNManager MBean");
+        LOG.info("Unregister the EPNManagement MBean");
+
+        try {
+            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
+            
+            java.util.Set<Bean<?>> beans=bm.getBeans(EPNManager.class);
+            
+            if (beans.size() > 0) {
+                _epnManager.removeNetworkListener(this);
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to unregister network listener", e);
+        }
         
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
-            ObjectName objname=new ObjectName(OBJECT_NAME);
+            ObjectName objname=new ObjectName(OBJECT_NAME_DOMAIN+OBJECT_NAME_MANAGER);
             
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister MBean for EPNManager", e);
+            LOG.log(Level.SEVERE, "Failed to unregister MBean for EPNManagement", e);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void networkRegistered(Network network) {
+        try {
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+            
+            mbs.registerMBean(network, getObjectName(network)); 
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to register MBean for network "
+                        +network.getName()+"["+network.getVersion()+"]", e);
+        }   
+        
+        _numOfNetworks++;
+    }
+
+    /**
+     * This method creates the MBean object name for the supplied
+     * network.
+     * 
+     * @param network The network
+     * @return The object name
+     * @throws Exception Failed to create object name
+     */
+    protected ObjectName getObjectName(Network network) throws Exception {
+        return (new ObjectName(OBJECT_NAME_DOMAIN+":name="
+                +network.getName()+",version="+network.getVersion()));
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void networkUnregistered(Network network) {
+        try {
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+            
+            mbs.unregisterMBean(getObjectName(network)); 
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to unregister MBean for network "
+                        +network.getName()+"["+network.getVersion()+"]", e);
+        }
+        
+        _numOfNetworks--;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getNumberOfNetworks() {
+        return (_numOfNetworks);
     }
 }

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * This class represents an Event Processor Network.
  *
  */
-public class Network {
+public class Network implements NetworkMBean {
 
     private String _name=null;
     private String _version=null;
@@ -92,6 +92,16 @@ public class Network {
      */
     protected long lastAccessed() {
         return (_lastAccessed);
+    }
+    
+    /**
+     * This method returns the date/time the network was
+     * last accessed.
+     * 
+     * @return When the network was last accessed
+     */
+    public java.util.Date getLastAccessed() {
+        return (new java.util.Date(_lastAccessed));
     }
     
     /**

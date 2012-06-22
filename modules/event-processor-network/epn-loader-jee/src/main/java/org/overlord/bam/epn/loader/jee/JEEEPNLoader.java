@@ -49,7 +49,6 @@ public class JEEEPNLoader extends AbstractEPNLoader {
     private static final Logger LOG=Logger.getLogger(JEEEPNLoader.class.getName());
     
     private static final String EPN_JSON = "epn.json";
-    private static final String EPN_MANAGER = "java:global/overlord-bam/EPNManager";
 
     private EPNManager _epnManager=null;
     private Network _network=null;
@@ -69,7 +68,7 @@ public class JEEEPNLoader extends AbstractEPNLoader {
         try {
             InitialContext ctx=new InitialContext();
             
-            _epnManager = (EPNManager)ctx.lookup(EPN_MANAGER);
+            _epnManager = (EPNManager)ctx.lookup(EPNManager.URI);
 
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(EPN_JSON);
             

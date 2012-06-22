@@ -84,6 +84,58 @@ public class AbstractEPNManagerTest {
     }
 
     @Test
+    public void testNetworkListenerNotified() {
+        Network net=new Network();
+        net.setName(TEST_NETWORK);
+        
+        Node n1=new Node();
+        n1.setName(N1);
+        n1.setEventProcessor(new TestEventProcessorA());
+        net.getNodes().add(n1);
+        
+        AbstractEPNManager mgr=getManager();
+        
+        TestNetworkListener l=new TestNetworkListener();
+        mgr.addNetworkListener(l);
+        
+        if (l._registered.size() != 0) {
+            fail("No networks should be registered");
+        }
+        
+        if (l._unregistered.size() != 0) {
+            fail("No networks should be unregistered");
+        }
+        
+        try {
+            mgr.register(net);
+        } catch(Exception e) {
+            fail("Failed: "+e);
+        }
+        
+        if (l._registered.size() != 1) {
+            fail("1 network should be registered: "+l._registered.size());
+        }
+        
+        if (l._unregistered.size() != 0) {
+            fail("Still no networks should be unregistered");
+        }
+        
+        try {
+            mgr.unregister(net.getName(), net.getVersion());
+        } catch(Exception e) {
+            fail("Failed: "+e);
+        }
+        
+        if (l._registered.size() != 1) {
+            fail("Still 1 network should be registered: "+l._registered.size());
+        }
+        
+        if (l._unregistered.size() != 1) {
+            fail("1 network should be unregistered: "+l._unregistered.size());
+        }
+    }
+
+    @Test
     public void testRegisterNetworkNodeNoEventProcessor() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
@@ -394,4 +446,18 @@ public class AbstractEPNManagerTest {
         }
     }
 
+    public class TestNetworkListener implements NetworkListener {
+        
+        protected java.util.List<Network> _registered=new java.util.ArrayList<Network>();
+        protected java.util.List<Network> _unregistered=new java.util.ArrayList<Network>();
+
+        public void networkRegistered(Network network) {
+            _registered.add(network);
+        }
+
+        public void networkUnregistered(Network network) {
+            _unregistered.add(network);
+        }
+        
+    }
 }

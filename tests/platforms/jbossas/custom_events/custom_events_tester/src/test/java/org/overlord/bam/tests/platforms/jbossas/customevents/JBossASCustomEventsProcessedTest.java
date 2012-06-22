@@ -39,7 +39,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class JBossASCustomEventsTest {
+public class JBossASCustomEventsProcessedTest {
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
@@ -258,81 +258,9 @@ public class JBossASCustomEventsTest {
         
         ret = MAPPER.readValue(is, java.util.List.class);
 
-System.out.println("RET="+ret);
+        System.out.println("ACS RESULTS="+ret);
+        
         return (ret);
     }
 
-    @Test
-    @OperateOnDeployment(value="monitor")
-    public void testActivityEventsResults() {
-        
-        try {
-            // Reset event list
-            getEvents();
-            
-            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
-            SOAPConnection con=factory.createConnection();
-            
-            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/demo-orders/OrderService");
-            
-            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
-                        "   <soap:Body>"+
-                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
-                        "            <order>"+
-                        "                <orderId>PO-13739-ABC</orderId>"+
-                        "                <itemId>JAM</itemId>"+
-                        "                <quantity>50</quantity>"+
-                        "            </order>"+
-                        "        </orders:submitOrder>"+
-                        "    </soap:Body>"+
-                        "</soap:Envelope>";
-            
-            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
-            
-            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
-            
-            is.close();
-            
-            SOAPMessage response=con.call(request, url);
-
-            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-            
-            response.writeTo(baos);
-            
-            String resp=baos.toString();
-
-            baos.close();
-            
-            if (!resp.contains("<accepted>true</accepted>")) {
-                fail("Order was not accepted: "+resp);
-            }
-            
-            // Wait for events to propagate
-            Thread.sleep(2000);
-            
-            java.util.List<?> events=getEvents();
-            
-            if (events == null) {
-                fail("No events returned");
-            }
-            
-            // Should be 8 processed events and 2 result
-            if (events.size() != 10) {
-                fail("10 events expected, but got: "+events.size());
-            }
-            
-            java.util.List<?> acsresults=getACSEvents();
-            
-            if (acsresults == null) {
-                fail("No acsresults returned");
-            }
-            
-            if (acsresults.size() != 2) {
-                fail("2 acsresults expected, but got: "+acsresults.size());
-            }
-            
-        } catch (Exception e) {
-            fail("Failed to invoke service via SOAP: "+e);
-        }
-    }
 }

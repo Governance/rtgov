@@ -39,8 +39,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
 
     private static final Logger LOG=Logger.getLogger(EPNActiveCollectionSource.class.getName());
 
-    private static final String EPN_MANAGER = "java:global/overlord-bam/EPNManager";
-
     private EPNManager _epnManager=null;
     private String _network=null;
     private String _node=null;
@@ -197,7 +195,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
             try {
                 InitialContext ctx=new InitialContext();
                 
-                _epnManager = (EPNManager)ctx.lookup(EPN_MANAGER);
+                _epnManager = (EPNManager)ctx.lookup(EPNManager.URI);
                 
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Failed to obtain Event Processor Network Manager", e);

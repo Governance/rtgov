@@ -36,6 +36,8 @@ public abstract class AbstractEPNManager implements EPNManager {
                         new java.util.HashMap<String, java.util.List<Network>>();
     private java.util.Map<String, java.util.List<NodeListener>> _nodeListeners=
                         new java.util.HashMap<String, java.util.List<NodeListener>>();
+    private java.util.List<NetworkListener> _networkListeners=
+                        new java.util.ArrayList<NetworkListener>();
     private boolean _usePrePostEventListProcessing=false;
     
     /**
@@ -73,6 +75,12 @@ public abstract class AbstractEPNManager implements EPNManager {
                 currentNetworkChanged(oldnet, network);
             }
         }
+        
+        synchronized (_networkListeners) {
+            for (int i=0; i < _networkListeners.size(); i++) {
+                _networkListeners.get(i).networkRegistered(network);
+            }
+        }
     }
     
     /**
@@ -81,12 +89,14 @@ public abstract class AbstractEPNManager implements EPNManager {
     public void unregister(String networkName, String version) throws Exception {
         
         LOG.info("Unregistering EPN network '"+networkName+"' version["+version+"]");
+        
+        Network network=null;
 
         synchronized (_networkMap) {
             NetworkList nl=_networkMap.get(networkName);
             
             if (nl != null) {
-                Network network=(version == null ? nl.getCurrent() : nl.getVersion(version));
+                network = (version == null ? nl.getCurrent() : nl.getVersion(version));
                 
                 if (network != null) {
                     Network oldcur=nl.getCurrent();
@@ -102,6 +112,14 @@ public abstract class AbstractEPNManager implements EPNManager {
                 
                 if (nl.size() == 0) {
                     _networkMap.remove(networkName);
+                }
+            }
+        }
+        
+        if (network != null) {
+            synchronized (_networkListeners) {
+                for (int i=0; i < _networkListeners.size(); i++) {
+                    _networkListeners.get(i).networkUnregistered(network);
                 }
             }
         }
@@ -201,6 +219,32 @@ public abstract class AbstractEPNManager implements EPNManager {
                     _nodeListeners.remove(network);
                 }
             }
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void addNetworkListener(NetworkListener l) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Register network listener="+l);
+        }
+        
+        synchronized (_networkListeners) {
+            _networkListeners.add(l);
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void removeNetworkListener(NetworkListener l) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Unregister network listener="+l);
+        }
+        
+        synchronized (_networkListeners) {
+            _networkListeners.remove(l);
         }
     }
     
@@ -436,21 +480,6 @@ public abstract class AbstractEPNManager implements EPNManager {
                 }
             }
         }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public java.util.List<NetworkInfo> getNetworkInfo() {
-        java.util.List<NetworkInfo> ret=new java.util.ArrayList<NetworkInfo>();
-        
-        for (NetworkList nl : _networkMap.values()) {
-            for (Network n : nl.getNetworks()) {
-                ret.add(new NetworkInfo(n));
-            }
-        }
-        
-        return (ret);
     }
     
     /**

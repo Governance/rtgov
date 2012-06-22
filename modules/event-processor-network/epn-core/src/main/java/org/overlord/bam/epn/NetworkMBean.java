@@ -15,20 +15,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.jmx;
+package org.overlord.bam.epn;
 
 /**
- * This interface represents the JMX management interface
- * to the Event Processor Network management capability.
+ * This interface exposes the attributes and operations to be
+ * managed for a Network.
  *
  */
-public interface EPNManagementMBean {
+public interface NetworkMBean {
+
+    /**
+     * This method returns the name of the network. This can be used
+     * to locate the network by name.
+     * 
+     * @return The name of the network
+     */
+    public String getName();
     
     /**
-     * This method returns the number of registered networks.
+     * This method returns the version associated with the network.
      * 
-     * @return The number of registered networks
+     * @return The version
      */
-    public int getNumberOfNetworks();
+    public String getVersion();
+
+    /**
+     * This method returns the date/time the network was
+     * last accessed.
+     * 
+     * @return When the network was last accessed
+     */
+    public java.util.Date getLastAccessed();
 
 }

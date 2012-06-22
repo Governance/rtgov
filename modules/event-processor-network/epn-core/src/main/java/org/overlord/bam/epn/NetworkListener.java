@@ -15,20 +15,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.jmx;
+package org.overlord.bam.epn;
 
 /**
- * This interface represents the JMX management interface
- * to the Event Processor Network management capability.
+ * This interface represents a listener that is informed of
+ * situations regarding networks.
  *
  */
-public interface EPNManagementMBean {
+public interface NetworkListener {
+
+    /**
+     * This method indicates that a network has been
+     * registered.
+     * 
+     * @param network The network
+     */
+    public void networkRegistered(Network network);
     
     /**
-     * This method returns the number of registered networks.
+     * This method indicates that a network has been
+     * unregistered.
      * 
-     * @return The number of registered networks
+     * @param network The network
      */
-    public int getNumberOfNetworks();
-
+    public void networkUnregistered(Network network);
+    
 }
