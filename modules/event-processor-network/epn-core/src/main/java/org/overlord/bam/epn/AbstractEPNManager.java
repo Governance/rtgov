@@ -78,7 +78,7 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         synchronized (_networkListeners) {
             for (int i=0; i < _networkListeners.size(); i++) {
-                _networkListeners.get(i).networkRegistered(network);
+                _networkListeners.get(i).registered(network);
             }
         }
     }
@@ -119,7 +119,7 @@ public abstract class AbstractEPNManager implements EPNManager {
         if (network != null) {
             synchronized (_networkListeners) {
                 for (int i=0; i < _networkListeners.size(); i++) {
-                    _networkListeners.get(i).networkUnregistered(network);
+                    _networkListeners.get(i).unregistered(network);
                 }
             }
         }

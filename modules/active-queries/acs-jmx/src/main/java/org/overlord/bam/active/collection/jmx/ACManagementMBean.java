@@ -15,29 +15,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn;
+package org.overlord.bam.active.collection.jmx;
 
 /**
- * This interface represents a listener that is informed of
- * situations regarding networks.
+ * This interface represents the JMX management interface
+ * to the Event Processor Network management capability.
  *
  */
-public interface NetworkListener {
+public interface ACManagementMBean {
+    
+    /**
+     * This method sets the house keeping interval.
+     * 
+     * @param interval The interval
+     */
+    public void setHouseKeepingInterval(long interval);
+    
+    /**
+     * This method gets the house keeping interval.
+     * 
+     * @return The interval
+     */
+    public long getHouseKeepingInterval();
 
-    /**
-     * This method indicates that a network has been
-     * registered.
-     * 
-     * @param network The network
-     */
-    public void registered(Network network);
-    
-    /**
-     * This method indicates that a network has been
-     * unregistered.
-     * 
-     * @param network The network
-     */
-    public void unregistered(Network network);
-    
 }

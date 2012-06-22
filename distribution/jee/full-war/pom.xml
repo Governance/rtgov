@@ -89,6 +89,11 @@
 			<artifactId>active-collection</artifactId>
 			<version>${bam.version}</version>
 		</dependency>		
+		<dependency>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>acs-jmx</artifactId>
+			<version>${bam.version}</version>
+		</dependency>		
 
 		<dependency>
 			<groupId>junit</groupId>

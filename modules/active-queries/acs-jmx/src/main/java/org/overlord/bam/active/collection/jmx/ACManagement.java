@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.jmx;
+package org.overlord.bam.active.collection.jmx;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -36,35 +36,33 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
-import org.overlord.bam.epn.EPNManager;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.NetworkListener;
+import org.overlord.bam.active.collection.ActiveCollection;
+import org.overlord.bam.active.collection.ActiveCollectionListener;
+import org.overlord.bam.active.collection.ActiveCollectionManager;
 
 /**
- * This class provides the capability to manage the EPN Manager.
+ * This class provides the capability to manage the Active Collection Manager.
  *
  */
-@Singleton(name="EPNManagement")
+@Singleton(name="ACManagement")
 @ApplicationScoped
 @Startup
 @ConcurrencyManagement(BEAN)
-public class EPNManagement extends javax.management.NotificationBroadcasterSupport
-                        implements EPNManagementMBean, NetworkListener {
+public class ACManagement extends javax.management.NotificationBroadcasterSupport
+                        implements ACManagementMBean, ActiveCollectionListener {
     
-    private static final String OBJECT_NAME_DOMAIN = "org.overlord.bam.epn";    
-    private static final String OBJECT_NAME_MANAGER = ":name=EPNManager";
+    private static final String OBJECT_NAME_DOMAIN = "org.overlord.bam.active.collection";    
+    private static final String OBJECT_NAME_MANAGER = ":name=ActiveCollectionManager";
     
-    private static final Logger LOG=Logger.getLogger(EPNManagement.class.getName());
+    private static final Logger LOG=Logger.getLogger(ACManagement.class.getName());
     
     @Inject
-    private EPNManager _epnManager;
+    private ActiveCollectionManager _acManager;
     
-    private int _numOfNetworks=0;
-
     /**
      * The constructor.
      */
-    public EPNManagement() {
+    public ACManagement() {
     }
     
     /**
@@ -72,7 +70,7 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
      */
     @PostConstruct
     public void init() {
-        LOG.info("Register the EPNManagement MBean: "+_epnManager);
+        LOG.info("Register the ACManagement MBean: "+_acManager);
         
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
@@ -80,10 +78,10 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             
             mbs.registerMBean(this, objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register MBean for EPNManagement", e);
+            LOG.log(Level.SEVERE, "Failed to register MBean for ACManagement", e);
         }
         
-        _epnManager.addNetworkListener(this);
+        _acManager.addActiveCollectionListener(this);
     }
 
     /**
@@ -91,18 +89,18 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
      */
     @PreDestroy
     public void close() throws Exception {
-        LOG.info("Unregister the EPNManagement MBean");
+        LOG.info("Unregister the ACManagement MBean");
 
         try {
             BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
             
-            java.util.Set<Bean<?>> beans=bm.getBeans(EPNManager.class);
+            java.util.Set<Bean<?>> beans=bm.getBeans(ActiveCollectionManager.class);
             
             if (beans.size() > 0) {
-                _epnManager.removeNetworkListener(this);
+                _acManager.removeActiveCollectionListener(this);
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister network listener", e);
+            LOG.log(Level.SEVERE, "Failed to unregister active collection listener", e);
         }
         
         try {
@@ -111,59 +109,61 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister MBean for EPNManagement", e);
+            LOG.log(Level.SEVERE, "Failed to unregister MBean for ACManagement", e);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public void registered(Network network) {
+    public void registered(ActiveCollection ac) {
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             
-            mbs.registerMBean(network, getObjectName(network)); 
+            mbs.registerMBean(ac, getObjectName(ac)); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register MBean for network "
-                        +network.getName()+"["+network.getVersion()+"]", e);
+            LOG.log(Level.SEVERE, "Failed to register MBean for active collection '"
+                        +ac.getName()+"'", e);
         }   
-        
-        _numOfNetworks++;
     }
 
     /**
      * This method creates the MBean object name for the supplied
-     * network.
+     * active collection.
      * 
-     * @param network The network
+     * @param ac The active collection
      * @return The object name
      * @throws Exception Failed to create object name
      */
-    protected ObjectName getObjectName(Network network) throws Exception {
-        return (new ObjectName(OBJECT_NAME_DOMAIN+":name="
-                +network.getName()+",version="+network.getVersion()));
+    protected ObjectName getObjectName(ActiveCollection ac) throws Exception {
+        return (new ObjectName(OBJECT_NAME_DOMAIN+":name="+ac.getName()));
     }
     
     /**
      * {@inheritDoc}
      */
-    public void unregistered(Network network) {
+    public void unregistered(ActiveCollection ac) {
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             
-            mbs.unregisterMBean(getObjectName(network)); 
+            mbs.unregisterMBean(getObjectName(ac)); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister MBean for network "
-                        +network.getName()+"["+network.getVersion()+"]", e);
+            LOG.log(Level.SEVERE, "Failed to unregister MBean for active collection '"
+                        +ac.getName()+"'", e);
         }
-        
-        _numOfNetworks--;
     }
 
     /**
      * {@inheritDoc}
      */
-    public int getNumberOfNetworks() {
-        return (_numOfNetworks);
+    public void setHouseKeepingInterval(long interval) {
+        _acManager.setHouseKeepingInterval(interval);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public long getHouseKeepingInterval() {
+        return (_acManager.getHouseKeepingInterval());
     }
 }

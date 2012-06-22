@@ -26,6 +26,34 @@ package org.overlord.bam.active.collection;
 public interface ActiveCollectionManager {
 
     /**
+     * This method sets the house keeping interval.
+     * 
+     * @param interval The interval
+     */
+    public void setHouseKeepingInterval(long interval);
+    
+    /**
+     * This method gets the house keeping interval.
+     * 
+     * @return The interval
+     */
+    public long getHouseKeepingInterval();
+
+    /**
+     * This method registers an active collection listener.
+     * 
+     * @param l The active collection listener
+     */
+    public void addActiveCollectionListener(ActiveCollectionListener l);
+    
+    /**
+     * This method unregisters an active collection listener.
+     * 
+     * @param l The active collection listener
+     */
+    public void removeActiveCollectionListener(ActiveCollectionListener l);
+    
+    /**
      * This method registers the active collection source with
      * the manager.
      * 

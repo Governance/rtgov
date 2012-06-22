@@ -21,7 +21,7 @@ package org.overlord.bam.active.collection;
  * This class provides the base Active Collection implementation.
  *
  */
-public abstract class ActiveCollection {
+public abstract class ActiveCollection implements ActiveCollectionMBean {
 
     private String _name=null;
     private java.util.List<ActiveChangeListener> _listeners=

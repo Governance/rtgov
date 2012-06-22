@@ -53,6 +53,53 @@ public class DefaultActiveCollectionManagerTest {
     }
 
     @Test
+    public void testNetworkListenerNotified() {
+        ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        acs.setName(TEST_AC);
+        
+        TestActiveCollectionListener l=new TestActiveCollectionListener();
+        mgr.addActiveCollectionListener(l);
+        
+        if (l._registered.size() != 0) {
+            fail("No active collections should be registered");
+        }
+        
+        if (l._unregistered.size() != 0) {
+            fail("No active collections should be unregistered");
+        }
+        
+        try {
+            mgr.register(acs);
+        } catch (Exception e) {
+            fail("Failed to register active collection source: "+e);
+        }
+        
+        if (l._registered.size() != 1) {
+            fail("1 active collection should be registered: "+l._registered.size());
+        }
+        
+        if (l._unregistered.size() != 0) {
+            fail("Still no active collections should be unregistered");
+        }
+        
+        try {
+            mgr.unregister(acs);
+        } catch (Exception e) {
+            fail("Failed to unregister active collection source: "+e);
+        }
+        
+        if (l._registered.size() != 1) {
+            fail("Still 1 active collection should be registered: "+l._registered.size());
+        }
+        
+        if (l._unregistered.size() != 1) {
+            fail("1 active collection should be unregistered: "+l._unregistered.size());
+        }
+    }
+
+    @Test
     public void testAlreadyRegisteredACS() {
         ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
         
@@ -219,4 +266,18 @@ public class DefaultActiveCollectionManagerTest {
         
     }
 
+    public class TestActiveCollectionListener implements ActiveCollectionListener {
+        
+        protected java.util.List<ActiveCollection> _registered=new java.util.ArrayList<ActiveCollection>();
+        protected java.util.List<ActiveCollection> _unregistered=new java.util.ArrayList<ActiveCollection>();
+
+        public void registered(ActiveCollection ac) {
+            _registered.add(ac);
+        }
+
+        public void unregistered(ActiveCollection ac) {
+            _unregistered.add(ac);
+        }
+        
+    }
 }

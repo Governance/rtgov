@@ -42,6 +42,8 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
                 new java.util.HashMap<String, ActiveCollection>();
     private java.util.Map<String, java.lang.ref.SoftReference<ActiveCollection>> _derivedActiveCollections=
                 new java.util.HashMap<String, java.lang.ref.SoftReference<ActiveCollection>>();
+    private java.util.List<ActiveCollectionListener> _activeCollectionListeners=
+                new java.util.ArrayList<ActiveCollectionListener>();
     private long _houseKeepingInterval=10000;
     private HouseKeeper _houseKeeper=null;
     
@@ -85,6 +87,7 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
      * {@inheritDoc}
      */
     public void register(ActiveCollectionSource acs) throws Exception {
+        ActiveCollection ac=null;
         
         // Check whether active collection for name has already been created
         synchronized (_activeCollections) {
@@ -110,8 +113,18 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
                 
                 LOG.info("Registered active collection for source '"+acs.getName()+"'");
                 
+                ac = list;
+                
             } else {
                 throw new IllegalArgumentException("Active collection type not currently supported");
+            }
+        }
+        
+        if (ac != null) {
+            synchronized (_activeCollectionListeners) {
+                for (int i=0; i < _activeCollectionListeners.size(); i++) {
+                    _activeCollectionListeners.get(i).registered(ac);
+                }
             }
         }
     }
@@ -120,6 +133,7 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
      * {@inheritDoc}
      */
     public void unregister(ActiveCollectionSource acs) throws Exception {
+        ActiveCollection ac=null;
         
         synchronized (_activeCollections) {
             if (!_activeCollections.containsKey(acs.getName())) {
@@ -130,11 +144,21 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
             // Close the active collection source
             acs.close();
           
+            ac = acs.getActiveCollection();
+            
             acs.setActiveCollection(null);
             
             _activeCollections.remove(acs.getName());
             
             LOG.info("Unregistered active collection for source '"+acs.getName()+"'");
+        }
+        
+        if (ac != null) {
+            synchronized (_activeCollectionListeners) {
+                for (int i=0; i < _activeCollectionListeners.size(); i++) {
+                    _activeCollectionListeners.get(i).unregistered(ac);
+                }
+            }
         }
     }
 
@@ -247,6 +271,32 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addActiveCollectionListener(ActiveCollectionListener l) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Register active collection listener="+l);
+        }
+        
+        synchronized (_activeCollectionListeners) {
+            _activeCollectionListeners.add(l);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeActiveCollectionListener(ActiveCollectionListener l) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Unregister active collection listener="+l);
+        }
+        
+        synchronized (_activeCollectionListeners) {
+            _activeCollectionListeners.remove(l);
         }
     }
 

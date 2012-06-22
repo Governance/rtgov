@@ -15,29 +15,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn;
+package org.overlord.bam.active.collection;
 
 /**
- * This interface represents a listener that is informed of
- * situations regarding networks.
+ * This interface can be used to listen for active collections
+ * being registered with the manager.
  *
  */
-public interface NetworkListener {
+public interface ActiveCollectionListener {
 
     /**
-     * This method indicates that a network has been
-     * registered.
+     * This method notifies the listener that an active collection
+     * has been registered.
      * 
-     * @param network The network
+     * @param ac The active collection
      */
-    public void registered(Network network);
+    public void registered(ActiveCollection ac);
     
     /**
-     * This method indicates that a network has been
-     * unregistered.
+     * This method notifies the listener that an active collection
+     * has been unregistered.
      * 
-     * @param network The network
+     * @param ac The active collection
      */
-    public void unregistered(Network network);
+    public void unregistered(ActiveCollection ac);
     
 }

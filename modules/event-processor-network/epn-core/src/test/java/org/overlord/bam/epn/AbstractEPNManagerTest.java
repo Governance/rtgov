@@ -451,11 +451,11 @@ public class AbstractEPNManagerTest {
         protected java.util.List<Network> _registered=new java.util.ArrayList<Network>();
         protected java.util.List<Network> _unregistered=new java.util.ArrayList<Network>();
 
-        public void networkRegistered(Network network) {
+        public void registered(Network network) {
             _registered.add(network);
         }
 
-        public void networkUnregistered(Network network) {
+        public void unregistered(Network network) {
             _unregistered.add(network);
         }
         
