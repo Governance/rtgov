@@ -26,10 +26,12 @@ import java.util.logging.Logger;
  */
 public class ActiveList extends ActiveCollection implements java.lang.Iterable<Object> {
     
+    private static final int INITIAL_CAPACITY = 1000;
+
     private static final Logger LOG=Logger.getLogger(ActiveList.class.getName());
     
-    private java.util.List<Object> _list=new java.util.ArrayList<Object>();
-    private java.util.List<Long> _listTimestamps=new java.util.ArrayList<Long>();
+    private java.util.List<Object> _list=new java.util.ArrayList<Object>(INITIAL_CAPACITY);
+    private java.util.List<Long> _listTimestamps=new java.util.ArrayList<Long>(INITIAL_CAPACITY);
     private java.util.List<Object> _readCopy=null;
     private boolean _copyOnRead=true;
 
@@ -40,6 +42,19 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      */
     public ActiveList(String name) {
         super(name);
+    }
+    
+    /**
+     * This constructor initializes the active list.
+     * 
+     * @param name The name
+     * @param capacity The initial capacity of the list
+     */
+    protected ActiveList(String name, int capacity) {
+        super(name);
+        
+        _list = new java.util.ArrayList<Object>(capacity);
+        _listTimestamps = new java.util.ArrayList<Long>(capacity);
     }
     
     /**
