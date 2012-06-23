@@ -82,8 +82,8 @@ public class ActiveListTest {
         
         list.insert(1, new TestObject(3));
         
-        if (list.size() != 3) {
-            fail("Should be 3 objects: "+list.size());
+        if (list.getSize() != 3) {
+            fail("Should be 3 objects: "+list.getSize());
         }
         
         java.util.Iterator<Object> iter=list.iterator();
@@ -249,8 +249,8 @@ public class ActiveListTest {
         
         ActiveList derived=new ActiveList(TEST_DERIVED_ACTIVE_COLLECTION, list, predicate);
         
-        if (derived.size() != 5) {
-        	fail("Should be 5 entries in derived: "+derived.size());
+        if (derived.getSize() != 5) {
+        	fail("Should be 5 entries in derived: "+derived.getSize());
         }
     }
     
@@ -282,8 +282,8 @@ public class ActiveListTest {
         list.insert(null, new TestObject(11));
         list.insert(null, new TestObject(12));
         
-        if (derived.size() != 6) {
-        	fail("Derived list should have 6 items: "+derived.size());
+        if (derived.getSize() != 6) {
+        	fail("Derived list should have 6 items: "+derived.getSize());
         }
         
         if (l._insertedValue.size() != 1) {
@@ -308,14 +308,14 @@ public class ActiveListTest {
             list.insert(null, new TestObject(i));
         }
         
-        if (list.size() != 15) {
-            fail("List should have 15 items: "+list.size());
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
         }
         
         list.cleanup();
         
-        if (list.size() != 10) {
-            fail("List should have 10 items: "+list.size());
+        if (list.getSize() != 10) {
+            fail("List should have 10 items: "+list.getSize());
         }
         
         if (l._removedKey.size() != 5) {
@@ -399,14 +399,14 @@ public class ActiveListTest {
             list.insert(null, new TestObject(5+i));
         }
         
-        if (list.size() != 15) {
-            fail("List should have 15 items: "+list.size());
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
         }
         
         list.cleanup();
         
-        if (list.size() != 10) {
-            fail("List should have 10 items: "+list.size());
+        if (list.getSize() != 10) {
+            fail("List should have 10 items: "+list.getSize());
         }
         
         if (l._removedKey.size() != 5) {

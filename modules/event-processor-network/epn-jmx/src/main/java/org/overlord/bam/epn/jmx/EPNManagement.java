@@ -51,7 +51,7 @@ import org.overlord.bam.epn.NetworkListener;
 public class EPNManagement extends javax.management.NotificationBroadcasterSupport
                         implements EPNManagementMBean, NetworkListener {
     
-    private static final String OBJECT_NAME_DOMAIN = "org.overlord.bam.epn";    
+    private static final String OBJECT_NAME_DOMAIN = "overlord.bam.networks";    
     private static final String OBJECT_NAME_MANAGER = ":name=EPNManager";
     
     private static final Logger LOG=Logger.getLogger(EPNManagement.class.getName());

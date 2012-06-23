@@ -88,7 +88,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
     /**
      * {@inheritDoc}
      */
-    public int size() {
+    public int getSize() {
         synchronized (_list) {
             return (_list.size());
         }
@@ -232,10 +232,10 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
         if (getMaxItems() > 0) {
             
             synchronized (_list) {
-                int num=size()-getMaxItems();
+                int num=getSize()-getMaxItems();
                 
                 if (num > 0) {
-                    for (int i=size()-1; i >= getMaxItems(); i--) {
+                    for (int i=getSize()-1; i >= getMaxItems(); i--) {
                         // TODO: Could do bulk remove and then
                         // send notifications all at once???
                         remove(i, null);
@@ -252,7 +252,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                 
                 // Work through list backwards to determine if the entry
                 // has expired
-                for (int i=size()-1; i >= 0; i--) {
+                for (int i=getSize()-1; i >= 0; i--) {
                     if (_listTimestamps.get(i) < expiration) {
                         // TODO: Could do bulk remove and then
                         // send notifications all at once???

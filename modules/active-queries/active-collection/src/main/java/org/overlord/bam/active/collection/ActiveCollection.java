@@ -190,7 +190,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean {
      * 
      * @return The size
      */
-    public abstract int size();
+    public abstract int getSize();
     
     /**
      * This method adds the supplied object to the active collection.

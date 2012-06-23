@@ -36,6 +36,6 @@ public interface ActiveCollectionMBean {
      * 
      * @return The size of the collection
      */
-    public int size();
+    public int getSize();
     
 }

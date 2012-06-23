@@ -110,7 +110,7 @@ public class CustomEventMonitor implements NodeListener {
     public java.util.List<CustomActivityEvent> getACSResults() {
         java.util.List<CustomActivityEvent> ret=new java.util.ArrayList<CustomActivityEvent>();
 
-        LOG.info("Returning Custom Active Collection results (size="+_customEventsACS.size()+") ac="+_customEventsACS);
+        LOG.info("Returning Custom Active Collection results (size="+_customEventsACS.getSize()+") ac="+_customEventsACS);
         
         for (Object obj : _customEventsACS) {
             if (obj instanceof CustomActivityEvent) {

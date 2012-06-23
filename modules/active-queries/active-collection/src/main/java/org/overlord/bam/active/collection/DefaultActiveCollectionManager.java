@@ -248,7 +248,7 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
                     
                     if (ac.getHighWaterMarkWarningIssued()) {
                         
-                        if (ac.size() < ac.getHighWaterMark()) {
+                        if (ac.getSize() < ac.getHighWaterMark()) {
                             // TODO: Currently log message, but should also
                             // report via MBean when implemented
                             LOG.info("Active collection '"+ac.getName()
@@ -258,7 +258,7 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
                             // Reset warning indicator
                             ac.setHighWaterMarkWarningIssued(false);
                         }
-                    } else if (ac.size() > ac.getHighWaterMark()) {
+                    } else if (ac.getSize() > ac.getHighWaterMark()) {
                         
                         // Issue warning
                         // TODO: Currently log message, but should also

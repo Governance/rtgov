@@ -51,8 +51,8 @@ import org.overlord.bam.active.collection.ActiveCollectionManager;
 public class ACManagement extends javax.management.NotificationBroadcasterSupport
                         implements ACManagementMBean, ActiveCollectionListener {
     
-    private static final String OBJECT_NAME_DOMAIN = "org.overlord.bam.active.collection";    
-    private static final String OBJECT_NAME_MANAGER = ":name=ActiveCollectionManager";
+    private static final String OBJECT_NAME_DOMAIN = "overlord.bam.collections";    
+    private static final String OBJECT_NAME_MANAGER = ":name=CollectionManager";
     
     private static final Logger LOG=Logger.getLogger(ACManagement.class.getName());
     

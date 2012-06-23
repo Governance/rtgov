@@ -111,8 +111,8 @@ public class EPNActiveCollectionSourceTest {
         // Review results
         ActiveList al=(ActiveList)acs.getActiveCollection();
         
-        if (al.size() != 6) {
-            fail("Should only be 6 events: "+al.size());
+        if (al.getSize() != 6) {
+            fail("Should only be 6 events: "+al.getSize());
         }
         
         for (Object obj : al) {
@@ -251,8 +251,8 @@ public class EPNActiveCollectionSourceTest {
         
         acs.publishAggregateEvents();
         
-        if (acs.getActiveCollection().size() != 1) {
-            fail("Active collection should have 1 entry: "+acs.getActiveCollection().size());
+        if (acs.getActiveCollection().getSize() != 1) {
+            fail("Active collection should have 1 entry: "+acs.getActiveCollection().getSize());
         }
         
         TestObject to=(TestObject)((ActiveList)acs.getActiveCollection()).iterator().next();
