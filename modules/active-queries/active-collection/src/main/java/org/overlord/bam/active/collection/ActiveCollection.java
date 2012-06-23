@@ -181,8 +181,8 @@ public abstract class ActiveCollection implements ActiveCollectionMBean {
      * 
      * @return The list of active change listeners
      */
-    protected java.util.List<ActiveChangeListener> getActiveChangeListeners() {
-        return (_listeners);
+    public java.util.List<ActiveChangeListener> getActiveChangeListeners() {
+        return (java.util.Collections.unmodifiableList(_listeners));
     }
     
     /**

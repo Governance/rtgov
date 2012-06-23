@@ -81,6 +81,13 @@ public interface ActiveCollectionManager {
     public ActiveCollection getActiveCollection(String name);
     
     /**
+     * This method returns the active collections.
+     * 
+     * @return The active collections
+     */
+    public java.util.Collection<ActiveCollection> getActiveCollections();
+    
+    /**
      * This method derives a local active collection, from the supplied
      * parent active collection, with the supplied predicate to filter
      * results from the parent collection.

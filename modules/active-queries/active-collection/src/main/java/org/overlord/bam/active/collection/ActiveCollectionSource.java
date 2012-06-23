@@ -220,6 +220,12 @@ public class ActiveCollectionSource {
             }
             
             for (AbstractActiveChangeListener l : _listeners) {
+                
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.finer("Initialize active collection '"
+                               +getName()+"' with listener from source: "+l);
+                }
+                
                 _activeCollection.addActiveChangeListener(l);
             }
         }

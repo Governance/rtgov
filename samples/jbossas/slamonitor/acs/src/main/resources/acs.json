@@ -20,6 +20,11 @@
     "maxItems" : 0,
     "network" : "SLAMonitorEPN",
     "node" : "SLAViolations",
-    "notifyType" : "Results"
+    "notifyType" : "Results",
+    "activeChangeListeners" : [ {
+        "@class" : "org.overlord.bam.active.collection.jmx.JMXNotifier",
+    	"objectName" : "overlord.sample.slamonitor:name=SLAViolations",
+    	"insertType" : "SLAViolation"
+	} ]
   }
 ]

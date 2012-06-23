@@ -133,7 +133,17 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
      * {@inheritDoc}
      */
     public void unregister(ActiveCollectionSource acs) throws Exception {
-        ActiveCollection ac=null;
+        
+        if (acs.getActiveCollection() != null) {
+            // Active collection needs to be unregistered before closing
+            // the active collection source, as the source unregisters
+            // any active change listeners associated with the collection
+            synchronized (_activeCollectionListeners) {
+                for (int i=0; i < _activeCollectionListeners.size(); i++) {
+                    _activeCollectionListeners.get(i).unregistered(acs.getActiveCollection());
+                }
+            }
+        }
         
         synchronized (_activeCollections) {
             if (!_activeCollections.containsKey(acs.getName())) {
@@ -144,21 +154,11 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
             // Close the active collection source
             acs.close();
           
-            ac = acs.getActiveCollection();
-            
             acs.setActiveCollection(null);
             
             _activeCollections.remove(acs.getName());
             
             LOG.info("Unregistered active collection for source '"+acs.getName()+"'");
-        }
-        
-        if (ac != null) {
-            synchronized (_activeCollectionListeners) {
-                for (int i=0; i < _activeCollectionListeners.size(); i++) {
-                    _activeCollectionListeners.get(i).unregistered(ac);
-                }
-            }
         }
     }
 
@@ -177,6 +177,13 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
         }
         
         return (ret);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public java.util.Collection<ActiveCollection> getActiveCollections() {
+        return (_activeCollections.values());
     }
 
     /**

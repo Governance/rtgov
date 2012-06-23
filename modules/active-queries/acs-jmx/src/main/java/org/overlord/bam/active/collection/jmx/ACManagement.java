@@ -36,6 +36,7 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 
+import org.overlord.bam.active.collection.ActiveChangeListener;
 import org.overlord.bam.active.collection.ActiveCollection;
 import org.overlord.bam.active.collection.ActiveCollectionListener;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
@@ -82,6 +83,7 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
         }
         
         _acManager.addActiveCollectionListener(this);
+        
     }
 
     /**
@@ -121,6 +123,15 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             
             mbs.registerMBean(ac, getObjectName(ac)); 
+            
+            // Check whether the active collection has a JMXNotifier
+            // registered as a listener
+            for (ActiveChangeListener l : ac.getActiveChangeListeners()) {
+                if (l instanceof JMXNotifier) {
+                    mbs.registerMBean(l, new ObjectName(((JMXNotifier)l).getObjectName()));
+                }
+            }
+            
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to register MBean for active collection '"
                         +ac.getName()+"'", e);
@@ -147,6 +158,15 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             
             mbs.unregisterMBean(getObjectName(ac)); 
+
+            // Check whether the active collection has a JMXNotifier
+            // registered as a listener
+            for (ActiveChangeListener l : ac.getActiveChangeListeners()) {
+                if (l instanceof JMXNotifier) {
+                    mbs.unregisterMBean(new ObjectName(((JMXNotifier)l).getObjectName()));
+                }
+            }
+            
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to unregister MBean for active collection '"
                         +ac.getName()+"'", e);

@@ -185,7 +185,9 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
     /**
      * {@inheritDoc}
      */
+    @Override
     public void init() throws Exception {
+        super.init();
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Initializing EPN Active Collection Source");
@@ -232,7 +234,9 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      * 
      * @throws Exception Failed to pre-initialize
      */
+    @Override
     protected void preInit() throws Exception {
+        super.preInit();
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Pre-Initializing EPN Active Collection Source (script="+_aggregationScript
@@ -259,7 +263,10 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
     /**
      * {@inheritDoc}
      */
+    @Override
     public void close() throws Exception {
+        super.close();
+        
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Closing EPN Active Collection Source");
         }

@@ -265,18 +265,66 @@ public class DefaultActiveCollectionManagerTest {
         }
         
     }
+    
+    @Test
+    public void testActiveCollectionUnregisteredBeforeSource() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        ActiveList list=new ActiveList("Test");
+        list.addActiveChangeListener(new ActiveChangeListener() {
+
+            public void inserted(Object key, Object value) {
+            }
+
+            public void updated(Object key, Object value) {
+            }
+
+            public void removed(Object key, Object value) {
+            }
+            
+        });
+        
+        acs.setActiveCollection(list);
+        
+        TestActiveCollectionListener l=new TestActiveCollectionListener();
+        l.setCheckListenerRegistered(true);
+        
+        DefaultActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        mgr.addActiveCollectionListener(l);
+        
+        try {
+            // Required to register the source with the manager
+            mgr.register(acs);
+            
+            // Need to overwrite the active collection with one that has a listener
+            acs.setActiveCollection(list);
+            
+            mgr.unregister(acs);
+        } catch (Exception e) {
+            fail("Failed to unregister: "+e);
+        }
+    }
 
     public class TestActiveCollectionListener implements ActiveCollectionListener {
         
         protected java.util.List<ActiveCollection> _registered=new java.util.ArrayList<ActiveCollection>();
         protected java.util.List<ActiveCollection> _unregistered=new java.util.ArrayList<ActiveCollection>();
+        protected boolean _checkListenerRegistered=false;
 
+        public void setCheckListenerRegistered(boolean b) {
+            _checkListenerRegistered = b;
+        }
+        
         public void registered(ActiveCollection ac) {
             _registered.add(ac);
         }
 
         public void unregistered(ActiveCollection ac) {
             _unregistered.add(ac);
+            
+            if (_checkListenerRegistered && ac.getActiveChangeListeners().size() == 0) {
+                fail("No active change listeners registered");
+            }
         }
         
     }
