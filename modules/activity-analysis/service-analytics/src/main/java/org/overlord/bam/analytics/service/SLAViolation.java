@@ -123,6 +123,14 @@ public class SLAViolation implements java.io.Externalizable {
     /**
      * {@inheritDoc}
      */
+    public String toString() {
+        return ("SLA violation '"+_violation+"' on service="+_serviceType+" operation="
+                    +_operation+" "+new java.util.Date(_timestamp));
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
