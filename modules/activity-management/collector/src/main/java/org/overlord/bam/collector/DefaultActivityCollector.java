@@ -33,8 +33,6 @@ import javax.transaction.TransactionManager;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Origin;
-import org.overlord.bam.collector.spi.ActivityLogger;
-import org.overlord.bam.collector.spi.CollectorContext;
 
 /**
  * This class provides a default implementation of the activity

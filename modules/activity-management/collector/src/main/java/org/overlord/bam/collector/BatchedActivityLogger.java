@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.collector.spi;
+package org.overlord.bam.collector;
 
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -31,7 +31,7 @@ import org.overlord.bam.activity.model.ActivityUnit;
  * batches activity events based on time slots and size.
  *
  */
-public abstract class BatchedActivityLogger implements ActivityLogger {
+public abstract class BatchedActivityLogger implements ActivityLogger, BatchedActivityLoggerMBean {
 
     private static final Logger LOG=Logger.getLogger(BatchedActivityLogger.class.getName());
     

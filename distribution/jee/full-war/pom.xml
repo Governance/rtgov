@@ -19,31 +19,27 @@
 			<artifactId>activity-model</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
+		
+		<!-- Collector modules -->
+		
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>collector</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
-		
-		<!-- Domain specific event models -->
 		<dependency>
-			<groupId>org.overlord.bam.activity-analysis</groupId>
-			<artifactId>service-analytics</artifactId>
+			<groupId>org.overlord.bam.activity-management</groupId>
+			<artifactId>collector-jmx</artifactId>
 			<version>${bam.version}</version>
-		</dependency>
-		
-		<!-- JBossAS Specific -->
-		<dependency>
-			<groupId>org.overlord.bam.integration</groupId>
-			<artifactId>bam-jbossas</artifactId>
-			<version>${bam.version}</version>
-		</dependency>
-		
+		</dependency>		
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>collector-activity-server</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
+		
+		<!-- Activity Server modules -->
+		
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity-server</artifactId>
@@ -63,7 +59,10 @@
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity-server-epn</artifactId>
 			<version>${bam.version}</version>
-		</dependency>		
+		</dependency>
+		
+		<!-- Event Processor Network modules -->
+			
 		<dependency>
 			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
@@ -84,6 +83,9 @@
 			<artifactId>epn-jmx</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
+		
+		<!-- Active collection modules -->
+		
 		<dependency>
 			<groupId>org.overlord.bam.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
@@ -95,6 +97,24 @@
 			<version>${bam.version}</version>
 		</dependency>		
 
+		<!-- Domain specific event models -->
+		
+		<dependency>
+			<groupId>org.overlord.bam.activity-analysis</groupId>
+			<artifactId>service-analytics</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		
+		<!-- JBossAS Specific -->
+		
+		<dependency>
+			<groupId>org.overlord.bam.integration</groupId>
+			<artifactId>bam-jbossas</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		
+		<!-- Test dependencies -->
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

@@ -35,8 +35,6 @@ import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.collector.DefaultActivityCollector;
-import org.overlord.bam.collector.spi.ActivityLogger;
-import org.overlord.bam.collector.spi.CollectorContext;
 
 public class DefaultActivityCollectorTest {
 

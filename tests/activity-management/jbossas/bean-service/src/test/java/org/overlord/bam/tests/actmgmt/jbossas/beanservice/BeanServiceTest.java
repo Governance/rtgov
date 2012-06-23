@@ -89,7 +89,7 @@ public class BeanServiceTest {
     org.overlord.bam.tests.actmgmt.jbossas.beanservice.OrderService _orderService;
 
     @Inject
-    org.overlord.bam.collector.spi.CollectorContext _collectorContext;
+    org.overlord.bam.collector.CollectorContext _collectorContext;
 
     @Test
     public void submitOrderDirectNoTxn() {

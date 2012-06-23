@@ -24,7 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
 
-import org.overlord.bam.collector.spi.CollectorContext;
+import org.overlord.bam.collector.CollectorContext;
 
 /**
  * This class provides context information regarding the
