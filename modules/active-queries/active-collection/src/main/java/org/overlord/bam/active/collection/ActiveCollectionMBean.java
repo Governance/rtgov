@@ -38,4 +38,29 @@ public interface ActiveCollectionMBean {
      */
     public int getSize();
     
+    /**
+     * This method returns the item expiration duration.
+     * 
+     * @return The number of milliseconds that the item should remain
+     *          in the active collection, or 0 if not relevant
+     */
+    public long getItemExpiration();
+
+    /**
+     * This method returns the maximum number of items that should be
+     * contained within the active collection. The default policy will
+     * be to remove oldest entry when maximum number is reached.
+     * 
+     * @return The maximum number of items, or 0 if not relevant
+     */
+    public int getMaxItems();
+
+    /**
+     * This method gets the high water mark, used to indicate
+     * when a warning should be issued.
+     * 
+     * @return The high water mark, or 0 if not relevant
+     */
+    public int getHighWaterMark();
+
 }

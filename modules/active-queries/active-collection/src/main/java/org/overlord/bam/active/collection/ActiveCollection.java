@@ -70,7 +70,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean {
      * @return The number of milliseconds that the item should remain
      *          in the active collection, or 0 if not relevant
      */
-    protected long getItemExpiration() {
+    public long getItemExpiration() {
         return (_itemExpiration);
     }
     
@@ -91,7 +91,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean {
      * 
      * @return The maximum number of items, or 0 if not relevant
      */
-    protected int getMaxItems() {
+    public int getMaxItems() {
         return (_maxItems);
     }
 
@@ -112,7 +112,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean {
      * 
      * @return The high water mark, or 0 if not relevant
      */
-    protected int getHighWaterMark() {
+    public int getHighWaterMark() {
         return (_highWaterMark);
     }
 
