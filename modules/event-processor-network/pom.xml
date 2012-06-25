@@ -18,6 +18,7 @@
 		<module>epn-core</module>
 		<module>epn-container-embedded</module>
 		<module>epn-container-jee</module>
+		<module>epn-container-jee-mdb</module>
 		<module>epn-processor-cep</module>
 		<module>epn-loader-jee</module>
 		<module>epn-jmx</module>

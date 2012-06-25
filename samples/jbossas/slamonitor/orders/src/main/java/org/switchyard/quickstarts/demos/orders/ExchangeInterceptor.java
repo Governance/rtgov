@@ -56,7 +56,7 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 InitialContext ctx=new InitialContext();
                 
                 _activityCollector = (ActivityCollector)ctx.lookup(ACTIVITY_COLLECTOR);
-            
+                
             } catch(Exception e) {
                 LOG.log(Level.SEVERE, "Failed to initialize activity collector", e);
             }

@@ -251,7 +251,7 @@ public class BeanServiceTest {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
             
-            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/quickstart-bean/OrderService");
+            java.net.URL url=new java.net.URL("http://localhost:18001/quickstart-bean/OrderService");
             
             String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
                         "   <soap:Body>"+
@@ -285,6 +285,7 @@ public class BeanServiceTest {
                 fail("Order was not accepted: "+resp);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             fail("Failed to invoke service via SOAP: "+e);
         }
         
