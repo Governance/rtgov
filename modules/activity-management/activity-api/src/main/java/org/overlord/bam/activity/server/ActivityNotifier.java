@@ -15,21 +15,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.collector;
+package org.overlord.bam.activity.server;
 
 import org.overlord.bam.activity.model.ActivityUnit;
 
 /**
- * This interface represents an activity event collector.
+ * This interface represents a component that should be notified when
+ * an activity occurs.
  *
  */
-public interface ActivityLogger {
+public interface ActivityNotifier {
 
     /**
-     * This method records the supplied activity event.
+     * This method notifies when a list of activity events have
+     * been reported.
      * 
-     * @param act The activity event
+     * @param activities The activities
+     * @throws Exception Failed to notify
      */
-    public void log(ActivityUnit act);
+    public void notify(java.util.List<ActivityUnit> activities) throws Exception;
     
 }

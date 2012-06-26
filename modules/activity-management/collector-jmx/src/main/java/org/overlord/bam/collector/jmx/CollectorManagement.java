@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.overlord.bam.collector.ActivityCollector;
+import org.overlord.bam.activity.collector.ActivityCollector;
 
 /**
  * This class provides the capability to manage the Activity Collector.

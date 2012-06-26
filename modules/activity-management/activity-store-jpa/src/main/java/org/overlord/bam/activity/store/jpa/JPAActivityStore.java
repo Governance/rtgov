@@ -22,8 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.server.spi.ActivityStore;
 
 /**
  * This class provides the JPA implementation of the Activity Store.

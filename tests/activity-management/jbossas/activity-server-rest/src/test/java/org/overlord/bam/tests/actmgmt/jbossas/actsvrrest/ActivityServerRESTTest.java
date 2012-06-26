@@ -52,7 +52,7 @@ public class ActivityServerRESTTest {
     }
 
     @Inject
-    org.overlord.bam.activity.server.spi.ActivityStore _activityStore=null;
+    org.overlord.bam.activity.server.ActivityStore _activityStore=null;
 
     @Deployment
     public static WebArchive createDeployment() {

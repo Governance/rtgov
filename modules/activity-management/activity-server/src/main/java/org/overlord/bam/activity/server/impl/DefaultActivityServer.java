@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server;
+package org.overlord.bam.activity.server.impl;
 
 import java.util.UUID;
 
@@ -28,8 +28,10 @@ import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.bpm.BPMActivityType;
 import org.overlord.bam.activity.model.soa.RPCActivityType;
-import org.overlord.bam.activity.server.spi.ActivityNotifier;
-import org.overlord.bam.activity.server.spi.ActivityStore;
+import org.overlord.bam.activity.server.ActivityNotifier;
+import org.overlord.bam.activity.server.ActivityServer;
+import org.overlord.bam.activity.server.ActivityStore;
+import org.overlord.bam.activity.server.QuerySpec;
 
 /**
  * This class represents the default implementation of the activity server.

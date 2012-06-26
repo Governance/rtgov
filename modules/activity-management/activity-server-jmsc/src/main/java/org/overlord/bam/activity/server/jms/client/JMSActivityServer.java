@@ -34,8 +34,8 @@ import org.hornetq.api.jms.HornetQJMSClient;
 import org.hornetq.api.jms.JMSFactoryType;
 import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.server.ActivityServer;
+import org.overlord.bam.activity.server.QuerySpec;
 
 /**
  * This class provides the JMS implementation of the activity logger.

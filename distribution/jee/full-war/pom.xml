@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
-			<artifactId>activity-model</artifactId>
+			<artifactId>activity-api</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.collector;
+package org.overlord.bam.collector.impl;
 
 import static org.junit.Assert.*;
 
@@ -34,7 +34,9 @@ import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.collector.DefaultActivityCollector;
+import org.overlord.bam.activity.collector.ActivityLogger;
+import org.overlord.bam.activity.collector.CollectorContext;
+import org.overlord.bam.collector.impl.DefaultActivityCollector;
 
 public class DefaultActivityCollectorTest {
 

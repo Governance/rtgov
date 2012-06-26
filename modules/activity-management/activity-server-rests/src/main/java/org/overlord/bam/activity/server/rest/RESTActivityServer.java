@@ -21,8 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.server.ActivityServer;
+import org.overlord.bam.activity.server.QuerySpec;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;

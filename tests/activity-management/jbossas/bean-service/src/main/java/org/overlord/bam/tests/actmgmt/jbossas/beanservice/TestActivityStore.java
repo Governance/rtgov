@@ -21,8 +21,8 @@ import java.util.List;
 
 
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.server.spi.ActivityStore;
 
 public class TestActivityStore implements ActivityStore {
 

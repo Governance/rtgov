@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.collector;
+package org.overlord.bam.collector.impl;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -33,6 +33,9 @@ import javax.transaction.TransactionManager;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Origin;
+import org.overlord.bam.activity.collector.ActivityCollector;
+import org.overlord.bam.activity.collector.ActivityLogger;
+import org.overlord.bam.activity.collector.CollectorContext;
 
 /**
  * This class provides a default implementation of the activity

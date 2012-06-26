@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.collector;
+package org.overlord.bam.activity.collector;
 
 import org.overlord.bam.activity.model.ActivityType;
 
@@ -27,32 +27,32 @@ public interface ActivityCollector {
 
     /**
      * This method sets the collector context.
-     * 
+     *
      * @param cc The collector context
      */
     public void setCollectorContext(CollectorContext cc);
-    
+        
     /**
      * This method gets the collector context.
-     * 
+     *
      * @return The collector context
      */
     public CollectorContext getCollectorContext();
-    
+        
     /**
      * This method sets the activity logger.
-     * 
+     *
      * @param activityLogger The activity logger
      */
     public void setActivityLogger(ActivityLogger activityLogger);
-    
+        
     /**
      * This method gets the activity logger.
-     * 
+     *
      * @return The activity logger
      */
     public ActivityLogger getActivityLogger();
-    
+     
     /**
      * This method can be used to create an application controlled
      * scope. Within this scope, all activity types will

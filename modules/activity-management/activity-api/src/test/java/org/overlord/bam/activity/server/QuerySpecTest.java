@@ -25,6 +25,7 @@ import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
+import org.overlord.bam.activity.server.QuerySpec;
 
 public class QuerySpecTest {
 

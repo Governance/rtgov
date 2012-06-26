@@ -15,7 +15,7 @@
 	</parent>
 
 	<modules>
-		<module>activity-model</module>
+		<module>activity-api</module>
 		<module>activity-server</module>
 		<module>activity-server-rests</module>
 		<module>activity-server-jmsc</module>

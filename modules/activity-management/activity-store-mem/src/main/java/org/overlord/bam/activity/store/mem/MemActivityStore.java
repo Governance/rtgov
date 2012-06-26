@@ -24,8 +24,8 @@ import java.util.logging.Logger;
 import javax.inject.Singleton;
 
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.server.spi.ActivityStore;
 
 /**
  * This class provides the in-memory implementation of the Activity Store.

@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.activity-management</groupId>
-	<artifactId>activity-model</artifactId> 
+	<artifactId>activity-api</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Overlord BAM::Modules::Activity Management::Activity Model</name>
+	<name>Overlord BAM::Modules::Activity Management::Activity API</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
@@ -23,6 +23,12 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
            	<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-api</artifactId>
+		    <version>6.0</version>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

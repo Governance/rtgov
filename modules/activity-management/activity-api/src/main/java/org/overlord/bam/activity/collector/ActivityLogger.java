@@ -15,34 +15,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server.spi;
+package org.overlord.bam.activity.collector;
 
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.QuerySpec;
 
 /**
- * This interface represents a persistence storage for Activity
- * Events.
+ * This interface represents an activity event collector.
  *
  */
-public interface ActivityStore {
+public interface ActivityLogger {
 
     /**
-     * This method stores the list of activity events.
+     * This method records the supplied activity event.
      * 
-     * @param activities The list of activity events to store
-     * @throws Exception Failed to store events
+     * @param act The activity event
      */
-    public void store(java.util.List<ActivityUnit> activities) throws Exception;
-    
-    /**
-     * This method queries the persistent store for activity events
-     * that satisfy the supplied query.
-     * 
-     * @param query The query
-     * @return The list of activities that satisfy the query
-     * @throws Exception Failed to query events
-     */
-    public java.util.List<ActivityUnit> query(QuerySpec query) throws Exception;
+    public void log(ActivityUnit act);
     
 }

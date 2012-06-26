@@ -26,7 +26,7 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.spi.ActivityNotifier;
+import org.overlord.bam.activity.server.ActivityNotifier;
 import org.overlord.bam.epn.EPNManager;
 
 /**

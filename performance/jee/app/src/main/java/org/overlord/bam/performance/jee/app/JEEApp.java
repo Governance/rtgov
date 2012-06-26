@@ -32,7 +32,7 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.collector.ActivityCollector;
+import org.overlord.bam.activity.collector.ActivityCollector;
 
 /**
  * REST app for creating activity events related to a virtual
