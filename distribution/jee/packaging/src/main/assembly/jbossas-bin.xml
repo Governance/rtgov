@@ -38,6 +38,16 @@
 			</includes>
 		</fileSet>
 
+		<fileSet>
+			<directory>src/main/jbossas</directory>
+			<outputDirectory>/</outputDirectory>
+			<excludes>
+				<exclude>**/.*</exclude>
+				<exclude>**/target/**</exclude>
+				<exclude>**/.settings/**</exclude>
+			</excludes>
+		</fileSet>
+
 		<!-- copy samples -->
 		<fileSet>
 			<directory>../../../samples/jbossas</directory>
@@ -54,10 +64,24 @@
 	<dependencySets>
 
 		<dependencySet>
-			<outputDirectory>modules</outputDirectory>
+			<outputDirectory>/</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.bam.distribution.jee:overlord-bam:war:jbossas</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>modules/org/overlord/bam/main</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.bam.activity-management:activity-api:jar</include>
+				<include>org.overlord.bam.event-processor-network:epn-core:jar</include>
+				<include>org.overlord.bam.event-processor-network:epn-processor-cep:jar</include>
+				<include>org.overlord.bam.active-queries:active-collection:jar</include>
+				<include>org.overlord.bam.activity-analysis:service-analytics:jar</include>
+				<include>org.codehaus.jackson:jackson-core-asl:jar</include>
+				<include>org.codehaus.jackson:jackson-mapper-asl:jar</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>

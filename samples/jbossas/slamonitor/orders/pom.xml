@@ -108,7 +108,7 @@
                     </webResources>
 					<archive>
 						<manifestEntries>
-							<Dependencies>deployment.overlord-bam.war</Dependencies>
+							<Dependencies>org.overlord.bam</Dependencies>
 						</manifestEntries>
 					</archive>
                 </configuration>

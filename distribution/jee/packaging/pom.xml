@@ -22,6 +22,41 @@
 			<classifier>${platform}</classifier>
 			<type>war</type>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.activity-management</groupId>
+			<artifactId>activity-api</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
+			<artifactId>epn-core</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
+			<artifactId>epn-processor-cep</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.activity-analysis</groupId>
+			<artifactId>service-analytics</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+           		<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+           		<version>${jackson.version}</version>
+		</dependency>
 	</dependencies> 
 
 	<build>

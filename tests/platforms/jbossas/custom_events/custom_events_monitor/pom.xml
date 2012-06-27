@@ -67,7 +67,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>deployment.overlord-bam.war, deployment.tests-jbossas-custom-events-acs.war</Dependencies>
+							<Dependencies>org.overlord.bam,deployment.overlord-bam.war, deployment.tests-jbossas-custom-events-acs.war</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.active-queries</groupId>
-	<artifactId>acs-jmx</artifactId> 
+	<artifactId>active-collection-jee</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Overlord BAM::Modules::Active Queries::ACS JMX</name>
+	<name>Overlord BAM::Modules::Active Queries::Active Collection JEE</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
@@ -18,12 +18,6 @@
 			<groupId>org.overlord.bam.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
 			<version>${bam.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>javax.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
-		    <version>1.0</version>
-		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 		    <groupId>javax</groupId>

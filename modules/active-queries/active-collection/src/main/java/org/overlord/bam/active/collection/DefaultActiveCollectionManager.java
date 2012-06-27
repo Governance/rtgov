@@ -17,23 +17,14 @@
  */
 package org.overlord.bam.active.collection;
 
-import static javax.ejb.ConcurrencyManagementType.BEAN;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.Singleton;
 
 /**
  * This class provides the default implementation of the ActiveCollectionManager
  * interface.
  *
  */
-@Singleton(name="ActiveCollectionManager")
-@ConcurrencyManagement(BEAN)
 public class DefaultActiveCollectionManager implements ActiveCollectionManager {
     
     private static final Logger LOG=Logger.getLogger(DefaultActiveCollectionManager.class.getName());
@@ -50,7 +41,6 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
     /**
      * This method initializes the Active Collection Manager.
      */
-    @PostConstruct
     public void init() {
         _houseKeeper = new HouseKeeper();
     }
@@ -58,7 +48,6 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
     /**
      * This method closes the Active Collection Manager.
      */
-    @PreDestroy
     public void close() {
         if (_houseKeeper != null) {
             _houseKeeper.cancel();
@@ -97,12 +86,8 @@ public class DefaultActiveCollectionManager implements ActiveCollectionManager {
             }
             
             if (acs.getType() == ActiveCollectionType.List) {
-                ActiveList list=new ActiveList(acs.getName());
-                
-                // Copy configuration
-                list.setItemExpiration(acs.getItemExpiration());
-                list.setMaxItems(acs.getMaxItems());
-                list.setHighWaterMark(acs.getHighWaterMark());
+                ActiveList list=new ActiveList(acs.getName(),
+                        acs.getItemExpiration(), acs.getMaxItems(), acs.getHighWaterMark());
                 
                 _activeCollections.put(acs.getName(), list);
                 

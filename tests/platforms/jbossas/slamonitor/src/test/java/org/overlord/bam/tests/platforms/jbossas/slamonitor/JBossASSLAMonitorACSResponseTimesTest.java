@@ -41,7 +41,9 @@ import org.overlord.bam.active.collection.ActiveList;
 import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
-public class JBossASSLAMonitorACSResponeTimesTest {
+public class JBossASSLAMonitorACSResponseTimesTest {
+
+    private static final String ORDER_SERVICE_URL = "http://127.0.0.1:8080/demo-orders/OrderService";
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
@@ -124,7 +126,7 @@ public class JBossASSLAMonitorACSResponeTimesTest {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
             
-            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/demo-orders/OrderService");
+            java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
             
             String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
                         "   <soap:Body>"+

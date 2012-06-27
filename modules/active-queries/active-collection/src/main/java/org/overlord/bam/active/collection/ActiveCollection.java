@@ -42,6 +42,22 @@ public abstract class ActiveCollection implements ActiveCollectionMBean {
     }
     
     /**
+     * This constructor initializes the active collection.
+     * 
+     * @param name The name
+     * @param itemExpiration Item expiration time, or 0 if not relevant
+     * @param maxItems Max number of items, or 0 if not relevant
+     * @param highWaterMark Generate warning if number of items exceed high water mark
+     */
+    public ActiveCollection(String name, long itemExpiration, int maxItems,
+                            int highWaterMark) {
+        _name = name;
+        _itemExpiration = itemExpiration;
+        _maxItems = maxItems;
+        _highWaterMark = highWaterMark;
+    }
+    
+    /**
      * This constructor initializes the active collection as a derived
      * version of the supplied collection, that applies the supplied predicate.
      * 

@@ -149,4 +149,10 @@ public class EventList implements java.io.Serializable, java.lang.Iterable<java.
         return (0);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return (_list == null ? "<Unresolved EventList>" : _list.toString());
+    }
 }

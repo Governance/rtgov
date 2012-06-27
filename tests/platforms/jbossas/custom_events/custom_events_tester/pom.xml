@@ -59,9 +59,20 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.event-processor-network</groupId>
+			<artifactId>epn-processor-cep</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${bam.version}</version>
 		</dependency>
 
 		<dependency>
@@ -138,6 +149,47 @@
 						<include>**/*Test.java</include>
 					</includes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<configuration>
+							<target>
+								<echo message="jbosshome: ${env.JBOSS_HOME}"/>
+								<echo message="${org.overlord.bam.activity-management:activity-api:jar}"/>
+								<echo message="BASE DIR= ${basedir}" />
+								
+								<delete dir="${env.JBOSS_HOME}/modules/org/overlord/bam" />
+								
+								<copy file="${basedir}/src/test/modules/module.xml"
+										todir="${env.JBOSS_HOME}/modules/org/overlord/bam/main" />
+
+								<copy file="${org.overlord.bam.activity-management:activity-api:jar}"
+										tofile="${env.JBOSS_HOME}/modules/org/overlord/bam/main/activity-api.jar" />
+								<copy file="${org.overlord.bam.event-processor-network:epn-core:jar}"
+										tofile="${env.JBOSS_HOME}/modules/org/overlord/bam/main/epn-core.jar" />
+								<copy file="${org.overlord.bam.event-processor-network:epn-processor-cep:jar}"
+										tofile="${env.JBOSS_HOME}/modules/org/overlord/bam/main/epn-processor-cep.jar" />
+								<copy file="${org.overlord.bam.active-queries:active-collection:jar}"
+										tofile="${env.JBOSS_HOME}/modules/org/overlord/bam/main/active-collection.jar" />
+								<copy file="${org.overlord.bam.activity-analysis:service-analytics:jar}"
+										tofile="${env.JBOSS_HOME}/modules/org/overlord/bam/main/service-analytics.jar" />
+								<copy file="${org.codehaus.jackson:jackson-core-asl:jar}"
+										tofile="${env.JBOSS_HOME}/modules/org/overlord/bam/main/jackson-core-asl.jar" />
+								<copy file="${org.codehaus.jackson:jackson-mapper-asl:jar}"
+										tofile="${env.JBOSS_HOME}/modules/org/overlord/bam/main/jackson-mapper-asl.jar" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>	

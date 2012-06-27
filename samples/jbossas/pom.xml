@@ -28,7 +28,7 @@
 
 	<properties>
 		<bam.version>1.0.0-SNAPSHOT</bam.version>
-		<switchyard.version>0.4.0.Final</switchyard.version>
+		<switchyard.version>0.5.0.Beta1</switchyard.version>
 		<jackson.version>1.9.2</jackson.version>
 		<resteasy.version>2.3.0.GA</resteasy.version>
 		<junit.version>4.8.1</junit.version>

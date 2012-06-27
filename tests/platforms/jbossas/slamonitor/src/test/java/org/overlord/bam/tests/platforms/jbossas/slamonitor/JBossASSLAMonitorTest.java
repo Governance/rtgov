@@ -44,6 +44,8 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class JBossASSLAMonitorTest {
 
+    private static final String ORDER_SERVICE_URL = "http://127.0.0.1:8080/demo-orders/OrderService";
+    
     private static final String SLA_MONITOR_EPN = "SLAMonitorEPN";
     private static final String SLA_VIOLATIONS = "SLAViolations";
     private static final String RESPONSE_TIMES = "ResponseTimes";
@@ -100,7 +102,7 @@ public class JBossASSLAMonitorTest {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
             
-            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/demo-orders/OrderService");
+            java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
             
             String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
                         "   <soap:Body>"+
@@ -171,7 +173,7 @@ public class JBossASSLAMonitorTest {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
             
-            java.net.URL url=new java.net.URL("http://127.0.0.1:18001/demo-orders/OrderService");
+            java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
             
             String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
                         "   <soap:Body>"+
@@ -209,23 +211,40 @@ public class JBossASSLAMonitorTest {
             Thread.sleep(2000);
             
             // Check that all events have been processed
+            if (tl.getProcessed(RESPONSE_TIMES) == null) {
+                fail("Expecting response times processed events");
+            }
+            
             if (tl.getProcessed(RESPONSE_TIMES).size() != 8) {
                 fail("Expecting 8 (response time) processed events, but got: "+tl.getProcessed(RESPONSE_TIMES).size());
             }
            
+            if (tl.getResults(RESPONSE_TIMES) == null) {
+                fail("Expecting response times results");
+            }
+            
             if (tl.getResults(RESPONSE_TIMES).size() != 2) {
                 fail("Expecting 2 (response time) results events, but got: "+tl.getResults(RESPONSE_TIMES).size());
             }
 
+            if (tl.getProcessed(SLA_VIOLATIONS) == null) {
+                fail("Expecting sla violations processed events");
+            }
+            
             if (tl.getProcessed(SLA_VIOLATIONS).size() != 2) {
                 fail("Expecting 2 (sla violations) processed events, but got: "+tl.getProcessed(SLA_VIOLATIONS).size());
             }
            
+            if (tl.getResults(SLA_VIOLATIONS) == null) {
+                fail("Expecting sla violations results");
+            }
+            
             if (tl.getResults(SLA_VIOLATIONS).size() != 1) {
                 fail("Expecting 1 (sla violations) results events, but got: "+tl.getResults(SLA_VIOLATIONS).size());
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             fail("Failed to invoke service via SOAP: "+e);
         }
     }

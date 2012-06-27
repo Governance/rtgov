@@ -411,10 +411,11 @@ public abstract class AbstractEPNManager implements EPNManager {
         }
 
         if (ret != null) {
-            LOG.warning("Processed events on network="+network.getName()
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Processed events on network="+network.getName()
                     +" version="+network.getVersion()+" node="+node.getName()
-                    +" source="+source+" ret="+ret);
-            
+                    +" source="+source+" retrying="+ret);
+            }
         } else if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Processed events on network="+network.getName()
                     +" version="+network.getVersion()+" node="+node.getName()

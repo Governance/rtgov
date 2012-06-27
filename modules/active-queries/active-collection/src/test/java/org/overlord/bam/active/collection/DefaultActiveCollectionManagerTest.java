@@ -22,7 +22,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.active.collection.DefaultActiveCollectionManager;
 
 public class DefaultActiveCollectionManagerTest {
     

@@ -268,14 +268,14 @@ public class Node {
                     
                 } catch (Exception e) {
                     if (LOG.isLoggable(Level.FINE)) {
-                        LOG.log(Level.FINE, "Retry event: "+event, e);
+                        LOG.log(Level.FINE, "Retry event (retriesLeft="+retriesLeft+"): "+event, e);
                     }
                     if (retries == null) {
                         retries = new java.util.ArrayList<Serializable>();
                         
                         if (retriesLeft == 0) {
-                            LOG.log(Level.WARNING, "No more retries left, but processing failed again "
-                                    +"(just showing the first failure within the group of events)", e);
+                            LOG.log(Level.WARNING, "No more retries left on node '"
+                                    +getName()+"' (exception from first failed event)", e);
                         }
                     }
                     retries.add(event);

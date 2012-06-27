@@ -42,7 +42,7 @@
 				<configuration>
  					<archive>
 						<manifestEntries>
-							<Dependencies>deployment.overlord-bam.war</Dependencies>
+							<Dependencies>org.overlord.bam,deployment.overlord-bam.war</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

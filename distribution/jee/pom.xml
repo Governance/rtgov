@@ -15,7 +15,7 @@
 	</parent>
 
 	<modules>
-		<module>full-war</module>
+		<module>war</module>
 		<module>packaging</module>
 	</modules>
 

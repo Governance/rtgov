@@ -203,7 +203,7 @@ public class Network implements NetworkMBean {
                 node.init();
             }
             
-            // Cache context classloader for us deserializing
+            // Cache context classloader for use deserializing
             // events in this context
             _contextClassLoader = Thread.currentThread().getContextClassLoader();
             

@@ -54,6 +54,8 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class BeanServiceTest {
 
+    private static final String ORDER_SERVICE_URL = "http://localhost:8080/quickstart-bean/OrderService";
+
     @Deployment
     public static WebArchive createDeployment() {
         String version=System.getProperty("bam.version");
@@ -251,7 +253,7 @@ public class BeanServiceTest {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
             
-            java.net.URL url=new java.net.URL("http://localhost:18001/quickstart-bean/OrderService");
+            java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
             
             String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
                         "   <soap:Body>"+

@@ -310,7 +310,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                             source, events, retriesLeft);
         
         if (retries != null) {
-            retry(network.getName(), network.getVersion(), node.getName(), source, retries, retriesLeft-1);
+            retry(network.getName(), network.getVersion(), node.getName(),
+                    source, retries, retriesLeft-1);
         }
     }
     
@@ -333,7 +334,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             LOG.finest("Retry "+networkName+"/"+nodeName+" events="+events+" retriesLeft="+retriesLeft);
         }
         
-        if (retriesLeft > 0) {
+        if (retriesLeft >= 0) {
             javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
             mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, networkName);
             mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, version);
@@ -344,7 +345,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
         } else {
             // Events failed to be processed
             // TODO: Should this be reported via the manager?
-            LOG.severe("Unable to process events");
+            LOG.severe("Unable to process events for network="+networkName+"["
+                                +version+"] node="+nodeName);
         }
     }
     
@@ -355,7 +357,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
     protected void notifyListeners(String networkName, String version,
                     String nodeName, NotificationType type, EventList events) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Notify events processed "+networkName+"/"+version+"/"+nodeName+" events="+events);
+            LOG.finest("Notify type '"+type.name()+"' "
+                      +networkName+"/"+version+"/"+nodeName+" events="+events);
         }
 
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);

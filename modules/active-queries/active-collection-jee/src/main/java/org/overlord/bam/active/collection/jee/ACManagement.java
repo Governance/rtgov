@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.jmx;
+package org.overlord.bam.active.collection.jee;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -40,6 +40,7 @@ import org.overlord.bam.active.collection.ActiveChangeListener;
 import org.overlord.bam.active.collection.ActiveCollection;
 import org.overlord.bam.active.collection.ActiveCollectionListener;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
+import org.overlord.bam.active.collection.jmx.JMXNotifier;
 
 /**
  * This class provides the capability to manage the Active Collection Manager.

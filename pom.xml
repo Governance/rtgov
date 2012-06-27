@@ -59,7 +59,7 @@
 		<junit.version>4.8.1</junit.version>
 		<resteasy.version>2.3.0.GA</resteasy.version>
 		<mvel.version>2.1.0.drools16</mvel.version>
-		<arquillian.jbossas.version>7.1.0.Final</arquillian.jbossas.version>
+		<arquillian.jbossas.version>7.1.1.Final</arquillian.jbossas.version>
 		<arquillian.version>1.0.0.Final</arquillian.version>
 	</properties>
 
