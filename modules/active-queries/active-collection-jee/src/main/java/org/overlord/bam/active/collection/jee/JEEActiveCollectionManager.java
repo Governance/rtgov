@@ -25,7 +25,7 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 
 import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.DefaultActiveCollectionManager;
+import org.overlord.bam.active.collection.AbstractActiveCollectionManager;
 
 
 /**
@@ -35,7 +35,7 @@ import org.overlord.bam.active.collection.DefaultActiveCollectionManager;
  */
 @Singleton(name="ActiveCollectionManager")
 @ConcurrencyManagement(BEAN)
-public class JEEActiveCollectionManager extends DefaultActiveCollectionManager
+public class JEEActiveCollectionManager extends AbstractActiveCollectionManager
                     implements ActiveCollectionManager {
     
     /**

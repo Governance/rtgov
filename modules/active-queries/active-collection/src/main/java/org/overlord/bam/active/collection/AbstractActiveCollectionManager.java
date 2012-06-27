@@ -21,13 +21,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This class provides the default implementation of the ActiveCollectionManager
- * interface.
+ * This class provides the abstract base implementation of the ActiveCollectionManager
+ * interface. This class provides a general implementation that can be used by
+ * derived implementations in different environments.
  *
  */
-public class DefaultActiveCollectionManager implements ActiveCollectionManager {
+public abstract class AbstractActiveCollectionManager implements ActiveCollectionManager {
     
-    private static final Logger LOG=Logger.getLogger(DefaultActiveCollectionManager.class.getName());
+    private static final Logger LOG=Logger.getLogger(AbstractActiveCollectionManager.class.getName());
 
     private java.util.Map<String, ActiveCollection> _activeCollections=
                 new java.util.HashMap<String, ActiveCollection>();

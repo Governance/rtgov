@@ -7,8 +7,8 @@
 		<copy file="${basedir}/src/test/modules/module.xml"
 				todir="${jboss.home}/modules/org/overlord/bam/main" />
 
-		<copy file="${org.overlord.bam.activity-management:activity-api:jar}"
-				tofile="${jboss.home}/modules/org/overlord/bam/main/activity-api.jar" />
+		<copy file="${org.overlord.bam.activity-management:activity:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/activity.jar" />
 		<copy file="${org.overlord.bam.event-processor-network:epn-core:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-core.jar" />
 		<copy file="${org.overlord.bam.event-processor-network:epn-processor-cep:jar}"

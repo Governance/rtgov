@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
-			<artifactId>activity-api</artifactId>
+			<artifactId>activity</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
 		</dependency>

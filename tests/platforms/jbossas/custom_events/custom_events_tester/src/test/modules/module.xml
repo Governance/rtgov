@@ -25,7 +25,7 @@
 <module xmlns="urn:jboss:module:1.0" name="org.overlord.bam">
 
     <resources>
-        <resource-root path="activity-api.jar"/>
+        <resource-root path="activity.jar"/>
         <resource-root path="epn-core.jar"/>
         <resource-root path="epn-processor-cep.jar"/>
         <resource-root path="active-collection.jar"/>

@@ -23,7 +23,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.overlord.bam.activity-management</groupId>
-					<artifactId>activity-api</artifactId>
+					<artifactId>activity</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -39,7 +39,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.overlord.bam.activity-management</groupId>
-					<artifactId>activity-api</artifactId>
+					<artifactId>activity</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -48,12 +48,12 @@
 		
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
-			<artifactId>activity-server</artifactId>
+			<artifactId>activity-server-jee</artifactId>
 			<version>${bam.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.overlord.bam.activity-management</groupId>
-					<artifactId>activity-api</artifactId>
+					<artifactId>activity</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -64,7 +64,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.overlord.bam.activity-management</groupId>
-					<artifactId>activity-api</artifactId>
+					<artifactId>activity</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -75,7 +75,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.overlord.bam.activity-management</groupId>
-					<artifactId>activity-api</artifactId>
+					<artifactId>activity</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -86,7 +86,7 @@
 			<exclusions>
 				<exclusion>
 					<groupId>org.overlord.bam.activity-management</groupId>
-					<artifactId>activity-api</artifactId>
+					<artifactId>activity</artifactId>
 				</exclusion>
 				<exclusion>
 					<groupId>org.overlord.bam.event-processor-network</groupId>

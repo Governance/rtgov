@@ -23,14 +23,14 @@ import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
 
-public class DefaultActiveCollectionManagerTest {
+public class AbstractActiveCollectionManagerTest {
     
     private static final String DERIVED_AC = "DerivedAC";
 	private static final String TEST_AC="TestActiveCollection";
 
     @Test
     public void testRegisterACS() {
-        ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
         
         ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
@@ -53,7 +53,7 @@ public class DefaultActiveCollectionManagerTest {
 
     @Test
     public void testNetworkListenerNotified() {
-        ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
         
         ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
@@ -100,7 +100,7 @@ public class DefaultActiveCollectionManagerTest {
 
     @Test
     public void testAlreadyRegisteredACS() {
-        ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
         
         ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
@@ -121,7 +121,7 @@ public class DefaultActiveCollectionManagerTest {
 
     @Test
     public void testUnregisterACS() {
-        ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
         
         ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
@@ -150,7 +150,7 @@ public class DefaultActiveCollectionManagerTest {
     
     @Test
     public void testAlreadyUnregisteredACS() {
-        ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
         
         ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
@@ -177,7 +177,7 @@ public class DefaultActiveCollectionManagerTest {
     
     @Test
     public void testCreateAndRemoveDerivedCollection() {
-        ActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
 
         ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
@@ -215,7 +215,7 @@ public class DefaultActiveCollectionManagerTest {
     
     @Test
     public void testRegisterACSWithHighWaterMark() {
-        DefaultActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        AbstractActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
         
         ActiveCollectionSource acs=new ActiveCollectionSource();
         acs.setName(TEST_AC);
@@ -288,7 +288,7 @@ public class DefaultActiveCollectionManagerTest {
         TestActiveCollectionListener l=new TestActiveCollectionListener();
         l.setCheckListenerRegistered(true);
         
-        DefaultActiveCollectionManager mgr=new DefaultActiveCollectionManager();
+        AbstractActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
         mgr.addActiveCollectionListener(l);
         
         try {

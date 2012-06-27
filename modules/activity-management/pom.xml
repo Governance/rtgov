@@ -15,8 +15,8 @@
 	</parent>
 
 	<modules>
-		<module>activity-api</module>
-		<module>activity-server</module>
+		<module>activity</module>
+		<module>activity-server-jee</module>
 		<module>activity-server-rests</module>
 		<module>activity-server-jmsc</module>
 		<module>activity-server-epn</module>
