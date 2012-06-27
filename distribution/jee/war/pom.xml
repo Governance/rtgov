@@ -103,28 +103,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>	
-		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-container-jee-mdb</artifactId>
-			<version>${bam.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.bam.event-processor-network</groupId>
-					<artifactId>epn-core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>	
-		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-jmx</artifactId>
-			<version>${bam.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.bam.event-processor-network</groupId>
-					<artifactId>epn-core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		
 		<!-- Active collection modules -->
 		
