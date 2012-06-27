@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server.impl;
+package org.overlord.bam.activity.server.jee;
 
 import static org.junit.Assert.*;
 
@@ -34,20 +34,20 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
 import org.overlord.bam.activity.server.ActivityNotifier;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.server.impl.DefaultActivityServer;
+import org.overlord.bam.activity.server.jee.JEEActivityServer;
 
-public class DefaultActivityServerTest {
+public class JEEActivityServerTest {
     
     private static final String PROC_TYPE = "ProcType";
     private static final String INST_ID = "InstId";
     private static final String RESP_ID = "respId";
     private static final String REQ_ID = "reqId";
     private static final String TEST_ID = "TestID";
-    private static final Logger LOG=Logger.getLogger(DefaultActivityServerTest.class.getName());
+    private static final Logger LOG=Logger.getLogger(JEEActivityServerTest.class.getName());
 
     @Test
     public void testStoreAndNotify() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         
         TestStore store=new TestStore();
         TestNotifier notifier1=new TestNotifier();
@@ -102,7 +102,7 @@ public class DefaultActivityServerTest {
 
     @Test
     public void testStoreFault() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         
         TestStore store=new TestStore();
         TestNotifier notifier1=new TestNotifier();
@@ -153,7 +153,7 @@ public class DefaultActivityServerTest {
 
     @Test
     public void testNotifierFault() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         
         TestStore store=new TestStore();
         TestNotifier notifier1=new TestNotifier();
@@ -204,7 +204,7 @@ public class DefaultActivityServerTest {
     
     @Test
     public void testProcessActivityUnitHandleDuplicates() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         as.setHandleDuplicateIds(true);
         
         ActivityUnit au=new ActivityUnit();
@@ -242,7 +242,7 @@ public class DefaultActivityServerTest {
     
     @Test
     public void testProcessActivityUnitNotHandleDuplicates() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         as.setHandleDuplicateIds(false);
         
         ActivityUnit au=new ActivityUnit();
@@ -279,7 +279,7 @@ public class DefaultActivityServerTest {
     
     @Test
     public void testProcessActivityIdAssignedIfMissing() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         
         ActivityUnit au=new ActivityUnit();
  
@@ -296,7 +296,7 @@ public class DefaultActivityServerTest {
         
     @Test
     public void testProcessActivityIdPreservedIfExists() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         
         ActivityUnit au=new ActivityUnit();
         au.setId(TEST_ID);
@@ -310,7 +310,7 @@ public class DefaultActivityServerTest {
         
     @Test
     public void testProcessActivityAssignActivityUnitIdToTypesAndIndex() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         
         ActivityUnit au=new ActivityUnit();
         au.setId(TEST_ID);
@@ -349,7 +349,7 @@ public class DefaultActivityServerTest {
     
     @Test
     public void testProcessActivityExtractIdWithDuplicates() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         as.setHandleDuplicateIds(false);
         
         ActivityUnit au=new ActivityUnit();
@@ -416,7 +416,7 @@ public class DefaultActivityServerTest {
     
     @Test
     public void testProcessActivityExtractIdWithNoDuplicates() {
-        DefaultActivityServer as=new DefaultActivityServer();
+        JEEActivityServer as=new JEEActivityServer();
         as.setHandleDuplicateIds(true);
         
         ActivityUnit au=new ActivityUnit();
