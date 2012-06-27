@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.collector.impl;
+package org.overlord.bam.activity.collector.jee;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -44,9 +44,9 @@ import org.overlord.bam.activity.collector.CollectorContext;
  */
 @Singleton(name="ActivityCollector")
 @ConcurrencyManagement(BEAN)
-public class DefaultActivityCollector implements ActivityCollector {
+public class JEEActivityCollector implements ActivityCollector {
 
-    private static final Logger LOG=Logger.getLogger(DefaultActivityCollector.class.getName());
+    private static final Logger LOG=Logger.getLogger(JEEActivityCollector.class.getName());
     
     @Inject
     private CollectorContext _collectorContext=null;

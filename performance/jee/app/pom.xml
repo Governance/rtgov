@@ -22,7 +22,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
-			<artifactId>collector</artifactId>
+			<artifactId>collector-jee</artifactId>
 			<version>${bam.version}</version>
 			<scope>provided</scope>
 		</dependency>

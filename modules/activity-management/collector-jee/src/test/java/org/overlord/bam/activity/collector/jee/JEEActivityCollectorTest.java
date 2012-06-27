@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.collector.impl;
+package org.overlord.bam.activity.collector.jee;
 
 import static org.junit.Assert.*;
 
@@ -36,13 +36,13 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.collector.ActivityLogger;
 import org.overlord.bam.activity.collector.CollectorContext;
-import org.overlord.bam.collector.impl.DefaultActivityCollector;
+import org.overlord.bam.activity.collector.jee.JEEActivityCollector;
 
-public class DefaultActivityCollectorTest {
+public class JEEActivityCollectorTest {
 
     @Test
     public void testNoScopeSingleEvent() {
-        DefaultActivityCollector ac=new DefaultActivityCollector();
+        JEEActivityCollector ac=new JEEActivityCollector();
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
@@ -64,7 +64,7 @@ public class DefaultActivityCollectorTest {
     
     @Test
     public void testAppControlledScopeOnlyStartedOnce() {
-        DefaultActivityCollector ac=new DefaultActivityCollector();
+        JEEActivityCollector ac=new JEEActivityCollector();
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
@@ -90,7 +90,7 @@ public class DefaultActivityCollectorTest {
     
     @Test
     public void testAppControlledScope() {
-        DefaultActivityCollector ac=new DefaultActivityCollector();
+        JEEActivityCollector ac=new JEEActivityCollector();
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
@@ -132,7 +132,7 @@ public class DefaultActivityCollectorTest {
 
     @Test
     public void testXAControlledScope() {
-        DefaultActivityCollector ac=new DefaultActivityCollector();
+        JEEActivityCollector ac=new JEEActivityCollector();
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         

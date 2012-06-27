@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.collector.jmx;
+package org.overlord.bam.activity.collector.jee.jmx;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
