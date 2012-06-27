@@ -17,7 +17,7 @@ JBossAS7/Switchyard:
 
 The 'jbossas' target platform requires JBossAS7 with Switchyard. This can be obtained from: http://www.jboss.org/switchyard/downloads
 
-(Note: currently been tested with switchyard-0.5-SNAPSHOT).
+(Note: currently requires switchyard-0.5-beta1 or later).
 
 Once installed, set the JBOSS_HOME environment variable to point to the root of the switchyard installation.
 

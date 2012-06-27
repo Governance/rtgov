@@ -14,19 +14,21 @@ Deploying the example
 
 1) Download and unpack a Switchyard AS7 distribution (http://www.jboss.org/switchyard/downloads)
 
-2) Startup the server, using the following command from the 'bin' folder:
+2) Copy the contents of the ${bam}/modules folder into the ${as7}/modules folder
+
+3) Startup the server, using the following command from the 'bin' folder:
 
 ./standalone.sh --server-config standalone-full.xml
 
 This starts the full configuration, as this includes JMS.
 
-3) Deploy the overlord-bam.war from the ${bam}/modules folder into the ${as7}/standalone/deployments folder
+4) Deploy the overlord-bam.war from the ${bam} top level folder into the ${as7}/standalone/deployments folder
 
-4) Build the SLA Monitor sample, using the following command from the ${bam}/samples/slamonitor folder:
+5) Build the SLA Monitor sample, using the following command from the ${bam}/samples/slamonitor folder:
 
 mvn clean install
 
-5) Copy the sample archives for each of the components (acs, epn, monitor and orders) from
+6) Copy the sample archives for each of the components (acs, epn, monitor and orders) from
 ${bam}/samples/slamonitor/${component}/target/slamonitor-${component}.war file
 into the ${as7}/standalone/deployments folder.
 
@@ -51,7 +53,7 @@ Running the example
 
 Startup a SOAP client (e.g. SOAPUI) and send an example message to the URL:
 
-http://127.0.0.1:18001/demo-orders/OrderService
+http://127.0.0.1:8080/demo-orders/OrderService
 
 The initial message could be:
 
@@ -99,6 +101,8 @@ http://localhost:8080/slamonitor-monitor/monitor/responseTimes - returns all res
 http://localhost:8080/slamonitor-monitor/monitor/responseTimes?operation=submitOrder - returns only response times for this operation
 
 http://localhost:8080/slamonitor-monitor/monitor/violations - returns all SLA violations
+
+You can also view the SLA violations using a JMX console (e.g. jconsole). The example registers an MBean with the object name 'overlord.sample.slamonitor:name=SLAViolations'. Subscribe to the notifications for this management bean to also see the violations.
 
 
 

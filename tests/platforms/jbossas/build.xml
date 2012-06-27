@@ -1,0 +1,31 @@
+<project default="setup">
+	<target name="setup">
+		<echo message="Setting up BAM modules"/>
+	
+		<delete dir="${jboss.home}/modules/org/overlord/bam" />
+		
+		<copy file="${basedir}/src/test/modules/module.xml"
+				todir="${jboss.home}/modules/org/overlord/bam/main" />
+
+		<copy file="${org.overlord.bam.activity-management:activity-api:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/activity-api.jar" />
+		<copy file="${org.overlord.bam.event-processor-network:epn-core:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-core.jar" />
+		<copy file="${org.overlord.bam.event-processor-network:epn-processor-cep:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-processor-cep.jar" />
+		<copy file="${org.overlord.bam.active-queries:active-collection:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/active-collection.jar" />
+		<copy file="${org.overlord.bam.activity-analysis:service-analytics:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/service-analytics.jar" />
+		<copy file="${org.codehaus.jackson:jackson-core-asl:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/jackson-core-asl.jar" />
+		<copy file="${org.codehaus.jackson:jackson-mapper-asl:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/jackson-mapper-asl.jar" />
+	</target>
+
+	<target name="clean">
+		<echo message="Cleaning up BAM modules"/>
+		<delete dir="${jboss.home}/modules/org/overlord/bam" />
+	</target>
+
+</project>
