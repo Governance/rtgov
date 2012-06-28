@@ -45,7 +45,7 @@ public class CustomEventMonitor implements NodeListener {
 
     private static final String ACS_NAME = "CustomEvents";
 
-	private static final String CUSTOM_EVENTS_EPN = "CustomEventsEPN";
+    private static final String CUSTOM_EVENTS_EPN = "CustomEventsEPN";
 
     private static final Logger LOG=Logger.getLogger(CustomEventMonitor.class.getName());
     

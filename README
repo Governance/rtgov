@@ -7,7 +7,7 @@ Any feature requests or issues with the BAM component should be reported here: h
 Setting the environment
 -----------------------
 
-When building the repository, the 'distribution' and 'tests' folders are platform specific and therefore need a
+When building the repository, the 'release' folder is platform specific and therefore need a
 target platform to be specified. All other folders are platform agnostic.
 
 The following environment needs to be setup for the selected target platform:
@@ -33,7 +33,7 @@ mvn clean install -P<platform>
 where platform can be: jbossas 
 
 
-Once the build has completed, the distribution can be found in the distribution/jee/packaging/target folder.
+Once the build has completed, the distribution can be found in the release/jbossas/distribution/target folder.
 
 
 
