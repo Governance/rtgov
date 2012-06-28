@@ -25,9 +25,9 @@ import javax.naming.InitialContext;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.mvel2.MVEL;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
+import org.overlord.bam.epn.ContextualNodeListener;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.NodeListener;
 import org.overlord.bam.epn.NotificationType;
 
 /**
@@ -35,7 +35,7 @@ import org.overlord.bam.epn.NotificationType;
  * Event Processor Network nodes.
  *
  */
-public class EPNActiveCollectionSource extends ActiveCollectionSource implements NodeListener {
+public class EPNActiveCollectionSource extends ActiveCollectionSource {
 
     private static final Logger LOG=Logger.getLogger(EPNActiveCollectionSource.class.getName());
 
@@ -54,6 +54,11 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
                 new java.util.HashMap<Object, java.util.List<Object>>();
     
     private Aggregator _aggregator=null;
+    
+    private ClassLoader _contextClassLoader=null;
+    private boolean _preinitialized=false;
+
+    private EPNACSNodeListener _listener=new EPNACSNodeListener();
     
     /**
      * This method sets the EPN manager.
@@ -210,7 +215,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
             LOG.fine("Register node listener for network="+_network);
         }
 
-        _epnManager.addNodeListener(_network, this);
+        _epnManager.addNodeListener(_network, _listener);
         
         if (_groupBy != null) {
             // Compile expression
@@ -236,27 +241,35 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
      */
     @Override
     protected void preInit() throws Exception {
-        super.preInit();
-        
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Pre-Initializing EPN Active Collection Source (script="+_aggregationScript
-                    +" compiled="+_aggregationScriptExpression+")");
-        }
-
-        // Only initialize if the script is specified, but not yet compiled
-        if (_aggregationScript != null && _aggregationScriptExpression == null) {
-            java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
+        if (!_preinitialized) {
+            _preinitialized = true;
             
-            if (is == null) {
-                LOG.severe("Unable to locate '"+_aggregationScript+"'");
-            } else {
-                byte[] b=new byte[is.available()];
-                is.read(b);
-                is.close();
-
-                // Compile expression
-                _aggregationScriptExpression = MVEL.compileExpression(new String(b));
+            super.preInit();
+            
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Pre-Initializing EPN Active Collection Source (script="+_aggregationScript
+                        +" compiled="+_aggregationScriptExpression+")");
             }
+    
+            // Only initialize if the script is specified, but not yet compiled
+            if (_aggregationScript != null && _aggregationScriptExpression == null) {
+                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
+                
+                if (is == null) {
+                    LOG.severe("Unable to locate '"+_aggregationScript+"'");
+                } else {
+                    byte[] b=new byte[is.available()];
+                    is.read(b);
+                    is.close();
+    
+                    // Compile expression
+                    _aggregationScriptExpression = MVEL.compileExpression(new String(b));
+                }
+            }
+            
+            // Cache context classloader for use deserializing
+            // events in this context
+            _contextClassLoader = Thread.currentThread().getContextClassLoader();
         }
     }
 
@@ -271,6 +284,8 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
             LOG.fine("Closing EPN Active Collection Source");
         }
 
+        _epnManager.removeNodeListener(_network, _listener);
+
         if (_aggregator != null) {
             _aggregator.cancel();
         }
@@ -279,6 +294,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
     /**
      * {@inheritDoc}
      */
+    /*
     public void notify(String network, String version, String node,
             NotificationType type, EventList events) {
         if (isRelevant(network, version, node, type)) {
@@ -290,6 +306,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
             }
         }
     }
+    */
 
     /**
      * This method determines whether the notification is relevant for this
@@ -477,5 +494,35 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource implements
         public void run() {
             publishAggregateEvents();
         }
+    }
+    
+    /**
+     * This class handles the events from the EPN node.
+     *
+     */
+    public class EPNACSNodeListener extends ContextualNodeListener {
+
+        /**
+         * {@inheritDoc}
+         */
+        public ClassLoader getContextClassLoader() {
+            return (_contextClassLoader);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void handleEvents(String network, String version, String node,
+                NotificationType type, EventList events) {
+            if (isRelevant(network, version, node, type)) {
+                
+                if (_aggregationDuration > 0 && _groupByExpression != null) {
+                    aggregateEvents(network, version, node, type, events);
+                } else {
+                    processNotification(network, version, node, type, events);
+                }
+            }            
+        }
+        
     }
 }

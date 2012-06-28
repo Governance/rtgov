@@ -66,4 +66,13 @@ public class TestObject implements java.io.Serializable {
     public String getName() {
         return (_name);
     }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof TestObject) {
+            if (((TestObject)obj)._name.equals(_name)) {
+                return (true);
+            }
+        }
+        return (false);
+    }
 }

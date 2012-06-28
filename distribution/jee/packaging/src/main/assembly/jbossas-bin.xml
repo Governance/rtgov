@@ -79,6 +79,7 @@
 				<include>org.overlord.bam.event-processor-network:epn-core:jar</include>
 				<include>org.overlord.bam.event-processor-network:epn-processor-cep:jar</include>
 				<include>org.overlord.bam.active-queries:active-collection:jar</include>
+				<include>org.overlord.bam.active-queries:acs-epn:jar</include>
 				<include>org.overlord.bam.activity-analysis:service-analytics:jar</include>
 				<include>org.codehaus.jackson:jackson-core-asl:jar</include>
 				<include>org.codehaus.jackson:jackson-mapper-asl:jar</include>

@@ -116,7 +116,7 @@ public class EPNActiveCollectionSourceTest {
         }
         
         for (Object obj : al) {
-            if (obj == resultList.get(0)) {
+            if (obj.equals(resultList.get(0))) {
                 resultList.remove(0);
             } else {
                 fail("Failed to match: "+obj+" with "+resultList.get(0));

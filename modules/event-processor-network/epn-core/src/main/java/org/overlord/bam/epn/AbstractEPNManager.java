@@ -463,7 +463,7 @@ public abstract class AbstractEPNManager implements EPNManager {
             for (int i=0; i < listeners.size(); i++) {
                 NodeListener nl=listeners.get(i);
                 
-                if (_usePrePostEventListProcessing) {
+                if (_usePrePostEventListProcessing && !(nl instanceof ContextualNodeListener)) {
                     try {
                         preProcessEvents(events, nl.getClass().getClassLoader());
                     } catch (Throwable t) {
