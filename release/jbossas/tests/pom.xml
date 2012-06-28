@@ -1,0 +1,24 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overlord.bam.release.jbossas</groupId>
+	<artifactId>tests</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>Overlord BAM::Release::JBossAS::Tests</name>
+
+	<parent>
+		<groupId>org.overlord.bam.release</groupId>
+		<artifactId>jbossas</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>event-processor-network</module>
+		<module>activity-management</module>
+		<module>platform</module>
+	</modules>
+
+</project>
+
