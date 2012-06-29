@@ -26,7 +26,7 @@ import javax.inject.Inject;
 
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityServer;
-import org.overlord.bam.activity.collector.BatchedActivityLogger;
+import org.overlord.bam.activity.collector.BatchedActivityUnitLogger;
 
 /**
  * This class provides a bridge between the Collector and Activity Server,
@@ -34,7 +34,7 @@ import org.overlord.bam.activity.collector.BatchedActivityLogger;
  * configured activity server.
  *
  */
-public class ActivityServerLogger extends BatchedActivityLogger {
+public class ActivityServerLogger extends BatchedActivityUnitLogger {
 
     private static final Logger LOG=Logger.getLogger(ActivityServerLogger.class.getName());
     

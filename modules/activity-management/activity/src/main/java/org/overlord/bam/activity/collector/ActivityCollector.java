@@ -40,18 +40,18 @@ public interface ActivityCollector {
     public CollectorContext getCollectorContext();
         
     /**
-     * This method sets the activity logger.
+     * This method sets the activity unit logger.
      *
-     * @param activityLogger The activity logger
+     * @param activityUnitLogger The activity unit logger
      */
-    public void setActivityLogger(ActivityLogger activityLogger);
+    public void setActivityUnitLogger(ActivityUnitLogger activityUnitLogger);
         
     /**
-     * This method gets the activity logger.
+     * This method gets the activity unit logger.
      *
-     * @return The activity logger
+     * @return The activity unit logger
      */
-    public ActivityLogger getActivityLogger();
+    public ActivityUnitLogger getActivityUnitLogger();
      
     /**
      * This method can be used to create an application controlled

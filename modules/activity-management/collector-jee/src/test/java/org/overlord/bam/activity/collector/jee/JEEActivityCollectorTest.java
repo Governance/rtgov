@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.collector.ActivityLogger;
+import org.overlord.bam.activity.collector.ActivityUnitLogger;
 import org.overlord.bam.activity.collector.CollectorContext;
 import org.overlord.bam.activity.collector.jee.JEEActivityCollector;
 
@@ -46,7 +46,7 @@ public class JEEActivityCollectorTest {
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
-        ac.setActivityLogger(al);
+        ac.setActivityUnitLogger(al);
         ac.setCollectorContext(cc);
         
         RequestSent act=new RequestSent();
@@ -68,7 +68,7 @@ public class JEEActivityCollectorTest {
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
-        ac.setActivityLogger(al);
+        ac.setActivityUnitLogger(al);
         ac.setCollectorContext(cc);
         
         // Start scope
@@ -94,7 +94,7 @@ public class JEEActivityCollectorTest {
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
-        ac.setActivityLogger(al);
+        ac.setActivityUnitLogger(al);
         ac.setCollectorContext(cc);
         
         // Start scope
@@ -136,7 +136,7 @@ public class JEEActivityCollectorTest {
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
-        ac.setActivityLogger(al);
+        ac.setActivityUnitLogger(al);
         ac.setCollectorContext(cc);
         
         try {
@@ -198,7 +198,7 @@ public class JEEActivityCollectorTest {
         
     }
 
-    public class TestActivityLogger implements ActivityLogger {
+    public class TestActivityLogger implements ActivityUnitLogger {
 
         private java.util.List<ActivityUnit> _activityUnits=new java.util.Vector<ActivityUnit>();
         

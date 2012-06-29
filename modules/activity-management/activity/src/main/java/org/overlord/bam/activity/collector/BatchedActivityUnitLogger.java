@@ -27,20 +27,21 @@ import javax.annotation.PreDestroy;
 import org.overlord.bam.activity.model.ActivityUnit;
 
 /**
- * This class provides the abstract activity logger implementation that
- * batches activity events based on time slots and size.
+ * This class provides the abstract activity unit logger implementation that
+ * batches activity units based on time slots and size.
  *
  */
-public abstract class BatchedActivityLogger implements ActivityLogger, BatchedActivityLoggerMBean {
+public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
+                            BatchedActivityUnitLoggerMBean {
 
-    private static final Logger LOG=Logger.getLogger(BatchedActivityLogger.class.getName());
+    private static final Logger LOG=Logger.getLogger(BatchedActivityUnitLogger.class.getName());
     
     private int _messageCounter=0;
     private java.util.Timer _timer;
     private java.util.TimerTask _timerTask;
     
     private long _maxTimeInterval=500;
-    private int _maxMessageCount=1000;
+    private int _maxUnitCount=1000;
     
     /**
      * This method initializes the activity logger.
@@ -71,23 +72,23 @@ public abstract class BatchedActivityLogger implements ActivityLogger, BatchedAc
     }
     
     /**
-     * This method sets the maximum number of messages
+     * This method sets the maximum number of activity units
      * that should be logged within a single batch.
      * 
-     * @param max The maximum number of messages
+     * @param max The maximum number of activity units
      */
-    public void setMaxMessageCount(int max) {
-        _maxMessageCount = max;
+    public void setMaxUnitCount(int max) {
+        _maxUnitCount = max;
     }
     
     /**
-     * This method returns the maximum number of messages
+     * This method returns the maximum number of activity units
      * that should be logged within a single batch.
      * 
-     * @return The maximum number of messages
+     * @return The maximum number of activity units
      */
-    public int getMaxMessageCount() {
-        return (_maxMessageCount);
+    public int getMaxUnitCount() {
+        return (_maxUnitCount);
     }
     
     /**
@@ -122,7 +123,7 @@ public abstract class BatchedActivityLogger implements ActivityLogger, BatchedAc
                  
                  _messageCounter++;
 
-                 if (_messageCounter > _maxMessageCount) {
+                 if (_messageCounter > _maxUnitCount) {
                      sendMessage();
                      
                      reset();

@@ -34,7 +34,7 @@ import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Origin;
 import org.overlord.bam.activity.collector.ActivityCollector;
-import org.overlord.bam.activity.collector.ActivityLogger;
+import org.overlord.bam.activity.collector.ActivityUnitLogger;
 import org.overlord.bam.activity.collector.CollectorContext;
 
 /**
@@ -52,7 +52,7 @@ public class JEEActivityCollector implements ActivityCollector {
     private CollectorContext _collectorContext=null;
     
     @Inject
-    private ActivityLogger _activityLogger=null;
+    private ActivityUnitLogger _activityLogger=null;
     
     private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();
     
@@ -79,7 +79,7 @@ public class JEEActivityCollector implements ActivityCollector {
      * 
      * @param activityLogger The activity logger
      */
-    public void setActivityLogger(ActivityLogger activityLogger) {
+    public void setActivityUnitLogger(ActivityUnitLogger activityLogger) {
         _activityLogger = activityLogger;
     }
     
@@ -88,7 +88,7 @@ public class JEEActivityCollector implements ActivityCollector {
      * 
      * @return The activity logger
      */
-    public ActivityLogger getActivityLogger() {
+    public ActivityUnitLogger getActivityUnitLogger() {
         return (_activityLogger);
     }
     

@@ -23,7 +23,7 @@ import org.overlord.bam.activity.model.ActivityUnit;
  * This interface represents an activity event collector.
  *
  */
-public interface ActivityLogger {
+public interface ActivityUnitLogger {
 
     /**
      * This method records the supplied activity event.

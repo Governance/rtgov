@@ -22,7 +22,7 @@ package org.overlord.bam.activity.collector;
  * for the BatchedActivityLogger.
  *
  */
-public interface BatchedActivityLoggerMBean {
+public interface BatchedActivityUnitLoggerMBean {
 
     /**
      * This method sets the maximum time interval
@@ -46,7 +46,7 @@ public interface BatchedActivityLoggerMBean {
      * 
      * @param max The maximum number of messages
      */
-    public void setMaxMessageCount(int max);
+    public void setMaxUnitCount(int max);
     
     /**
      * This method returns the maximum number of messages
@@ -54,6 +54,6 @@ public interface BatchedActivityLoggerMBean {
      * 
      * @return The maximum number of messages
      */
-    public int getMaxMessageCount();
+    public int getMaxUnitCount();
     
 }

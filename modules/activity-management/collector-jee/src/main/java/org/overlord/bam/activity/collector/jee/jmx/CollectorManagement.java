@@ -70,7 +70,7 @@ public class CollectorManagement {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             ObjectName objname=new ObjectName(OBJECT_NAME_DOMAIN+OBJECT_NAME_LOGGER);
             
-            mbs.registerMBean(_activityCollector.getActivityLogger(), objname); 
+            mbs.registerMBean(_activityCollector.getActivityUnitLogger(), objname); 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to register MBean for ActivityLogger", e);
         }
