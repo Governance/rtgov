@@ -31,7 +31,6 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
 
     private static final int VERSION = 1;
 
-    private String _processType=null;
     private String _instanceId=null;
 
     /**
@@ -46,26 +45,7 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * @param ba The bpm activity to copy
      */
     public BPMActivityType(BPMActivityType ba) {
-        _processType = ba._processType;
         _instanceId = ba._instanceId;
-    }
-    
-    /**
-     * This method sets the process type.
-     * 
-     * @param processType The process type
-     */
-    public void setProcessType(String processType) {
-        _processType = processType;
-    }
-    
-    /**
-     * This method gets the process type.
-     * 
-     * @return The process type
-     */
-    public String getProcessType() {
-        return (_processType);
     }
     
     /**
@@ -94,7 +74,6 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
         
         out.writeInt(VERSION);
         
-        out.writeObject(_processType);
         out.writeObject(_instanceId);
     }
 
@@ -107,7 +86,6 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
         
         in.readInt(); // Consume version, as not required for now
         
-        _processType = (String)in.readObject();
         _instanceId = (String)in.readObject();
     }
 }

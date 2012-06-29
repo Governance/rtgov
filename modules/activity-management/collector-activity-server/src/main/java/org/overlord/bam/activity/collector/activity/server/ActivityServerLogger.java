@@ -55,6 +55,24 @@ public class ActivityServerLogger extends BatchedActivityLogger {
     }
     
     /**
+     * This method sets the activity server.
+     * 
+     * @param activityServer The activity server
+     */
+    public void setActivityServer(ActivityServer activityServer) {
+        _activityServer = activityServer;
+    }
+    
+    /**
+     * This method gets the activity server.
+     * 
+     * @return The activity server
+     */
+    public ActivityServer getActivityServer() {
+        return (_activityServer);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     protected void appendActivity(ActivityUnit act) throws Exception {

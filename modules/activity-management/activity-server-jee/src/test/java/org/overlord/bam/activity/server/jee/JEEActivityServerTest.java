@@ -370,7 +370,6 @@ public class JEEActivityServerTest {
         
         ProcessCompleted pc=new ProcessCompleted();
         pc.setInstanceId(INST_ID);
-        pc.setProcessType(PROC_TYPE);
         au.getActivityTypes().add(pc);
         
         ResponseSent rps=new ResponseSent();
@@ -437,7 +436,6 @@ public class JEEActivityServerTest {
         
         ProcessCompleted pc=new ProcessCompleted();
         pc.setInstanceId(INST_ID);
-        pc.setProcessType(PROC_TYPE);
         au.getActivityTypes().add(pc);
         
         ResponseSent rps=new ResponseSent();

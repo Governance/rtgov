@@ -39,6 +39,8 @@ import org.overlord.bam.activity.server.QuerySpec;
  */
 public class JEEActivityServer implements ActivityServer {
 
+    private static final String PROCESS_CONTEXT_NAME = "process";
+
     @Inject
     private ActivityStore _store=null;
     
@@ -173,7 +175,7 @@ public class JEEActivityServer implements ActivityServer {
                    
                     // Copy instance id to context for activity unit
                     au.getContext().add(new Context(Context.ENDPOINT_ID,
-                            ((BPMActivityType)at).getProcessType(),
+                            PROCESS_CONTEXT_NAME,
                             ((BPMActivityType)at).getInstanceId()));                   
                 }
             }

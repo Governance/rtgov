@@ -29,6 +29,7 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
 
     private static final int VERSION = 1;
 
+    private String _processType=null;
     private String _version=null;
 
     /**
@@ -43,7 +44,26 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
      * @param ba The bpm activity to copy
      */
     public ProcessStarted(ProcessStarted ba) {
+        _processType = ba._processType;
         _version = ba._version;
+    }
+    
+    /**
+     * This method sets the process type.
+     * 
+     * @param processType The process type
+     */
+    public void setProcessType(String processType) {
+        _processType = processType;
+    }
+    
+    /**
+     * This method gets the process type.
+     * 
+     * @return The process type
+     */
+    public String getProcessType() {
+        return (_processType);
     }
     
     /**
@@ -72,6 +92,7 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
         
         out.writeInt(VERSION);
         
+        out.writeObject(_processType);
         out.writeObject(_version);
     }
 
@@ -84,6 +105,7 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
         
         in.readInt(); // Consume version, as not required for now
         
+        _processType = (String)in.readObject();
         _version = (String)in.readObject();
     }
 }
