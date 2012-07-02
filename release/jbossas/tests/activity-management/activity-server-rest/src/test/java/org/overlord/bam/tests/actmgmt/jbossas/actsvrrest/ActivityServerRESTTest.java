@@ -64,7 +64,7 @@ public class ActivityServerRESTTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.bam.activity-management:activity-server-jee:"+version,
+                    .artifacts("org.overlord.bam.activity-management:activity-server-impl:"+version,
                             "org.overlord.bam.activity-management:activity-store-mem:"+version,
                             "org.overlord.bam.activity-management:activity-server-rests:"+version)
                     .resolveAsFiles());

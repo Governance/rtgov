@@ -43,7 +43,7 @@
 		
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
-			<artifactId>activity-server-jee</artifactId>
+			<artifactId>activity-server-impl</artifactId>
 			<version>${bam.version}</version>
 			<exclusions>
 				<exclusion>

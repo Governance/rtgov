@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server.jee;
+package org.overlord.bam.activity.server.impl;
 
 import java.util.UUID;
 
@@ -34,10 +34,10 @@ import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
 
 /**
- * This class represents the JEE implementation of the activity server.
+ * This class represents the default implementation of the activity server.
  *
  */
-public class JEEActivityServer implements ActivityServer {
+public class ActivityServerImpl implements ActivityServer {
 
     private static final String PROCESS_CONTEXT_NAME = "process";
 

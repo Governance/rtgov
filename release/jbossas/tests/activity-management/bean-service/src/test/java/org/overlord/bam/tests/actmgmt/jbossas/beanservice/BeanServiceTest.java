@@ -83,7 +83,7 @@ public class BeanServiceTest {
                     .use(MavenDependencyResolver.class)
                     .artifacts("org.overlord.bam.activity-management:collector-jee:"+version,
                             "org.overlord.bam.integration:bam-jbossas:"+version,
-                            "org.overlord.bam.activity-management:activity-server-jee:"+version,
+                            "org.overlord.bam.activity-management:activity-server-impl:"+version,
                             "org.overlord.bam.activity-management:collector-activity-server:"+version)
                     .resolveAsFiles());
     }
