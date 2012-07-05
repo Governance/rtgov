@@ -21,6 +21,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
+import org.overlord.bam.active.collection.MVELPredicate;
+import org.overlord.bam.active.collection.QuerySpec;
 import org.overlord.bam.active.collection.util.ActiveCollectionUtil;
 
 public class ActiveCollectionUtilTest {
@@ -31,7 +33,7 @@ public class ActiveCollectionUtilTest {
         list.add(new TestActiveCollectionSource());
        
         try {
-            ActiveCollectionUtil.serialize(list);            
+            ActiveCollectionUtil.serializeACS(list);            
         } catch(Exception e) {
             fail("Failed to serialize: "+e);
         }
@@ -47,7 +49,7 @@ public class ActiveCollectionUtilTest {
             
             is.close();
             
-            java.util.List<ActiveCollectionSource> acslist=ActiveCollectionUtil.deserialize(b);
+            java.util.List<ActiveCollectionSource> acslist=ActiveCollectionUtil.deserializeACS(b);
             
             if (acslist.size() != 1) {
                 fail("List should have 1 source: "+acslist.size());
@@ -71,6 +73,59 @@ public class ActiveCollectionUtilTest {
         }
     }
     
+    @Test
+    public void testSerializeQuerySpec() {
+        QuerySpec qs=new QuerySpec();
+        qs.setCollection("OrderService");
+        qs.setParent("ServiceResponseTime");
+        qs.setPredicate(new MVELPredicate(
+                "serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
+                +"operation == \"submitOrder\""));
+        
+        try {
+            System.out.println("QUERY SPEC="
+                        +new String(ActiveCollectionUtil.serializeQuerySpec(qs)));            
+        } catch(Exception e) {
+            fail("Failed to serialize: "+e);
+        }
+    }
+
+    @Test
+    public void testDeserializeQuerySpec() {
+        QuerySpec qs=new QuerySpec();
+        qs.setCollection("OrderService");
+        qs.setParent("ServiceResponseTime");
+        qs.setPredicate(new MVELPredicate(
+                "serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
+                +"operation == \"submitOrder\""));
+        
+        try {
+           byte[] b=ActiveCollectionUtil.serializeQuerySpec(qs);
+           
+           QuerySpec result=ActiveCollectionUtil.deserializeQuerySpec(b);
+           
+           if (result == null) {
+               fail("Query spec was not deserialized");
+           }
+           
+           if (!result.getCollection().equals(qs.getCollection())) {
+               fail("Collection not the same");
+           }
+           
+           if (!result.getParent().equals(qs.getParent())) {
+               fail("Parent not the same");
+           }
+           
+           if (!result.getPredicate().getClass().getName().equals(
+                       qs.getPredicate().getClass().getName())) {
+               fail("Predicate classes not the same");
+           }
+           
+        } catch(Exception e) {
+            fail("Failed to deserialize: "+e);
+        }
+    }
+
     public class TestActiveCollectionSource extends ActiveCollectionSource {
         
         public TestActiveCollectionSource() {

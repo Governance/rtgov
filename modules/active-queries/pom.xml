@@ -17,6 +17,7 @@
 	<modules>
 		<module>active-collection</module>
 		<module>active-collection-jee</module>
+		<module>active-collection-rests</module>
 		<module>acs-epn</module>
 		<module>acs-loader-jee</module>
 	</modules>

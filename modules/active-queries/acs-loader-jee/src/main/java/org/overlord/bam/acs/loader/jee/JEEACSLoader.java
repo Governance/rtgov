@@ -80,7 +80,7 @@ public class JEEACSLoader extends AbstractACSLoader {
                 is.read(b);
                 is.close();
                 
-                _activeCollectionSources = ActiveCollectionUtil.deserialize(b);
+                _activeCollectionSources = ActiveCollectionUtil.deserializeACS(b);
                 
                 if (_activeCollectionSources == null) {
                     LOG.severe("Failed to load active collection sources");

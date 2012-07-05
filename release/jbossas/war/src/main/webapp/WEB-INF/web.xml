@@ -3,10 +3,10 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-    <display-name>BAM Activity Server</display-name>
+    <display-name>BAM</display-name>
 
     <servlet>
-        <servlet-name>Resteasy</servlet-name>
+        <servlet-name>ActivityServer</servlet-name>
         <servlet-class>
             org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
         </servlet-class>
@@ -16,9 +16,25 @@
         </init-param>
     </servlet>
 
+    <servlet>
+        <servlet-name>ActiveCollectionManager</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.bam.active.collection.rest.RESTActiveCollectionServerApplication</param-value>
+        </init-param>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>Resteasy</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <servlet-name>ActivityServer</servlet-name>
+        <url-pattern>/activity/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ActiveCollectionManager</servlet-name>
+        <url-pattern>/acm/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

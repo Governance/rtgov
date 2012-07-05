@@ -26,12 +26,13 @@ import org.mvel2.MVEL;
  * predicate interface.
  *
  */
-public class MVELPredicate implements Predicate {
+public class MVELPredicate extends Predicate {
 
     private static final Logger LOG=Logger.getLogger(MVELPredicate.class.getName());
     
     private String _expression=null;
     private java.io.Serializable _expressionCompiled=null;
+    private boolean _initialized=false;
 
     /**
      * This is the default constructor for the MVEL predicate.
@@ -57,12 +58,9 @@ public class MVELPredicate implements Predicate {
     public void setExpression(String expr) {
         _expression = expr;
         
-        // Invoke the compilation of the expression
-        if (expr != null) {
-            _expressionCompiled = MVEL.compileExpression(_expression);
-        } else {
-            _expressionCompiled = null;
-        }
+        // Reset state
+        _initialized = false;
+        _expressionCompiled = null;
     }
     
     /**
@@ -80,6 +78,16 @@ public class MVELPredicate implements Predicate {
     public boolean evaluate(Object item) {
         boolean ret=false;
         
+        if (!_initialized) {
+            if (_expression != null) {
+                _expressionCompiled = MVEL.compileExpression(_expression);
+            } else {
+                _expressionCompiled = null;
+            }
+
+            _initialized = true;
+        }
+        
         if (_expressionCompiled != null) {
             Object result=MVEL.executeExpression(_expressionCompiled, item);
             
@@ -95,4 +103,10 @@ public class MVELPredicate implements Predicate {
         return (ret);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public String toString() {
+        return ("MVELPredicate["+_expression+"]");
+    }
 }

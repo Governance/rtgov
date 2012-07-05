@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 public class TestUtils {
     
-    protected static java.io.File copyToTmpFile(java.io.File source, String filename) {
+    public static java.io.File copyToTmpFile(java.io.File source, String filename) {
         String tmpdir=System.getProperty("java.io.tmpdir");
         java.io.File dir=new java.io.File(tmpdir+java.io.File.separator+"bamtests"+System.currentTimeMillis());
         
@@ -56,5 +56,4 @@ public class TestUtils {
         
         return(ret);
     }
-
 }

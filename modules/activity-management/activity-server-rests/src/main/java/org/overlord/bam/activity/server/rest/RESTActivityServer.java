@@ -40,7 +40,7 @@ import javax.ws.rs.core.Response.Status;
  * This class represents the RESTful interface to the activity server.
  *
  */
-@Path("/server")
+@Path("/activity")
 @ApplicationScoped
 public class RESTActivityServer {
 

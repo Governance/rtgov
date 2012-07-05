@@ -58,7 +58,7 @@ public class ActivityServerRESTTest {
     public static WebArchive createDeployment() {
         String version=System.getProperty("bam.version");
         
-        return ShrinkWrap.create(WebArchive.class, "TestActivityServer.war")
+        return ShrinkWrap.create(WebArchive.class, "overlord-bam.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .setWebXML("web.xml")
             .addAsLibraries(
@@ -107,7 +107,7 @@ public class ActivityServerRESTTest {
             _activityStore.store(aulist);
             
             // Query via REST interface
-            URL getUrl = new URL("http://localhost:8080/TestActivityServer/server/query");
+            URL getUrl = new URL("http://localhost:8080/overlord-bam/activity/query");
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("POST");
     
@@ -186,7 +186,7 @@ public class ActivityServerRESTTest {
             _activityStore.store(aulist);
             
             // Query via REST interface
-            URL getUrl = new URL("http://localhost:8080/TestActivityServer/server/query");
+            URL getUrl = new URL("http://localhost:8080/overlord-bam/activity/query");
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("POST");
     
@@ -254,7 +254,7 @@ public class ActivityServerRESTTest {
                 fail("Initial query result should be 0: "+result.size());
             }
             
-            URL getUrl = new URL("http://localhost:8080/TestActivityServer/server/store");
+            URL getUrl = new URL("http://localhost:8080/overlord-bam/activity/store");
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("POST");
             

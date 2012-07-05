@@ -21,6 +21,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.type.TypeReference;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
+import org.overlord.bam.active.collection.QuerySpec;
 
 /**
  * This class provides utility functions for the Active Collection
@@ -54,7 +55,7 @@ public final class ActiveCollectionUtil {
      * @return The JSON serialized representation
      * @throws Exception Failed to serialize
      */
-    public static byte[] serialize(java.util.List<ActiveCollectionSource> acs) throws Exception {
+    public static byte[] serializeACS(java.util.List<ActiveCollectionSource> acs) throws Exception {
         byte[] ret=null;
         
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
@@ -76,12 +77,53 @@ public final class ActiveCollectionUtil {
      * @throws Exception Failed to deserialize
      */
     @SuppressWarnings("unchecked")
-    public static java.util.List<ActiveCollectionSource> deserialize(byte[] acs) throws Exception {
+    public static java.util.List<ActiveCollectionSource> deserializeACS(byte[] acs) throws Exception {
         java.util.List<ActiveCollectionSource> ret=null;
         
         java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(acs);
         
         ret = (java.util.List<ActiveCollectionSource>)MAPPER.readValue(bais, TYPEREF);
+        
+        bais.close();
+        
+        return (ret);
+    }
+
+    /**
+     * This method serializes a query specification
+     * into a JSON representation.
+     * 
+     * @param qs The query spec
+     * @return The JSON serialized representation
+     * @throws Exception Failed to serialize
+     */
+    public static byte[] serializeQuerySpec(QuerySpec qs) throws Exception {
+        byte[] ret=null;
+        
+        java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+        
+        MAPPER.writeValue(baos, qs);
+        
+        ret = baos.toByteArray();
+        
+        baos.close();
+        
+        return (ret);
+    }
+
+    /**
+     * This method deserializes a query specification from a JSON representation.
+     * 
+     * @param qs The JSON representation of the query spec
+     * @return The query spec
+     * @throws Exception Failed to deserialize
+     */
+    public static QuerySpec deserializeQuerySpec(byte[] qs) throws Exception {
+        QuerySpec ret=null;
+        
+        java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(qs);
+        
+        ret = (QuerySpec)MAPPER.readValue(bais, QuerySpec.class);
         
         bais.close();
         

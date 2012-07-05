@@ -17,12 +17,15 @@
  */
 package org.overlord.bam.active.collection;
 
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+
 /**
  * This interface is used to determine whether a changed item
  * in a parent active collection is relevant to a child collection.
  *
  */
-public interface Predicate {
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+public abstract class Predicate {
 
     /**
      * This method evaluates the supplied item against
@@ -31,6 +34,6 @@ public interface Predicate {
      * @param item The item
      * @return Whether the predicate is true or false for this item
      */
-    public boolean evaluate(Object item);
+    public abstract boolean evaluate(Object item);
     
 }
