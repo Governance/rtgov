@@ -113,6 +113,10 @@ public class RESTActiveCollectionServer {
     public String query(String qspec) throws Exception {
         String ret="";
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Active Collection JSON Query="+qspec);        
+        }
+        
         QuerySpec qs=ActiveCollectionUtil.deserializeQuerySpec(qspec.getBytes());
         
         if (LOG.isLoggable(Level.FINEST)) {

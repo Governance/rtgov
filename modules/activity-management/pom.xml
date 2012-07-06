@@ -17,11 +17,13 @@
 	<modules>
 		<module>activity</module>
 		<module>activity-server-impl</module>
+		<module>activity-server-restc</module>
 		<module>activity-server-rests</module>
 		<module>activity-server-jmsc</module>
 		<module>activity-server-epn</module>
 		<module>activity-store-jpa</module>
 		<module>activity-store-mem</module>
+		<module>collector-embedded</module>
 		<module>collector-jee</module>
 		<module>collector-activity-server</module>
 	</modules>

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector.jee;
+package org.overlord.bam.activity.collector;
 
 import static org.junit.Assert.*;
 
@@ -36,13 +36,12 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.collector.ActivityUnitLogger;
 import org.overlord.bam.activity.collector.CollectorContext;
-import org.overlord.bam.activity.collector.jee.JEEActivityCollector;
 
-public class JEEActivityCollectorTest {
+public class AbstractActivityCollectorTest {
 
     @Test
     public void testNoScopeSingleEvent() {
-        JEEActivityCollector ac=new JEEActivityCollector();
+        AbstractActivityCollector ac=new AbstractActivityCollector() {};
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
@@ -64,7 +63,7 @@ public class JEEActivityCollectorTest {
     
     @Test
     public void testAppControlledScopeOnlyStartedOnce() {
-        JEEActivityCollector ac=new JEEActivityCollector();
+        AbstractActivityCollector ac=new AbstractActivityCollector() {};
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
@@ -90,7 +89,7 @@ public class JEEActivityCollectorTest {
     
     @Test
     public void testAppControlledScope() {
-        JEEActivityCollector ac=new JEEActivityCollector();
+        AbstractActivityCollector ac=new AbstractActivityCollector() {};
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
@@ -132,7 +131,7 @@ public class JEEActivityCollectorTest {
 
     @Test
     public void testXAControlledScope() {
-        JEEActivityCollector ac=new JEEActivityCollector();
+        AbstractActivityCollector ac=new AbstractActivityCollector() {};
         TestActivityLogger al=new TestActivityLogger();
         TestCollectorContext cc=new TestCollectorContext();
         
@@ -208,6 +207,13 @@ public class JEEActivityCollectorTest {
         
         public void log(ActivityUnit act) {
             _activityUnits.add(act);
+        }
+
+        public void init() {
+            
+        }
+
+        public void close() {
         }
         
     }

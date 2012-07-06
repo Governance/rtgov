@@ -1,0 +1,69 @@
+[ {
+    "typeName" : "RequestSent",
+    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-13739-ABC</orderId>                <itemId>JAM</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
+    "messageId" : "5a684fbc-c6a6-4750-979c-e07732b3b7a4",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "operation" : "submitOrder",
+    "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
+    "fault" : null
+  }, {
+    "typeName" : "RequestReceived",
+    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-13739-ABC</orderId>                <itemId>JAM</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
+    "messageId" : "5a684fbc-c6a6-4750-979c-e07732b3b7a4",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "operation" : "submitOrder",
+    "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
+    "fault" : null
+  }, {
+    "typeName" : "RequestSent",
+    "content" : "JAM",
+    "messageId" : "0aed56c0-088b-4d52-a383-14db95fc5a3a",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
+    "operation" : "lookupItem",
+    "messageType" : "java:java.lang.String",
+    "fault" : null
+  }, {
+    "typeName" : "RequestReceived",
+    "content" : "JAM",
+    "messageId" : "0aed56c0-088b-4d52-a383-14db95fc5a3a",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
+    "operation" : "lookupItem",
+    "messageType" : "java:java.lang.String",
+    "fault" : null
+  }, {
+    "typeName" : "ResponseSent",
+    "replyToId" : "0aed56c0-088b-4d52-a383-14db95fc5a3a",
+    "content" : "{\"name\":\"Strawberry Jam\",\"itemId\":\"JAM\",\"quantity\":500}",
+    "messageId" : "f292b742-5e4e-42bc-8b0d-2fccae755dee",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
+    "operation" : "lookupItem",
+    "messageType" : "java:org.switchyard.quickstarts.demos.orders.Item",
+    "fault" : null
+  }, {
+    "typeName" : "ResponseReceived",
+    "replyToId" : "0aed56c0-088b-4d52-a383-14db95fc5a3a",
+    "content" : "{\"name\":\"Strawberry Jam\",\"itemId\":\"JAM\",\"quantity\":500}",
+    "messageId" : "f292b742-5e4e-42bc-8b0d-2fccae755dee",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
+    "operation" : "lookupItem",
+    "messageType" : "java:org.switchyard.quickstarts.demos.orders.Item",
+    "fault" : null
+  }, {
+    "typeName" : "ResponseSent",
+    "replyToId" : "5a684fbc-c6a6-4750-979c-e07732b3b7a4",
+    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-13739-ABC\",\"accepted\":true}",
+    "messageId" : "1ca8f879-f423-400a-a6d2-e6e0af1797d5",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "operation" : "submitOrder",
+    "messageType" : "java:org.switchyard.quickstarts.demos.orders.OrderAck",
+    "fault" : null
+  }, {
+    "typeName" : "ResponseReceived",
+    "replyToId" : "5a684fbc-c6a6-4750-979c-e07732b3b7a4",
+    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-13739-ABC\",\"accepted\":true}",
+    "messageId" : "1ca8f879-f423-400a-a6d2-e6e0af1797d5",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "operation" : "submitOrder",
+    "messageType" : "java:org.switchyard.quickstarts.demos.orders.OrderAck",
+    "fault" : null
+  } ]

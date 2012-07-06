@@ -38,7 +38,7 @@ import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.QuerySpec;
 
 /**
- * This class provides the JMS implementation of the activity logger.
+ * This class provides the JMS client implementation of the activity server.
  *
  */
 public class JMSActivityServer implements ActivityServer {

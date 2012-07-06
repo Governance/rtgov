@@ -35,6 +35,7 @@
 	</properties>
 
 	<modules>
+		<module>activityclient</module>
 		<module>slamonitor</module>
 	</modules>
 

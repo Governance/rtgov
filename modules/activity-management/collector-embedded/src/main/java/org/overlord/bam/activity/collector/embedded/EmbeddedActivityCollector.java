@@ -15,31 +15,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector;
+package org.overlord.bam.activity.collector.embedded;
 
-import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.collector.AbstractActivityCollector;
+import org.overlord.bam.activity.collector.ActivityCollector;
 
 /**
- * This interface represents an activity event collector.
+ * This class provides an embedded implementation of the activity
+ * collector interface.
  *
  */
-public interface ActivityUnitLogger {
-
-    /**
-     * This method initializes the activity logger.
-     */
-    public void init();
-
-    /**
-     * This method records the supplied activity event.
-     * 
-     * @param act The activity event
-     */
-    public void log(ActivityUnit act);
-    
-    /**
-     * This method closes the activity logger.
-     */
-    public void close();
+public class EmbeddedActivityCollector extends AbstractActivityCollector
+                        implements ActivityCollector {
 
 }
