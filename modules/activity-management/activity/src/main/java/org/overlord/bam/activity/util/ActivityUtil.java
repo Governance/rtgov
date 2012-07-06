@@ -22,6 +22,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.TypeReference;
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.server.QuerySpec;
 
 /**
  * This class provides utility functions for the activity
@@ -56,12 +57,33 @@ public final class ActivityUtil {
      * @return The JSON serialized representation
      * @throws Exception Failed to serialize
      */
-    public static byte[] serialize(ActivityUnit act) throws Exception {
+    public static byte[] serializeActivityUnit(ActivityUnit act) throws Exception {
         byte[] ret=null;
         
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
         
         MAPPER.writeValue(baos, act);
+        
+        ret = baos.toByteArray();
+        
+        baos.close();
+        
+        return (ret);
+    }
+
+    /**
+     * This method serializes a Query Spec into a JSON representation.
+     * 
+     * @param qs The query spec
+     * @return The JSON serialized representation
+     * @throws Exception Failed to serialize
+     */
+    public static byte[] serializeQuerySpec(QuerySpec qs) throws Exception {
+        byte[] ret=null;
+        
+        java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+        
+        MAPPER.writeValue(baos, qs);
         
         ret = baos.toByteArray();
         
@@ -98,7 +120,7 @@ public final class ActivityUtil {
      * @return The JSON serialized representation
      * @throws Exception Failed to serialize
      */
-    public static byte[] serializeList(java.util.List<ActivityUnit> activities) throws Exception {
+    public static byte[] serializeActivityUnitList(java.util.List<ActivityUnit> activities) throws Exception {
         byte[] ret=null;
         
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
@@ -119,12 +141,31 @@ public final class ActivityUtil {
      * @return The Activity event
      * @throws Exception Failed to deserialize
      */
-    public static ActivityUnit deserialize(byte[] act) throws Exception {
+    public static ActivityUnit deserializeActivityUnit(byte[] act) throws Exception {
         ActivityUnit ret=null;
         
         java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(act);
         
         ret = MAPPER.readValue(bais, ActivityUnit.class);
+        
+        bais.close();
+        
+        return (ret);
+    }
+
+    /**
+     * This method deserializes an Activity event from a JSON representation.
+     * 
+     * @param qs The JSON representation of the query spec
+     * @return The query spec
+     * @throws Exception Failed to deserialize
+     */
+    public static QuerySpec deserializeQuerySpec(byte[] qs) throws Exception {
+        QuerySpec ret=null;
+        
+        java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(qs);
+        
+        ret = MAPPER.readValue(bais, QuerySpec.class);
         
         bais.close();
         
@@ -138,7 +179,7 @@ public final class ActivityUtil {
      * @return The Activity event list
      * @throws Exception Failed to deserialize
      */
-    public static java.util.List<ActivityUnit> deserializeList(byte[] act) throws Exception {
+    public static java.util.List<ActivityUnit> deserializeActivityUnitList(byte[] act) throws Exception {
         java.util.List<ActivityUnit> ret=null;
         
         java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(act);

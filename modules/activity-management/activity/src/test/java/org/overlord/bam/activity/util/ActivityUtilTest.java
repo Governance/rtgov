@@ -83,7 +83,7 @@ public class ActivityUtilTest {
         ActivityUnit act=createTestActivityUnit("TestId");
         
         try {
-            byte[] b=ActivityUtil.serialize(act);
+            byte[] b=ActivityUtil.serializeActivityUnit(act);
             
             if (b == null) {
                 fail("null returned");
@@ -94,9 +94,9 @@ public class ActivityUtilTest {
             is.read(inb2);
             is.close();
             
-            ActivityUnit act2=ActivityUtil.deserialize(inb2);
+            ActivityUnit act2=ActivityUtil.deserializeActivityUnit(inb2);
             
-            byte[] b2=ActivityUtil.serialize(act2);            
+            byte[] b2=ActivityUtil.serializeActivityUnit(act2);            
             
             String s1=new String(b);
             String s2=new String(b2);
@@ -121,7 +121,7 @@ public class ActivityUtilTest {
             acts.add(act1);
             acts.add(act2);
             
-            byte[] b=ActivityUtil.serializeList(acts);
+            byte[] b=ActivityUtil.serializeActivityUnitList(acts);
             
             if (b == null) {
                 fail("null returned");
@@ -132,9 +132,9 @@ public class ActivityUtilTest {
             is.read(inb2);
             is.close();
             
-            java.util.List<ActivityUnit> acts2=ActivityUtil.deserializeList(inb2);
+            java.util.List<ActivityUnit> acts2=ActivityUtil.deserializeActivityUnitList(inb2);
             
-            byte[] b2=ActivityUtil.serializeList(acts2);            
+            byte[] b2=ActivityUtil.serializeActivityUnitList(acts2);            
             
             String s1=new String(b);
             String s2=new String(b2);
@@ -170,8 +170,8 @@ public class ActivityUtilTest {
             ois.close();
             is.close();
             
-            String s1=new String(ActivityUtil.serialize(act1));
-            String s2=new String(ActivityUtil.serialize(act2));
+            String s1=new String(ActivityUtil.serializeActivityUnit(act1));
+            String s2=new String(ActivityUtil.serializeActivityUnit(act2));
 
             if (!s1.equals(s2)) {
                 fail("Representations are different: s1="+s1+" s2="+s2);

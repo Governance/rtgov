@@ -17,6 +17,8 @@
  */
 package org.overlord.bam.samples.jbossas.activityclient;
 
+import java.util.Random;
+
 import javax.transaction.TransactionManager;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -39,6 +41,7 @@ public class ActivityClient {
     
     private String _activityServerURL=null;
     private ActivityCollector _collector=null;
+    private Random _random=new Random();
 
     /**
      * The main method.
@@ -113,7 +116,7 @@ public class ActivityClient {
      * @param actType The activity type
      * @param txnId A transaction id
      */
-    protected void preProcess(ActivityType actType, double txnId) {
+    protected void preProcess(ActivityType actType, int txnId) {
         
         if (actType instanceof org.overlord.bam.activity.model.soa.RPCActivityType) {
             org.overlord.bam.activity.model.soa.RPCActivityType rpcType=
@@ -142,7 +145,19 @@ public class ActivityClient {
     public void send(String filename) {
 
         try {
-            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("txns/"+filename);
+            java.io.InputStream is=ClassLoader.getSystemResourceAsStream(filename);
+
+            if (is == null) {
+                java.io.File f=new java.io.File(filename);
+                
+                if (f.exists()) {
+                    is = new java.io.FileInputStream(filename);
+                }
+            }
+
+            if (is == null) {
+                throw new java.io.FileNotFoundException(filename);
+            }
             
             ObjectMapper mapper=new ObjectMapper();
             
@@ -150,7 +165,7 @@ public class ActivityClient {
                       mapper.readValue(is,
                              new TypeReference<java.util.List<ActivityType>>(){});
             
-            double rand=Math.random();
+            int rand=_random.nextInt();
             
             _collector.startScope();
             

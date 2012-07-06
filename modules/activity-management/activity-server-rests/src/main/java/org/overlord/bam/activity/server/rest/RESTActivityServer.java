@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.bam.activity.util.ActivityUtil;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.spi.CreationalContext;
@@ -108,30 +109,53 @@ public class RESTActivityServer {
     @Path("/query")
     @Produces("application/json")
     @Consumes("application/json")
-    public java.util.List<ActivityUnit> query(QuerySpec qs) throws Exception {
+    public String query(String qspec) throws Exception {
+        String ret="";
+        
+        QuerySpec qs=ActivityUtil.deserializeQuerySpec(qspec.getBytes());
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Query="+qs);        
+            LOG.finest("Activity Server Query Spec="+qs);        
         }
         
         if (_activityServer == null) {
             throw new Exception("Activity Server is not available");
         }
         
-        return (_activityServer.query(qs));
+        java.util.List<ActivityUnit> list=_activityServer.query(qs);
+        
+        if (list != null) {
+            byte[] b=ActivityUtil.serializeActivityUnitList(list);
+            
+            ret = new String(b);
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Activity Server Query Result="+ret);        
+        }
+
+        return (ret);
     }
 
     /**
      * This method stores the supplied list of activity events.
      * 
-     * @param activities The list of activity events
+     * @param acts The list of activity events
      * @return A response indicating success or failure
+     * @throws Exception Failed to perform store operation
      */
     @POST
     @Path("/store")
     @Consumes("application/json")
-    public Response store(java.util.List<ActivityUnit> activities) {
+    public Response store(String acts) throws Exception {
  
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Store activities="+acts);        
+        }
+        
+        java.util.List<ActivityUnit> activities=
+                    ActivityUtil.deserializeActivityUnitList(acts.getBytes());
+        
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Store "+activities.size()+" activities");        
         }
