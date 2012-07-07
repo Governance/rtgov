@@ -35,7 +35,7 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.overlord.bam.active.collection.MVELPredicate;
+import org.overlord.bam.active.collection.predicate.MVEL;
 import org.overlord.bam.active.collection.QuerySpec;
 
 import static org.junit.Assert.*;
@@ -168,7 +168,7 @@ public class JBossASACMgrACSResponseTimesTest {
             QuerySpec qs2=new QuerySpec();
             qs2.setCollection("OrderService");
             qs2.setParent(SERVICE_RESPONSE_TIME);
-            qs2.setPredicate(new MVELPredicate("serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
+            qs2.setPredicate(new MVEL("serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
                     +"operation == \"submitOrder\""));
             
             java.util.List<?> result2 = performACMQuery(qs2);

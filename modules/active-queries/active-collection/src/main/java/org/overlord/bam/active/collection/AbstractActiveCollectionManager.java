@@ -20,6 +20,8 @@ package org.overlord.bam.active.collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.bam.active.collection.predicate.Predicate;
+
 /**
  * This class provides the abstract base implementation of the ActiveCollectionManager
  * interface. This class provides a general implementation that can be used by

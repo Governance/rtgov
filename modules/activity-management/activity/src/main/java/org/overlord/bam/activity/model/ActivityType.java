@@ -37,7 +37,7 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
  * This abstract class is the super type of all activity type classes.
  *
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="typeName")
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
 @JsonSubTypes({@Type(value=MessageReceived.class),
     @Type(value=MessageSent.class),
     @Type(value=RequestReceived.class),

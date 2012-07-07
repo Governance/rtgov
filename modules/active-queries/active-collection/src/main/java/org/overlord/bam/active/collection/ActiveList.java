@@ -20,6 +20,8 @@ package org.overlord.bam.active.collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
+import org.overlord.bam.active.collection.predicate.Predicate;
+
 /**
  * This interface represents an active list.
  *

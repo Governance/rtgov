@@ -17,6 +17,8 @@
  */
 package org.overlord.bam.active.collection;
 
+import org.overlord.bam.active.collection.predicate.Predicate;
+
 /**
  * This class provides the base Active Collection implementation.
  *

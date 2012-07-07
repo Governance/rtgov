@@ -15,20 +15,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection;
+package org.overlord.bam.active.collection.predicate;
 
 import java.util.logging.Logger;
-
-import org.mvel2.MVEL;
 
 /**
  * This class provides an MVEL implementation of the
  * predicate interface.
  *
  */
-public class MVELPredicate extends Predicate {
+public class MVEL extends Predicate {
 
-    private static final Logger LOG=Logger.getLogger(MVELPredicate.class.getName());
+    private static final Logger LOG=Logger.getLogger(MVEL.class.getName());
     
     private String _expression=null;
     private java.io.Serializable _expressionCompiled=null;
@@ -37,7 +35,7 @@ public class MVELPredicate extends Predicate {
     /**
      * This is the default constructor for the MVEL predicate.
      */
-    public MVELPredicate() {
+    public MVEL() {
     }
     
     /**
@@ -46,7 +44,7 @@ public class MVELPredicate extends Predicate {
      * 
      * @param expr The predicate
      */
-    public MVELPredicate(String expr) {
+    public MVEL(String expr) {
         setExpression(expr);
     }
     
@@ -80,7 +78,7 @@ public class MVELPredicate extends Predicate {
         
         if (!_initialized) {
             if (_expression != null) {
-                _expressionCompiled = MVEL.compileExpression(_expression);
+                _expressionCompiled = org.mvel2.MVEL.compileExpression(_expression);
             } else {
                 _expressionCompiled = null;
             }
@@ -89,7 +87,7 @@ public class MVELPredicate extends Predicate {
         }
         
         if (_expressionCompiled != null) {
-            Object result=MVEL.executeExpression(_expressionCompiled, item);
+            Object result=org.mvel2.MVEL.executeExpression(_expressionCompiled, item);
             
             if (result instanceof Boolean) {
                 ret = ((Boolean)result).booleanValue();
@@ -107,6 +105,6 @@ public class MVELPredicate extends Predicate {
      * {@inheritDoc}
      */
     public String toString() {
-        return ("MVELPredicate["+_expression+"]");
+        return ("MVEL["+_expression+"]");
     }
 }

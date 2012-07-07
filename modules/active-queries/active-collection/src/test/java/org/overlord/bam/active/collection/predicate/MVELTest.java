@@ -15,17 +15,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection;
+package org.overlord.bam.active.collection.predicate;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.bam.active.collection.predicate.MVEL;
 
-public class MVELPredicateTest {
+public class MVELTest {
 
     @Test
     public void testPredicateTrue() {
-        MVELPredicate predicate=new MVELPredicate();
+        MVEL predicate=new MVEL();
         
         predicate.setExpression("serviceType == \"OrderService\" && operation == \"buy\"");
         
@@ -41,7 +42,7 @@ public class MVELPredicateTest {
 
     @Test
     public void testPredicateFalse() {
-        MVELPredicate predicate=new MVELPredicate();
+        MVEL predicate=new MVEL();
         
         predicate.setExpression("serviceType == \"OrderService\" && operation == \"buy\"");
         
@@ -57,7 +58,7 @@ public class MVELPredicateTest {
 
     @Test
     public void testPredicateANDFalseWithMissingValue() {
-        MVELPredicate predicate=new MVELPredicate();
+        MVEL predicate=new MVEL();
         
         predicate.setExpression("serviceType == \"OrderService\" && operation == \"buy\"");
         
@@ -72,7 +73,7 @@ public class MVELPredicateTest {
 
     @Test
     public void testPredicateORTrueWithMissingValue() {
-        MVELPredicate predicate=new MVELPredicate();
+        MVEL predicate=new MVEL();
         
         predicate.setExpression("serviceType == \"OrderService\" || operation == \"buy\"");
         

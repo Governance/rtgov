@@ -17,6 +17,8 @@
  */
 package org.overlord.bam.active.collection;
 
+import org.overlord.bam.active.collection.predicate.Predicate;
+
 /**
  * This class defines the query specification that can be used to define
  * the active collection that is required. If a name and no predicate/parent

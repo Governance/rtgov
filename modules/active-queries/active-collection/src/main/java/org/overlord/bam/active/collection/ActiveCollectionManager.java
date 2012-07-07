@@ -17,6 +17,8 @@
  */
 package org.overlord.bam.active.collection;
 
+import org.overlord.bam.active.collection.predicate.Predicate;
+
 /**
  * This interface represents the Active Collection Manager, responsible
  * for managing the active collection sources, and their associated

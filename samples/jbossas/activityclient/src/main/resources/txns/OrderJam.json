@@ -1,5 +1,5 @@
 [ {
-    "typeName" : "RequestSent",
+    "type" : "RequestSent",
     "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-13739-ABC</orderId>                <itemId>JAM</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
     "messageId" : "1",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
@@ -7,7 +7,7 @@
     "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
     "fault" : null
   }, {
-    "typeName" : "RequestReceived",
+    "type" : "RequestReceived",
     "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-13739-ABC</orderId>                <itemId>JAM</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
     "messageId" : "1",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
@@ -15,7 +15,7 @@
     "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
     "fault" : null
   }, {
-    "typeName" : "RequestSent",
+    "type" : "RequestSent",
     "content" : "JAM",
     "messageId" : "2",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
@@ -23,7 +23,7 @@
     "messageType" : "java:java.lang.String",
     "fault" : null
   }, {
-    "typeName" : "RequestReceived",
+    "type" : "RequestReceived",
     "content" : "JAM",
     "messageId" : "2",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
@@ -31,7 +31,7 @@
     "messageType" : "java:java.lang.String",
     "fault" : null
   }, {
-    "typeName" : "ResponseSent",
+    "type" : "ResponseSent",
     "replyToId" : "2",
     "content" : "{\"name\":\"Strawberry Jam\",\"itemId\":\"JAM\",\"quantity\":500}",
     "messageId" : "3",
@@ -40,7 +40,7 @@
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.Item",
     "fault" : null
   }, {
-    "typeName" : "ResponseReceived",
+    "type" : "ResponseReceived",
     "replyToId" : "2",
     "content" : "{\"name\":\"Strawberry Jam\",\"itemId\":\"JAM\",\"quantity\":500}",
     "messageId" : "3",
@@ -49,7 +49,7 @@
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.Item",
     "fault" : null
   }, {
-    "typeName" : "ResponseSent",
+    "type" : "ResponseSent",
     "replyToId" : "1",
     "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-13739-ABC\",\"accepted\":true}",
     "messageId" : "4",
@@ -58,7 +58,7 @@
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.OrderAck",
     "fault" : null
   }, {
-    "typeName" : "ResponseReceived",
+    "type" : "ResponseReceived",
     "replyToId" : "1",
     "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-13739-ABC\",\"accepted\":true}",
     "messageId" : "4",

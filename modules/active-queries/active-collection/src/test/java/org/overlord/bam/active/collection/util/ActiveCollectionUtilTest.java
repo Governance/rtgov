@@ -21,8 +21,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.active.collection.MVELPredicate;
 import org.overlord.bam.active.collection.QuerySpec;
+import org.overlord.bam.active.collection.predicate.MVEL;
 import org.overlord.bam.active.collection.util.ActiveCollectionUtil;
 
 public class ActiveCollectionUtilTest {
@@ -78,7 +78,7 @@ public class ActiveCollectionUtilTest {
         QuerySpec qs=new QuerySpec();
         qs.setCollection("OrderService");
         qs.setParent("ServiceResponseTime");
-        qs.setPredicate(new MVELPredicate(
+        qs.setPredicate(new MVEL(
                 "serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
                 +"operation == \"submitOrder\""));
         
@@ -95,7 +95,7 @@ public class ActiveCollectionUtilTest {
         QuerySpec qs=new QuerySpec();
         qs.setCollection("OrderService");
         qs.setParent("ServiceResponseTime");
-        qs.setPredicate(new MVELPredicate(
+        qs.setPredicate(new MVEL(
                 "serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
                 +"operation == \"submitOrder\""));
         

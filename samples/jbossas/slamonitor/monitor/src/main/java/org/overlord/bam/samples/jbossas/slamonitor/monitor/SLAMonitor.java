@@ -29,8 +29,8 @@ import javax.ws.rs.QueryParam;
 
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveList;
-import org.overlord.bam.active.collection.MVELPredicate;
-import org.overlord.bam.active.collection.Predicate;
+import org.overlord.bam.active.collection.predicate.MVEL;
+import org.overlord.bam.active.collection.predicate.Predicate;
 import org.overlord.bam.analytics.service.ResponseTime;
 import org.overlord.bam.analytics.service.SLAViolation;
 
@@ -126,7 +126,7 @@ public class SLAMonitor {
                 expr = expressionBuilder(expr, "operation", operation);
                 expr = expressionBuilder(expr, "fault", fault);
         	    
-        		Predicate predicate=new MVELPredicate(expr);        		
+        		Predicate predicate=new MVEL(expr);        		
         		
         		ret = (ActiveList)_acmManager.create(alname, _serviceResponseTime, predicate);
         	}

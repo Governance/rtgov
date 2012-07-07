@@ -15,16 +15,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection;
+package org.overlord.bam.active.collection.predicate;
 
+import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 
 /**
  * This interface is used to determine whether a changed item
  * in a parent active collection is relevant to a child collection.
  *
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
+@JsonSubTypes({@Type(value=MVEL.class)})
 public abstract class Predicate {
 
     /**
