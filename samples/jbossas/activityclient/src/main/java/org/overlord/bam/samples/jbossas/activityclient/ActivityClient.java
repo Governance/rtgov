@@ -174,6 +174,13 @@ public class ActivityClient {
                 // Preprocess message ids
                 preProcess(actType, rand);
                 
+                // Check the timestamp, to see if a delay should occur
+                if (actType.getTimestamp() > 0) {
+                    synchronized (this) {
+                        wait(actType.getTimestamp());
+                    }
+                }
+                
                 _collector.record(actType);
             }
             

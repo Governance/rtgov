@@ -130,6 +130,13 @@ public class RESTActiveCollectionServer {
         ActiveList alist = (ActiveList)_acmManager.getActiveCollection(qs.getCollection());
         
         if (alist == null) {
+            
+            if (qs.getParent() == null || qs.getPredicate() == null) {
+                throw new Exception("Collection '"+qs.getCollection()
+                        +"' does not exist, and either the parent or "
+                        +"predicate have not been defined");
+            }
+            
             // Try to get parent collection
             ActiveList parent = (ActiveList)_acmManager.getActiveCollection(qs.getParent());
             
