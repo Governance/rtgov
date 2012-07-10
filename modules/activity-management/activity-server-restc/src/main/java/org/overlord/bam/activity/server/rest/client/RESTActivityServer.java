@@ -66,13 +66,13 @@ public class RESTActivityServer implements ActivityServer {
      * {@inheritDoc}
      */
     public void store(List<ActivityUnit> activities) throws Exception {
-        URL getUrl = new URL(_url+STORE);
+        URL storeUrl = new URL(_url+STORE);
         
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("RESTActivityServer store: "+activities);
         }
 
-        HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) storeUrl.openConnection();
         connection.setRequestMethod("POST");
         
         connection.setDoOutput(true);
@@ -112,9 +112,9 @@ public class RESTActivityServer implements ActivityServer {
             LOG.finer("RESTActivityServer query: "+query);
         }
         
-        URL getUrl = new URL(_url+QUERY);
+        URL queryUrl = new URL(_url+QUERY);
         
-        HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
+        HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
         connection.setRequestMethod("POST");
 
         connection.setDoOutput(true);

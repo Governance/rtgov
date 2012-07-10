@@ -31,7 +31,6 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -109,7 +108,6 @@ public class RESTActiveCollectionServer {
     @POST
     @Path("/query")
     @Produces("application/json")
-    @Consumes("application/json")
     public String query(String qspec) throws Exception {
         String ret="";
         
