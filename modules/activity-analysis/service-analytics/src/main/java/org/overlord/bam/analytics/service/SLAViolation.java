@@ -35,6 +35,7 @@ public class SLAViolation implements java.io.Externalizable {
     private String _operation=null;
     private String _violation=null;
     private long _timestamp=0;
+    private String _severity=null;
     private java.util.List<ActivityTypeRef> _activityTypeRefs=
                         new java.util.ArrayList<ActivityTypeRef>();
 
@@ -110,7 +111,22 @@ public class SLAViolation implements java.io.Externalizable {
         return (_timestamp);
     }
     
+    
     /**
+	 * @return the severity
+	 */
+	public String getSeverity() {
+		return _severity;
+	}
+
+	/**
+	 * @param severity the severity to set
+	 */
+	public void setSeverity(String severity) {
+		_severity = severity;
+	}
+
+	/**
      * This method returns the list of activity type references
      * associated with the violation.
      * 
@@ -125,7 +141,7 @@ public class SLAViolation implements java.io.Externalizable {
      */
     public String toString() {
         return ("SLA violation '"+_violation+"' on service="+_serviceType+" operation="
-                    +_operation+" "+new java.util.Date(_timestamp));
+                    +_operation+ " severity=" + _severity + " "+new java.util.Date(_timestamp));
     }
     
     /**
@@ -137,6 +153,7 @@ public class SLAViolation implements java.io.Externalizable {
         out.writeObject(_serviceType);
         out.writeObject(_operation);
         out.writeObject(_violation);
+        out.writeObject(_severity);
         out.writeLong(_timestamp);
         
         out.writeInt(_activityTypeRefs.size());
@@ -155,6 +172,7 @@ public class SLAViolation implements java.io.Externalizable {
         _serviceType = (String)in.readObject();
         _operation = (String)in.readObject();
         _violation = (String)in.readObject();
+        _severity = (String)in.readObject();
         _timestamp = in.readLong();
         
         int len=in.readInt();

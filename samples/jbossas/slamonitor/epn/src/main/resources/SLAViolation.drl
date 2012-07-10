@@ -22,7 +22,7 @@ then
 		sv.setOperation($rt.getOperation());
 		sv.setTimestamp($rt.getTimestamp());
 		sv.setViolation("Service exceeded maximum response time of 200 ms");
-		
+		sv.setSeverity("Critical");
 		epn.forward(sv);
 	}	
 
