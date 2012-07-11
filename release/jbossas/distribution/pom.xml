@@ -52,6 +52,24 @@
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.gadgets.server</groupId>
+			<artifactId>gadgets</artifactId>
+			<version>${gadgets.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.gadgets.server</groupId>
+			<artifactId>gadget-shindig</artifactId>
+			<version>${gadgets.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.gadgets.server</groupId>
+			<artifactId>gadget-web</artifactId>
+			<version>${gadgets.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
            		<version>${jackson.version}</version>

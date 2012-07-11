@@ -64,10 +64,20 @@
 	<dependencySets>
 
 		<dependencySet>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory>deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.bam.release.jbossas:overlord-bam:war</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.gadgets.server:gadgets:war</include>
+				<include>org.overlord.gadgets.server:gadget-shindig:war</include>
+				<include>org.overlord.gadgets.server:gadget-web:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
