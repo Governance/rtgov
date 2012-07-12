@@ -60,7 +60,7 @@
 								<delete dir="${env.JBOSS_HOME}/modules/org/overlord/bam"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/overlord-bam.war"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/gadgets.war"/>
-								<delete file="${env.JBOSS_HOME}/standalone/deployments/gadget-shindig.war"/>
+								<delete file="${env.JBOSS_HOME}/standalone/deployments/gadget-server.war"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/gadget-web.war"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/gs-h2-ds.xml"/>
 							</target>
