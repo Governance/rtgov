@@ -42,6 +42,10 @@ public class ActivityClient {
     private String _activityServerURL=null;
     private ActivityCollector _collector=null;
     private Random _random=new Random();
+    
+    private java.util.Map<String, java.io.File> _txnFileMap=
+                        new java.util.HashMap<String, java.io.File>();
+    private java.util.List<String> _txnList=new java.util.Vector<String>();
 
     /**
      * The main method.
@@ -50,8 +54,9 @@ public class ActivityClient {
      */
     public static void main(String[] args) {
         
-        if (args.length != 2) {
-            System.err.println("Usage: ActivityClient <url> <filename>");
+        if (args.length != 3) {
+            System.err.println("Usage: ActivityClient <url> <filename> <numOfTxns>\r\n"
+                    +"Set numOfTxns to -1 for continous");
             System.exit(1);
         }
         
@@ -59,7 +64,13 @@ public class ActivityClient {
         
         ac.init();
         
-        ac.send(args[1]);
+        ac.loadTransactions(args[1]);
+        
+        try {
+            ac.scheduleTxns(Integer.parseInt(args[2]));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         
         ac.close();
     }
@@ -137,33 +148,120 @@ public class ActivityClient {
     }
     
     /**
-     * This method sends the contents of the named file to the activity
-     * server.
+     * This method loads the information from the transaction properties
+     * file.
      * 
-     * @param filename The filename
+     * @param filename The transaction properties file
      */
-    public void send(String filename) {
-
+    public void loadTransactions(String filename) {
+        
         try {
-            java.io.InputStream is=ClassLoader.getSystemResourceAsStream(filename);
+            java.io.File f=null;
 
-            if (is == null) {
-                java.io.File f=new java.io.File(filename);
+            java.net.URL url=ClassLoader.getSystemResource(filename);
+
+            if (url == null) {
+                f = new java.io.File(filename);
                 
-                if (f.exists()) {
-                    is = new java.io.FileInputStream(filename);
+                if (!f.exists()) {
+                    f = null;
                 }
+            } else {
+                f = new java.io.File(url.getFile());
             }
 
-            if (is == null) {
+            if (f == null) {
                 throw new java.io.FileNotFoundException(filename);
             }
+            
+            java.io.FileInputStream is=new java.io.FileInputStream(f);
+            
+            java.util.Properties props=new java.util.Properties();
+            props.load(is);
+            
+            is.close();
+            
+            // Scan properties for file names
+            for (String key : props.stringPropertyNames()) {
+                if (key.endsWith(".txn")) {
+                    String fn=props.getProperty(key);
+                                        
+                    String name=key.substring(0, key.length()-4);
+                    
+                    java.io.File txnFile=new java.io.File(f.getParentFile(), fn);
+                    
+                    if (!txnFile.exists()) {
+                        System.err.println("Could not find transaction ("+name+
+                                ") file '"+fn+"' relative to: "+f.getParentFile());
+                        continue;
+                    }
+                    
+                    _txnFileMap.put(name, txnFile);
+                    
+                    String w=props.getProperty(name+".weight");
+                    
+                    if (w != null) {
+                        try {
+                            int weight=Integer.parseInt(w);
+                            
+                            for (int i=0; i < weight; i++) {
+                                _txnList.add(name);
+                            }
+                            
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.err.println("Weight for '"+name+"' not found");
+                    }
+                }
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * This method performs a random series of business transactions.
+     * 
+     */
+    public void scheduleTxns(int num) {
+        
+        Random rand=new Random(System.currentTimeMillis());
+        
+        int count=0;
+        
+        while (num == -1 || count < num) {
+            
+            int pos=Math.abs(rand.nextInt()) % _txnList.size();
+            
+            String txnName=_txnList.get(pos);
+            
+            send(txnName);
+            
+            count++;
+        }
+    }
+    
+    /**
+     * This method sends the contents of the named transaction to the activity
+     * server.
+     * 
+     * @param txnName The txnName
+     */
+    public void send(String txnName) {
+
+        try {
+            java.io.FileInputStream is=new java.io.FileInputStream(_txnFileMap.get(txnName));
             
             ObjectMapper mapper=new ObjectMapper();
             
             java.util.List<ActivityType> actTypes=
                       mapper.readValue(is,
                              new TypeReference<java.util.List<ActivityType>>(){});
+            
+            is.close();
             
             int rand=_random.nextInt();
             
@@ -177,7 +275,8 @@ public class ActivityClient {
                 // Check the timestamp, to see if a delay should occur
                 if (actType.getTimestamp() > 0) {
                     synchronized (this) {
-                        wait(actType.getTimestamp());
+                        int variation=_random.nextInt()%20;
+                        wait(actType.getTimestamp()+variation);
                     }
                 }
                 

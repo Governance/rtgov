@@ -249,12 +249,9 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
             synchronized (_list) {
                 int num=getSize()-getMaxItems();
                 
-                if (num > 0) {
-                    for (int i=getSize()-1; i >= getMaxItems(); i--) {
-                        // TODO: Could do bulk remove and then
-                        // send notifications all at once???
-                        remove(i, null);
-                    }
+                while (num > 0) {
+                    remove(0, null);
+                    num--;
                 }
             }
         }

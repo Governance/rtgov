@@ -1,6 +1,6 @@
 [ {
     "type" : "RequestSent",
-    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-13739-ABC</orderId>                <itemId>JAM</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
+    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-{ID}-ABC</orderId>                <itemId>JAM</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
     "messageId" : "1",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
@@ -8,7 +8,7 @@
     "fault" : null
   }, {
     "type" : "RequestReceived",
-    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-13739-ABC</orderId>                <itemId>JAM</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
+    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-{ID}-ABC</orderId>                <itemId>JAM</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
     "messageId" : "1",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
@@ -55,7 +55,7 @@
   }, {
     "type" : "ResponseSent",
     "replyToId" : "1",
-    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-13739-ABC\",\"accepted\":true}",
+    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-{ID}-ABC\",\"accepted\":true}",
     "messageId" : "4",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
@@ -64,7 +64,7 @@
   }, {
     "type" : "ResponseReceived",
     "replyToId" : "1",
-    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-13739-ABC\",\"accepted\":true}",
+    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-{ID}-ABC\",\"accepted\":true}",
     "messageId" : "4",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",

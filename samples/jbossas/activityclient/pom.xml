@@ -63,28 +63,39 @@
 		</dependency>
 	</dependencies>
 	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.1.1</version>
-				<executions>
-					<execution>
-						<phase>test</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-						<configuration>
-							<mainClass>org.overlord.bam.samples.jbossas.activityclient.ActivityClient</mainClass>
-							<arguments>
-								<argument>http://localhost:8080</argument>
-								<argument>${project.build.directory}/classes/txns/OrderJam.json</argument>
-							</arguments>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	<profiles>
+		<profile>
+			<activation>
+				<property>
+					<name>count</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.1.1</version>
+						<executions>
+							<execution>
+								<phase>test</phase>
+								<goals>
+									<goal>java</goal>
+								</goals>
+								<configuration>
+									<mainClass>org.overlord.bam.samples.jbossas.activityclient.ActivityClient</mainClass>
+									<arguments>
+										<argument>http://localhost:8080</argument>
+										<argument>${project.build.directory}/classes/txns/Transactions.properties</argument>
+										<argument>${count}</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>

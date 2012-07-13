@@ -119,11 +119,13 @@ public class JMXNotifier extends AbstractActiveChangeListener
      * {@inheritDoc}
      */
     public void inserted(Object key, Object value) {
-        Notification notification=new Notification(_insertType, this,
-                _sequenceNumber++, value.toString());
-        
-        for (NotificationDetails n : _notificationDetails) {
-            n.getListener().handleNotification(notification, n.getHandback());
+        if (_insertType != null) {
+            Notification notification=new Notification(_insertType, this,
+                    _sequenceNumber++, value.toString());
+            
+            for (NotificationDetails n : _notificationDetails) {
+                n.getListener().handleNotification(notification, n.getHandback());
+            }
         }
     }
 
@@ -131,11 +133,13 @@ public class JMXNotifier extends AbstractActiveChangeListener
      * {@inheritDoc}
      */
     public void updated(Object key, Object value) {
-        Notification notification=new Notification(_updateType, this,
-                _sequenceNumber++, value.toString());
-        
-        for (NotificationDetails n : _notificationDetails) {
-            n.getListener().handleNotification(notification, n.getHandback());
+        if (_updateType != null) {
+            Notification notification=new Notification(_updateType, this,
+                    _sequenceNumber++, value.toString());
+            
+            for (NotificationDetails n : _notificationDetails) {
+                n.getListener().handleNotification(notification, n.getHandback());
+            }
         }
     }
 
@@ -143,11 +147,14 @@ public class JMXNotifier extends AbstractActiveChangeListener
      * {@inheritDoc}
      */
     public void removed(Object key, Object value) {
-        Notification notification=new Notification(_removeType, this,
-                _sequenceNumber++, value.toString());
         
-        for (NotificationDetails n : _notificationDetails) {
-            n.getListener().handleNotification(notification, n.getHandback());
+        if (_removeType != null) {
+            Notification notification=new Notification(_removeType, this,
+                    _sequenceNumber++, value.toString());
+            
+            for (NotificationDetails n : _notificationDetails) {
+                n.getListener().handleNotification(notification, n.getHandback());
+            }   
         }
     }
 

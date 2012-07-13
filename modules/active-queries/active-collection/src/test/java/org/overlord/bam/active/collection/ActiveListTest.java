@@ -319,6 +319,13 @@ public class ActiveListTest {
             fail("List should have 10 items: "+list.getSize());
         }
         
+        // Check first item is now the TestObject with i=5
+        TestObject to=(TestObject)list.iterator().next();
+        
+        if (to.getNumber() != 5) {
+            fail("First item in list should have number 5");
+        }
+        
         if (l._removedKey.size() != 5) {
             fail("Removed key size should be 5: "+l._removedKey.size());
         }

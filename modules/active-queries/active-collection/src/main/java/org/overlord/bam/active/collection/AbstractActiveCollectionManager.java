@@ -236,7 +236,13 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
         
         synchronized (_activeCollections) {
             for (ActiveCollection ac : _activeCollections.values()) {
-                ac.cleanup();
+                
+                try {
+                    ac.cleanup();
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, "Failed to perform cleanup on active collection '"
+                            +ac.getName()+"'", e);
+                }
                 
                 // Check whether the high water mark has been breached
                 if (ac.getHighWaterMark() > 0) {
