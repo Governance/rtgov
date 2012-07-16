@@ -3,14 +3,14 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.activity-management</groupId>
 	<artifactId>collector-embedded</artifactId> 
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0.20120716-M1</version>
 	<packaging>jar</packaging>
 	<name>Overlord BAM::Modules::Activity Management::Collector Embedded</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
 		<artifactId>activity-management</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0.20120716-M1</version>
 	</parent>
 
 	<dependencies>

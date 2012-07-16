@@ -3,14 +3,14 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam</groupId>
 	<artifactId>build</artifactId> 
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0.20120716-M1</version>
 	<packaging>jar</packaging>
 	<name>Overlord BAM::Build</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0.20120716-M1</version>
 	</parent>
 
 	<dependencies>

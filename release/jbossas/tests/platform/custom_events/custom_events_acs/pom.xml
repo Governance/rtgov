@@ -3,14 +3,14 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.release.jbossas.tests.platform.custom_events</groupId>
 	<artifactId>tests-jbossas-custom-events-acs</artifactId> 
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0.20120716-M1</version>
 	<packaging>war</packaging>
 	<name>Overlord BAM::Release::JBossAS::Tests::Platform::CustomEvents::ACS</name>
 
 	<parent>
 		<groupId>org.overlord.bam.release.jbossas.tests.platform</groupId>
 		<artifactId>custom_events</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0.20120716-M1</version>
 	</parent>
 
 	<dependencies>

@@ -3,14 +3,14 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.samples.jbossas</groupId>
 	<artifactId>samples-jbossas-activityclient</artifactId> 
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0.20120716-M1</version>
 	<packaging>jar</packaging>
 	<name>Overlord BAM::Samples::JBossAS::ActivityClient</name>
 
 	<parent>
 		<groupId>org.overlord.bam.samples.jbossas</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0.20120716-M1</version>
 	</parent>
 
 	<dependencies>

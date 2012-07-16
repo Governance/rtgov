@@ -5,13 +5,13 @@
 	<groupId>org.overlord.bam</groupId>
 	<artifactId>activity-management</artifactId>
 	<packaging>pom</packaging>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0.20120716-M1</version>
 	<name>Overlord BAM::Modules::Activity Management</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
 		<artifactId>modules</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0.20120716-M1</version>
 	</parent>
 
 	<modules>
