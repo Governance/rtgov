@@ -21,5 +21,42 @@
 		<module>monitor</module>
 	</modules>
 
+	<profiles>
+		<profile>
+			<id>jbossas</id>
+			<activation>
+				<property>
+                    			<name>env.JBOSS_HOME</name>
+                		</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.7</version>
+						<executions>
+							<execution>
+								<id>install</id>
+								<phase>install</phase>
+								<configuration>
+									<target>
+										<echo message="Install SLA Monitor sample at: ${env.JBOSS_HOME}"/>
+										<copy todir="${env.JBOSS_HOME}/standalone/deployments" >
+											<fileset file="target/*.war" />
+										</copy>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>
 
