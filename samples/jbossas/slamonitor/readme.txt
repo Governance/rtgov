@@ -12,25 +12,17 @@ active updates to any interested listeners.
 Deploying the example
 ---------------------
 
-1) Download and unpack a Switchyard AS7 distribution (http://www.jboss.org/switchyard/downloads)
+1) Make sure that the JBOSS_HOME variable is set to the location of the target JBossAS environment.
 
-2) Copy the contents of the ${bam}/modules folder into the ${as7}/modules folder
-
-3) Startup the server, using the following command from the 'bin' folder:
-
-./standalone.sh --server-config standalone-full.xml
-
-This starts the full configuration, as this includes JMS.
-
-4) Deploy the overlord-bam.war from the ${bam} top level folder into the ${as7}/standalone/deployments folder
-
-5) Build the SLA Monitor sample, using the following command from the ${bam}/samples/slamonitor folder:
+2) Build the SLA Monitor sample, using the following command from the ${bam}/samples/slamonitor folder:
 
 mvn clean install
 
-6) Copy the sample archives for each of the components (acs, epn, monitor and orders) from
-${bam}/samples/slamonitor/${component}/target/slamonitor-${component}.war file
-into the ${as7}/standalone/deployments folder.
+This will automatically deploy the built war files into the JBossAS deployments folder. If the JBOSS_HOME
+variable has not been set, then these war files will need to manually be copied from
+${bam}/samples/slamonitor/${component}/target/slamonitor-${component}.war into the
+${as7}/standalone/deployments folder.
+
 
 NOTE: The components are as follows:
 
@@ -40,7 +32,7 @@ to be presented via the REST service.
 - epn: this component represents the Event Processor Network (EPN) used to calculate response times
 and detect SLA violations.
 
-- monitor: this component provides the REST service for colating the response time and SLA violation
+- monitor: this component provides a custom REST service for colating the response time and SLA violation
 information for access by a client application
 
 - orders: this component represents the Switchyard application with additional 'Exchange Handler'

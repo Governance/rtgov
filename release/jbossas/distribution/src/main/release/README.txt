@@ -1,4 +1,0 @@
-OVERLORD BAM README
-===================
-
-
