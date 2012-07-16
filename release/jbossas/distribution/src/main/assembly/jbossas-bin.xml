@@ -28,7 +28,7 @@
 
 	<fileSets>
 
-		<!--Copy files like License and samples etc -->	
+		<!--Copy files like License and readmes etc -->	
 		<fileSet>
 			<directory>src/main/release</directory>
 			<outputDirectory>/</outputDirectory>
@@ -38,9 +38,10 @@
 			</includes>
 		</fileSet>
 
+		<!-- Copy samples -->
 		<fileSet>
-			<directory>src/main/jbossas</directory>
-			<outputDirectory>/</outputDirectory>
+			<directory>../../../samples/jbossas</directory>
+			<outputDirectory>samples</outputDirectory>
 			<excludes>
 				<exclude>**/.*</exclude>
 				<exclude>**/target/**</exclude>
@@ -48,10 +49,10 @@
 			</excludes>
 		</fileSet>
 
-		<!-- copy samples -->
+		<!-- Copy modules and deployments - overwriting samples/slamonitor pom -->
 		<fileSet>
-			<directory>../../../samples/jbossas</directory>
-			<outputDirectory>samples</outputDirectory>
+			<directory>src/main/jbossas</directory>
+			<outputDirectory>/</outputDirectory>
 			<excludes>
 				<exclude>**/.*</exclude>
 				<exclude>**/target/**</exclude>
