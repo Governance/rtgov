@@ -29,4 +29,18 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class AbstractActiveChangeListener implements ActiveChangeListener {
 
+    /**
+     * This method initializes the active change listener.
+     * 
+     */
+    public void init() {
+    }
+    
+    /**
+     * This method closes the active change listener.
+     * 
+     */
+    public void close() {
+    }
+    
 }

@@ -226,6 +226,8 @@ public class ActiveCollectionSource {
                                +getName()+"' with listener from source: "+l);
                 }
                 
+                l.init();
+                
                 _activeCollection.addActiveChangeListener(l);
             }
         }
@@ -243,6 +245,8 @@ public class ActiveCollectionSource {
                         
             for (AbstractActiveChangeListener l : _listeners) {
                 _activeCollection.removeActiveChangeListener(l);
+                
+                l.close();
             }
         }
     }
