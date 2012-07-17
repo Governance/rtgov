@@ -20,6 +20,8 @@ package org.overlord.bam.active.collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
+import org.overlord.bam.active.collection.QuerySpec.Style;
+import org.overlord.bam.active.collection.QuerySpec.Truncate;
 import org.overlord.bam.active.collection.predicate.Predicate;
 
 /**
@@ -233,6 +235,47 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      */
     protected ActiveCollection derive(String name, Predicate predicate) {
         return (new ActiveList(name, this, predicate));
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public java.util.List<Object> query(QuerySpec qs) {
+        java.util.List<Object> ret=null;
+        
+        synchronized (_list) {
+            // If no max items set, or list size is smaller than the max
+            // size, and the style is normal, then just copy
+            if ((qs.getMaxItems() == 0 || qs.getMaxItems() >= _list.size())
+                               && qs.getStyle() == Style.Normal) {
+                ret = new java.util.ArrayList<Object>(_list);
+            } else {
+                int start=0;
+                int end=_list.size();
+                
+                if (qs.getMaxItems() > 0 && qs.getMaxItems() <= _list.size()) {
+                    if (qs.getTruncate() == Truncate.End) {
+                        end = qs.getMaxItems();
+                    } else {
+                        start = _list.size()-qs.getMaxItems();
+                    }
+                }
+                
+                ret = new java.util.ArrayList<Object>();
+                
+                if (qs.getStyle() == Style.Reversed) {
+                    for (int i=end-1; i >= start; i--) {
+                        ret.add(_list.get(i));
+                    }
+                } else {
+                    for (int i=start; i < end; i++) {
+                        ret.add(_list.get(i));
+                    }
+                }
+            }
+        }
+        
+        return (ret);
     }
     
     /**

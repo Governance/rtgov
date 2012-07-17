@@ -21,8 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.overlord.bam.active.collection.ActiveCollection;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.active.collection.QuerySpec;
 import org.overlord.bam.active.collection.util.ActiveCollectionUtil;
 
@@ -125,9 +125,9 @@ public class RESTActiveCollectionServer {
             throw new Exception("Active Collection Manager is not available");
         }
         
-        ActiveList alist = (ActiveList)_acmManager.getActiveCollection(qs.getCollection());
+        ActiveCollection actColl = _acmManager.getActiveCollection(qs.getCollection());
         
-        if (alist == null) {
+        if (actColl == null) {
             
             if (qs.getParent() == null || qs.getPredicate() == null) {
                 throw new Exception("Collection '"+qs.getCollection()
@@ -136,28 +136,30 @@ public class RESTActiveCollectionServer {
             }
             
             // Try to get parent collection
-            ActiveList parent = (ActiveList)_acmManager.getActiveCollection(qs.getParent());
+            ActiveCollection parent = _acmManager.getActiveCollection(qs.getParent());
             
             if (parent != null) {
-                alist = (ActiveList)_acmManager.create(qs.getCollection(),
+                actColl = _acmManager.create(qs.getCollection(),
                                 parent, qs.getPredicate());
             } else {
                 throw new Exception("Unknown parent collection '"+qs.getParent()+"'");
             }
         }
 
-        if (alist != null) {
+        if (actColl != null) {
             
             java.io.ByteArrayOutputStream out=new java.io.ByteArrayOutputStream();
         
             int count=0;
-            int max=alist.getSize();
+            int max=actColl.getSize();
             
             if (max > 0) {
                 out.write("[".getBytes());
             }
 
-            for (Object obj : alist) {
+            java.util.List<Object> results=actColl.query(qs);
+            
+            for (Object obj : results) {
                 MAPPER.writeValue(out, obj);
                 
                 count++;

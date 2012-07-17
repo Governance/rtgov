@@ -22,6 +22,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
 import org.overlord.bam.active.collection.QuerySpec;
+import org.overlord.bam.active.collection.QuerySpec.Style;
+import org.overlord.bam.active.collection.QuerySpec.Truncate;
 import org.overlord.bam.active.collection.predicate.MVEL;
 import org.overlord.bam.active.collection.util.ActiveCollectionUtil;
 
@@ -81,6 +83,9 @@ public class ActiveCollectionUtilTest {
         qs.setPredicate(new MVEL(
                 "serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
                 +"operation == \"submitOrder\""));
+        qs.setMaxItems(5000);
+        qs.setTruncate(Truncate.End);
+        qs.setStyle(Style.Reversed);
         
         try {
             System.out.println("QUERY SPEC="
@@ -98,6 +103,9 @@ public class ActiveCollectionUtilTest {
         qs.setPredicate(new MVEL(
                 "serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
                 +"operation == \"submitOrder\""));
+        qs.setMaxItems(5000);
+        qs.setTruncate(Truncate.End);
+        qs.setStyle(Style.Reversed);
         
         try {
            byte[] b=ActiveCollectionUtil.serializeQuerySpec(qs);
@@ -119,6 +127,18 @@ public class ActiveCollectionUtilTest {
            if (!result.getPredicate().getClass().getName().equals(
                        qs.getPredicate().getClass().getName())) {
                fail("Predicate classes not the same");
+           }
+           
+           if (result.getMaxItems() != qs.getMaxItems()) {
+               fail("Max Items not the same");
+           }
+           
+           if (result.getTruncate() != qs.getTruncate()) {
+               fail("Truncate not the same");
+           }
+           
+           if (result.getStyle() != qs.getStyle()) {
+               fail("Style not the same");
            }
            
         } catch(Exception e) {

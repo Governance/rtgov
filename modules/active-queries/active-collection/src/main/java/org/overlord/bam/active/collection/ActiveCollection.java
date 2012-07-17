@@ -322,6 +322,14 @@ public abstract class ActiveCollection implements ActiveCollectionMBean {
     protected abstract ActiveCollection derive(String name, Predicate predicate);
     
     /**
+     * This method queries the active collection, using the supplied spec.
+     * 
+     * @param qs The query spec
+     * @return The query results
+     */
+    public abstract java.util.List<Object> query(QuerySpec qs);
+    
+    /**
      * This class provides a bridge between the parent and derived active
      * collections.
      *

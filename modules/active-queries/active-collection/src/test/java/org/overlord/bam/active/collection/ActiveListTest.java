@@ -22,6 +22,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveChangeListener;
 import org.overlord.bam.active.collection.ActiveList;
+import org.overlord.bam.active.collection.QuerySpec.Style;
+import org.overlord.bam.active.collection.QuerySpec.Truncate;
 import org.overlord.bam.active.collection.predicate.Predicate;
 
 public class ActiveListTest {
@@ -419,6 +421,211 @@ public class ActiveListTest {
         
         if (l._removedKey.size() != 5) {
             fail("Removed key size should be 5: "+l._removedKey.size());
+        }
+    }
+
+    @Test
+    public void testAllItemsNormal() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        for (int i=0; i < 15; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
+        }
+
+        QuerySpec qs=new QuerySpec();
+        qs.setStyle(Style.Normal);
+        
+        java.util.List<Object> results=list.query(qs);
+        
+        if (((TestObject)results.get(0)).getNumber() != 0) {
+            fail("First item should be obj 0: "+((TestObject)results.get(0)).getNumber());
+        }
+    }
+
+    @Test
+    public void testAllItemsReversed() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        for (int i=0; i < 15; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
+        }
+
+        QuerySpec qs=new QuerySpec();
+        qs.setStyle(Style.Reversed);
+        
+        java.util.List<Object> results=list.query(qs);
+        
+        if (((TestObject)results.get(0)).getNumber() != 14) {
+            fail("First item should be obj 14: "+((TestObject)results.get(0)).getNumber());
+        }
+    }
+
+    @Test
+    public void testMaxItemsGreaterThanSize() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        for (int i=0; i < 15; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
+        }
+
+        QuerySpec qs=new QuerySpec();
+        qs.setStyle(Style.Normal);
+        qs.setMaxItems(20);
+        
+        java.util.List<Object> results=list.query(qs);
+        
+        if (results.size() != list.getSize()) {
+            fail("Result size ("+results.size()+
+                    ") should be same as list: "+list.getSize());
+        }
+    }
+
+    @Test
+    public void testMaxItemsLessSizeTruncateEnd() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        for (int i=0; i < 15; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
+        }
+
+        QuerySpec qs=new QuerySpec();
+        qs.setStyle(Style.Normal);
+        qs.setMaxItems(5);
+        qs.setTruncate(Truncate.End);
+        
+        java.util.List<Object> results=list.query(qs);
+        
+        if (results.size() != qs.getMaxItems()) {
+            fail("Result size ("+results.size()+
+                    ") should be: "+qs.getMaxItems());
+        }
+
+        if (((TestObject)results.get(0)).getNumber() != 0) {
+            fail("First item should be obj 0: "+((TestObject)results.get(0)).getNumber());
+        }
+    }
+
+    @Test
+    public void testMaxItemsLessSizeTruncateStart() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        for (int i=0; i < 15; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
+        }
+
+        QuerySpec qs=new QuerySpec();
+        qs.setStyle(Style.Normal);
+        qs.setMaxItems(5);
+        qs.setTruncate(Truncate.Start);
+        
+        java.util.List<Object> results=list.query(qs);
+        
+        if (results.size() != qs.getMaxItems()) {
+            fail("Result size ("+results.size()+
+                    ") should be: "+qs.getMaxItems());
+        }
+
+        if (((TestObject)results.get(0)).getNumber() != 10) {
+            fail("First item should be obj 10: "+((TestObject)results.get(0)).getNumber());
+        }
+    }
+
+    @Test
+    public void testMaxItemsLessSizeTruncateEndReversed() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        for (int i=0; i < 15; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
+        }
+
+        QuerySpec qs=new QuerySpec();
+        qs.setStyle(Style.Reversed);
+        qs.setMaxItems(5);
+        qs.setTruncate(Truncate.End);
+        
+        java.util.List<Object> results=list.query(qs);
+        
+        if (results.size() != qs.getMaxItems()) {
+            fail("Result size ("+results.size()+
+                    ") should be: "+qs.getMaxItems());
+        }
+
+        if (((TestObject)results.get(0)).getNumber() != 4) {
+            fail("First item should be obj 4: "+((TestObject)results.get(0)).getNumber());
+        }
+    }
+
+    @Test
+    public void testMaxItemsLessSizeTruncateStartReversed() {
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        list.addActiveChangeListener(l);
+        
+        for (int i=0; i < 15; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        if (list.getSize() != 15) {
+            fail("List should have 15 items: "+list.getSize());
+        }
+
+        QuerySpec qs=new QuerySpec();
+        qs.setStyle(Style.Reversed);
+        qs.setMaxItems(5);
+        qs.setTruncate(Truncate.Start);
+        
+        java.util.List<Object> results=list.query(qs);
+        
+        if (results.size() != qs.getMaxItems()) {
+            fail("Result size ("+results.size()+
+                    ") should be: "+qs.getMaxItems());
+        }
+
+        if (((TestObject)results.get(0)).getNumber() != 14) {
+            fail("First item should be obj 14: "+((TestObject)results.get(0)).getNumber());
         }
     }
 

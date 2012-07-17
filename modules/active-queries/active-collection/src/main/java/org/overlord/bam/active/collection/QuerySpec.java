@@ -34,6 +34,9 @@ public class QuerySpec {
     private String _collection=null;
     private Predicate _predicate=null;
     private String _parent=null;
+    private int _maxItems=0;
+    private Truncate _truncate=Truncate.Start;
+    private Style _style=Style.Normal;
     
     /**
      * The default constructor.
@@ -100,10 +103,115 @@ public class QuerySpec {
     }
     
     /**
+     * This method returns the maximum number of items
+     * that should be included in the query result,
+     * or 0 if unrestricted.
+     * 
+     * @return The maximum number of items, or 0 if unrestricted
+     */
+    public int getMaxItems() {
+        return (_maxItems);
+    }
+    
+    /**
+     * This method sets the maximum number of items
+     * that should be included in the query result,
+     * or 0 if unrestricted.
+     * 
+     * @param maxItems The maximum number of items, or 0 if unrestricted
+     */
+    public void setMaxItems(int maxItems) {
+        _maxItems = maxItems;
+    }
+    
+    /**
+     * This method returns which part of the collection
+     * should be truncated if the collection contains
+     * more items than can be returned in the query result.
+     * 
+     * @return The truncation location
+     */
+    public Truncate getTruncate() {
+        return (_truncate);
+    }
+    
+    /**
+     * This method sets which part of the collection
+     * should be truncated if the collection contains
+     * more items than can be returned in the query result.
+     * 
+     * @param truncate The truncation location
+     */
+    public void setTruncate(Truncate truncate) {
+        _truncate = truncate;
+    }
+    
+    /**
+     * This method returns the style that should be used
+     * for returning the result.
+     * 
+     * @return The style
+     */
+    public Style getStyle() {
+        return (_style);
+    }
+    
+    /**
+     * This method sets the style that should be used
+     * for returning the result.
+     * 
+     * @param style The style
+     */
+    public void setStyle(Style style) {
+        _style = style;
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public String toString() {
         return ("Query[collection="+_collection+" parent="
-                    +_parent+" predicate="+_predicate+"]");
+                    +_parent+" predicate="+_predicate
+                    +" maxItems="+_maxItems+" truncate="
+                    +_truncate+" style="+_style+"]");
+    }
+    
+    /**
+     * This enumerated type defines where truncation should
+     * occur if the collection size is greater than the
+     * maximum number of items specified.
+     */
+    public enum Truncate {
+        
+        /**
+         * This value indicates that the last portion of the
+         * collection should be returned.
+         */
+        Start,
+        
+        /**
+         * This value indicates that the first portion of the
+         * collection should be returned.
+         */
+        End
+    }
+    
+    /**
+     * This enumerated type defines the style used for returning
+     * the results.
+     */
+    public enum Style {
+        
+        /**
+         * This value indicates that the results should be returned
+         * as normal.
+         */
+        Normal,
+        
+        /**
+         * This value indicates that the results should be returned
+         * in reverse order.
+         */
+        Reversed
     }
 }
