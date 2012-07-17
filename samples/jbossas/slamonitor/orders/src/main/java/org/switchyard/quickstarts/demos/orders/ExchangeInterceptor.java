@@ -101,7 +101,8 @@ public class ExchangeInterceptor implements ExchangeHandler {
             
             if (exchange.getPhase() == ExchangePhase.IN) {
                 
-                if (_activityCollector.startScope()) {
+                if (!_activityCollector.isScopeActive()) {
+                    _activityCollector.startScope();
                     exchange.getContext().setProperty(START_SCOPE, Boolean.TRUE);
                 }
                 

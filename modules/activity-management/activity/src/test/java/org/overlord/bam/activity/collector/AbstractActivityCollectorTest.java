@@ -71,21 +71,23 @@ public class AbstractActivityCollectorTest {
         ac.setActivityUnitLogger(al);
         ac.setCollectorContext(cc);
         
-        // Start scope
-        if (!ac.startScope()) {
-            fail("Failed to start scope");
+        if (ac.isScopeActive()) {
+            fail("Scope should not be active");
         }
         
-        // Check second scope should not be started
-        if (ac.startScope()) {
-            fail("Second scope should not have started");
+        // Start scope
+        ac.startScope();
+        
+        if (!ac.isScopeActive()) {
+            fail("Scope should be active");
         }
         
         ac.endScope();
         
-        if (!ac.startScope()) {
-            fail("Failed to start scope again after end");
+        if (ac.isScopeActive()) {
+            fail("Scope should no longer be active");
         }
+        
     }    
     
     @Test
@@ -98,9 +100,7 @@ public class AbstractActivityCollectorTest {
         ac.setCollectorContext(cc);
         
         // Start scope
-        if (!ac.startScope()) {
-            fail("Failed to start scope");
-        }
+        ac.startScope();
         
         RequestSent req=new RequestSent();
         

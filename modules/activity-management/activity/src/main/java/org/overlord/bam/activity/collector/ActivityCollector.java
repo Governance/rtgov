@@ -57,18 +57,18 @@ public interface ActivityCollector {
     /**
      * This method can be used to create an application controlled
      * scope. Within this scope, all activity types will
-     * be recorded in a single activity unit. If the method returns
-     * true, then it indicates the application started a
-     * scope, and is therefore now responsible for ending that
-     * scope at a suitable time using the 'endScope' method.
-     * If however a 'false' value is returned from calling this
-     * method, then the application should not call the 'endScope'
-     * method, as it implies a scope was started by
-     * some other means.
-     * 
-     * @return Whether the scope was started
+     * be recorded in a single activity unit. If a client starts
+     * a scope, then it is also responsible for ending it
+     * using the 'endScope' method.
      */
-    public boolean startScope();
+    public void startScope();
+    
+    /**
+     * This method determines whether a scope is already active.
+     * 
+     * @return Whether a scope is already active
+     */
+    public boolean isScopeActive();
     
     /**
      * This method completes the scope. However this

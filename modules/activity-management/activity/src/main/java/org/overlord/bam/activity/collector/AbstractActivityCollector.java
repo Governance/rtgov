@@ -105,15 +105,21 @@ public class AbstractActivityCollector implements ActivityCollector {
     /**
      * {@inheritDoc}
      */
-    public boolean startScope() {
+    public void startScope() {
         ActivityUnit au=_activityUnit.get();
         
+        // Currently only starts a scope if none exists. However
+        // in the future may wish to support nested scopes.
         if (au == null) {
             startScope(createActivityUnit());
-            return true;
         }
-        
-        return false;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isScopeActive() {
+        return (_activityUnit.get() != null);
     }
     
     /**
