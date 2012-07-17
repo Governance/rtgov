@@ -32,6 +32,7 @@ import javax.transaction.xa.XAResource;
 
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.collector.ActivityUnitLogger;
@@ -168,6 +169,58 @@ public class AbstractActivityCollectorTest {
         
         if (al.getActivityUnits().get(0).getActivityTypes().size() != 2) {
             fail("Should be 2 activity types: "+al.getActivityUnits().get(0).getActivityTypes().size());
+        }
+    }
+
+    @Test
+    public void testMergeAppProvidedContexts() {
+        AbstractActivityCollector ac=new AbstractActivityCollector() {};
+        TestActivityLogger al=new TestActivityLogger();
+        TestCollectorContext cc=new TestCollectorContext();
+        
+        ac.setActivityUnitLogger(al);
+        ac.setCollectorContext(cc);
+        
+        Context c1=new Context(Context.CONVERSATION_ID, "name1", "value1");
+        Context c2=new Context(Context.MESSAGE_ID, "name2", "value2");
+        Context c3=new Context(Context.PROPERTY_ID, "name3", "value3");
+        
+        // Start scope
+        ac.startScope();
+        
+        RequestSent req=new RequestSent();
+        
+        java.util.List<Context> cl1=new java.util.Vector<Context>();
+        cl1.add(c1);
+        cl1.add(c2);
+        
+        ac.record(req, cl1);
+        
+        if (al.getActivityUnits().size() != 0) {
+            fail("Should be no activity unit: "+al.getActivityUnits().size());
+        }
+        
+        RequestReceived resp=new RequestReceived();
+        
+        java.util.List<Context> cl2=new java.util.Vector<Context>();
+        cl2.add(c2);
+        cl2.add(c3);
+        
+        ac.record(resp, cl2);
+        
+        if (al.getActivityUnits().size() != 0) {
+            fail("Should still be no activity unit: "+al.getActivityUnits().size());
+        }
+        
+        // End txn
+        ac.endScope();
+        
+        if (al.getActivityUnits().size() != 1) {
+            fail("Should be 1 activity unit: "+al.getActivityUnits().size());
+        }
+        
+        if (al.getActivityUnits().get(0).getContext().size() != 3) {
+            fail("Should be 3 contexts: "+al.getActivityUnits().get(0).getContext().size());
         }
     }
 

@@ -18,6 +18,7 @@
 package org.overlord.bam.activity.collector;
 
 import org.overlord.bam.activity.model.ActivityType;
+import org.overlord.bam.activity.model.Context;
 
 /**
  * This interface represents an activity event collector.
@@ -87,5 +88,18 @@ public interface ActivityCollector {
      * @param actType The activity type
      */
     public void record(ActivityType actType);
+    
+    /**
+     * This method records the supplied activity type. If a
+     * scope has not been explicitly started, using the 'startScope'
+     * then calling this method may result in a scope
+     * being started automatically. Otherwise the activity type may just
+     * be recorded as a single event within an activity unit. This
+     * method also allows some context information to be supplied.
+     * 
+     * @param actType The activity type
+     * @param contexts The optional context information
+     */
+    public void record(ActivityType actType, java.util.List<Context> contexts);
     
 }
