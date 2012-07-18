@@ -31,8 +31,9 @@ public class OperationDefinition implements java.io.Externalizable {
     private static final int VERSION = 1;
 
     private String _operation=null;
-    private java.util.List<FaultDefinition> _faults=
-            new java.util.ArrayList<FaultDefinition>();
+    private RequestResponseDefinition _requestResponse=null;
+    private java.util.List<RequestFaultDefinition> _requestFaults=
+            new java.util.ArrayList<RequestFaultDefinition>();
 
     /**
      * This method sets the operation.
@@ -53,13 +54,31 @@ public class OperationDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method sets the normal response details.
+     * 
+     * @param response The normal response
+     */
+    public void setRequestResponse(RequestResponseDefinition response) {
+        _requestResponse = response;
+    }
+    
+    /**
+     * This method gets the normal response details.
+     * 
+     * @return The normal response
+     */
+    public RequestResponseDefinition getRequestResponse() {
+        return (_requestResponse);
+    }
+    
+    /**
      * This method sets the list of faults associated
      * with the operation.
      * 
      * @param faults The faults
      */
-    public void setFaults(java.util.List<FaultDefinition> faults) {
-        _faults = faults;
+    public void setRequestFaults(java.util.List<RequestFaultDefinition> faults) {
+        _requestFaults = faults;
     }
     
     /**
@@ -68,8 +87,49 @@ public class OperationDefinition implements java.io.Externalizable {
      * 
      * @return The faults
      */
-    public java.util.List<FaultDefinition> getFaults() {
-        return (_faults);
+    public java.util.List<RequestFaultDefinition> getRequestFaults() {
+        return (_requestFaults);
+    }
+    
+    /**
+     * This method returns the fault associated with the supplied
+     * name, if defined within the operation definition.
+     * 
+     * @param name The fault name
+     * @return The fault, or null if not found
+     */
+    public RequestFaultDefinition getRequestFault(String name) {
+        RequestFaultDefinition ret=null;
+        
+        for (int i=0; i < _requestFaults.size(); i++) {
+            if (_requestFaults.get(i).getFault().equals(name)) {
+                ret = _requestFaults.get(i);
+                break;
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method returns the aggregated invocation metric information
+     * from the normal and fault responses.
+     * 
+     * @return The invocation metric
+     */
+    public InvocationMetric getMetrics() {
+        java.util.List<InvocationMetric> metrics=
+                new java.util.ArrayList<InvocationMetric>();
+        
+        if (getRequestResponse() != null) {
+            metrics.add(getRequestResponse().getMetrics());            
+        }
+
+        for (RequestFaultDefinition fault : getRequestFaults()) {
+            metrics.add(fault.getMetrics());
+        }
+
+        return (new InvocationMetric(metrics));
     }
     
     /**
@@ -100,9 +160,9 @@ public class OperationDefinition implements java.io.Externalizable {
         
         out.writeObject(_operation);
         
-        out.writeInt(_faults.size());
-        for (int i=0; i < _faults.size(); i++) {
-            out.writeObject(_faults.get(i));
+        out.writeInt(_requestFaults.size());
+        for (int i=0; i < _requestFaults.size(); i++) {
+            out.writeObject(_requestFaults.get(i));
         }
     }
 
@@ -117,7 +177,7 @@ public class OperationDefinition implements java.io.Externalizable {
         
         int len=in.readInt();
         for (int i=0; i < len; i++) {
-            _faults.add((FaultDefinition)in.readObject());
+            _requestFaults.add((RequestFaultDefinition)in.readObject());
         }
     }
 }

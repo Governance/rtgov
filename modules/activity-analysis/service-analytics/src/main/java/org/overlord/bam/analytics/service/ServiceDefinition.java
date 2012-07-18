@@ -73,6 +73,43 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method returns the operation associated with the supplied
+     * name, if defined within the service definition.
+     * 
+     * @param name The operation name
+     * @return The operation, or null if not found
+     */
+    public OperationDefinition getOperation(String name) {
+        OperationDefinition ret=null;
+        
+        for (int i=0; i < _operations.size(); i++) {
+            if (_operations.get(i).getOperation().equals(name)) {
+                ret = _operations.get(i);
+                break;
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method returns the aggregated invocation metric information
+     * from the operations.
+     * 
+     * @return The invocation metric
+     */
+    public InvocationMetric getMetrics() {
+        java.util.List<InvocationMetric> metrics=
+                        new java.util.ArrayList<InvocationMetric>();
+        
+        for (OperationDefinition op : getOperations()) {
+            metrics.add(op.getMetrics());
+        }
+        
+        return (new InvocationMetric(metrics));
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public int hashCode() {

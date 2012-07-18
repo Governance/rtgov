@@ -154,7 +154,7 @@ public final class ActivityUtil {
     }
 
     /**
-     * This method deserializes an Activity event from a JSON representation.
+     * This method deserializes a Query Spec from a JSON representation.
      * 
      * @param qs The JSON representation of the query spec
      * @return The query spec
