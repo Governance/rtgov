@@ -100,6 +100,17 @@ public class InvocationDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method merges the supplied invocation
+     * definition.
+     * 
+     * @param id The invocation definition to merge
+     */
+    public void merge(InvocationDefinition id) {
+        
+        getMetrics().merge(id.getMetrics());
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {

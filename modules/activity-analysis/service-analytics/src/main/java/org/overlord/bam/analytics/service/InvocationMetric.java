@@ -228,6 +228,42 @@ public class InvocationMetric implements java.io.Externalizable {
     }
     
     /**
+     * This method merges the supplied invocation metric
+     * information.
+     * 
+     * @param metric The invocation metrics to merge
+     */
+    public void merge(InvocationMetric metric) {
+        
+        if (metric.getCount() > 0) {
+            int myCount=getCount();
+            int mergeCount=metric.getCount();
+            
+            setCount(myCount + mergeCount);
+            
+            setCountChange(((getCountChange()*myCount)+(metric.getCountChange()*mergeCount))/
+                    getCount());
+            
+            setAverage(((getAverage()*myCount)+(metric.getAverage()*mergeCount))/
+                    getCount());
+            setAverageChange(((getAverageChange()*myCount)+(metric.getAverageChange()*mergeCount))/
+                    getCount());
+            
+            if (getMin() == 0 || metric.getMin() < getMin()) {
+                setMin(metric.getMin());
+            }
+            setMinChange(((getMinChange()*myCount)+(metric.getMinChange()*mergeCount))/
+                    getCount());
+            
+            if (metric.getMax() > getMax()) {
+                setMax(metric.getMax());
+            }
+            setMaxChange(((getMaxChange()*myCount)+(metric.getMaxChange()*mergeCount))/
+                    getCount());
+        }
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public String toString() {

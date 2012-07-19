@@ -133,6 +133,35 @@ public class OperationDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method merges the supplied operation definition
+     * with this.
+     * 
+     * @param opdef The operation definition to merge
+     */
+    public void merge(OperationDefinition opdef) {
+        
+        if (opdef.getRequestResponse() != null) {
+            if (getRequestResponse() != null) {
+                getRequestResponse().merge(opdef.getRequestResponse());
+            } else {
+                setRequestResponse(opdef.getRequestResponse());
+            }
+        }
+        
+        for (int i=0; i < opdef.getRequestFaults().size(); i++) {
+            RequestFaultDefinition rfd=opdef.getRequestFaults().get(i);
+            
+            RequestFaultDefinition cur=getRequestFault(rfd.getFault());
+            
+            if (cur != null) {
+                cur.merge(rfd);
+            } else {
+                getRequestFaults().add(rfd);
+            }
+        }
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public int hashCode() {

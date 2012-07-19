@@ -130,6 +130,34 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method merges the supplied definition with this
+     * service definition.
+     * 
+     * @param sd The service definition to merge
+     * @throws Exception Failed to merge
+     */
+    public void merge(ServiceDefinition sd) throws Exception {
+        
+        if (sd == null || !sd.getServiceType().equals(getServiceType())) {
+            throw new IllegalArgumentException("Invalid service definition");
+        }
+        
+        // Examine operation definitions - merge existing and
+        // transfer undefined
+        for (int i=0; i < sd.getOperations().size(); i++) {
+            OperationDefinition opdef=sd.getOperations().get(i);
+            
+            OperationDefinition cur=getOperation(opdef.getOperation());
+            
+            if (cur != null) {
+                cur.merge(opdef);
+            } else {
+                getOperations().add(opdef);
+            }
+        }
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {

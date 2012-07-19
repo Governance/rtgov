@@ -95,6 +95,30 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method merges the information from the supplied
+     * MEP definition.
+     * 
+     * @param mep The MEP definition to merge
+     */
+    public void merge(MEPDefinition mep) {
+        
+        getMetrics().merge(mep.getMetrics());
+        
+        for (int i=0; i < mep.getInvocations().size(); i++) {
+            InvocationDefinition id=mep.getInvocations().get(i);
+            
+            InvocationDefinition cur=getInvocation(id.getServiceType(),
+                            id.getOperation(), id.getFault());
+            
+            if (cur != null) {
+                cur.merge(id);
+            } else {
+                getInvocations().add(id);
+            }
+        }
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
