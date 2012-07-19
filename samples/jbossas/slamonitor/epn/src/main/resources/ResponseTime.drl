@@ -28,9 +28,6 @@ then
 	rt.setServiceType($req.getServiceType());
 	rt.setOperation($req.getOperation());
 	rt.setFault($resp.getFault());
-	rt.setTimestamp($req.getTimestamp());
-	rt.setRequestReference(new ActivityTypeRef($req.getActivityUnitId(),$req.getActivityUnitIndex()));
-	rt.setResponseReference(new ActivityTypeRef($resp.getActivityUnitId(),$resp.getActivityUnitIndex()));
 	
 	long responseTime=$resp.getTimestamp()-$req.getTimestamp();
 	

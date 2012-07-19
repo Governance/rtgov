@@ -68,6 +68,7 @@
 		<module>build</module>
 		<module>modules</module>
 		<module>integration</module>
+		<module>content</module>
 		<module>samples</module>
 		<module>release</module>
 	</modules>

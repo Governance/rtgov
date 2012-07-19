@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import org.overlord.bam.activity.model.ActivityTypeRef;
-
 /**
  * This class represents response time information associated with
  * the invocation of a service.
@@ -35,12 +33,9 @@ public class ResponseTime implements java.io.Externalizable {
     private String _serviceType=null;
     private String _operation=null;
     private String _fault=null;
-    private long _timestamp=0;
     private long _duration=0;
     private long _max=0;
     private long _min=0;
-    private ActivityTypeRef _requestRef=null;
-    private ActivityTypeRef _responseRef=null;
 
     /**
      * This method sets the service type.
@@ -94,60 +89,6 @@ public class ResponseTime implements java.io.Externalizable {
      */
     public String getFault() {
         return (_fault);
-    }
-    
-    /**
-     * This method sets the request reference.
-     * 
-     * @param actTypeRef The request reference
-     */
-    public void setRequestReference(ActivityTypeRef actTypeRef) {
-        _requestRef = actTypeRef;
-    }
-    
-    /**
-     * This method returns the request reference.
-     * 
-     * @return The request reference
-     */
-    public ActivityTypeRef getRequestReference() {
-        return (_requestRef);
-    }
-    
-    /**
-     * This method sets the response reference.
-     * 
-     * @param actTypeRef The response reference
-     */
-    public void setResponseReference(ActivityTypeRef actTypeRef) {
-        _responseRef = actTypeRef;
-    }
-    
-    /**
-     * This method returns the response reference.
-     * 
-     * @return The response reference
-     */
-    public ActivityTypeRef getResponseReference() {
-        return (_responseRef);
-    }
-    
-    /**
-     * This method sets the timestamp.
-     * 
-     * @param timestamp The timestamp
-     */
-    public void setTimestamp(long timestamp) {
-        _timestamp = timestamp;
-    }
-    
-    /**
-     * This method returns the timestamp.
-     * 
-     * @return The timestamp
-     */
-    public long getTimestamp() {
-        return (_timestamp);
     }
     
     /**
@@ -209,7 +150,7 @@ public class ResponseTime implements java.io.Externalizable {
      */
     public String toString() {
         return ("ResponseTime[service="+_serviceType+" op="+_operation+" fault="+_fault
-                    +" timestamp="+_timestamp+" duration="+_duration+" min="+_min+" max="+_max+"]");
+                    +" duration="+_duration+" min="+_min+" max="+_max+"]");
     }
     
     /**
@@ -221,12 +162,9 @@ public class ResponseTime implements java.io.Externalizable {
         out.writeObject(_serviceType);
         out.writeObject(_operation);
         out.writeObject(_fault);
-        out.writeLong(_timestamp);
         out.writeLong(_duration);
         out.writeLong(_max);
         out.writeLong(_min);
-        out.writeObject(_requestRef);
-        out.writeObject(_responseRef);
     }
 
     /**
@@ -239,11 +177,8 @@ public class ResponseTime implements java.io.Externalizable {
         _serviceType = (String)in.readObject();
         _operation = (String)in.readObject();
         _fault = (String)in.readObject();
-        _timestamp = in.readLong();
         _duration = in.readLong();
         _max = in.readLong();
         _min = in.readLong();
-        _requestRef = (ActivityTypeRef)in.readObject();
-        _responseRef = (ActivityTypeRef)in.readObject();
     }
 }

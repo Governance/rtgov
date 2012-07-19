@@ -30,6 +30,11 @@ import org.overlord.bam.activity.model.ActivityTypeRef;
 public class SLAViolation implements java.io.Externalizable {
 
     private static final int VERSION = 1;
+    
+    public static final String SEVERITY_CRITICAL="Critical";
+    public static final String SEVERITY_HIGH="High";
+    public static final String SEVERITY_MEDIUM="Medium";
+    public static final String SEVERITY_LOW="Low";
 
     private String _serviceType=null;
     private String _operation=null;

@@ -1,0 +1,15 @@
+[
+  {
+    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "ServiceResponseTimes",
+    "type" : "List",
+    "itemExpiration" : 0,
+    "maxItems" : 100,
+    "network" : "Overlord-BAM-EPN",
+    "node" : "ServiceResponseTimes",
+    "notifyType" : "Results",
+    "aggregationDuration" : 1000,
+    "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
+    "aggregationScript" : "AggregateServiceResponseTime.mvel"
+  }
+]

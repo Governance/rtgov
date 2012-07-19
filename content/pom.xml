@@ -3,10 +3,10 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam</groupId>
-	<artifactId>release</artifactId>
+	<artifactId>content</artifactId>
 	<packaging>pom</packaging>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>Overlord BAM::Release</name>
+	<name>Overlord BAM::Content</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
@@ -14,14 +14,11 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<profiles>
-		<profile>
-			<id>jbossas</id>
-			<modules>
-				<module>jbossas</module>
-			</modules>
-		</profile>
-	</profiles>
+	<modules>
+		<module>acs</module>
+		<module>epn</module>
+		<module>services</module>
+	</modules>
 
 	<build>
 		<pluginManagement>

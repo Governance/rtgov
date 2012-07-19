@@ -1,0 +1,48 @@
+{
+  "name" : "Overlord-BAM-EPN",
+  "subscriptions" : [ {
+    "nodeName" : "SOAEvents",
+    "subject" : "ActivityUnits"
+  },
+  {
+    "nodeName" : "ServiceDefinitions",
+    "subject" : "ActivityUnits"
+  } ],
+  "nodes" : [
+    {
+      "name" : "SOAEvents",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ "SOAEvents" ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.bam.content.epn.SOAActivityTypeEventSplitter"
+      },
+      "predicate" : null,
+      "notifyTypes" : [ ]
+    },{
+      "name" : "ServiceDefinitions",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.bam.content.epn.ServiceDefinitionProcessor"
+      },
+      "predicate" : null,
+      "notifyTypes" : [ "Results" ]
+    },{
+      "name" : "ServiceResponseTimes",
+      "sourceNodes" : [ "ServiceDefinitions" ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.bam.content.epn.ServiceResponseTimeProcessor"
+      },
+      "predicate" : null,
+      "notifyTypes" : [ "Results" ]
+    }
+  ],
+  "version" : "1.0.0-SNAPSHOT"
+}

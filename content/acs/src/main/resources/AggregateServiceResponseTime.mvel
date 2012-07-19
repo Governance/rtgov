@@ -8,6 +8,7 @@ firstEvent = events.get(0);
 result.setServiceType(firstEvent.getServiceType());
 result.setOperation(firstEvent.getOperation());
 result.setFault(firstEvent.getFault());
+result.setTimestamp(firstEvent.getTimestamp());
 
 for (i=0; i < events.size(); i++) {
 	to = events.get(i);

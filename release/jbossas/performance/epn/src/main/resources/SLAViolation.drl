@@ -20,7 +20,15 @@ then
 		
 		sv.setServiceType($rt.getServiceType());
 		sv.setOperation($rt.getOperation());
-		sv.setTimestamp($rt.getTimestamp());
+		sv.setTimestamp(System.currentTimeMillis());
+		
+		if ($rt.getDuration() > 400) {
+			sv.setViolation("Service exceeded maximum response time of 400 ms");
+			sv.setSeverity("Critical");
+		} else {
+			sv.setViolation("Service exceeded maximum response time of 200 ms");
+			sv.setSeverity("Medium");
+		}
 		
 		epn.forward(sv);
 	}	
