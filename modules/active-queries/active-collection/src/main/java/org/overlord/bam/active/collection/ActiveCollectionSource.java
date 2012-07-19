@@ -49,6 +49,19 @@ public class ActiveCollectionSource {
     private String _maintenanceScript=null;
     private java.io.Serializable _maintenanceScriptExpression=null;
 
+    private long _aggregationDuration=0;
+    private String _groupBy=null;
+    private java.io.Serializable _groupByExpression=null;
+    private String _aggregationScript=null;
+    private java.io.Serializable _aggregationScriptCompiled=null;
+    
+    private java.util.Map<Object, java.util.List<Object>> _groupedEvents=
+                new java.util.HashMap<Object, java.util.List<Object>>();
+    
+    private Aggregator _aggregator=null;
+
+    private boolean _preinitialized=false;
+
     /**
      * This method sets the name of the active collection that
      * this source represents.
@@ -212,6 +225,60 @@ public class ActiveCollectionSource {
     }
     
     /**
+     * This method sets the aggregation duration.
+     * 
+     * @param duration The aggregation duration
+     */
+    public void setAggregationDuration(long duration) {
+        _aggregationDuration = duration;
+    }
+    
+    /**
+     * This method gets the aggregation duration.
+     * 
+     * @return The aggregation duration
+     */
+    public long getAggregationDuration() {
+        return (_aggregationDuration);
+    }
+    
+    /**
+     * This method sets the 'group by' expression.
+     * 
+     * @param expr The expression
+     */
+    public void setGroupBy(String expr) {
+        _groupBy = expr;
+    }
+    
+    /**
+     * This method gets the 'group by' expression.
+     * 
+     * @return The expression
+     */
+    public String getGroupBy() {
+        return (_groupBy);
+    }
+    
+    /**
+     * This method sets the aggregation script.
+     * 
+     * @param script The aggregation script
+     */
+    public void setAggregationScript(String script) {
+        _aggregationScript = script;
+    }
+    
+    /**
+     * This method gets the aggregation script.
+     * 
+     * @return The aggregation script
+     */
+    public String getAggregationScript() {
+        return (_aggregationScript);
+    }
+    
+    /**
      * This method pre-initializes the active collection source
      * in situations where it needs to be initialized before
      * registration with the manager. This may be required
@@ -222,24 +289,49 @@ public class ActiveCollectionSource {
      */
     protected void preInit() throws Exception {
         
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Pre-Initializing Active Collection Source (script="+_maintenanceScript
-                    +" compiled="+_maintenanceScriptExpression+")");
-        }
-
-        // Only initialize if the script is specified, but not yet compiled
-        if (_maintenanceScript != null && _maintenanceScriptExpression == null) {
-            java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_maintenanceScript);
+        if (!_preinitialized) {
+            _preinitialized = true;
             
-            if (is == null) {
-                LOG.severe("Unable to locate '"+_maintenanceScript+"'");
-            } else {
-                byte[] b=new byte[is.available()];
-                is.read(b);
-                is.close();
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Pre-Initializing script="+_aggregationScript
+                        +" compiled="+_aggregationScriptCompiled);
+            }
+    
+            // Only initialize if the script is specified, but not yet compiled
+            if (_aggregationScript != null && _aggregationScriptCompiled == null) {
+                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
+                
+                if (is == null) {
+                    LOG.severe("Unable to locate '"+_aggregationScript+"'");
+                } else {
+                    byte[] b=new byte[is.available()];
+                    is.read(b);
+                    is.close();
+    
+                    // Compile expression
+                    _aggregationScriptCompiled = MVEL.compileExpression(new String(b));
+                }
+            }
 
-                // Compile expression
-                _maintenanceScriptExpression = MVEL.compileExpression(new String(b));
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Pre-Initializing script="+_maintenanceScript
+                        +" compiled="+_maintenanceScriptExpression);
+            }
+    
+            // Only initialize if the script is specified, but not yet compiled
+            if (_maintenanceScript != null && _maintenanceScriptExpression == null) {
+                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_maintenanceScript);
+                
+                if (is == null) {
+                    LOG.severe("Unable to locate '"+_maintenanceScript+"'");
+                } else {
+                    byte[] b=new byte[is.available()];
+                    is.read(b);
+                    is.close();
+
+                    // Compile expression
+                    _maintenanceScriptExpression = MVEL.compileExpression(new String(b));
+                }
             }
         }
     }
@@ -250,6 +342,8 @@ public class ActiveCollectionSource {
      * @throws Exception Failed to initialize source
      */
     public void init() throws Exception {
+        
+        preInit();
         
         // If active change listeners defined, then instantiate them
         // and add them to the active collection
@@ -273,26 +367,18 @@ public class ActiveCollectionSource {
                 _activeCollection.addActiveChangeListener(l);
             }
         }
-    }
-
-    /**
-     * This method closes the active collection source.
-     * 
-     * @throws Exception Failed to close source
-     */
-    public void close() throws Exception {
         
-        // Unregister any pre-defined listeners
-        if (_listeners.size() > 0) {
-                        
-            for (AbstractActiveChangeListener l : _listeners) {
-                _activeCollection.removeActiveChangeListener(l);
-                
-                l.close();
+        if (_groupBy != null) {
+            // Compile expression
+            _groupByExpression = MVEL.compileExpression(_groupBy);
+            
+            if (_aggregationDuration > 0) {
+                // Create aggregator
+                _aggregator = new Aggregator();
             }
         }
     }
-    
+
     /**
      * This method is invoked to handle the supplied item.
      * If a script has been defined, then it will be used
@@ -365,4 +451,156 @@ public class ActiveCollectionSource {
         }
         _activeCollection.remove(key, value);
     }
+    
+    /**
+     * This method returns the list of map of grouped events by key.
+     * 
+     * @return The grouped events
+     */
+    @JsonIgnore
+    protected java.util.Map<Object, java.util.List<Object>> getGroupedEvents() {
+        return (_groupedEvents);
+    }
+    
+    /**
+     * This method processes the supplied event to determine its group
+     * for subsequent aggregation.
+     * 
+     * @param event The event to be processed
+     */
+    protected void aggregateEvent(java.io.Serializable event) {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("aggregateEvent event="+event);
+        }
+        
+        synchronized (_groupedEvents) {
+
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Aggregating event: "+event);
+            }
+            
+            // Derive key
+            Object key=MVEL.executeExpression(_groupByExpression, event);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Derived key '"+key+"' for event: "+event);
+            }
+            
+            if (key == null) {
+                LOG.severe("Failed to evaluate expression '"+_groupBy+"' on event: "+event);
+            } else {
+                java.util.List<Object> list=_groupedEvents.get(key);
+                
+                if (list == null) {
+                    list = new java.util.ArrayList<Object>();
+                    _groupedEvents.put(key, list);
+                }
+                
+                list.add(event);
+            }
+        }
+    }
+    
+    /**
+     * This method publishes any aggregated events to the associated active
+     * collection.
+     */
+    protected void publishAggregateEvents() {
+        java.util.Map<Object, java.util.List<Object>> source=null;
+        
+        // Take a copy of the events and clear the original map
+        synchronized (_groupedEvents) {
+            
+            if (_groupedEvents.size() > 0) {
+                source = new java.util.HashMap<Object, java.util.List<Object>>(_groupedEvents);
+                
+                _groupedEvents.clear();
+            }
+        }
+        
+        if (source != null) {
+            
+            if (_aggregationScriptCompiled != null) {
+                java.util.Map<String,java.util.List<Object>> vars=
+                        new java.util.HashMap<String, java.util.List<Object>>();
+
+                for (java.util.List<Object> list : source.values()) {
+
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("publishAggregateEvents list="+list);
+                    }
+                    
+                    vars.clear();
+                    vars.put("events", list);
+                    
+                    Object result= MVEL.executeExpression(_aggregationScriptCompiled, vars);
+                    
+                    if (result == null) {
+                        LOG.severe("Aggregation script failed to return a result");
+                        
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Script="+_aggregationScript);
+                            LOG.finest("List of Events="+list);
+                        }
+                    } else {
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("publishAggregateEvents result="+result);
+                        }
+                        
+                        handleItem(null, result);
+                    }
+                }
+            } else {
+                LOG.severe("No aggregation script to process events: "+source);
+            }
+        }
+    }
+    
+    /**
+     * This method closes the active collection source.
+     * 
+     * @throws Exception Failed to close source
+     */
+    public void close() throws Exception {
+        
+        // Unregister any pre-defined listeners
+        if (_listeners.size() > 0) {
+                        
+            for (AbstractActiveChangeListener l : _listeners) {
+                _activeCollection.removeActiveChangeListener(l);
+                
+                l.close();
+            }
+        }
+
+        if (_aggregator != null) {
+            _aggregator.cancel();
+        }
+    }
+    
+    /**
+     * This class implements the aggregation functionality triggered
+     * at configured intervals.
+     *
+     */
+    public class Aggregator extends java.util.TimerTask {
+
+        private java.util.Timer _timer=new java.util.Timer();
+        
+        /**
+         * This is the constructor.
+         */
+        public Aggregator() {
+            _timer.scheduleAtFixedRate(this, _aggregationDuration, _aggregationDuration);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void run() {
+            publishAggregateEvents();
+        }
+    }    
 }

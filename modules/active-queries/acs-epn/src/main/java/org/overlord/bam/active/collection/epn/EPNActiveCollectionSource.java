@@ -22,8 +22,6 @@ import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.mvel2.MVEL;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
 import org.overlord.bam.epn.ContextualNodeListener;
 import org.overlord.bam.epn.EPNManager;
@@ -44,16 +42,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
     private String _node=null;
     private NotificationType _notifyType=null;
     
-    private long _aggregationDuration=0;
-    private String _groupBy=null;
-    private java.io.Serializable _groupByExpression=null;
-    private String _aggregationScript=null;
-    private java.io.Serializable _aggregationScriptCompiled=null;
-    
-    private java.util.Map<Object, java.util.List<Object>> _groupedEvents=
-                new java.util.HashMap<Object, java.util.List<Object>>();
-    
-    private Aggregator _aggregator=null;
     
     private ClassLoader _contextClassLoader=null;
     private boolean _preinitialized=false;
@@ -67,16 +55,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
      */
     protected void setEPNManager(EPNManager mgr) {
         _epnManager = mgr;
-    }
-    
-    /**
-     * This method returns the list of map of grouped events by key.
-     * 
-     * @return The grouped events
-     */
-    @JsonIgnore
-    protected java.util.Map<Object, java.util.List<Object>> getGroupedEvents() {
-        return (_groupedEvents);
     }
     
     /**
@@ -134,60 +112,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
     }
     
     /**
-     * This method sets the aggregation duration.
-     * 
-     * @param duration The aggregation duration
-     */
-    public void setAggregationDuration(long duration) {
-        _aggregationDuration = duration;
-    }
-    
-    /**
-     * This method gets the aggregation duration.
-     * 
-     * @return The aggregation duration
-     */
-    public long getAggregationDuration() {
-        return (_aggregationDuration);
-    }
-    
-    /**
-     * This method sets the 'group by' expression.
-     * 
-     * @param expr The expression
-     */
-    public void setGroupBy(String expr) {
-        _groupBy = expr;
-    }
-    
-    /**
-     * This method gets the 'group by' expression.
-     * 
-     * @return The expression
-     */
-    public String getGroupBy() {
-        return (_groupBy);
-    }
-    
-    /**
-     * This method sets the aggregation script.
-     * 
-     * @param script The aggregation script
-     */
-    public void setAggregationScript(String script) {
-        _aggregationScript = script;
-    }
-    
-    /**
-     * This method gets the aggregation script.
-     * 
-     * @return The aggregation script
-     */
-    public String getAggregationScript() {
-        return (_aggregationScript);
-    }
-    
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -216,18 +140,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         }
 
         _epnManager.addNodeListener(_network, _listener);
-        
-        if (_groupBy != null) {
-            // Compile expression
-            _groupByExpression = MVEL.compileExpression(_groupBy);
-            
-            if (_aggregationDuration > 0) {
-                // Create aggregator
-                _aggregator = new Aggregator();
-            }
-        }
-        
-        preInit();
     }
     
     /**
@@ -241,31 +153,13 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
      */
     @Override
     protected void preInit() throws Exception {
+        // Don't want to perform pre-init twice, as will overwrite
+        // context classloader with the wrong value
+        
         if (!_preinitialized) {
             _preinitialized = true;
             
             super.preInit();
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Pre-Initializing EPN Active Collection Source (script="+_aggregationScript
-                        +" compiled="+_aggregationScriptCompiled+")");
-            }
-    
-            // Only initialize if the script is specified, but not yet compiled
-            if (_aggregationScript != null && _aggregationScriptCompiled == null) {
-                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
-                
-                if (is == null) {
-                    LOG.severe("Unable to locate '"+_aggregationScript+"'");
-                } else {
-                    byte[] b=new byte[is.available()];
-                    is.read(b);
-                    is.close();
-    
-                    // Compile expression
-                    _aggregationScriptCompiled = MVEL.compileExpression(new String(b));
-                }
-            }
             
             // Cache context classloader for use deserializing
             // events in this context
@@ -273,6 +167,29 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         }
     }
 
+    /**
+     * This method processes the notification to aggregate information over a
+     * particular duration.
+     * 
+     * @param network The network
+     * @param version The version
+     * @param node The node
+     * @param type The type
+     * @param events The list of events to be processed
+     */
+    protected void aggregateEvents(String network, String version, String node,
+                            NotificationType type, EventList events) {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("aggregateEvents network="+network+" version="+version
+                    +" node="+node+" type="+type+" events="+events);
+        }
+        
+        for (java.io.Serializable event : events) {
+            aggregateEvent(event);
+        }
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -285,28 +202,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         }
 
         _epnManager.removeNodeListener(_network, _listener);
-
-        if (_aggregator != null) {
-            _aggregator.cancel();
-        }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    /*
-    public void notify(String network, String version, String node,
-            NotificationType type, EventList events) {
-        if (isRelevant(network, version, node, type)) {
-            
-            if (_aggregationDuration > 0 && _groupByExpression != null) {
-                aggregateEvents(network, version, node, type, events);
-            } else {
-                processNotification(network, version, node, type, events);
-            }
-        }
-    }
-    */
 
     /**
      * This method determines whether the notification is relevant for this
@@ -368,135 +264,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
     }
     
     /**
-     * This method processes the notification to aggregate information over a
-     * particular duration.
-     * 
-     * @param network The network
-     * @param version The version
-     * @param node The node
-     * @param type The type
-     * @param events The list of events to be processed
-     */
-    protected void aggregateEvents(String network, String version, String node,
-                            NotificationType type, EventList events) {
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("aggregateEvents network="+network+" version="+version
-                    +" node="+node+" type="+type+" events="+events);
-        }
-        
-        synchronized (_groupedEvents) {
-            
-            for (java.io.Serializable event : events) {
-                
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("Aggregating event: "+event);
-                }
-                
-                // Derive key
-                Object key=MVEL.executeExpression(_groupByExpression, event);
-                
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("Derived key '"+key+"' for event: "+event);
-                }
-                
-                if (key == null) {
-                    LOG.severe("Failed to evaluate expression '"+_groupBy+"' on event: "+event);
-                } else {
-                    java.util.List<Object> list=_groupedEvents.get(key);
-                    
-                    if (list == null) {
-                        list = new java.util.ArrayList<Object>();
-                        _groupedEvents.put(key, list);
-                    }
-                    
-                    list.add(event);
-                }
-            }
-        }
-    }
-    
-    /**
-     * This method publishes any aggregated events to the associated active
-     * collection.
-     */
-    protected void publishAggregateEvents() {
-        java.util.Map<Object, java.util.List<Object>> source=null;
-        
-        // Take a copy of the events and clear the original map
-        synchronized (_groupedEvents) {
-            
-            if (_groupedEvents.size() > 0) {
-                source = new java.util.HashMap<Object, java.util.List<Object>>(_groupedEvents);
-                
-                _groupedEvents.clear();
-            }
-        }
-        
-        if (source != null) {
-            
-            if (_aggregationScriptCompiled != null) {
-                java.util.Map<String,java.util.List<Object>> vars=
-                        new java.util.HashMap<String, java.util.List<Object>>();
-
-                for (java.util.List<Object> list : source.values()) {
-
-                    if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.finest("publishAggregateEvents list="+list);
-                    }
-                    
-                    vars.clear();
-                    vars.put("events", list);
-                    
-                    Object result= MVEL.executeExpression(_aggregationScriptCompiled, vars);
-                    
-                    if (result == null) {
-                        LOG.severe("Aggregation script failed to return a result (network="
-                                        +_network+" node="+_node+")");
-                        if (LOG.isLoggable(Level.FINEST)) {
-                            LOG.finest("Script="+_aggregationScript);
-                            LOG.finest("List of Events="+list);
-                        }
-                    } else {
-                        if (LOG.isLoggable(Level.FINEST)) {
-                            LOG.finest("publishAggregateEvents result="+result);
-                        }
-                        
-                        handleItem(null, result);
-                    }
-                }
-            } else {
-                LOG.severe("No aggregation script to process events: "+source);
-            }
-        }
-    }
-    
-    /**
-     * This class implements the aggregation functionality triggered
-     * at configured intervals.
-     *
-     */
-    public class Aggregator extends java.util.TimerTask {
-
-        private java.util.Timer _timer=new java.util.Timer();
-        
-        /**
-         * This is the constructor.
-         */
-        public Aggregator() {
-            _timer.scheduleAtFixedRate(this, _aggregationDuration, _aggregationDuration);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void run() {
-            publishAggregateEvents();
-        }
-    }
-    
-    /**
      * This class handles the events from the EPN node.
      *
      */
@@ -516,7 +283,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
                 NotificationType type, EventList events) {
             if (isRelevant(network, version, node, type)) {
                 
-                if (_aggregationDuration > 0 && _groupByExpression != null) {
+                if (getAggregationDuration() > 0 && getGroupBy() != null) {
                     aggregateEvents(network, version, node, type, events);
                 } else {
                     processNotification(network, version, node, type, events);

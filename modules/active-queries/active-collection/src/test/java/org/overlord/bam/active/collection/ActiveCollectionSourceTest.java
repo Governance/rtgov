@@ -19,10 +19,17 @@ package org.overlord.bam.active.collection;
 
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
+
 import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveList;
 
 public class ActiveCollectionSourceTest {
+
+    private static final String T_OBJ3 = "TObj3";
+    private static final String T_OBJ2 = "TObj2";
+    private static final String T_OBJ1 = "TObj1";
+    private static final String TEST_ACTIVE_LIST = "TestActiveList";
 
     @Test
     public void testActiveChangeListenerFailConfig() {
@@ -72,6 +79,136 @@ public class ActiveCollectionSourceTest {
         
         if (list.getActiveChangeListeners().size() != 0) {
             fail("Should be 0 listeners again (after close): "+list.getActiveChangeListeners().size());
+        }
+    }
+    
+    @Test
+    public void testGroupBy() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
+        acs.setName(TEST_ACTIVE_LIST);
+        
+        acs.setType(ActiveCollectionType.List);
+        
+        acs.setAggregationDuration(1000);
+        acs.setGroupBy("name");
+        
+        try {
+            acs.init();
+        } catch(Exception e) {
+            fail("Failed to initialize active collection source: "+e);
+        }
+        
+        java.util.List<Serializable> eventList=new java.util.ArrayList<Serializable>();
+        eventList.add(new TestObject(T_OBJ1, 11));
+        eventList.add(new TestObject(T_OBJ2, 21));
+        eventList.add(new TestObject(T_OBJ3, 31));
+        eventList.add(new TestObject(T_OBJ1, 12));
+        eventList.add(new TestObject(T_OBJ2, 22));
+        eventList.add(new TestObject(T_OBJ1, 13));
+        eventList.add(new TestObject(T_OBJ1, 14));
+        eventList.add(new TestObject(T_OBJ2, 23));
+        
+        for (Serializable event : eventList) {
+            acs.aggregateEvent(event);
+        }
+        
+        java.util.Map<Object, java.util.List<Object>> groupedEvents=acs.getGroupedEvents();
+        
+        if (groupedEvents.keySet().size() != 3) {
+            fail("Expecting 3 keys: "+groupedEvents.keySet().size());
+        }
+        
+        java.util.List<Object> results1=groupedEvents.get(T_OBJ1);
+        
+        if (results1 == null) {
+            fail("Results for "+T_OBJ1+" not found");
+        } else if (results1.size() != 4) {
+            fail("Results for "+T_OBJ1+" should have 4 events: "+results1.size());
+        }
+        
+        java.util.List<Object> results2=groupedEvents.get(T_OBJ2);
+        
+        if (results2 == null) {
+            fail("Results for "+T_OBJ2+" not found");
+        } else if (results2.size() != 3) {
+            fail("Results for "+T_OBJ2+" should have 3 events: "+results2.size());
+        }
+        
+        java.util.List<Object> results3=groupedEvents.get(T_OBJ3);
+        
+        if (results3 == null) {
+            fail("Results for "+T_OBJ3+" not found");
+        } else if (results3.size() != 1) {
+            fail("Results for "+T_OBJ3+" should have 1 event: "+results3.size());
+        }
+        
+        // Wait for 2 seconds, and check list - it should be clear, indicating
+        // aggregator initiated publication of aggregated events
+        try {
+            synchronized (this) {
+                wait(2000);
+            }
+        } catch(Exception e) {
+            fail("Failed to wait: "+e);
+        }
+        
+        if (acs.getGroupedEvents().size() != 0) {
+            fail("Aggregated events should have been cleared: "+acs.getGroupedEvents().size());
+        }
+        
+    }
+
+    @Test
+    public void testPublishAggregatedEvents() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
+        acs.setName(TEST_ACTIVE_LIST);
+        
+        acs.setType(ActiveCollectionType.List);
+        
+        acs.setAggregationDuration(1000);
+        acs.setGroupBy("name");
+        
+        acs.setAggregationScript("scripts/Aggregate.mvel");
+        
+        try {
+            acs.init();
+        } catch(Exception e) {
+            fail("Failed to initialize active collection source: "+e);
+        }
+        
+        java.util.List<Object> list1=new java.util.ArrayList<Object>();
+        list1.add(new TestObject(T_OBJ1, 50));
+        list1.add(new TestObject(T_OBJ1, 60));
+        list1.add(new TestObject(T_OBJ1, 40));
+        
+        acs.getGroupedEvents().put(T_OBJ1, list1);
+        
+        acs.publishAggregateEvents();
+        
+        if (acs.getActiveCollection().getSize() != 1) {
+            fail("Active collection should have 1 entry: "+acs.getActiveCollection().getSize());
+        }
+        
+        TestObject to=(TestObject)((ActiveList)acs.getActiveCollection()).iterator().next();
+        
+        if (to.getAvg() != 50) {
+            fail("Avg was not 50: "+to.getAvg());
+        }
+        
+        if (to.getMin() != 40) {
+            fail("Min was not 40: "+to.getMin());
+        }
+        
+        if (to.getMax() != 60) {
+            fail("Max was not 60: "+to.getMax());
+        }
+        
+        if (!to.getName().equals(T_OBJ1)) {
+            fail("Name should be "+T_OBJ1+": "+to.getName());
         }
     }
     
