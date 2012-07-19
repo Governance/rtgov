@@ -253,7 +253,22 @@ public class ActivityClient {
     public void send(String txnName) {
 
         try {
-            java.io.FileInputStream is=new java.io.FileInputStream(_txnFileMap.get(txnName));
+            int rand=_random.nextInt();
+            
+            java.io.InputStream is=new java.io.FileInputStream(_txnFileMap.get(txnName));
+            
+            byte[] b=new byte[is.available()];
+            
+            is.read(b);
+            
+            is.close();
+            
+            // Transform any ID fields in the txn with the unique id
+            String txn=new String(b);
+            
+            txn = txn.replaceAll("\\{ID\\}", ""+rand);
+            
+            is = new java.io.ByteArrayInputStream(txn.getBytes());
             
             ObjectMapper mapper=new ObjectMapper();
             
@@ -262,8 +277,6 @@ public class ActivityClient {
                              new TypeReference<java.util.List<ActivityType>>(){});
             
             is.close();
-            
-            int rand=_random.nextInt();
             
             _collector.startScope();
             

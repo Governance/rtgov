@@ -43,6 +43,7 @@
 			<directory>../../../samples/jbossas</directory>
 			<outputDirectory>samples</outputDirectory>
 			<excludes>
+				<exclude>slamonitor/pom.xml</exclude>
 				<exclude>**/.*</exclude>
 				<exclude>**/target/**</exclude>
 				<exclude>**/.settings/**</exclude>
