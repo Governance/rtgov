@@ -55,6 +55,36 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method returns the invocation associated with the supplied
+     * service type, operation and optional fault.
+     * 
+     * @param serviceType The service type
+     * @param operation The operation
+     * @param fault The optional fault
+     * @return The invocation definition, or null if not found
+     */
+    public InvocationDefinition getInvocation(String serviceType, String operation,
+                                String fault) {
+        for (int i=0; i < _invocations.size(); i++) {
+            InvocationDefinition id=(InvocationDefinition)_invocations.get(i);
+            
+            if (id.getServiceType().equals(serviceType) &&
+                    id.getOperation().equals(operation)) {
+                
+                if (id.getFault() == null) {
+                    if (fault == null) {
+                        return (id);
+                    }
+                } else if (fault != null && id.getFault().equals(fault)) {
+                    return (id);
+                }
+            }
+        }
+        
+        return (null);
+    }
+    
+    /**
      * This method returns the invocation metric information
      * from the fault response.
      * 

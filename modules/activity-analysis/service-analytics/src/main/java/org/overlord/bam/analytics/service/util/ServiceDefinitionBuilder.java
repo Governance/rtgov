@@ -20,7 +20,10 @@ package org.overlord.bam.analytics.service.util;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.soa.RequestReceived;
+import org.overlord.bam.activity.model.soa.RequestSent;
+import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
+import org.overlord.bam.analytics.service.InvocationDefinition;
 import org.overlord.bam.analytics.service.RequestFaultDefinition;
 import org.overlord.bam.analytics.service.InvocationMetric;
 import org.overlord.bam.analytics.service.RequestResponseDefinition;
@@ -61,19 +64,20 @@ public class ServiceDefinitionBuilder {
      * @return The service definition builder
      */
     public ServiceDefinitionBuilder process(ActivityUnit actUnit) {
-        checkForServiceInvocation(actUnit, 0, actUnit.getActivityTypes().size());
+        checkForServiceInvoked(actUnit, 0, actUnit.getActivityTypes().size());
         
         return (this);
     }
 
     /**
-     * This method checks for the events associated with a service invocation.
+     * This method checks for the events associated with the service
+     * being invoked.
      * 
      * @param actUnit The activity unit
      * @param from The 'from' index
      * @param to The 'to' index
      */
-    protected void checkForServiceInvocation(ActivityUnit actUnit, int from, int to) {
+    protected void checkForServiceInvoked(ActivityUnit actUnit, int from, int to) {
         
         // Scan the activity types for a received request
         for (int i=from; i < to; i++) {
@@ -93,17 +97,17 @@ public class ServiceDefinitionBuilder {
                         
                         // Process the activities related to this
                         // matched interaction
-                        MEPDefinition resp=processServiceInvocation(rqr, rps);
+                        MEPDefinition resp=processServiceInvoked(rqr, rps);
                         
                         // Check if any invocations are performed in the
                         // scope of this req/resp
-                        checkForInvocations(actUnit, resp, i+1, j-1);
+                        checkForExternalInvocations(actUnit, resp, i+1, j);
                         
                         // Advance 'i' so only checks after the sent
                         // response
                         i = j;
                         
-                        // Escape from this look, as the response has
+                        // Escape from this loop, as the response has
                         // been found
                         break;
                     }
@@ -121,9 +125,44 @@ public class ServiceDefinitionBuilder {
      * @param from The 'from' index
      * @param to The 'to' index
      */
-    protected void checkForInvocations(ActivityUnit actUnit, MEPDefinition mep,
+    protected void checkForExternalInvocations(ActivityUnit actUnit, MEPDefinition mep,
                             int from, int to) {
         
+        // Scan the activity types for a received request
+        for (int i=from; i < to; i++) {
+            ActivityType at1=actUnit.getActivityTypes().get(i);
+            
+            if (at1 instanceof RequestSent) {
+                RequestSent rqs=(RequestSent)at1;
+                
+                // Locate the matching response received activity
+                for (int j=i+1; j < to; j++) {
+                    ActivityType at2=actUnit.getActivityTypes().get(j);
+                    
+                    if (at2 instanceof ResponseReceived &&
+                            ((ResponseReceived)at2).getReplyToId().equals(
+                                    rqs.getMessageId())) {
+                        ResponseReceived rpr=(ResponseReceived)at2;
+                        
+                        // Process the activities related to this
+                        // matched interaction
+                        processExternalInvocation(mep, rqs, rpr);
+                        
+                        // Check if any invocations are performed in the
+                        // scope of this req/resp
+                        checkForServiceInvoked(actUnit, i+1, j);
+                        
+                        // Advance 'i' so only checks after the received
+                        // response
+                        i = j;
+                        
+                        // Escape from this loop, as the response has
+                        // been found
+                        break;
+                    }
+                }
+            }
+        }
     }
     
     /**
@@ -133,7 +172,7 @@ public class ServiceDefinitionBuilder {
      * @param rps The response sent event
      * @return The response definition associated with the req/resp
      */
-    protected MEPDefinition processServiceInvocation(RequestReceived rqr,
+    protected MEPDefinition processServiceInvoked(RequestReceived rqr,
                         ResponseSent rps) {
         MEPDefinition ret=null;
         
@@ -174,6 +213,8 @@ public class ServiceDefinitionBuilder {
             
             if (frd == null) {
                 frd = new RequestFaultDefinition();
+                frd.setFault(rps.getFault());
+                
                 op.getRequestFaults().add(frd);
             }
             
@@ -185,9 +226,9 @@ public class ServiceDefinitionBuilder {
         long duration=rps.getTimestamp()-rqr.getTimestamp();
         
         metrics.setAverage(((metrics.getAverage()*metrics.getCount())+duration)
-                            / metrics.getCount()+1);
+                            / (metrics.getCount()+1));
         
-        if (duration < metrics.getMin()) {
+        if (metrics.getMin() == 0 || duration < metrics.getMin()) {
             metrics.setMin(duration);
         }
 
@@ -198,6 +239,47 @@ public class ServiceDefinitionBuilder {
         metrics.setCount(metrics.getCount()+1);
         
         return (ret);
+    }
+    
+    /**
+     * This method processes the external invocation and associates the
+     * details with the supplied MEP definition.
+     * 
+     * @param call The MEP definition
+     * @param rqs The request
+     * @param rpr The response
+     */
+    protected void processExternalInvocation(MEPDefinition call,
+                    RequestSent rqs, ResponseReceived rpr) {
+        
+        InvocationDefinition idef=call.getInvocation(rqs.getServiceType(),
+                        rqs.getOperation(), rpr.getFault());
+        
+        if (idef == null) {
+            idef = new InvocationDefinition();
+            idef.setServiceType(rqs.getServiceType());
+            idef.setOperation(rqs.getOperation());
+            idef.setFault(rpr.getFault());
+            
+            call.getInvocations().add(idef);
+        }
+        
+        InvocationMetric metrics=idef.getMetrics();
+
+        long duration=rpr.getTimestamp()-rqs.getTimestamp();
+        
+        metrics.setAverage(((metrics.getAverage()*metrics.getCount())+duration)
+                            / (metrics.getCount()+1));
+        
+        if (metrics.getMin() == 0 || duration < metrics.getMin()) {
+            metrics.setMin(duration);
+        }
+
+        if (duration > metrics.getMax()) {
+            metrics.setMax(duration);
+        }
+
+        metrics.setCount(metrics.getCount()+1);        
     }
     
     /**
