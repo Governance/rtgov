@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.mvel2.MVEL;
 
 /**
  * This class defines an Active Collection Source that is
@@ -44,6 +45,9 @@ public class ActiveCollectionSource {
     private ActiveCollection _activeCollection=null;
     private java.util.List<AbstractActiveChangeListener> _listeners=
                     new java.util.ArrayList<AbstractActiveChangeListener>();
+
+    private String _maintenanceScript=null;
+    private java.io.Serializable _maintenanceScriptExpression=null;
 
     /**
      * This method sets the name of the active collection that
@@ -190,6 +194,24 @@ public class ActiveCollectionSource {
     }
 
     /**
+     * This method sets the maintenance script.
+     * 
+     * @param script The maintenance script
+     */
+    public void setMaintenanceScript(String script) {
+        _maintenanceScript = script;
+    }
+    
+    /**
+     * This method gets the maintenance script.
+     * 
+     * @return The maintenance script
+     */
+    public String getMaintenanceScript() {
+        return (_maintenanceScript);
+    }
+    
+    /**
      * This method pre-initializes the active collection source
      * in situations where it needs to be initialized before
      * registration with the manager. This may be required
@@ -200,6 +222,26 @@ public class ActiveCollectionSource {
      */
     protected void preInit() throws Exception {
         
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Pre-Initializing Active Collection Source (script="+_maintenanceScript
+                    +" compiled="+_maintenanceScriptExpression+")");
+        }
+
+        // Only initialize if the script is specified, but not yet compiled
+        if (_maintenanceScript != null && _maintenanceScriptExpression == null) {
+            java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_maintenanceScript);
+            
+            if (is == null) {
+                LOG.severe("Unable to locate '"+_maintenanceScript+"'");
+            } else {
+                byte[] b=new byte[is.available()];
+                is.read(b);
+                is.close();
+
+                // Compile expression
+                _maintenanceScriptExpression = MVEL.compileExpression(new String(b));
+            }
+        }
     }
     
     /**
@@ -248,6 +290,32 @@ public class ActiveCollectionSource {
                 
                 l.close();
             }
+        }
+    }
+    
+    /**
+     * This method is invoked to handle the supplied item.
+     * If a script has been defined, then it will be used
+     * to manage the item, otherwise it will be inserted
+     * into the associated collection.
+     * 
+     * @param key The key
+     * @param value The value
+     */
+    protected void handleItem(Object key, Object value) {
+        
+        if (_maintenanceScriptExpression != null) {
+            java.util.Map<String,Object> vars=
+                    new java.util.HashMap<String, Object>();
+
+            vars.put("acs", this);
+            vars.put("key", key);
+            vars.put("value", value);
+                
+            MVEL.executeExpression(_maintenanceScriptExpression, vars);
+ 
+        } else {
+            insert(key, value);
         }
     }
 

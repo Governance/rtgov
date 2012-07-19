@@ -48,7 +48,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
     private String _groupBy=null;
     private java.io.Serializable _groupByExpression=null;
     private String _aggregationScript=null;
-    private java.io.Serializable _aggregationScriptExpression=null;
+    private java.io.Serializable _aggregationScriptCompiled=null;
     
     private java.util.Map<Object, java.util.List<Object>> _groupedEvents=
                 new java.util.HashMap<Object, java.util.List<Object>>();
@@ -248,11 +248,11 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
             
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Pre-Initializing EPN Active Collection Source (script="+_aggregationScript
-                        +" compiled="+_aggregationScriptExpression+")");
+                        +" compiled="+_aggregationScriptCompiled+")");
             }
     
             // Only initialize if the script is specified, but not yet compiled
-            if (_aggregationScript != null && _aggregationScriptExpression == null) {
+            if (_aggregationScript != null && _aggregationScriptCompiled == null) {
                 java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
                 
                 if (is == null) {
@@ -263,7 +263,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
                     is.close();
     
                     // Compile expression
-                    _aggregationScriptExpression = MVEL.compileExpression(new String(b));
+                    _aggregationScriptCompiled = MVEL.compileExpression(new String(b));
                 }
             }
             
@@ -363,7 +363,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         // Default behaviour is to simply add all events to the
         // active collection
         for (Object event : events) {
-            insert(null, event);
+            handleItem(null, event);
         }
     }
     
@@ -435,7 +435,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         
         if (source != null) {
             
-            if (_aggregationScriptExpression != null) {
+            if (_aggregationScriptCompiled != null) {
                 java.util.Map<String,java.util.List<Object>> vars=
                         new java.util.HashMap<String, java.util.List<Object>>();
 
@@ -448,7 +448,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
                     vars.clear();
                     vars.put("events", list);
                     
-                    Object result= MVEL.executeExpression(_aggregationScriptExpression, vars);
+                    Object result= MVEL.executeExpression(_aggregationScriptCompiled, vars);
                     
                     if (result == null) {
                         LOG.severe("Aggregation script failed to return a result (network="
@@ -462,7 +462,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
                             LOG.finest("publishAggregateEvents result="+result);
                         }
                         
-                        insert(null, result);
+                        handleItem(null, result);
                     }
                 }
             } else {
