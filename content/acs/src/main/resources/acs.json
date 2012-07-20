@@ -11,5 +11,15 @@
     "aggregationDuration" : 1000,
     "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
     "aggregationScript" : "AggregateServiceResponseTime.mvel"
+  },{
+    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "ServiceDefinitions",
+    "type" : "Map",
+    "itemExpiration" : 0,
+    "maxItems" : 100,
+    "network" : "Overlord-BAM-EPN",
+    "node" : "ServiceDefinitions",
+    "notifyType" : "Results",
+    "maintenanceScript" : "MaintainServiceDefinitions.mvel"
   }
 ]

@@ -56,30 +56,35 @@ public class InvocationMetric implements java.io.Externalizable {
         
         if (metrics.size() > 0) {
             for (InvocationMetric m : metrics) {
-                _count += m.getCount();
-                _countChange += (m.getCountChange() * m.getCount());
                 
-                _avg += (m.getAverage() * m.getCount());
-                _avgChange += (m.getAverageChange() * m.getCount());
-                
-                if (m.getMax() > _max) {
-                    _max = m.getMax();
+                if (m.getCount() > 0) {
+                    _count += m.getCount();
+                    _countChange += (m.getCountChange() * m.getCount());
+                    
+                    _avg += (m.getAverage() * m.getCount());
+                    _avgChange += (m.getAverageChange() * m.getCount());
+                    
+                    if (m.getMax() > _max) {
+                        _max = m.getMax();
+                    }
+                    _maxChange += (m.getMaxChange() * m.getCount());
+                    
+                    if (_min == 0 || m.getMin() < _min) {
+                        _min = m.getMin();
+                    }
+                    _minChange += (m.getMinChange() * m.getCount());
                 }
-                _maxChange += (m.getMaxChange() * m.getCount());
-                
-                if (_min == 0 || m.getMin() < _min) {
-                    _min = m.getMin();
-                }
-                _minChange += (m.getMinChange() * m.getCount());
             }
             
-            _countChange /= _count;
-
-            _avg /= _count;
-            _avgChange /= _count;
-            
-            _minChange /= _count;
-            _maxChange /= _count;
+            if (_count != 0) {
+                _countChange /= _count;
+    
+                _avg /= _count;
+                _avgChange /= _count;
+                
+                _minChange /= _count;
+                _maxChange /= _count;
+            }
         }
     }
     

@@ -22,6 +22,18 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.bam.content</groupId>
+			<artifactId>overlord-bam-epn</artifactId>
+			<version>${bam.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.content</groupId>
+			<artifactId>overlord-bam-acs</artifactId>
+			<version>${bam.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${bam.version}</version>

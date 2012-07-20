@@ -18,8 +18,11 @@
 package org.overlord.bam.content.epn;
 
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.util.ActivityUtil;
 import org.overlord.bam.analytics.service.ServiceDefinition;
 import org.overlord.bam.analytics.service.util.ServiceDefinitionUtil;
 
@@ -31,6 +34,8 @@ import org.overlord.bam.analytics.service.util.ServiceDefinitionUtil;
  */
 public class ServiceDefinitionProcessor extends org.overlord.bam.epn.EventProcessor {
 
+    private static final Logger LOG=Logger.getLogger(ServiceDefinitionProcessor.class.getName());
+    
     /**
      * {@inheritDoc}
      */
@@ -50,6 +55,23 @@ public class ServiceDefinitionProcessor extends org.overlord.bam.epn.EventProces
                     ret = new java.util.LinkedList<ServiceDefinition>();
                 }
                 ((java.util.LinkedList<ServiceDefinition>)ret).add(iter.next());
+            }
+
+            if (LOG.isLoggable(Level.FINEST)) {
+                java.util.LinkedList<ServiceDefinition> list=
+                        (java.util.LinkedList<ServiceDefinition>)ret;
+                
+                byte[] aub=ActivityUtil.serializeActivityUnit((ActivityUnit)event);
+                
+                LOG.finest("Transforming activity unit: "+new String(aub));
+
+                LOG.finest("Service definition list size="+list.size());
+                
+                for (int i=0; i < list.size(); i++) {
+                    byte[] sdb=ServiceDefinitionUtil.serializeServiceDefinition(list.get(i));
+
+                    LOG.finest("Service definition("+i+"): "+new String(sdb));
+                }
             }
             
             if (((java.util.LinkedList<Serializable>)ret).size() == 0) {

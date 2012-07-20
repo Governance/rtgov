@@ -102,6 +102,17 @@ public class ActiveMap extends ActiveCollection implements java.lang.Iterable<Ob
     }
     
     /**
+     * This method returns the value associated with the supplied
+     * key.
+     * 
+     * @param key The key
+     * @return The value, or null if none associated with the key
+     */
+    public Object get(Object key) {
+        return (_map.get(key));
+    }
+    
+    /**
      * {@inheritDoc}
      */
     @Override

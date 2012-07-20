@@ -188,6 +188,7 @@ public class OperationDefinition implements java.io.Externalizable {
         out.writeInt(VERSION);
         
         out.writeObject(_operation);
+        out.writeObject(_requestResponse);
         
         out.writeInt(_requestFaults.size());
         for (int i=0; i < _requestFaults.size(); i++) {
@@ -203,6 +204,7 @@ public class OperationDefinition implements java.io.Externalizable {
         in.readInt(); // Consume version, as not required for now
         
         _operation = (String)in.readObject();
+        _requestResponse = (RequestResponseDefinition)in.readObject();
         
         int len=in.readInt();
         for (int i=0; i < len; i++) {
