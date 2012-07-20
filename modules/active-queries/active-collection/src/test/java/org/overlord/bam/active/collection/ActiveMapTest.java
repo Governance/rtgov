@@ -21,7 +21,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveChangeListener;
-import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.active.collection.predicate.Predicate;
 
 public class ActiveMapTest {

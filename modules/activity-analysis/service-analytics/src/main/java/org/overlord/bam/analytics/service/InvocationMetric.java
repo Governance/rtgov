@@ -158,7 +158,7 @@ public class InvocationMetric implements java.io.Externalizable {
     /**
      * This method sets the count change (if applicable).
      * 
-     * @param count The count change percentage
+     * @param change The count change percentage
      */
     public void setCountChange(int change) {
         _countChange = change;
@@ -176,7 +176,7 @@ public class InvocationMetric implements java.io.Externalizable {
     /**
      * This method sets the average duration change (if applicable).
      * 
-     * @param time The average duration change percentage
+     * @param change The average duration change percentage
      */
     public void setAverageChange(int change) {
         _avgChange = change;
@@ -194,7 +194,7 @@ public class InvocationMetric implements java.io.Externalizable {
     /**
      * This method sets the maximum duration change (if applicable).
      * 
-     * @param time The maximum duration change percentage
+     * @param change The maximum duration change percentage
      */
     public void setMaxChange(int change) {
         _maxChange = change;
@@ -212,7 +212,7 @@ public class InvocationMetric implements java.io.Externalizable {
     /**
      * This method sets the minimum duration change (if applicable).
      * 
-     * @param time The minimum duration change percentage
+     * @param change The minimum duration change percentage
      */
     public void setMinChange(int change) {
         _minChange = change;
@@ -241,25 +241,30 @@ public class InvocationMetric implements java.io.Externalizable {
             
             setCount(myCount + mergeCount);
             
-            setCountChange(((getCountChange()*myCount)+(metric.getCountChange()*mergeCount))/
-                    getCount());
+            setCountChange(((getCountChange() * myCount)
+                    + (metric.getCountChange() * mergeCount))
+                    / getCount());
             
-            setAverage(((getAverage()*myCount)+(metric.getAverage()*mergeCount))/
-                    getCount());
-            setAverageChange(((getAverageChange()*myCount)+(metric.getAverageChange()*mergeCount))/
-                    getCount());
+            setAverage(((getAverage() * myCount)
+                        + (metric.getAverage() * mergeCount))
+                        / getCount());
+            setAverageChange(((getAverageChange() * myCount)
+                    + (metric.getAverageChange() * mergeCount))
+                    / getCount());
             
             if (getMin() == 0 || metric.getMin() < getMin()) {
                 setMin(metric.getMin());
             }
-            setMinChange(((getMinChange()*myCount)+(metric.getMinChange()*mergeCount))/
-                    getCount());
+            setMinChange(((getMinChange() * myCount)
+                    + (metric.getMinChange() * mergeCount))
+                    / getCount());
             
             if (metric.getMax() > getMax()) {
                 setMax(metric.getMax());
             }
-            setMaxChange(((getMaxChange()*myCount)+(metric.getMaxChange()*mergeCount))/
-                    getCount());
+            setMaxChange(((getMaxChange() * myCount)
+                    + (metric.getMaxChange() * mergeCount))
+                    / getCount());
         }
     }
     

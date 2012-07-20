@@ -68,8 +68,8 @@ public abstract class MEPDefinition implements java.io.Externalizable {
         for (int i=0; i < _invocations.size(); i++) {
             InvocationDefinition id=(InvocationDefinition)_invocations.get(i);
             
-            if (id.getServiceType().equals(serviceType) &&
-                    id.getOperation().equals(operation)) {
+            if (id.getServiceType().equals(serviceType)
+                    && id.getOperation().equals(operation)) {
                 
                 if (id.getFault() == null) {
                     if (fault == null) {

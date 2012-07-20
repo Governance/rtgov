@@ -31,9 +31,24 @@ public class SLAViolation implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
+    /**
+     * Critical severity.
+     */
     public static final String SEVERITY_CRITICAL="Critical";
+
+    /**
+     * High severity.
+     */
     public static final String SEVERITY_HIGH="High";
+    
+    /**
+     * Medium severity.
+     */
     public static final String SEVERITY_MEDIUM="Medium";
+    
+    /**
+     * Low severity.
+     */
     public static final String SEVERITY_LOW="Low";
 
     private String _serviceType=null;
@@ -116,22 +131,25 @@ public class SLAViolation implements java.io.Externalizable {
         return (_timestamp);
     }
     
-    
     /**
-	 * @return the severity
-	 */
-	public String getSeverity() {
-		return _severity;
-	}
+     * This method returns the severity value.
+     * 
+     * @return The severity
+     */
+    public String getSeverity() {
+        return _severity;
+    }
 
-	/**
-	 * @param severity the severity to set
-	 */
-	public void setSeverity(String severity) {
-		_severity = severity;
-	}
+    /**
+     * This method sets the severity value.
+     * 
+     * @param severity The severity value
+     */
+    public void setSeverity(String severity) {
+        _severity = severity;
+    }
 
-	/**
+    /**
      * This method returns the list of activity type references
      * associated with the violation.
      * 

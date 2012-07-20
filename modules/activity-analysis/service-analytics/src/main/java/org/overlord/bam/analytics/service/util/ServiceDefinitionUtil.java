@@ -41,7 +41,7 @@ import org.overlord.bam.analytics.service.ServiceDefinition;
  * definition.
  *
  */
-public class ServiceDefinitionUtil {
+public final class ServiceDefinitionUtil {
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
@@ -55,6 +55,12 @@ public class ServiceDefinitionUtil {
         
         MAPPER.setSerializationConfig(config);
         MAPPER.setDeserializationConfig(config2);
+    }
+    
+    /**
+     * The default constructor.
+     */
+    private ServiceDefinitionUtil() {
     }
 
     /**
@@ -136,8 +142,8 @@ public class ServiceDefinitionUtil {
                 for (int j=i+1; j < to; j++) {
                     ActivityType at2=actUnit.getActivityTypes().get(j);
                     
-                    if (at2 instanceof ResponseSent &&
-                            ((ResponseSent)at2).getReplyToId().equals(
+                    if (at2 instanceof ResponseSent
+                            && ((ResponseSent)at2).getReplyToId().equals(
                                     rqr.getMessageId())) {
                         ResponseSent rps=(ResponseSent)at2;
                         
@@ -186,8 +192,8 @@ public class ServiceDefinitionUtil {
                 for (int j=i+1; j < to; j++) {
                     ActivityType at2=actUnit.getActivityTypes().get(j);
                     
-                    if (at2 instanceof ResponseReceived &&
-                            ((ResponseReceived)at2).getReplyToId().equals(
+                    if (at2 instanceof ResponseReceived
+                            && ((ResponseReceived)at2).getReplyToId().equals(
                                     rqs.getMessageId())) {
                         ResponseReceived rpr=(ResponseReceived)at2;
                         
@@ -273,7 +279,7 @@ public class ServiceDefinitionUtil {
         
         long duration=rps.getTimestamp()-rqr.getTimestamp();
         
-        metrics.setAverage(((metrics.getAverage()*metrics.getCount())+duration)
+        metrics.setAverage(((metrics.getAverage() * metrics.getCount())+duration)
                             / (metrics.getCount()+1));
         
         if (metrics.getMin() == 0 || duration < metrics.getMin()) {
@@ -317,7 +323,7 @@ public class ServiceDefinitionUtil {
 
         long duration=rpr.getTimestamp()-rqs.getTimestamp();
         
-        metrics.setAverage(((metrics.getAverage()*metrics.getCount())+duration)
+        metrics.setAverage(((metrics.getAverage() * metrics.getCount())+duration)
                             / (metrics.getCount()+1));
         
         if (metrics.getMin() == 0 || duration < metrics.getMin()) {
