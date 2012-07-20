@@ -103,6 +103,21 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
                 
                 ac = list;
                 
+            } else if (acs.getType() == ActiveCollectionType.Map) {
+                ActiveMap map=new ActiveMap(acs.getName(),
+                        acs.getItemExpiration(), acs.getMaxItems(), acs.getHighWaterMark());
+                
+                _activeCollections.put(acs.getName(), map);
+                
+                acs.setActiveCollection(map);
+                
+                // Initialize the active collection source
+                acs.init();
+                
+                LOG.info("Registered active collection for source '"+acs.getName()+"'");
+                
+                ac = map;
+                    
             } else {
                 throw new IllegalArgumentException("Active collection type not currently supported");
             }
