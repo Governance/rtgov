@@ -125,6 +125,11 @@ public abstract class MEPDefinition implements java.io.Externalizable {
         out.writeInt(VERSION);
         
         out.writeObject(_metrics);
+        
+        out.writeInt(_invocations.size());
+        for (int i=0; i < _invocations.size(); i++) {
+            out.writeObject(_invocations.get(i));
+        }
     }
 
     /**
@@ -135,5 +140,10 @@ public abstract class MEPDefinition implements java.io.Externalizable {
         in.readInt(); // Consume version, as not required for now
         
         _metrics = (InvocationMetric)in.readObject();
+        
+        int len=in.readInt();
+        for (int i=0; i < len; i++) {
+            _invocations.add((InvocationDefinition)in.readObject());
+        }
     }
 }

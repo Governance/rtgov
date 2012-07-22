@@ -186,9 +186,9 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         /**
          * {@inheritDoc}
          */
-        public Channel getChannel(Network network, String source)
+        public Channel getNotificationChannel(Network network, String subject)
                 throws Exception {
-            return (new EmbeddedChannel(network, source));
+            return (new EmbeddedChannel(network, subject));
         }
 
         /**
@@ -224,6 +224,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         private Node _node=null;
         private String _source=null;
         private String _subject=null;
+        private boolean _notification=false;
         
         /**
          * The constructor.
@@ -242,11 +243,12 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * The constructor for the notification channel.
          * 
          * @param network The network
-         * @param sourceNode The source node name
+         * @param subject The subject
          */
-        public EmbeddedChannel(Network network, String sourceNode) {
+        public EmbeddedChannel(Network network, String subject) {
             _network = network;
-            _source = sourceNode;
+            _subject = subject;
+            _notification = true;
         }
         
         /**
@@ -265,7 +267,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * @return Whether this is a notification channel
          */
         public boolean isNotificationChannel() {
-            return (_subject == null && _node == null);
+            return (_notification);
         }
         
         /**
@@ -300,7 +302,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          */
         public void send(EventList events) throws Exception {
             if (isNotificationChannel()) {
-                notifyListeners(_network.getName(), _network.getVersion(),
+                notifyListeners(_subject, _network.getName(), _network.getVersion(),
                                 _source, NotificationType.Results, events);
             } else {
                 send(events, _node.getMaxRetries());

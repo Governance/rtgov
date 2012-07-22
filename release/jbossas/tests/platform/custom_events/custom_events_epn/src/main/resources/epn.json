@@ -15,7 +15,7 @@
         "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.SOAActivityTypeEventDetector"
       },
       "predicate" : null,
-      "notifyTypes" : [ ]
+      "notifications" : [ ]
     },{
       "name" : "CustomEvents",
       "sourceNodes" : [ "SOAEvents" ],
@@ -26,7 +26,13 @@
         "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.CustomActivityEventProcessor"
       },
       "predicate" : null,
-      "notifyTypes" : [ "Processed", "Results" ]
+      "notifications" : [ {
+      	"type" : "Processed",
+      	"subject" : "CustomEvents"
+      },{
+      	"type" : "Results",
+      	"subject" : "CustomEvents"
+      } ]
     }
   ],
   "version" : "1"

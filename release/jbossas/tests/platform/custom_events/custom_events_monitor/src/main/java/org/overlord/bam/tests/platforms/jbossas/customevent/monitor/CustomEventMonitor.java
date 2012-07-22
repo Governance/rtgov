@@ -30,7 +30,7 @@ import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.NodeListener;
+import org.overlord.bam.epn.NotificationListener;
 import org.overlord.bam.epn.NotificationType;
 import org.overlord.bam.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
 
@@ -41,11 +41,11 @@ import org.overlord.bam.tests.platforms.jbossas.customevent.data.CustomActivityE
  */
 @Path("/monitor")
 @ApplicationScoped
-public class CustomEventMonitor implements NodeListener {
+public class CustomEventMonitor implements NotificationListener {
 
     private static final String ACS_NAME = "CustomEvents";
 
-    private static final String CUSTOM_EVENTS_EPN = "CustomEventsEPN";
+    private static final String CUSTOM_EVENTS_SUBJECT = "CustomEvents";
 
     private static final Logger LOG=Logger.getLogger(CustomEventMonitor.class.getName());
     
@@ -68,7 +68,7 @@ public class CustomEventMonitor implements NodeListener {
             
             _epnManager = (EPNManager)ctx.lookup(EPNManager.URI);
 
-            _epnManager.addNodeListener(CUSTOM_EVENTS_EPN, this);
+            _epnManager.addNotificationListener(CUSTOM_EVENTS_SUBJECT, this);
             
             _activeCollectionManager = (ActiveCollectionManager)ctx.lookup(ACS_MANAGER);
             
@@ -124,7 +124,7 @@ public class CustomEventMonitor implements NodeListener {
     /**
      * {@inheritDoc}
      */
-    public void notify(String network, String version, String node,
+    public void notify(String subject, String network, String version, String node,
             NotificationType type, EventList events) {
         System.out.println(">>> CUSTOM EVENT MONITOR: ("+type+")");
         

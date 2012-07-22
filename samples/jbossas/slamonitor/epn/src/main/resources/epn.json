@@ -15,7 +15,7 @@
         "@class" : "org.overlord.bam.samples.jbossas.slamonitor.epn.SOAActivityTypeEventSplitter"
       },
       "predicate" : null,
-      "notifyTypes" : [ ]
+      "notifications" : [ ]
     },{
       "name" : "ResponseTimes",
       "sourceNodes" : [ "SOAEvents" ],
@@ -27,7 +27,10 @@
         "ruleName" : "ResponseTime"
       },
       "predicate" : null,
-      "notifyTypes" : [ "Processed", "Results" ]
+      "notifications" : [ {
+      	 "type" : "Results",
+      	 "subject" : "ResponseTimes"
+      } ]
     },{
       "name" : "SLAViolations",
       "sourceNodes" : [ "ResponseTimes" ],
@@ -39,7 +42,13 @@
         "ruleName" : "SLAViolation"
       },
       "predicate" : null,
-      "notifyTypes" : [ "Processed", "Results" ]
+      "notifications" : [ {
+      	 "type" : "Processed",
+      	 "subject" : "SLAViolationsProcessed"
+      },{
+      	 "type" : "Results",
+      	 "subject" : "SLAViolations"
+      } ]
     }
   ],
   "version" : "1"

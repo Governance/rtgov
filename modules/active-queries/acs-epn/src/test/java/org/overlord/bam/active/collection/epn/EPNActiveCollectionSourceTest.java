@@ -30,7 +30,7 @@ import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.NetworkListener;
-import org.overlord.bam.epn.NodeListener;
+import org.overlord.bam.epn.NotificationListener;
 import org.overlord.bam.epn.NotificationType;
 
 public class EPNActiveCollectionSourceTest {
@@ -42,6 +42,9 @@ public class EPNActiveCollectionSourceTest {
     private static final String TEST_NODE2 = "TestNode2";
     private static final String TEST_NETWORK = "TestNetwork";
     private static final String TEST_ACTIVE_LIST = "TestActiveList";
+    private static final String TEST_SUBJECT1 = "TestSubject1";
+    private static final String TEST_SUBJECT2 = "TestSubject2";
+    private static final String TEST_SUBJECT3 = "TestSubject3";
 
     @Test
     public void testNodeAndTypeFiltering() {
@@ -77,7 +80,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events=new EventList(eventList);
         
-        mgr.publish(TEST_NODE1, NotificationType.Results, events);
+        mgr.publish(TEST_SUBJECT1, TEST_NODE1, NotificationType.Results, events);
         
         java.util.List<Serializable> eventList2=new java.util.ArrayList<Serializable>();
         eventList2.add(new TestObject("TObj21", 21));
@@ -86,7 +89,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events2=new EventList(eventList2);
         
-        mgr.publish(TEST_NODE2, NotificationType.Results, events2);
+        mgr.publish(TEST_SUBJECT2, TEST_NODE2, NotificationType.Results, events2);
         
         java.util.List<Serializable> eventList3=new java.util.ArrayList<Serializable>();
         eventList3.add(new TestObject("TObj31", 31));
@@ -97,7 +100,7 @@ public class EPNActiveCollectionSourceTest {
 
         EventList events3=new EventList(eventList3);
         
-        mgr.publish(TEST_NODE1, NotificationType.Results, events3);
+        mgr.publish(TEST_SUBJECT1, TEST_NODE1, NotificationType.Results, events3);
         
         java.util.List<Serializable> eventList4=new java.util.ArrayList<Serializable>();
         eventList4.add(new TestObject("TObj41", 41));
@@ -106,7 +109,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events4=new EventList(eventList4);
         
-        mgr.publish(TEST_NODE1, NotificationType.Processed, events4);
+        mgr.publish(TEST_SUBJECT3, TEST_NODE1, NotificationType.Processed, events4);
         
         // Review results
         ActiveList al=(ActiveList)acs.getActiveCollection();
@@ -127,7 +130,7 @@ public class EPNActiveCollectionSourceTest {
 
     public class TestEPNManager implements EPNManager {
         
-        private java.util.List<NodeListener> _nodeListeners=new java.util.ArrayList<NodeListener>();
+        private java.util.List<NotificationListener> _nodeListeners=new java.util.ArrayList<NotificationListener>();
         private java.util.List<NetworkListener> _networkListeners=new java.util.ArrayList<NetworkListener>();
 
         public void register(Network network) throws Exception {
@@ -137,11 +140,11 @@ public class EPNActiveCollectionSourceTest {
                 throws Exception {
         }
 
-        public void addNodeListener(String network, NodeListener l) {
+        public void addNotificationListener(String network, NotificationListener l) {
             _nodeListeners.add(l);
         }
 
-        public void removeNodeListener(String network, NodeListener l) {
+        public void removeNotificationListener(String network, NotificationListener l) {
             _nodeListeners.remove(l);
         }
         
@@ -153,9 +156,9 @@ public class EPNActiveCollectionSourceTest {
             _networkListeners.remove(l);
         }
         
-        public void publish(String node, NotificationType type, EventList events) {
-            for (NodeListener l : _nodeListeners) {
-                l.notify(TEST_NETWORK, null, node, type, events);
+        public void publish(String subject, String node, NotificationType type, EventList events) {
+            for (NotificationListener l : _nodeListeners) {
+                l.notify(subject, TEST_NETWORK, null, node, type, events);
             }
         }
 

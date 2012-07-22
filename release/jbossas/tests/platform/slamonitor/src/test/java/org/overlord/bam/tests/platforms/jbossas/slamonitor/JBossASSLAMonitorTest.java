@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.NodeListener;
+import org.overlord.bam.epn.NotificationListener;
 import org.overlord.bam.epn.NotificationType;
 
 import static org.junit.Assert.*;
@@ -46,9 +46,8 @@ public class JBossASSLAMonitorTest {
 
     private static final String ORDER_SERVICE_URL = "http://127.0.0.1:8080/demo-orders/OrderService";
     
-    private static final String SLA_MONITOR_EPN = "SLAMonitorEPN";
     private static final String SLA_VIOLATIONS = "SLAViolations";
-    private static final String RESPONSE_TIMES = "ResponseTimes";
+    private static final String SLA_VIOLATIONS_PROCESSED = "SLAViolationsProcessed";
     
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
@@ -95,7 +94,7 @@ public class JBossASSLAMonitorTest {
         
         TestListener tl=new TestListener();
         
-        _epnManager.addNodeListener(SLA_MONITOR_EPN, tl);
+        _epnManager.addNotificationListener(SLA_VIOLATIONS_PROCESSED, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -138,24 +137,16 @@ public class JBossASSLAMonitorTest {
             // Wait for events to propagate
             Thread.sleep(2000);
             
-            // Check that all events have been processed
-            if (tl.getProcessed(RESPONSE_TIMES).size() != 8) {
-                fail("Expecting 8 (response time) processed events, but got: "+tl.getProcessed(RESPONSE_TIMES).size());
+            if (tl.getProcessed(SLA_VIOLATIONS_PROCESSED) == null) {
+                fail("Expecting sla violations processed");
             }
-           
-            if (tl.getResults(RESPONSE_TIMES).size() != 2) {
-                fail("Expecting 2 (response time) results events, but got: "+tl.getResults(RESPONSE_TIMES).size());
-            }
-
-            if (tl.getProcessed(SLA_VIOLATIONS).size() != 2) {
+            
+            if (tl.getProcessed(SLA_VIOLATIONS_PROCESSED).size() != 2) {
                 fail("Expecting 2 (sla violations) processed events, but got: "+tl.getProcessed(SLA_VIOLATIONS).size());
-            }
-           
-            if (tl.getResults(SLA_VIOLATIONS) != null) {
-                fail("Expecting 0 (sla violations) results events, but got: "+tl.getResults(SLA_VIOLATIONS).size());
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             fail("Failed to invoke service via SOAP: "+e);
         }
     }
@@ -166,7 +157,7 @@ public class JBossASSLAMonitorTest {
         
         TestListener tl=new TestListener();
         
-        _epnManager.addNodeListener(SLA_MONITOR_EPN, tl);
+        _epnManager.addNotificationListener(SLA_VIOLATIONS, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -210,30 +201,6 @@ public class JBossASSLAMonitorTest {
             Thread.sleep(2000);
             
             // Check that all events have been processed
-            if (tl.getProcessed(RESPONSE_TIMES) == null) {
-                fail("Expecting response times processed events");
-            }
-            
-            if (tl.getProcessed(RESPONSE_TIMES).size() != 8) {
-                fail("Expecting 8 (response time) processed events, but got: "+tl.getProcessed(RESPONSE_TIMES).size());
-            }
-           
-            if (tl.getResults(RESPONSE_TIMES) == null) {
-                fail("Expecting response times results");
-            }
-            
-            if (tl.getResults(RESPONSE_TIMES).size() != 2) {
-                fail("Expecting 2 (response time) results events, but got: "+tl.getResults(RESPONSE_TIMES).size());
-            }
-
-            if (tl.getProcessed(SLA_VIOLATIONS) == null) {
-                fail("Expecting sla violations processed events");
-            }
-            
-            if (tl.getProcessed(SLA_VIOLATIONS).size() != 2) {
-                fail("Expecting 2 (sla violations) processed events, but got: "+tl.getProcessed(SLA_VIOLATIONS).size());
-            }
-           
             if (tl.getResults(SLA_VIOLATIONS) == null) {
                 fail("Expecting sla violations results");
             }
@@ -248,7 +215,7 @@ public class JBossASSLAMonitorTest {
         }
     }
     
-    public class TestListener implements NodeListener {
+    public class TestListener implements NotificationListener {
         
         private java.util.Map<String, java.util.List<Serializable>> _processed=
                     new java.util.HashMap<String, java.util.List<Serializable>>();
@@ -258,22 +225,22 @@ public class JBossASSLAMonitorTest {
         /**
          * {@inheritDoc}
          */
-        public void notify(String network, String version, String node,
+        public void notify(String subject, String network, String version, String node,
                 NotificationType type, EventList events) {
             if (type == NotificationType.Processed) {
-                java.util.List<Serializable> list=_processed.get(node);
+                java.util.List<Serializable> list=_processed.get(subject);
                 if (list == null) {
                     list = new java.util.ArrayList<Serializable>();
-                    _processed.put(node, list);
+                    _processed.put(subject, list);
                 }
                 for (Serializable event : events) {
                     list.add(event);
                 }
             } else if (type == NotificationType.Results) {
-                java.util.List<Serializable> list=_results.get(node);
+                java.util.List<Serializable> list=_results.get(subject);
                 if (list == null) {
                     list = new java.util.ArrayList<Serializable>();
-                    _results.put(node, list);
+                    _results.put(subject, list);
                 }
                 for (Serializable event : events) {
                     list.add(event);

@@ -19,23 +19,24 @@ package org.overlord.bam.epn;
 
 /**
  * This class represents an abstract listener interested in information
- * about an Event Processor Network Node.
+ * about an Event Processor Network notification subject.
  *
  */
-public abstract class ContextualNodeListener implements NodeListener {
+public abstract class ContextualNotificationListener implements NotificationListener {
 
     /**
      * This method notifies the listener when a situation occurs
      * on the identified network/version/node concerning a list
      * of events.
      * 
+     * @param subject The subject
      * @param network The network name
      * @param version The version of the network that processed the events
      * @param node The node name
      * @param type The type of notification
      * @param events The events that have been processed
      */
-    public final void notify(String network, String version,
+    public final void notify(String subject, String network, String version,
                     String node, NotificationType type, EventList events) {
         // Reset to make sure context class loader related classes are used
         events.reset();
@@ -45,7 +46,7 @@ public abstract class ContextualNodeListener implements NodeListener {
         events.resolve(getContextClassLoader());
         
         // Get the client to handle the events
-        handleEvents(network, version, node, type, events);
+        handleEvents(subject, network, version, node, type, events);
     }
     
     /**
@@ -58,16 +59,17 @@ public abstract class ContextualNodeListener implements NodeListener {
    
     /**
      * This method notifies the listener when a situation occurs
-     * on the identified network/version/node concerning a list
-     * of events.
+     * on the subject for the identified network/version/node
+     * concerning a list of events.
      * 
+     * @param subject The subject
      * @param network The network name
      * @param version The version of the network that processed the events
      * @param node The node name
      * @param type The type of notification
      * @param events The events that have been processed
      */
-    public abstract void handleEvents(String network, String version,
+    public abstract void handleEvents(String subject, String network, String version,
                     String node, NotificationType type, EventList events);
     
 }

@@ -37,7 +37,7 @@ public class Node {
     private Predicate _predicate=null;
     private java.util.List<String> _sourceNodes=new java.util.ArrayList<String>();
     private java.util.List<String> _destinationSubjects=new java.util.ArrayList<String>();
-    private java.util.List<String> _notifyTypes=new java.util.ArrayList<String>();
+    private java.util.List<Notification> _notifications=new java.util.ArrayList<Notification>();
     
     private java.util.List<Channel> _channels=new java.util.Vector<Channel>();
     
@@ -183,23 +183,21 @@ public class Node {
     }
     
     /**
-     * This method returns the list of notification
-     * types that are enabled.
+     * This method returns the list of notifications.
      * 
-     * @return The list of notification types enabled
+     * @return The list of notifications
      */
-    public java.util.List<String> getNotifyTypes() {
-        return (_notifyTypes);
+    public java.util.List<Notification> getNotifications() {
+        return (_notifications);
     }
     
     /**
-     * This method sets the list of notification
-     * types that are enabled.
+     * This method sets the list of notifications.
      * 
-     * @param types The list of notification types enabled
+     * @param notifications The list of notifications
      */
-    public void setNotificationEnabled(java.util.List<String> types) {
-        _notifyTypes = types;
+    public void setNotificationEnabled(java.util.List<Notification> notifications) {
+        _notifications = notifications;
     }
     
     /**

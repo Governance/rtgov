@@ -5,9 +5,7 @@
     "type" : "List",
     "itemExpiration" : 0,
     "maxItems" : 100,
-    "network" : "Overlord-BAM-EPN",
-    "node" : "ServiceResponseTimes",
-    "notifyType" : "Results",
+    "subject" : "ServiceResponseTimes",
     "aggregationDuration" : 1000,
     "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
     "aggregationScript" : "AggregateServiceResponseTime.mvel"
@@ -17,9 +15,7 @@
     "type" : "Map",
     "itemExpiration" : 0,
     "maxItems" : 100,
-    "network" : "Overlord-BAM-EPN",
-    "node" : "ServiceDefinitions",
-    "notifyType" : "Results",
+    "subject" : "ServiceDefinitions",
     "maintenanceScript" : "MaintainServiceDefinitions.mvel"
   }
 ]

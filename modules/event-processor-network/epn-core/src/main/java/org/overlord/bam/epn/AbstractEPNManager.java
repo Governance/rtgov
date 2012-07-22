@@ -34,8 +34,8 @@ public abstract class AbstractEPNManager implements EPNManager {
     private java.util.Map<String, NetworkList> _networkMap=new java.util.HashMap<String, NetworkList>();
     private java.util.Map<String, java.util.List<Network>> _subjectMap=
                         new java.util.HashMap<String, java.util.List<Network>>();
-    private java.util.Map<String, java.util.List<NodeListener>> _nodeListeners=
-                        new java.util.HashMap<String, java.util.List<NodeListener>>();
+    private java.util.Map<String, java.util.List<NotificationListener>> _notificationListeners=
+                        new java.util.HashMap<String, java.util.List<NotificationListener>>();
     private java.util.List<NetworkListener> _networkListeners=
                         new java.util.ArrayList<NetworkListener>();
     private boolean _usePrePostEventListProcessing=false;
@@ -184,17 +184,17 @@ public abstract class AbstractEPNManager implements EPNManager {
     /**
      * {@inheritDoc}
      */
-    public void addNodeListener(String network, NodeListener l) {
+    public void addNotificationListener(String subject, NotificationListener l) {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Register node listener="+l+" on network="+network);
+            LOG.fine("Register notification listener="+l+" on subject="+subject);
         }
         
-        synchronized (_nodeListeners) {
-            java.util.List<NodeListener> listeners=_nodeListeners.get(network);
+        synchronized (_notificationListeners) {
+            java.util.List<NotificationListener> listeners=_notificationListeners.get(subject);
             
             if (listeners == null) {
-                listeners = new java.util.ArrayList<NodeListener>();
-                _nodeListeners.put(network, listeners);
+                listeners = new java.util.ArrayList<NotificationListener>();
+                _notificationListeners.put(subject, listeners);
             }
             
             listeners.add(l);
@@ -204,19 +204,19 @@ public abstract class AbstractEPNManager implements EPNManager {
     /**
      * {@inheritDoc}
      */
-    public void removeNodeListener(String network, NodeListener l) {
+    public void removeNotificationListener(String subject, NotificationListener l) {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Unregister node listener="+l+" on network="+network);
+            LOG.fine("Unregister notification listener="+l+" on subject="+subject);
         }
         
-        synchronized (_nodeListeners) {
-            java.util.List<NodeListener> listeners=_nodeListeners.get(network);
+        synchronized (_notificationListeners) {
+            java.util.List<NotificationListener> listeners=_notificationListeners.get(subject);
             
             if (listeners != null) {                
                 listeners.remove(l);
                 
                 if (listeners.size() == 0) {
-                    _nodeListeners.remove(network);
+                    _notificationListeners.remove(subject);
                 }
             }
         }
@@ -384,29 +384,38 @@ public abstract class AbstractEPNManager implements EPNManager {
 
         EventList ret=node.process(getContainer(), source, events, retriesLeft);
         
-        if (node.getNotifyTypes().contains(NotificationType.Processed.name())
-                && (ret == null || ret.size() < events.size())) { 
+        if (ret == null || ret.size() < events.size()) { 
             EventList notifyList=null;
             
-            if (ret != null) {
-                java.util.List<java.io.Serializable> processed = new java.util.ArrayList<java.io.Serializable>();
+            for (Notification no : node.getNotifications()) {
                 
-                for (java.io.Serializable event : events) {
-                    if (!ret.contains(event)) {
-                        processed.add(event);
+                if (no.getType() == NotificationType.Processed) {
+                    
+                    if (notifyList == null) {                        
+                        if (ret != null) {
+                            java.util.List<java.io.Serializable> processed = new java.util.ArrayList<java.io.Serializable>();
+                            
+                            for (java.io.Serializable event : events) {
+                                if (!ret.contains(event)) {
+                                    processed.add(event);
+                                }
+                            }
+                            
+                            if (processed.size() > 0) {
+                                notifyList = new EventList(processed);
+                            }
+                        } else {
+                            notifyList = events;
+                        }
+                    }
+                    
+                    if (notifyList != null) {
+                        notifyListeners(no.getSubject(), network.getName(),
+                                network.getVersion(),
+                                node.getName(), NotificationType.Processed,
+                                notifyList);
                     }
                 }
-                
-                if (processed.size() > 0) {
-                    notifyList = new EventList(processed);
-                }
-            } else {
-                notifyList = events;
-            }
-            
-            if (notifyList != null) {
-                notifyListeners(network.getName(), network.getVersion(),
-                        node.getName(), NotificationType.Processed, notifyList);
             }
         }
 
@@ -427,8 +436,10 @@ public abstract class AbstractEPNManager implements EPNManager {
 
     /**
      * This method sends a notification to any registered listeners that
-     * a situation has occurred on the named network/version/node.
+     * a situation has occurred on the named network/version/node, associated
+     * with the specified subject.
      * 
+     * @param subject The subject
      * @param networkName The network name
      * @param version The version
      * @param nodeName The node name
@@ -436,34 +447,40 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @param events The list of events
      * @throws Exception Failed to notify
      */
-    protected void notifyListeners(String networkName, String version,
-                    String nodeName, NotificationType type, EventList events) throws Exception {
-        dispatchNotificationToListeners(networkName, version, nodeName, type, events);
+    protected void notifyListeners(String subject, String networkName, String version,
+                    String nodeName, NotificationType type,
+                    EventList events) throws Exception {
+        dispatchNotificationToListeners(subject, networkName, version, nodeName, type,
+                            events);
     }
     
     /**
-     * This method dispatches the notifications to the registered node listeners.
+     * This method dispatches the notifications to the registered listeners.
      * 
+     * @param subject The subject
      * @param networkName The network name
      * @param version The version
      * @param nodeName The node name
      * @param type The type of notification
      * @param events The list of events
      */
-    protected void dispatchNotificationToListeners(String networkName, String version,
-                    String nodeName, NotificationType type, EventList events) {
+    protected void dispatchNotificationToListeners(String subject,
+                    String networkName, String version,
+                    String nodeName, NotificationType type,
+                    EventList events) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Notify processed events on network="+networkName+" node="+nodeName
-                    +" type="+type+" events="+events);
+            LOG.finest("Notify processed events on  subject="+subject
+                    +" network="+networkName+" node="+nodeName
+                    +" type="+type+"events="+events);
         }
         
-        java.util.List<NodeListener> listeners=_nodeListeners.get(networkName);
+        java.util.List<NotificationListener> listeners=_notificationListeners.get(subject);
 
         if (listeners != null) {
             for (int i=0; i < listeners.size(); i++) {
-                NodeListener nl=listeners.get(i);
+                NotificationListener nl=listeners.get(i);
                 
-                if (_usePrePostEventListProcessing && !(nl instanceof ContextualNodeListener)) {
+                if (_usePrePostEventListProcessing && !(nl instanceof ContextualNotificationListener)) {
                     try {
                         preProcessEvents(events, nl.getClass().getClassLoader());
                     } catch (Throwable t) {
@@ -474,7 +491,7 @@ public abstract class AbstractEPNManager implements EPNManager {
                     }
                 }
                 
-                nl.notify(networkName, version, nodeName, type, events);
+                nl.notify(subject, networkName, version, nodeName, type, events);
                 
                 if (_usePrePostEventListProcessing) {
                     postProcessEvents(events);

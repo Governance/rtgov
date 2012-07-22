@@ -17,7 +17,7 @@
       "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor1"
     },
     "sourceNodes" : [ ],
-    "notifyTypes" : [ ],
+    "notifications" : [ ],
     "maxRetries" : 3,
     "retryInterval" : 0,
     "destinationSubjects" : [ ]
@@ -31,7 +31,7 @@
       "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor2"
     },
     "sourceNodes" : [ "N0" ],
-    "notifyTypes" : [ ],
+    "notifications" : [ ],
     "maxRetries" : 3,
     "retryInterval" : 0,
     "destinationSubjects" : [ ]
@@ -42,7 +42,7 @@
       "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor3"
     },
     "sourceNodes" : [ "N0" ],
-    "notifyTypes" : [ ],
+    "notifications" : [ ],
     "maxRetries" : 3,
     "retryInterval" : 0,
     "destinationSubjects" : [ ]

@@ -5,9 +5,7 @@
     "type" : "List",
     "itemExpiration" : 0,
     "maxItems" : 100,
-    "network" : "SLAMonitorEPN",
-    "node" : "ResponseTimes",
-    "notifyType" : "Results",
+    "subject" : "ResponseTimes",
     "aggregationDuration" : 1000,
     "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
     "aggregationScript" : "ServiceResponseTime.mvel"
@@ -18,9 +16,7 @@
     "type" : "List",
     "itemExpiration" : 40000,
     "maxItems" : 0,
-    "network" : "SLAMonitorEPN",
-    "node" : "SLAViolations",
-    "notifyType" : "Results",
+    "subject" : "SLAViolations",
     "activeChangeListeners" : [ {
         "@class" : "org.overlord.bam.active.collection.jmx.JMXNotifier",
     	"objectName" : "overlord.sample.slamonitor:name=SLAViolations",

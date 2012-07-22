@@ -30,11 +30,12 @@ import org.overlord.bam.epn.Node;
 import org.overlord.bam.epn.testdata.TestEvent1;
 import org.overlord.bam.epn.testdata.TestEvent2;
 import org.overlord.bam.epn.testdata.TestEventProcessorA;
-import org.overlord.bam.epn.testdata.TestNodeListener;
+import org.overlord.bam.epn.testdata.TestNotificationListener;
 
 public class AbstractEPNManagerTest {
 
-    private static final String DUMMY_NETWORK = "DummyNetwork";
+    private static final String SUBJECT1 = "SUBJECT1";
+    private static final String DUMMY_SUBJECT = "DummySubject";
     private static final String N1 = "N1";
     private static final String N2 = "N2";
     private static final String N3 = "N3";
@@ -204,7 +205,7 @@ public class AbstractEPNManagerTest {
     }
 
     @Test
-    public void testRegisterNodeListenerNotifyProcessed() {
+    public void testRegisterNotificationListenerNotifyProcessed() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
         
@@ -213,7 +214,12 @@ public class AbstractEPNManagerTest {
         Node n1=new Node();
         n1.setName(N1);
         n1.setEventProcessor(tep);
-        n1.getNotifyTypes().add(NotificationType.Processed.name());
+        
+        Notification not1=new Notification();
+        not1.setSubject(SUBJECT1);
+        not1.setType(NotificationType.Processed);
+        n1.getNotifications().add(not1);
+        
         net.getNodes().add(n1);
         
         AbstractEPNManager mgr=getManager();
@@ -221,13 +227,13 @@ public class AbstractEPNManagerTest {
         try {
             mgr.register(net);
             
-            TestNodeListener nl=new TestNodeListener();
+            TestNotificationListener nl=new TestNotificationListener();
             
-            mgr.addNodeListener(TEST_NETWORK, nl);
+            mgr.addNotificationListener(SUBJECT1, nl);
             
-            TestNodeListener anothernl=new TestNodeListener();
+            TestNotificationListener anothernl=new TestNotificationListener();
             
-            mgr.addNodeListener(DUMMY_NETWORK, anothernl);
+            mgr.addNotificationListener(DUMMY_SUBJECT, anothernl);
             
             TestEvent1 te1=new TestEvent1(2);
             TestEvent2 te2=new TestEvent2(5);
@@ -254,7 +260,7 @@ public class AbstractEPNManagerTest {
             }
             
             if (nl.getEntries().size() != 1) {
-                fail("Node listener should have 1 processed event: "+nl.getEntries().size());
+                fail("Notification listener should have 1 processed event: "+nl.getEntries().size());
             }
             
             if (!nl.getEntries().get(0).getEvents().contains(te1)) {
@@ -280,7 +286,7 @@ public class AbstractEPNManagerTest {
     }
 
     @Test
-    public void testRegisterNodeListenerDontNotifyProcessed() {
+    public void testRegisterNotificationListenerDontNotifyProcessed() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
         
@@ -289,7 +295,12 @@ public class AbstractEPNManagerTest {
         Node n1=new Node();
         n1.setName(N1);
         n1.setEventProcessor(tep);
-        n1.getNotifyTypes().add(NotificationType.Results.name());
+
+        Notification not1=new Notification();
+        not1.setSubject(SUBJECT1);
+        not1.setType(NotificationType.Results);
+        n1.getNotifications().add(not1);
+        
         net.getNodes().add(n1);
         
         AbstractEPNManager mgr=getManager();
@@ -297,13 +308,13 @@ public class AbstractEPNManagerTest {
         try {
             mgr.register(net);
             
-            TestNodeListener nl=new TestNodeListener();
+            TestNotificationListener nl=new TestNotificationListener();
             
-            mgr.addNodeListener(TEST_NETWORK, nl);
+            mgr.addNotificationListener(SUBJECT1, nl);
             
-            TestNodeListener anothernl=new TestNodeListener();
+            TestNotificationListener anothernl=new TestNotificationListener();
             
-            mgr.addNodeListener(DUMMY_NETWORK, anothernl);
+            mgr.addNotificationListener(DUMMY_SUBJECT, anothernl);
             
             TestEvent1 te1=new TestEvent1(2);
             TestEvent2 te2=new TestEvent2(5);

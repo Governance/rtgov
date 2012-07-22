@@ -5,8 +5,7 @@
     "type" : "List",
     "itemExpiration" : 0,
     "maxItems" : 0,
-    "network" : "CustomEventsEPN",
-    "node" : "CustomEvents",
+    "subject" : "CustomEvents",
     "notifyType" : "Results"
   }
 ]

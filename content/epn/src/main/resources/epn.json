@@ -19,7 +19,7 @@
         "@class" : "org.overlord.bam.content.epn.SOAActivityTypeEventSplitter"
       },
       "predicate" : null,
-      "notifyTypes" : [ ]
+      "notifications" : [ ]
     },{
       "name" : "ServiceDefinitions",
       "sourceNodes" : [ ],
@@ -30,7 +30,10 @@
         "@class" : "org.overlord.bam.content.epn.ServiceDefinitionProcessor"
       },
       "predicate" : null,
-      "notifyTypes" : [ "Results" ]
+      "notifications" : [ {
+      	"type" : "Results",
+      	"subject" : "ServiceDefinitions"
+      } ]
     },{
       "name" : "ServiceResponseTimes",
       "sourceNodes" : [ "ServiceDefinitions" ],
@@ -41,7 +44,10 @@
         "@class" : "org.overlord.bam.content.epn.ServiceResponseTimeProcessor"
       },
       "predicate" : null,
-      "notifyTypes" : [ "Results" ]
+      "notifications" : [ {
+      	"type" : "Results",
+      	"subject" : "ServiceResponseTimes"
+      } ]
     }
   ],
   "version" : "1.0.0-SNAPSHOT"

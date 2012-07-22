@@ -67,7 +67,7 @@ public interface EPNManager {
      * @param network The network to listen to
      * @param l The listener
      */
-    public void addNodeListener(String network, NodeListener l);
+    public void addNotificationListener(String network, NotificationListener l);
     
     /**
      * This method unregisters a node listener for the specified network.
@@ -75,7 +75,7 @@ public interface EPNManager {
      * @param network The network was listening to
      * @param l The listener
      */
-    public void removeNodeListener(String network, NodeListener l);
+    public void removeNotificationListener(String network, NotificationListener l);
     
     /**
      * This method publishes the supplied events to be processed

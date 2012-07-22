@@ -251,9 +251,13 @@ public class Network implements NetworkMBean {
             }
             
             // If results should be notified, then add a channel to be sent the results
-            if (node.getNotifyTypes().contains(NotificationType.Results.name())
-                                && container != null) {
-                node.getChannels().add(container.getChannel(this, node.getName()));
+            if (container != null) {
+                for (Notification no : node.getNotifications()) {
+                    if (no.getType().equals(NotificationType.Results)) {
+                        node.getChannels().add(container.getNotificationChannel(this,
+                                no.getSubject()));
+                    }
+                }
             }
             
             if (node.getDestinationSubjects() != null) {

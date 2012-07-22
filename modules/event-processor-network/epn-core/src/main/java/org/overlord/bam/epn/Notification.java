@@ -18,24 +18,54 @@
 package org.overlord.bam.epn;
 
 /**
- * This interface represents a listener interested in information
- * about an Event Processor Network Node.
+ * This class represents a notification used to define a subject and type.
  *
  */
-public interface NodeListener {
+public class Notification {
+
+    private String _subject=null;
+    private NotificationType _type=null;
+    
+    /**
+     * The default constructor for the notification.
+     * 
+     */
+    public Notification() {
+    }
 
     /**
-     * This method notifies the listener when a situation occurs
-     * on the identified network/version/node concerning a list
-     * of events.
+     * This method sets the subject.
      * 
-     * @param network The network name
-     * @param version The version of the network that processed the events
-     * @param node The node name
-     * @param type The type of notification
-     * @param events The events that have been processed
+     * @param subject The subject
      */
-    public void notify(String network, String version,
-                    String node, NotificationType type, EventList events);
+    public void setSubject(String subject) {
+        _subject = subject;
+    }
     
+    /**
+     * This method gets the subject.
+     * 
+     * @return The subject
+     */
+    public String getSubject() {
+        return (_subject);
+    }
+
+    /**
+     * This method sets the type.
+     * 
+     * @param type The type
+     */
+    public void setType(NotificationType type) {
+        _type = type;
+    }
+    
+    /**
+     * This method gets the node name.
+     * 
+     * @return The node name
+     */
+    public NotificationType getType() {
+        return (_type);
+    }
 }

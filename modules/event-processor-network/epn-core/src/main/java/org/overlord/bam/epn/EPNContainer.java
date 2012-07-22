@@ -46,11 +46,11 @@ public interface EPNContainer {
      * listeners of the results produced by the node.
      * 
      * @param network The network
-     * @param source The source node
+     * @param subject The subject
      * @return The notification channel
      * @throws Exception Channel cannot be created
      */
-    public Channel getChannel(Network network, String source) throws Exception;
+    public Channel getNotificationChannel(Network network, String subject) throws Exception;
 
     /**
      * This method returns the channel associated with the supplied

@@ -39,6 +39,7 @@ public class JMSChannel implements Channel {
     private String _destinationNode=null;
     private String _sourceNode=null;
     private String _subject=null;
+    private boolean _notification=false;
 
     /**
      * This is the constructor for the JMS channel.
@@ -63,13 +64,17 @@ public class JMSChannel implements Channel {
      * 
      * @param session The session
      * @param producer The producer
+     * @param network The network
      * @param subject The subject
+     * @param notification Whether the subject is for notification
      */
     public JMSChannel(javax.jms.Session session, javax.jms.MessageProducer producer,
-                            String subject) {
+                Network network, String subject, boolean notification) {
         _session = session;
         _producer = producer;
+        _network = network;
         _subject = subject;
+        _notification = notification;
     }
     
     /**
@@ -88,7 +93,7 @@ public class JMSChannel implements Channel {
      * @return Whether this is a notification channel
      */
     public boolean isNotificationChannel() {
-        return (_destinationNode == null);
+        return (_notification);
     }
     
     /**

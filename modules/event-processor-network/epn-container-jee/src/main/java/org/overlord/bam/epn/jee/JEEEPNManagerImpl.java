@@ -270,12 +270,14 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             
             EventList events=(EventList)((ObjectMessage)message).getObject();
             
+            String subject=message.getStringProperty(JEEEPNManagerImpl.EPN_SUBJECTS);
             String networkName=message.getStringProperty(JEEEPNManagerImpl.EPN_NETWORK);
             String version=message.getStringProperty(JEEEPNManagerImpl.EPN_VERSION);
             String nodeName=message.getStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES);
             NotificationType type=NotificationType.valueOf(message.getStringProperty(JEEEPNManagerImpl.EPN_NOTIFY_TYPE));
             
-            dispatchNotificationToListeners(networkName, version, nodeName, type, events);
+            dispatchNotificationToListeners(subject, networkName, version,
+                            nodeName, type, events);
         } else {
             LOG.severe("Unsupport message '"+message+"' received");
         }
@@ -354,10 +356,11 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
      * {@inheritDoc}
      */
     @Override
-    protected void notifyListeners(String networkName, String version,
-                    String nodeName, NotificationType type, EventList events) throws Exception {
+    protected void notifyListeners(String subject, String networkName, String version,
+                    String nodeName, NotificationType type,
+                    EventList events) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Notify type '"+type.name()+"' "
+            LOG.finest("Notify type '"+type.name()+"' subject="+subject+" "
                       +networkName+"/"+version+"/"+nodeName+" events="+events);
         }
 
@@ -366,6 +369,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
         mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, version);
         mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
         mesg.setStringProperty(JEEEPNManagerImpl.EPN_NOTIFY_TYPE, type.name());
+        mesg.setStringProperty(JEEEPNManagerImpl.EPN_SUBJECTS, subject);
         _notificationsProducer.send(mesg);
     }
     
@@ -400,16 +404,17 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
         /**
          * {@inheritDoc}
          */
-        public Channel getChannel(Network network, String source)
+        public Channel getNotificationChannel(Network network, String subject)
                 throws Exception {
-            return new JMSChannel(_session, _eventsProducer, network, source, null);
+            return new JMSChannel(_session, _eventsProducer, network, subject, true);
         }
 
         /**
          * {@inheritDoc}
          */
         public Channel getChannel(String subject) throws Exception {
-            return new JMSChannel(_session, _eventsProducer, subject);
+            // Create internal pub/sub channel
+            return new JMSChannel(_session, _eventsProducer, null, subject, false);
         }
 
         /**
@@ -426,25 +431,31 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                 String networkName=null;
                 String version=null;
                 String sourceNode=null;
-                boolean notification=false;
                 
                 for (Channel channel : channels) {
                     if (channel instanceof JMSChannel) {
                         JMSChannel jmsc=(JMSChannel)channel;
                         
-                        if (jmsc.getSubject() != null) {
+                        // Check if notification channel
+                        if (jmsc.isNotificationChannel()) {
+                            
+                            // Send immediately as no details
+                            // need to be aggregated
+
+                            notifyListeners(jmsc.getSubject(),
+                                    jmsc.getNetworkName(), jmsc.getVersion(),
+                                    jmsc.getSourceNode(), NotificationType.Results,
+                                    events);
+
+                        // Check if channel has internal pub/sub subjects
+                        } else if (jmsc.getSubject() != null) {
                             if (subjects == null) {
                                 subjects = jmsc.getSubject();
                             } else {
                                 subjects += ","+jmsc.getSubject();
                             }
-                        } else if (jmsc.isNotificationChannel()) {
-                            notification = true;
-                            networkName = jmsc.getNetworkName();
-                            version = jmsc.getVersion();
-                            sourceNode = jmsc.getSourceNode();
-                            
                         } else {
+                            // Channel is point to point, to destination nodes(s)
                             if (destNodes == null) {
                                 destNodes = jmsc.getDestinationNode();
                                 networkName = jmsc.getNetworkName();
@@ -486,11 +497,6 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
         
                     _eventsProducer.send(mesg);  
                 }
-                
-                if (notification) {
-                    notifyListeners(networkName, version, sourceNode, NotificationType.Results, events);
-                }
-
             }
         }
     }
