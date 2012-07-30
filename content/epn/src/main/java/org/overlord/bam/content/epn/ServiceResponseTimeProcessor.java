@@ -105,6 +105,8 @@ public class ServiceResponseTimeProcessor extends org.overlord.bam.epn.EventProc
         rt.setMin(mep.getMetrics().getMin());
         rt.setMax(mep.getMetrics().getMax());
         
+        rt.setTimestamp(System.currentTimeMillis());
+        
         rts.add(rt);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * JBoss, Home of Professional Open Source
+  * JBoss, Home of Professional Open Source
  * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
@@ -36,6 +36,7 @@ public class ResponseTime implements java.io.Externalizable {
     private long _duration=0;
     private long _max=0;
     private long _min=0;
+    private long _timestamp=0;
 
     /**
      * This method sets the service type.
@@ -146,11 +147,30 @@ public class ResponseTime implements java.io.Externalizable {
     }
     
     /**
+     * This method sets the timestamp.
+     * 
+     * @param time The timestamp
+     */
+    public void setTimestamp(long time) {
+        _timestamp = time;
+    }
+    
+    /**
+     * This method returns the timestamp.
+     * 
+     * @return The timestamp
+     */
+    public long getTimestamp() {
+        return (_timestamp);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public String toString() {
         return ("ResponseTime[service="+_serviceType+" op="+_operation+" fault="+_fault
-                    +" duration="+_duration+" min="+_min+" max="+_max+"]");
+                    +" duration="+_duration+" min="+_min+" max="+_max+" timestamp="
+                    +_timestamp+"]");
     }
     
     /**
@@ -165,6 +185,7 @@ public class ResponseTime implements java.io.Externalizable {
         out.writeLong(_duration);
         out.writeLong(_max);
         out.writeLong(_min);
+        out.writeLong(_timestamp);
     }
 
     /**
@@ -180,5 +201,6 @@ public class ResponseTime implements java.io.Externalizable {
         _duration = in.readLong();
         _max = in.readLong();
         _min = in.readLong();
+        _timestamp = in.readLong();
     }
 }

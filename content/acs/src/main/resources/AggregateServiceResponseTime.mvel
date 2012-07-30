@@ -27,4 +27,6 @@ result.setDuration(total/events.size());
 result.setMin(min);
 result.setMax(max);
 
+result.setTimestamp(System.currentTimeMillis());
+
 result;
