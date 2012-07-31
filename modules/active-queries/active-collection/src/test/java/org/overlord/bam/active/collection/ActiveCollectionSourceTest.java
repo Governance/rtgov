@@ -212,6 +212,146 @@ public class ActiveCollectionSourceTest {
         }
     }
     
+    @Test
+    public void testMaintainInsert() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
+        acs.setName(TEST_ACTIVE_LIST);
+        
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        
+        acs.getActiveCollection().addActiveChangeListener(l);
+        
+        acs.setType(ActiveCollectionType.List);
+        
+        acs.setMaintenanceScript("scripts/Maintain.mvel");
+        
+        try {
+            acs.init();
+        } catch(Exception e) {
+            fail("Failed to initialize active collection source: "+e);
+        }
+        
+        acs.handleItem(null, new TestObject(T_OBJ1, 50));
+        
+        if (acs.getActiveCollection().getSize() != 1) {
+            fail("Active collection should have 1 entry: "+acs.getActiveCollection().getSize());
+        }
+        
+        TestObject to=(TestObject)((ActiveList)acs.getActiveCollection()).iterator().next();
+        
+        if (to.getAvg() != 50) {
+            fail("Avg was not 50: "+to.getAvg());
+        }
+        
+        if (!to.getName().equals(T_OBJ1)) {
+            fail("Name should be "+T_OBJ1+": "+to.getName());
+        }
+        
+        if (l._insertedValue.size() != 1) {
+            fail("Expecting 1 inserted value");
+        }
+    }
+    
+    @Test
+    public void testMaintainUpdate() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
+        acs.setName(TEST_ACTIVE_LIST);
+        
+        TestObject updateObject=new TestObject();
+        
+        acs.getActiveCollection().insert(null, updateObject);
+
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        
+        acs.getActiveCollection().addActiveChangeListener(l);
+        
+        acs.setType(ActiveCollectionType.List);
+        
+        acs.setMaintenanceScript("scripts/Maintain.mvel");
+        
+        try {
+            acs.init();
+        } catch(Exception e) {
+            fail("Failed to initialize active collection source: "+e);
+        }
+        
+        acs.handleItem(null, new TestObject(T_OBJ1, 50));
+        
+        if (acs.getActiveCollection().getSize() != 1) {
+            fail("Active collection should have 1 entry: "+acs.getActiveCollection().getSize());
+        }
+        
+        TestObject to=(TestObject)((ActiveList)acs.getActiveCollection()).iterator().next();
+        
+        if (to.getAvg() != 50) {
+            fail("Avg was not 50: "+to.getAvg());
+        }
+        
+        if (!to.getName().equals(T_OBJ1)) {
+            fail("Name should be "+T_OBJ1+": "+to.getName());
+        }
+        
+        if (l._updatedValue.size() != 1) {
+            fail("Expecting 1 updated value");
+        }
+        
+        if (!updateObject.getName().equals("UPDATED")) {
+            fail("Object not updated");
+        }
+    }
+    
+    @Test
+    public void testMaintainRemove() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
+        acs.setName(TEST_ACTIVE_LIST);
+        
+        TestObject to1=new TestObject(T_OBJ1, 50);        
+        acs.getActiveCollection().insert(null, to1);
+
+        TestObject to2=new TestObject(T_OBJ2, 60);        
+        acs.getActiveCollection().insert(null, to2);
+
+        TestActiveChangeListener l=new TestActiveChangeListener();
+        
+        acs.getActiveCollection().addActiveChangeListener(l);
+        
+        acs.setType(ActiveCollectionType.List);
+        
+        acs.setMaintenanceScript("scripts/Maintain.mvel");
+        
+        try {
+            acs.init();
+        } catch(Exception e) {
+            fail("Failed to initialize active collection source: "+e);
+        }
+        
+        acs.handleItem(null, new TestObject(T_OBJ3, 70));
+        
+        if (acs.getActiveCollection().getSize() != 1) {
+            fail("Active collection should have 1 entries: "+acs.getActiveCollection().getSize());
+        }
+        
+        TestObject to=(TestObject)((ActiveList)acs.getActiveCollection()).iterator().next();
+        
+        if (to.getAvg() != 60) {
+            fail("Avg was not 60: "+to.getAvg());
+        }
+        
+        if (!to.getName().equals(T_OBJ2)) {
+            fail("Name should be "+T_OBJ2+": "+to.getName());
+        }
+        
+        if (l._removedValue.size() != 1) {
+            fail("Expecting 1 removed value");
+        }
+    }
+    
     public static class TestActiveChangeListener extends AbstractActiveChangeListener {
         
         protected java.util.List<Object> _insertedKey=new java.util.ArrayList<Object>();
