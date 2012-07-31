@@ -1,39 +1,13 @@
 {
   "name" : "SLAMonitorEPN",
   "subscriptions" : [ {
-    "nodeName" : "SOAEvents",
-    "subject" : "ActivityUnits"
+    "nodeName" : "SLAViolations",
+    "subject" : "ServiceResponseTimes"
   } ],
   "nodes" : [
     {
-      "name" : "SOAEvents",
-      "sourceNodes" : [ ],
-      "destinationSubjects" : [ ],
-      "maxRetries" : 3,
-      "retryInterval" : 0,
-      "eventProcessor" : {
-        "@class" : "org.overlord.bam.samples.jbossas.slamonitor.epn.SOAActivityTypeEventSplitter"
-      },
-      "predicate" : null,
-      "notifications" : [ ]
-    },{
-      "name" : "ResponseTimes",
-      "sourceNodes" : [ "SOAEvents" ],
-      "destinationSubjects" : [ ],
-      "maxRetries" : 3,
-      "retryInterval" : 0,
-      "eventProcessor" : {
-        "@class" : "org.overlord.bam.epn.cep.CEPEventProcessor",
-        "ruleName" : "ResponseTime"
-      },
-      "predicate" : null,
-      "notifications" : [ {
-      	 "type" : "Results",
-      	 "subject" : "ResponseTimes"
-      } ]
-    },{
       "name" : "SLAViolations",
-      "sourceNodes" : [ "ResponseTimes" ],
+      "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
@@ -44,10 +18,10 @@
       "predicate" : null,
       "notifications" : [ {
       	 "type" : "Processed",
-      	 "subject" : "SLAViolationsProcessed"
+      	 "subject" : "SituationsProcessed"
       },{
       	 "type" : "Results",
-      	 "subject" : "SLAViolations"
+      	 "subject" : "Situations"
       } ]
     }
   ],

@@ -235,7 +235,7 @@ public class Node {
      * to be returned to be retried.
      * 
      * @param container The container
-     * @param source The source node that generated the event
+     * @param source The source node/subject that generated the event
      * @param events The list of events to be processed
      * @param retriesLeft The number of remaining retries
      * @return The events to retry, or null if no retries necessary

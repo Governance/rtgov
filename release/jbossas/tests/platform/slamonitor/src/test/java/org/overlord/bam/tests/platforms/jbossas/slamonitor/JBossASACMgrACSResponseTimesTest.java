@@ -47,7 +47,7 @@ public class JBossASACMgrACSResponseTimesTest {
     
     private static final String ORDER_SERVICE_URL = "http://127.0.0.1:8080/demo-orders/OrderService";
 
-    private static final String SERVICE_RESPONSE_TIME = "ServiceResponseTime";
+    private static final String SERVICE_RESPONSE_TIMES = "ServiceResponseTimes";
     
     @Deployment(name="overlord-bam", order=1)
     public static WebArchive createDeployment1() {
@@ -61,8 +61,32 @@ public class JBossASACMgrACSResponseTimesTest {
                 TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
     }
     
-    @Deployment(name="orders", order=2)
+    @Deployment(name="overlord-bam-acs", order=2)
     public static WebArchive createDeployment2() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-acs:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-acs.war"));
+    }
+    
+    @Deployment(name="overlord-bam-epn", order=3)
+    public static WebArchive createDeployment3() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-epn:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-epn.war"));
+    }
+    
+    @Deployment(name="orders", order=4)
+    public static WebArchive createDeployment4() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -72,8 +96,8 @@ public class JBossASACMgrACSResponseTimesTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="epn", order=3)
-    public static WebArchive createDeployment3() {
+    @Deployment(name="epn", order=5)
+    public static WebArchive createDeployment5() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -83,19 +107,8 @@ public class JBossASACMgrACSResponseTimesTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="acs", order=4)
-    public static WebArchive createDeployment4() {
-        String version=System.getProperty("bam.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-acs:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
-    }
-    
-    @Deployment(name="monitor", order=5)
-    public static WebArchive createDeployment5() {
+    @Deployment(name="monitor", order=6)
+    public static WebArchive createDeployment6() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -151,7 +164,7 @@ public class JBossASACMgrACSResponseTimesTest {
             Thread.sleep(4000);
             
             QuerySpec qs1=new QuerySpec();
-            qs1.setCollection(SERVICE_RESPONSE_TIME);
+            qs1.setCollection(SERVICE_RESPONSE_TIMES);
             
             java.util.List<?> result1 = performACMQuery(qs1);
             
@@ -167,7 +180,7 @@ public class JBossASACMgrACSResponseTimesTest {
 
             QuerySpec qs2=new QuerySpec();
             qs2.setCollection("OrderService");
-            qs2.setParent(SERVICE_RESPONSE_TIME);
+            qs2.setParent(SERVICE_RESPONSE_TIMES);
             qs2.setPredicate(new MVEL("serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && "
                     +"operation == \"submitOrder\""));
             

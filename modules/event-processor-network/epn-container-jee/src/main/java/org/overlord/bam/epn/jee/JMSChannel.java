@@ -155,7 +155,7 @@ public class JMSChannel implements Channel {
             mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, _network.getName());
             mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, _network.getVersion());
             mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, _destinationNode);
-            mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE_NODE, _sourceNode);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE, _sourceNode);
             mesg.setIntProperty(JEEEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
             
             if (LOG.isLoggable(Level.FINEST)) {

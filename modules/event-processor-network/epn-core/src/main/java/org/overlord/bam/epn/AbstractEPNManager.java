@@ -369,7 +369,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      * 
      * @param network The network
      * @param node The node
-     * @param source The source node, or null if sending to root
+     * @param source The source node/subject
      * @param events The list of events to be processed
      * @param retriesLeft The number of retries left
      * @return The events to retry, or null if no retries necessary

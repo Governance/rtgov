@@ -27,7 +27,7 @@ import org.overlord.bam.activity.model.ActivityTypeRef;
  * This class represents the occurrence of an SLA violation.
  *
  */
-public class SLAViolation implements java.io.Externalizable {
+public class Situation implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
@@ -51,66 +51,66 @@ public class SLAViolation implements java.io.Externalizable {
      */
     public static final String SEVERITY_LOW="Low";
 
-    private String _serviceType=null;
-    private String _operation=null;
-    private String _violation=null;
+    private String _type=null;
+    private String _subject=null;
+    private String _description=null;
     private long _timestamp=0;
     private String _severity=null;
     private java.util.List<ActivityTypeRef> _activityTypeRefs=
                         new java.util.ArrayList<ActivityTypeRef>();
 
     /**
-     * This method sets the service type.
+     * This method sets the situation type.
      * 
-     * @param serviceType The service type
+     * @param type The situation type
      */
-    public void setServiceType(String serviceType) {
-        _serviceType = serviceType;
+    public void setType(String type) {
+        _type = type;
     }
     
     /**
-     * This method gets the service type.
+     * This method gets the situation type.
      * 
-     * @return The service type
+     * @return The situation type
      */
-    public String getServiceType() {
-        return (_serviceType);
+    public String getType() {
+        return (_type);
     }
     
     /**
-     * This method sets the operation.
+     * This method sets the subject.
      * 
-     * @param operation The operation
+     * @param subject The subject
      */
-    public void setOperation(String operation) {
-        _operation = operation;
+    public void setSubject(String subject) {
+        _subject = subject;
     }
     
     /**
-     * This method gets the operation.
+     * This method gets the subject.
      * 
-     * @return The operation
+     * @return The subject
      */
-    public String getOperation() {
-        return (_operation);
+    public String getSubject() {
+        return (_subject);
     }
     
     /**
-     * This method sets the violation.
+     * This method sets the situation description.
      * 
-     * @param violation The violation
+     * @param description The description
      */
-    public void setViolation(String violation) {
-        _violation = violation;
+    public void setDescription(String description) {
+        _description = description;
     }
     
     /**
-     * This method gets the violation.
+     * This method gets the situation description.
      * 
-     * @return The violation
+     * @return The description
      */
-    public String getViolation() {
-        return (_violation);
+    public String getDescription() {
+        return (_description);
     }
     
     /**
@@ -163,8 +163,8 @@ public class SLAViolation implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public String toString() {
-        return ("SLA violation '"+_violation+"' on service="+_serviceType+" operation="
-                    +_operation+ " severity=" + _severity + " "+new java.util.Date(_timestamp));
+        return ("Situation '"+_description+"' of type="+_type+" subject="
+                    +_subject+ " severity=" + _severity + " "+new java.util.Date(_timestamp));
     }
     
     /**
@@ -173,9 +173,9 @@ public class SLAViolation implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_serviceType);
-        out.writeObject(_operation);
-        out.writeObject(_violation);
+        out.writeObject(_type);
+        out.writeObject(_subject);
+        out.writeObject(_description);
         out.writeObject(_severity);
         out.writeLong(_timestamp);
         
@@ -192,9 +192,9 @@ public class SLAViolation implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _serviceType = (String)in.readObject();
-        _operation = (String)in.readObject();
-        _violation = (String)in.readObject();
+        _type = (String)in.readObject();
+        _subject = (String)in.readObject();
+        _description = (String)in.readObject();
         _severity = (String)in.readObject();
         _timestamp = in.readLong();
         

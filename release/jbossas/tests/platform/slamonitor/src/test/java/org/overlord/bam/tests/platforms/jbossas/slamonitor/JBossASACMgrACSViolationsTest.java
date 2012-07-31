@@ -46,7 +46,7 @@ public class JBossASACMgrACSViolationsTest {
     
     private static final String ORDER_SERVICE_URL = "http://127.0.0.1:8080/demo-orders/OrderService";
 
-    private static final String SERVICE_VIOLATIONS = "ServiceViolations";
+    private static final String SITUATIONS = "Situations";
     
     @Deployment(name="overlord-bam", order=1)
     public static WebArchive createDeployment1() {
@@ -60,8 +60,32 @@ public class JBossASACMgrACSViolationsTest {
                 TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
     }
     
-    @Deployment(name="orders", order=2)
+    @Deployment(name="overlord-bam-acs", order=2)
     public static WebArchive createDeployment2() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-acs:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-acs.war"));
+    }
+    
+    @Deployment(name="overlord-bam-epn", order=3)
+    public static WebArchive createDeployment3() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-epn:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-epn.war"));
+    }
+    
+    @Deployment(name="orders", order=4)
+    public static WebArchive createDeployment4() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -71,8 +95,8 @@ public class JBossASACMgrACSViolationsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="epn", order=3)
-    public static WebArchive createDeployment3() {
+    @Deployment(name="epn", order=5)
+    public static WebArchive createDeployment5() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -82,19 +106,8 @@ public class JBossASACMgrACSViolationsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="acs", order=4)
-    public static WebArchive createDeployment4() {
-        String version=System.getProperty("bam.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-acs:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
-    }
-    
-    @Deployment(name="monitor", order=5)
-    public static WebArchive createDeployment5() {
+    @Deployment(name="monitor", order=6)
+    public static WebArchive createDeployment6() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -150,7 +163,7 @@ public class JBossASACMgrACSViolationsTest {
             Thread.sleep(4000);
             
             QuerySpec qs1=new QuerySpec();
-            qs1.setCollection(SERVICE_VIOLATIONS);
+            qs1.setCollection(SITUATIONS);
             
             java.util.List<?> result1 = performACMQuery(qs1);
             

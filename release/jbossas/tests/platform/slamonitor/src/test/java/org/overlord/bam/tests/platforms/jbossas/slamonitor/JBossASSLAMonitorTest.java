@@ -46,8 +46,8 @@ public class JBossASSLAMonitorTest {
 
     private static final String ORDER_SERVICE_URL = "http://127.0.0.1:8080/demo-orders/OrderService";
     
-    private static final String SLA_VIOLATIONS = "SLAViolations";
-    private static final String SLA_VIOLATIONS_PROCESSED = "SLAViolationsProcessed";
+    private static final String SLA_VIOLATIONS = "Situations";
+    private static final String SLA_VIOLATIONS_PROCESSED = "SituationsProcessed";
     
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
@@ -67,8 +67,32 @@ public class JBossASSLAMonitorTest {
                 TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
     }
     
-    @Deployment(name="orders", order=2)
+    @Deployment(name="overlord-bam-acs", order=2)
     public static WebArchive createDeployment2() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-acs:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-acs.war"));
+    }
+    
+    @Deployment(name="overlord-bam-epn", order=3)
+    public static WebArchive createDeployment3() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-epn:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-epn.war"));
+    }
+    
+    @Deployment(name="orders", order=4)
+    public static WebArchive createDeployment4() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -78,8 +102,8 @@ public class JBossASSLAMonitorTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="epn", order=3)
-    public static WebArchive createDeployment3() {
+    @Deployment(name="epn", order=5)
+    public static WebArchive createDeployment5() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)

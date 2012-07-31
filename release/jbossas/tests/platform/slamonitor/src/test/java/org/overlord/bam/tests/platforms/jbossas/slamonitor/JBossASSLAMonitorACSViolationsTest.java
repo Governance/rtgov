@@ -47,7 +47,7 @@ public class JBossASSLAMonitorACSViolationsTest {
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
-    private static final String SERVICE_VIOLATIONS = "ServiceViolations";
+    private static final String SITUATIONS = "Situations";
     
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
@@ -67,8 +67,32 @@ public class JBossASSLAMonitorACSViolationsTest {
                 TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
     }
     
-    @Deployment(name="orders", order=2)
+    @Deployment(name="overlord-bam-acs", order=2)
     public static WebArchive createDeployment2() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-acs:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-acs.war"));
+    }
+    
+    @Deployment(name="overlord-bam-epn", order=3)
+    public static WebArchive createDeployment3() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-epn:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-epn.war"));
+    }
+    
+    @Deployment(name="orders", order=4)
+    public static WebArchive createDeployment4() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -78,8 +102,8 @@ public class JBossASSLAMonitorACSViolationsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="epn", order=3)
-    public static WebArchive createDeployment3() {
+    @Deployment(name="epn", order=5)
+    public static WebArchive createDeployment5() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -89,19 +113,8 @@ public class JBossASSLAMonitorACSViolationsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="acs", order=4)
-    public static WebArchive createDeployment4() {
-        String version=System.getProperty("bam.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-acs:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
-    }
-    
-    @Deployment(name="monitor", order=5)
-    public static WebArchive createDeployment5() {
+    @Deployment(name="monitor", order=6)
+    public static WebArchive createDeployment6() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -115,10 +128,10 @@ public class JBossASSLAMonitorACSViolationsTest {
     @Test @OperateOnDeployment("overlord-bam")
     public void testViolations() {
         
-        ActiveList al=(ActiveList)_activeCollectionManager.getActiveCollection(SERVICE_VIOLATIONS);
+        ActiveList al=(ActiveList)_activeCollectionManager.getActiveCollection(SITUATIONS);
         
         if (al == null) {
-            fail("Active collection for '"+SERVICE_VIOLATIONS+"' was not found");
+            fail("Active collection for '"+SITUATIONS+"' was not found");
         }
         
         try {
@@ -191,7 +204,7 @@ public class JBossASSLAMonitorACSViolationsTest {
     protected java.util.List<?> getViolations() throws Exception {
         java.util.List<?> ret=null;
         
-        String urlStr="http://localhost:8080/slamonitor/monitor/violations";
+        String urlStr="http://localhost:8080/slamonitor/monitor/situations";
         
         URL getUrl = new URL(urlStr);
         

@@ -231,12 +231,12 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * 
          * @param network The network
          * @param node The node
-         * @param sourceNode The source node name
+         * @param source The source node name
          */
-        public EmbeddedChannel(Network network, Node node, String sourceNode) {
+        public EmbeddedChannel(Network network, Node node, String source) {
             _network = network;
             _node = node;
-            _source = sourceNode;
+            _source = source;
         }
         
         /**
@@ -249,6 +249,8 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
             _network = network;
             _subject = subject;
             _notification = true;
+
+            _source = subject;
         }
         
         /**
@@ -258,6 +260,8 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          */
         public EmbeddedChannel(String subject) {
             _subject = subject;
+
+            _source = subject;
         }
         
         /**
@@ -351,7 +355,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          * 
          * @param network The network
          * @param node The node
-         * @param source The source node name
+         * @param source The source name
          * @param events The list of events
          * @param retriesLeft The number of retries left
          * @param channel The channel

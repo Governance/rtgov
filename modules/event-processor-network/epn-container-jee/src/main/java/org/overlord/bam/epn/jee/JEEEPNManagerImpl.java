@@ -70,8 +70,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
     public static final String EPN_VERSION = "EPNVersion";
     /** The EPN Destination Node Names. **/
     public static final String EPN_DESTINATION_NODES = "EPNDestinationNodes";
-    /** The EPN Source Node Name. **/
-    public static final String EPN_SOURCE_NODE = "EPNSourceNode";
+    /** The EPN Source Name. **/
+    public static final String EPN_SOURCE = "EPNSource";
     /** The EPN Number of Retries Left. **/
     public static final String EPN_RETRIES_LEFT = "EPNRetriesLeft";
     /** The EPN notification type. **/
@@ -157,7 +157,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                 String network=message.getStringProperty(JEEEPNManagerImpl.EPN_NETWORK);
                 String version=message.getStringProperty(JEEEPNManagerImpl.EPN_VERSION);
                 String node=message.getStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES);
-                String source=message.getStringProperty(JEEEPNManagerImpl.EPN_SOURCE_NODE);
+                String source=message.getStringProperty(JEEEPNManagerImpl.EPN_SOURCE);
                 int retriesLeft=message.getIntProperty(JEEEPNManagerImpl.EPN_RETRIES_LEFT);
                 
                 dispatchToNodes(network, version, node, source, events, retriesLeft);
@@ -200,7 +200,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                         preProcessEvents(events, network);
                         
                         for (int i=0; i < nodes.size(); i++) {
-                            dispatch(network, nodes.get(i), null, events, -1);
+                            dispatch(network, nodes.get(i), subject, events, -1);
                         }
                         
                         postProcessEvents(events);
@@ -289,7 +289,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
      * 
      * @param network The network
      * @param node The node
-     * @param source The source node, or null if sending to root
+     * @param source The source node/subject
      * @param events The list of events to be processed
      * @param retriesLeft The number of retries left, or -1 if should be max value
      * @throws Exception Failed to dispatch the events for processing
@@ -341,7 +341,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, networkName);
             mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, version);
             mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
-            mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE_NODE, source);
+            mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE, source);
             mesg.setIntProperty(JEEEPNManagerImpl.EPN_RETRIES_LEFT, retriesLeft);
             _eventsProducer.send(mesg);
         } else {
@@ -481,7 +481,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                     mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, networkName);
                     mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, version);
                     mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, destNodes);
-                    mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE_NODE, sourceNode);   
+                    mesg.setStringProperty(JEEEPNManagerImpl.EPN_SOURCE, sourceNode);   
                     mesg.setIntProperty(JEEEPNManagerImpl.EPN_RETRIES_LEFT, -1);
                     sendResults = true;
                 }

@@ -333,6 +333,14 @@ public class ActiveCollectionSource {
                     _maintenanceScriptExpression = MVEL.compileExpression(new String(b));
                 }
             }
+
+            // If active change listeners defined, then pre-init them
+            if (_listeners.size() > 0) {                
+                for (AbstractActiveChangeListener l : _listeners) {
+                    l.preInit();
+                 }
+            }
+            
         }
     }
     

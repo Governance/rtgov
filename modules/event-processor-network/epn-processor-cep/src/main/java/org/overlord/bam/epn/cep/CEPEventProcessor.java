@@ -88,6 +88,12 @@ public class CEPEventProcessor extends EventProcessor {
     public java.io.Serializable process(String source,
                 java.io.Serializable event, int retriesLeft) throws Exception {
 
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Process event '"+event+" from source '"+source
+                    +"' on CEP Event Processor '"+getRuleName()
+                    +"'");
+        }
+
         EPN_CONTEXT.forward(null);
         
         // Get entry point

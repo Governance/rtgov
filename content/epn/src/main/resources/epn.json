@@ -37,7 +37,7 @@
     },{
       "name" : "ServiceResponseTimes",
       "sourceNodes" : [ "ServiceDefinitions" ],
-      "destinationSubjects" : [ ],
+      "destinationSubjects" : [ "ServiceResponseTimes" ],
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {

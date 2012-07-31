@@ -17,5 +17,18 @@
     "maxItems" : 100,
     "subject" : "ServiceDefinitions",
     "maintenanceScript" : "MaintainServiceDefinitions.mvel"
+  },{
+    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "Situations",
+    "type" : "List",
+    "itemExpiration" : 40000,
+    "maxItems" : 0,
+    "subject" : "Situations",
+    "activeChangeListeners" : [ {
+        "@class" : "org.overlord.bam.active.collection.jmx.JMXNotifier",
+    	"objectName" : "overlord.bam:name=Situations",
+    	"descriptionScript" : "SituationDescription.mvel",
+    	"insertTypeScript" : "SituationType.mvel"
+	} ]
   }
 ]

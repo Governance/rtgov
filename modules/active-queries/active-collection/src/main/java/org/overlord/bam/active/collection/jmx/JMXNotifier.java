@@ -17,12 +17,16 @@
  */
 package org.overlord.bam.active.collection.jmx;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.management.ListenerNotFoundException;
 import javax.management.MBeanNotificationInfo;
 import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 
+import org.mvel2.MVEL;
 import org.overlord.bam.active.collection.AbstractActiveChangeListener;
 
 /**
@@ -33,6 +37,8 @@ import org.overlord.bam.active.collection.AbstractActiveChangeListener;
 public class JMXNotifier extends AbstractActiveChangeListener
                 implements JMXNotifierMBean, javax.management.NotificationEmitter {
 
+    private static final Logger LOG=Logger.getLogger(JMXNotifier.class.getName());
+    
     private String _objectName=null;
     private String _insertType=null;
     private String _updateType=null;
@@ -43,6 +49,17 @@ public class JMXNotifier extends AbstractActiveChangeListener
     private java.util.List<NotificationDetails> _notificationDetails=
                     new java.util.ArrayList<NotificationDetails>();
     
+    private String _descriptionScript=null;
+    private java.io.Serializable _descriptionScriptExpression=null;
+    private String _insertTypeScript=null;
+    private java.io.Serializable _insertTypeScriptExpression=null;
+    private String _updateTypeScript=null;
+    private java.io.Serializable _updateTypeScriptExpression=null;
+    private String _removeTypeScript=null;
+    private java.io.Serializable _removeTypeScriptExpression=null;
+
+    private boolean _preinitialized=false;
+
     /**
      * This method sets the object name for the JMX MBean.
      * 
@@ -59,6 +76,24 @@ public class JMXNotifier extends AbstractActiveChangeListener
      */
     public String getObjectName() {
         return (_objectName);
+    }
+    
+    /**
+     * This method sets the description script for the JMX MBean.
+     * 
+     * @param script The description script
+     */
+    public void setDescriptionScript(String script) {
+        _descriptionScript = script;
+    }
+    
+    /**
+     * This method gets the description script for the JMX MBean.
+     * 
+     * @return The description script
+     */
+    public String getDescriptionScript() {
+        return (_descriptionScript);
     }
     
     /**
@@ -80,6 +115,24 @@ public class JMXNotifier extends AbstractActiveChangeListener
     }
     
     /**
+     * This method sets the insert type script for the JMX MBean.
+     * 
+     * @param script The insert type script
+     */
+    public void setInsertTypeScript(String script) {
+        _insertTypeScript = script;
+    }
+    
+    /**
+     * This method gets the insert type script for the JMX MBean.
+     * 
+     * @return The insert type script
+     */
+    public String getInsertTypeScript() {
+        return (_insertTypeScript);
+    }
+    
+    /**
      * This method sets the update type for the JMX MBean.
      * 
      * @param type The update type
@@ -95,6 +148,24 @@ public class JMXNotifier extends AbstractActiveChangeListener
      */
     public String getUpdateType() {
         return (_updateType);
+    }
+    
+    /**
+     * This method sets the update type script for the JMX MBean.
+     * 
+     * @param script The update type script
+     */
+    public void setUpdateTypeScript(String script) {
+        _updateTypeScript = script;
+    }
+    
+    /**
+     * This method gets the update type script for the JMX MBean.
+     * 
+     * @return The update type script
+     */
+    public String getUpdateTypeScript() {
+        return (_updateTypeScript);
     }
     
     /**
@@ -116,12 +187,137 @@ public class JMXNotifier extends AbstractActiveChangeListener
     }
     
     /**
+     * This method sets the remove type script for the JMX MBean.
+     * 
+     * @param script The remove type script
+     */
+    public void setRemoveTypeScript(String script) {
+        _removeTypeScript = script;
+    }
+    
+    /**
+     * This method gets the remove type script for the JMX MBean.
+     * 
+     * @return The remove type script
+     */
+    public String getRemoveTypeScript() {
+        return (_removeTypeScript);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    protected void preInit() throws Exception {
+        super.preInit();
+        
+        if (!_preinitialized) {
+            _preinitialized = true;
+            
+            // Only initialize if the script is specified, but not yet compiled
+            if (_descriptionScript != null && _descriptionScriptExpression == null) {
+                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_descriptionScript);
+                
+                if (is == null) {
+                    LOG.severe("Unable to locate '"+_descriptionScript+"'");
+                } else {
+                    byte[] b=new byte[is.available()];
+                    is.read(b);
+                    is.close();
+    
+                    // Compile expression
+                    _descriptionScriptExpression = MVEL.compileExpression(new String(b));
+    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Pre-Initialized description script="+_descriptionScript
+                                +" compiled="+_descriptionScriptExpression);
+                    }
+                }
+            }
+            
+            // Only initialize if the script is specified, but not yet compiled
+            if (_insertTypeScript != null && _insertTypeScriptExpression == null) {
+                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_insertTypeScript);
+                
+                if (is == null) {
+                    LOG.severe("Unable to locate '"+_insertTypeScript+"'");
+                } else {
+                    byte[] b=new byte[is.available()];
+                    is.read(b);
+                    is.close();
+    
+                    // Compile expression
+                    _insertTypeScriptExpression = MVEL.compileExpression(new String(b));
+    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Pre-Initialized insert type script="+_insertTypeScript
+                                +" compiled="+_insertTypeScriptExpression);
+                    }
+                }
+            }
+            
+            // Only initialize if the script is specified, but not yet compiled
+            if (_updateTypeScript != null && _updateTypeScriptExpression == null) {
+                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_updateTypeScript);
+                
+                if (is == null) {
+                    LOG.severe("Unable to locate '"+_updateTypeScript+"'");
+                } else {
+                    byte[] b=new byte[is.available()];
+                    is.read(b);
+                    is.close();
+    
+                    // Compile expression
+                    _updateTypeScriptExpression = MVEL.compileExpression(new String(b));
+    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Pre-Initialized update type script="+_updateTypeScript
+                                +" compiled="+_updateTypeScriptExpression);
+                    }
+                }
+            }
+            
+            // Only initialize if the script is specified, but not yet compiled
+            if (_removeTypeScript != null && _removeTypeScriptExpression == null) {
+                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_removeTypeScript);
+                
+                if (is == null) {
+                    LOG.severe("Unable to locate '"+_removeTypeScript+"'");
+                } else {
+                    byte[] b=new byte[is.available()];
+                    is.read(b);
+                    is.close();
+    
+                    // Compile expression
+                    _removeTypeScriptExpression = MVEL.compileExpression(new String(b));
+    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Pre-Initialized remove type script="+_removeTypeScript
+                                +" compiled="+_removeTypeScriptExpression);
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void inserted(Object key, Object value) {
-        if (_insertType != null) {
-            Notification notification=new Notification(_insertType, this,
-                    _sequenceNumber++, value.toString());
+        String type=_insertType;
+        
+        if (type == null && _insertTypeScriptExpression != null) {
+            type = (String)MVEL.executeExpression(_insertTypeScriptExpression, value);
+        }
+        
+        if (type != null) {
+            String description=value.toString();
+            
+            if (_descriptionScriptExpression != null) {
+                description = (String)MVEL.executeExpression(_descriptionScriptExpression, value);
+            }
+            
+            Notification notification=new Notification(type, this,
+                    _sequenceNumber++, description);
             
             for (NotificationDetails n : _notificationDetails) {
                 n.getListener().handleNotification(notification, n.getHandback());
@@ -133,9 +329,21 @@ public class JMXNotifier extends AbstractActiveChangeListener
      * {@inheritDoc}
      */
     public void updated(Object key, Object value) {
-        if (_updateType != null) {
-            Notification notification=new Notification(_updateType, this,
-                    _sequenceNumber++, value.toString());
+        String type=_updateType;
+        
+        if (type == null && _updateTypeScriptExpression != null) {
+            type = (String)MVEL.executeExpression(_updateTypeScriptExpression, value);
+        }
+        
+        if (type != null) {
+            String description=value.toString();
+            
+            if (_descriptionScriptExpression != null) {
+                description = (String)MVEL.executeExpression(_descriptionScriptExpression, value);
+            }
+            
+            Notification notification=new Notification(type, this,
+                    _sequenceNumber++, description);
             
             for (NotificationDetails n : _notificationDetails) {
                 n.getListener().handleNotification(notification, n.getHandback());
@@ -147,10 +355,21 @@ public class JMXNotifier extends AbstractActiveChangeListener
      * {@inheritDoc}
      */
     public void removed(Object key, Object value) {
+        String type=_removeType;
         
-        if (_removeType != null) {
-            Notification notification=new Notification(_removeType, this,
-                    _sequenceNumber++, value.toString());
+        if (type == null && _removeTypeScriptExpression != null) {
+            type = (String)MVEL.executeExpression(_removeTypeScriptExpression, value);
+        }
+        
+        if (type != null) {
+            String description=value.toString();
+            
+            if (_descriptionScriptExpression != null) {
+                description = (String)MVEL.executeExpression(_descriptionScriptExpression, value);
+            }
+            
+            Notification notification=new Notification(type, this,
+                    _sequenceNumber++, description);
             
             for (NotificationDetails n : _notificationDetails) {
                 n.getListener().handleNotification(notification, n.getHandback());

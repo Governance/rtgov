@@ -32,7 +32,7 @@ import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.active.collection.predicate.MVEL;
 import org.overlord.bam.active.collection.predicate.Predicate;
 import org.overlord.bam.analytics.service.ResponseTime;
-import org.overlord.bam.analytics.service.SLAViolation;
+import org.overlord.bam.analytics.service.Situation;
 
 /**
  * This is the custom event monitor that receives node notifications
@@ -43,8 +43,8 @@ import org.overlord.bam.analytics.service.SLAViolation;
 @ApplicationScoped
 public class SLAMonitor {
 
-    private static final String SERVICE_RESPONSE_TIME = "ServiceResponseTime";
-    private static final String SERVICE_VIOLATIONS = "ServiceViolations";
+    private static final String SERVICE_RESPONSE_TIMES = "ServiceResponseTimes";
+    private static final String SITUATIONS = "Situations";
 
     private static final Logger LOG=Logger.getLogger(SLAMonitor.class.getName());
     
@@ -52,7 +52,7 @@ public class SLAMonitor {
 
     private ActiveCollectionManager _acmManager=null;
     private ActiveList _serviceResponseTime=null;
-    private ActiveList _serviceViolations=null;
+    private ActiveList _situations=null;
     
     /**
      * This is the default constructor.
@@ -65,10 +65,10 @@ public class SLAMonitor {
             _acmManager = (ActiveCollectionManager)ctx.lookup(ACM_MANAGER);
 
             _serviceResponseTime = (ActiveList)
-                    _acmManager.getActiveCollection(SERVICE_RESPONSE_TIME);
+                    _acmManager.getActiveCollection(SERVICE_RESPONSE_TIMES);
         
-            _serviceViolations = (ActiveList)
-                    _acmManager.getActiveCollection(SERVICE_VIOLATIONS);
+            _situations = (ActiveList)
+                    _acmManager.getActiveCollection(SITUATIONS);
         
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to initialize active collection manager", e);
@@ -116,6 +116,11 @@ public class SLAMonitor {
     protected ActiveList getResponseTimeList(String serviceType, String operation, String fault) {
     	ActiveList ret=_serviceResponseTime;
     	
+    	if (LOG.isLoggable(Level.FINE)) {
+    	    LOG.fine("Get Response Time List: serviceType="+serviceType+" operation="
+    	            +operation+" fault="+fault);
+    	}
+    	
     	if (serviceType != null || operation != null || fault != null) {
         	String alname="RespTime:"+serviceType+":"+operation+":"+fault;
 
@@ -128,10 +133,20 @@ public class SLAMonitor {
         	    
         		Predicate predicate=new MVEL(expr);        		
         		
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Create derived collection for: serviceType="+serviceType+" operation="
+                            +operation+" fault="+fault);
+                }
+                
         		ret = (ActiveList)_acmManager.create(alname, _serviceResponseTime, predicate);
         	}
     	}
     	
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Returning: serviceType="+serviceType+" operation="
+                    +operation+" fault="+fault+" ret="+ret);
+        }
+        
     	return (ret);
     }
     
@@ -157,19 +172,19 @@ public class SLAMonitor {
     }
     
     /**
-     * This method returns the list of SLA violations.
+     * This method returns the list of situations.
      * 
-     * @return The SLA violations
+     * @return The situations
      */
     @GET
-    @Path("/violations")
+    @Path("/situations")
     @Produces("application/json")
-    public java.util.List<SLAViolation> getViolations() {
-        java.util.List<SLAViolation> ret=new java.util.ArrayList<SLAViolation>();
+    public java.util.List<Situation> getSituations() {
+        java.util.List<Situation> ret=new java.util.ArrayList<Situation>();
 
-        for (Object obj : _serviceViolations) {
-            if (obj instanceof SLAViolation) {
-                ret.add((SLAViolation)obj);
+        for (Object obj : _situations) {
+            if (obj instanceof Situation) {
+                ret.add((Situation)obj);
             }
         }
         

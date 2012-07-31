@@ -30,17 +30,32 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 public abstract class AbstractActiveChangeListener implements ActiveChangeListener {
 
     /**
+     * This method pre-initializes the active change listener
+     * in situations where it needs to be initialized before
+     * registration with the collection. This may be required
+     * where the registration is performed in a different
+     * contextual classloader.
+     * 
+     * @throws Exception Failed to pre-initialize
+     */
+    protected void preInit() throws Exception {
+    }
+    
+    /**
      * This method initializes the active change listener.
      * 
+     * @throws Exception Failed to initialize
      */
-    public void init() {
+    public void init() throws Exception {
+        preInit();
     }
     
     /**
      * This method closes the active change listener.
      * 
+     * @throws Exception Failed to close
      */
-    public void close() {
+    public void close() throws Exception {
     }
     
 }
