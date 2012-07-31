@@ -300,76 +300,111 @@ public class JMXNotifier extends AbstractActiveChangeListener
     }
     
     /**
-     * {@inheritDoc}
+     * This method returns the description associated with the
+     * supplied value.
+     * 
+     * @param value The value
+     * @return The description
      */
-    public void inserted(Object key, Object value) {
+    protected String getDescription(Object value) {
+        String description=value.toString();
+        
+        if (_descriptionScriptExpression != null) {
+            description = (String)MVEL.executeExpression(_descriptionScriptExpression, value);
+        }
+        
+        return (description);
+    }
+    
+    /**
+     * This method returns the type associated with the value.
+     * 
+     * @param value The value
+     * @return The insert type
+     */
+    protected String getInsertType(Object value) {
         String type=_insertType;
         
         if (type == null && _insertTypeScriptExpression != null) {
             type = (String)MVEL.executeExpression(_insertTypeScriptExpression, value);
         }
         
+        return (type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void inserted(Object key, Object value) {
+        String type=getInsertType(value);
+        
         if (type != null) {
-            String description=value.toString();
-            
-            if (_descriptionScriptExpression != null) {
-                description = (String)MVEL.executeExpression(_descriptionScriptExpression, value);
-            }
-            
             Notification notification=new Notification(type, this,
-                    _sequenceNumber++, description);
+                    _sequenceNumber++, getDescription(value));
             
             for (NotificationDetails n : _notificationDetails) {
                 n.getListener().handleNotification(notification, n.getHandback());
             }
         }
     }
-
+    
     /**
-     * {@inheritDoc}
+     * This method returns the type associated with the value.
+     * 
+     * @param value The value
+     * @return The update type
      */
-    public void updated(Object key, Object value) {
+    protected String getUpdateType(Object value) {
         String type=_updateType;
         
         if (type == null && _updateTypeScriptExpression != null) {
             type = (String)MVEL.executeExpression(_updateTypeScriptExpression, value);
         }
         
+        return (type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void updated(Object key, Object value) {
+        String type=getUpdateType(value);
+        
         if (type != null) {
-            String description=value.toString();
-            
-            if (_descriptionScriptExpression != null) {
-                description = (String)MVEL.executeExpression(_descriptionScriptExpression, value);
-            }
-            
             Notification notification=new Notification(type, this,
-                    _sequenceNumber++, description);
+                    _sequenceNumber++, getDescription(value));
             
             for (NotificationDetails n : _notificationDetails) {
                 n.getListener().handleNotification(notification, n.getHandback());
             }
         }
     }
-
+    
     /**
-     * {@inheritDoc}
+     * This method returns the type associated with the value.
+     * 
+     * @param value The value
+     * @return The remove type
      */
-    public void removed(Object key, Object value) {
+    protected String getRemoveType(Object value) {
         String type=_removeType;
         
         if (type == null && _removeTypeScriptExpression != null) {
             type = (String)MVEL.executeExpression(_removeTypeScriptExpression, value);
         }
         
+        return (type);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removed(Object key, Object value) {
+        String type=getRemoveType(value);
+        
         if (type != null) {
-            String description=value.toString();
-            
-            if (_descriptionScriptExpression != null) {
-                description = (String)MVEL.executeExpression(_descriptionScriptExpression, value);
-            }
-            
             Notification notification=new Notification(type, this,
-                    _sequenceNumber++, description);
+                    _sequenceNumber++, getDescription(value));
             
             for (NotificationDetails n : _notificationDetails) {
                 n.getListener().handleNotification(notification, n.getHandback());
