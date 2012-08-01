@@ -26,6 +26,7 @@ import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
 import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.bam.activity.server.QuerySpec.Operator;
 
 public class QuerySpecTest {
 
@@ -146,10 +147,43 @@ public class QuerySpecTest {
     }
 
     @Test
+    public void testQueryContextMATCH() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Match,
+                        new Context(Context.PROPERTY_ID,"trader","Joe")));
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (!qs.evaluate(au)) {
+            fail("Query should evaluate to true");
+        }
+    }
+
+    @Test
+    public void testQueryContextMATCHFail() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Match,
+                        new Context(Context.MESSAGE_ID,"mid","5")));
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (qs.evaluate(au)) {
+            fail("Query should evaluate to false");
+        }
+    }
+    
+    @Test
     public void testQueryContextAND() {
-        QuerySpec qs=new QuerySpec()
-                .addContext(new Context(Context.CONVERSATION_ID,"txnId","123"))
-                .addContext(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.And,
+                        new Context(Context.CONVERSATION_ID,"txnId","123"),
+                        new Context(Context.PROPERTY_ID,"trader","Joe")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
@@ -164,9 +198,10 @@ public class QuerySpecTest {
 
     @Test
     public void testQueryContextANDFail() {
-        QuerySpec qs=new QuerySpec()
-                .addContext(new Context(Context.CONVERSATION_ID,"txnId","123"))
-                .addContext(new Context(Context.MESSAGE_ID,"mid","5"));
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.And,
+                        new Context(Context.CONVERSATION_ID,"txnId","123"),
+                        new Context(Context.MESSAGE_ID,"mid","5")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
@@ -180,11 +215,55 @@ public class QuerySpecTest {
     }
     
     @Test
+    public void testQueryContextExpressionAND() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.And,
+                        new Context(Context.CONVERSATION_ID,"txnId","123")));
+        
+        QuerySpec.Expression subexpr= new QuerySpec.Expression(Operator.Match,
+                new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        qs.getExpression().getExpressions().add(subexpr);
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.CONVERSATION_ID,"txnId","123"));
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (!qs.evaluate(au)) {
+            fail("Query should evaluate to true");
+        }
+    }
+
+    @Test
+    public void testQueryContextExpressionANDFail() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.And,
+                        new Context(Context.CONVERSATION_ID,"txnId","123")));
+        
+        QuerySpec.Expression subexpr= new QuerySpec.Expression(Operator.Match,
+                new Context(Context.MESSAGE_ID,"mid","5"));
+        
+        qs.getExpression().getExpressions().add(subexpr);
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.CONVERSATION_ID,"txnId","123"));
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (qs.evaluate(au)) {
+            fail("Query should evaluate to false");
+        }
+    }
+
+    @Test
     public void testQueryContextOR() {
-        QuerySpec qs=new QuerySpec()
-                .addContext(new Context(Context.CONVERSATION_ID,"txnId","123"))
-                .addContext(new Context(Context.PROPERTY_ID,"trader","Joe"))
-                .setContextAND(false);
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Or,
+                        new Context(Context.CONVERSATION_ID,"txnId","123"),
+                        new Context(Context.PROPERTY_ID,"trader","Joe")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
@@ -199,10 +278,10 @@ public class QuerySpecTest {
 
     @Test
     public void testQueryContextORFail() {
-        QuerySpec qs=new QuerySpec()
-                .addContext(new Context(Context.CONVERSATION_ID,"txnId","123"))
-                .addContext(new Context(Context.MESSAGE_ID,"mid","5"))
-                .setContextAND(false);
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Or,
+                        new Context(Context.CONVERSATION_ID,"txnId","123"),
+                        new Context(Context.MESSAGE_ID,"mid","5")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
@@ -216,14 +295,125 @@ public class QuerySpecTest {
     }
     
     @Test
+    public void testQueryContextExpressionOR() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Or,
+                        new Context(Context.CONVERSATION_ID,"txnId","123")));
+        
+        QuerySpec.Expression subexpr= new QuerySpec.Expression(Operator.Match,
+                new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        qs.getExpression().getExpressions().add(subexpr);
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.CONVERSATION_ID,"txnId","321"));
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (!qs.evaluate(au)) {
+            fail("Query should evaluate to true");
+        }
+    }
+
+    @Test
+    public void testQueryContextExpressionORFail() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Or,
+                        new Context(Context.CONVERSATION_ID,"txnId","123")));
+        
+        QuerySpec.Expression subexpr= new QuerySpec.Expression(Operator.Match,
+                new Context(Context.MESSAGE_ID,"mid","5"));
+        
+        qs.getExpression().getExpressions().add(subexpr);
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.CONVERSATION_ID,"txnId","321"));
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (qs.evaluate(au)) {
+            fail("Query should evaluate to false");
+        }
+    }
+
+    @Test
+    public void testQueryContextNOT() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Not,
+                        new Context(Context.MESSAGE_ID,"mid","5")));
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (!qs.evaluate(au)) {
+            fail("Query should evaluate to true");
+        }
+    }
+
+    @Test
+    public void testQueryContextNOTFail() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Not,
+                        new Context(Context.PROPERTY_ID,"trader","Joe")));
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (qs.evaluate(au)) {
+            fail("Query should evaluate to false");
+        }
+    }
+    
+    @Test
+    public void testQueryExpressionNOT() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Or,
+                new QuerySpec.Expression(Operator.Not,
+                        new Context(Context.MESSAGE_ID,"mid","5"))));
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.PROPERTY_ID,"trader","Joe"));
+        
+        if (!qs.evaluate(au)) {
+            fail("Query should evaluate to true");
+        }
+    }
+
+    
+    @Test
+    public void testQueryExpressionNOTFail() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Or,
+                new QuerySpec.Expression(Operator.Not,
+                        new Context(Context.MESSAGE_ID,"mid","5"))));
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        au.getContext().add(new Context(Context.MESSAGE_ID,"mid","5"));
+        
+        if (qs.evaluate(au)) {
+            fail("Query should evaluate to false");
+        }
+    }
+    
+    @Test
     public void testQuerySerialize() {
         QuerySpec qs=new QuerySpec()
                 .setId("TestId")
                 .setFromTimestamp(500)
                 .setToTimestamp(600)
-                .addContext(new Context(Context.CONVERSATION_ID,"txnId","123"))
-                .addContext(new Context(Context.MESSAGE_ID,"mid","5"))
-                .setContextAND(false);
+                .setExpression(new QuerySpec.Expression(Operator.Or,
+                        new Context(Context.CONVERSATION_ID,"txnId","123"),
+                        new Context(Context.MESSAGE_ID,"mid","5")));
         
         ObjectMapper mapper=new ObjectMapper();
         
@@ -245,10 +435,11 @@ public class QuerySpecTest {
     public void testQueryDeserialize() {
         ObjectMapper mapper=new ObjectMapper();
         
-        String qspec="{\"id\":\"TestId\",\"fromTimestamp\":500,\"toTimestamp\":600," +
-        		"\"contextAND\":false,\"contexts\":[{\"name\":\"txnId\",\"value\":\"123\"," +
-        		"\"type\":0},{\"name\":\"mid\",\"value\":\"5\",\"type\":2}]}";
-        
+        String qspec="{\"id\":\"TestId\",\"fromTimestamp\":500,\"toTimestamp\":600,"
+                +"\"expression\":{\"operator\":\"Or\",\"contexts\":[{\"name\":" +
+                "\"txnId\",\"value\":\"123\",\"type\":0},{\"name\":\"mid\"," +
+                "\"value\":\"5\",\"type\":2}],\"expressions\":[]}}";
+
         try {
             java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(qspec.getBytes());
             

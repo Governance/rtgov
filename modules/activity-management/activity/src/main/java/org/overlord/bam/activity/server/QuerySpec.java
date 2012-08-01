@@ -35,8 +35,7 @@ public class QuerySpec implements java.io.Externalizable {
     private String _id=null;
     private long _fromTimestamp=0;
     private long _toTimestamp=0;
-    private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
-    private boolean _contextAND=true;
+    private Expression _expression=null;
     
     /**
      * This is the default constructor.
@@ -113,58 +112,23 @@ public class QuerySpec implements java.io.Externalizable {
     }
     
     /**
-     * This method adds a context to query.
+     * This method sets the expression.
      * 
-     * @param context The context
+     * @param expr The expression
      * @return The query spec
      */
-    public QuerySpec addContext(Context context) {
-        _contexts.add(context);
-        return (this);
-    }
-
-    /**
-     * This method removes a context from the query.
-     * 
-     * @param context The context
-     * @return The query spec
-     */
-    public QuerySpec removeContext(Context context) {
-        _contexts.remove(context);
+    public QuerySpec setExpression(Expression expr) {
+        _expression = expr;
         return (this);
     }
     
     /**
-     * This method returns the list of contexts to be
-     * matched by the activity units.
+     * This method returns the expression.
      * 
-     * @return The list of contexts
+     * @return The expression
      */
-    public java.util.List<Context> getContexts() {
-        return (_contexts);
-    }
-    
-    /**
-     * This method determines whether the list of
-     * contexts to be matched should be treated as
-     * a logical conjunction (i.e. AND).
-     *
-     * @param b Whether query should treat contexts as a logical AND
-     * @return The query spec
-     */
-    public QuerySpec setContextAND(boolean b) {
-        _contextAND = b;
-        return (this);
-    }
-
-    /**
-     * This method returns whether the list of contexts
-     * is to be matched as a logical conjunction (i.e. AND).
-     * 
-     * @return Whether contexts are a logical conjunction
-     */
-    public boolean isContextAND() {
-        return (_contextAND);
+    public Expression getExpression() {
+        return (_expression);
     }
     
     /**
@@ -206,25 +170,9 @@ public class QuerySpec implements java.io.Externalizable {
             ret = false;
         }
         
-        // Evaluate the context details
-        if (ret && _contexts.size() > 0) {
-            boolean onematch=false;
-            
-            for (Context c : _contexts) {
-                if (au.getContext().contains(c)) {
-                    onematch = true;
-                    if (!_contextAND) {
-                        break;
-                    }
-                } else if (_contextAND) {
-                    ret = false;
-                    break;
-                }
-            }
-            
-            if (!_contextAND && !onematch) {
-                ret = false;
-            }
+        // Evaluate the expression
+        if (ret && _expression != null) {
+            ret = _expression.evaluate(au);
         }
         
         return (ret);
@@ -235,7 +183,7 @@ public class QuerySpec implements java.io.Externalizable {
      */
     public String toString() {
         return ("QuerySpec[id="+_id+" from="+_fromTimestamp+" to="+_toTimestamp
-                +" contexts="+_contexts+" contextAND="+_contextAND+"]");
+                +" expression="+_expression+"]");
     }
     
     /**
@@ -247,14 +195,7 @@ public class QuerySpec implements java.io.Externalizable {
         out.writeObject(_id);
         out.writeLong(_fromTimestamp);
         out.writeLong(_toTimestamp);
-        
-        out.writeInt(_contexts.size());
-        
-        for (int i=0; i < _contexts.size(); i++) {
-            out.writeObject(_contexts.get(i));
-        }
-        
-        out.writeBoolean(_contextAND);
+        out.writeObject(_expression);
     }
 
     /**
@@ -267,14 +208,276 @@ public class QuerySpec implements java.io.Externalizable {
         _id = (String)in.readObject();
         _fromTimestamp = in.readLong();
         _toTimestamp = in.readLong();
-        
-        int num=in.readInt();
-        
-        for (int i=0; i < num; i++) {
-            _contexts.add((Context)in.readObject());
-        }
-        
-        _contextAND = in.readBoolean();
+        _expression = (Expression)in.readObject();
     }
     
+    /**
+     * This enumerated type defines the supported operators.
+     *
+     */
+    public static enum Operator {
+        
+        /**
+         * Match a single context, with no sub-expressions.
+         */
+        Match,
+        
+        /**
+         * Logical AND of any context or sub-expression defined.
+         */
+        And,
+        
+        /**
+         * Logical OR of any context or sub-expression defined.
+         */
+        Or,
+        
+        /**
+         * Match a single context or sub-expression.
+         */
+        Not
+    }
+    
+    /**
+     * This class represents an operator and parameters.
+     * 
+     */
+    public static class Expression implements java.io.Externalizable {
+
+        private static final int VERSION = 1;
+        
+        private Operator _operator=null;
+        private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
+        private java.util.List<Expression> _expressions=new java.util.ArrayList<Expression>();
+        
+        /**
+         * The default constructor.
+         */
+        public Expression() {
+        }
+        
+        /**
+         * The context constructor.
+         */
+        public Expression(Operator operator, Context... context) {
+            _operator = operator;
+            
+            for (Context c : context) {
+                _contexts.add(c);
+            }
+        }
+        
+        /**
+         * The sub-expression constructor.
+         */
+        public Expression(Operator operator, Expression... expr) {
+            _operator = operator;
+            
+            for (Expression e : expr) {
+                _expressions.add(e);
+            }
+        }
+        
+        /**
+         * This method returns the operator associated with the
+         * expression.
+         * 
+         * @return The operator
+         */
+        public Operator getOperator() {
+            return (_operator);
+        }
+        
+        /**
+         * This method sets the operator associated with the
+         * expression.
+         * 
+         * @param operator The operator
+         */
+        public void setOperator(Operator operator) {
+            _operator = operator;
+        }
+        
+        /**
+         * This method returns the list of contexts.
+         * 
+         * @return The contexts
+         */
+        public java.util.List<Context> getContexts() {
+            return (_contexts);
+        }
+        
+        /**
+         * This method returns the list of sub-expressions.
+         * 
+         * @return The expressions
+         */
+        public java.util.List<Expression> getExpressions() {
+            return (_expressions);
+        }
+        
+        /**
+         * This method evaluates the supplied activity unit
+         * against the expression.
+         * 
+         * @param au The activity unit
+         * @return The result of the evaluation
+         */
+        public boolean evaluate(ActivityUnit au) {
+            boolean ret=false;
+            
+            if (_operator == Operator.Match) {
+                ret = evaluateMatch(au);
+            } else if (_operator == Operator.And) {
+                ret = evaluateAnd(au);
+            } else if (_operator == Operator.Or) {
+                ret = evaluateOr(au);
+            } else if (_operator == Operator.Not) {
+                ret = evaluateNot(au);
+            }
+            
+            return (ret);
+        }
+        
+        /**
+         * This method evaluates the Match operator.
+         * 
+         * @param au The activity unit
+         * @return The result
+         */
+        protected boolean evaluateMatch(ActivityUnit au) {
+            if (_contexts.size() == 0) {
+                return (false);
+            }
+            return (au.getContext().contains(_contexts.get(0)));
+        }
+        
+        /**
+         * This method evaluates the And operator.
+         * 
+         * @param au The activity unit
+         * @return The result
+         */
+        protected boolean evaluateAnd(ActivityUnit au) {
+            for (Context c : _contexts) {
+                if (!au.getContext().contains(c)) {
+                    return (false);
+                }
+            }
+            
+            for (Expression expr : _expressions) {
+                if (!expr.evaluate(au)) {
+                    return (false);
+                }
+            }
+            
+            return (true);
+        }
+        
+        /**
+         * This method evaluates the Or operator.
+         * 
+         * @param au The activity unit
+         * @return The result
+         */
+        protected boolean evaluateOr(ActivityUnit au) {
+            for (Context c : _contexts) {
+                if (au.getContext().contains(c)) {
+                    return (true);
+                }
+            }
+            
+            for (Expression expr : _expressions) {
+                if (expr.evaluate(au)) {
+                    return (true);
+                }
+            }
+            
+            return (false);
+        }
+        
+        /**
+         * This method evaluates the Not operator.
+         * 
+         * @param au The activity unit
+         * @return The result
+         */
+        protected boolean evaluateNot(ActivityUnit au) {
+            
+            if (_contexts.size() > 0) {
+                return (!au.getContext().contains(_contexts.get(0)));
+            }
+            
+            if (_expressions.size() > 0) {
+                return (!_expressions.get(0).evaluate(au));
+            }
+            
+            return (false);
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        public String toString() {
+            StringBuffer buf=new StringBuffer();
+            buf.append("(");
+            buf.append(_operator.name());
+            
+            for (Context c : _contexts) {
+                buf.append(" "+c);
+            }
+            
+            for (Expression e : _expressions) {
+                buf.append(" "+e);
+            }
+            
+            buf.append(")");
+            
+            return (buf.toString());
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        public void writeExternal(ObjectOutput out) throws IOException {
+            out.writeInt(VERSION);
+            
+            out.writeObject(_operator);
+            
+            out.writeInt(_contexts.size());
+            
+            for (int i=0; i < _contexts.size(); i++) {
+                out.writeObject(_contexts.get(i));
+            }
+            
+            out.writeInt(_expressions.size());
+            
+            for (int i=0; i < _expressions.size(); i++) {
+                out.writeObject(_expressions.get(i));
+            }
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void readExternal(ObjectInput in) throws IOException,
+                ClassNotFoundException {
+            in.readInt(); // Consume version number - not required at the moment
+            
+            _operator = (Operator)in.readObject();
+            
+            int num=in.readInt();
+            
+            for (int i=0; i < num; i++) {
+                _contexts.add((Context)in.readObject());
+            }
+            
+            num = in.readInt();
+            
+            for (int i=0; i < num; i++) {
+                _expressions.add((Expression)in.readObject());
+            }
+        }
+        
+    }
 }
