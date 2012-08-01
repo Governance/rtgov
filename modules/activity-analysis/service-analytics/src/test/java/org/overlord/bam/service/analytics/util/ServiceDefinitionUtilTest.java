@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.analytics.service.util;
+package org.overlord.bam.service.analytics.util;
 
 import static org.junit.Assert.*;
 
@@ -25,12 +25,13 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.analytics.service.InvocationDefinition;
-import org.overlord.bam.analytics.service.InvocationMetric;
-import org.overlord.bam.analytics.service.RequestFaultDefinition;
-import org.overlord.bam.analytics.service.RequestResponseDefinition;
-import org.overlord.bam.analytics.service.OperationDefinition;
-import org.overlord.bam.analytics.service.ServiceDefinition;
+import org.overlord.bam.service.analytics.InvocationDefinition;
+import org.overlord.bam.service.analytics.InvocationMetric;
+import org.overlord.bam.service.analytics.OperationDefinition;
+import org.overlord.bam.service.analytics.RequestFaultDefinition;
+import org.overlord.bam.service.analytics.RequestResponseDefinition;
+import org.overlord.bam.service.analytics.ServiceDefinition;
+import org.overlord.bam.service.analytics.util.ServiceDefinitionUtil;
 
 public class ServiceDefinitionUtilTest {
 

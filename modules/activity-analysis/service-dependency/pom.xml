@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overlord.bam.activity-analysis</groupId>
+	<artifactId>service-dependency</artifactId> 
+	<packaging>jar</packaging>
+	<name>Overlord BAM::Modules::Activity Analysis::Service Dependency</name>
+
+	<parent>
+		<groupId>org.overlord.bam</groupId>
+		<artifactId>activity-analysis</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.bam.activity-analysis</groupId>
+			<artifactId>service-analytics</artifactId>
+           		<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+           		<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,7 +1,7 @@
 import org.overlord.bam.activity.model.soa.RequestReceived
 import org.overlord.bam.activity.model.soa.ResponseSent
 import org.overlord.bam.activity.model.ActivityTypeRef
-import org.overlord.bam.analytics.service.ResponseTime
+import org.overlord.bam.service.analytics.ResponseTime
 
 global org.overlord.bam.epn.cep.EPNContext epn
 

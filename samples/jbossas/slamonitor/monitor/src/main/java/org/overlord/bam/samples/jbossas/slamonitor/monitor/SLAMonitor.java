@@ -31,8 +31,8 @@ import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.active.collection.predicate.MVEL;
 import org.overlord.bam.active.collection.predicate.Predicate;
-import org.overlord.bam.analytics.service.ResponseTime;
-import org.overlord.bam.analytics.service.Situation;
+import org.overlord.bam.service.analytics.ResponseTime;
+import org.overlord.bam.service.analytics.Situation;
 
 /**
  * This is the custom event monitor that receives node notifications

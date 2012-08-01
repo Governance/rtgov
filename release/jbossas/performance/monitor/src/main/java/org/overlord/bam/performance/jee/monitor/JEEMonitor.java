@@ -30,7 +30,7 @@ import javax.ws.rs.core.Response;
 import org.overlord.bam.active.collection.ActiveChangeListener;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveList;
-import org.overlord.bam.analytics.service.ResponseTime;
+import org.overlord.bam.service.analytics.ResponseTime;
 
 /**
  * This is the custom event monitor that receives node notifications

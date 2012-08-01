@@ -19,11 +19,11 @@ package org.overlord.bam.content.epn;
 
 import java.io.Serializable;
 
-import org.overlord.bam.analytics.service.MEPDefinition;
-import org.overlord.bam.analytics.service.OperationDefinition;
-import org.overlord.bam.analytics.service.RequestFaultDefinition;
-import org.overlord.bam.analytics.service.ResponseTime;
-import org.overlord.bam.analytics.service.ServiceDefinition;
+import org.overlord.bam.service.analytics.MEPDefinition;
+import org.overlord.bam.service.analytics.OperationDefinition;
+import org.overlord.bam.service.analytics.RequestFaultDefinition;
+import org.overlord.bam.service.analytics.ResponseTime;
+import org.overlord.bam.service.analytics.ServiceDefinition;
 
 /**
  * This class provides an implementation of the EventProcessor
