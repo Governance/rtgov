@@ -17,6 +17,8 @@
  */
 package org.overlord.bam.service.dependency;
 
+import java.util.logging.Logger;
+
 import org.overlord.bam.service.analytics.InvocationDefinition;
 import org.overlord.bam.service.analytics.OperationDefinition;
 import org.overlord.bam.service.analytics.RequestFaultDefinition;
@@ -28,20 +30,22 @@ import org.overlord.bam.service.analytics.ServiceDefinition;
  *
  */
 public class ServiceDependencyBuilder {
+    
+    private static final Logger LOG=Logger.getLogger(ServiceDependencyBuilder.class.getName());
 
     /**
-     * This method returns the list of service definitions that
+     * This method returns the set of service definitions that
      * initiate business activity (i.e. have no client services).
      * 
      * @param sds The service definitions
-     * @return The list of initial services
+     * @return The set of initial services
      */
-    public static java.util.List<ServiceDefinition> getInitialServices(java.util.List<ServiceDefinition> sds) {
-        java.util.List<ServiceDefinition> ret=
-                new java.util.ArrayList<ServiceDefinition>();
+    public static java.util.Set<ServiceDefinition> getInitialServices(java.util.Collection<ServiceDefinition> sds) {
+        java.util.Set<ServiceDefinition> ret=
+                new java.util.HashSet<ServiceDefinition>();
         
         for (ServiceDefinition sd : sds) {
-            java.util.List<ServiceDefinition> clients=
+            java.util.Set<ServiceDefinition> clients=
                         getServiceClients(sd.getServiceType(), sds);
             
             if (clients.size() == 0) {
@@ -53,29 +57,32 @@ public class ServiceDependencyBuilder {
     }
     
     /**
-     * This method returns the list of services that are clients to the
+     * This method returns the set of services that are clients to the
      * supplied service type.
      * 
      * @param serviceType The service type
      * @param sds The service definitions
-     * @return The list of service definitions that are clients of
+     * @return The set of service definitions that are clients of
      *                  the service type
      */
-    public static java.util.List<ServiceDefinition> getServiceClients(String serviceType,
-                        java.util.List<ServiceDefinition> sds) {
-        java.util.List<ServiceDefinition> ret=
-                new java.util.ArrayList<ServiceDefinition>();
+    public static java.util.Set<ServiceDefinition> getServiceClients(String serviceType,
+                        java.util.Collection<ServiceDefinition> sds) {
+        java.util.Set<ServiceDefinition> ret=
+                new java.util.HashSet<ServiceDefinition>();
         
         for (ServiceDefinition sd : sds) {
             if (!sd.getServiceType().equals(serviceType)) {
                 
                 for (OperationDefinition opDef : sd.getOperations()) {
-                    for (InvocationDefinition invDef :
-                                opDef.getRequestResponse().getInvocations()) {
-                        if (invDef.getServiceType().equals(serviceType)) {
-                            
-                            if (!ret.contains(sd)) {
-                                ret.add(sd);
+                    
+                    if (opDef.getRequestResponse() != null) {
+                        for (InvocationDefinition invDef :
+                                    opDef.getRequestResponse().getInvocations()) {
+                            if (invDef.getServiceType().equals(serviceType)) {
+                                
+                                if (!ret.contains(sd)) {
+                                    ret.add(sd);
+                                }
                             }
                         }
                     }
@@ -96,5 +103,97 @@ public class ServiceDependencyBuilder {
         }
         
         return (ret);
+    }
+    
+    /**
+     * This method builds a service graph from a collection of service
+     * definitions.
+     * 
+     * @param sds The service definitions
+     * @return The service graph
+     */
+    public static ServiceGraph buildGraph(java.util.Set<ServiceDefinition> sds) {
+        ServiceGraph ret=new ServiceGraph();
+        
+        // Get set of initial services
+        java.util.Set<ServiceDefinition> initialNodes=
+                        getInitialServices(sds);
+        
+        // Initialize the service nodes
+        for (ServiceDefinition sd : sds) {
+            ServiceNode sn=new ServiceNode();
+            
+            sn.setService(sd);
+            
+            for (OperationDefinition op : sd.getOperations()) {
+                OperationNode opn=new OperationNode();
+                
+                opn.setService(sd);
+                opn.setOperation(op);
+                
+                sn.getOperations().add(opn);
+            }
+            
+            sn.getProperties().put(ServiceNode.INITIAL_NODE, initialNodes.contains(sd));
+            
+            ret.getNodes().add(sn);
+        }
+        
+        // Initialize invocation links between operations
+        for (ServiceDefinition sd : sds) {
+            
+            for (OperationDefinition op : sd.getOperations()) {
+                ServiceNode sn=ret.getNode(sd.getServiceType());
+                OperationNode opn=sn.getOperation(op.getName());
+                
+                if (op.getRequestResponse() != null) {
+                    linkOperationNodes(ret, sn, opn,
+                            op.getRequestResponse().getInvocations());
+                }
+                
+                for (RequestFaultDefinition rfd : op.getRequestFaults()) {
+                    linkOperationNodes(ret, sn, opn,
+                            rfd.getInvocations());
+                }
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method links the source operation node with the invoked
+     * operation nodes.
+     * 
+     * @param sg The service graph
+     * @param sn The source service node
+     * @param opn The source operation node
+     * @param ids The list of invocations
+     */
+    protected static void linkOperationNodes(ServiceGraph sg, ServiceNode sn,
+            OperationNode opn, java.util.List<InvocationDefinition> ids) {
+        
+        for (InvocationDefinition id : ids) {
+            ServiceNode tsn=sg.getNode(id.getServiceType());
+            
+            if (tsn != null) {
+                OperationNode topn=tsn.getOperation(id.getOperation());
+                
+                if (topn != null) {
+                    InvocationLink il=new InvocationLink();
+                    
+                    il.setSource(opn);
+                    il.setTarget(topn);
+                    
+                    if (!sg.getLinks().contains(il)) {
+                        sg.getLinks().add(il);
+                    } else {
+                        LOG.fine("Link between source '"+opn
+                                +"' and target '"+topn
+                                +"' has already been defined: "+il);
+                    }
+                }
+            }
+        }
     }
 }

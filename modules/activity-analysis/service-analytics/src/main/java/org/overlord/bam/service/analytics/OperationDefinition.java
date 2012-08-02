@@ -30,27 +30,27 @@ public class OperationDefinition implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    private String _operation=null;
+    private String _name=null;
     private RequestResponseDefinition _requestResponse=null;
     private java.util.List<RequestFaultDefinition> _requestFaults=
             new java.util.ArrayList<RequestFaultDefinition>();
 
     /**
-     * This method sets the operation.
+     * This method sets the operation name.
      * 
-     * @param operation The operation
+     * @param operation The operation name
      */
-    public void setOperation(String operation) {
-        _operation = operation;
+    public void setName(String operation) {
+        _name = operation;
     }
     
     /**
-     * This method gets the operation.
+     * This method gets the operation name.
      * 
-     * @return The operation
+     * @return The operation name
      */
-    public String getOperation() {
-        return (_operation);
+    public String getName() {
+        return (_name);
     }
     
     /**
@@ -165,7 +165,7 @@ public class OperationDefinition implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public int hashCode() {
-        return (_operation.hashCode());
+        return (_name.hashCode());
     }
     
     /**
@@ -174,7 +174,7 @@ public class OperationDefinition implements java.io.Externalizable {
     public boolean equals(Object obj) {
         
         if (obj instanceof OperationDefinition
-                  && ((OperationDefinition)obj).getOperation().equals(_operation)) {
+                  && ((OperationDefinition)obj).getName().equals(_name)) {
             return (true);
         }
         
@@ -187,7 +187,7 @@ public class OperationDefinition implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_operation);
+        out.writeObject(_name);
         out.writeObject(_requestResponse);
         
         out.writeInt(_requestFaults.size());
@@ -203,7 +203,7 @@ public class OperationDefinition implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _operation = (String)in.readObject();
+        _name = (String)in.readObject();
         _requestResponse = (RequestResponseDefinition)in.readObject();
         
         int len=in.readInt();

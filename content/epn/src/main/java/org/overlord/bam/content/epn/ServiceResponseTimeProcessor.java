@@ -95,7 +95,7 @@ public class ServiceResponseTimeProcessor extends org.overlord.bam.epn.EventProc
         ResponseTime rt=new ResponseTime();
         
         rt.setServiceType(sdef.getServiceType());
-        rt.setOperation(opdef.getOperation());
+        rt.setOperation(opdef.getName());
         
         if (mep instanceof RequestFaultDefinition) {
             rt.setFault(((RequestFaultDefinition)mep).getFault());

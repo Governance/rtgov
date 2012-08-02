@@ -24,10 +24,16 @@ import org.overlord.bam.service.analytics.ServiceDefinition;
  *
  */
 public class ServiceNode {
+    
+    /**
+     * This boolean property indicates whether the service node
+     * is an initial node in the graph.
+     */
+    public static final String INITIAL_NODE="InitialNode";
 
     private ServiceDefinition _service=null;
-    private java.util.List<OperationNode> _operations=new java.util.ArrayList<OperationNode>();
-    private java.util.Properties _properties=new java.util.Properties();
+    private java.util.Set<OperationNode> _operations=new java.util.HashSet<OperationNode>();
+    private java.util.Map<String,Object> _properties=new java.util.HashMap<String,Object>();
     
     /**
      * The default constructor.
@@ -58,8 +64,28 @@ public class ServiceNode {
      * 
      * @return The operation nodes
      */
-    public java.util.List<OperationNode> getOperations() {
+    public java.util.Set<OperationNode> getOperations() {
         return (_operations);
+    }
+    
+    /**
+     * This method returns the operation node associated with
+     * the supplied name.
+     * 
+     * @param name The operation name
+     * @return The operation node, or null if not found
+     */
+    public OperationNode getOperation(String name) {
+        OperationNode ret=null;
+        
+        for (OperationNode opn : _operations) {
+            if (opn.getOperation().getName().equals(name)) {
+                ret = opn;
+                break;
+            }
+        }
+        
+        return (ret);
     }
     
     /**
@@ -68,7 +94,7 @@ public class ServiceNode {
      * 
      * @return The properties
      */
-    public java.util.Properties getProperties() {
+    public java.util.Map<String,Object> getProperties() {
         return (_properties);
     }
 }

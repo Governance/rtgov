@@ -244,7 +244,7 @@ public final class ServiceDefinitionUtil {
         
         if (op == null) {
             op = new OperationDefinition();
-            op.setOperation(rqr.getOperation());
+            op.setName(rqr.getOperation());
             sd.getOperations().add(op);
         }
         

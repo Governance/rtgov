@@ -83,7 +83,7 @@ public class ServiceDefinition implements java.io.Externalizable {
         OperationDefinition ret=null;
         
         for (int i=0; i < _operations.size(); i++) {
-            if (_operations.get(i).getOperation().equals(name)) {
+            if (_operations.get(i).getName().equals(name)) {
                 ret = _operations.get(i);
                 break;
             }
@@ -147,7 +147,7 @@ public class ServiceDefinition implements java.io.Externalizable {
         for (int i=0; i < sd.getOperations().size(); i++) {
             OperationDefinition opdef=sd.getOperations().get(i);
             
-            OperationDefinition cur=getOperation(opdef.getOperation());
+            OperationDefinition cur=getOperation(opdef.getName());
             
             if (cur != null) {
                 cur.merge(opdef);

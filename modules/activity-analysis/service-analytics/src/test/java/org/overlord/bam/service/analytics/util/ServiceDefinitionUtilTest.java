@@ -50,7 +50,7 @@ public class ServiceDefinitionUtilTest {
         OperationDefinition op1=new OperationDefinition();
         st1.getOperations().add(op1);
         
-        op1.setOperation("op1");
+        op1.setName("op1");
         
         RequestResponseDefinition nrd1=new RequestResponseDefinition();
         nrd1.getMetrics().setCount(10);
@@ -97,7 +97,7 @@ public class ServiceDefinitionUtilTest {
         OperationDefinition op1=new OperationDefinition();
         st1.getOperations().add(op1);
         
-        op1.setOperation("op1");
+        op1.setName("op1");
         
         RequestResponseDefinition nrd1=new RequestResponseDefinition();
         nrd1.getMetrics().setCount(10);
@@ -157,7 +157,7 @@ public class ServiceDefinitionUtilTest {
         
         OperationDefinition opresult=result.getOperations().get(0);
         
-        if (!opresult.getOperation().equals(op1.getOperation())) {
+        if (!opresult.getName().equals(op1.getName())) {
             fail("Operation mismatch");
         }
     }

@@ -23,8 +23,8 @@ package org.overlord.bam.service.dependency;
  */
 public class ServiceGraph {
 
-    private java.util.List<ServiceNode> _nodes=new java.util.ArrayList<ServiceNode>();
-    private java.util.List<InvocationLink> _links=new java.util.ArrayList<InvocationLink>();
+    private java.util.Set<ServiceNode> _nodes=new java.util.HashSet<ServiceNode>();
+    private java.util.Set<InvocationLink> _links=new java.util.HashSet<InvocationLink>();
  
     /**
      * The default constructor.
@@ -37,8 +37,28 @@ public class ServiceGraph {
      * 
      * @return The service nodes
      */
-    public java.util.List<ServiceNode> getNodes() {
+    public java.util.Set<ServiceNode> getNodes() {
         return (_nodes);
+    }
+    
+    /**
+     * This method returns the service node associated with
+     * the supplied service type.
+     * 
+     * @param serviceType The service type
+     * @return The service node, or null if not found
+     */
+    public ServiceNode getNode(String serviceType) {
+        ServiceNode ret=null;
+        
+        for (ServiceNode sn : _nodes) {
+            if (sn.getService().getServiceType().equals(serviceType)) {
+                ret = sn;
+                break;
+            }
+        }
+        
+        return (ret);
     }
     
     /**
@@ -46,7 +66,7 @@ public class ServiceGraph {
      * 
      * @return The service invocation links
      */
-    public java.util.List<InvocationLink> getLinks() {
+    public java.util.Set<InvocationLink> getLinks() {
         return (_links);
     }
 }

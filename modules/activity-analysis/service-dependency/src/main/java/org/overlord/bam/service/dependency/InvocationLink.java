@@ -39,6 +39,17 @@ public class InvocationLink {
     }
     
     /**
+     * This constructor sets the source and target operation nodes.
+     * 
+     * @param source The source operation node
+     * @param target The target operation node
+     */
+    public InvocationLink(OperationNode source, OperationNode target) {
+        _source = source;
+        _target = target;
+    }
+    
+    /**
      * This method returns the invocation definitions for
      * the operation being invoked. The list will include
      * invocation details for normal and fault responses.
@@ -83,5 +94,25 @@ public class InvocationLink {
      */
     public void setTarget(OperationNode node) {
         _target = node;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return (_source.hashCode());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object obj) {
+        if (obj instanceof InvocationLink) {
+            InvocationLink il=(InvocationLink)obj;
+            
+            return (il.getSource() == _source && il.getTarget() == _target);
+        }
+        
+        return (false);
     }
 }

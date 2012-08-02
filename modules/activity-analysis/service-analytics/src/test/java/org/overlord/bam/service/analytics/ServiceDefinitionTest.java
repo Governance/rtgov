@@ -58,18 +58,18 @@ public class ServiceDefinitionTest {
         sd1.setServiceType(SERVICE_TYPE_1);
         
         OperationDefinition op1=new OperationDefinition();
-        op1.setOperation(OPERATION_1);
+        op1.setName(OPERATION_1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
         sd2.setServiceType(SERVICE_TYPE_1);
         
         OperationDefinition op2=new OperationDefinition();
-        op2.setOperation(OPERATION_1);
+        op2.setName(OPERATION_1);
         sd2.getOperations().add(op2);
         
         OperationDefinition op3=new OperationDefinition();
-        op3.setOperation(OPERATION_3);
+        op3.setName(OPERATION_3);
         sd2.getOperations().add(op3);
        
         try {
