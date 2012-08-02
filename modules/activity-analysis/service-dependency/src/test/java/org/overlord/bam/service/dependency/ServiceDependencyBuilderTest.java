@@ -246,5 +246,15 @@ public class ServiceDependencyBuilderTest {
         if (result.getLinks().contains(new InvocationLink(opn3, opn2))) {
             fail("Link from op3 to op2 should not be present");
         }
+        
+        int idcount=0;
+        
+        for (InvocationLink il : result.getLinks()) {
+            idcount += il.getInvocations().size();
+        }
+        
+        if (idcount != 4) {
+            fail("Expecting 4 invocation definitions: "+idcount);
+        }
     }
 }

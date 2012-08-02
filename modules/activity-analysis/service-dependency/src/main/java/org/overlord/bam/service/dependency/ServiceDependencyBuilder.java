@@ -184,6 +184,7 @@ public class ServiceDependencyBuilder {
                     
                     il.setSource(opn);
                     il.setTarget(topn);
+                    il.getInvocations().add(id);
                     
                     if (!sg.getLinks().contains(il)) {
                         sg.getLinks().add(il);
@@ -191,6 +192,15 @@ public class ServiceDependencyBuilder {
                         LOG.fine("Link between source '"+opn
                                 +"' and target '"+topn
                                 +"' has already been defined: "+il);
+                        
+                        // Copy invocation definitions to existing link
+                        for (InvocationLink existing : sg.getLinks()) {
+                            
+                            if (existing.equals(il)) {
+                                existing.getInvocations().addAll(il.getInvocations());
+                                break;
+                            }
+                        }
                     }
                 }
             }
