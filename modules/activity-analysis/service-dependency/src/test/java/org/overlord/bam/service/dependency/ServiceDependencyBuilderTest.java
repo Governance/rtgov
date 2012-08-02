@@ -214,42 +214,75 @@ public class ServiceDependencyBuilderTest {
             fail("Result null");
         }
         
-        if (result.getNodes().size() != 3) {
-            fail("Expecting 3 nodes: "+result.getNodes().size());
+        if (result.getServiceNodes().size() != 3) {
+            fail("Expecting 3 nodes: "+result.getServiceNodes().size());
         }
         
         // Should only be 3 links, although 4 invocations, as
         // two are between the same source/target operation nodes
-        if (result.getLinks().size() != 3) {
-            fail("Expecting 3 links: "+result.getLinks().size());
+        if (result.getUsageLinks().size() != 3) {
+            fail("Expecting 3 usage links: "+result.getUsageLinks().size());
         }
         
-        ServiceNode sn1=result.getNode(SERVICE_TYPE1);
+        // Should only be 3 links, although 4 invocations, as
+        // two are between the same source/target operation nodes
+        if (result.getInvocationLinks().size() != 3) {
+            fail("Expecting 3 invocation links: "+result.getInvocationLinks().size());
+        }
+        
+        ServiceNode sn1=result.getServiceNode(SERVICE_TYPE1);
         OperationNode opn1=sn1.getOperation(OP1);
-        ServiceNode sn2=result.getNode(SERVICE_TYPE2);
+        ServiceNode sn2=result.getServiceNode(SERVICE_TYPE2);
         OperationNode opn2=sn2.getOperation(OP2);
-        ServiceNode sn3=result.getNode(SERVICE_TYPE3);
+        ServiceNode sn3=result.getServiceNode(SERVICE_TYPE3);
         OperationNode opn3=sn3.getOperation(OP3);
         
-        if (!result.getLinks().contains(new InvocationLink(opn1, opn2))) {
-            fail("Link from op1 to op2 not present");
+        if (!result.getUsageLinks().contains(new UsageLink(sn1, sn2))) {
+            fail("UsageLink from s1 to s2 not present");
         }
         
-        if (!result.getLinks().contains(new InvocationLink(opn2, opn1))) {
-            fail("Link from op2 to op1 not present");
+        if (!result.getUsageLinks().contains(new UsageLink(sn2, sn1))) {
+            fail("UsageLink from s2 to s1 not present");
         }
         
-        if (!result.getLinks().contains(new InvocationLink(opn2, opn3))) {
-            fail("Link from op2 to op3 not present");
+        if (!result.getUsageLinks().contains(new UsageLink(sn2, sn3))) {
+            fail("UsageLink from s2 to s3 not present");
         }
         
-        if (result.getLinks().contains(new InvocationLink(opn3, opn2))) {
-            fail("Link from op3 to op2 should not be present");
+        if (result.getUsageLinks().contains(new UsageLink(sn3, sn2))) {
+            fail("UsageLink from s3 to s2 should not be present");
         }
         
         int idcount=0;
         
-        for (InvocationLink il : result.getLinks()) {
+        for (UsageLink ul : result.getUsageLinks()) {
+            idcount += ul.getInvocations().size();
+        }
+        
+        if (idcount != 4) {
+            fail("Expecting 4 invocation definitions: "+idcount);
+        }
+        
+        
+        if (!result.getInvocationLinks().contains(new InvocationLink(opn1, opn2))) {
+            fail("Link from op1 to op2 not present");
+        }
+        
+        if (!result.getInvocationLinks().contains(new InvocationLink(opn2, opn1))) {
+            fail("Link from op2 to op1 not present");
+        }
+        
+        if (!result.getInvocationLinks().contains(new InvocationLink(opn2, opn3))) {
+            fail("Link from op2 to op3 not present");
+        }
+        
+        if (result.getInvocationLinks().contains(new InvocationLink(opn3, opn2))) {
+            fail("Link from op3 to op2 should not be present");
+        }
+        
+        idcount = 0;
+        
+        for (InvocationLink il : result.getInvocationLinks()) {
             idcount += il.getInvocations().size();
         }
         

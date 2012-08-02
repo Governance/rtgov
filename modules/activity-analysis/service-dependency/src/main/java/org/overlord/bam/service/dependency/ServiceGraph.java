@@ -24,7 +24,8 @@ package org.overlord.bam.service.dependency;
 public class ServiceGraph {
 
     private java.util.Set<ServiceNode> _nodes=new java.util.HashSet<ServiceNode>();
-    private java.util.Set<InvocationLink> _links=new java.util.HashSet<InvocationLink>();
+    private java.util.Set<InvocationLink> _invocationLinks=new java.util.HashSet<InvocationLink>();
+    private java.util.Set<UsageLink> _usageLinks=new java.util.HashSet<UsageLink>();
  
     /**
      * The default constructor.
@@ -37,7 +38,7 @@ public class ServiceGraph {
      * 
      * @return The service nodes
      */
-    public java.util.Set<ServiceNode> getNodes() {
+    public java.util.Set<ServiceNode> getServiceNodes() {
         return (_nodes);
     }
     
@@ -48,7 +49,7 @@ public class ServiceGraph {
      * @param serviceType The service type
      * @return The service node, or null if not found
      */
-    public ServiceNode getNode(String serviceType) {
+    public ServiceNode getServiceNode(String serviceType) {
         ServiceNode ret=null;
         
         for (ServiceNode sn : _nodes) {
@@ -66,7 +67,16 @@ public class ServiceGraph {
      * 
      * @return The service invocation links
      */
-    public java.util.Set<InvocationLink> getLinks() {
-        return (_links);
+    public java.util.Set<InvocationLink> getInvocationLinks() {
+        return (_invocationLinks);
+    }
+    
+    /**
+     * This method returns the service usage links.
+     * 
+     * @return The service usage links
+     */
+    public java.util.Set<UsageLink> getUsageLinks() {
+        return (_usageLinks);
     }
 }

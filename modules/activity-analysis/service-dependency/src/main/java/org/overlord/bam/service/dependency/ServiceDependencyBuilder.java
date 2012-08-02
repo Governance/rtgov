@@ -136,14 +136,14 @@ public class ServiceDependencyBuilder {
             
             sn.getProperties().put(ServiceNode.INITIAL_NODE, initialNodes.contains(sd));
             
-            ret.getNodes().add(sn);
+            ret.getServiceNodes().add(sn);
         }
         
         // Initialize invocation links between operations
         for (ServiceDefinition sd : sds) {
             
             for (OperationDefinition op : sd.getOperations()) {
-                ServiceNode sn=ret.getNode(sd.getServiceType());
+                ServiceNode sn=ret.getServiceNode(sd.getServiceType());
                 OperationNode opn=sn.getOperation(op.getName());
                 
                 if (op.getRequestResponse() != null) {
@@ -174,9 +174,33 @@ public class ServiceDependencyBuilder {
             OperationNode opn, java.util.List<InvocationDefinition> ids) {
         
         for (InvocationDefinition id : ids) {
-            ServiceNode tsn=sg.getNode(id.getServiceType());
+            ServiceNode tsn=sg.getServiceNode(id.getServiceType());
             
             if (tsn != null) {
+                UsageLink ul=new UsageLink();
+                
+                ul.setSource(sn);
+                ul.setTarget(tsn);
+                ul.getInvocations().add(id);
+                
+                if (!sg.getUsageLinks().contains(ul)) {
+                    sg.getUsageLinks().add(ul);
+                } else {
+                    LOG.fine("Usage link between source '"+sn
+                            +"' and target '"+tsn
+                            +"' has already been defined: "+ul);
+                    
+                    // Copy invocation definitions to existing link
+                    for (UsageLink existing : sg.getUsageLinks()) {
+                        
+                        if (existing.equals(ul)) {
+                            existing.getInvocations().addAll(ul.getInvocations());
+                            break;
+                        }
+                    }
+                }
+
+                // Find target for invocation link
                 OperationNode topn=tsn.getOperation(id.getOperation());
                 
                 if (topn != null) {
@@ -186,15 +210,15 @@ public class ServiceDependencyBuilder {
                     il.setTarget(topn);
                     il.getInvocations().add(id);
                     
-                    if (!sg.getLinks().contains(il)) {
-                        sg.getLinks().add(il);
+                    if (!sg.getInvocationLinks().contains(il)) {
+                        sg.getInvocationLinks().add(il);
                     } else {
                         LOG.fine("Link between source '"+opn
                                 +"' and target '"+topn
                                 +"' has already been defined: "+il);
                         
                         // Copy invocation definitions to existing link
-                        for (InvocationLink existing : sg.getLinks()) {
+                        for (InvocationLink existing : sg.getInvocationLinks()) {
                             
                             if (existing.equals(il)) {
                                 existing.getInvocations().addAll(il.getInvocations());
