@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.overlord.bam.service.dependency.InvocationLink;
 import org.overlord.bam.service.dependency.OperationNode;
 import org.overlord.bam.service.dependency.ServiceGraph;
 import org.overlord.bam.service.dependency.ServiceNode;
@@ -73,6 +74,10 @@ public class SVGServiceGraphGenerator {
             
             for (UsageLink ul : sg.getUsageLinks()) {
                 generateUsageLink(ul, container, insertPoint);
+            }
+
+            for (InvocationLink il : sg.getInvocationLinks()) {
+                generateInvocationLink(il, container, insertPoint);
             }
 
             // Remove insertion point
@@ -128,9 +133,79 @@ public class SVGServiceGraphGenerator {
         polygon.appendChild(title);
     
         org.w3c.dom.Text titleText=
-                container.getOwnerDocument().createTextNode(ul.toString());
+                container.getOwnerDocument().createTextNode(getDescription(ul));
         title.appendChild(titleText);
     
+    }
+    
+    /**
+     * This method returns the description to be used for the
+     * invocation link.
+     * 
+     * @param il The invocation link
+     * @return The description
+     */
+    protected String getDescription(UsageLink ul) {
+        return (ul.getSource().getService().getServiceType()
+                +" -> "+ul.getTarget().getService().getServiceType());
+    }
+    
+    /**
+     * This method generates the invocation link.
+     * 
+     * @param il The invocation link
+     * @param container The container
+     * @param insertPoint The insertion point
+     */
+    protected void generateInvocationLink(InvocationLink il,
+                    org.w3c.dom.Element container, org.w3c.dom.Node insertPoint) {
+        
+        int x1=(Integer)il.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
+                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.WIDTH);
+        
+        int y1=(Integer)il.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION)
+                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.HEIGHT)/2;
+        
+        int x2=(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION);
+        
+        int y2=(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION)
+                +(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT)/2;
+        
+        org.w3c.dom.Element line=
+                container.getOwnerDocument().createElement("line");
+        line.setAttribute("x1", ""+x1);
+        line.setAttribute("y1", ""+y1);
+        line.setAttribute("x2", ""+x2);
+        line.setAttribute("y2", ""+y2);
+        
+        //String colour="#FF0000";
+        String colour="#00FF00";
+        
+        line.setAttribute("style", "stroke:"+colour+";stroke-width:3");
+        
+        container.insertBefore(line, insertPoint);
+        
+        // Title
+        org.w3c.dom.Element title=
+                container.getOwnerDocument().createElement("desc");
+        line.appendChild(title);
+    
+        org.w3c.dom.Text titleText=
+                container.getOwnerDocument().createTextNode(getDescription(il));
+        title.appendChild(titleText);
+    
+    }
+    
+    /**
+     * This method returns the description to be used for the
+     * invocation link.
+     * 
+     * @param il The invocation link
+     * @return The description
+     */
+    protected String getDescription(InvocationLink il) {
+        return (il.getTarget().getService().getServiceType()
+                +" -> "+il.getTarget().getOperation().getName());
     }
     
     /**
