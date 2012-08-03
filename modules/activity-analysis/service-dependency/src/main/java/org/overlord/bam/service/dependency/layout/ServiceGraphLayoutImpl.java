@@ -47,7 +47,7 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
     /**
      * This definition represents the width of a service node.
      */
-    protected static final int SERVICE_WIDTH=OPERATION_WIDTH+(2*SERVICE_BORDER_PADDING);
+    protected static final int SERVICE_WIDTH=OPERATION_WIDTH+(2 * SERVICE_BORDER_PADDING);
     
     /**
      * This definition represents the padding for the service node header.
@@ -112,8 +112,8 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
             sn.getProperties().put(ServiceGraphLayout.WIDTH, SERVICE_WIDTH);
             sn.getProperties().put(ServiceGraphLayout.HEIGHT,
                     SERVICE_HEADER_PADDING+((OPERATION_HEIGHT
-                            +SERVICE_BORDER_PADDING)
-                            *sn.getOperations().size()));
+                            + SERVICE_BORDER_PADDING)
+                            * sn.getOperations().size()));
             
             int opX=x+SERVICE_BORDER_PADDING;
             int opY=y+SERVICE_HEADER_PADDING;

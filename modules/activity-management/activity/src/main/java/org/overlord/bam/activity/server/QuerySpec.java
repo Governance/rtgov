@@ -258,6 +258,9 @@ public class QuerySpec implements java.io.Externalizable {
         
         /**
          * The context constructor.
+         * 
+         * @param operator The operator
+         * @param context The list of contexts
          */
         public Expression(Operator operator, Context... context) {
             _operator = operator;
@@ -269,6 +272,9 @@ public class QuerySpec implements java.io.Externalizable {
         
         /**
          * The sub-expression constructor.
+         * 
+         * @param operator The operator
+         * @param expr The list of sub-expressions
          */
         public Expression(Operator operator, Expression... expr) {
             _operator = operator;

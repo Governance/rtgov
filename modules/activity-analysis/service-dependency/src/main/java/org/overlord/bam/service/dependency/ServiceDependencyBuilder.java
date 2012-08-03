@@ -29,10 +29,16 @@ import org.overlord.bam.service.analytics.ServiceDefinition;
  * dependency between a list of service definitions.
  *
  */
-public class ServiceDependencyBuilder {
+public final class ServiceDependencyBuilder {
     
     private static final Logger LOG=Logger.getLogger(ServiceDependencyBuilder.class.getName());
 
+    /**
+     * The default constructor.
+     */
+    private ServiceDependencyBuilder() {
+    }
+    
     /**
      * This method returns the set of service definitions that
      * initiate business activity (i.e. have no client services).
@@ -76,8 +82,8 @@ public class ServiceDependencyBuilder {
                 for (OperationDefinition opDef : sd.getOperations()) {
                     
                     if (opDef.getRequestResponse() != null) {
-                        for (InvocationDefinition invDef :
-                                    opDef.getRequestResponse().getInvocations()) {
+                        for (InvocationDefinition invDef
+                                    : opDef.getRequestResponse().getInvocations()) {
                             if (invDef.getServiceType().equals(serviceType)) {
                                 
                                 if (!ret.contains(sd)) {
@@ -88,8 +94,8 @@ public class ServiceDependencyBuilder {
                     }
                     
                     for (RequestFaultDefinition rfd : opDef.getRequestFaults()) {
-                        for (InvocationDefinition invDef :
-                                        rfd.getInvocations()) {
+                        for (InvocationDefinition invDef
+                                    : rfd.getInvocations()) {
                             if (invDef.getServiceType().equals(serviceType)) {
                                 
                                 if (!ret.contains(sd)) {

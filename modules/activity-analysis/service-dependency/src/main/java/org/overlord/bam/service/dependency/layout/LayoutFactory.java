@@ -22,7 +22,13 @@ package org.overlord.bam.service.dependency.layout;
  * algorithms.
  *
  */
-public class LayoutFactory {
+public final class LayoutFactory {
+    
+    /**
+     * This is the default constructor.
+     */
+    private LayoutFactory() {
+    }
 
     /**
      * This method returns the service graph layout algorithm.
