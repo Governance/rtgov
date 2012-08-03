@@ -32,7 +32,7 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
     /**
      * This definition represents the width of an operation node.
      */
-    protected static final int OPERATION_WIDTH=80;
+    protected static final int OPERATION_WIDTH=160;
     
     /**
      * This definition represents the height of an operation node.
@@ -57,7 +57,7 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
     /**
      * This definition represents the horizontal padding between service nodes.
      */
-    protected static final int SERVICE_HORIZONTAL_PADDING=100;
+    protected static final int SERVICE_HORIZONTAL_PADDING=200;
     
     /**
      * This definition represents the vertical padding between service nodes.
