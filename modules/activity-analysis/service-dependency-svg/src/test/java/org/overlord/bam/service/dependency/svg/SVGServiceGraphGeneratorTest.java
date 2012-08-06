@@ -32,6 +32,7 @@ import org.overlord.bam.service.dependency.layout.ServiceGraphLayoutImpl;
 public class SVGServiceGraphGeneratorTest {
 
     private static final String FAULT2 = "Fault2";
+    private static final String OP5 = "op5";
     private static final String OP4 = "op4";
     private static final String OP3 = "op3";
     private static final String OP2 = "op2";
@@ -65,10 +66,20 @@ public class SVGServiceGraphGeneratorTest {
         id1.setOperation(OP2);
         rrd1.getInvocations().add(id1);
         
+        id1.getMetrics().setCount(5);
+        id1.getMetrics().setAverage(200);
+        id1.getMetrics().setMax(220);
+        id1.getMetrics().setMin(140);
+        
         InvocationDefinition id1b=new InvocationDefinition();
         id1b.setServiceType(SERVICE_TYPE4);
         id1b.setOperation(OP4);
         rrd1.getInvocations().add(id1b);
+        
+        id1b.getMetrics().setCount(8);
+        id1b.getMetrics().setAverage(250);
+        id1b.getMetrics().setMax(255);
+        id1b.getMetrics().setMin(140);
         
         ServiceDefinition sd2=new ServiceDefinition();
         sd2.setServiceType(SERVICE_TYPE2);
@@ -80,19 +91,39 @@ public class SVGServiceGraphGeneratorTest {
         RequestResponseDefinition rrd2=new RequestResponseDefinition();
         op2.setRequestResponse(rrd2);
         
+        rrd2.getMetrics().setCount(2);
+        rrd2.getMetrics().setAverage(100);
+        rrd2.getMetrics().setMax(200);
+        rrd2.getMetrics().setMin(20);
+        
         InvocationDefinition id2c=new InvocationDefinition();
         id2c.setServiceType(SERVICE_TYPE3);
         id2c.setOperation(OP3);
         rrd2.getInvocations().add(id2c);
         
+        id2c.getMetrics().setCount(2);
+        id2c.getMetrics().setAverage(100);
+        id2c.getMetrics().setMax(200);
+        id2c.getMetrics().setMin(20);
+        
         RequestFaultDefinition rfd2=new RequestFaultDefinition();
         rfd2.setFault(FAULT2);
         op2.getRequestFaults().add(rfd2);
         
+        rfd2.getMetrics().setCount(3);
+        rfd2.getMetrics().setAverage(80);
+        rfd2.getMetrics().setMax(180);
+        rfd2.getMetrics().setMin(50);
+
         InvocationDefinition id2b=new InvocationDefinition();
         id2b.setServiceType(SERVICE_TYPE3);
         id2b.setOperation(OP3);
         rfd2.getInvocations().add(id2b);
+        
+        id2b.getMetrics().setCount(1);
+        id2b.getMetrics().setAverage(90);
+        id2b.getMetrics().setMax(90);
+        id2b.getMetrics().setMin(90);
         
         ServiceDefinition sd3=new ServiceDefinition();
         sd3.setServiceType(SERVICE_TYPE3);
@@ -101,14 +132,22 @@ public class SVGServiceGraphGeneratorTest {
         op3.setName(OP3);
         sd3.getOperations().add(op3);
         
+        op3.getMetrics().setCount(3);
+        op3.getMetrics().setAverage(80);
+        op3.getMetrics().setMax(180);
+        op3.getMetrics().setMin(50);
+                
         ServiceDefinition sd4=new ServiceDefinition();
         sd4.setServiceType(SERVICE_TYPE4);
-        
+
         OperationDefinition op4=new OperationDefinition();
         op4.setName(OP4);
         sd4.getOperations().add(op4);
         
-        
+        OperationDefinition op5=new OperationDefinition();
+        op5.setName(OP5);
+        sd4.getOperations().add(op5);
+                
         java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
         sds.add(sd1);
         sds.add(sd2);

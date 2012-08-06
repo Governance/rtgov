@@ -78,7 +78,7 @@ public class SVGServiceGraphGenerator {
                 text.setAttribute("y", "20");
                 text.setAttribute("font-size", "14");
                 text.setAttribute("font-family", "Verdana");
-                text.setAttribute("fill", "#00008F");
+                text.setAttribute("fill", "black");
 
                 container.insertBefore(text, insertPoint);
             
@@ -143,11 +143,13 @@ public class SVGServiceGraphGenerator {
                 container.getOwnerDocument().createElement("polygon");
         polygon.setAttribute("points", x1+","+y1+" "+x2+","+y2+" "
                 +x3+","+y3+" "+x4+","+y4);
-        polygon.setAttribute("style", "fill:#FFD6AD;fill-opacity:0.3");
+
+        InvocationMetric im=getMetrics(ul.getInvocations());
+        String colour=getColour(im);
+        
+        polygon.setAttribute("style", "fill:"+colour+";fill-opacity:0.2");
         
         container.insertBefore(polygon, insertPoint);
-        
-        InvocationMetric im=getMetrics(ul.getInvocations());
         
         // Generate tooltip
         generateMetrics(polygon, getDescription(ul), im);
@@ -182,10 +184,18 @@ public class SVGServiceGraphGenerator {
             
             double ratio=mid/gap;
             
-            if (ratio > 0.8) {
+            if (ratio > 0.95) {
                 ret = "#FF0000";
+            } else if (ratio > 0.9) {
+                ret = "#FF3300";
+            } else if (ratio > 0.85) {
+                ret = "#FF5930";
+            } else if (ratio > 0.8) {
+                ret = "#FF6A45";
+            } else if (ratio > 0.75) {
+                ret = "#FF9479";
             } else if (ratio > 0.7) {
-                ret = "#FF9933";
+                ret = "#FF9900";
             }
         }
         
@@ -346,8 +356,8 @@ public class SVGServiceGraphGenerator {
 
         String countValue="Count "+metrics.getCount();
         String avgValue="Avg "+metrics.getAverage();
-        String minValue="Min "+metrics.getMinChange();
-        String maxValue="Max "+metrics.getMaxChange();
+        String minValue="Min "+metrics.getMin();
+        String maxValue="Max "+metrics.getMax();
         
         if (metrics.getAverageChange() != 0 || metrics.getMaxChange() != 0
                 || metrics.getMinChange() != 0 || metrics.getCountChange() != 0) {
@@ -413,7 +423,10 @@ public class SVGServiceGraphGenerator {
                 opn.getProperties().get(ServiceGraphLayout.Y_POSITION).toString());
         
         rect.setAttribute("fill", "#85D6FF");
-        rect.setAttribute("stroke", "#78C1E6");
+
+        String colour=getColour(opn.getOperation().getMetrics());
+        
+        rect.setAttribute("stroke", colour);
         rect.setAttribute("stroke-width", "1");
         
         container.insertBefore(rect, insertPoint);
@@ -440,6 +453,10 @@ public class SVGServiceGraphGenerator {
         text.appendChild(value);
         
         container.insertBefore(text, insertPoint);
+        
+        // Generate tooltip
+        generateMetrics(rect, opn.getOperation().getName(),
+                opn.getOperation().getMetrics());
     }
     
     /**
