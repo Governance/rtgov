@@ -17,7 +17,7 @@
  */
 package org.overlord.bam.service.dependency;
 
-import org.overlord.bam.service.analytics.InvocationDefinition;
+import org.overlord.bam.analytics.service.InvocationDefinition;
 
 /**
  * This class represents the invocation link between a

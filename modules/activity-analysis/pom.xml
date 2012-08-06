@@ -15,7 +15,7 @@
 	</parent>
 
 	<modules>
-		<module>service-analytics</module>
+		<module>analytics</module>
 		<module>service-dependency</module>
 		<module>service-dependency-svg</module>
 	</modules>

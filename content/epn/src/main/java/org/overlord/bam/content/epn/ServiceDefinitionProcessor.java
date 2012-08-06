@@ -23,8 +23,8 @@ import java.util.logging.Logger;
 
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.util.ActivityUtil;
-import org.overlord.bam.service.analytics.ServiceDefinition;
-import org.overlord.bam.service.analytics.util.ServiceDefinitionUtil;
+import org.overlord.bam.analytics.service.ServiceDefinition;
+import org.overlord.bam.analytics.service.util.ServiceDefinitionUtil;
 
 /**
  * This class provides an implementation of the EventProcessor

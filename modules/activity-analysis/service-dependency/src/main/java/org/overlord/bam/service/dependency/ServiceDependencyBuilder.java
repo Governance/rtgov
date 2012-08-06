@@ -19,10 +19,10 @@ package org.overlord.bam.service.dependency;
 
 import java.util.logging.Logger;
 
-import org.overlord.bam.service.analytics.InvocationDefinition;
-import org.overlord.bam.service.analytics.OperationDefinition;
-import org.overlord.bam.service.analytics.RequestFaultDefinition;
-import org.overlord.bam.service.analytics.ServiceDefinition;
+import org.overlord.bam.analytics.service.InvocationDefinition;
+import org.overlord.bam.analytics.service.OperationDefinition;
+import org.overlord.bam.analytics.service.RequestFaultDefinition;
+import org.overlord.bam.analytics.service.ServiceDefinition;
 
 /**
  * This class builds a service view representing the

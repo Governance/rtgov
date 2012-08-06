@@ -20,11 +20,11 @@ package org.overlord.bam.service.dependency;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.service.analytics.InvocationDefinition;
-import org.overlord.bam.service.analytics.OperationDefinition;
-import org.overlord.bam.service.analytics.RequestFaultDefinition;
-import org.overlord.bam.service.analytics.RequestResponseDefinition;
-import org.overlord.bam.service.analytics.ServiceDefinition;
+import org.overlord.bam.analytics.service.InvocationDefinition;
+import org.overlord.bam.analytics.service.OperationDefinition;
+import org.overlord.bam.analytics.service.RequestFaultDefinition;
+import org.overlord.bam.analytics.service.RequestResponseDefinition;
+import org.overlord.bam.analytics.service.ServiceDefinition;
 
 public class ServiceDependencyBuilderTest {
 

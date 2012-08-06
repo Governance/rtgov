@@ -1,6 +1,6 @@
 import org.overlord.bam.activity.model.ActivityTypeRef
-import org.overlord.bam.service.analytics.ResponseTime
-import org.overlord.bam.service.analytics.Situation
+import org.overlord.bam.analytics.service.ResponseTime
+import org.overlord.bam.analytics.Situation
 
 global org.overlord.bam.epn.cep.EPNContext epn
 

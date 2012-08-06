@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 import org.overlord.bam.active.collection.ActiveCollection;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveMap;
-import org.overlord.bam.service.analytics.ServiceDefinition;
+import org.overlord.bam.analytics.service.ServiceDefinition;
 import org.overlord.bam.service.dependency.ServiceDependencyBuilder;
 import org.overlord.bam.service.dependency.ServiceGraph;
 import org.overlord.bam.service.dependency.layout.ServiceGraphLayoutImpl;

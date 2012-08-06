@@ -25,10 +25,10 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.service.analytics.InvocationDefinition;
-import org.overlord.bam.service.analytics.InvocationMetric;
-import org.overlord.bam.service.analytics.OperationDefinition;
-import org.overlord.bam.service.analytics.ServiceDefinition;
+import org.overlord.bam.analytics.service.InvocationDefinition;
+import org.overlord.bam.analytics.service.InvocationMetric;
+import org.overlord.bam.analytics.service.OperationDefinition;
+import org.overlord.bam.analytics.service.ServiceDefinition;
 
 public class ServiceDefinitionProcessorTest {
 

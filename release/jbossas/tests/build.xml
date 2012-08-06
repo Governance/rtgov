@@ -17,8 +17,8 @@
 				tofile="${jboss.home}/modules/org/overlord/bam/main/active-collection.jar" />
 		<copy file="${org.overlord.bam.active-queries:acs-epn:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/acs-epn.jar" />
-		<copy file="${org.overlord.bam.activity-analysis:service-analytics:jar}"
-				tofile="${jboss.home}/modules/org/overlord/bam/main/service-analytics.jar" />
+		<copy file="${org.overlord.bam.activity-analysis:analytics:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/analytics.jar" />
 		<copy file="${org.codehaus.jackson:jackson-core-asl:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/jackson-core-asl.jar" />
 		<copy file="${org.codehaus.jackson:jackson-mapper-asl:jar}"

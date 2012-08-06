@@ -24,8 +24,8 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.overlord.bam.service.analytics.InvocationDefinition;
-import org.overlord.bam.service.analytics.InvocationMetric;
+import org.overlord.bam.analytics.service.InvocationDefinition;
+import org.overlord.bam.analytics.service.InvocationMetric;
 import org.overlord.bam.service.dependency.InvocationLink;
 import org.overlord.bam.service.dependency.OperationNode;
 import org.overlord.bam.service.dependency.ServiceGraph;

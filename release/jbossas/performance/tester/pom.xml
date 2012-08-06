@@ -94,7 +94,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.activity-analysis</groupId>
-			<artifactId>service-analytics</artifactId>
+			<artifactId>analytics</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
 		</dependency>

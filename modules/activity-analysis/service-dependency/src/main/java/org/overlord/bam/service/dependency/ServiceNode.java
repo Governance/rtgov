@@ -17,7 +17,7 @@
  */
 package org.overlord.bam.service.dependency;
 
-import org.overlord.bam.service.analytics.ServiceDefinition;
+import org.overlord.bam.analytics.service.ServiceDefinition;
 
 /**
  * This class represents a node in the service graph.

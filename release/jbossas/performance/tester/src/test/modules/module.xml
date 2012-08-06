@@ -30,7 +30,7 @@
         <resource-root path="epn-processor-cep.jar"/>
         <resource-root path="active-collection.jar"/>
         <resource-root path="acs-epn.jar"/>
-        <resource-root path="service-analytics.jar"/>
+        <resource-root path="analytics.jar"/>
 
         <resource-root path="jackson-core-asl.jar"/>
         <resource-root path="jackson-mapper-asl.jar"/>
