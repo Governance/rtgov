@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE svg PUBLIC "-_W3C_DTD SVG 1.0_EN" "http://www.w3.org/TR/SVG/DTD/svg10.dtd" >
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'
-   onload='Init(evt)'>
-
-   <title>Service Graph</title>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+		contentScriptType="text/ecmascript" contentStyleType="text/css" 
+		onload="Init(evt)" preserveAspectRatio="xMidYMid meet" version="1.0" 
+		zoomAndPan="magnify">
+   <title>Service Dependency Overview</title>
 
    <desc>
       Service Graph representing the usage and invocation links between services.

@@ -31,6 +31,8 @@
         <resource-root path="active-collection.jar"/>
         <resource-root path="acs-epn.jar"/>
         <resource-root path="service-analytics.jar"/>
+        <resource-root path="service-dependency.jar"/>
+        <resource-root path="service-dependency-svg.jar"/>
 
         <resource-root path="jackson-core-asl.jar"/>
         <resource-root path="jackson-mapper-asl.jar"/>

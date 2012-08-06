@@ -20,6 +20,7 @@ package org.overlord.bam.service.dependency.svg;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -306,9 +307,11 @@ public class SVGServiceGraphGenerator {
         text.setAttribute("font-size", "10");
         text.setAttribute("fill", "#00008F");
         
+        QName qname=QName.valueOf(sn.getService().getServiceType());
+        
         org.w3c.dom.Text value=
                 container.getOwnerDocument().createTextNode(
-                        sn.getService().getServiceType());
+                        qname.getLocalPart());
         text.appendChild(value);
         
         container.insertBefore(text, insertPoint);
@@ -488,9 +491,15 @@ public class SVGServiceGraphGenerator {
         org.w3c.dom.Document ret=null;
         
         try {
-            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("templates"
-                            +java.io.File.separator+name+".svg");
+            String template="templates"+java.io.File.separator+name+".svg";
             
+            java.io.InputStream is=
+                    Thread.currentThread().getContextClassLoader().getResourceAsStream("/"+template);
+            
+            if (is == null) {
+                is = Thread.currentThread().getContextClassLoader().getResourceAsStream(template);
+            }
+
             DocumentBuilder builder=DocumentBuilderFactory.newInstance().newDocumentBuilder();
             
             ret = builder.parse(is);

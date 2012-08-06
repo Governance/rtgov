@@ -23,7 +23,8 @@ import org.overlord.bam.active.collection.predicate.Predicate;
  * This class provides the base Active Collection implementation.
  *
  */
-public abstract class ActiveCollection implements ActiveCollectionMBean {
+public abstract class ActiveCollection implements ActiveCollectionMBean,
+                            java.lang.Iterable<Object> {
 
     private String _name=null;
     private java.util.List<ActiveChangeListener> _listeners=

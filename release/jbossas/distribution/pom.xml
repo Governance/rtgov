@@ -34,6 +34,12 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.bam.content.services</groupId>
+			<artifactId>overlord-bam-services</artifactId>
+			<version>${bam.version}</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${bam.version}</version>
@@ -61,6 +67,16 @@
 		<dependency>
 			<groupId>org.overlord.bam.activity-analysis</groupId>
 			<artifactId>service-analytics</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.activity-analysis</groupId>
+			<artifactId>service-dependency</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.activity-analysis</groupId>
+			<artifactId>service-dependency-svg</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>

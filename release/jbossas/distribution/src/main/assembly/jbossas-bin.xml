@@ -72,6 +72,7 @@
 				<include>org.overlord.bam.release.jbossas:overlord-bam:war</include>
 				<include>org.overlord.bam.content:overlord-bam-epn:war</include>
 				<include>org.overlord.bam.content:overlord-bam-acs:war</include>
+				<include>org.overlord.bam.content.services:overlord-bam-services:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
@@ -95,6 +96,8 @@
 				<include>org.overlord.bam.active-queries:active-collection:jar</include>
 				<include>org.overlord.bam.active-queries:acs-epn:jar</include>
 				<include>org.overlord.bam.activity-analysis:service-analytics:jar</include>
+				<include>org.overlord.bam.activity-analysis:service-dependency:jar</include>
+				<include>org.overlord.bam.activity-analysis:service-dependency-svg:jar</include>
 				<include>org.codehaus.jackson:jackson-core-asl:jar</include>
 				<include>org.codehaus.jackson:jackson-mapper-asl:jar</include>
 			</includes>
