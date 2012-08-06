@@ -122,6 +122,8 @@ public class SVGServiceGraphGeneratorTest {
             fail("Graph is null");
         }
         
+        graph.setDescription("Graph description");
+        
         ServiceGraphLayoutImpl layout=new ServiceGraphLayoutImpl();
         
         layout.layout(graph);

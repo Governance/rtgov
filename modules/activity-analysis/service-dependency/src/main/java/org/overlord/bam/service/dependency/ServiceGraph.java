@@ -26,11 +26,31 @@ public class ServiceGraph {
     private java.util.Set<ServiceNode> _nodes=new java.util.HashSet<ServiceNode>();
     private java.util.Set<InvocationLink> _invocationLinks=new java.util.HashSet<InvocationLink>();
     private java.util.Set<UsageLink> _usageLinks=new java.util.HashSet<UsageLink>();
+    
+    private String _description=null;
  
     /**
      * The default constructor.
      */
     public ServiceGraph() {
+    }
+    
+    /**
+     * This method returns the description.
+     * 
+     * @return The description
+     */
+    public String getDescription() {
+        return (_description);
+    }
+    
+    /**
+     * This method sets the description.
+     * 
+     * @param description The description
+     */
+    public void setDescription(String description) {
+        _description = description;
     }
     
     /**

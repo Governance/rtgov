@@ -23,6 +23,8 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.overlord.bam.service.analytics.InvocationDefinition;
+import org.overlord.bam.service.analytics.InvocationMetric;
 import org.overlord.bam.service.dependency.InvocationLink;
 import org.overlord.bam.service.dependency.OperationNode;
 import org.overlord.bam.service.dependency.ServiceGraph;
@@ -68,6 +70,24 @@ public class SVGServiceGraphGenerator {
                 insertPoint = nl.item(0);
             }
             
+            // Add description
+            if (sg.getDescription() != null) {
+                org.w3c.dom.Element text=
+                        container.getOwnerDocument().createElement("text");
+                text.setAttribute("x", "10");
+                text.setAttribute("y", "20");
+                text.setAttribute("font-size", "14");
+                text.setAttribute("font-family", "Verdana");
+                text.setAttribute("fill", "#00008F");
+
+                container.insertBefore(text, insertPoint);
+            
+                org.w3c.dom.Text textValue=
+                        container.getOwnerDocument().createTextNode(sg.getDescription());
+                text.appendChild(textValue);
+            }
+            
+            // Generate nodes and links
             for (ServiceNode sn : sg.getServiceNodes()) {
                 generateService(sn, container, insertPoint);
             }
@@ -127,15 +147,10 @@ public class SVGServiceGraphGenerator {
         
         container.insertBefore(polygon, insertPoint);
         
-        // Title
-        org.w3c.dom.Element title=
-                container.getOwnerDocument().createElement("desc");
-        polygon.appendChild(title);
-    
-        org.w3c.dom.Text titleText=
-                container.getOwnerDocument().createTextNode(getDescription(ul));
-        title.appendChild(titleText);
-    
+        InvocationMetric im=getMetrics(ul.getInvocations());
+        
+        // Generate tooltip
+        generateMetrics(polygon, getDescription(ul), im);
     }
     
     /**
@@ -148,6 +163,33 @@ public class SVGServiceGraphGenerator {
     protected String getDescription(UsageLink ul) {
         return (ul.getSource().getService().getServiceType()
                 +" -> "+ul.getTarget().getService().getServiceType());
+    }
+    
+    /**
+     * This method returns the colour relevant for the supplied
+     * metric.
+     * 
+     * @param metric The metric
+     * @return The colour
+     */
+    protected String getColour(InvocationMetric metric) {
+        String ret="#00FF00";
+        
+        double gap=metric.getMax()-metric.getMin();
+        
+        if (gap > 0) {
+            double mid=metric.getAverage()-metric.getMin();
+            
+            double ratio=mid/gap;
+            
+            if (ratio > 0.8) {
+                ret = "#FF0000";
+            } else if (ratio > 0.7) {
+                ret = "#FF9933";
+            }
+        }
+        
+        return (ret);
     }
     
     /**
@@ -178,22 +220,16 @@ public class SVGServiceGraphGenerator {
         line.setAttribute("x2", ""+x2);
         line.setAttribute("y2", ""+y2);
         
-        //String colour="#FF0000";
-        String colour="#00FF00";
+        InvocationMetric im=getMetrics(il.getInvocations());
+        
+        String colour=getColour(im);
         
         line.setAttribute("style", "stroke:"+colour+";stroke-width:3");
         
         container.insertBefore(line, insertPoint);
         
-        // Title
-        org.w3c.dom.Element title=
-                container.getOwnerDocument().createElement("desc");
-        line.appendChild(title);
-    
-        org.w3c.dom.Text titleText=
-                container.getOwnerDocument().createTextNode(getDescription(il));
-        title.appendChild(titleText);
-    
+        // Generate tooltip
+        generateMetrics(line, getDescription(il), im);
     }
     
     /**
@@ -230,20 +266,18 @@ public class SVGServiceGraphGenerator {
                 sn.getProperties().get(ServiceGraphLayout.Y_POSITION).toString());
         
         rect.setAttribute("fill", "#B8DBFF");
-        rect.setAttribute("stroke", "white");
+        
+        String colour=getColour(sn.getService().getMetrics());
+        rect.setAttribute("stroke", colour);
+
         rect.setAttribute("stroke-width", "2");
         rect.setAttribute("filter", "url(#f1)");
         
         container.insertBefore(rect, insertPoint);
         
-        // Title
-        org.w3c.dom.Element title=
-                container.getOwnerDocument().createElement("desc");
-        rect.appendChild(title);
-    
-        org.w3c.dom.Text titleText=
-                container.getOwnerDocument().createTextNode(sn.getService().getServiceType());
-        title.appendChild(titleText);
+        // Generate tooltip
+        generateMetrics(rect, sn.getService().getServiceType(),
+                sn.getService().getMetrics());
 
         // Generate text
         org.w3c.dom.Element text=
@@ -273,6 +307,88 @@ public class SVGServiceGraphGenerator {
         for (OperationNode opn : sn.getOperations()) {
             generateOperation(opn, container, insertPoint);
         }
+    }
+    
+    /**
+     * This method returns the invocation metrics associated with the
+     * supplied invocation definitions.
+     * 
+     * @param invocations The invocation definitions
+     * @return The metrics
+     */
+    protected InvocationMetric getMetrics(java.util.List<InvocationDefinition> invocations) {
+        InvocationMetric im=new InvocationMetric();
+        
+        for (InvocationDefinition id : invocations) {
+            im.merge(id.getMetrics());
+        }
+        
+        return (im);
+    }
+
+    /**
+     * This method generates the tooltip information to show
+     * metrics.
+     * 
+     * @param container The container
+     * @param description The description
+     * @param metrics The metrics
+     */
+    protected void generateMetrics(org.w3c.dom.Element container,
+            String description, InvocationMetric metrics) {
+        org.w3c.dom.Element desc=
+                container.getOwnerDocument().createElement("desc");
+        container.appendChild(desc);
+    
+        org.w3c.dom.Text descText=
+                container.getOwnerDocument().createTextNode(description);
+        desc.appendChild(descText);
+
+        String countValue="Count "+metrics.getCount();
+        String avgValue="Avg "+metrics.getAverage();
+        String minValue="Min "+metrics.getMinChange();
+        String maxValue="Max "+metrics.getMaxChange();
+        
+        if (metrics.getAverageChange() != 0 || metrics.getMaxChange() != 0
+                || metrics.getMinChange() != 0 || metrics.getCountChange() != 0) {
+            countValue += " ("+metrics.getCountChange()+"%)";
+            avgValue += " ("+metrics.getAverageChange()+"%)";
+            minValue += " ("+metrics.getMinChange()+"%)";
+            maxValue += " ("+metrics.getMaxChange()+"%)";
+        }
+        
+        org.w3c.dom.Element count=
+                container.getOwnerDocument().createElement("count");
+        container.appendChild(count);
+    
+        org.w3c.dom.Text countText=
+                container.getOwnerDocument().createTextNode(countValue);
+        count.appendChild(countText);
+
+        org.w3c.dom.Element avg=
+                container.getOwnerDocument().createElement("avg");
+        container.appendChild(avg);
+    
+        org.w3c.dom.Text avgText=
+                container.getOwnerDocument().createTextNode(avgValue);
+        avg.appendChild(avgText);
+
+        org.w3c.dom.Element max=
+                container.getOwnerDocument().createElement("max");
+        container.appendChild(max);
+    
+        org.w3c.dom.Text maxText=
+                container.getOwnerDocument().createTextNode(maxValue);
+        max.appendChild(maxText);
+
+        org.w3c.dom.Element min=
+                container.getOwnerDocument().createElement("min");
+        container.appendChild(min);
+    
+        org.w3c.dom.Text minText=
+                container.getOwnerDocument().createTextNode(minValue);
+        min.appendChild(minText);
+
     }
     
     /**

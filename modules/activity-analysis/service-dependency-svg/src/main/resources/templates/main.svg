@@ -21,6 +21,10 @@
       var tipText = null;
       var tipTitle = null;
       var tipDesc = null;
+      var tipCount = null;
+      var tipAvg = null;
+      var tipMax = null;
+      var tipMin = null;
 
       var lastElement = null;
       var titleText = '';
@@ -38,6 +42,10 @@
          tipText = SVGDocument.getElementById('tipText');
          tipTitle = SVGDocument.getElementById('tipTitle');
          tipDesc = SVGDocument.getElementById('tipDesc');
+         tipCount = SVGDocument.getElementById('tipCount');
+         tipAvg = SVGDocument.getElementById('tipAvg');
+         tipMax = SVGDocument.getElementById('tipMax');
+         tipMin = SVGDocument.getElementById('tipMin');
          //window.status = (TrueCoords);
 
          //create event for object
@@ -77,6 +85,10 @@
 
          var titleValue = '';
          var descValue = '';
+         var countValue = '';
+         var avgValue = '';
+         var minValue = '';
+         var maxValue = '';
          var targetElement = evt.target;
          if ( lastElement != targetElement )
          {
@@ -99,6 +111,30 @@
                   titleValue = descValue;
                   descValue = '';
                }
+            }
+
+            var countTitle = targetElement.getElementsByTagName('count').item(0);
+            if ( countTitle )
+            {
+               countValue = countTitle.firstChild.nodeValue;
+            }
+
+            var avgTitle = targetElement.getElementsByTagName('avg').item(0);
+            if ( avgTitle )
+            {
+               avgValue = avgTitle.firstChild.nodeValue;
+            }
+
+            var maxTitle = targetElement.getElementsByTagName('max').item(0);
+            if ( maxTitle )
+            {
+               maxValue = maxTitle.firstChild.nodeValue;
+            }
+
+            var minTitle = targetElement.getElementsByTagName('min').item(0);
+            if ( minTitle )
+            {
+               minValue = minTitle.firstChild.nodeValue;
             }
 
             // if there is still no 'title' element, use the contents of the 'id' attribute for the tooltip title
@@ -126,6 +162,38 @@
                descDisplay = 'inline';
             }
             tipDesc.setAttributeNS(null, 'display', descDisplay );
+
+            var countDisplay = 'none';
+            if ( '' != countValue )
+            {
+               tipCount.firstChild.nodeValue = countValue;
+               countDisplay = 'inline';
+            }
+            tipCount.setAttributeNS(null, 'display', countDisplay );
+
+            var avgDisplay = 'none';
+            if ( '' != avgValue )
+            {
+               tipAvg.firstChild.nodeValue = avgValue;
+               avgDisplay = 'inline';
+            }
+            tipAvg.setAttributeNS(null, 'display', avgDisplay );
+
+            var maxDisplay = 'none';
+            if ( '' != maxValue )
+            {
+               tipMax.firstChild.nodeValue = maxValue;
+               maxDisplay = 'inline';
+            }
+            tipMax.setAttributeNS(null, 'display', maxDisplay );
+
+            var minDisplay = 'none';
+            if ( '' != minValue )
+            {
+               tipMin.firstChild.nodeValue = minValue;
+               minDisplay = 'inline';
+            }
+            tipMin.setAttributeNS(null, 'display', minDisplay );
          }
 
          // if there are tooltip contents to be displayed, adjust the size and position of the box
@@ -165,6 +233,10 @@
 		<text id='tipText' x='5' y='20' font-family='Arial' font-size='12'>
 			<tspan id='tipTitle' x='5' font-weight='bold'><![CDATA[ ]]></tspan>
 			<tspan id='tipDesc' x='5' dy='15' fill='blue'><![CDATA[ ]]></tspan>
+			<tspan id='tipCount' x='5' dy='15' fill='blue'><![CDATA[ ]]></tspan>
+			<tspan id='tipAvg' x='5' dy='15' fill='green'><![CDATA[ ]]></tspan>
+			<tspan id='tipMin' x='5' dy='15' fill='#FFCC00'><![CDATA[ ]]></tspan>
+			<tspan id='tipMax' x='5' dy='15' fill='red'><![CDATA[ ]]></tspan>
 		</text>
 	</g>
 
