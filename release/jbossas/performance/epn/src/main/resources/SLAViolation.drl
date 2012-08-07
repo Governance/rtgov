@@ -13,8 +13,8 @@ when
     $rt : ResponseTime() from entry-point "ResponseTimes" 
 then
 
-	if ($rt.getDuration() > 1000) {
-		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getDuration()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
+	if ($rt.getAverage() > 1000) {
+		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
 		
 		SLAViolation sv=new SLAViolation();
 		
@@ -22,7 +22,7 @@ then
 		sv.setOperation($rt.getOperation());
 		sv.setTimestamp(System.currentTimeMillis());
 		
-		if ($rt.getDuration() > 400) {
+		if ($rt.getAverage() > 400) {
 			sv.setViolation("Service exceeded maximum response time of 400 ms");
 			sv.setSeverity("Critical");
 		} else {
