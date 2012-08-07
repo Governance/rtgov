@@ -109,13 +109,21 @@ public class InvocationDefinition implements java.io.Externalizable {
     }
     
     /**
-     * This method returns the invocation metric information
-     * from the fault response.
+     * This method returns the invocation metric information.
      * 
      * @return The invocation metric
      */
     public InvocationMetric getMetrics() {
         return (_metrics);
+    }
+    
+    /**
+     * This method sets the invocation metric information.
+     * 
+     * @param im The invocation metric
+     */
+    protected void setMetrics(InvocationMetric im) {
+        _metrics = im;
     }
     
     /**
@@ -127,6 +135,32 @@ public class InvocationDefinition implements java.io.Externalizable {
     public void merge(InvocationDefinition id) {
         
         getMetrics().merge(id.getMetrics());
+    }
+    
+    /**
+     * This method adjusts the invocation
+     * definition using the supplied value.
+     * 
+     * @param id The invocation definition to adjust
+     * @return The 'diff'
+     */
+    public InvocationDefinition diff(InvocationDefinition id) {
+        InvocationDefinition ret=new InvocationDefinition();
+        
+        ret.setMetrics(getMetrics().diff(id.getMetrics()));
+        
+        return (ret);
+    }
+    
+    /**
+     * This method adjusts the invocation
+     * definition using the supplied value.
+     * 
+     * @param id The invocation definition to adjust
+     */
+    public void adjust(InvocationDefinition id) {
+        
+        getMetrics().adjust(id.getMetrics());
     }
     
     /**

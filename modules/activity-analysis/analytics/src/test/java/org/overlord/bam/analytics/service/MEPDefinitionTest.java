@@ -33,7 +33,11 @@ public class MEPDefinitionTest {
     @Test
     public void testMergeNoReqResp() {
         
-        MEPDefinition mep1=new MEPDefinition(){};
+        MEPDefinition mep1=new MEPDefinition() {
+            protected MEPDefinition create() {
+                return null;
+            }
+        };
         
         InvocationDefinition id1=new InvocationDefinition();
         id1.setServiceType(SERVICE_TYPE_1);
@@ -41,7 +45,11 @@ public class MEPDefinitionTest {
         
         mep1.getInvocations().add(id1);
         
-        MEPDefinition mep2=new MEPDefinition(){};
+        MEPDefinition mep2=new MEPDefinition() {
+            protected MEPDefinition create() {
+                return null;
+            }
+        };
         
         InvocationDefinition id2=new InvocationDefinition();
         id2.setServiceType(SERVICE_TYPE_1);

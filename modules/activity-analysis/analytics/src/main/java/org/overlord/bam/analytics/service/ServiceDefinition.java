@@ -175,6 +175,68 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method returns the service definition that represents
+     * the difference between this and the supplied definition.
+     * 
+     * @param sd The service definition to diff
+     * @return The 'diff' service definition
+     * @throws Exception Failed to diff
+     */
+    public ServiceDefinition diff(ServiceDefinition sd) throws Exception {
+        ServiceDefinition ret=new ServiceDefinition();
+        
+        if (sd == null || !sd.getServiceType().equals(getServiceType())) {
+            throw new IllegalArgumentException("Invalid service definition");
+        }
+        
+        ret.setServiceType(getServiceType());
+        
+        // Examine operation definitions
+        for (int i=0; i < sd.getOperations().size(); i++) {
+            OperationDefinition opdef=sd.getOperations().get(i);
+            
+            OperationDefinition cur=getOperation(opdef.getName());
+            
+            if (cur != null) {
+                OperationDefinition diff=cur.diff(opdef);
+                
+                if (diff != null) {
+                    ret.getOperations().add(diff);
+                }
+            } else {
+                ret.getOperations().add(new OperationDefinition(opdef));
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method adjusts the service definition information
+     * based on the supplied 'diff' values.
+     * 
+     * @param sd The service definition to adjust
+     * @throws Exception Failed to adjust
+     */
+    public void adjust(ServiceDefinition sd) throws Exception {
+        
+        if (sd == null || !sd.getServiceType().equals(getServiceType())) {
+            throw new IllegalArgumentException("Invalid service definition");
+        }
+        
+        // Examine operation definitions - demerge existing
+        for (int i=0; i < sd.getOperations().size(); i++) {
+            OperationDefinition opdef=sd.getOperations().get(i);
+            
+            OperationDefinition cur=getOperation(opdef.getName());
+            
+            if (cur != null) {
+                cur.adjust(opdef);
+            }
+        }
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {

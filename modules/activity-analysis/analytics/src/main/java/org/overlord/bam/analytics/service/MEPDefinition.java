@@ -105,13 +105,21 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     }
     
     /**
-     * This method returns the invocation metric information
-     * from the fault response.
+     * This method returns the invocation metric information.
      * 
      * @return The invocation metric
      */
     public InvocationMetric getMetrics() {
         return (_metrics);
+    }
+    
+    /**
+     * This method sets the invocation metric information.
+     * 
+     * @param im The invocation metric
+     */
+    protected void setMetrics(InvocationMetric im) {
+        _metrics = im;
     }
     
     /**
@@ -134,6 +142,67 @@ public abstract class MEPDefinition implements java.io.Externalizable {
                 cur.merge(id);
             } else {
                 getInvocations().add(id);
+            }
+        }
+    }
+    
+    /**
+     * This method creates a new concrete type.
+     * 
+     * @return The new MEP definition instance
+     */
+    protected abstract MEPDefinition create();
+    
+    /**
+     * This method performs a 'diff' on the supplied
+     * MEP definition.
+     * 
+     * @param mep The MEP definition
+     * @return The diff
+     */
+    public MEPDefinition diff(MEPDefinition mep) {
+        MEPDefinition ret=create();
+        
+        ret.setMetrics(getMetrics().diff(mep.getMetrics()));
+        
+        for (int i=0; i < mep.getInvocations().size(); i++) {
+            InvocationDefinition id=mep.getInvocations().get(i);
+            
+            InvocationDefinition cur=getInvocation(id.getServiceType(),
+                            id.getOperation(), id.getFault());
+            
+            if (cur != null) {
+                InvocationDefinition idiff=cur.diff(id);
+                
+                if (idiff != null) {
+                    ret.getInvocations().add(idiff);
+                }
+            } else {
+                ret.getInvocations().add(new InvocationDefinition(id));
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method adjusts the information using the supplied
+     * MEP definition.
+     * 
+     * @param mep The MEP definition to adjust
+     */
+    public void adjust(MEPDefinition mep) {
+        
+        getMetrics().adjust(mep.getMetrics());
+        
+        for (int i=0; i < mep.getInvocations().size(); i++) {
+            InvocationDefinition id=mep.getInvocations().get(i);
+            
+            InvocationDefinition cur=getInvocation(id.getServiceType(),
+                            id.getOperation(), id.getFault());
+            
+            if (cur != null) {
+                cur.adjust(id);
             }
         }
     }

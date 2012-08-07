@@ -31,11 +31,17 @@ public class ActiveCollectionUtilTest {
 
     @Test
     public void testSerializeACS() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        acs.setName("TestACS");
+        acs.getProperties().put("testProp", "testValue");
+        
         java.util.List<ActiveCollectionSource> list=new java.util.Vector<ActiveCollectionSource>();
-        list.add(new TestActiveCollectionSource());
+        list.add(acs);
        
         try {
-            ActiveCollectionUtil.serializeACS(list);            
+            byte[] b=ActiveCollectionUtil.serializeACS(list);
+            
+            System.out.println("Serialized ACS="+new String(b));
         } catch(Exception e) {
             fail("Failed to serialize: "+e);
         }
@@ -143,13 +149,6 @@ public class ActiveCollectionUtilTest {
            
         } catch(Exception e) {
             fail("Failed to deserialize: "+e);
-        }
-    }
-
-    public class TestActiveCollectionSource extends ActiveCollectionSource {
-        
-        public TestActiveCollectionSource() {
-            setName("TestACS");
         }
     }
 }

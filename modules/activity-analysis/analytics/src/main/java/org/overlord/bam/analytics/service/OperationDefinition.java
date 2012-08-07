@@ -183,6 +183,76 @@ public class OperationDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method calculates the diff between the
+     * current and supplied operation definitions.
+     * 
+     * @param opdef The operation definition
+     * @return The diff
+     */
+    public OperationDefinition diff(OperationDefinition opdef) {
+        OperationDefinition ret=new OperationDefinition();
+        
+        ret.setName(getName());
+        
+        if (opdef.getRequestResponse() != null) {
+            if (getRequestResponse() != null) {
+                RequestResponseDefinition rrd=(RequestResponseDefinition)
+                        getRequestResponse().diff(opdef.getRequestResponse());
+                
+                if (rrd != null) {
+                    ret.setRequestResponse(rrd);
+                }
+            } else {
+                ret.setRequestResponse(new RequestResponseDefinition(
+                        opdef.getRequestResponse()));
+            }
+        }
+        
+        for (int i=0; i < opdef.getRequestFaults().size(); i++) {
+            RequestFaultDefinition rfd=opdef.getRequestFaults().get(i);
+            
+            RequestFaultDefinition cur=getRequestFault(rfd.getFault());
+            
+            if (cur != null) {
+                RequestFaultDefinition rfdiff=(RequestFaultDefinition)cur.diff(rfd);
+                
+                if (rfdiff != null) {
+                    ret.getRequestFaults().add(rfdiff);
+                }
+            } else {
+                ret.getRequestFaults().add(new RequestFaultDefinition(rfd));
+            }
+        }
+        
+        return (ret);
+    }
+
+    /**
+     * This method adjusts the operation definition
+     * with the supplied information.
+     * 
+     * @param opdef The operation definition to adjust
+     */
+    public void adjust(OperationDefinition opdef) {
+        
+        if (opdef.getRequestResponse() != null) {
+            if (getRequestResponse() != null) {
+                getRequestResponse().adjust(opdef.getRequestResponse());
+            }
+        }
+        
+        for (int i=0; i < opdef.getRequestFaults().size(); i++) {
+            RequestFaultDefinition rfd=opdef.getRequestFaults().get(i);
+            
+            RequestFaultDefinition cur=getRequestFault(rfd.getFault());
+            
+            if (cur != null) {
+                cur.adjust(rfd);
+            }
+        }
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public int hashCode() {

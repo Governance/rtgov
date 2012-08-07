@@ -500,8 +500,9 @@ public class ActiveCollectionSource {
                                 +"' with variables: "+_variables);
                     }
                     
-                    MVEL.executeExpression(_scheduledScriptExpression, vars);
-         
+                    synchronized (ActiveCollectionSource.this) {
+                        MVEL.executeExpression(_scheduledScriptExpression, vars);
+                    }
                 }                
             }, 0, _scheduledInterval);
         }
@@ -525,9 +526,11 @@ public class ActiveCollectionSource {
             vars.put("acs", this);
             vars.put("key", key);
             vars.put("value", value);
-                
-            MVEL.executeExpression(_maintenanceScriptExpression, vars);
- 
+            vars.put("variables", _variables);
+
+            synchronized (this) {
+                MVEL.executeExpression(_maintenanceScriptExpression, vars);
+            }
         } else {
             insert(key, value);
         }

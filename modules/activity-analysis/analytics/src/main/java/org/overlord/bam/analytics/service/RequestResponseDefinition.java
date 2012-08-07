@@ -46,6 +46,13 @@ public class RequestResponseDefinition extends MEPDefinition implements java.io.
     /**
      * {@inheritDoc}
      */
+    protected MEPDefinition create() {
+        return (new RequestResponseDefinition());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         

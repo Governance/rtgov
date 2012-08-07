@@ -1,0 +1,42 @@
+int cleanupCycle=acs.properties.get("cleanupCycle");
+
+snapshots = variables.get("snapshots");
+
+if (snapshots == null) {
+	snapshots = new java.util.ArrayList();
+	variables.put("snapshots", snapshots);
+}
+
+java.util.Map prevSnapshot=null;
+if (snapshots.size() > 0) {
+	prevSnapshot = snapshots.get(snapshots.size()-1);
+}
+
+java.util.Map snapshot=new java.util.HashMap();
+
+foreach (entry : acs.activeCollection) {
+	org.overlord.bam.analytics.service.ServiceDefinition sd=null;
+	
+	if (prevSnapshot == null || !prevSnapshot.containsKey(entry.value.serviceType)) {
+		sd = new org.overlord.bam.analytics.service.ServiceDefinition(entry.value);
+	} else {
+		sd = entry.value.diff(prevSnapshot.get(entry.value.serviceType));
+	}
+	
+	snapshot.put(entry.value.serviceType, sd);
+}
+
+snapshots.add(snapshot);
+
+while (snapshots.size() > cleanupCycle) {
+	snapshot = snapshots.remove(0);
+	
+	for (key : snapshot.keySet()) {
+		org.overlord.bam.analytics.service.ServiceDefinition sd=
+				acs.activeCollection.get(key);
+				
+		if (sd != null) {
+			sd.adjust(snapshot.get(key));
+		}
+	}
+}
