@@ -202,10 +202,10 @@ public class OperationDefinition implements java.io.Externalizable {
                 if (rrd != null) {
                     ret.setRequestResponse(rrd);
                 }
-            } else {
-                ret.setRequestResponse(new RequestResponseDefinition(
-                        opdef.getRequestResponse()));
             }
+        } else if (getRequestResponse() != null) {
+            ret.setRequestResponse(new RequestResponseDefinition(
+                            getRequestResponse()));
         }
         
         for (int i=0; i < opdef.getRequestFaults().size(); i++) {

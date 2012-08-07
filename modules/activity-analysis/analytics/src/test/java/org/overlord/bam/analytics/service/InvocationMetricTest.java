@@ -60,4 +60,78 @@ public class InvocationMetricTest {
             fail("Max should be 70: "+im1.getMax());
         }
     }
+
+    @Test
+    public void testDiff() {
+
+        InvocationMetric im1=new InvocationMetric();
+        
+        im1.setAverage(10);
+        im1.setCount(1);
+        
+        im1.setMin(10);
+        im1.setMax(10);
+        
+        InvocationMetric im2=new InvocationMetric();
+        
+        im2.setAverage(50);
+        im2.setCount(3);
+        im2.setMin(10);
+        im2.setMax(70);
+        
+        InvocationMetric result=im2.diff(im1);
+        
+        if (result.getCount() != 2) {
+            fail("Count should be 2: "+result.getCount());
+        }
+        
+        if (result.getAverage() != 40) {
+            fail("Average should be 40: "+result.getAverage());
+        }
+        
+        if (result.getMin() != 0) {
+            fail("Min should be 0: "+result.getMin());
+        }
+        
+        if (result.getMax() != 60) {
+            fail("Max should be 60: "+result.getMax());
+        }
+    }
+
+    @Test
+    public void testAdjust() {
+
+        InvocationMetric im1=new InvocationMetric();
+        
+        im1.setAverage(50);
+        im1.setCount(5);
+        
+        im1.setMin(10);
+        im1.setMax(80);
+        
+        InvocationMetric diff=new InvocationMetric();
+        
+        diff.setAverage(10);
+        diff.setCount(3);
+        diff.setMin(-10);
+        diff.setMax(20);
+        
+        im1.adjust(diff);
+        
+        if (im1.getCount() != 2) {
+            fail("Count should be 2: "+im1.getCount());
+        }
+        
+        if (im1.getAverage() != 40) {
+            fail("Average should be 40: "+im1.getAverage());
+        }
+        
+        if (im1.getMin() != 20) {
+            fail("Min should be 20: "+im1.getMin());
+        }
+        
+        if (im1.getMax() != 60) {
+            fail("Max should be 60: "+im1.getMax());
+        }
+    }
 }
