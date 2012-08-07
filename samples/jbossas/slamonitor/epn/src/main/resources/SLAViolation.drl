@@ -13,8 +13,8 @@ when
     $rt : ResponseTime() from entry-point "ServiceResponseTimes" 
 then
 
-	if ($rt.getDuration() > 200) {
-		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getDuration()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
+	if ($rt.getAverage() > 200) {
+		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
 		
 		Situation situation=new Situation();
 		
@@ -22,7 +22,7 @@ then
 		situation.setSubject($rt.getServiceType()+"/"+$rt.getOperation());
 		situation.setTimestamp(System.currentTimeMillis());
 		
-		if ($rt.getDuration() > 400) {
+		if ($rt.getAverage() > 400) {
 			situation.setDescription("Service exceeded maximum response time of 400 ms");
 			situation.setSeverity("Critical");
 		} else {

@@ -33,6 +33,21 @@ public class RequestFaultDefinition extends MEPDefinition implements java.io.Ext
     private String _fault=null;
 
     /**
+     * Default constructor.
+     */
+    public RequestFaultDefinition() {
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public RequestFaultDefinition(RequestFaultDefinition rfd) {
+        super(rfd);
+        
+        _fault = rfd.getFault();
+    }
+
+    /**
      * This method sets the optional fault.
      * 
      * @param fault The fault

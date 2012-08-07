@@ -33,6 +33,23 @@ public class ServiceDefinition implements java.io.Externalizable {
     private String _serviceType=null;
     private java.util.List<OperationDefinition> _operations=
                     new java.util.ArrayList<OperationDefinition>();
+    
+    /**
+     * Default constructor.
+     */
+    public ServiceDefinition() {
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public ServiceDefinition(ServiceDefinition sd) {
+        _serviceType = sd.getServiceType();
+        
+        for (OperationDefinition op : sd.getOperations()) {
+            _operations.add(new OperationDefinition(op));
+        }
+    }
 
     /**
      * This method sets the service type.

@@ -12,18 +12,18 @@ result.setFault(firstEvent.getFault());
 for (i=0; i < events.size(); i++) {
 	to = events.get(i);
 
-	total += to.getDuration();
+	total += to.getAverage();
 	
-	if (min == 0 || to.getDuration() < min) {
-		min = to.getDuration();
+	if (min == 0 || to.getAverage() < min) {
+		min = to.getAverage();
 	}
 	
-	if (max == 0 || to.getDuration() > max) {
-		max = to.getDuration();
+	if (max == 0 || to.getAverage() > max) {
+		max = to.getAverage();
 	}
 }
 
-result.setDuration(total/events.size());
+result.setAverage(total/events.size());
 result.setMin(min);
 result.setMax(max);
 

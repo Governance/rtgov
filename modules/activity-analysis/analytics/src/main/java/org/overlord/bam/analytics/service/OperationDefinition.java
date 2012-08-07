@@ -36,6 +36,27 @@ public class OperationDefinition implements java.io.Externalizable {
             new java.util.ArrayList<RequestFaultDefinition>();
 
     /**
+     * Default constructor.
+     */
+    public OperationDefinition() {
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public OperationDefinition(OperationDefinition od) {
+        _name = od.getName();
+        
+        if (od.getRequestResponse() != null) {
+            _requestResponse = new RequestResponseDefinition(od.getRequestResponse());
+        }
+        
+        for (RequestFaultDefinition rfd : od.getRequestFaults()) {
+            _requestFaults.add(new RequestFaultDefinition(rfd));
+        }
+    }
+
+    /**
      * This method sets the operation name.
      * 
      * @param operation The operation name

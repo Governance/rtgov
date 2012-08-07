@@ -36,6 +36,25 @@ public class InvocationDefinition implements java.io.Externalizable {
     private InvocationMetric _metrics=new InvocationMetric();
 
     /**
+     * Default constructor.
+     */
+    public InvocationDefinition() {
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public InvocationDefinition(InvocationDefinition id) {
+        _serviceType = id.getServiceType();
+        _operation = id.getOperation();
+        _fault = id.getFault();
+        
+        if (id.getMetrics() != null) {
+            _metrics = new InvocationMetric(id.getMetrics());
+        }
+    }
+
+    /**
      * This method sets the service type.
      * 
      * @param serviceType The service type

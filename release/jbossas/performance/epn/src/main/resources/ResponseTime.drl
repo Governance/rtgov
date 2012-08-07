@@ -31,7 +31,7 @@ then
 	
 	long responseTime=$resp.getTimestamp()-$req.getTimestamp();
 	
-	rt.setDuration(responseTime);
+	rt.setAverage(responseTime);
 	
     epn.forward(rt);
 

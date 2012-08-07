@@ -35,6 +35,26 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     private InvocationMetric _metrics=new InvocationMetric();
 
     /**
+     * Default constructor.
+     */
+    public MEPDefinition() {
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public MEPDefinition(MEPDefinition md) {
+         
+        for (InvocationDefinition id : md.getInvocations()) {
+            _invocations.add(new InvocationDefinition(id));
+        }
+        
+        if (md.getMetrics() != null) {
+            _metrics = new InvocationMetric(md.getMetrics());
+        }
+    }
+    
+    /**
      * This method sets the list of invocations associated
      * with the operation.
      * 

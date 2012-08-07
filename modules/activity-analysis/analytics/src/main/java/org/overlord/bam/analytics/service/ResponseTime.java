@@ -33,11 +33,30 @@ public class ResponseTime implements java.io.Externalizable {
     private String _serviceType=null;
     private String _operation=null;
     private String _fault=null;
-    private long _duration=0;
+    private long _avg=0;
     private long _max=0;
     private long _min=0;
     private long _timestamp=0;
 
+    /**
+     * Default constructor.
+     */
+    public ResponseTime() {
+    }
+    
+    /**
+     * Copy constructor.
+     */
+    public ResponseTime(ResponseTime rt) {
+        _serviceType = rt.getServiceType();
+        _operation = rt.getOperation();
+        _fault = rt.getFault();
+        _avg = rt.getAverage();
+        _max = rt.getMax();
+        _min = rt.getMin();
+        _timestamp = rt.getTimestamp();
+    }
+    
     /**
      * This method sets the service type.
      * 
@@ -93,21 +112,21 @@ public class ResponseTime implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the duration.
+     * This method sets the average.
      * 
-     * @param time The duration
+     * @param average The average
      */
-    public void setDuration(long time) {
-        _duration = time;
+    public void setAverage(long average) {
+        _avg = average;
     }
     
     /**
-     * This method returns the duration.
+     * This method returns the average.
      * 
-     * @return The duration
+     * @return The average
      */
-    public long getDuration() {
-        return (_duration);
+    public long getAverage() {
+        return (_avg);
     }
     
     /**
@@ -169,7 +188,7 @@ public class ResponseTime implements java.io.Externalizable {
      */
     public String toString() {
         return ("ResponseTime[service="+_serviceType+" op="+_operation+" fault="+_fault
-                    +" duration="+_duration+" min="+_min+" max="+_max+" timestamp="
+                    +" duration="+_avg+" min="+_min+" max="+_max+" timestamp="
                     +_timestamp+"]");
     }
     
@@ -182,7 +201,7 @@ public class ResponseTime implements java.io.Externalizable {
         out.writeObject(_serviceType);
         out.writeObject(_operation);
         out.writeObject(_fault);
-        out.writeLong(_duration);
+        out.writeLong(_avg);
         out.writeLong(_max);
         out.writeLong(_min);
         out.writeLong(_timestamp);
@@ -198,7 +217,7 @@ public class ResponseTime implements java.io.Externalizable {
         _serviceType = (String)in.readObject();
         _operation = (String)in.readObject();
         _fault = (String)in.readObject();
-        _duration = in.readLong();
+        _avg = in.readLong();
         _max = in.readLong();
         _min = in.readLong();
         _timestamp = in.readLong();

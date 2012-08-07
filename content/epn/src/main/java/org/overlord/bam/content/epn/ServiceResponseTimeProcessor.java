@@ -101,7 +101,7 @@ public class ServiceResponseTimeProcessor extends org.overlord.bam.epn.EventProc
             rt.setFault(((RequestFaultDefinition)mep).getFault());
         }
         
-        rt.setDuration(mep.getMetrics().getAverage());
+        rt.setAverage(mep.getMetrics().getAverage());
         rt.setMin(mep.getMetrics().getMin());
         rt.setMax(mep.getMetrics().getMax());
         

@@ -31,6 +31,19 @@ public class RequestResponseDefinition extends MEPDefinition implements java.io.
     private static final int VERSION = 1;
 
     /**
+     * Default constructor.
+     */
+    public RequestResponseDefinition() {
+    }
+
+    /**
+     * Copy constructor.
+     */
+    public RequestResponseDefinition(RequestResponseDefinition rrd) {
+        super(rrd);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {

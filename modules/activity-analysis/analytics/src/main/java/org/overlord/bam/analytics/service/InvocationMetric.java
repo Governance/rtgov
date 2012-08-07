@@ -47,6 +47,20 @@ public class InvocationMetric implements java.io.Externalizable {
     }
     
     /**
+     * The copy constructor.
+     */
+    public InvocationMetric(InvocationMetric im) {
+        _count = im.getCount();
+        _countChange = im.getCountChange();
+        _avg = im.getAverage();
+        _avgChange = im.getAverageChange();
+        _min = im.getMin();
+        _minChange = im.getMinChange();
+        _max = im.getMax();
+        _maxChange = im.getMaxChange();
+    }
+    
+    /**
      * This constructor initializes the invocation metric as an
      * aggregation of a supplied list of metrics.
      * 
