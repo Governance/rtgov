@@ -352,6 +352,45 @@ public class ActiveCollectionSourceTest {
         }
     }
     
+    @Test
+    public void testScheduled() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
+        acs.setName(TEST_ACTIVE_LIST);
+        acs.setType(ActiveCollectionType.List);
+        
+        acs.setScheduledScript("scripts/Scheduled.mvel");
+        acs.setScheduledInterval(5000);
+        
+        acs.getVariables().put("counter", 0);
+        
+        try {
+            acs.init();
+        } catch(Exception e) {
+            fail("Failed to initialize active collection source: "+e);
+        }
+        
+        try {
+            synchronized (this) {
+                wait(7000);
+            }
+        } catch (Exception e) {
+            fail("Failed to wait: "+e);
+        }
+        
+        if (((Integer)acs.getVariables().get("counter")).intValue() != 2) {
+            fail("Counter should be 2: "+((Integer)
+                    acs.getVariables().get("counter")).intValue());
+        }
+        
+        try {
+            acs.close();
+        } catch(Exception e) {
+            fail("Failed to close: "+e);
+        }
+    }
+    
     public static class TestActiveChangeListener extends AbstractActiveChangeListener {
         
         protected java.util.List<Object> _insertedKey=new java.util.ArrayList<Object>();

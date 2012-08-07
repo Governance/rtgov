@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.active.collection;
 
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +49,16 @@ public class ActiveCollectionSource {
 
     private String _maintenanceScript=null;
     private java.io.Serializable _maintenanceScriptExpression=null;
+
+    private String _scheduledScript=null;
+    private java.io.Serializable _scheduledScriptExpression=null;
+    private long _scheduledInterval=0;
+    
+    private java.util.Timer _scheduledTimer=null;
+    
+    private java.util.Map<String,Object> _variables=new java.util.HashMap<String, Object>();
+    
+    private java.util.Map<String,Object> _properties=new java.util.HashMap<String, Object>();
 
     private long _aggregationDuration=0;
     private String _groupBy=null;
@@ -225,6 +236,71 @@ public class ActiveCollectionSource {
     }
     
     /**
+     * This method sets the scheduled script.
+     * 
+     * @param script The scheduled script
+     */
+    public void setScheduledScript(String script) {
+        _scheduledScript = script;
+    }
+    
+    /**
+     * This method gets the scheduled script.
+     * 
+     * @return The scheduled script
+     */
+    public String getScheduledScript() {
+        return (_scheduledScript);
+    }
+    
+    /**
+     * This method sets the scheduled interval.
+     * 
+     * @param interval The scheduled interval
+     */
+    public void setScheduledInterval(long interval) {
+        _scheduledInterval = interval;
+    }
+    
+    /**
+     * This method gets the scheduled interval.
+     * 
+     * @return The scheduled interval
+     */
+    public long getScheduledInterval() {
+        return (_scheduledInterval);
+    }
+    
+    /**
+     * This method returns the interval variables that
+     * can be used by scripts to cache information used
+     * between invocations.
+     * 
+     * @return The internal variables
+     */
+    protected java.util.Map<String,Object> getVariables() {
+        return (_variables);
+    }
+    
+    /**
+     * This method returns the properties.
+     * 
+     * @return The properties
+     */
+    public java.util.Map<String,Object> getProperties() {
+        return (_properties);
+    }
+    
+    /**
+     * This method sets the properties.
+     * 
+     * @param props The properties
+     */
+    public void setProperties(java.util.Map<String,Object> props) {
+        _properties = props;
+    }
+    
+    /**
      * This method sets the aggregation duration.
      * 
      * @param duration The aggregation duration
@@ -314,7 +390,7 @@ public class ActiveCollectionSource {
             }
 
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Pre-Initializing script="+_maintenanceScript
+                LOG.fine("Pre-Initializing maintenance script="+_maintenanceScript
                         +" compiled="+_maintenanceScriptExpression);
             }
     
@@ -331,6 +407,28 @@ public class ActiveCollectionSource {
 
                     // Compile expression
                     _maintenanceScriptExpression = MVEL.compileExpression(new String(b));
+                }
+            }
+
+
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Pre-Initializing scheduled script="+_scheduledScript
+                        +" compiled="+_scheduledScriptExpression);
+            }
+    
+            // Only initialize if the script is specified, but not yet compiled
+            if (_scheduledScript != null && _scheduledScriptExpression == null) {
+                java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_scheduledScript);
+                
+                if (is == null) {
+                    LOG.severe("Unable to locate '"+_scheduledScript+"'");
+                } else {
+                    byte[] b=new byte[is.available()];
+                    is.read(b);
+                    is.close();
+
+                    // Compile expression
+                    _scheduledScriptExpression = MVEL.compileExpression(new String(b));
                 }
             }
 
@@ -384,6 +482,28 @@ public class ActiveCollectionSource {
                 // Create aggregator
                 _aggregator = new Aggregator();
             }
+        }
+        
+        // Check if scheduled timer should be started
+        if (_scheduledScriptExpression != null && _scheduledInterval > 0) {
+            _scheduledTimer = new java.util.Timer();
+            _scheduledTimer.scheduleAtFixedRate(new TimerTask() {
+                public void run() {
+                    java.util.Map<String,Object> vars=
+                            new java.util.HashMap<String, Object>();
+
+                    vars.put("acs", this);
+                    vars.put("variables", _variables);
+                    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Call scheduled script on '"+getName()
+                                +"' with variables: "+_variables);
+                    }
+                    
+                    MVEL.executeExpression(_scheduledScriptExpression, vars);
+         
+                }                
+            }, 0, _scheduledInterval);
         }
     }
 
@@ -584,6 +704,10 @@ public class ActiveCollectionSource {
 
         if (_aggregator != null) {
             _aggregator.cancel();
+        }
+        
+        if (_scheduledTimer != null) {
+            _scheduledTimer.cancel();
         }
     }
     
