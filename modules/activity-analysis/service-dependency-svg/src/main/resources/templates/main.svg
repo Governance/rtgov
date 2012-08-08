@@ -25,6 +25,10 @@
       var tipAvg = null;
       var tipMax = null;
       var tipMin = null;
+      var tipCritical = null;
+      var tipHigh = null;
+      var tipMedium = null;
+      var tipLow = null;
 
       var lastElement = null;
       var titleText = '';
@@ -46,6 +50,10 @@
          tipAvg = SVGDocument.getElementById('tipAvg');
          tipMax = SVGDocument.getElementById('tipMax');
          tipMin = SVGDocument.getElementById('tipMin');
+         tipCritical = SVGDocument.getElementById('tipCritical');
+         tipHigh = SVGDocument.getElementById('tipHigh');
+         tipMedium = SVGDocument.getElementById('tipMedium');
+         tipLow = SVGDocument.getElementById('tipLow');
          //window.status = (TrueCoords);
 
          //create event for object
@@ -89,6 +97,10 @@
          var avgValue = '';
          var minValue = '';
          var maxValue = '';
+         var criticalValue = '';
+         var highValue = '';
+         var mediumValue = '';
+         var lowValue = '';
          var targetElement = evt.target;
          if ( lastElement != targetElement )
          {
@@ -135,6 +147,30 @@
             if ( minTitle )
             {
                minValue = minTitle.firstChild.nodeValue;
+            }
+
+            var criticalTitle = targetElement.getElementsByTagName('Critical').item(0);
+            if ( criticalTitle )
+            {
+               criticalValue = criticalTitle.firstChild.nodeValue;
+            }
+
+            var highTitle = targetElement.getElementsByTagName('High').item(0);
+            if ( highTitle )
+            {
+               highValue = highTitle.firstChild.nodeValue;
+            }
+
+            var mediumTitle = targetElement.getElementsByTagName('Medium').item(0);
+            if ( mediumTitle )
+            {
+               mediumValue = mediumTitle.firstChild.nodeValue;
+            }
+
+            var lowTitle = targetElement.getElementsByTagName('Low').item(0);
+            if ( lowTitle )
+            {
+               lowValue = lowTitle.firstChild.nodeValue;
             }
 
             // if there is still no 'title' element, use the contents of the 'id' attribute for the tooltip title
@@ -194,6 +230,38 @@
                minDisplay = 'inline';
             }
             tipMin.setAttributeNS(null, 'display', minDisplay );
+
+            var criticalDisplay = 'none';
+            if ( '' != criticalValue )
+            {
+               tipCritical.firstChild.nodeValue = criticalValue;
+               criticalDisplay = 'inline';
+            }
+            tipCritical.setAttributeNS(null, 'display', criticalDisplay );
+
+            var highDisplay = 'none';
+            if ( '' != highValue )
+            {
+               tipHigh.firstChild.nodeValue = highValue;
+               highDisplay = 'inline';
+            }
+            tipHigh.setAttributeNS(null, 'display', highDisplay );
+
+            var mediumDisplay = 'none';
+            if ( '' != mediumValue )
+            {
+               tipMedium.firstChild.nodeValue = mediumValue;
+               mediumDisplay = 'inline';
+            }
+            tipMedium.setAttributeNS(null, 'display', mediumDisplay );
+
+            var lowDisplay = 'none';
+            if ( '' != lowValue )
+            {
+               tipLow.firstChild.nodeValue = lowValue;
+               lowDisplay = 'inline';
+            }
+            tipLow.setAttributeNS(null, 'display', lowDisplay );
          }
 
          // if there are tooltip contents to be displayed, adjust the size and position of the box
@@ -237,6 +305,10 @@
 			<tspan id='tipAvg' x='5' dy='15' fill='green'><![CDATA[ ]]></tspan>
 			<tspan id='tipMin' x='5' dy='15' fill='#FFCC00'><![CDATA[ ]]></tspan>
 			<tspan id='tipMax' x='5' dy='15' fill='red'><![CDATA[ ]]></tspan>
+			<tspan id='tipCritical' x='5' dy='15' fill='red'><![CDATA[ ]]></tspan>
+			<tspan id='tipHigh' x='5' dy='15' fill='orange'><![CDATA[ ]]></tspan>
+			<tspan id='tipMedium' x='5' dy='15' fill='#FFCC00'><![CDATA[ ]]></tspan>
+			<tspan id='tipLow' x='5' dy='15' fill='green'><![CDATA[ ]]></tspan>
 		</text>
 	</g>
 

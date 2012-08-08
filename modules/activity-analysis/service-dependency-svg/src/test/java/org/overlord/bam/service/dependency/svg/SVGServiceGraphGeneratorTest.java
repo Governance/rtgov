@@ -20,6 +20,7 @@ package org.overlord.bam.service.dependency.svg;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.bam.analytics.Situation;
 import org.overlord.bam.analytics.service.InvocationDefinition;
 import org.overlord.bam.analytics.service.OperationDefinition;
 import org.overlord.bam.analytics.service.RequestFaultDefinition;
@@ -154,8 +155,45 @@ public class SVGServiceGraphGeneratorTest {
         sds.add(sd3);
         sds.add(sd4);
         
+        java.util.List<Situation> sits=new java.util.ArrayList<Situation>();
+        
+        Situation sit1=new Situation();
+        sit1.setSeverity(Situation.Severity.Critical);
+        sit1.setSubject(SERVICE_TYPE1);
+        sit1.setType("SLA Violation");
+        sit1.setDescription("Service exceeded SLA");
+        sits.add(sit1);
+        
+        Situation sit2=new Situation();
+        sit2.setSeverity(Situation.Severity.High);
+        sit2.setSubject(SERVICE_TYPE1);
+        sit2.setType("SLA Warning");
+        sit2.setDescription("Service close to violating SLA");
+        sits.add(sit2);
+        
+        Situation sit3=new Situation();
+        sit3.setSeverity(Situation.Severity.High);
+        sit3.setSubject(SERVICE_TYPE2+"/"+OP2+"/"+FAULT2);
+        sit3.setType("SLA Violation");
+        sit3.setDescription("Service exceeded SLA");
+        sits.add(sit3);
+        
+        Situation sit4=new Situation();
+        sit4.setSeverity(Situation.Severity.Low);
+        sit4.setSubject(SERVICE_TYPE4+"/"+OP4);
+        sit4.setType("SLA Violation");
+        sit4.setDescription("Service exceeded SLA");
+        sits.add(sit4);
+        
+        Situation sit5=new Situation();
+        sit5.setSeverity(Situation.Severity.Medium);
+        sit5.setSubject(SERVICE_TYPE4+"/"+OP5);
+        sit5.setType("SLA Violation");
+        sit5.setDescription("Service exceeded SLA");
+        sits.add(sit5);
+        
         ServiceGraph graph=
-                ServiceDependencyBuilder.buildGraph(sds);
+                ServiceDependencyBuilder.buildGraph(sds, sits);
         
         if (graph == null) {
             fail("Graph is null");
@@ -173,7 +211,7 @@ public class SVGServiceGraphGeneratorTest {
         java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
         
         try {
-            generator.generate(graph, 300, os);
+            generator.generate(graph, 0, os);
         } catch (Exception e) {
             fail("Failed to generate: "+e);
         }

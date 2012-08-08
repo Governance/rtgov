@@ -110,7 +110,7 @@ public class RESTServiceDependencyServer {
         }
         
         ServiceGraph graph=
-                ServiceDependencyBuilder.buildGraph(sds);
+                ServiceDependencyBuilder.buildGraph(sds, null);
         
         if (graph == null) {
             throw new Exception("Failed to generate service dependency overview");

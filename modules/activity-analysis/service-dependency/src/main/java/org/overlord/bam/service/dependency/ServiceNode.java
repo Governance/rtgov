@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.service.dependency;
 
+import org.overlord.bam.analytics.Situation;
 import org.overlord.bam.analytics.service.ServiceDefinition;
 
 /**
@@ -34,6 +35,7 @@ public class ServiceNode {
     private ServiceDefinition _service=null;
     private java.util.Set<OperationNode> _operations=new java.util.HashSet<OperationNode>();
     private java.util.Map<String,Object> _properties=new java.util.HashMap<String,Object>();
+    private java.util.List<Situation> _situations=new java.util.ArrayList<Situation>();
     
     /**
      * The default constructor.
@@ -96,5 +98,15 @@ public class ServiceNode {
      */
     public java.util.Map<String,Object> getProperties() {
         return (_properties);
+    }
+    
+    /**
+     * This method returns the situations associated with
+     * the node.
+     * 
+     * @return The situations
+     */
+    public java.util.List<Situation> getSituations() {
+        return (_situations);
     }
 }

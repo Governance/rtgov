@@ -24,6 +24,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.overlord.bam.analytics.Situation;
 import org.overlord.bam.analytics.service.InvocationDefinition;
 import org.overlord.bam.analytics.service.InvocationMetric;
 import org.overlord.bam.service.dependency.InvocationLink;
@@ -305,22 +306,24 @@ public class SVGServiceGraphGenerator {
         
         container.insertBefore(rect, insertPoint);
         
-        if (ratio >= 1.0) {
+        x= (Integer)sn.getProperties().get(ServiceGraphLayout.X_POSITION);
+        x += 5;
+        x *= ratio;
+        
+        y=(Integer)sn.getProperties().get(ServiceGraphLayout.Y_POSITION);
+        y += 10;
+        y *= ratio;
+        
+        if (isGenerateToolTips(ratio)) {
             // Generate tooltip
             generateMetrics(rect, sn.getService().getServiceType(),
                     sn.getService().getMetrics());
-
+        }
+        
+        if (isGenerateText(ratio)) {
             // Generate text
             org.w3c.dom.Element text=
                     container.getOwnerDocument().createElement("text");
-            
-            x= (Integer)sn.getProperties().get(ServiceGraphLayout.X_POSITION);
-            x += 5;
-            x *= ratio;
-            
-            y=(Integer)sn.getProperties().get(ServiceGraphLayout.Y_POSITION);
-            y += 10;
-            y *= ratio;
             
             text.setAttribute("x", ""+x);
             text.setAttribute("y", ""+y);
@@ -336,13 +339,170 @@ public class SVGServiceGraphGenerator {
                             qname.getLocalPart());
             text.appendChild(value);
             
-            container.insertBefore(text, insertPoint);
+            container.insertBefore(text, insertPoint);    
+        }
+
+        if (sn.getSituations().size() > 0) {
+            generateSituations(container, insertPoint, x+(int)(width*0.9), y, ratio,
+                    sn.getSituations());
         }
     
         // Generate operations
         for (OperationNode opn : sn.getOperations()) {
             generateOperation(opn, ratio, container, insertPoint);
         }
+    }
+    
+    /**
+     * This method determines whether to generate the tool tips.
+     * 
+     * @param ratio The ratio
+     * @return Whether to generate tool tips
+     */
+    protected boolean isGenerateToolTips(double ratio) {
+        return (ratio >= 1.0);
+    }
+    
+    /**
+     * This method determines whether to generate the text.
+     * 
+     * @param ratio The ratio
+     * @return Whether to generate text
+     */
+    protected boolean isGenerateText(double ratio) {
+        return (ratio >= 1.0);
+    }
+    
+    /**
+     * This method generates the situations associated with the supplied
+     * position and list.
+     * 
+     * @param container The container
+     * @param x The x position
+     * @param y The y position
+     * @param ratio The ratio
+     * @param situations The list of situations
+     */
+    protected void generateSituations(org.w3c.dom.Element container,
+                org.w3c.dom.Node insertPoint, int x, int y, double ratio,
+                        java.util.List<Situation> situations) {
+        int radius=(int)((double)6*ratio);
+        
+        org.w3c.dom.Element circle=
+                container.getOwnerDocument().createElement("circle");
+        circle.setAttribute("cx", ""+x);
+        circle.setAttribute("cy", ""+y);
+        circle.setAttribute("r", ""+radius);
+        //circle.setAttribute("stroke-width", "1");
+        //circle.setAttribute("stroke", "black");
+        
+        container.insertBefore(circle, insertPoint);
+
+        Situation.Severity severity=Situation.getHighestSeverity(situations);
+
+        if (severity != null) {
+            String colour=getSeverityColour(severity);
+    
+            circle.setAttribute("fill", colour);
+        }
+        
+        if (isGenerateToolTips(ratio)) {
+            // Generate the situation elements
+            java.util.List<Situation> critical=Situation.getSituationsForSeverity(
+                            Situation.Severity.Critical, situations);
+            
+            if (critical.size() > 0) {
+                org.w3c.dom.Element desc=
+                        container.getOwnerDocument().createElement(
+                                Situation.Severity.Critical.name());
+                circle.appendChild(desc);
+            
+                org.w3c.dom.Text descText=
+                        container.getOwnerDocument().createTextNode(
+                                getSituationText(critical.get(0)));
+                desc.appendChild(descText);                
+            }
+
+            java.util.List<Situation> high=Situation.getSituationsForSeverity(
+                    Situation.Severity.High, situations);
+    
+            if (high.size() > 0) {
+                org.w3c.dom.Element desc=
+                        container.getOwnerDocument().createElement(
+                                Situation.Severity.High.name());
+                circle.appendChild(desc);
+            
+                org.w3c.dom.Text descText=
+                        container.getOwnerDocument().createTextNode(
+                                getSituationText(high.get(0)));
+                desc.appendChild(descText);                
+            }
+
+            java.util.List<Situation> medium=Situation.getSituationsForSeverity(
+                    Situation.Severity.Medium, situations);
+    
+            if (medium.size() > 0) {
+                org.w3c.dom.Element desc=
+                        container.getOwnerDocument().createElement(
+                                Situation.Severity.Medium.name());
+                circle.appendChild(desc);
+            
+                org.w3c.dom.Text descText=
+                        container.getOwnerDocument().createTextNode(
+                                getSituationText(medium.get(0)));
+                desc.appendChild(descText);                
+            }
+
+            java.util.List<Situation> low=Situation.getSituationsForSeverity(
+                    Situation.Severity.Low, situations);
+    
+            if (low.size() > 0) {
+                org.w3c.dom.Element desc=
+                        container.getOwnerDocument().createElement(
+                                Situation.Severity.Low.name());
+                circle.appendChild(desc);
+            
+                org.w3c.dom.Text descText=
+                        container.getOwnerDocument().createTextNode(
+                                getSituationText(low.get(0)));
+                desc.appendChild(descText);                
+            }
+        }
+    }
+    
+    /**
+     * This method returns the text to display for the supplied
+     * situation.
+     * 
+     * @param s The situation
+     * @return The text
+     */
+    protected String getSituationText(Situation s) {
+        return (s.getType()+": "+s.getDescription()+" ["
+                    +new java.util.Date(s.getTimestamp())+"]");
+    }
+    
+    /**
+     * This method returns the colour associated with the supplied
+     * severity.
+     * 
+     * @param severity The severity
+     * @return The colour
+     */
+    protected String getSeverityColour(Situation.Severity severity) {
+        String ret=null;
+        
+        if (severity == Situation.Severity.Critical) {
+            ret = "red";
+        } else if (severity == Situation.Severity.High) {
+            ret = "orange";
+        } else if (severity == Situation.Severity.Medium) {
+            ret = "yellow";
+        } else {
+            ret = "green";
+        }
+        
+        return (ret);
     }
     
     /**
@@ -462,17 +622,17 @@ public class SVGServiceGraphGenerator {
         
         container.insertBefore(rect, insertPoint);
         
-        if (ratio >= 1.0) {
+        x = (Integer)opn.getProperties().get(ServiceGraphLayout.X_POSITION);
+        x += 5;
+        x *= ratio;
+        
+        y = (Integer)opn.getProperties().get(ServiceGraphLayout.Y_POSITION);
+        y += 14;
+        y *= ratio;
+        
+        if (isGenerateText(ratio)) {
             org.w3c.dom.Element text=
                     container.getOwnerDocument().createElement("text");
-            
-            x = (Integer)opn.getProperties().get(ServiceGraphLayout.X_POSITION);
-            x += 5;
-            x *= ratio;
-            
-            y = (Integer)opn.getProperties().get(ServiceGraphLayout.Y_POSITION);
-            y += 14;
-            y *= ratio;
             
             text.setAttribute("x", ""+x);
             text.setAttribute("y", ""+y);
@@ -487,10 +647,17 @@ public class SVGServiceGraphGenerator {
             text.appendChild(value);
             
             container.insertBefore(text, insertPoint);
-                
+        }
+         
+        if (isGenerateToolTips(ratio)) {
             // Generate tooltip
             generateMetrics(rect, opn.getOperation().getName(),
                     opn.getOperation().getMetrics());
+        }
+        
+        if (opn.getSituations().size() > 0) {
+            generateSituations(container, insertPoint, x+(int)(width*0.9), y-4, ratio,
+                        opn.getSituations());
         }
     }
     

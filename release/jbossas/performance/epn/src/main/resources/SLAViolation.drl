@@ -1,6 +1,7 @@
 import org.overlord.bam.activity.model.ActivityTypeRef
 import org.overlord.bam.analytics.service.ResponseTime
 import org.overlord.bam.analytics.service.SLAViolation
+import org.overlord.bam.analytics.Situation
 
 global org.overlord.bam.epn.cep.EPNContext epn
 
@@ -24,10 +25,10 @@ then
 		
 		if ($rt.getAverage() > 400) {
 			sv.setViolation("Service exceeded maximum response time of 400 ms");
-			sv.setSeverity("Critical");
+			sv.setSeverity(Situation.Severity.Critical);
 		} else {
 			sv.setViolation("Service exceeded maximum response time of 200 ms");
-			sv.setSeverity("Medium");
+			sv.setSeverity(Situation.Severity.Medium);
 		}
 		
 		epn.forward(sv);

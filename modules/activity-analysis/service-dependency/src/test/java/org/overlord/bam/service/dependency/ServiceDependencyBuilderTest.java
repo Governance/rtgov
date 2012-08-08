@@ -20,6 +20,7 @@ package org.overlord.bam.service.dependency;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.bam.analytics.Situation;
 import org.overlord.bam.analytics.service.InvocationDefinition;
 import org.overlord.bam.analytics.service.OperationDefinition;
 import org.overlord.bam.analytics.service.RequestFaultDefinition;
@@ -34,6 +35,7 @@ public class ServiceDependencyBuilderTest {
     private static final String SERVICE_TYPE1 = "serviceType1";
     private static final String SERVICE_TYPE2 = "serviceType2";
     private static final String SERVICE_TYPE3 = "serviceType3";
+    private static final String FAULT2 = "fault2";
 
     @Test
     public void testInitialServices() {
@@ -207,8 +209,31 @@ public class ServiceDependencyBuilderTest {
         sds.add(sd2);
         sds.add(sd3);
         
+        java.util.List<Situation> sits=new java.util.ArrayList<Situation>();
+        
+        Situation sit1=new Situation();
+        sit1.setSeverity(Situation.Severity.Critical);
+        sit1.setSubject(SERVICE_TYPE1);
+        sit1.setType("SLA Violation");
+        sit1.setDescription("Service exceeded SLA");
+        sits.add(sit1);
+        
+        Situation sit2=new Situation();
+        sit2.setSeverity(Situation.Severity.High);
+        sit2.setSubject(SERVICE_TYPE1);
+        sit2.setType("SLA Warning");
+        sit2.setDescription("Service close to violating SLA");
+        sits.add(sit2);
+        
+        Situation sit3=new Situation();
+        sit3.setSeverity(Situation.Severity.High);
+        sit3.setSubject(SERVICE_TYPE2+"/"+OP2+"/"+FAULT2);
+        sit3.setType("SLA Violation");
+        sit3.setDescription("Service exceeded SLA");
+        sits.add(sit3);
+        
         ServiceGraph result=
-                ServiceDependencyBuilder.buildGraph(sds);
+                ServiceDependencyBuilder.buildGraph(sds, sits);
         
         if (result == null) {
             fail("Result null");
@@ -288,6 +313,26 @@ public class ServiceDependencyBuilderTest {
         
         if (idcount != 4) {
             fail("Expecting 4 invocation definitions: "+idcount);
+        }
+        
+        if (sn1.getSituations().size() != 2) {
+            fail("sn1 does not have 2 situation: "+sn1.getSituations().size());
+        }
+        
+        if (!sn1.getSituations().contains(sit1)) {
+            fail("sn1 situation does not include sit1");
+        }
+        
+        if (!sn1.getSituations().contains(sit2)) {
+            fail("sn1 situation does not include sit2");
+        }
+        
+        if (opn2.getSituations().size() != 1) {
+            fail("Opn2 does not have 1 situation: "+opn2.getSituations().size());
+        }
+        
+        if (opn2.getSituations().get(0) != sit3) {
+            fail("Opn2 situation not sit3");
         }
     }
 }

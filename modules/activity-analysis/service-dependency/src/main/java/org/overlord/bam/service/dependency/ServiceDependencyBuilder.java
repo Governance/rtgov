@@ -19,6 +19,7 @@ package org.overlord.bam.service.dependency;
 
 import java.util.logging.Logger;
 
+import org.overlord.bam.analytics.Situation;
 import org.overlord.bam.analytics.service.InvocationDefinition;
 import org.overlord.bam.analytics.service.OperationDefinition;
 import org.overlord.bam.analytics.service.RequestFaultDefinition;
@@ -116,9 +117,11 @@ public final class ServiceDependencyBuilder {
      * definitions.
      * 
      * @param sds The service definitions
+     * @param sits The situations
      * @return The service graph
      */
-    public static ServiceGraph buildGraph(java.util.Set<ServiceDefinition> sds) {
+    public static ServiceGraph buildGraph(java.util.Set<ServiceDefinition> sds,
+                        java.util.List<Situation> sits) {
         ServiceGraph ret=new ServiceGraph();
         
         // Get set of initial services
@@ -137,10 +140,30 @@ public final class ServiceDependencyBuilder {
                 opn.setService(sd);
                 opn.setOperation(op);
                 
+                String subject=sn.getService().getServiceType()
+                        +"/"+op.getName();
+                
+                if (sits != null) {
+                    for (Situation s : sits) {
+                        if (s.getSubject() != null && s.getSubject().startsWith(subject)) {
+                            opn.getSituations().add(s);
+                        }
+                    }
+                }
+                
                 sn.getOperations().add(opn);
             }
             
             sn.getProperties().put(ServiceNode.INITIAL_NODE, initialNodes.contains(sd));
+            
+            if (sits != null) {
+                for (Situation s : sits) {
+                    if (s.getSubject() != null && s.getSubject().equals(
+                                sn.getService().getServiceType())) {
+                        sn.getSituations().add(s);
+                    }
+                }
+            }
             
             ret.getServiceNodes().add(sn);
         }

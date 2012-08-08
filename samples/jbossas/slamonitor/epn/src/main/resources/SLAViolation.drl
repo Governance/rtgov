@@ -24,10 +24,10 @@ then
 		
 		if ($rt.getAverage() > 400) {
 			situation.setDescription("Service exceeded maximum response time of 400 ms");
-			situation.setSeverity("Critical");
+			situation.setSeverity(Situation.Severity.Critical);
 		} else {
 			situation.setDescription("Service exceeded maximum response time of 200 ms");
-			situation.setSeverity("Medium");
+			situation.setSeverity(Situation.Severity.Medium);
 		}
 		
 		epn.forward(situation);

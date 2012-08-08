@@ -31,31 +31,34 @@ public class Situation implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
-    /**
-     * Critical severity.
-     */
-    public static final String SEVERITY_CRITICAL="Critical";
-
-    /**
-     * High severity.
-     */
-    public static final String SEVERITY_HIGH="High";
+    public enum Severity {
+        
+        /**
+         * Low severity.
+         */
+        Low,
+        
+        /**
+         * Medium severity.
+         */
+        Medium,
+        
+        /**
+         * High severity.
+         */
+        High,
+       
+        /**
+         * Critical severity.
+         */
+        Critical
+     }
     
-    /**
-     * Medium severity.
-     */
-    public static final String SEVERITY_MEDIUM="Medium";
-    
-    /**
-     * Low severity.
-     */
-    public static final String SEVERITY_LOW="Low";
-
     private String _type=null;
     private String _subject=null;
     private String _description=null;
     private long _timestamp=0;
-    private String _severity=null;
+    private Severity _severity=null;
     private java.util.List<ActivityTypeRef> _activityTypeRefs=
                         new java.util.ArrayList<ActivityTypeRef>();
 
@@ -136,7 +139,7 @@ public class Situation implements java.io.Externalizable {
      * 
      * @return The severity
      */
-    public String getSeverity() {
+    public Severity getSeverity() {
         return _severity;
     }
 
@@ -145,7 +148,7 @@ public class Situation implements java.io.Externalizable {
      * 
      * @param severity The severity value
      */
-    public void setSeverity(String severity) {
+    public void setSeverity(Severity severity) {
         _severity = severity;
     }
 
@@ -157,6 +160,48 @@ public class Situation implements java.io.Externalizable {
      */
     public java.util.List<ActivityTypeRef> getActivityTypeRefs() {
         return (_activityTypeRefs);
+    }
+    
+    /**
+     * This method returns the highest severity associated with the supplied
+     * list of situations.
+     * 
+     * @param sits The list of situations
+     * @return The highest severity, or null if no situations provided
+     */
+    public static Severity getHighestSeverity(java.util.List<Situation> sits) {
+        Severity ret=null;
+        
+        for (Situation s : sits) {
+            
+            if (ret == null) {
+                ret = s.getSeverity();
+            } else if (s.getSeverity().ordinal() > ret.ordinal()) {
+                ret = s.getSeverity();
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method filters the list of situations based on severity.
+     * 
+     * @param severity The severity
+     * @param sits The list of situations
+     * @return The situations for the supplied severity
+     */
+    public static java.util.List<Situation> getSituationsForSeverity(Severity severity,
+                        java.util.List<Situation> sits) {
+        java.util.List<Situation> ret=new java.util.ArrayList<Situation>();
+        
+        for (Situation s : sits) {
+            if (s.getSeverity() == severity) {
+                ret.add(s);
+            }
+        }
+        
+        return (ret);
     }
     
     /**
@@ -195,7 +240,7 @@ public class Situation implements java.io.Externalizable {
         _type = (String)in.readObject();
         _subject = (String)in.readObject();
         _description = (String)in.readObject();
-        _severity = (String)in.readObject();
+        _severity = (Severity)in.readObject();
         _timestamp = in.readLong();
         
         int len=in.readInt();

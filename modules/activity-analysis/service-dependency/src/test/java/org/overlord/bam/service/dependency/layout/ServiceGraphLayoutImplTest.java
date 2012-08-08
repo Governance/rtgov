@@ -109,7 +109,7 @@ public class ServiceGraphLayoutImplTest {
         sds.add(sd4);
         
         ServiceGraph graph=
-                ServiceDependencyBuilder.buildGraph(sds);
+                ServiceDependencyBuilder.buildGraph(sds, null);
         
         if (graph == null) {
             fail("Graph is null");

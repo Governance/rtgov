@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.service.dependency;
 
+import org.overlord.bam.analytics.Situation;
 import org.overlord.bam.analytics.service.OperationDefinition;
 import org.overlord.bam.analytics.service.ServiceDefinition;
 
@@ -30,6 +31,7 @@ public class OperationNode {
     private ServiceDefinition _service=null;
     private OperationDefinition _operation=null;
     private java.util.Properties _properties=new java.util.Properties();
+    private java.util.List<Situation> _situations=new java.util.ArrayList<Situation>();
     
     /**
      * The default constructor.
@@ -81,5 +83,15 @@ public class OperationNode {
      */
     public java.util.Properties getProperties() {
         return (_properties);
+    }
+    
+    /**
+     * This method returns the situations associated with
+     * the node.
+     * 
+     * @return The situations
+     */
+    public java.util.List<Situation> getSituations() {
+        return (_situations);
     }
 }
