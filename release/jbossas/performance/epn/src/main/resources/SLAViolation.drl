@@ -1,6 +1,5 @@
 import org.overlord.bam.activity.model.ActivityTypeRef
 import org.overlord.bam.analytics.service.ResponseTime
-import org.overlord.bam.analytics.service.SLAViolation
 import org.overlord.bam.analytics.Situation
 
 global org.overlord.bam.epn.cep.EPNContext epn
@@ -11,27 +10,33 @@ end
 
 rule "check for SLA violations"
 when
-    $rt : ResponseTime() from entry-point "ResponseTimes" 
+    $rt : ResponseTime() from entry-point "ServiceResponseTimes" 
 then
 
-	if ($rt.getAverage() > 1000) {
+	if ($rt.getAverage() > 200) {
 		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
 		
-		SLAViolation sv=new SLAViolation();
+		Situation situation=new Situation();
 		
-		sv.setServiceType($rt.getServiceType());
-		sv.setOperation($rt.getOperation());
-		sv.setTimestamp(System.currentTimeMillis());
+		situation.setType("SLA Violation");
+		situation.setSubject($rt.getServiceType()+"/"+$rt.getOperation());
+		situation.setTimestamp(System.currentTimeMillis());
 		
 		if ($rt.getAverage() > 400) {
-			sv.setViolation("Service exceeded maximum response time of 400 ms");
-			sv.setSeverity(Situation.Severity.Critical);
+			situation.setDescription("Service exceeded maximum response time of 400 ms");
+			situation.setSeverity(Situation.Severity.Critical);
+		} else if ($rt.getAverage() > 320) {
+			situation.setDescription("Service exceeded response time of 320 ms");
+			situation.setSeverity(Situation.Severity.High);
+		} else if ($rt.getAverage() > 260) {
+			situation.setDescription("Service exceeded response time of 260 ms");
+			situation.setSeverity(Situation.Severity.Medium);
 		} else {
-			sv.setViolation("Service exceeded maximum response time of 200 ms");
-			sv.setSeverity(Situation.Severity.Medium);
+			situation.setDescription("Service exceeded response time of 200 ms");
+			situation.setSeverity(Situation.Severity.Low);
 		}
 		
-		epn.forward(sv);
+		epn.forward(situation);
 	}	
 
 end

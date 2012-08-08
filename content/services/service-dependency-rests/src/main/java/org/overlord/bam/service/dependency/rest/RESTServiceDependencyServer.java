@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.overlord.bam.active.collection.ActiveCollection;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveMap;
+import org.overlord.bam.analytics.Situation;
 import org.overlord.bam.analytics.service.ServiceDefinition;
 import org.overlord.bam.service.dependency.ServiceDependencyBuilder;
 import org.overlord.bam.service.dependency.ServiceGraph;
@@ -52,6 +53,7 @@ public class RESTServiceDependencyServer {
     private ActiveCollectionManager _acmManager=null;
     
     private ActiveCollection _servDefns=null;
+    private ActiveCollection _situations=null;
 
     /**
      * This is the default constructor.
@@ -96,8 +98,16 @@ public class RESTServiceDependencyServer {
             _servDefns=_acmManager.getActiveCollection("ServiceDefinitions");
         }
         
+        if (_acmManager != null && _situations == null) {
+            _situations=_acmManager.getActiveCollection("Situations");
+        }
+        
         if (_servDefns == null) {
             throw new Exception("Service definitions are not available");
+        }
+        
+        if (_situations == null) {
+            throw new Exception("Situations are not available");
         }
         
         java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
@@ -109,8 +119,16 @@ public class RESTServiceDependencyServer {
             }
         }
         
+        java.util.List<Situation> situations=new java.util.ArrayList<Situation>();
+        
+        for (Object obj : _situations) {
+            if (obj instanceof Situation) {
+                situations.add((Situation)obj);
+            }
+        }
+        
         ServiceGraph graph=
-                ServiceDependencyBuilder.buildGraph(sds, null);
+                ServiceDependencyBuilder.buildGraph(sds, situations);
         
         if (graph == null) {
             throw new Exception("Failed to generate service dependency overview");
