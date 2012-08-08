@@ -11,9 +11,27 @@ org.overlord.bam.analytics.service.ServiceDefinition existingsd=
 	(org.overlord.bam.analytics.service.ServiceDefinition)map.get(newsd.getServiceType());
 
 if (existingsd == null) {
-	acs.insert(newsd.getServiceType(), newsd);
+	acs.insert(newsd.getServiceType(),
+			new org.overlord.bam.analytics.service.ServiceDefinition(newsd));
 } else {
 	existingsd.merge(newsd);
 	
 	acs.update(existingsd.getServiceType(), existingsd);
 }
+
+// Update the current snapshot
+currentSnapshot = variables.get("currentSnapshot");
+
+if (currentSnapshot == null) {
+	currentSnapshot = new java.util.HashMap();
+	variables.put("currentSnapshot", currentSnapshot);
+}
+
+existingsd = currentSnapshot.get(newsd.getServiceType());
+
+if (existingsd == null) {
+	currentSnapshot.put(newsd.getServiceType(), newsd);
+} else {
+	existingsd.merge(newsd);
+}
+

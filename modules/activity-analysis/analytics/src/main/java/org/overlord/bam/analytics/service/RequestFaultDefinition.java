@@ -68,28 +68,6 @@ public class RequestFaultDefinition extends MEPDefinition implements java.io.Ext
     /**
      * {@inheritDoc}
      */
-    protected MEPDefinition create() {
-        return (new RequestFaultDefinition());
-    }
-    
-    /**
-     * This method performs a 'diff' on the supplied
-     * MEP definition.
-     * 
-     * @param mep The MEP definition
-     * @return The diff
-     */
-    public MEPDefinition diff(MEPDefinition mep) {
-        RequestFaultDefinition ret=(RequestFaultDefinition)super.diff(mep);
-        
-        ret.setFault(getFault());
-        
-        return (ret);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public int hashCode() {
         return (_fault.hashCode());
     }

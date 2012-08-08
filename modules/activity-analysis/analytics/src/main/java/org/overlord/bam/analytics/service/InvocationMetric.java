@@ -288,45 +288,6 @@ public class InvocationMetric implements java.io.Externalizable {
     }
     
     /**
-     * This method calculates the 'diff' with the
-     * supplied metric.
-     * 
-     * @param metric The invocation metrics
-     * @return The 'diff'
-     */
-    public InvocationMetric diff(InvocationMetric metric) {
-        InvocationMetric ret=new InvocationMetric();
-        
-        ret.setCount(getCount() - metric.getCount());
-        ret.setCountChange(getCountChange() - metric.getCountChange());
-        ret.setAverage(getAverage() - metric.getAverage());
-        ret.setAverageChange(getAverageChange() - metric.getAverageChange());
-        ret.setMin(getMin() - metric.getMin());
-        ret.setMinChange(getMinChange() - metric.getMinChange());
-        ret.setMax(getMax() - metric.getMax());
-        ret.setMaxChange(getMaxChange() - metric.getMaxChange());
-        
-        return (ret);
-    }
-    
-    /**
-     * This method adjusts the invocation metric
-     * information using the supplied 'diff' data.
-     * 
-     * @param metric The invocation metrics to demerge
-     */
-    public void adjust(InvocationMetric metric) {        
-        setCount(getCount() - metric.getCount());
-        setCountChange(getCountChange() - metric.getCountChange());
-        setAverage(getAverage() - metric.getAverage());
-        setAverageChange(getAverageChange() - metric.getAverageChange());
-        setMin(getMin() - metric.getMin());
-        setMinChange(getMinChange() - metric.getMinChange());
-        setMax(getMax() - metric.getMax());
-        setMaxChange(getMaxChange() - metric.getMaxChange());
-    }
-    
-    /**
      * {@inheritDoc}
      */
     public String toString() {

@@ -20,6 +20,10 @@ package org.overlord.bam.analytics.service;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.overlord.bam.analytics.service.util.ServiceDefinitionUtil;
 
 /**
  * This class represents the service contract details associated
@@ -27,6 +31,8 @@ import java.io.ObjectOutput;
  *
  */
 public class ServiceDefinition implements java.io.Externalizable {
+    
+    private static final Logger LOG=Logger.getLogger(ServiceDefinition.class.getName());
 
     private static final int VERSION = 1;
 
@@ -159,6 +165,10 @@ public class ServiceDefinition implements java.io.Externalizable {
             throw new IllegalArgumentException("Invalid service definition");
         }
         
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("Pre-merge this=["+this+"] with=["+sd+"]");
+        }
+
         // Examine operation definitions - merge existing and
         // transfer undefined
         for (int i=0; i < sd.getOperations().size(); i++) {
@@ -169,71 +179,28 @@ public class ServiceDefinition implements java.io.Externalizable {
             if (cur != null) {
                 cur.merge(opdef);
             } else {
-                getOperations().add(opdef);
+                getOperations().add(new OperationDefinition(opdef));
             }
+        }
+
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("Post-merge this=["+this+"]");
         }
     }
     
     /**
-     * This method returns the service definition that represents
-     * the difference between this and the supplied definition.
-     * 
-     * @param sd The service definition to diff
-     * @return The 'diff' service definition
-     * @throws Exception Failed to diff
+     * {@inheritDoc}
      */
-    public ServiceDefinition diff(ServiceDefinition sd) throws Exception {
-        ServiceDefinition ret=new ServiceDefinition();
+    public String toString() {
+        String ret=null;
         
-        if (sd == null || !sd.getServiceType().equals(getServiceType())) {
-            throw new IllegalArgumentException("Invalid service definition");
-        }
-        
-        ret.setServiceType(getServiceType());
-        
-        // Examine operation definitions
-        for (int i=0; i < sd.getOperations().size(); i++) {
-            OperationDefinition opdef=sd.getOperations().get(i);
-            
-            OperationDefinition cur=getOperation(opdef.getName());
-            
-            if (cur != null) {
-                OperationDefinition diff=cur.diff(opdef);
-                
-                if (diff != null) {
-                    ret.getOperations().add(diff);
-                }
-            } else {
-                ret.getOperations().add(new OperationDefinition(opdef));
-            }
+        try {
+            ret = new String(ServiceDefinitionUtil.serializeServiceDefinition(this));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         
         return (ret);
-    }
-    
-    /**
-     * This method adjusts the service definition information
-     * based on the supplied 'diff' values.
-     * 
-     * @param sd The service definition to adjust
-     * @throws Exception Failed to adjust
-     */
-    public void adjust(ServiceDefinition sd) throws Exception {
-        
-        if (sd == null || !sd.getServiceType().equals(getServiceType())) {
-            throw new IllegalArgumentException("Invalid service definition");
-        }
-        
-        // Examine operation definitions - demerge existing
-        for (int i=0; i < sd.getOperations().size(); i++) {
-            OperationDefinition opdef=sd.getOperations().get(i);
-            
-            OperationDefinition cur=getOperation(opdef.getName());
-            
-            if (cur != null) {
-                cur.adjust(opdef);
-            }
-        }
     }
     
     /**

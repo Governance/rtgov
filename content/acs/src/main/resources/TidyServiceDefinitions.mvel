@@ -7,36 +7,39 @@ if (snapshots == null) {
 	variables.put("snapshots", snapshots);
 }
 
-java.util.Map prevSnapshot=null;
-if (snapshots.size() > 0) {
-	prevSnapshot = snapshots.get(snapshots.size()-1);
+// Update the current snapshot
+currentSnapshot = variables.get("currentSnapshot");
+
+if (currentSnapshot == null) {
+	currentSnapshot = new java.util.HashMap();
 }
 
-java.util.Map snapshot=new java.util.HashMap();
+snapshots.add(new java.util.HashMap(currentSnapshot));
 
+currentSnapshot.clear();
+
+// Remove any snapshots above the number configured
+while (snapshots.size() > cleanupCycle) {
+	snapshot = snapshots.remove(0);
+}
+
+// Merge snapshots
+merged = org.overlord.bam.analytics.service.util.ServiceDefinitionUtil.mergeSnapshots(snapshots);
+
+// Update existing, and remove definitions no longer relevant
 foreach (entry : acs.activeCollection) {
 	org.overlord.bam.analytics.service.ServiceDefinition sd=null;
 	
-	if (prevSnapshot == null || !prevSnapshot.containsKey(entry.value.serviceType)) {
-		sd = new org.overlord.bam.analytics.service.ServiceDefinition(entry.value);
+	if (merged.containsKey(entry.key)) {
+		acs.update(entry.key, merged.get(entry.key));
 	} else {
-		sd = entry.value.diff(prevSnapshot.get(entry.value.serviceType));
+		acs.remove(entry.key, entry.value);
 	}
 	
-	snapshot.put(entry.value.serviceType, sd);
+	merged.remove(entry.key);
 }
 
-snapshots.add(snapshot);
-
-while (snapshots.size() > cleanupCycle) {
-	snapshot = snapshots.remove(0);
-	
-	for (key : snapshot.keySet()) {
-		org.overlord.bam.analytics.service.ServiceDefinition sd=
-				acs.activeCollection.get(key);
-				
-		if (sd != null) {
-			sd.adjust(snapshot.get(key));
-		}
-	}
+// Add new definitions
+for (key : merged.keySet()) {
+	acs.insert(key, merged.get(key));
 }

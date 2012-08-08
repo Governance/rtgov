@@ -721,4 +721,167 @@ public class ServiceDefinitionUtilTest {
         }
 
     }
+    
+    @Test
+    public void testMergeSnapshots() {
+        
+        ServiceDefinition st1=new ServiceDefinition();
+        st1.setServiceType("st1");
+        
+        OperationDefinition op1=new OperationDefinition();
+        st1.getOperations().add(op1);
+        
+        op1.setName("op1");
+        
+        RequestResponseDefinition nrd1=new RequestResponseDefinition();
+        nrd1.getMetrics().setCount(10);
+        nrd1.getMetrics().setAverage(1000);
+        nrd1.getMetrics().setMin(500);
+        nrd1.getMetrics().setMax(1500);
+        nrd1.getMetrics().setCountChange(+5);
+        nrd1.getMetrics().setAverageChange(+2);
+        nrd1.getMetrics().setMinChange(-5);
+        nrd1.getMetrics().setMaxChange(+20);
+        
+        op1.setRequestResponse(nrd1);
+        
+        RequestFaultDefinition frd1=new RequestFaultDefinition();
+        frd1.setFault("fault1");
+        
+        frd1.getMetrics().setCount(20);
+        frd1.getMetrics().setAverage(2000);
+        frd1.getMetrics().setMin(1500);
+        frd1.getMetrics().setMax(2500);
+        frd1.getMetrics().setCountChange(-10);
+        frd1.getMetrics().setAverageChange(+6);
+        frd1.getMetrics().setMinChange(0);
+        frd1.getMetrics().setMaxChange(+10);
+        
+        op1.getRequestFaults().add(frd1);
+        
+        ServiceDefinition st2=new ServiceDefinition();
+        st2.setServiceType("st2");
+        
+        OperationDefinition op2=new OperationDefinition();
+        st2.getOperations().add(op2);
+        
+        op2.setName("op2");
+        
+        RequestResponseDefinition nrd2=new RequestResponseDefinition();
+        nrd2.getMetrics().setCount(10);
+        nrd2.getMetrics().setAverage(1000);
+        nrd2.getMetrics().setMin(500);
+        nrd2.getMetrics().setMax(1500);
+        nrd2.getMetrics().setCountChange(+5);
+        nrd2.getMetrics().setAverageChange(+2);
+        nrd2.getMetrics().setMinChange(-5);
+        nrd2.getMetrics().setMaxChange(+20);
+        
+        op2.setRequestResponse(nrd1);
+        
+        RequestFaultDefinition frd2=new RequestFaultDefinition();
+        frd2.setFault("fault2");
+        
+        frd2.getMetrics().setCount(20);
+        frd2.getMetrics().setAverage(2000);
+        frd2.getMetrics().setMin(1500);
+        frd2.getMetrics().setMax(2500);
+        frd2.getMetrics().setCountChange(-10);
+        frd2.getMetrics().setAverageChange(+6);
+        frd2.getMetrics().setMinChange(0);
+        frd2.getMetrics().setMaxChange(+10);
+        
+        op2.getRequestFaults().add(frd2);
+        
+        ServiceDefinition st3=new ServiceDefinition();
+        st3.setServiceType("st1");
+        
+        OperationDefinition op3=new OperationDefinition();
+        st3.getOperations().add(op3);
+        
+        op3.setName("op1");
+        
+        RequestResponseDefinition nrd3=new RequestResponseDefinition();
+        nrd3.getMetrics().setCount(5);
+        nrd3.getMetrics().setAverage(500);
+        nrd3.getMetrics().setMin(250);
+        nrd3.getMetrics().setMax(750);
+        nrd3.getMetrics().setCountChange(+2);
+        nrd3.getMetrics().setAverageChange(+1);
+        nrd3.getMetrics().setMinChange(-2);
+        nrd3.getMetrics().setMaxChange(+10);
+        
+        op3.setRequestResponse(nrd3);
+        
+        RequestFaultDefinition frd3=new RequestFaultDefinition();
+        frd3.setFault("fault3");
+        
+        frd3.getMetrics().setCount(20);
+        frd3.getMetrics().setAverage(2000);
+        frd3.getMetrics().setMin(1500);
+        frd3.getMetrics().setMax(2500);
+        frd3.getMetrics().setCountChange(-10);
+        frd3.getMetrics().setAverageChange(+6);
+        frd3.getMetrics().setMinChange(0);
+        frd3.getMetrics().setMaxChange(+10);
+        
+        op3.getRequestFaults().add(frd3);
+        
+        
+        java.util.Map<String,ServiceDefinition> sds1=new java.util.HashMap<String,ServiceDefinition>();
+        sds1.put(st1.getServiceType(), st1);
+        sds1.put(st2.getServiceType(), st2);
+        
+        java.util.Map<String,ServiceDefinition> sds2=new java.util.HashMap<String,ServiceDefinition>();
+        sds2.put(st3.getServiceType(), st3);
+        
+        java.util.List<java.util.Map<String,ServiceDefinition>> list=
+                new java.util.ArrayList<java.util.Map<String,ServiceDefinition>>();
+        list.add(sds1);
+        list.add(sds2);
+        
+        java.util.Map<String,ServiceDefinition> merged=ServiceDefinitionUtil.mergeSnapshots(list);
+        
+        if (merged == null) {
+            fail("No merged results");
+        }
+        
+        if (merged.size() != 2) {
+            fail("Two service defintions expected");
+        }
+        
+        ServiceDefinition sd1=merged.get("st1");
+        ServiceDefinition sd2=merged.get("st2");
+        
+        if (sd1 == null) {
+            fail("SD1 is null");
+        }
+        
+        if (sd2 == null) {
+            fail("SD2 is null");
+        }
+        
+        if (sd1.getOperations().size() != 1) {
+            fail("SD1 ops should be 1: "+sd1.getOperations().size());
+        }
+        
+        if (sd2.getOperations().size() != 1) {
+            fail("SD2 ops should be 1: "+sd2.getOperations().size());
+        }
+        
+        OperationDefinition opd1=sd1.getOperations().get(0);
+        OperationDefinition opd2=sd2.getOperations().get(0);
+        
+        if (opd1.getRequestFaults().size() != 2) {
+            fail("OP1 should have two faults: "+opd1.getRequestFaults().size());
+        }
+        
+        if (opd2.getRequestFaults().size() != 1) {
+            fail("OP2 should have 1 fault: "+opd2.getRequestFaults().size());
+        }
+        
+        if (opd1.getRequestResponse().getMetrics().getCount() != 15) {
+            fail("Expecting count 15: "+opd1.getRequestResponse().getMetrics().getCount());
+        }
+    }
 }

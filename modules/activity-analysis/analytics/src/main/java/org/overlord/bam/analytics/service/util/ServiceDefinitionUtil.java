@@ -17,6 +17,9 @@
  */
 package org.overlord.bam.analytics.service.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.DeserializationConfig.Feature;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -42,6 +45,8 @@ import org.overlord.bam.analytics.service.ServiceDefinition;
  *
  */
 public final class ServiceDefinitionUtil {
+    
+    private static final Logger LOG=Logger.getLogger(ServiceDefinitionUtil.class.getName());
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
@@ -335,5 +340,50 @@ public final class ServiceDefinitionUtil {
         }
 
         metrics.setCount(metrics.getCount()+1);        
+    }
+    
+    /**
+     * This method merges the supplied service definition snapshots.
+     * 
+     * @return The merged service definitions
+     */
+    public static java.util.Map<String,ServiceDefinition> mergeSnapshots(
+                    java.util.List<java.util.Map<String,ServiceDefinition>> snapshots) {
+        java.util.Map<String,ServiceDefinition> ret=
+                        new java.util.HashMap<String, ServiceDefinition>();
+        
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("MERGE: "+snapshots);
+        }
+        
+        java.util.Set<String> keys=new java.util.HashSet<String>();
+        
+        // Build key set
+        for (java.util.Map<String,ServiceDefinition> sds : snapshots) {
+            keys.addAll(sds.keySet());
+        }
+        
+        for (String key : keys) {
+            ServiceDefinition sd=new ServiceDefinition();
+            sd.setServiceType(key);
+            
+            for (java.util.Map<String,ServiceDefinition> sds : snapshots) {
+                if (sds.containsKey(key)) {
+                    try {
+                        sd.merge(sds.get(key));
+                    } catch (Exception e) {
+                        LOG.log(Level.SEVERE, "Failed to merge service definitions", e);
+                    }
+                }
+            }
+            
+            ret.put(key, sd);
+        }
+        
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("MERGED: "+ret);
+        }
+        
+        return (ret);
     }
 }

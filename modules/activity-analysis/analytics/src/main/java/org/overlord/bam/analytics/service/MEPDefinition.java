@@ -141,68 +141,7 @@ public abstract class MEPDefinition implements java.io.Externalizable {
             if (cur != null) {
                 cur.merge(id);
             } else {
-                getInvocations().add(id);
-            }
-        }
-    }
-    
-    /**
-     * This method creates a new concrete type.
-     * 
-     * @return The new MEP definition instance
-     */
-    protected abstract MEPDefinition create();
-    
-    /**
-     * This method performs a 'diff' on the supplied
-     * MEP definition.
-     * 
-     * @param mep The MEP definition
-     * @return The diff
-     */
-    public MEPDefinition diff(MEPDefinition mep) {
-        MEPDefinition ret=create();
-        
-        ret.setMetrics(getMetrics().diff(mep.getMetrics()));
-        
-        for (int i=0; i < mep.getInvocations().size(); i++) {
-            InvocationDefinition id=mep.getInvocations().get(i);
-            
-            InvocationDefinition cur=getInvocation(id.getServiceType(),
-                            id.getOperation(), id.getFault());
-            
-            if (cur != null) {
-                InvocationDefinition idiff=cur.diff(id);
-                
-                if (idiff != null) {
-                    ret.getInvocations().add(idiff);
-                }
-            } else {
-                ret.getInvocations().add(new InvocationDefinition(id));
-            }
-        }
-        
-        return (ret);
-    }
-    
-    /**
-     * This method adjusts the information using the supplied
-     * MEP definition.
-     * 
-     * @param mep The MEP definition to adjust
-     */
-    public void adjust(MEPDefinition mep) {
-        
-        getMetrics().adjust(mep.getMetrics());
-        
-        for (int i=0; i < mep.getInvocations().size(); i++) {
-            InvocationDefinition id=mep.getInvocations().get(i);
-            
-            InvocationDefinition cur=getInvocation(id.getServiceType(),
-                            id.getOperation(), id.getFault());
-            
-            if (cur != null) {
-                cur.adjust(id);
+                getInvocations().add(new InvocationDefinition(id));
             }
         }
     }

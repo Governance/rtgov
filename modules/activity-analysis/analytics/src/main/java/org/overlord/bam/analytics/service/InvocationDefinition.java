@@ -138,32 +138,6 @@ public class InvocationDefinition implements java.io.Externalizable {
     }
     
     /**
-     * This method adjusts the invocation
-     * definition using the supplied value.
-     * 
-     * @param id The invocation definition to adjust
-     * @return The 'diff'
-     */
-    public InvocationDefinition diff(InvocationDefinition id) {
-        InvocationDefinition ret=new InvocationDefinition();
-        
-        ret.setMetrics(getMetrics().diff(id.getMetrics()));
-        
-        return (ret);
-    }
-    
-    /**
-     * This method adjusts the invocation
-     * definition using the supplied value.
-     * 
-     * @param id The invocation definition to adjust
-     */
-    public void adjust(InvocationDefinition id) {
-        
-        getMetrics().adjust(id.getMetrics());
-    }
-    
-    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {

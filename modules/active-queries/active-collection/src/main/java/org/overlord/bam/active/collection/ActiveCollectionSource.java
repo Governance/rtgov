@@ -492,7 +492,7 @@ public class ActiveCollectionSource {
                     java.util.Map<String,Object> vars=
                             new java.util.HashMap<String, Object>();
 
-                    vars.put("acs", this);
+                    vars.put("acs", ActiveCollectionSource.this);
                     vars.put("variables", _variables);
                     
                     if (LOG.isLoggable(Level.FINE)) {
