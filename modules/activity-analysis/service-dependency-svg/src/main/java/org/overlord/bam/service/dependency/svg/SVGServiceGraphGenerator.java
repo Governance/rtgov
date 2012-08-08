@@ -53,13 +53,21 @@ public class SVGServiceGraphGenerator {
      * service graph to the output stream.
      * 
      * @param sg The service graph
+     * @param maxWidth The maximum width, or 0 if not relevant
      * @param os The output stream
      * @throws Exception Failed to generate SVG
      */
-    public void generate(ServiceGraph sg, java.io.OutputStream os) 
+    public void generate(ServiceGraph sg, int maxWidth, java.io.OutputStream os) 
                         throws Exception {
+        double ratio=1.0;
         
-        org.w3c.dom.Document doc=loadTemplate("main");
+        if (maxWidth > 0) {
+            int width=(Integer)sg.getProperties().get(ServiceGraphLayout.WIDTH);
+            
+            ratio = (double)maxWidth / (double)width;
+        }
+        
+        org.w3c.dom.Document doc=loadTemplate(ratio < 0.8 ? "summary" : "main");
         
         if (doc != null) {
             org.w3c.dom.Element container=doc.getDocumentElement();
@@ -72,7 +80,7 @@ public class SVGServiceGraphGenerator {
             }
             
             // Add description
-            if (sg.getDescription() != null) {
+            if (sg.getDescription() != null && ratio >= 1.0) {
                 org.w3c.dom.Element text=
                         container.getOwnerDocument().createElement("text");
                 text.setAttribute("x", "10");
@@ -90,15 +98,15 @@ public class SVGServiceGraphGenerator {
             
             // Generate nodes and links
             for (ServiceNode sn : sg.getServiceNodes()) {
-                generateService(sn, container, insertPoint);
+                generateService(sn, ratio, container, insertPoint);
             }
             
             for (UsageLink ul : sg.getUsageLinks()) {
-                generateUsageLink(ul, container, insertPoint);
+                generateUsageLink(ul, ratio, container, insertPoint);
             }
 
             for (InvocationLink il : sg.getInvocationLinks()) {
-                generateInvocationLink(il, container, insertPoint);
+                generateInvocationLink(il, ratio, container, insertPoint);
             }
 
             // Remove insertion point
@@ -114,31 +122,32 @@ public class SVGServiceGraphGenerator {
      * This method generates the usage link.
      * 
      * @param ul The usage link
+     * @param ratio The ratio
      * @param container The container
      * @param insertPoint The insertion point
      */
-    protected void generateUsageLink(UsageLink ul,
+    protected void generateUsageLink(UsageLink ul, double ratio,
                     org.w3c.dom.Element container, org.w3c.dom.Node insertPoint) {
         
-        int x1=(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
-                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH);
+        int x1=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
+                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH))*ratio);
         
-        int y1=(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION);
+        int y1=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION))*ratio);
         
-        int x2=(Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION);
+        int x2=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION))*ratio);
         
-        int y2=(Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION);
+        int y2=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION))*ratio);
         
-        int x3=(Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION);
+        int x3=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION))*ratio);
         
-        int y3=(Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION)
-                +(Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT);
+        int y3=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION)
+                +(Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT))*ratio);
         
-        int x4=(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
-                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH);
+        int x4=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
+                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH))*ratio);
         
-        int y4=(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION)
-                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.HEIGHT);
+        int y4=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION)
+                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.HEIGHT))*ratio);
         
         org.w3c.dom.Element polygon=
                 container.getOwnerDocument().createElement("polygon");
@@ -152,8 +161,10 @@ public class SVGServiceGraphGenerator {
         
         container.insertBefore(polygon, insertPoint);
         
-        // Generate tooltip
-        generateMetrics(polygon, getDescription(ul), im);
+        if (ratio >= 1.0) {
+            // Generate tooltip
+            generateMetrics(polygon, getDescription(ul), im);
+        }
     }
     
     /**
@@ -207,22 +218,23 @@ public class SVGServiceGraphGenerator {
      * This method generates the invocation link.
      * 
      * @param il The invocation link
+     * @param ratio The ratio
      * @param container The container
      * @param insertPoint The insertion point
      */
-    protected void generateInvocationLink(InvocationLink il,
+    protected void generateInvocationLink(InvocationLink il, double ratio,
                     org.w3c.dom.Element container, org.w3c.dom.Node insertPoint) {
         
-        int x1=(Integer)il.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
-                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.WIDTH);
+        int x1=(int)(((Integer)il.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
+                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.WIDTH))*ratio);
         
-        int y1=(Integer)il.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION)
-                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.HEIGHT)/2;
+        int y1=(int)(((Integer)il.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION)
+                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.HEIGHT)/2)*ratio);
         
-        int x2=(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION);
+        int x2=(int)(((Integer)il.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION))*ratio);
         
-        int y2=(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION)
-                +(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT)/2;
+        int y2=(int)(((Integer)il.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION)
+                +(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT)/2)*ratio);
         
         org.w3c.dom.Element line=
                 container.getOwnerDocument().createElement("line");
@@ -239,8 +251,10 @@ public class SVGServiceGraphGenerator {
         
         container.insertBefore(line, insertPoint);
         
-        // Generate tooltip
-        generateMetrics(line, getDescription(il), im);
+        if (ratio >= 1.0) {
+            // Generate tooltip
+            generateMetrics(line, getDescription(il), im);
+        }
     }
     
     /**
@@ -259,22 +273,27 @@ public class SVGServiceGraphGenerator {
      * This method generates the service node.
      * 
      * @param sn The service node
+     * @param ratio The ratio, 1 if normal size
      * @param container The container
      * @param insertPoint The insertion point
      */
-    protected void generateService(ServiceNode sn, org.w3c.dom.Element container,
+    protected void generateService(ServiceNode sn, double ratio, org.w3c.dom.Element container,
                         org.w3c.dom.Node insertPoint) {
         
         org.w3c.dom.Element rect=
                     container.getOwnerDocument().createElement("rect");
-        rect.setAttribute("width",
-                sn.getProperties().get(ServiceGraphLayout.WIDTH).toString());
-        rect.setAttribute("height",
-                sn.getProperties().get(ServiceGraphLayout.HEIGHT).toString());
-        rect.setAttribute("x",
-                sn.getProperties().get(ServiceGraphLayout.X_POSITION).toString());
-        rect.setAttribute("y",
-                sn.getProperties().get(ServiceGraphLayout.Y_POSITION).toString());
+        
+        int width=(int)((Integer)sn.getProperties().get(ServiceGraphLayout.WIDTH) * ratio);
+        rect.setAttribute("width", ""+width);
+        
+        int height=(int)((Integer)sn.getProperties().get(ServiceGraphLayout.HEIGHT) * ratio);
+        rect.setAttribute("height", ""+height);
+        
+        int x=(int)((Integer)sn.getProperties().get(ServiceGraphLayout.X_POSITION) * ratio);
+        rect.setAttribute("x", ""+x);
+        
+        int y=(int)((Integer)sn.getProperties().get(ServiceGraphLayout.Y_POSITION) * ratio);
+        rect.setAttribute("y", ""+y);
         
         rect.setAttribute("fill", "#B8DBFF");
         
@@ -286,39 +305,43 @@ public class SVGServiceGraphGenerator {
         
         container.insertBefore(rect, insertPoint);
         
-        // Generate tooltip
-        generateMetrics(rect, sn.getService().getServiceType(),
-                sn.getService().getMetrics());
+        if (ratio >= 1.0) {
+            // Generate tooltip
+            generateMetrics(rect, sn.getService().getServiceType(),
+                    sn.getService().getMetrics());
 
-        // Generate text
-        org.w3c.dom.Element text=
-                container.getOwnerDocument().createElement("text");
+            // Generate text
+            org.w3c.dom.Element text=
+                    container.getOwnerDocument().createElement("text");
+            
+            x= (Integer)sn.getProperties().get(ServiceGraphLayout.X_POSITION);
+            x += 5;
+            x *= ratio;
+            
+            y=(Integer)sn.getProperties().get(ServiceGraphLayout.Y_POSITION);
+            y += 10;
+            y *= ratio;
+            
+            text.setAttribute("x", ""+x);
+            text.setAttribute("y", ""+y);
+            
+            text.setAttribute("font-family", "Verdana");
+            text.setAttribute("font-size", "10");
+            text.setAttribute("fill", "#00008F");
         
-        int x=(Integer)sn.getProperties().get(ServiceGraphLayout.X_POSITION);
-        x += 5;
-        
-        int y=(Integer)sn.getProperties().get(ServiceGraphLayout.Y_POSITION);
-        y += 10;
-        
-        text.setAttribute("x", ""+x);
-        text.setAttribute("y", ""+y);
-        
-        text.setAttribute("font-family", "Verdana");
-        text.setAttribute("font-size", "10");
-        text.setAttribute("fill", "#00008F");
-        
-        QName qname=QName.valueOf(sn.getService().getServiceType());
-        
-        org.w3c.dom.Text value=
-                container.getOwnerDocument().createTextNode(
-                        qname.getLocalPart());
-        text.appendChild(value);
-        
-        container.insertBefore(text, insertPoint);
+            QName qname=QName.valueOf(sn.getService().getServiceType());
+            
+            org.w3c.dom.Text value=
+                    container.getOwnerDocument().createTextNode(
+                            qname.getLocalPart());
+            text.appendChild(value);
+            
+            container.insertBefore(text, insertPoint);
+        }
     
         // Generate operations
         for (OperationNode opn : sn.getOperations()) {
-            generateOperation(opn, container, insertPoint);
+            generateOperation(opn, ratio, container, insertPoint);
         }
     }
     
@@ -408,22 +431,27 @@ public class SVGServiceGraphGenerator {
      * This method generates the operation node.
      * 
      * @param opn The operation node
+     * @param ratio The ratio
      * @param doc The svg document
      * @param insertPoint The insertion point
      */
-    protected void generateOperation(OperationNode opn, org.w3c.dom.Element container,
-            org.w3c.dom.Node insertPoint) {
+    protected void generateOperation(OperationNode opn, double ratio,
+            org.w3c.dom.Element container, org.w3c.dom.Node insertPoint) {
         
         org.w3c.dom.Element rect=
                     container.getOwnerDocument().createElement("rect");
-        rect.setAttribute("width",
-                opn.getProperties().get(ServiceGraphLayout.WIDTH).toString());
-        rect.setAttribute("height",
-                opn.getProperties().get(ServiceGraphLayout.HEIGHT).toString());
-        rect.setAttribute("x",
-                opn.getProperties().get(ServiceGraphLayout.X_POSITION).toString());
-        rect.setAttribute("y",
-                opn.getProperties().get(ServiceGraphLayout.Y_POSITION).toString());
+        
+        int width=(int)((Integer)opn.getProperties().get(ServiceGraphLayout.WIDTH) * ratio);
+        rect.setAttribute("width", ""+width);
+        
+        int height=(int)((Integer)opn.getProperties().get(ServiceGraphLayout.HEIGHT) * ratio);
+        rect.setAttribute("height", ""+height);
+        
+        int x=(int)((Integer)opn.getProperties().get(ServiceGraphLayout.X_POSITION) * ratio);
+        rect.setAttribute("x", ""+x);
+        
+        int y=(int)((Integer)opn.getProperties().get(ServiceGraphLayout.Y_POSITION) * ratio);
+        rect.setAttribute("y", ""+y);
         
         rect.setAttribute("fill", "#85D6FF");
 
@@ -434,32 +462,36 @@ public class SVGServiceGraphGenerator {
         
         container.insertBefore(rect, insertPoint);
         
-        org.w3c.dom.Element text=
-                container.getOwnerDocument().createElement("text");
-        
-        int x=(Integer)opn.getProperties().get(ServiceGraphLayout.X_POSITION);
-        x += 5;
-        
-        int y=(Integer)opn.getProperties().get(ServiceGraphLayout.Y_POSITION);
-        y += 14;
-        
-        text.setAttribute("x", ""+x);
-        text.setAttribute("y", ""+y);
-        
-        text.setAttribute("font-family", "Verdana");
-        text.setAttribute("font-size", "12");
-        text.setAttribute("fill", "#00008F");
-        
-        org.w3c.dom.Text value=
-                container.getOwnerDocument().createTextNode(
-                        opn.getOperation().getName());
-        text.appendChild(value);
-        
-        container.insertBefore(text, insertPoint);
-        
-        // Generate tooltip
-        generateMetrics(rect, opn.getOperation().getName(),
-                opn.getOperation().getMetrics());
+        if (ratio >= 1.0) {
+            org.w3c.dom.Element text=
+                    container.getOwnerDocument().createElement("text");
+            
+            x = (Integer)opn.getProperties().get(ServiceGraphLayout.X_POSITION);
+            x += 5;
+            x *= ratio;
+            
+            y = (Integer)opn.getProperties().get(ServiceGraphLayout.Y_POSITION);
+            y += 14;
+            y *= ratio;
+            
+            text.setAttribute("x", ""+x);
+            text.setAttribute("y", ""+y);
+            
+            text.setAttribute("font-family", "Verdana");
+            text.setAttribute("font-size", "12");
+            text.setAttribute("fill", "#00008F");
+            
+            org.w3c.dom.Text value=
+                    container.getOwnerDocument().createTextNode(
+                            opn.getOperation().getName());
+            text.appendChild(value);
+            
+            container.insertBefore(text, insertPoint);
+                
+            // Generate tooltip
+            generateMetrics(rect, opn.getOperation().getName(),
+                    opn.getOperation().getMetrics());
+        }
     }
     
     /**

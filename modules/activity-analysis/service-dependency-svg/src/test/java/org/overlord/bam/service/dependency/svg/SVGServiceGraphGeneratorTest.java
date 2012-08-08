@@ -173,7 +173,7 @@ public class SVGServiceGraphGeneratorTest {
         java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
         
         try {
-            generator.generate(graph, os);
+            generator.generate(graph, 300, os);
         } catch (Exception e) {
             fail("Failed to generate: "+e);
         }

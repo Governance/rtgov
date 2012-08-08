@@ -26,6 +26,7 @@ public class ServiceGraph {
     private java.util.Set<ServiceNode> _nodes=new java.util.HashSet<ServiceNode>();
     private java.util.Set<InvocationLink> _invocationLinks=new java.util.HashSet<InvocationLink>();
     private java.util.Set<UsageLink> _usageLinks=new java.util.HashSet<UsageLink>();
+    private java.util.Map<String,Object> _properties=new java.util.HashMap<String,Object>();
     
     private String _description=null;
  
@@ -98,5 +99,15 @@ public class ServiceGraph {
      */
     public java.util.Set<UsageLink> getUsageLinks() {
         return (_usageLinks);
+    }
+
+    /**
+     * This method returns the properties associated with
+     * the graph.
+     * 
+     * @return The properties
+     */
+    public java.util.Map<String,Object> getProperties() {
+        return (_properties);
     }
 }

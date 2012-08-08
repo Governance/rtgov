@@ -80,6 +80,10 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
                             _height+SERVICE_VERTICAL_PADDING);
             }
         }
+        
+        // Record the overall height and width
+        sg.getProperties().put(ServiceGraphLayout.HEIGHT, _height);
+        sg.getProperties().put(ServiceGraphLayout.WIDTH, _width);
     }
     
     /**

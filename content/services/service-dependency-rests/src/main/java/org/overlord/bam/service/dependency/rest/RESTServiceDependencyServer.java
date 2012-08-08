@@ -31,9 +31,11 @@ import org.overlord.bam.service.dependency.svg.SVGServiceGraphGenerator;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 /**
  * This class represents the RESTful interface to the service dependency server.
@@ -86,7 +88,7 @@ public class RESTServiceDependencyServer {
     @GET
     @Path("/overview")
     @Produces("image/svg+xml")
-    public String overview() throws Exception {
+    public String overview(@DefaultValue("0") @QueryParam("width") int width) throws Exception {
         String ret="";
         
         // Obtain service definition collection
@@ -125,7 +127,7 @@ public class RESTServiceDependencyServer {
         
         java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
         
-        generator.generate(graph, os);
+        generator.generate(graph, width, os);
         
         os.close();
         
