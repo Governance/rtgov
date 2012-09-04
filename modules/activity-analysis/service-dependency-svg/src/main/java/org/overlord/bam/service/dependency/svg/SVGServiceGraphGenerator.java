@@ -410,7 +410,16 @@ public class SVGServiceGraphGenerator {
         }
         
         if (isGenerateToolTips(ratio)) {
+
             // Generate the situation elements
+            org.w3c.dom.Element title=
+                    container.getOwnerDocument().createElement("desc");
+            circle.appendChild(title);
+        
+            org.w3c.dom.Text titleText=
+                    container.getOwnerDocument().createTextNode("Situations");
+            title.appendChild(titleText);                
+
             java.util.List<Situation> critical=Situation.getSituationsForSeverity(
                             Situation.Severity.Critical, situations);
             
