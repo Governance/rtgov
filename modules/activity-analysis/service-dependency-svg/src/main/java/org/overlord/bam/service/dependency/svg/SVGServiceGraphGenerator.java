@@ -43,10 +43,30 @@ public class SVGServiceGraphGenerator {
     
     private static final Logger LOG=Logger.getLogger(SVGServiceGraphGenerator.class.getName());
 
+    private ColourSelector _colourSelector=null;
+    
     /**
      * The default constructor.
      */
     public SVGServiceGraphGenerator() {
+    }
+    
+    /**
+     * This method returns the colour selector.
+     * 
+     * @return The colour selector
+     */
+    public ColourSelector getColourSelector() {
+        return (_colourSelector);
+    }
+    
+    /**
+     * This method sets the colour selector.
+     * 
+     * @param selector The colour selector
+     */
+    public void setColourSelector(ColourSelector selector) {
+        _colourSelector = selector;
     }
     
     /**
@@ -156,7 +176,7 @@ public class SVGServiceGraphGenerator {
                 +x3+","+y3+" "+x4+","+y4);
 
         InvocationMetric im=getMetrics(ul.getInvocations());
-        String colour=getColour(im);
+        String colour=getColour(ul, im);
         
         polygon.setAttribute("style", "fill:"+colour+";fill-opacity:0.2");
         
@@ -184,32 +204,15 @@ public class SVGServiceGraphGenerator {
      * This method returns the colour relevant for the supplied
      * metric.
      * 
+     * @param component The source component
      * @param metric The metric
      * @return The colour
      */
-    protected String getColour(InvocationMetric metric) {
+    protected String getColour(Object component, InvocationMetric metric) {
         String ret="#00FF00";
         
-        double gap=metric.getMax()-metric.getMin();
-        
-        if (gap > 0) {
-            double mid=metric.getAverage()-metric.getMin();
-            
-            double ratio=mid/gap;
-            
-            if (ratio > 0.95) {
-                ret = "#FF0000";
-            } else if (ratio > 0.9) {
-                ret = "#FF3300";
-            } else if (ratio > 0.85) {
-                ret = "#FF5930";
-            } else if (ratio > 0.8) {
-                ret = "#FF6A45";
-            } else if (ratio > 0.75) {
-                ret = "#FF9479";
-            } else if (ratio > 0.7) {
-                ret = "#FF9900";
-            }
+        if (_colourSelector != null) {
+            ret = _colourSelector.getColour(component, metric);
         }
         
         return (ret);
@@ -246,7 +249,7 @@ public class SVGServiceGraphGenerator {
         
         InvocationMetric im=getMetrics(il.getInvocations());
         
-        String colour=getColour(im);
+        String colour=getColour(il, im);
         
         line.setAttribute("style", "stroke:"+colour+";stroke-width:3");
         
@@ -298,7 +301,7 @@ public class SVGServiceGraphGenerator {
         
         rect.setAttribute("fill", "#B8DBFF");
         
-        String colour=getColour(sn.getService().getMetrics());
+        String colour=getColour(sn, sn.getService().getMetrics());
         rect.setAttribute("stroke", colour);
 
         rect.setAttribute("stroke-width", "2");
@@ -615,7 +618,7 @@ public class SVGServiceGraphGenerator {
         
         rect.setAttribute("fill", "#85D6FF");
 
-        String colour=getColour(opn.getOperation().getMetrics());
+        String colour=getColour(opn, opn.getOperation().getMetrics());
         
         rect.setAttribute("stroke", colour);
         rect.setAttribute("stroke-width", "1");
