@@ -229,6 +229,51 @@ public class SVGServiceGraphGeneratorTest {
         }
         
         System.out.println(svg);
+    }
+
+    @Test
+    public void testEmptyServiceDescriptionLayoutGraph() {
+        java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
+        
+        java.util.List<Situation> sits=new java.util.ArrayList<Situation>();
+        
+        ServiceGraph graph=
+                ServiceDependencyBuilder.buildGraph(sds, sits);
+        
+        if (graph == null) {
+            fail("Graph is null");
+        }
+        
+        graph.setDescription("Graph description");
+        
+        ServiceGraphLayoutImpl layout=new ServiceGraphLayoutImpl();
+        
+        layout.layout(graph);
+        
+        // Check some of the dimensions
+        SVGServiceGraphGenerator generator=new SVGServiceGraphGenerator();
+        
+        java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
+        
+        try {
+            generator.generate(graph, 0, os);
+        } catch (Exception e) {
+            fail("Failed to generate: "+e);
+        }
+        
+        try {
+            os.close();
+        } catch (Exception e) {
+            fail("Failed to close: "+e);
+        }
+        
+        String svg=new String(os.toByteArray());
+        
+        if (!svg.contains("<svg")) {
+            fail("Not a SVG document");
+        }
+        
+        System.out.println(svg);
      }
 
 }

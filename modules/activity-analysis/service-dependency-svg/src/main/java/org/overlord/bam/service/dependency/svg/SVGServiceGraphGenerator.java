@@ -117,17 +117,33 @@ public class SVGServiceGraphGenerator {
                 text.appendChild(textValue);
             }
             
-            // Generate nodes and links
-            for (ServiceNode sn : sg.getServiceNodes()) {
-                generateService(sn, ratio, container, insertPoint);
-            }
-            
-            for (UsageLink ul : sg.getUsageLinks()) {
-                generateUsageLink(ul, ratio, container, insertPoint);
-            }
+            if (sg.getServiceNodes().size() > 0) {
+                // Generate nodes and links
+                for (ServiceNode sn : sg.getServiceNodes()) {
+                    generateService(sn, ratio, container, insertPoint);
+                }
+                
+                for (UsageLink ul : sg.getUsageLinks()) {
+                    generateUsageLink(ul, ratio, container, insertPoint);
+                }
+    
+                for (InvocationLink il : sg.getInvocationLinks()) {
+                    generateInvocationLink(il, ratio, container, insertPoint);
+                }
+            } else {
+                org.w3c.dom.Element text=
+                        container.getOwnerDocument().createElement("text");
+                text.setAttribute("x", "50");
+                text.setAttribute("y", "100");
+                text.setAttribute("font-size", "30");
+                text.setAttribute("font-family", "Verdana");
+                text.setAttribute("fill", "#D9D9C2");
 
-            for (InvocationLink il : sg.getInvocationLinks()) {
-                generateInvocationLink(il, ratio, container, insertPoint);
+                container.insertBefore(text, insertPoint);
+            
+                org.w3c.dom.Text textValue=
+                        container.getOwnerDocument().createTextNode("No Service Activity");
+                text.appendChild(textValue);
             }
 
             // Remove insertion point
