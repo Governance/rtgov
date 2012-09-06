@@ -53,6 +53,8 @@ public abstract class ActivityType implements java.io.Externalizable {
     private String _activityUnitId=null;
     private int _activityUnitIndex=0;
     private long _timestamp=0;
+    
+    private java.util.List<Context> _contexts=new java.util.Vector<Context>();
 
     /**
      * The default constructor.
@@ -128,6 +130,24 @@ public abstract class ActivityType implements java.io.Externalizable {
     }
 
     /**
+     * This method sets the context.
+     * 
+     * @param context The context
+     */
+    public void setContext(java.util.List<Context> context) {
+        _contexts = context;
+    }
+    
+    /**
+     * This method gets the context.
+     * 
+     * @return The context
+     */
+    public java.util.List<Context> getContext() {
+        return (_contexts);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -136,6 +156,13 @@ public abstract class ActivityType implements java.io.Externalizable {
         out.writeObject(_activityUnitId);
         out.writeInt(_activityUnitIndex);
         out.writeLong(_timestamp);
+        
+        int len=_contexts.size();
+        
+        out.writeInt(len);
+        for (int i=0; i < len; i++) {
+            out.writeObject(_contexts.get(i));
+        }    
     }
 
     /**
@@ -148,6 +175,12 @@ public abstract class ActivityType implements java.io.Externalizable {
         _activityUnitId = (String)in.readObject();
         _activityUnitIndex = in.readInt();
         _timestamp = in.readLong();
+        
+        int len=in.readInt();
+        
+        for (int i=0; i < len; i++) {
+            _contexts.add((Context)in.readObject());
+        }
     }
     
 }

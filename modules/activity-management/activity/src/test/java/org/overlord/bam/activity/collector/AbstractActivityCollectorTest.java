@@ -194,7 +194,9 @@ public class AbstractActivityCollectorTest {
         cl1.add(c1);
         cl1.add(c2);
         
-        ac.record(req, cl1);
+        req.setContext(cl1);
+        
+        ac.record(req);
         
         if (al.getActivityUnits().size() != 0) {
             fail("Should be no activity unit: "+al.getActivityUnits().size());
@@ -206,7 +208,9 @@ public class AbstractActivityCollectorTest {
         cl2.add(c2);
         cl2.add(c3);
         
-        ac.record(resp, cl2);
+        resp.setContext(cl2);
+        
+        ac.record(resp);
         
         if (al.getActivityUnits().size() != 0) {
             fail("Should still be no activity unit: "+al.getActivityUnits().size());
@@ -219,8 +223,8 @@ public class AbstractActivityCollectorTest {
             fail("Should be 1 activity unit: "+al.getActivityUnits().size());
         }
         
-        if (al.getActivityUnits().get(0).getContext().size() != 3) {
-            fail("Should be 3 contexts: "+al.getActivityUnits().get(0).getContext().size());
+        if (al.getActivityUnits().get(0).getAllContexts().size() != 3) {
+            fail("Should be 3 contexts: "+al.getActivityUnits().get(0).getAllContexts().size());
         }
     }
 

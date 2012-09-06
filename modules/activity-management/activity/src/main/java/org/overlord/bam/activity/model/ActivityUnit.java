@@ -136,6 +136,23 @@ public class ActivityUnit implements java.io.Externalizable {
     }
     
     /**
+     * This method gets all the context instances associated
+     * with the activity unit and its contained activity
+     * types. Duplicate contexts will be ignored.
+     * 
+     * @return The complete list of contexts
+     */
+    public java.util.Set<Context> getAllContexts() {
+        java.util.Set<Context> ret=new java.util.HashSet<Context>(_contexts);
+        
+        for (ActivityType at : _activityTypes) {
+            ret.addAll(at.getContext());
+        }
+        
+        return (ret);
+    }
+    
+    /**
      * This method sets the activity types.
      * 
      * @param activityTypes The activity types

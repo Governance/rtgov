@@ -175,8 +175,10 @@ public class Context implements java.io.Externalizable {
             Context ctx=(Context)obj;
             
             if (ctx._type == _type
-                    && ctx._value.equals(_value)
-                    && ctx._name.equals(_name)) {
+                    && ((ctx._value != null && ctx._value.equals(_value))
+                        || (ctx._value == null && _value == null))
+                    && ((ctx._name != null && ctx._name.equals(_name))
+                            || (ctx._name == null && _name == null))) {
                 return (true);
             }
         }

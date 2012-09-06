@@ -28,7 +28,6 @@ import javax.transaction.TransactionManager;
 
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.Origin;
 
 /**
@@ -181,14 +180,6 @@ public class AbstractActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public void record(ActivityType actType) {
-        record(actType, null);
-    }
-        
-    /**
-     * {@inheritDoc}
-     */
-    public void record(ActivityType actType, java.util.List<Context> contexts) {
-        
         ActivityUnit au=_activityUnit.get();
         
         // Check if need to create a single event activity unit outside of transaction scope
@@ -245,18 +236,6 @@ public class AbstractActivityCollector implements ActivityCollector {
         // mechanism
         
         au.getActivityTypes().add(actType);
-        
-        // Check if context information has been provided
-        if (contexts != null && contexts.size() > 0) {
-            
-            for (int i=0; i < contexts.size(); i++) {
-                Context c=contexts.get(i);
-                
-                if (!au.getContext().contains(c)) {
-                    au.getContext().add(c);
-                }
-            }
-        }
         
         if (!transactional) {
             _activityLogger.log(au);
