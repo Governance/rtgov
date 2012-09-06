@@ -31,48 +31,7 @@ public class Context implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
-    /**
-     * A 'conversation id' represents a value that can be used to correlate
-     * activities across distributed services. These context types
-     * will be globally unique, and may refer to values that are
-     * carried in the application message contents.
-     */
-    public static final short CONVERSATION_ID=0;
-    
-    /**
-     * The 'endpoint id' type represents an id that may be associated
-     * with the executable unit enacting the service/process being monitored,
-     * and can therefore be used to correlate local activities as being
-     * part of the same executable unit.
-     */
-    public static final short ENDPOINT_ID=1;
-    
-    /**
-     * This context type represents an id associated with a particular message
-     * being exchanged between distributed participants.
-     */
-    public static final short MESSAGE_ID=2;
-    
-    /**
-     * This context type represents a property value extracted from some
-     * business activity. Properties are not used for strict correlation of
-     * conversations or endpoint instances, but may be able to loosely
-     * relate different business transactions around a particular piece
-     * of information.
-     */
-    public static final short PROPERTY_ID=3;
-    
-    /**
-     * The type names.
-     */
-    public static final String[] TYPE_NAME={
-        "Conversation",
-        "Endpoint",
-        "Message",
-        "Property"
-    };
-    
-    private short _type=CONVERSATION_ID;
+    private Type _type=Type.Conversation;
     private String _name=null;
     private String _value=null;
 
@@ -89,7 +48,7 @@ public class Context implements java.io.Externalizable {
      * @param name The name
      * @param value The value
      */
-    public Context(short type, String name, String value) {
+    public Context(Type type, String name, String value) {
         _type = type;
         _name = name;
         _value = value;
@@ -111,7 +70,7 @@ public class Context implements java.io.Externalizable {
      * 
      * @return The type
      */
-    public short getType() {
+    public Type getType() {
         return (_type);
     }
     
@@ -120,7 +79,7 @@ public class Context implements java.io.Externalizable {
      * 
      * @param type The type
      */
-    public void setType(short type) {
+    public void setType(Type type) {
         _type = type;
     }
     
@@ -190,7 +149,7 @@ public class Context implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public String toString() {
-        return ("Context["+TYPE_NAME[_type]+":"+_name+"="+_value+"]");
+        return ("Context["+_type+":"+_name+"="+_value+"]");
     }
     
     /**
@@ -199,7 +158,7 @@ public class Context implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeShort(_type);
+        out.writeObject(_type);
         out.writeObject(_name);
         out.writeObject(_value);
     }
@@ -211,9 +170,43 @@ public class Context implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _type = in.readShort();
+        _type = (Type)in.readObject();
         _name = (String)in.readObject();
         _value = (String)in.readObject();
     }
 
+    public enum Type {
+        
+        /**
+         * A 'conversation id' represents a value that can be used to correlate
+         * activities across distributed services. These context types
+         * will be globally unique, and may refer to values that are
+         * carried in the application message contents.
+         */
+        Conversation,
+        
+        /**
+         * The 'endpoint id' type represents an id that may be associated
+         * with the executable unit enacting the service/process being monitored,
+         * and can therefore be used to correlate local activities as being
+         * part of the same executable unit.
+         */
+        Endpoint,
+        
+        /**
+         * This context type represents an id associated with a particular message
+         * being exchanged between distributed participants.
+         */
+        Message,
+        
+        /**
+         * This context type represents a property value extracted from some
+         * business activity. Properties are not used for strict correlation of
+         * conversations or endpoint instances, but may be able to loosely
+         * relate different business transactions around a particular piece
+         * of information.
+         */
+        Property
+
+    }
 }

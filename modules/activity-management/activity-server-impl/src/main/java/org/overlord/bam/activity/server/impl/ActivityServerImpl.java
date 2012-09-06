@@ -161,7 +161,7 @@ public class ActivityServerImpl implements ActivityServer {
                     }
                     
                     // Copy message id to context for activity unit
-                    au.getContext().add(new Context(Context.MESSAGE_ID, null,
+                    au.getContext().add(new Context(Context.Type.Message, null,
                             ((RPCActivityType)at).getMessageId()));
                 }
             } else if (at instanceof BPMActivityType) {
@@ -174,7 +174,7 @@ public class ActivityServerImpl implements ActivityServer {
                     }
                    
                     // Copy instance id to context for activity unit
-                    au.getContext().add(new Context(Context.ENDPOINT_ID,
+                    au.getContext().add(new Context(Context.Type.Endpoint,
                             PROCESS_CONTEXT_NAME,
                             ((BPMActivityType)at).getInstanceId()));                   
                 }

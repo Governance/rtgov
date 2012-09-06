@@ -158,7 +158,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         boolean midset=false;
         
         for (Context c : getContext()) {
-            if (c.getType() == Context.MESSAGE_ID) {
+            if (c.getType() == Context.Type.Message) {
                 c.setValue(messageId);
                 midset = true;
                 break;
@@ -166,7 +166,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         }
         
         if (!midset) {
-            getContext().add(new Context(Context.MESSAGE_ID, null, messageId));
+            getContext().add(new Context(Context.Type.Message, null, messageId));
         }
     }
     
@@ -185,7 +185,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      */
     public String getMessageId() {
         for (Context c : getContext()) {
-            if (c.getType() == Context.MESSAGE_ID) {
+            if (c.getType() == Context.Type.Message) {
                 return (c.getValue());
             }
         }
