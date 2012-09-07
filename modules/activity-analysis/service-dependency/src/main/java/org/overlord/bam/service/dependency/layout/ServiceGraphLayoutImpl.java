@@ -55,6 +55,12 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
     protected static final int SERVICE_HEADER_PADDING=20;
     
     /**
+     * This definition represents the initial horizontal padding for the
+     * root service nodes.
+     */
+    protected static final int SERVICE_INITIAL_HORIZONTAL_PADDING=50;
+    
+    /**
      * This definition represents the horizontal padding between service nodes.
      */
     protected static final int SERVICE_HORIZONTAL_PADDING=200;
@@ -76,7 +82,7 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
         for (ServiceNode sn : sg.getServiceNodes()) {
             if (sn.getProperties().get(ServiceNode.INITIAL_NODE) == Boolean.TRUE) {
                 
-                layoutService(sg, sn, SERVICE_HORIZONTAL_PADDING,
+                layoutService(sg, sn, SERVICE_INITIAL_HORIZONTAL_PADDING,
                             _height+SERVICE_VERTICAL_PADDING);
             }
         }

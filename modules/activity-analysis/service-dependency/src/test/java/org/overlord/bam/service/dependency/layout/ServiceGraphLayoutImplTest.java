@@ -138,7 +138,7 @@ public class ServiceGraphLayoutImplTest {
         int sn4y=(Integer)sn4.getProperties().get(ServiceGraphLayout.Y_POSITION);
         int sn4h=(Integer)sn4.getProperties().get(ServiceGraphLayout.HEIGHT);
         
-        if (sn1x != ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING) {
+        if (sn1x != ServiceGraphLayoutImpl.SERVICE_INITIAL_HORIZONTAL_PADDING) {
             fail("sn1x incorrect");
         }
         
@@ -146,7 +146,8 @@ public class ServiceGraphLayoutImplTest {
             fail("sn1y incorrect");
         }
         
-        int val=(2*ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING
+        int val=(ServiceGraphLayoutImpl.SERVICE_INITIAL_HORIZONTAL_PADDING
+                +ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING
                 +ServiceGraphLayoutImpl.SERVICE_WIDTH);
         
          if (sn2x != val) {
@@ -160,7 +161,8 @@ public class ServiceGraphLayoutImplTest {
             fail("sn2y incorrect");
         }
 
-        val = ((3*ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING)
+        val = (ServiceGraphLayoutImpl.SERVICE_INITIAL_HORIZONTAL_PADDING
+                +(2*ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING)
                 +(2*ServiceGraphLayoutImpl.SERVICE_WIDTH));
         
         if (sn3x != val) {
@@ -174,7 +176,8 @@ public class ServiceGraphLayoutImplTest {
            fail("sn3y incorrect");
        }
 
-        val = (2*ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING
+        val = (ServiceGraphLayoutImpl.SERVICE_INITIAL_HORIZONTAL_PADDING
+                +ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING
                 +ServiceGraphLayoutImpl.SERVICE_WIDTH);
         
         if (sn4x != val) {
