@@ -148,6 +148,16 @@ public abstract class ActivityType implements java.io.Externalizable {
     }
     
     /**
+     * This method returns the explicit and derived
+     * context information associated with the activity type.
+     * 
+     * @return The list of all explicit and derived context information
+     */
+    public java.util.List<Context> getAllContexts() {
+        return (new java.util.ArrayList<Context>(_contexts));
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {

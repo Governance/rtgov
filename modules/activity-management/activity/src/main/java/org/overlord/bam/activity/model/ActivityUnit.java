@@ -146,7 +146,7 @@ public class ActivityUnit implements java.io.Externalizable {
         java.util.Set<Context> ret=new java.util.HashSet<Context>(_contexts);
         
         for (ActivityType at : _activityTypes) {
-            ret.addAll(at.getContext());
+            ret.addAll(at.getAllContexts());
         }
         
         return (ret);

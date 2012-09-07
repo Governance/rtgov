@@ -39,6 +39,8 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     private String _messageType=null;
     private String _content=null;
     
+    private String _messageId=null;
+    
     /**
      * The default constructor.
      */
@@ -56,7 +58,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         _fault = rpc._fault;
         _messageType = rpc._messageType;
         _content = rpc._content;
-        setMessageId(rpc.getMessageId());
+        _messageId = rpc._messageId;
     }
     
     /**
@@ -155,19 +157,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      * @param messageId The message id
      */
     public void setMessageId(String messageId) {
-        boolean midset=false;
-        
-        for (Context c : getContext()) {
-            if (c.getType() == Context.Type.Message) {
-                c.setValue(messageId);
-                midset = true;
-                break;
-            }
-        }
-        
-        if (!midset) {
-            getContext().add(new Context(Context.Type.Message, null, messageId));
-        }
+        _messageId = messageId;
     }
     
     /**
@@ -184,13 +174,21 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      * @return The message id
      */
     public String getMessageId() {
-        for (Context c : getContext()) {
-            if (c.getType() == Context.Type.Message) {
-                return (c.getValue());
-            }
+        return (_messageId);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public java.util.List<Context> getAllContexts() {
+        java.util.List<Context> ret=super.getAllContexts();
+        
+        if (_messageId != null) {
+            ret.add(new Context(Context.Type.Message, null, _messageId));
         }
         
-        return (null);
+        return (ret);
     }
     
     /**
@@ -203,7 +201,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
                 +" fault="+_fault
                 +" messageType="+_messageType
                 +" content="+_content
-                +" messageId="+getMessageId());
+                +" messageId="+_messageId);
     }
     
     /**
@@ -219,6 +217,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         out.writeObject(_fault);
         out.writeObject(_messageType);
         out.writeObject(_content);
+        out.writeObject(_messageId);
     }
 
     /**
@@ -235,5 +234,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         _fault = (String)in.readObject();
         _messageType = (String)in.readObject();
         _content = (String)in.readObject();
+        _messageId = (String)in.readObject();
     }
 }

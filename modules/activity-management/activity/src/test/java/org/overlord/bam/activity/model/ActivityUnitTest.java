@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.bam.activity.model.mom.MessageSent;
+import org.overlord.bam.activity.model.soa.RequestSent;
 
 public class ActivityUnitTest {
 
@@ -54,6 +55,31 @@ public class ActivityUnitTest {
         
         if (au.getAllContexts().size() != 2) {
             fail("Should be 2 contexts: "+au.getAllContexts().size());
+        }
+    }
+
+    @Test
+    public void testDerivedContext() {
+        ActivityUnit au=new ActivityUnit();
+        
+        RequestSent rs=new RequestSent();
+        rs.setMessageId("mid");
+        au.getActivityTypes().add(rs);
+        
+        java.util.Set<Context> contexts=au.getAllContexts();
+        
+        if (contexts.size() != 1) {
+            fail("Should be 1 context: "+contexts.size());
+        }
+        
+        Context c=contexts.iterator().next();
+        
+        if (c.getType() != Context.Type.Message) {
+            fail("Context type is not message");
+        }
+        
+        if (!c.getValue().equals("mid")) {
+            fail("Context value is not correct");
         }
     }
 
