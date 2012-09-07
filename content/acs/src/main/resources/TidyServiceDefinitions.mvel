@@ -1,4 +1,4 @@
-int cleanupCycle=acs.properties.get("cleanupCycle");
+int maxSnapshots=acs.properties.get("maxSnapshots");
 
 snapshots = variables.get("snapshots");
 
@@ -19,7 +19,7 @@ snapshots.add(new java.util.HashMap(currentSnapshot));
 currentSnapshot.clear();
 
 // Remove any snapshots above the number configured
-while (snapshots.size() > cleanupCycle) {
+while (snapshots.size() > maxSnapshots) {
 	snapshot = snapshots.remove(0);
 }
 

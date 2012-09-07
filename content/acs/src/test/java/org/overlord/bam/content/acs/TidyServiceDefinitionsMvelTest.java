@@ -60,7 +60,7 @@ public class TidyServiceDefinitionsMvelTest {
         
         ActiveCollectionSource acs=new ActiveCollectionSource();
         
-        acs.getProperties().put("cleanupCycle", 3);
+        acs.getProperties().put("maxSnapshots", 3);
         
         ActiveMap map=new ActiveMap("TestMap");
         

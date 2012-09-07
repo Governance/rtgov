@@ -18,9 +18,9 @@
     "subject" : "ServiceDefinitions",
     "scheduledScript" : "TidyServiceDefinitions.mvel",
     "scheduledInterval" : 60000,
-	"properties" : {
-		"cleanupCycle" : 5
-	},
+    "properties" : {
+        "maxSnapshots" : 5
+    },
     "maintenanceScript" : "MaintainServiceDefinitions.mvel"
   },{
     "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",

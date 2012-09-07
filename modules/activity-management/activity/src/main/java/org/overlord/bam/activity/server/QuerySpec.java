@@ -412,9 +412,7 @@ public class QuerySpec implements java.io.Externalizable {
             
             if (_contexts.size() > 0) {
                 return (!au.getContext().contains(_contexts.get(0)));
-            }
-            
-            if (_expressions.size() > 0) {
+            } else if (_expressions.size() > 0) {
                 return (!_expressions.get(0).evaluate(au));
             }
             
