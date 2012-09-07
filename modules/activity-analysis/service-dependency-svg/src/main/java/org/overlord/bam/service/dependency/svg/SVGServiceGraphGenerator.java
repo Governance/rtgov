@@ -43,7 +43,7 @@ public class SVGServiceGraphGenerator {
     
     private static final Logger LOG=Logger.getLogger(SVGServiceGraphGenerator.class.getName());
 
-    private ColourSelector _colourSelector=null;
+    private ColorSelector _colorSelector=null;
     
     /**
      * The default constructor.
@@ -52,21 +52,21 @@ public class SVGServiceGraphGenerator {
     }
     
     /**
-     * This method returns the colour selector.
+     * This method returns the color selector.
      * 
-     * @return The colour selector
+     * @return The color selector
      */
-    public ColourSelector getColourSelector() {
-        return (_colourSelector);
+    public ColorSelector getColorSelector() {
+        return (_colorSelector);
     }
     
     /**
-     * This method sets the colour selector.
+     * This method sets the color selector.
      * 
-     * @param selector The colour selector
+     * @param selector The color selector
      */
-    public void setColourSelector(ColourSelector selector) {
-        _colourSelector = selector;
+    public void setColorSelector(ColorSelector selector) {
+        _colorSelector = selector;
     }
     
     /**
@@ -192,9 +192,9 @@ public class SVGServiceGraphGenerator {
                 +x3+","+y3+" "+x4+","+y4);
 
         InvocationMetric im=getMetrics(ul.getInvocations());
-        String colour=getColour(ul, im);
+        String color=getColor(ul, im);
         
-        polygon.setAttribute("style", "fill:"+colour+";fill-opacity:0.2");
+        polygon.setAttribute("style", "fill:"+color+";fill-opacity:0.2");
         
         container.insertBefore(polygon, insertPoint);
         
@@ -217,18 +217,18 @@ public class SVGServiceGraphGenerator {
     }
     
     /**
-     * This method returns the colour relevant for the supplied
+     * This method returns the color relevant for the supplied
      * metric.
      * 
      * @param component The source component
      * @param metric The metric
-     * @return The colour
+     * @return The color
      */
-    protected String getColour(Object component, InvocationMetric metric) {
+    protected String getColor(Object component, InvocationMetric metric) {
         String ret="#00FF00";
         
-        if (_colourSelector != null) {
-            ret = _colourSelector.getColour(component, metric);
+        if (_colorSelector != null) {
+            ret = _colorSelector.getColor(component, metric);
         }
         
         return (ret);
@@ -265,9 +265,9 @@ public class SVGServiceGraphGenerator {
         
         InvocationMetric im=getMetrics(il.getInvocations());
         
-        String colour=getColour(il, im);
+        String color=getColor(il, im);
         
-        line.setAttribute("style", "stroke:"+colour+";stroke-width:3");
+        line.setAttribute("style", "stroke:"+color+";stroke-width:3");
         
         container.insertBefore(line, insertPoint);
         
@@ -317,8 +317,8 @@ public class SVGServiceGraphGenerator {
         
         rect.setAttribute("fill", "#B8DBFF");
         
-        String colour=getColour(sn, sn.getService().getMetrics());
-        rect.setAttribute("stroke", colour);
+        String color=getColor(sn, sn.getService().getMetrics());
+        rect.setAttribute("stroke", color);
 
         rect.setAttribute("stroke-width", "2");
         rect.setAttribute("filter", "url(#f1)");
@@ -420,9 +420,9 @@ public class SVGServiceGraphGenerator {
         Situation.Severity severity=Situation.getHighestSeverity(situations);
 
         if (severity != null) {
-            String colour=getSeverityColour(severity);
+            String color=getSeverityColor(severity);
     
-            circle.setAttribute("fill", colour);
+            circle.setAttribute("fill", color);
         }
         
         if (isGenerateToolTips(ratio)) {
@@ -511,13 +511,13 @@ public class SVGServiceGraphGenerator {
     }
     
     /**
-     * This method returns the colour associated with the supplied
+     * This method returns the color associated with the supplied
      * severity.
      * 
      * @param severity The severity
-     * @return The colour
+     * @return The color
      */
-    protected String getSeverityColour(Situation.Severity severity) {
+    protected String getSeverityColor(Situation.Severity severity) {
         String ret=null;
         
         if (severity == Situation.Severity.Critical) {
@@ -643,9 +643,9 @@ public class SVGServiceGraphGenerator {
         
         rect.setAttribute("fill", "#85D6FF");
 
-        String colour=getColour(opn, opn.getOperation().getMetrics());
+        String color=getColor(opn, opn.getOperation().getMetrics());
         
-        rect.setAttribute("stroke", colour);
+        rect.setAttribute("stroke", color);
         rect.setAttribute("stroke-width", "1");
         
         container.insertBefore(rect, insertPoint);

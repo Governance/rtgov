@@ -64,6 +64,16 @@ public class ServiceDefinitionUtilTest {
         
         op1.setRequestResponse(nrd1);
         
+        InvocationDefinition id1=new InvocationDefinition();
+        id1.setServiceType("st2");
+        id1.setOperation("op2");
+        id1.getMetrics().setCount(10);
+        id1.getMetrics().setAverage(500);
+        id1.getMetrics().setMin(250);
+        id1.getMetrics().setMax(750);
+        
+        nrd1.getInvocations().add(id1);
+        
         RequestFaultDefinition frd1=new RequestFaultDefinition();
         frd1.setFault("fault1");
         

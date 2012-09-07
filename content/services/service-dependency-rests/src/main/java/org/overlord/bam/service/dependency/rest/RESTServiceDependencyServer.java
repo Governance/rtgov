@@ -28,7 +28,7 @@ import org.overlord.bam.analytics.service.ServiceDefinition;
 import org.overlord.bam.service.dependency.ServiceDependencyBuilder;
 import org.overlord.bam.service.dependency.ServiceGraph;
 import org.overlord.bam.service.dependency.layout.ServiceGraphLayoutImpl;
-import org.overlord.bam.service.dependency.svg.MVELColourSelector;
+import org.overlord.bam.service.dependency.svg.MVELColorSelector;
 import org.overlord.bam.service.dependency.svg.SVGServiceGraphGenerator;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -144,15 +144,15 @@ public class RESTServiceDependencyServer {
         // Check some of the dimensions
         SVGServiceGraphGenerator generator=new SVGServiceGraphGenerator();
         
-        MVELColourSelector selector=new MVELColourSelector();
+        MVELColorSelector selector=new MVELColorSelector();
         
-        selector.setScriptLocation("ColourSelector.mvel");
+        selector.setScriptLocation("ColorSelector.mvel");
         
         try {
             selector.init();
-            generator.setColourSelector(selector);
+            generator.setColorSelector(selector);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to initialize colour selector", e);
+            LOG.log(Level.SEVERE, "Failed to initialize color selector", e);
         }     
         
         java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
