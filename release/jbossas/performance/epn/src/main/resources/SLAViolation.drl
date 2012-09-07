@@ -2,7 +2,7 @@ import org.overlord.bam.activity.model.ActivityTypeRef
 import org.overlord.bam.analytics.service.ResponseTime
 import org.overlord.bam.analytics.Situation
 
-global org.overlord.bam.epn.cep.EPNContext epn
+global org.overlord.bam.epn.EPNContext epn
 
 declare ResponseTime
     @role( event )

@@ -31,6 +31,7 @@ import org.drools.conf.MBeansOption;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.WorkingMemoryEntryPoint;
+import org.overlord.bam.epn.EPNContext;
 import org.overlord.bam.epn.EventProcessor;
 
 /**

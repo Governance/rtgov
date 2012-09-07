@@ -27,7 +27,8 @@
     <resources>
         <resource-root path="activity.jar"/>
         <resource-root path="epn-core.jar"/>
-        <resource-root path="epn-processor-cep.jar"/>
+        <resource-root path="epn-cep.jar"/>
+        <resource-root path="epn-mvel.jar"/>
         <resource-root path="active-collection.jar"/>
         <resource-root path="acs-epn.jar"/>
         <resource-root path="analytics.jar"/>

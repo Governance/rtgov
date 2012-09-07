@@ -11,8 +11,10 @@
 				tofile="${jboss.home}/modules/org/overlord/bam/main/activity.jar" />
 		<copy file="${org.overlord.bam.event-processor-network:epn-core:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-core.jar" />
-		<copy file="${org.overlord.bam.event-processor-network:epn-processor-cep:jar}"
-				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-processor-cep.jar" />
+		<copy file="${org.overlord.bam.event-processor-network:epn-cep:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-cep.jar" />
+		<copy file="${org.overlord.bam.event-processor-network:epn-mvel:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-mvel.jar" />
 		<copy file="${org.overlord.bam.active-queries:active-collection:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/active-collection.jar" />
 		<copy file="${org.overlord.bam.active-queries:acs-epn:jar}"

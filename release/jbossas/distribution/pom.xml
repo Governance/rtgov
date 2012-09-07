@@ -51,7 +51,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-processor-cep</artifactId>
+			<artifactId>epn-cep</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
+			<artifactId>epn-mvel</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>

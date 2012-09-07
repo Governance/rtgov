@@ -15,18 +15,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.cep;
+package org.overlord.bam.epn;
 
 /**
- * This interface provides services to the CEP rules that process
- * events.
+ * This interface provides services to the EventProcessor
+ * implementations that process the events.
  *
  */
 public interface EPNContext {
 
     /**
      * This method is used to forward the result obtained
-     * from the evaluation of a CEP rule to other nodes
+     * from processing the event to other nodes
      * within the network. This method can only be called
      * once per event being processed.
      * 
