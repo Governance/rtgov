@@ -1,0 +1,7 @@
+java.util.Properties results=new java.util.Properties();
+
+results.put("source", source);
+results.put("event", event);
+results.put("retriesLeft", retriesLeft);
+
+epn.forward(results);

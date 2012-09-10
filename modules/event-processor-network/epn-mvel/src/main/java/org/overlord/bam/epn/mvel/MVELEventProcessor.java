@@ -20,8 +20,9 @@ package org.overlord.bam.epn.mvel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.mvel2.MVEL;
 import org.overlord.bam.epn.EventProcessor;
-import org.overlord.bam.epn.EPNContext;
+import org.overlord.bam.internal.epn.DefaultEPNContext;
 
 /**
  * This class represents the MVEL implementation of the Event
@@ -32,12 +33,34 @@ public class MVELEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(MVELEventProcessor.class.getName());
 
+    private static final DefaultEPNContext EPN_CONTEXT=new DefaultEPNContext();
+
     private String _script=null;
+    private Object _scriptExpression=null;
 
     /**
      * {@inheritDoc}
      */
     public void init() throws Exception {
+        
+        // Load the script
+        java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_script);
+        
+        if (is == null) {
+            throw new Exception("Unable to locate MVEL script '"+_script+"'");
+        } else {
+            byte[] b=new byte[is.available()];
+            is.read(b);
+            is.close();
+
+            // Compile expression
+            _scriptExpression = MVEL.compileExpression(new String(b));
+
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Initialized script="+_script
+                        +" compiled="+_scriptExpression);
+            }
+        }
     }
     
     /**
@@ -59,28 +82,33 @@ public class MVELEventProcessor extends EventProcessor {
     }
     
     /**
-     * This method gets the EPN context used by the CEP rule engine.
-     * 
-     * @return The EPN context
-     */
-    public EPNContext getEPNContext() {
-        return (null);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public java.io.Serializable process(String source,
                 java.io.Serializable event, int retriesLeft) throws Exception {
-
+        java.io.Serializable ret=null;
+        
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Process event '"+event+" from source '"+source
                     +"' on MVEL Event Processor '"+getScript()
                     +"'");
         }
 
-        
-        return (null);
+        if (_scriptExpression != null) {
+            java.util.Map<String,Object> vars=
+                    new java.util.HashMap<String, Object>();
+            
+            vars.put("source", source);
+            vars.put("event", event);
+            vars.put("retriesLeft", retriesLeft);
+            vars.put("epn", EPN_CONTEXT);
+
+            MVEL.executeExpression(_scriptExpression, vars);
+            
+            ret = (java.io.Serializable)EPN_CONTEXT.getResult();
+        }
+
+        return (ret);
     }
 
 }

@@ -22,150 +22,52 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
 import org.overlord.bam.epn.mvel.MVELEventProcessor;
 
 public class MVELEventProcessorTest {
 
-    private static final int TIME_INTERVAL = 2000;
-    private static final int GAP_INTERVAL = 3*60*1000;
+    private static final String SOURCE_VALUE = "sourceValue";
 
     @Test
-    public void testPurchasingResponseTime() {
-        /*
+    public void testProcess() {
         MVELEventProcessor ep=new MVELEventProcessor();
-        ep.setRuleName("PurchasingResponseTime");
         
-        ActivityUnit e1=new ActivityUnit();
-        e1.setId("e1");
-        RequestReceived me1=new RequestReceived();
-        me1.setTimestamp(System.currentTimeMillis());
-        me1.setMessageId("me1");
-        e1.getActivityTypes().add(me1);
+        ep.setScript("script/Process.mvel");
         
-        ActivityUnit e2=new ActivityUnit();
-        e2.setId("e2");
-        ResponseSent me2=new ResponseSent();
-        me2.setMessageId("me2");
-        me2.setReplyToId("me0");
-        e2.getActivityTypes().add(me2);
-        
-        ActivityUnit e3=new ActivityUnit();
-        e3.setId("e3");
-        ResponseSent me3=new ResponseSent();
-        me3.setTimestamp(me1.getTimestamp()+TIME_INTERVAL);
-        me3.setMessageId("me3");
-        me3.setReplyToId("me1");
-        e3.getActivityTypes().add(me3);
-        
-        try {            
+        try {
             ep.init();
-            
-            java.util.Properties props1=(java.util.Properties)ep.process("Purchasing", me1, 0);
-            
-            if (props1 != null) {
-                fail("Should be no result 1");
-            }
-            
-            java.util.Properties props2=(java.util.Properties)ep.process("Purchasing", me2, 0);
-            
-            if (props2 != null) {
-                fail("Should be no result 2");
-            }
-            
-            java.util.Properties props3=(java.util.Properties)ep.process("Purchasing", me3, 0);
-            
-            if (props3 == null) {
-                fail("Result should not be null");
-            }
-            
-            String reqId=(String)props3.get("requestId");
-            String respId=(String)props3.get("responseId");
-            
-            if (!reqId.equals(me1.getMessageId())) {
-                fail("Request id incorrect");
-            }
-            
-            if (!respId.equals(me3.getMessageId())) {
-                fail("Response id incorrect");
-            }
-            
-            if (!props3.containsKey("responseTime")) {
-                fail("Response time not found");
-            }
-            
-            long responseTime=(Long)props3.get("responseTime");
-            
-            if (responseTime != TIME_INTERVAL) {
-                fail("Response time should be "+TIME_INTERVAL+": "+responseTime);
-            }
-            
-        } catch(Exception e) {
-            e.printStackTrace();
-            fail("Exception: "+e);
+        } catch (Exception e) {
+            fail("Failed to initialize: "+e);
         }
-    }
-
-    @Test
-    public void testPurchasingResponseTimeOutOfOrder() {
-        MVELEventProcessor ep=new MVELEventProcessor();
-        ep.setRuleName("PurchasingResponseTime");
         
-        ActivityUnit e1=new ActivityUnit();
-        e1.setId("e1");
-        RequestReceived me1=new RequestReceived();
-        me1.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL);
-        me1.setMessageId("me1");
-        e1.getActivityTypes().add(me1);
+        ActivityUnit au=new ActivityUnit();
         
-        ActivityUnit e3=new ActivityUnit();
-        e3.setId("e3");
-        ResponseSent me3=new ResponseSent();
-        me3.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL+TIME_INTERVAL);
-        me3.setMessageId("me3");
-        me3.setReplyToId("me1");
-        e3.getActivityTypes().add(me3);
+        RequestReceived rr=new RequestReceived();
         
-        try {            
-            ep.init();
-            
-            java.util.Properties props3=(java.util.Properties)ep.process("Purchasing", me3, 0);
-            
-            if (props3 != null) {
-                fail("Should be no result 1");
-            }
-            
-            java.util.Properties props1=(java.util.Properties)ep.process("Purchasing", me1, 0);
-            
-            if (props1 == null) {
-                fail("Result should not be null");
-            }
-            
-            String reqId=(String)props1.get("requestId");
-            String respId=(String)props1.get("responseId");
-            
-            if (!reqId.equals(me1.getMessageId())) {
-                fail("Request id incorrect");
-            }
-            
-            if (!respId.equals(me3.getMessageId())) {
-                fail("Response id incorrect");
-            }
-            
-            if (!props1.containsKey("responseTime")) {
-                fail("Response time not found");
-            }
-            
-            long responseTime=(Long)props1.get("responseTime");
-            
-            if (responseTime != TIME_INTERVAL) {
-                fail("Response time should be "+TIME_INTERVAL+": "+responseTime);
-            }
-            
-        } catch(Exception e) {
-            e.printStackTrace();
-            fail("Exception: "+e);
+        au.getActivityTypes().add(rr);
+        
+        java.util.Properties props=null;
+        
+        try {
+            props = (java.util.Properties)ep.process(SOURCE_VALUE, au, 1);
+        } catch (Exception e) {
+            fail("Failed to process: "+e);
         }
-        */
+        
+        if (props == null) {
+            fail("Properties not returned");
+        }
+        
+        if (!props.get("source").equals(SOURCE_VALUE)) {
+            fail("Source value incorrect");
+        }
+        
+        if (props.get("event") != au) {
+            fail("Event incorrect");
+        }
+        
+        if (((Integer)props.get("retriesLeft")) != 1) {
+            fail("Retries Left incorrect");
+        }
     }
 }

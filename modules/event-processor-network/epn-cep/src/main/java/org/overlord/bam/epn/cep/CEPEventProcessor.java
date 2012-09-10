@@ -33,6 +33,7 @@ import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.WorkingMemoryEntryPoint;
 import org.overlord.bam.epn.EPNContext;
 import org.overlord.bam.epn.EventProcessor;
+import org.overlord.bam.internal.epn.DefaultEPNContext;
 
 /**
  * This class represents the CEP implementation of the Event
@@ -43,7 +44,8 @@ public class CEPEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(CEPEventProcessor.class.getName());
 
-    private static final EPNContextImpl EPN_CONTEXT=new EPNContextImpl();
+    private static final DefaultEPNContext EPN_CONTEXT=new DefaultEPNContext();
+
     private static final java.util.Map<String,StatefulKnowledgeSession> SESSIONS=
                 new java.util.HashMap<String,StatefulKnowledgeSession>();
     private StatefulKnowledgeSession _session=null;
@@ -196,61 +198,6 @@ public class CEPEventProcessor extends EventProcessor {
         }
 
         return (null);
-    }
-
-    /**
-     * This class implements the EPNContext interface provided to the CEP
-     * rules.
-     */
-    public static class EPNContextImpl implements EPNContext {
-
-        private ThreadLocal<Object> _result=new ThreadLocal<Object>();
-        
-        /**
-         * The default constructor.
-         */
-        public EPNContextImpl() {
-        }
-        
-        /**
-         * {@inheritDoc}
-         */
-        public void logInfo(String info) {
-            LOG.info(info);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void logError(String error) {
-            LOG.severe(error);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void logDebug(String debug) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine(debug);
-            }
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void forward(Object result) {
-            _result.set(result);
-        }
-
-        /**
-         * This method retrieves the result forwarded by the rule.
-         * 
-         * @return The result, or null if not defined
-         */
-        public Object getResult() {
-            return _result.get();
-        }
-        
     }
 
 }

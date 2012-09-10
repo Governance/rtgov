@@ -92,7 +92,8 @@
 			<includes>
 				<include>org.overlord.bam.activity-management:activity:jar</include>
 				<include>org.overlord.bam.event-processor-network:epn-core:jar</include>
-				<include>org.overlord.bam.event-processor-network:epn-processor-cep:jar</include>
+				<include>org.overlord.bam.event-processor-network:epn-cep:jar</include>
+				<include>org.overlord.bam.event-processor-network:epn-mvel:jar</include>
 				<include>org.overlord.bam.active-queries:active-collection:jar</include>
 				<include>org.overlord.bam.active-queries:acs-epn:jar</include>
 				<include>org.overlord.bam.activity-analysis:analytics:jar</include>
