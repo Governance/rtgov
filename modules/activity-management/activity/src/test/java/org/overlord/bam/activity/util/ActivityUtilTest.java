@@ -44,13 +44,11 @@ public class ActivityUtilTest {
 
         Context c1=new Context();
         c1.setType(Context.Type.Conversation);
-        c1.setName("OrderId");
         c1.setValue("12345");
         act.getContext().add(c1);
         
         Context c2=new Context();
         c2.setType(Context.Type.Endpoint);
-        c2.setName("procId");
         c2.setValue("abc123");
         act.getContext().add(c2);
         

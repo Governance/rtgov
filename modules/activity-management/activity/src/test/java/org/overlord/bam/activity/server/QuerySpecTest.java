@@ -23,6 +23,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
+import org.overlord.bam.activity.model.Property;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
 import org.overlord.bam.activity.server.QuerySpec;
@@ -150,12 +151,31 @@ public class QuerySpecTest {
     public void testQueryContextMATCH() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Match,
-                        new Context(Context.Type.Property,"trader","Joe")));
+                        new Context(Context.Type.Endpoint,"12345")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        au.getContext().add(new Context(Context.Type.Endpoint,"12345"));
+        
+        if (!qs.evaluate(au)) {
+            fail("Query should evaluate to true");
+        }
+    }
+
+    @Test
+    public void testQueryPropertyMATCH() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Match,
+                        new Property("trader","Joe")));
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (!qs.evaluate(au)) {
             fail("Query should evaluate to true");
@@ -166,12 +186,31 @@ public class QuerySpecTest {
     public void testQueryContextMATCHFail() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Match,
-                        new Context(Context.Type.Message,"mid","5")));
+                        new Context(Context.Type.Message,"5")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        au.getContext().add(new Context(Context.Type.Endpoint,"Joe"));
+        
+        if (qs.evaluate(au)) {
+            fail("Query should evaluate to false");
+        }
+    }
+    
+    @Test
+    public void testQueryPropertyMATCHFail() {
+        QuerySpec qs=new QuerySpec().setExpression(
+                new QuerySpec.Expression(Operator.Match,
+                        new Property("mid","5")));
+        
+        ActivityUnit au=new ActivityUnit();
+        au.setId("TestId");
+        
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
@@ -182,14 +221,18 @@ public class QuerySpecTest {
     public void testQueryContextAND() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.And,
-                        new Context(Context.Type.Conversation,"txnId","123"),
-                        new Context(Context.Type.Property,"trader","Joe")));
+                        new Context(Context.Type.Conversation,"123")));
+        qs.getExpression().getProperties().add(
+                        new Property("trader","Joe"));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Conversation,"txnId","123"));
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getContext().add(new Context(Context.Type.Conversation,"123"));
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (!qs.evaluate(au)) {
             fail("Query should evaluate to true");
@@ -200,14 +243,17 @@ public class QuerySpecTest {
     public void testQueryContextANDFail() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.And,
-                        new Context(Context.Type.Conversation,"txnId","123"),
-                        new Context(Context.Type.Message,"mid","5")));
+                        new Context(Context.Type.Conversation,"123"),
+                        new Context(Context.Type.Message,"5")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Conversation,"txnId","123"));
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getContext().add(new Context(Context.Type.Conversation,"123"));
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
@@ -218,18 +264,21 @@ public class QuerySpecTest {
     public void testQueryContextExpressionAND() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.And,
-                        new Context(Context.Type.Conversation,"txnId","123")));
+                        new Context(Context.Type.Conversation,"123")));
         
         QuerySpec.Expression subexpr= new QuerySpec.Expression(Operator.Match,
-                new Context(Context.Type.Property,"trader","Joe"));
+                new Property("trader","Joe"));
         
         qs.getExpression().getExpressions().add(subexpr);
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Conversation,"txnId","123"));
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getContext().add(new Context(Context.Type.Conversation,"123"));
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (!qs.evaluate(au)) {
             fail("Query should evaluate to true");
@@ -240,18 +289,21 @@ public class QuerySpecTest {
     public void testQueryContextExpressionANDFail() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.And,
-                        new Context(Context.Type.Conversation,"txnId","123")));
+                        new Context(Context.Type.Conversation,"123")));
         
         QuerySpec.Expression subexpr= new QuerySpec.Expression(Operator.Match,
-                new Context(Context.Type.Message,"mid","5"));
+                new Context(Context.Type.Message,"5"));
         
         qs.getExpression().getExpressions().add(subexpr);
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Conversation,"txnId","123"));
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getContext().add(new Context(Context.Type.Conversation,"123"));
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
@@ -262,14 +314,19 @@ public class QuerySpecTest {
     public void testQueryContextOR() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Or,
-                        new Context(Context.Type.Conversation,"txnId","123"),
-                        new Context(Context.Type.Property,"trader","Joe")));
+                        new Context(Context.Type.Conversation,"123")));
+        
+        qs.getExpression().getProperties().add(
+                        new Property("trader","Joe"));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Conversation,"txnId","123"));
-        au.getContext().add(new Context(Context.Type.Property,"trader","Fred"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getContext().add(new Context(Context.Type.Conversation,"123"));
+        rr.getProperties().add(new Property("trader","Fred"));
         
         if (!qs.evaluate(au)) {
             fail("Query should evaluate to true");
@@ -280,14 +337,17 @@ public class QuerySpecTest {
     public void testQueryContextORFail() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Or,
-                        new Context(Context.Type.Conversation,"txnId","123"),
-                        new Context(Context.Type.Message,"mid","5")));
+                        new Context(Context.Type.Conversation,"123"),
+                        new Context(Context.Type.Message,"5")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Conversation,"txnId","321"));
-        au.getContext().add(new Context(Context.Type.Property,"trader","Fred"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getContext().add(new Context(Context.Type.Conversation,"321"));
+        rr.getProperties().add(new Property("trader","Fred"));
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
@@ -298,18 +358,21 @@ public class QuerySpecTest {
     public void testQueryContextExpressionOR() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Or,
-                        new Context(Context.Type.Conversation,"txnId","123")));
+                        new Context(Context.Type.Conversation,"123")));
         
         QuerySpec.Expression subexpr= new QuerySpec.Expression(Operator.Match,
-                new Context(Context.Type.Property,"trader","Joe"));
+                new Property("trader","Joe"));
         
         qs.getExpression().getExpressions().add(subexpr);
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Conversation,"txnId","321"));
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getContext().add(new Context(Context.Type.Conversation,"321"));
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (!qs.evaluate(au)) {
             fail("Query should evaluate to true");
@@ -320,18 +383,21 @@ public class QuerySpecTest {
     public void testQueryContextExpressionORFail() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Or,
-                        new Context(Context.Type.Conversation,"txnId","123")));
+                        new Context(Context.Type.Conversation,"123")));
         
         QuerySpec.Expression subexpr= new QuerySpec.Expression(Operator.Match,
-                new Context(Context.Type.Message,"mid","5"));
+                new Context(Context.Type.Message,"5"));
         
         qs.getExpression().getExpressions().add(subexpr);
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Conversation,"txnId","321"));
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getContext().add(new Context(Context.Type.Conversation,"321"));
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
@@ -342,12 +408,15 @@ public class QuerySpecTest {
     public void testQueryContextNOT() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Not,
-                        new Context(Context.Type.Message,"mid","5")));
+                        new Context(Context.Type.Message,"5")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (!qs.evaluate(au)) {
             fail("Query should evaluate to true");
@@ -358,12 +427,15 @@ public class QuerySpecTest {
     public void testQueryContextNOTFail() {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Not,
-                        new Context(Context.Type.Property,"trader","Joe")));
+                        new Property("trader","Joe")));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
@@ -375,12 +447,15 @@ public class QuerySpecTest {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Or,
                 new QuerySpec.Expression(Operator.Not,
-                        new Context(Context.Type.Message,"mid","5"))));
+                        new Context(Context.Type.Message,"5"))));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Property,"trader","Joe"));
+        RequestReceived rr=new RequestReceived();
+        au.getActivityTypes().add(rr);
+        
+        rr.getProperties().add(new Property("trader","Joe"));
         
         if (!qs.evaluate(au)) {
             fail("Query should evaluate to true");
@@ -393,12 +468,12 @@ public class QuerySpecTest {
         QuerySpec qs=new QuerySpec().setExpression(
                 new QuerySpec.Expression(Operator.Or,
                 new QuerySpec.Expression(Operator.Not,
-                        new Context(Context.Type.Message,"mid","5"))));
+                        new Context(Context.Type.Message,"5"))));
         
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Message,"mid","5"));
+        au.getContext().add(new Context(Context.Type.Message,"5"));
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
@@ -412,8 +487,9 @@ public class QuerySpecTest {
                 .setFromTimestamp(500)
                 .setToTimestamp(600)
                 .setExpression(new QuerySpec.Expression(Operator.Or,
-                        new Context(Context.Type.Conversation,"txnId","123"),
-                        new Context(Context.Type.Message,"mid","5")));
+                        new Context(Context.Type.Conversation,"123"),
+                        new Context(Context.Type.Message,"5")));
+        qs.getExpression().getProperties().add(new Property("trader","joe"));
         
         ObjectMapper mapper=new ObjectMapper();
         
@@ -436,10 +512,10 @@ public class QuerySpecTest {
         ObjectMapper mapper=new ObjectMapper();
         
         String qspec="{\"id\":\"TestId\",\"fromTimestamp\":500,\"toTimestamp\":600,"
-                +"\"expression\":{\"operator\":\"Or\",\"contexts\":[{\"name\":" +
-                "\"txnId\",\"value\":\"123\",\"type\":0},{\"name\":\"mid\"," +
-                "\"value\":\"5\",\"type\":2}],\"expressions\":[]}}";
-
+                +"\"expression\":{\"properties\":[{\"name\":\"trader\",\"value\":\"joe\""
+                +"}],\"expressions\":[],\"operator\":\"Or\",\"contexts\":[{\"value\""
+                +":\"123\",\"type\":\"Conversation\"},{\"value\":\"5\",\"type\":\"Message\"}]}}";
+                
         try {
             java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(qspec.getBytes());
             
@@ -453,4 +529,5 @@ public class QuerySpecTest {
             fail("Failed to deserialize: "+e);
         }
     }
+
 }

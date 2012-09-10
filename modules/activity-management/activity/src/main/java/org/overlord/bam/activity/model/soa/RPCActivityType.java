@@ -185,7 +185,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         java.util.List<Context> ret=super.getAllContexts();
         
         if (_messageId != null) {
-            ret.add(new Context(Context.Type.Message, null, _messageId));
+            ret.add(new Context(Context.Type.Message, _messageId));
         }
         
         return (ret);

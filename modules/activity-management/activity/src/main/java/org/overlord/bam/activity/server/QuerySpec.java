@@ -23,6 +23,7 @@ import java.io.ObjectOutput;
 
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
+import org.overlord.bam.activity.model.Property;
 
 /**
  * This class represents a query specification.
@@ -248,6 +249,7 @@ public class QuerySpec implements java.io.Externalizable {
         
         private Operator _operator=null;
         private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
+        private java.util.List<Property> _properties=new java.util.ArrayList<Property>();
         private java.util.List<Expression> _expressions=new java.util.ArrayList<Expression>();
         
         /**
@@ -267,6 +269,20 @@ public class QuerySpec implements java.io.Externalizable {
             
             for (Context c : context) {
                 _contexts.add(c);
+            }
+        }
+        
+        /**
+         * The context constructor.
+         * 
+         * @param operator The operator
+         * @param props The list of properties
+         */
+        public Expression(Operator operator, Property... props) {
+            _operator = operator;
+            
+            for (Property p : props) {
+                _properties.add(p);
             }
         }
         
@@ -314,6 +330,15 @@ public class QuerySpec implements java.io.Externalizable {
         }
         
         /**
+         * This method returns the list of properties.
+         * 
+         * @return The properties
+         */
+        public java.util.List<Property> getProperties() {
+            return (_properties);
+        }
+        
+        /**
          * This method returns the list of sub-expressions.
          * 
          * @return The expressions
@@ -330,16 +355,29 @@ public class QuerySpec implements java.io.Externalizable {
          * @return The result of the evaluation
          */
         public boolean evaluate(ActivityUnit au) {
+            return (evaluate(au.getAllContexts(), au.getAllProperties()));
+        }
+        
+        /**
+         * This method evaluates the supplied activity unit
+         * against the expression.
+         * 
+         * @param contexts The set of contexts
+         * @param properties The set of properties
+         * @return The result of the evaluation
+         */
+        protected boolean evaluate(java.util.Set<Context> contexts,
+                java.util.Set<Property> properties) {
             boolean ret=false;
             
             if (_operator == Operator.Match) {
-                ret = evaluateMatch(au);
+                ret = evaluateMatch(contexts, properties);
             } else if (_operator == Operator.And) {
-                ret = evaluateAnd(au);
+                ret = evaluateAnd(contexts, properties);
             } else if (_operator == Operator.Or) {
-                ret = evaluateOr(au);
+                ret = evaluateOr(contexts, properties);
             } else if (_operator == Operator.Not) {
-                ret = evaluateNot(au);
+                ret = evaluateNot(contexts, properties);
             }
             
             return (ret);
@@ -348,31 +386,56 @@ public class QuerySpec implements java.io.Externalizable {
         /**
          * This method evaluates the Match operator.
          * 
-         * @param au The activity unit
+         * @param contexts The set of contexts
+         * @param properties The set of properties
          * @return The result
          */
-        protected boolean evaluateMatch(ActivityUnit au) {
-            if (_contexts.size() == 0) {
-                return (false);
+        protected boolean evaluateMatch(java.util.Set<Context> contexts,
+                java.util.Set<Property> properties) {
+            if (_contexts.size() > 0) {
+                if (!contexts.contains(_contexts.get(0)) ||
+                        _contexts.size() > 1) {
+                    return (false);
+                } else {
+                    // Return true as long as no properties
+                    // have been defined
+                    return (_properties.size() == 0);
+                }
             }
-            return (au.getContext().contains(_contexts.get(0)));
+            if (_properties.size() > 0) {
+                if (!properties.contains(_properties.get(0)) ||
+                        _properties.size() > 1) {
+                    return (false);
+                } else {
+                    return (true);
+                }
+            }
+            return (false);
         }
         
         /**
          * This method evaluates the And operator.
          * 
-         * @param au The activity unit
+         * @param contexts The set of contexts
+         * @param properties The set of properties
          * @return The result
          */
-        protected boolean evaluateAnd(ActivityUnit au) {
+        protected boolean evaluateAnd(java.util.Set<Context> contexts,
+                java.util.Set<Property> properties) {
             for (Context c : _contexts) {
-                if (!au.getContext().contains(c)) {
+                if (!contexts.contains(c)) {
+                    return (false);
+                }
+            }
+            
+            for (Property p : _properties) {
+                if (!properties.contains(p)) {
                     return (false);
                 }
             }
             
             for (Expression expr : _expressions) {
-                if (!expr.evaluate(au)) {
+                if (!expr.evaluate(contexts, properties)) {
                     return (false);
                 }
             }
@@ -383,18 +446,26 @@ public class QuerySpec implements java.io.Externalizable {
         /**
          * This method evaluates the Or operator.
          * 
-         * @param au The activity unit
+         * @param contexts The set of contexts
+         * @param properties The set of properties
          * @return The result
          */
-        protected boolean evaluateOr(ActivityUnit au) {
+        protected boolean evaluateOr(java.util.Set<Context> contexts,
+                java.util.Set<Property> properties) {
             for (Context c : _contexts) {
-                if (au.getContext().contains(c)) {
+                if (contexts.contains(c)) {
+                    return (true);
+                }
+            }
+            
+            for (Property p : _properties) {
+                if (properties.contains(p)) {
                     return (true);
                 }
             }
             
             for (Expression expr : _expressions) {
-                if (expr.evaluate(au)) {
+                if (expr.evaluate(contexts, properties)) {
                     return (true);
                 }
             }
@@ -405,15 +476,19 @@ public class QuerySpec implements java.io.Externalizable {
         /**
          * This method evaluates the Not operator.
          * 
-         * @param au The activity unit
+         * @param contexts The set of contexts
+         * @param properties The set of properties
          * @return The result
          */
-        protected boolean evaluateNot(ActivityUnit au) {
+        protected boolean evaluateNot(java.util.Set<Context> contexts,
+                java.util.Set<Property> properties) {
             
             if (_contexts.size() > 0) {
-                return (!au.getContext().contains(_contexts.get(0)));
+                return (!contexts.contains(_contexts.get(0)));
+            } else if (_properties.size() > 0) {
+                return (!properties.contains(_properties.get(0)));
             } else if (_expressions.size() > 0) {
-                return (!_expressions.get(0).evaluate(au));
+                return (!_expressions.get(0).evaluate(contexts, properties));
             }
             
             return (false);

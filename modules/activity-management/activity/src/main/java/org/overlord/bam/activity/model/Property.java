@@ -22,61 +22,60 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 /**
- * This class represents context information that can be used to
- * correlate this (set of) activity with other activities related
- * to the same business/service transaction.
+ * This class represents a property that can be used to
+ * query an activity unit/type.
  *
  */
-public class Context implements java.io.Externalizable {
+public class Property implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
-    private Type _type=Type.Conversation;
+    private String _name=null;
     private String _value=null;
 
     /**
      * The default constructor.
      */
-    public Context() {
+    public Property() {
     }
  
     /**
-     * This constructor sets the fields for the context.
+     * This constructor sets the fields for the property.
      * 
-     * @param type The context type
+     * @param name The name
      * @param value The value
      */
-    public Context(Type type, String value) {
-        _type = type;
+    public Property(String name, String value) {
+        _name = name;
         _value = value;
     }
     
     /**
      * The copy constructor.
      * 
-     * @param context The context to copy
+     * @param prop The property to copy
      */
-    public Context(Context context) {
-        _type = context._type;
-        _value = context._value;
+    public Property(Property prop) {
+        _name = prop._name;
+        _value = prop._value;
     }
     
     /**
-     * This method returns the type.
+     * This method returns the name.
      * 
-     * @return The type
+     * @return The name
      */
-    public Type getType() {
-        return (_type);
+    public String getName() {
+        return (_name);
     }
     
     /**
-     * This method sets the type.
+     * This method sets the name.
      * 
-     * @param type The type
+     * @param name The name
      */
-    public void setType(Type type) {
-        _type = type;
+    public void setName(String name) {
+        _name = name;
     }
     
     /**
@@ -108,12 +107,13 @@ public class Context implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public boolean equals(Object obj) {
-        if (obj instanceof Context) {
-            Context ctx=(Context)obj;
+        if (obj instanceof Property) {
+            Property prop=(Property)obj;
             
-            if (ctx._type == _type
-                    && ((ctx._value != null && ctx._value.equals(_value))
-                        || (ctx._value == null && _value == null))) {
+            if (((prop._value != null && prop._value.equals(_value))
+                        || (prop._value == null && _value == null))
+                    && ((prop._name != null && prop._name.equals(_name))
+                            || (prop._name == null && _name == null))) {
                 return (true);
             }
         }
@@ -125,7 +125,7 @@ public class Context implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public String toString() {
-        return ("Context["+_type+":"+_value+"]");
+        return ("Property["+_name+"="+_value+"]");
     }
     
     /**
@@ -134,7 +134,7 @@ public class Context implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_type);
+        out.writeObject(_name);
         out.writeObject(_value);
     }
 
@@ -145,33 +145,7 @@ public class Context implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _type = (Type)in.readObject();
+        _name = (String)in.readObject();
         _value = (String)in.readObject();
-    }
-
-    public enum Type {
-        
-        /**
-         * A 'conversation id' represents a value that can be used to correlate
-         * activities across distributed services. These context types
-         * will be globally unique, and may refer to values that are
-         * carried in the application message contents.
-         */
-        Conversation,
-        
-        /**
-         * The 'endpoint id' type represents an id that may be associated
-         * with the executable unit enacting the service/process being monitored,
-         * and can therefore be used to correlate local activities as being
-         * part of the same executable unit.
-         */
-        Endpoint,
-        
-        /**
-         * This context type represents an id associated with a particular message
-         * being exchanged between distributed participants.
-         */
-        Message
-        
     }
 }

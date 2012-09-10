@@ -181,9 +181,9 @@ public class AbstractActivityCollectorTest {
         ac.setActivityUnitLogger(al);
         ac.setCollectorContext(cc);
         
-        Context c1=new Context(Context.Type.Conversation, "name1", "value1");
-        Context c2=new Context(Context.Type.Message, "name2", "value2");
-        Context c3=new Context(Context.Type.Property, "name3", "value3");
+        Context c1=new Context(Context.Type.Conversation, "value1");
+        Context c2=new Context(Context.Type.Message, "value2");
+        Context c3=new Context(Context.Type.Endpoint, "value3");
         
         // Start scope
         ac.startScope();

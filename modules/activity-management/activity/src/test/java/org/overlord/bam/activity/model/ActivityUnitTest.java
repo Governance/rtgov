@@ -31,7 +31,6 @@ public class ActivityUnitTest {
         
         Context c1=new Context();
         c1.setType(Context.Type.Conversation);
-        c1.setName("n1");
         c1.setValue("v1");
         
         au.getContext().add(c1);
@@ -41,14 +40,12 @@ public class ActivityUnitTest {
         
         Context c2=new Context();
         c2.setType(Context.Type.Conversation);
-        c2.setName("n1");
         c2.setValue("v1");
         
         ms.getContext().add(c2);
         
         Context c3=new Context();
         c3.setType(Context.Type.Endpoint);
-        c3.setName("n3");
         c3.setValue("v3");
         
         ms.getContext().add(c3);

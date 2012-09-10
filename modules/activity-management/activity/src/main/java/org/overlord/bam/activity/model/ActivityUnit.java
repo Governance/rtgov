@@ -153,6 +153,23 @@ public class ActivityUnit implements java.io.Externalizable {
     }
     
     /**
+     * This method gets all the properties associated
+     * with the activity unit and its contained activity
+     * types. Duplicate properties will be ignored.
+     * 
+     * @return The complete list of properties
+     */
+    public java.util.Set<Property> getAllProperties() {
+        java.util.Set<Property> ret=new java.util.HashSet<Property>();
+        
+        for (ActivityType at : _activityTypes) {
+            ret.addAll(at.getProperties());
+        }
+        
+        return (ret);
+    }
+    
+    /**
      * This method sets the activity types.
      * 
      * @param activityTypes The activity types

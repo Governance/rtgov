@@ -39,8 +39,6 @@ import org.overlord.bam.activity.server.QuerySpec;
  */
 public class ActivityServerImpl implements ActivityServer {
 
-    private static final String PROCESS_CONTEXT_NAME = "process";
-
     @Inject
     private ActivityStore _store=null;
     
@@ -161,7 +159,7 @@ public class ActivityServerImpl implements ActivityServer {
                     }
                     
                     // Copy message id to context for activity unit
-                    au.getContext().add(new Context(Context.Type.Message, null,
+                    au.getContext().add(new Context(Context.Type.Message,
                             ((RPCActivityType)at).getMessageId()));
                 }
             } else if (at instanceof BPMActivityType) {
@@ -175,7 +173,6 @@ public class ActivityServerImpl implements ActivityServer {
                    
                     // Copy instance id to context for activity unit
                     au.getContext().add(new Context(Context.Type.Endpoint,
-                            PROCESS_CONTEXT_NAME,
                             ((BPMActivityType)at).getInstanceId()));                   
                 }
             }

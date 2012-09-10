@@ -70,6 +70,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.event-processor-network</groupId>
+			<artifactId>epn-mvel</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>

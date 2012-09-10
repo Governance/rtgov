@@ -55,6 +55,7 @@ public abstract class ActivityType implements java.io.Externalizable {
     private long _timestamp=0;
     
     private java.util.List<Context> _contexts=new java.util.Vector<Context>();
+    private java.util.List<Property> _properties=new java.util.Vector<Property>();
 
     /**
      * The default constructor.
@@ -71,6 +72,14 @@ public abstract class ActivityType implements java.io.Externalizable {
         _activityUnitId = act._activityUnitId;
         _activityUnitIndex = act._activityUnitIndex;
         _timestamp = act._timestamp;
+        
+        for (Context ctx : act._contexts) {
+            _contexts.add(new Context(ctx));
+        }
+        
+        for (Property prop : act._properties) {
+            _properties.add(new Property(prop));
+        }
     }
     
     /**
@@ -158,6 +167,24 @@ public abstract class ActivityType implements java.io.Externalizable {
     }
     
     /**
+     * This method sets the properties.
+     * 
+     * @param props The properties
+     */
+    public void setProperties(java.util.List<Property> props) {
+        _properties = props;
+    }
+    
+    /**
+     * This method gets the properties.
+     * 
+     * @return The properties
+     */
+    public java.util.List<Property> getProperties() {
+        return (_properties);
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -172,6 +199,13 @@ public abstract class ActivityType implements java.io.Externalizable {
         out.writeInt(len);
         for (int i=0; i < len; i++) {
             out.writeObject(_contexts.get(i));
+        }    
+        
+        len=_properties.size();
+        
+        out.writeInt(len);
+        for (int i=0; i < len; i++) {
+            out.writeObject(_properties.get(i));
         }    
     }
 
@@ -190,6 +224,12 @@ public abstract class ActivityType implements java.io.Externalizable {
         
         for (int i=0; i < len; i++) {
             _contexts.add((Context)in.readObject());
+        }
+        
+        len=in.readInt();
+       
+        for (int i=0; i < len; i++) {
+            _properties.add((Property)in.readObject());
         }
     }
     
