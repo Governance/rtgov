@@ -60,6 +60,11 @@
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
+			<artifactId>epn-infinispan</artifactId>
+			<version>${bam.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.bam.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
 			<version>${bam.version}</version>
