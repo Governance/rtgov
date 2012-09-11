@@ -18,6 +18,7 @@
 package org.overlord.bam.epn;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.overlord.bam.epn.service.EPNService;
 
 /**
  * This interface defines an event processor responsible
@@ -28,12 +29,38 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class EventProcessor {
     
+    private java.util.Map<String,EPNService> _services=
+                            new java.util.HashMap<String,EPNService>();
+    
+    /**
+     * This method returns the map of names to services.
+     * 
+     * @return The services
+     */
+    public java.util.Map<String,EPNService> getServices() {
+        return (_services);
+    }
+    
+    /**
+     * This method sets the map of names to services.
+     * 
+     * @param services The services
+     */
+    public void setServices(java.util.Map<String,EPNService> services) {
+        _services = services;
+    }
+    
     /**
      * This method initializes the event processor.
      * 
      * @throws Exception Failed to initialize
      */
     public void init() throws Exception {
+        
+        // Iterate through the services initializing them
+        for (EPNService service : _services.values()) {
+            service.init();
+        }
     }
     
     /**
@@ -63,6 +90,11 @@ public abstract class EventProcessor {
      * @throws Exception Failed to close
      */
     public void close() throws Exception {
+        
+        // Iterate through the services closing them
+        for (EPNService service : _services.values()) {
+            service.close();
+        }
     }
 
 }

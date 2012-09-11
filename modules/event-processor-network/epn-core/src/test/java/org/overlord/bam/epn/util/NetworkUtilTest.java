@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.Node;
 import org.overlord.bam.epn.Subscription;
+import org.overlord.bam.epn.service.EmbeddedCacheManager;
 import org.overlord.bam.epn.testdata.TestEventProcessor1;
 import org.overlord.bam.epn.testdata.TestEventProcessor2;
 import org.overlord.bam.epn.testdata.TestEventProcessor3;
@@ -56,7 +57,10 @@ public class NetworkUtilTest {
         epn.getNodes().add(n0);
         
         n0.setEventProcessor(new TestEventProcessor1());
-        n0.setPredicate(new TestPredicate1());    
+        n0.setPredicate(new TestPredicate1());   
+        
+        n0.getEventProcessor().getServices().put("testCache",
+                            new EmbeddedCacheManager());
         
         // Node 1
         Node n1=new Node();
@@ -122,6 +126,11 @@ public class NetworkUtilTest {
             
             if (!(n1.getEventProcessor() instanceof TestEventProcessor1)) {
                 fail("Event Processor 1 not correct class");
+            }
+            
+            TestEventProcessor1 tep1=(TestEventProcessor1)n1.getEventProcessor();
+            if (!(tep1.getServices().get("testCache") instanceof EmbeddedCacheManager)) {
+                fail("Failed to find test cache");
             }
             
             if (n2.getPredicate() == null) {

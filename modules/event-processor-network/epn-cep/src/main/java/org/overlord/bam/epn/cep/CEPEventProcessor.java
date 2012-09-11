@@ -31,7 +31,6 @@ import org.drools.conf.MBeansOption;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.rule.WorkingMemoryEntryPoint;
-import org.overlord.bam.epn.EPNContext;
 import org.overlord.bam.epn.EventProcessor;
 import org.overlord.bam.internal.epn.DefaultEPNContext;
 
@@ -76,15 +75,6 @@ public class CEPEventProcessor extends EventProcessor {
         _ruleName = ruleName;
     }
     
-    /**
-     * This method gets the EPN context used by the CEP rule engine.
-     * 
-     * @return The EPN context
-     */
-    public EPNContext getEPNContext() {
-        return (EPN_CONTEXT);
-    }
-
     /**
      * {@inheritDoc}
      */

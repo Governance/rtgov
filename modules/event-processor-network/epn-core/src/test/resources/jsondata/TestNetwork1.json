@@ -14,7 +14,12 @@
       "@class" : "org.overlord.bam.epn.testdata.TestPredicate1"
     },
     "eventProcessor" : {
-      "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor1"
+      "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor1",
+      "services" : {
+        "testCache" : {
+          "@class" : "org.overlord.bam.epn.service.EmbeddedCacheManager"
+        }
+      }
     },
     "sourceNodes" : [ ],
     "notifications" : [ ],

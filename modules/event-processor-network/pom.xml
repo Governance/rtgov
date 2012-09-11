@@ -20,6 +20,7 @@
 		<module>epn-container-jee</module>
 		<module>epn-cep</module>
 		<module>epn-mvel</module>
+		<module>epn-infinispan</module>
 		<module>epn-loader-jee</module>
 	</modules>
 

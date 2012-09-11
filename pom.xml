@@ -55,6 +55,7 @@
 		<switchyard.version>0.4.0.Final</switchyard.version>
 		<drools.version>5.3.0.Final</drools.version>
 		<guava.version>r06</guava.version>
+		<infinispan.version>5.0.1.FINAL</infinispan.version>
 		<jackson.version>1.9.2</jackson.version>
 		<jms.version>1.1-rev-1</jms.version>
 		<junit.version>4.8.1</junit.version>
