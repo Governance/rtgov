@@ -27,8 +27,8 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.bam.samples.jbossas.slamonitor</groupId>
-			<artifactId>samples-jbossas-slamonitor-orders</artifactId>
+			<groupId>org.overlord.bam.samples.jbossas</groupId>
+			<artifactId>samples-jbossas-ordermgmt</artifactId>
 			<type>war</type>
 			<version>${bam.version}</version>
 		</dependency>

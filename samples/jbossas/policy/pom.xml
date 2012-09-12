@@ -15,7 +15,6 @@
 	</parent>
 
 	<modules>
-		<module>orders</module>
 		<module>epn</module>
 	</modules>
 
