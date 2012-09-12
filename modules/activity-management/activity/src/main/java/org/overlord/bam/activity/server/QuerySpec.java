@@ -23,7 +23,6 @@ import java.io.ObjectOutput;
 
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.Property;
 
 /**
  * This class represents a query specification.
@@ -249,7 +248,7 @@ public class QuerySpec implements java.io.Externalizable {
         
         private Operator _operator=null;
         private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
-        private java.util.List<Property> _properties=new java.util.ArrayList<Property>();
+        private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
         private java.util.List<Expression> _expressions=new java.util.ArrayList<Expression>();
         
         /**
@@ -264,28 +263,31 @@ public class QuerySpec implements java.io.Externalizable {
          * @param operator The operator
          * @param context The list of contexts
          */
-        public Expression(Operator operator, Context... context) {
+        public Expression(Operator operator,
+                            Context... context) {
+            this(operator, null, context);
+        }
+       
+        /**
+         * The context constructor.
+         * 
+         * @param operator The operator
+         * @param props The optional properties
+         * @param context The list of contexts
+         */
+        public Expression(Operator operator, java.util.Map<String,String> props,
+                            Context... context) {
             _operator = operator;
+            
+            if (props != null) {
+                _properties = props;
+            }
             
             for (Context c : context) {
                 _contexts.add(c);
             }
         }
-        
-        /**
-         * The context constructor.
-         * 
-         * @param operator The operator
-         * @param props The list of properties
-         */
-        public Expression(Operator operator, Property... props) {
-            _operator = operator;
-            
-            for (Property p : props) {
-                _properties.add(p);
-            }
-        }
-        
+       
         /**
          * The sub-expression constructor.
          * 
@@ -334,7 +336,7 @@ public class QuerySpec implements java.io.Externalizable {
          * 
          * @return The properties
          */
-        public java.util.List<Property> getProperties() {
+        public java.util.Map<String,String> getProperties() {
             return (_properties);
         }
         
@@ -367,7 +369,7 @@ public class QuerySpec implements java.io.Externalizable {
          * @return The result of the evaluation
          */
         protected boolean evaluate(java.util.Set<Context> contexts,
-                java.util.Set<Property> properties) {
+                java.util.Map<String,String> properties) {
             boolean ret=false;
             
             if (_operator == Operator.Match) {
@@ -391,7 +393,7 @@ public class QuerySpec implements java.io.Externalizable {
          * @return The result
          */
         protected boolean evaluateMatch(java.util.Set<Context> contexts,
-                java.util.Set<Property> properties) {
+                java.util.Map<String,String> properties) {
             if (_contexts.size() > 0) {
                 if (!contexts.contains(_contexts.get(0)) ||
                         _contexts.size() > 1) {
@@ -403,11 +405,12 @@ public class QuerySpec implements java.io.Externalizable {
                 }
             }
             if (_properties.size() > 0) {
-                if (!properties.contains(_properties.get(0)) ||
-                        _properties.size() > 1) {
-                    return (false);
-                } else {
-                    return (true);
+                if (_properties.size() == 1) {
+                    String key=_properties.keySet().iterator().next();
+                    if (properties.containsKey(key) &&
+                            properties.get(key).equals(_properties.get(key))) {
+                        return (true);
+                    }
                 }
             }
             return (false);
@@ -421,15 +424,16 @@ public class QuerySpec implements java.io.Externalizable {
          * @return The result
          */
         protected boolean evaluateAnd(java.util.Set<Context> contexts,
-                java.util.Set<Property> properties) {
+                java.util.Map<String,String> properties) {
             for (Context c : _contexts) {
                 if (!contexts.contains(c)) {
                     return (false);
                 }
             }
             
-            for (Property p : _properties) {
-                if (!properties.contains(p)) {
+            for (String key : _properties.keySet()) {
+                if (!properties.containsKey(key) ||
+                        !properties.get(key).equals(_properties.get(key))) {
                     return (false);
                 }
             }
@@ -451,15 +455,16 @@ public class QuerySpec implements java.io.Externalizable {
          * @return The result
          */
         protected boolean evaluateOr(java.util.Set<Context> contexts,
-                java.util.Set<Property> properties) {
+                java.util.Map<String,String> properties) {
             for (Context c : _contexts) {
                 if (contexts.contains(c)) {
                     return (true);
                 }
             }
             
-            for (Property p : _properties) {
-                if (properties.contains(p)) {
+            for (String key : _properties.keySet()) {
+                if (properties.containsKey(key) &&
+                        properties.get(key).equals(_properties.get(key))) {
                     return (true);
                 }
             }
@@ -481,12 +486,18 @@ public class QuerySpec implements java.io.Externalizable {
          * @return The result
          */
         protected boolean evaluateNot(java.util.Set<Context> contexts,
-                java.util.Set<Property> properties) {
+                java.util.Map<String,String> properties) {
             
             if (_contexts.size() > 0) {
                 return (!contexts.contains(_contexts.get(0)));
             } else if (_properties.size() > 0) {
-                return (!properties.contains(_properties.get(0)));
+                if (_properties.size() == 1) {
+                    String key=_properties.keySet().iterator().next();
+                    if (!properties.containsKey(key) ||
+                            !properties.get(key).equals(_properties.get(key))) {
+                        return (true);
+                    }                 
+                }
             } else if (_expressions.size() > 0) {
                 return (!_expressions.get(0).evaluate(contexts, properties));
             }

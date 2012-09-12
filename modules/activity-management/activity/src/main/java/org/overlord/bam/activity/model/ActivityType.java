@@ -55,7 +55,7 @@ public abstract class ActivityType implements java.io.Externalizable {
     private long _timestamp=0;
     
     private java.util.List<Context> _contexts=new java.util.Vector<Context>();
-    private java.util.List<Property> _properties=new java.util.Vector<Property>();
+    private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
 
     /**
      * The default constructor.
@@ -77,9 +77,7 @@ public abstract class ActivityType implements java.io.Externalizable {
             _contexts.add(new Context(ctx));
         }
         
-        for (Property prop : act._properties) {
-            _properties.add(new Property(prop));
-        }
+        _properties = new java.util.HashMap<String, String>(act._properties);
     }
     
     /**
@@ -171,7 +169,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @param props The properties
      */
-    public void setProperties(java.util.List<Property> props) {
+    public void setProperties(java.util.Map<String,String> props) {
         _properties = props;
     }
     
@@ -180,7 +178,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @return The properties
      */
-    public java.util.List<Property> getProperties() {
+    public java.util.Map<String,String> getProperties() {
         return (_properties);
     }
     
@@ -201,17 +199,13 @@ public abstract class ActivityType implements java.io.Externalizable {
             out.writeObject(_contexts.get(i));
         }    
         
-        len=_properties.size();
-        
-        out.writeInt(len);
-        for (int i=0; i < len; i++) {
-            out.writeObject(_properties.get(i));
-        }    
+        out.writeObject(_properties);    
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
@@ -226,11 +220,7 @@ public abstract class ActivityType implements java.io.Externalizable {
             _contexts.add((Context)in.readObject());
         }
         
-        len=in.readInt();
-       
-        for (int i=0; i < len; i++) {
-            _properties.add((Property)in.readObject());
-        }
+        _properties = (java.util.Map<String, String>)in.readObject();
     }
     
 }

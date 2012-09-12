@@ -157,13 +157,15 @@ public class ActivityUnit implements java.io.Externalizable {
      * with the activity unit and its contained activity
      * types. Duplicate properties will be ignored.
      * 
-     * @return The complete list of properties
+     * @return The aggregation of all activity type properties
      */
-    public java.util.Set<Property> getAllProperties() {
-        java.util.Set<Property> ret=new java.util.HashSet<Property>();
+    public java.util.Map<String,String> getAllProperties() {
+        java.util.Map<String,String> ret=new java.util.HashMap<String,String>();
         
         for (ActivityType at : _activityTypes) {
-            ret.addAll(at.getProperties());
+            for (String key : at.getProperties().keySet()) {
+                ret.put(key, at.getProperties().get(key));
+            }
         }
         
         return (ret);
