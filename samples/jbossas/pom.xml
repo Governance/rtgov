@@ -36,6 +36,7 @@
 
 	<modules>
 		<module>activityclient</module>
+		<module>policy</module>
 		<module>slamonitor</module>
 	</modules>
 

@@ -46,6 +46,20 @@ public class RequestReceived extends RPCActivityType implements java.io.External
     /**
      * {@inheritDoc}
      */
+    public boolean isRequest() {
+        return (true);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isServiceProvider() {
+        return (true);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         

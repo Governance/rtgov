@@ -26,9 +26,6 @@ ${as7}/standalone/deployments folder.
 
 NOTE: The components are as follows:
 
-- acs: this component represents the active collections responsible for collecting the information
-to be presented via the REST service.
-
 - epn: this component represents the Event Processor Network (EPN) used to calculate response times
 and detect SLA violations.
 

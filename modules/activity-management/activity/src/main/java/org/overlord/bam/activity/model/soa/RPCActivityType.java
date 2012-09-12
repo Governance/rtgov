@@ -62,6 +62,22 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     }
     
     /**
+     * This method determines whether the RPC activity is
+     * associated with the service provider.
+     * 
+     * @return Whether associated with the service provider
+     */
+    public abstract boolean isServiceProvider();
+    
+    /**
+     * This method determines whether the RPC activity is
+     * a request.
+     * 
+     * @return Whether a request
+     */
+    public abstract boolean isRequest();
+    
+    /**
      * This method sets the service type.
      * 
      * @param serviceType The service type

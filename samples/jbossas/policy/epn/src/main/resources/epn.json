@@ -1,0 +1,34 @@
+{
+  "name" : "PolicyEPN",
+  "subscriptions" : [ {
+    "nodeName" : "SampleBusinessPolicy",
+    "subject" : "SOAEvents"
+  } ],
+  "nodes" : [
+    {
+      "name" : "SampleBusinessPolicy",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.bam.epn.mvel.MVELEventProcessor",
+        "script" : "SampleBusinessPolicy.mvel",
+        "services" : {
+          "cache" : {
+            "@class" : "org.overlord.bam.epn.service.EmbeddedCacheManager"
+          }
+        }
+      },
+      "predicate" : {
+        "@class" : "org.overlord.bam.epn.mvel.MVELPredicate",
+        "expression" : "event.serviceProvider && event.serviceType == \"{urn:switchyard-quickstart-demo:orders:1.0}OrderService\""
+      },
+      "notifications" : [ {
+      	 "type" : "Results",
+      	 "subject" : "SuspendedCustomers"
+      } ]
+    }
+  ],
+  "version" : "1"
+}

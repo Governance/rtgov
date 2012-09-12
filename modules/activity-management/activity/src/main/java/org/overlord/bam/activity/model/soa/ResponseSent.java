@@ -47,6 +47,20 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
     }
     
     /**
+     * {@inheritDoc}
+     */
+    public boolean isRequest() {
+        return (false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isServiceProvider() {
+        return (true);
+    }
+    
+    /**
      * This method sets the 'reply to' message id.
      * 
      * @param replyToId The 'reply to' message id

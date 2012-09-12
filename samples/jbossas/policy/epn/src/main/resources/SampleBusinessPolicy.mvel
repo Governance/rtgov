@@ -1,0 +1,13 @@
+
+System.out.println("EVENT="+event);
+
+/*
+if (event.operation == "buy") {
+
+	if (!event.request) {
+		int total=event.properties.get("total");
+		
+		System.out.println("TOTAL="+total);
+	}
+}
+*/

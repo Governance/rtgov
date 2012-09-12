@@ -47,6 +47,20 @@ public class ResponseReceived extends RPCActivityType implements java.io.Externa
     }
     
     /**
+     * {@inheritDoc}
+     */
+    public boolean isRequest() {
+        return (false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isServiceProvider() {
+        return (false);
+    }
+    
+    /**
      * This method sets the 'reply to' message id.
      * 
      * @param replyToId The 'reply to' message id

@@ -46,6 +46,20 @@ public class RequestSent extends RPCActivityType implements java.io.Externalizab
     /**
      * {@inheritDoc}
      */
+    public boolean isRequest() {
+        return (true);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isServiceProvider() {
+        return (false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         
