@@ -43,7 +43,7 @@ public class CEPEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(CEPEventProcessor.class.getName());
 
-    private static final DefaultEPNContext EPN_CONTEXT=new DefaultEPNContext();
+    private DefaultEPNContext _context=null; //new DefaultEPNContext();
 
     private static final java.util.Map<String,StatefulKnowledgeSession> SESSIONS=
                 new java.util.HashMap<String,StatefulKnowledgeSession>();
@@ -54,6 +54,8 @@ public class CEPEventProcessor extends EventProcessor {
      * {@inheritDoc}
      */
     public void init() throws Exception {
+        _context = new DefaultEPNContext(getServices());
+        
         _session = createSession();
     }
     
@@ -87,7 +89,7 @@ public class CEPEventProcessor extends EventProcessor {
                     +"'");
         }
 
-        EPN_CONTEXT.forward(null);
+        _context.forward(null);
         
         // Get entry point
         // TODO: If not simple lookup, then may want to cache this
@@ -112,7 +114,7 @@ public class CEPEventProcessor extends EventProcessor {
                     +"' on CEP Event Processor '"+getRuleName()+"'");
         }
         
-        return (java.io.Serializable)EPN_CONTEXT.getResult();
+        return (java.io.Serializable)_context.getResult();
     }
 
     /**
@@ -134,7 +136,7 @@ public class CEPEventProcessor extends EventProcessor {
                     ret = kbase.newStatefulKnowledgeSession();
 
                     if (ret != null) {
-                        ret.setGlobal("epn", EPN_CONTEXT);
+                        ret.setGlobal("epn", _context);
                         ret.fireAllRules();
                         
                         SESSIONS.put(getRuleName(), ret);

@@ -110,31 +110,31 @@ public class CEPEventProcessorTest {
         CEPEventProcessor ep=new CEPEventProcessor();
         ep.setRuleName("PurchasingResponseTime");
         
-        ActivityUnit e1=new ActivityUnit();
-        e1.setId("e1");
-        RequestReceived me1=new RequestReceived();
-        me1.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL);
-        me1.setMessageId("me1");
-        e1.getActivityTypes().add(me1);
+        ActivityUnit e4=new ActivityUnit();
+        e4.setId("e4");
+        RequestReceived me4=new RequestReceived();
+        me4.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL);
+        me4.setMessageId("me4");
+        e4.getActivityTypes().add(me4);
         
-        ActivityUnit e3=new ActivityUnit();
-        e3.setId("e3");
-        ResponseSent me3=new ResponseSent();
-        me3.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL+TIME_INTERVAL);
-        me3.setMessageId("me3");
-        me3.setReplyToId("me1");
-        e3.getActivityTypes().add(me3);
+        ActivityUnit e5=new ActivityUnit();
+        e5.setId("e5");
+        ResponseSent me5=new ResponseSent();
+        me5.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL+TIME_INTERVAL);
+        me5.setMessageId("me5");
+        me5.setReplyToId("me4");
+        e5.getActivityTypes().add(me5);
         
         try {            
             ep.init();
             
-            java.util.Properties props3=(java.util.Properties)ep.process("Purchasing", me3, 0);
+            java.util.Properties props3=(java.util.Properties)ep.process("Purchasing", me5, 0);
             
             if (props3 != null) {
                 fail("Should be no result 1");
             }
             
-            java.util.Properties props1=(java.util.Properties)ep.process("Purchasing", me1, 0);
+            java.util.Properties props1=(java.util.Properties)ep.process("Purchasing", me4, 0);
             
             if (props1 == null) {
                 fail("Result should not be null");
@@ -143,11 +143,11 @@ public class CEPEventProcessorTest {
             String reqId=(String)props1.get("requestId");
             String respId=(String)props1.get("responseId");
             
-            if (!reqId.equals(me1.getMessageId())) {
+            if (!reqId.equals(me4.getMessageId())) {
                 fail("Request id incorrect");
             }
             
-            if (!respId.equals(me3.getMessageId())) {
+            if (!respId.equals(me5.getMessageId())) {
                 fail("Response id incorrect");
             }
             

@@ -24,7 +24,7 @@ import java.util.Map;
  * use by an event processor.
  *
  */
-public class EmbeddedCacheManager extends EPNService {
+public class EmbeddedCacheManager extends CacheManager {
     
     private java.util.Map<String, java.util.Map<?,?>> _caches=
             new java.util.HashMap<String, java.util.Map<?,?>>();

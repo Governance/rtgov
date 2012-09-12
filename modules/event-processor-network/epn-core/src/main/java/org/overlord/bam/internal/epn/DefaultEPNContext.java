@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.overlord.bam.epn.EPNContext;
+import org.overlord.bam.epn.service.EPNService;
 
 /**
  * This class provides services to the EventProcessor
@@ -31,12 +32,32 @@ public class DefaultEPNContext implements EPNContext {
 
     private static final Logger LOG=Logger.getLogger(DefaultEPNContext.class.getName());
 
-    private ThreadLocal<Object> _result=new ThreadLocal<Object>();
+    private static final ThreadLocal<Object> _result=new ThreadLocal<Object>();
+    
+    private java.util.Map<String,EPNService> _services=null;
     
     /**
      * The default constructor.
      */
     public DefaultEPNContext() {
+    }
+    
+    /**
+     * This constructor initializes the service map.
+     * 
+     * @param services The map of services available
+     */
+    public DefaultEPNContext(java.util.Map<String,EPNService> services) {
+        _services = services;
+    }
+    
+    /**
+     * This method sets the service map.
+     * 
+     * @param services The services
+     */
+    public void setServices(java.util.Map<String,EPNService> services) {
+        _services = services;
     }
     
     /**
@@ -66,6 +87,11 @@ public class DefaultEPNContext implements EPNContext {
      * {@inheritDoc}
      */
     public void forward(Object result) {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(">>> "+this+": Forward="+result);
+        }
+        
         _result.set(result);
     }
 
@@ -75,6 +101,25 @@ public class DefaultEPNContext implements EPNContext {
      * @return The result, or null if not defined
      */
     public Object getResult() {
-        return _result.get();
+        Object ret=_result.get();
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(">>> "+this+": Get result="+ret);
+        }
+        
+        return (ret);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public EPNService getService(String name) {
+        EPNService ret=null;
+        
+        if (_services != null) {
+            ret = _services.get(name);
+        }
+
+        return (ret);
     }
 }

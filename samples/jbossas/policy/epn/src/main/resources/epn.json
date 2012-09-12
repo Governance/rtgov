@@ -15,7 +15,7 @@
         "@class" : "org.overlord.bam.epn.mvel.MVELEventProcessor",
         "script" : "SampleBusinessPolicy.mvel",
         "services" : {
-          "cache" : {
+          "CacheManager" : {
             "@class" : "org.overlord.bam.epn.service.EmbeddedCacheManager"
           }
         }

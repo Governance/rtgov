@@ -17,6 +17,8 @@
  */
 package org.overlord.bam.epn;
 
+import org.overlord.bam.epn.service.EPNService;
+
 /**
  * This interface provides services to the EventProcessor
  * implementations that process the events.
@@ -55,4 +57,12 @@ public interface EPNContext {
      */
     public void logDebug(String debug);
 
+    /**
+     * This method returns the named service if available.
+     * 
+     * @param name The service name
+     * @return The service, or null if not found
+     */
+    public EPNService getService(String name);
+    
 }

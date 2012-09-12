@@ -33,7 +33,7 @@ public class MVELEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(MVELEventProcessor.class.getName());
 
-    private static final DefaultEPNContext EPN_CONTEXT=new DefaultEPNContext();
+    private DefaultEPNContext _context=null;
 
     private String _script=null;
     private Object _scriptExpression=null;
@@ -61,6 +61,8 @@ public class MVELEventProcessor extends EventProcessor {
                         +" compiled="+_scriptExpression);
             }
         }
+        
+        _context = new DefaultEPNContext(getServices());
     }
     
     /**
@@ -101,11 +103,11 @@ public class MVELEventProcessor extends EventProcessor {
             vars.put("source", source);
             vars.put("event", event);
             vars.put("retriesLeft", retriesLeft);
-            vars.put("epn", EPN_CONTEXT);
+            vars.put("epn", _context);
 
             MVEL.executeExpression(_scriptExpression, vars);
             
-            ret = (java.io.Serializable)EPN_CONTEXT.getResult();
+            ret = (java.io.Serializable)_context.getResult();
         }
 
         return (ret);
