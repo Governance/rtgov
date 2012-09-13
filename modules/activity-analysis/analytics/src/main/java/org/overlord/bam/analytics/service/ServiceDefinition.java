@@ -48,6 +48,8 @@ public class ServiceDefinition implements java.io.Externalizable {
 
     /**
      * Copy constructor.
+     * 
+     * @param sd The source to copy
      */
     public ServiceDefinition(ServiceDefinition sd) {
         _serviceType = sd.getServiceType();

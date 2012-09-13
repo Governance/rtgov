@@ -345,6 +345,7 @@ public final class ServiceDefinitionUtil {
     /**
      * This method merges the supplied service definition snapshots.
      * 
+     * @param snapshots The snapshots to merge
      * @return The merged service definitions
      */
     public static java.util.Map<String,ServiceDefinition> mergeSnapshots(

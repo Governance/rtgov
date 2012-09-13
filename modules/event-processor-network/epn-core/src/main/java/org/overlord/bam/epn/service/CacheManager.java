@@ -32,6 +32,9 @@ public abstract class CacheManager extends EPNService {
      * 
      * @param name The name of the required cache
      * @return The cache, or null if not found
+     * 
+     * @param <K> The key type
+     * @param <V> The value type
      */
     public abstract <K,V> Map<K,V> getCache(String name);
     

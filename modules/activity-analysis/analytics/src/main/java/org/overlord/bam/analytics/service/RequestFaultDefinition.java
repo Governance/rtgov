@@ -40,6 +40,8 @@ public class RequestFaultDefinition extends MEPDefinition implements java.io.Ext
 
     /**
      * Copy constructor.
+     * 
+     * @param rfd The source to copy
      */
     public RequestFaultDefinition(RequestFaultDefinition rfd) {
         super(rfd);

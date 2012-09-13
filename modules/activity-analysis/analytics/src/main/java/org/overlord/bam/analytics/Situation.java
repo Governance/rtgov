@@ -31,6 +31,11 @@ public class Situation implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
+    /**
+     * This enumeration type represents the severity of
+     * the situation.
+     *
+     */
     public enum Severity {
         
         /**
@@ -52,7 +57,7 @@ public class Situation implements java.io.Externalizable {
          * Critical severity.
          */
         Critical
-     }
+    }
     
     private String _type=null;
     private String _subject=null;

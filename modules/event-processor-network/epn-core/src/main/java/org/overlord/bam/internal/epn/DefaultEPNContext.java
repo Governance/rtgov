@@ -32,7 +32,7 @@ public class DefaultEPNContext implements EPNContext {
 
     private static final Logger LOG=Logger.getLogger(DefaultEPNContext.class.getName());
 
-    private static final ThreadLocal<Object> _result=new ThreadLocal<Object>();
+    private static final ThreadLocal<Object> RESULT=new ThreadLocal<Object>();
     
     private java.util.Map<String,EPNService> _services=null;
     
@@ -92,7 +92,7 @@ public class DefaultEPNContext implements EPNContext {
             LOG.finest(">>> "+this+": Forward="+result);
         }
         
-        _result.set(result);
+        RESULT.set(result);
     }
 
     /**
@@ -101,7 +101,7 @@ public class DefaultEPNContext implements EPNContext {
      * @return The result, or null if not defined
      */
     public Object getResult() {
-        Object ret=_result.get();
+        Object ret=RESULT.get();
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(">>> "+this+": Get result="+ret);

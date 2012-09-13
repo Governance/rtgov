@@ -38,6 +38,8 @@ public class RequestResponseDefinition extends MEPDefinition implements java.io.
 
     /**
      * Copy constructor.
+     * 
+     * @param rrd The source to copy
      */
     public RequestResponseDefinition(RequestResponseDefinition rrd) {
         super(rrd);

@@ -43,6 +43,8 @@ public class OperationDefinition implements java.io.Externalizable {
 
     /**
      * Copy constructor.
+     * 
+     * @param od The source to copy
      */
     public OperationDefinition(OperationDefinition od) {
         _name = od.getName();

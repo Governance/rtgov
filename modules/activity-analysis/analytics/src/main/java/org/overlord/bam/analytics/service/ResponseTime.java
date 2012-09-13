@@ -46,6 +46,8 @@ public class ResponseTime implements java.io.Externalizable {
     
     /**
      * Copy constructor.
+     * 
+     * @param rt The source to copy
      */
     public ResponseTime(ResponseTime rt) {
         _serviceType = rt.getServiceType();

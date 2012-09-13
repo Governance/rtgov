@@ -149,6 +149,10 @@ public class Context implements java.io.Externalizable {
         _value = (String)in.readObject();
     }
 
+    /**
+     * This enumerated type represents the type of the context.
+     *
+     */
     public enum Type {
         
         /**

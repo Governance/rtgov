@@ -48,6 +48,8 @@ public class InvocationMetric implements java.io.Externalizable {
     
     /**
      * The copy constructor.
+     * 
+     * @param im The source to copy
      */
     public InvocationMetric(InvocationMetric im) {
         _count = im.getCount();

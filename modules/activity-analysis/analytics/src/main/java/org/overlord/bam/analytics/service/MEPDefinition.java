@@ -42,6 +42,8 @@ public abstract class MEPDefinition implements java.io.Externalizable {
 
     /**
      * Copy constructor.
+     * 
+     * @param md The source to copy
      */
     public MEPDefinition(MEPDefinition md) {
          

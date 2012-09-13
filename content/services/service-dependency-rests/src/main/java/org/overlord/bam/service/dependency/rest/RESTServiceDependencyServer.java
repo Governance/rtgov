@@ -84,7 +84,7 @@ public class RESTServiceDependencyServer {
     /**
      * This method handles queries.
      * 
-     * @param qspec The query spec
+     * @param width The optional width
      * @return The list of objects
      * @throws Exception Failed to query
      */
@@ -114,8 +114,8 @@ public class RESTServiceDependencyServer {
         java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
         
         for (Object entry : _servDefns) {
-            if (entry instanceof ActiveMap.Entry &&
-                    ((ActiveMap.Entry)entry).getValue() instanceof ServiceDefinition) {
+            if (entry instanceof ActiveMap.Entry
+                    && ((ActiveMap.Entry)entry).getValue() instanceof ServiceDefinition) {
                 sds.add((ServiceDefinition)((ActiveMap.Entry)entry).getValue());
             }
         }

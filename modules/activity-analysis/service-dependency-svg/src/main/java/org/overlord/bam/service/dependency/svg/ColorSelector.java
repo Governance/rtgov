@@ -19,6 +19,12 @@ package org.overlord.bam.service.dependency.svg;
 
 import org.overlord.bam.analytics.service.InvocationMetric;
 
+/**
+ * This interface represents a color selector algorithm used to
+ * determine the color for a component on the service dependency
+ * graph.
+ *
+ */
 public interface ColorSelector {
 
     /**

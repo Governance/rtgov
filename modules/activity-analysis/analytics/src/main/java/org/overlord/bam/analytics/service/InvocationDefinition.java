@@ -43,6 +43,8 @@ public class InvocationDefinition implements java.io.Externalizable {
 
     /**
      * Copy constructor.
+     * 
+     * @param id The invocation definition to copy
      */
     public InvocationDefinition(InvocationDefinition id) {
         _serviceType = id.getServiceType();

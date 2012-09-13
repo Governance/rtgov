@@ -395,8 +395,8 @@ public class QuerySpec implements java.io.Externalizable {
         protected boolean evaluateMatch(java.util.Set<Context> contexts,
                 java.util.Map<String,String> properties) {
             if (_contexts.size() > 0) {
-                if (!contexts.contains(_contexts.get(0)) ||
-                        _contexts.size() > 1) {
+                if (!contexts.contains(_contexts.get(0))
+                        || _contexts.size() > 1) {
                     return (false);
                 } else {
                     // Return true as long as no properties
@@ -407,8 +407,8 @@ public class QuerySpec implements java.io.Externalizable {
             if (_properties.size() > 0) {
                 if (_properties.size() == 1) {
                     String key=_properties.keySet().iterator().next();
-                    if (properties.containsKey(key) &&
-                            properties.get(key).equals(_properties.get(key))) {
+                    if (properties.containsKey(key)
+                            && properties.get(key).equals(_properties.get(key))) {
                         return (true);
                     }
                 }
@@ -432,8 +432,8 @@ public class QuerySpec implements java.io.Externalizable {
             }
             
             for (String key : _properties.keySet()) {
-                if (!properties.containsKey(key) ||
-                        !properties.get(key).equals(_properties.get(key))) {
+                if (!properties.containsKey(key)
+                        || !properties.get(key).equals(_properties.get(key))) {
                     return (false);
                 }
             }
@@ -463,8 +463,8 @@ public class QuerySpec implements java.io.Externalizable {
             }
             
             for (String key : _properties.keySet()) {
-                if (properties.containsKey(key) &&
-                        properties.get(key).equals(_properties.get(key))) {
+                if (properties.containsKey(key)
+                        && properties.get(key).equals(_properties.get(key))) {
                     return (true);
                 }
             }
@@ -493,8 +493,8 @@ public class QuerySpec implements java.io.Externalizable {
             } else if (_properties.size() > 0) {
                 if (_properties.size() == 1) {
                     String key=_properties.keySet().iterator().next();
-                    if (!properties.containsKey(key) ||
-                            !properties.get(key).equals(_properties.get(key))) {
+                    if (!properties.containsKey(key)
+                            || !properties.get(key).equals(_properties.get(key))) {
                         return (true);
                     }                 
                 }

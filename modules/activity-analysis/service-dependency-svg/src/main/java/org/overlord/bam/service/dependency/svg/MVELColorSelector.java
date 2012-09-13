@@ -23,6 +23,11 @@ import java.util.logging.Logger;
 import org.overlord.bam.analytics.service.InvocationMetric;
 import org.mvel2.MVEL;
 
+/**
+ * This class provides a MVEL based implementation of the color
+ * selector algorithm.
+ *
+ */
 public class MVELColorSelector implements ColorSelector {
 
     private static final Logger LOG=Logger.getLogger(MVELColorSelector.class.getName());
@@ -33,7 +38,7 @@ public class MVELColorSelector implements ColorSelector {
     /**
      * This method sets the script location.
      * 
-     * @param script The script location
+     * @param location The script location
      */
     public void setScriptLocation(String location) {
         _scriptLocation = location;

@@ -167,24 +167,24 @@ public class SVGServiceGraphGenerator {
                     org.w3c.dom.Element container, org.w3c.dom.Node insertPoint) {
         
         int x1=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
-                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH))*ratio);
+                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH)) * ratio);
         
-        int y1=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION))*ratio);
+        int y1=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION)) * ratio);
         
-        int x2=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION))*ratio);
+        int x2=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION)) * ratio);
         
-        int y2=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION))*ratio);
+        int y2=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION)) * ratio);
         
-        int x3=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION))*ratio);
+        int x3=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION)) * ratio);
         
         int y3=(int)(((Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION)
-                +(Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT))*ratio);
+                +(Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT)) * ratio);
         
         int x4=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
-                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH))*ratio);
+                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH)) * ratio);
         
         int y4=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION)
-                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.HEIGHT))*ratio);
+                +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.HEIGHT)) * ratio);
         
         org.w3c.dom.Element polygon=
                 container.getOwnerDocument().createElement("polygon");
@@ -246,15 +246,15 @@ public class SVGServiceGraphGenerator {
                     org.w3c.dom.Element container, org.w3c.dom.Node insertPoint) {
         
         int x1=(int)(((Integer)il.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
-                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.WIDTH))*ratio);
+                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.WIDTH)) * ratio);
         
         int y1=(int)(((Integer)il.getSource().getProperties().get(ServiceGraphLayout.Y_POSITION)
-                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.HEIGHT)/2)*ratio);
+                +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.HEIGHT)/2) * ratio);
         
-        int x2=(int)(((Integer)il.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION))*ratio);
+        int x2=(int)(((Integer)il.getTarget().getProperties().get(ServiceGraphLayout.X_POSITION)) * ratio);
         
         int y2=(int)(((Integer)il.getTarget().getProperties().get(ServiceGraphLayout.Y_POSITION)
-                +(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT)/2)*ratio);
+                +(Integer)il.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT)/2) * ratio);
         
         org.w3c.dom.Element line=
                 container.getOwnerDocument().createElement("line");
@@ -362,7 +362,7 @@ public class SVGServiceGraphGenerator {
         }
 
         if (sn.getSituations().size() > 0) {
-            generateSituations(container, insertPoint, x+(int)(width*0.9), y, ratio,
+            generateSituations(container, insertPoint, x+(int)(width * 0.9), y, ratio,
                     sn.getSituations());
         }
     
@@ -405,7 +405,7 @@ public class SVGServiceGraphGenerator {
     protected void generateSituations(org.w3c.dom.Element container,
                 org.w3c.dom.Node insertPoint, int x, int y, double ratio,
                         java.util.List<Situation> situations) {
-        int radius=(int)((double)6*ratio);
+        int radius=(int)((double)6 * ratio);
         
         org.w3c.dom.Element circle=
                 container.getOwnerDocument().createElement("circle");
@@ -684,7 +684,7 @@ public class SVGServiceGraphGenerator {
         }
         
         if (opn.getSituations().size() > 0) {
-            generateSituations(container, insertPoint, x+(int)(width*0.9), y-4, ratio,
+            generateSituations(container, insertPoint, x+(int)(width * 0.9), y-4, ratio,
                         opn.getSituations());
         }
     }
