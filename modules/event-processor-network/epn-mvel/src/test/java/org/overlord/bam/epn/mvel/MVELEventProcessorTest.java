@@ -70,4 +70,31 @@ public class MVELEventProcessorTest {
             fail("Retries Left incorrect");
         }
     }
+    
+    @Test
+    public void testProcessWithException() {
+        MVELEventProcessor ep=new MVELEventProcessor();
+        
+        ep.setScript("script/ProcessWithException.mvel");
+        
+        try {
+            ep.init();
+        } catch (Exception e) {
+            fail("Failed to initialize: "+e);
+        }
+        
+        ActivityUnit au=new ActivityUnit();
+        
+        RequestReceived rr=new RequestReceived();
+        
+        au.getActivityTypes().add(rr);
+        
+        try {
+            ep.process(SOURCE_VALUE, au, 1);
+            
+            fail("Failed to receive exception");
+        } catch (Exception e) {
+            // Ignore
+        }
+    }
 }

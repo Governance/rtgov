@@ -1,0 +1,28 @@
+import org.overlord.bam.activity.model.soa.RequestReceived
+import org.overlord.bam.activity.model.soa.ResponseSent
+
+global org.overlord.bam.epn.EPNContext epn
+
+declare RequestReceived
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+declare ResponseSent
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+rule "correlate request and response"
+when
+    $req : RequestReceived( $id : messageId ) from entry-point "Purchasing" 
+    $resp : ResponseSent( replyToId == $id, this after[0,2m20s] $req )  from entry-point "Purchasing"
+then
+
+	epn.logInfo("REQUEST: "+$req+" WITH RESPONSE: "+$resp);
+
+	throw new Exception("The Exception");
+
+end
