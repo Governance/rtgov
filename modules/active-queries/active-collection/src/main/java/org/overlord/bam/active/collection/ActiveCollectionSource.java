@@ -74,6 +74,43 @@ public class ActiveCollectionSource {
     private boolean _preinitialized=false;
 
     /**
+     * The default constructor.
+     */
+    public ActiveCollectionSource() {
+    }
+    
+    /**
+     * The copy constructor.
+     * 
+     * @param source The source to copy
+     */
+    public ActiveCollectionSource(ActiveCollectionSource source) {
+        _name = source._name;
+        _type = source._type;
+        _itemExpiration = source._itemExpiration;
+        _maxItems = source._maxItems;
+        _highWaterMark = source._highWaterMark;
+        _activeCollection = source._activeCollection;
+        _listeners.addAll(source._listeners);
+        _maintenanceScript = source._maintenanceScript;
+        _maintenanceScriptExpression = source._maintenanceScriptExpression;
+        _scheduledScript = source._scheduledScript;
+        _scheduledScriptExpression = source._scheduledScriptExpression;
+        _scheduledInterval = source._scheduledInterval;
+        _scheduledTimer = source._scheduledTimer;
+        _variables = new java.util.HashMap<String, Object>(source._variables);
+        _properties = new java.util.HashMap<String, Object>(source._properties);
+        _aggregationDuration = source._aggregationDuration;
+        _groupBy = source._groupBy;
+        _groupByExpression = source._groupByExpression;
+        _aggregationScript = source._aggregationScript;
+        _aggregationScriptCompiled = source._aggregationScriptCompiled;
+        _groupedEvents = new java.util.HashMap<Object,java.util.List<Object>>(source._groupedEvents);
+        _aggregator = source._aggregator;
+        _preinitialized = source._preinitialized;
+    }
+    
+    /**
      * This method sets the name of the active collection that
      * this source represents.
      * 
@@ -509,15 +546,15 @@ public class ActiveCollectionSource {
     }
 
     /**
-     * This method is invoked to handle the supplied item.
-     * If a script has been defined, then it will be used
-     * to manage the item, otherwise it will be inserted
+     * This method is invoked to handle the supplied entry details.
+     * If a maintenance script has been defined, then it will be used
+     * to manage the entry, otherwise it will be inserted
      * into the associated collection.
      * 
      * @param key The key
      * @param value The value
      */
-    protected void handleItem(Object key, Object value) {
+    public void maintainEntry(Object key, Object value) {
         
         if (_maintenanceScriptExpression != null) {
             java.util.Map<String,Object> vars=
@@ -679,7 +716,7 @@ public class ActiveCollectionSource {
                             LOG.finest("publishAggregateEvents result="+result);
                         }
                         
-                        handleItem(null, result);
+                        maintainEntry(null, result);
                     }
                 }
             } else {

@@ -16,6 +16,7 @@
 
 	<modules>
 		<module>active-collection</module>
+		<module>active-collection-embedded</module>
 		<module>active-collection-jee</module>
 		<module>active-collection-rests</module>
 		<module>acs-epn</module>

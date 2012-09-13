@@ -233,7 +233,7 @@ public class ActiveCollectionSourceTest {
             fail("Failed to initialize active collection source: "+e);
         }
         
-        acs.handleItem(null, new TestObject(T_OBJ1, 50));
+        acs.maintainEntry(null, new TestObject(T_OBJ1, 50));
         
         if (acs.getActiveCollection().getSize() != 1) {
             fail("Active collection should have 1 entry: "+acs.getActiveCollection().getSize());
@@ -279,7 +279,7 @@ public class ActiveCollectionSourceTest {
             fail("Failed to initialize active collection source: "+e);
         }
         
-        acs.handleItem(null, new TestObject(T_OBJ1, 50));
+        acs.maintainEntry(null, new TestObject(T_OBJ1, 50));
         
         if (acs.getActiveCollection().getSize() != 1) {
             fail("Active collection should have 1 entry: "+acs.getActiveCollection().getSize());
@@ -331,7 +331,7 @@ public class ActiveCollectionSourceTest {
             fail("Failed to initialize active collection source: "+e);
         }
         
-        acs.handleItem(null, new TestObject(T_OBJ3, 70));
+        acs.maintainEntry(null, new TestObject(T_OBJ3, 70));
         
         if (acs.getActiveCollection().getSize() != 1) {
             fail("Active collection should have 1 entries: "+acs.getActiveCollection().getSize());

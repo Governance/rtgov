@@ -2,10 +2,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.samples.jbossas.policy</groupId>
-	<artifactId>samples-jbossas-policy-epn</artifactId> 
+	<artifactId>samples-jbossas-policy-acs</artifactId> 
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>Overlord BAM::Samples::JBossAS::Policy::EPN</name>
+	<name>Overlord BAM::Samples::JBossAS::Policy::ACS</name>
 
 	<parent>
 		<groupId>org.overlord.bam.samples.jbossas</groupId>
@@ -15,28 +15,22 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-core</artifactId>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
 			<version>${bam.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-loader-jee</artifactId>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>acs-loader-jee</artifactId>
 			<version>${bam.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam.activity-management</groupId>
-			<artifactId>activity</artifactId>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>acs-epn</artifactId>
 			<version>${bam.version}</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.activity-analysis</groupId>
-			<artifactId>analytics</artifactId>
-			<version>${bam.version}</version>
-			<scope>provided</scope>
-		</dependency>
+		</dependency>		
 		
 		<dependency>
 			<groupId>javax</groupId>
@@ -45,14 +39,8 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-container-embedded</artifactId>
-			<version>${bam.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-mvel</artifactId>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>active-collection-embedded</artifactId>
 			<version>${bam.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -65,7 +53,7 @@
 	</dependencies>
 	
 	<build>
-		<finalName>policy-epn</finalName>
+		<finalName>policy-acs</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -73,7 +61,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.bam</Dependencies>
+							<Dependencies>deployment.overlord-bam.war</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

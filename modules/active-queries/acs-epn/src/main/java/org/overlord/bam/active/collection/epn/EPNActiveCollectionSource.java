@@ -293,7 +293,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         // Default behaviour is to simply add all events to the
         // active collection
         for (Object event : events) {
-            handleItem(null, event);
+            maintainEntry(null, event);
         }
     }
     
