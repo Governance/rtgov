@@ -32,6 +32,9 @@ public class OrderServiceBean implements OrderService {
     @Inject @Reference
     private InventoryService _inventory;
     
+    @Inject @Reference
+    private LogisticsService _logistics;
+    
     @Override
     public OrderAck submitOrder(Order order) {
         // Create an order ack
@@ -50,7 +53,12 @@ public class OrderServiceBean implements OrderService {
             Item orderItem = _inventory.lookupItem(order.getItemId());
             // Check quantity on hand and generate the ack
             if (orderItem.getQuantity() >= order.getQuantity()) {
+                
+                // Arrange delivery
+                _logistics.deliver(order);
+                
                 orderAck.setAccepted(true).setStatus("Order Accepted");
+                orderAck.setTotal(orderItem.getUnitPrice()*order.getQuantity());
             } else {
                 orderAck.setAccepted(false).setStatus("Insufficient Quantity");
             }

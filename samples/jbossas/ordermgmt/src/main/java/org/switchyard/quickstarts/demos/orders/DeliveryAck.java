@@ -19,63 +19,21 @@
 
 package org.switchyard.quickstarts.demos.orders;
 
-public class OrderAck {
+public class DeliveryAck {
     
     private String _orderId;
-    private boolean _accepted;
-    private String _status;
-    private String _customer;
-    private double _total=0;
     
     public String getOrderId() {
         return _orderId;
     }
     
-    public boolean isAccepted() {
-        return _accepted;
-    }
-    
-    public String getStatus() {
-        return _status;
-    }
-    
-    public OrderAck setOrderId(String orderId) {
+    public DeliveryAck setOrderId(String orderId) {
         _orderId = orderId;
         return this;
-    }
-    
-    public OrderAck setStatus(String status) {
-        _status = status;
-        return this;
-    }
-
-    public OrderAck setAccepted(boolean accepted) {
-        _accepted = accepted;
-        return this;
-    }
-    
-    public double getTotal() {
-        return _total;
-    }
-
-    public void setTotal(double total) {
-        this._total = total;
-    }
-    
-    public void setCustomer(String customer) {
-        this._customer = customer;
-    }
-    
-    public String getCustomer() {
-        return _customer;
     }
 
     @Override
     public String toString() {
-        if (_accepted) {
-            return "Order " + _orderId + " Accepted.";
-        } else {
-            return "Order " + _orderId + " Not Accepted: " + _status;
-        }
+        return "Delivery " + _orderId + " acknowledged";
     }
 }

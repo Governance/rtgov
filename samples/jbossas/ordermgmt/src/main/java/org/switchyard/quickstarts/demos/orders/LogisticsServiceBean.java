@@ -19,45 +19,16 @@
 
 package org.switchyard.quickstarts.demos.orders;
 
-public class Item {
-    private String _itemId;
-    private String _name;
-    private int _quantity;
-    private double _unitPrice;
+import org.switchyard.component.bean.Service;
 
-    public String getName() {
-        return _name;
+@Service(LogisticsService.class)
+public class LogisticsServiceBean implements LogisticsService {
+
+    public LogisticsServiceBean() {
     }
-    
-    public String getItemId() {
-        return _itemId;
-    }
-    
-    public int getQuantity() {
-        return _quantity;
-    }
-    
-    public double getUnitPrice() {
-        return _unitPrice;
-    }
-    
-    public Item setName(String name) {
-        _name = name;
-        return this;
-    }
-    
-    public Item setItemId(String itemId) {
-        _itemId = itemId;
-        return this;
-    }
-    
-    public Item setQuantity(int quantity) {
-        _quantity = quantity;
-        return this;
-    }
-    
-    public Item setUnitPrice(double price) {
-        _unitPrice = price;
-        return this;
+
+    @Override
+    public DeliveryAck deliver(Order order) {
+        return (new DeliveryAck().setOrderId(order.getOrderId()));
     }
 }

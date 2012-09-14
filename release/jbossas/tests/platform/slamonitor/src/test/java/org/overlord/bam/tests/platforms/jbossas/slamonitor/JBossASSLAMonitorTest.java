@@ -46,8 +46,8 @@ public class JBossASSLAMonitorTest {
 
     private static final String ORDER_SERVICE_URL = "http://127.0.0.1:8080/demo-orders/OrderService";
     
-    private static final String SLA_VIOLATIONS = "Situations";
-    private static final String SLA_VIOLATIONS_PROCESSED = "SituationsProcessed";
+    private static final String SITUATIONS = "Situations";
+    private static final String SITUATIONS_PROCESSED = "SituationsProcessed";
     
     // NOTE: Had to use resource, as injection didn't seem to work when there
     // was multiple deployments, even though the method defined the
@@ -118,7 +118,7 @@ public class JBossASSLAMonitorTest {
         
         TestListener tl=new TestListener();
         
-        _epnManager.addNotificationListener(SLA_VIOLATIONS_PROCESSED, tl);
+        _epnManager.addNotificationListener(SITUATIONS_PROCESSED, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -161,12 +161,12 @@ public class JBossASSLAMonitorTest {
             // Wait for events to propagate
             Thread.sleep(2000);
             
-            if (tl.getProcessed(SLA_VIOLATIONS_PROCESSED) == null) {
-                fail("Expecting sla violations processed");
+            if (tl.getProcessed(SITUATIONS_PROCESSED) == null) {
+                fail("Expecting situations processed");
             }
             
-            if (tl.getProcessed(SLA_VIOLATIONS_PROCESSED).size() != 2) {
-                fail("Expecting 2 (sla violations) processed events, but got: "+tl.getProcessed(SLA_VIOLATIONS).size());
+            if (tl.getProcessed(SITUATIONS_PROCESSED).size() != 3) {
+                fail("Expecting 3 (sla situations) processed events, but got: "+tl.getProcessed(SITUATIONS_PROCESSED).size());
             }
 
         } catch (Exception e) {
@@ -181,7 +181,7 @@ public class JBossASSLAMonitorTest {
         
         TestListener tl=new TestListener();
         
-        _epnManager.addNotificationListener(SLA_VIOLATIONS, tl);
+        _epnManager.addNotificationListener(SITUATIONS, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -225,12 +225,12 @@ public class JBossASSLAMonitorTest {
             Thread.sleep(2000);
             
             // Check that all events have been processed
-            if (tl.getResults(SLA_VIOLATIONS) == null) {
+            if (tl.getResults(SITUATIONS) == null) {
                 fail("Expecting sla violations results");
             }
             
-            if (tl.getResults(SLA_VIOLATIONS).size() != 1) {
-                fail("Expecting 1 (sla violations) results events, but got: "+tl.getResults(SLA_VIOLATIONS).size());
+            if (tl.getResults(SITUATIONS).size() != 1) {
+                fail("Expecting 1 (sla violations) results events, but got: "+tl.getResults(SITUATIONS).size());
             }
 
         } catch (Exception e) {

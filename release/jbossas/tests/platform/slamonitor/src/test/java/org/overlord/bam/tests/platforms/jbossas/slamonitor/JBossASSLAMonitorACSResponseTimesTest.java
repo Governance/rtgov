@@ -181,8 +181,8 @@ public class JBossASSLAMonitorACSResponseTimesTest {
                 fail("No events returned");
             }
             
-            if (respTimes1.size() != 2) {
-                fail("2 events expected, but got: "+respTimes1.size());
+            if (respTimes1.size() != 3) {
+                fail("3 events expected, but got: "+respTimes1.size());
             }
             
             System.out.println("RESPONSE TIMES="+respTimes1);

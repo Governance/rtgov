@@ -174,8 +174,8 @@ public class JBossASACMgrACSResponseTimesTest {
                 fail("Result 1 is null");
             }
             
-            if (result1.size() != 2) {
-                fail("2 events expected, but got: "+result1.size());
+            if (result1.size() != 3) {
+                fail("3 events expected, but got: "+result1.size());
             }
 
             QuerySpec qs2=new QuerySpec();

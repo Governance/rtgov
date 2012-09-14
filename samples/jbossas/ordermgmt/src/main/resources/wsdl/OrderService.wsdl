@@ -30,6 +30,7 @@
                 <xs:element name="orderId" type="xs:string"/>
                 <xs:element name="itemId" type="xs:string"/>
                 <xs:element name="quantity" type="xs:int"/>
+                <xs:element name="customer" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
         <xs:complexType name="orderAckType">
@@ -37,6 +38,8 @@
                 <xs:element name="orderId" type="xs:string"/>
                 <xs:element name="accepted" type="xs:boolean"/>
                 <xs:element name="status" type="xs:string"/>
+                <xs:element name="customer" type="xs:string"/>
+                <xs:element name="total" type="xs:double"/>
             </xs:sequence>
         </xs:complexType>
     </xsd:schema>

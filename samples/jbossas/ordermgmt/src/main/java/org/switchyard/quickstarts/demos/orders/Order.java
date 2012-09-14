@@ -24,6 +24,7 @@ public class Order {
     private String orderId;
     private String itemId;
     private int quantity = 1;
+    private String customer;
 
     public String getOrderId() {
         return orderId;
@@ -47,5 +48,13 @@ public class Order {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+    
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+    
+    public String getCustomer() {
+        return customer;
     }
 }
