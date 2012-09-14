@@ -134,6 +134,7 @@ public class JBossASACMgrACSViolationsTest {
                         "                <orderId>PO-19838-XYZ</orderId>"+
                         "                <itemId>JAM</itemId>"+
                         "                <quantity>200</quantity>"+
+                        "                <customer>Fred</customer>"+
                         "            </order>"+
                         "        </orders:submitOrder>"+
                         "    </soap:Body>"+

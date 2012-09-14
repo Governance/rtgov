@@ -36,6 +36,8 @@ public class Transformers {
     private static final String ORDER_ID = "orderId";
     private static final String ITEM_ID = "itemId";
     private static final String QUANTITY = "quantity";
+    private static final String CUSTOMER = "customer";
+    private static final String AMOUNT = "amount";
 
     /**
      * Transform from a DOM element to an Order instance.
@@ -45,12 +47,13 @@ public class Transformers {
      * @return Order instance.
      */
     @Transformer(from = "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder")
-    public Order transform(Element from) {
+    public Order transformOrder(Element from) {
         Order order = new Order();
 
         order.setOrderId(getElementValue(from, ORDER_ID));
         order.setItemId(getElementValue(from, ITEM_ID));
         order.setQuantity(Integer.valueOf(getElementValue(from, QUANTITY)));
+        order.setCustomer(getElementValue(from, CUSTOMER));
 
         return order;
     }
@@ -63,15 +66,54 @@ public class Transformers {
      * @return Order response element.
      */
     @Transformer(to = "{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse")
-    public Element transform(OrderAck orderAck) {
+    public Element transformOrderAck(OrderAck orderAck) {
         StringBuffer ackXml = new StringBuffer()
             .append("<orders:submitOrderResponse xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">")
             .append("<orderAck>")
             .append("<orderId>" + orderAck.getOrderId() + "</orderId>")
             .append("<accepted>" + orderAck.isAccepted() + "</accepted>")
             .append("<status>" + orderAck.getStatus() + "</status>")
+            .append("<customer>" + orderAck.getCustomer() + "</customer>")
+            .append("<total>" + orderAck.getTotal() + "</total>")
             .append("</orderAck>")
             .append("</orders:submitOrderResponse>");
+
+        return toElement(ackXml.toString());
+    }
+
+    /**
+     * Transform from a DOM element to a Payment instance.
+     * <p/>
+     * No need to specify the "to" type because Payment is a concrete type.
+     * @param from Payment element.
+     * @return Payment instance.
+     */
+    @Transformer(from = "{urn:switchyard-quickstart-demo:orders:1.0}makePayment")
+    public Payment transformPayment(Element from) {
+        Payment payment = new Payment();
+
+         payment.setCustomer(getElementValue(from, CUSTOMER));
+         payment.setAmount(Double.valueOf(getElementValue(from, AMOUNT)));
+
+        return payment;
+    }
+
+    /**
+     * Transform from a Receipt to an Element.
+     * <p/>
+     * No need to specify the "from" type because OrderAck is a concrete type.
+     * @param receipt The receipt.
+     * @return Order response element.
+     */
+    @Transformer(to = "{urn:switchyard-quickstart-demo:orders:1.0}makePaymentResponse")
+    public Element transformReceipt(Receipt receipt) {
+        StringBuffer ackXml = new StringBuffer()
+            .append("<orders:makePaymentResponse xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">")
+            .append("<receipt>")
+            .append("<customer>" + receipt.getCustomer() + "</customer>")
+            .append("<amount>" + receipt.getAmount() + "</amount>")
+            .append("</receipt>")
+            .append("</orders:makePaymentResponse>");
 
         return toElement(ackXml.toString());
     }

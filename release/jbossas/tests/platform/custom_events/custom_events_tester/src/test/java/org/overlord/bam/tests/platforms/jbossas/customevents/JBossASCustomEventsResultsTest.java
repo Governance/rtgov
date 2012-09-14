@@ -209,6 +209,7 @@ public class JBossASCustomEventsResultsTest {
                         "                <orderId>PO-13739-ABC</orderId>"+
                         "                <itemId>JAM</itemId>"+
                         "                <quantity>50</quantity>"+
+                        "                <customer>Fred</customer>"+
                         "            </order>"+
                         "        </orders:submitOrder>"+
                         "    </soap:Body>"+

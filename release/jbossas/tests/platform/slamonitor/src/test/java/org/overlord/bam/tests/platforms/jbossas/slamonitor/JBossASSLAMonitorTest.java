@@ -133,6 +133,7 @@ public class JBossASSLAMonitorTest {
                         "                <orderId>PO-19838-XYZ</orderId>"+
                         "                <itemId>BUTTER</itemId>"+
                         "                <quantity>200</quantity>"+
+                        "                <customer>Fred</customer>"+
                         "            </order>"+
                         "        </orders:submitOrder>"+
                         "    </soap:Body>"+
@@ -196,6 +197,7 @@ public class JBossASSLAMonitorTest {
                         "                <orderId>PO-13739-ABC</orderId>"+
                         "                <itemId>JAM</itemId>"+
                         "                <quantity>50</quantity>"+
+                        "                <customer>Fred</customer>"+
                         "            </order>"+
                         "        </orders:submitOrder>"+
                         "    </soap:Body>"+

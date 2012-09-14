@@ -22,6 +22,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${bam.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.switchyard</groupId>
 			<artifactId>switchyard-api</artifactId>
 			<version>${switchyard.version}</version>

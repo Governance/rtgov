@@ -135,6 +135,7 @@ public class JBossASACMgrACSResponseTimesTest {
                         "                <orderId>PO-19838-XYZ</orderId>"+
                         "                <itemId>BUTTER</itemId>"+
                         "                <quantity>200</quantity>"+
+                        "                <customer>Fred</customer>"+
                         "            </order>"+
                         "        </orders:submitOrder>"+
                         "    </soap:Body>"+

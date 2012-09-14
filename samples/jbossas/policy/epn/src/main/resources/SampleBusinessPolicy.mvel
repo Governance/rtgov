@@ -7,12 +7,12 @@ if (event.operation == "submitOrder") {
 		String customer=event.properties.get("customer");
 		
 /** START: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
-		int startInd=event.content.indexOf("customer=");
-		int endInd=event.content.indexOf("\"", startInd+11);
+		int startInd=event.content.indexOf("<customer>");
+		int endInd=event.content.indexOf("</", startInd);
 		customer = event.content.substring(startInd+10, endInd);
 		
-		startInd=event.content.indexOf("total=");
-		endInd=event.content.indexOf("\"", startInd+8);
+		startInd=event.content.indexOf("<total>");
+		endInd=event.content.indexOf("</", startInd);
 		totalstr = event.content.substring(startInd+7, endInd);
 		
 		total = Integer.parseInt(totalstr);
@@ -50,12 +50,12 @@ if (event.operation == "submitOrder") {
 		String customer=event.properties.get("customer");
 		
 /** START: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
-		int startInd=event.content.indexOf("customer=");
-		int endInd=event.content.indexOf("\"", startInd+11);
+		int startInd=event.content.indexOf("<customer>");
+		int endInd=event.content.indexOf("</", startInd);
 		customer = event.content.substring(startInd+10, endInd);
 		
-		startInd=event.content.indexOf("amount=");
-		endInd=event.content.indexOf("\"", startInd+9);
+		startInd=event.content.indexOf("<amount>");
+		endInd=event.content.indexOf("</", startInd);
 		amountstr = event.content.substring(startInd+8, endInd);
 		
 		amount = Integer.parseInt(amountstr);
