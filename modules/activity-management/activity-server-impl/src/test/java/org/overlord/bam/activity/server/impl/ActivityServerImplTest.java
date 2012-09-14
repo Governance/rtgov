@@ -20,11 +20,11 @@ package org.overlord.bam.activity.server.impl;
 import static org.junit.Assert.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.bpm.ProcessCompleted;
 import org.overlord.bam.activity.model.bpm.ProcessStarted;
 import org.overlord.bam.activity.model.soa.RequestReceived;
@@ -43,8 +43,7 @@ public class ActivityServerImplTest {
     private static final String RESP_ID = "respId";
     private static final String REQ_ID = "reqId";
     private static final String TEST_ID = "TestID";
-    private static final Logger LOG=Logger.getLogger(ActivityServerImplTest.class.getName());
-
+    
     @Test
     public void testStoreAndNotify() {
         ActivityServerImpl as=new ActivityServerImpl();
@@ -203,81 +202,6 @@ public class ActivityServerImplTest {
     }
     
     @Test
-    public void testProcessActivityUnitHandleDuplicates() {
-        ActivityServerImpl as=new ActivityServerImpl();
-        as.setHandleDuplicateIds(true);
-        
-        ActivityUnit au=new ActivityUnit();
-        
-        for (int i=0; i < 10000; i++) {
-            RequestSent rqs=new RequestSent();
-            rqs.setMessageId("req"+i);
-            au.getActivityTypes().add(rqs);
-            
-            RequestReceived rqr=new RequestReceived();
-            rqr.setMessageId(rqs.getMessageId());
-            au.getActivityTypes().add(rqr);
-            
-            ResponseSent rps=new ResponseSent();
-            rps.setMessageId("resp"+i);
-            rps.setReplyToId(rqs.getMessageId());
-            au.getActivityTypes().add(rps);
-            
-            ResponseReceived rpr=new ResponseReceived();
-            rpr.setMessageId(rps.getMessageId());
-            rpr.setReplyToId(rqs.getMessageId());
-            au.getActivityTypes().add(rpr);
-        }
-        
-        long startTime=System.currentTimeMillis();
-        
-        as.processActivityUnit(au);
-        
-        long result=(System.currentTimeMillis()-startTime);
-        
-        LOG.info("PERFORMANCE RESULT: Processing "+au.getActivityTypes().size()+
-                " activity types, within a single activity unit, with duplicate ids handled: TIME="+result+"ms");
-    }
-    
-    
-    @Test
-    public void testProcessActivityUnitNotHandleDuplicates() {
-        ActivityServerImpl as=new ActivityServerImpl();
-        as.setHandleDuplicateIds(false);
-        
-        ActivityUnit au=new ActivityUnit();
-        
-        for (int i=0; i < 10000; i++) {
-            RequestSent rqs=new RequestSent();
-            rqs.setMessageId("req"+i);
-            au.getActivityTypes().add(rqs);
-            
-            RequestReceived rqr=new RequestReceived();
-            rqr.setMessageId(rqs.getMessageId());
-            au.getActivityTypes().add(rqr);
-            
-            ResponseSent rps=new ResponseSent();
-            rps.setMessageId("resp"+i);
-            rps.setReplyToId(rqs.getMessageId());
-            au.getActivityTypes().add(rps);
-            
-            ResponseReceived rpr=new ResponseReceived();
-            rpr.setMessageId(rps.getMessageId());
-            rpr.setReplyToId(rqs.getMessageId());
-            au.getActivityTypes().add(rpr);
-        }
-        
-        long startTime=System.currentTimeMillis();
-        
-        as.processActivityUnit(au);
-        
-        long result=(System.currentTimeMillis()-startTime);
-        
-        LOG.info("PERFORMANCE RESULT: Processing "+au.getActivityTypes().size()+
-                " activity types, within a single activity unit, with duplicate ids NOT handled: TIME="+result+"ms");
-    }
-    
-    @Test
     public void testProcessActivityIdAssignedIfMissing() {
         ActivityServerImpl as=new ActivityServerImpl();
         
@@ -350,7 +274,6 @@ public class ActivityServerImplTest {
     @Test
     public void testProcessActivityExtractIdWithDuplicates() {
         ActivityServerImpl as=new ActivityServerImpl();
-        as.setHandleDuplicateIds(false);
         
         ActivityUnit au=new ActivityUnit();
         au.setId(TEST_ID);
@@ -384,86 +307,22 @@ public class ActivityServerImplTest {
         
         as.processActivityUnit(au);
 
-        if (au.getContext().size() != 6) {
-            fail("Unexpected number of context entries (6): "+au.getContext().size());
+        java.util.Set<Context> ctxs=au.getAllContexts();
+        
+        if (ctxs.size() != 3) {
+            fail("Unexpected number of context entries (3): "+ctxs.size());
         }
         
-        if (!au.getContext().get(0).getValue().equals(REQ_ID)) {
-            fail("Expecting context 0 to be "+REQ_ID+": "+au.getContext().get(0).getValue());
+        if (!ctxs.contains(new Context(Context.Type.Message,REQ_ID))) {
+            fail("Expecting context Message="+REQ_ID);
         }
         
-        if (!au.getContext().get(1).getValue().equals(REQ_ID)) {
-            fail("Expecting context 1 to be "+REQ_ID+": "+au.getContext().get(1).getValue());
+        if (!ctxs.contains(new Context(Context.Type.Message,RESP_ID))) {
+            fail("Expecting context Message="+RESP_ID);
         }
         
-        if (!au.getContext().get(2).getValue().equals(INST_ID)) {
-            fail("Expecting context 2 to be "+INST_ID+": "+au.getContext().get(2).getValue());
-        }
-        
-        if (!au.getContext().get(3).getValue().equals(INST_ID)) {
-            fail("Expecting context 3 to be "+INST_ID+": "+au.getContext().get(3).getValue());
-        }
-        
-        if (!au.getContext().get(4).getValue().equals(RESP_ID)) {
-            fail("Expecting context 4 to be "+RESP_ID+": "+au.getContext().get(4).getValue());
-        }
-        
-        if (!au.getContext().get(5).getValue().equals(RESP_ID)) {
-            fail("Expecting context 5 to be "+RESP_ID+": "+au.getContext().get(5).getValue());
-        }
-    }
-    
-    @Test
-    public void testProcessActivityExtractIdWithNoDuplicates() {
-        ActivityServerImpl as=new ActivityServerImpl();
-        as.setHandleDuplicateIds(true);
-        
-        ActivityUnit au=new ActivityUnit();
-        au.setId(TEST_ID);
-        
-        RequestSent rqs=new RequestSent();
-        rqs.setMessageId(REQ_ID);
-        au.getActivityTypes().add(rqs);
-        
-        RequestReceived rqr=new RequestReceived();
-        rqr.setMessageId(rqs.getMessageId());
-        au.getActivityTypes().add(rqr);
-        
-        ProcessStarted ps=new ProcessStarted();
-        ps.setInstanceId(INST_ID);
-        ps.setProcessType(PROC_TYPE);
-        au.getActivityTypes().add(ps);
-        
-        ProcessCompleted pc=new ProcessCompleted();
-        pc.setInstanceId(INST_ID);
-        au.getActivityTypes().add(pc);
-        
-        ResponseSent rps=new ResponseSent();
-        rps.setMessageId(RESP_ID);
-        rps.setReplyToId(rqs.getMessageId());
-        au.getActivityTypes().add(rps);
-        
-        ResponseReceived rpr=new ResponseReceived();
-        rpr.setMessageId(rps.getMessageId());
-        rpr.setReplyToId(rqs.getMessageId());
-        au.getActivityTypes().add(rpr);
-        
-        as.processActivityUnit(au);
-
-        if (au.getContext().size() != 3) {
-            fail("Unexpected number of context entries (3): "+au.getContext().size());
-        }
-        
-        if (!au.getContext().get(0).getValue().equals(REQ_ID)) {
-            fail("Expecting context 0 to be "+REQ_ID+": "+au.getContext().get(0).getValue());
-        }
-        
-        if (!au.getContext().get(1).getValue().equals(INST_ID)) {
-            fail("Expecting context 1 to be "+INST_ID+": "+au.getContext().get(1).getValue());
-        }
-        
-        if (!au.getContext().get(2).getValue().equals(RESP_ID)) {
-            fail("Expecting context 2 to be "+RESP_ID+": "+au.getContext().get(2).getValue());
+        if (!ctxs.contains(new Context(Context.Type.Endpoint,INST_ID))) {
+            fail("Expecting context Endpoint="+INST_ID);
         }
     }
     

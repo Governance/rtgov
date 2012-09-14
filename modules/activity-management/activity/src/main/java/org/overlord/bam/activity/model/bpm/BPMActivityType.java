@@ -22,6 +22,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import org.overlord.bam.activity.model.ActivityType;
+import org.overlord.bam.activity.model.Context;
 
 /**
  * This activity type represents a BPM actvity.
@@ -64,6 +65,20 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      */
     public String getInstanceId() {
         return (_instanceId);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public java.util.List<Context> getAllContexts() {
+        java.util.List<Context> ret=super.getAllContexts();
+        
+        if (_instanceId != null) {
+            ret.add(new Context(Context.Type.Endpoint, _instanceId));
+        }
+        
+        return (ret);
     }
     
     /**

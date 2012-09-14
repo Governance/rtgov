@@ -25,9 +25,6 @@ import javax.inject.Inject;
 
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.bpm.BPMActivityType;
-import org.overlord.bam.activity.model.soa.RPCActivityType;
 import org.overlord.bam.activity.server.ActivityNotifier;
 import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.ActivityStore;
@@ -45,8 +42,6 @@ public class ActivityServerImpl implements ActivityServer {
     private java.util.List<ActivityNotifier> _notifiers=new java.util.Vector<ActivityNotifier>();
     
     private @Inject @Any Instance<ActivityNotifier> _injectedNotifiers=null;
-    
-    private boolean _handleDuplicateIds=true;
     
     /**
      * This method sets the activity store.
@@ -73,24 +68,6 @@ public class ActivityServerImpl implements ActivityServer {
      */
     public java.util.List<ActivityNotifier> getActivityNotifiers() {
         return (_notifiers);
-    }
-    
-    /**
-     * This method sets whether duplicate ids should be handled.
-     * 
-     * @param b Whether duplicates should be handled
-     */
-    public void setHandleDuplicateIds(boolean b) {
-        _handleDuplicateIds = b;
-    }
-    
-    /**
-     * This method returns whether duplicate ids should be handled.
-     * 
-     * @return Whether duplicates should be handled
-     */
-    public boolean getHandleDuplicateIds() {
-        return (_handleDuplicateIds);
     }
     
     /**
@@ -141,41 +118,11 @@ public class ActivityServerImpl implements ActivityServer {
         }
         
         int index=0;
-        java.util.Set<String> ids=(_handleDuplicateIds ? new java.util.HashSet<String>() : null);
         
         for (ActivityType at : au.getActivityTypes()) {
             
             at.setActivityUnitId(au.getId());
             at.setActivityUnitIndex(index++);
-            
-            // Check if RPC activity type
-            if (at instanceof RPCActivityType) {
- 
-                if (!_handleDuplicateIds
-                        || !ids.contains(((RPCActivityType)at).getMessageId())) {
-                    
-                    if (_handleDuplicateIds) {
-                        ids.add(((RPCActivityType)at).getMessageId());
-                    }
-                    
-                    // Copy message id to context for activity unit
-                    au.getContext().add(new Context(Context.Type.Message,
-                            ((RPCActivityType)at).getMessageId()));
-                }
-            } else if (at instanceof BPMActivityType) {
-                
-                if (!_handleDuplicateIds
-                        || !ids.contains(((BPMActivityType)at).getInstanceId())) {
-                    
-                    if (_handleDuplicateIds) {
-                        ids.add(((BPMActivityType)at).getInstanceId());
-                    }
-                   
-                    // Copy instance id to context for activity unit
-                    au.getContext().add(new Context(Context.Type.Endpoint,
-                            ((BPMActivityType)at).getInstanceId()));                   
-                }
-            }
         }
     }
     
