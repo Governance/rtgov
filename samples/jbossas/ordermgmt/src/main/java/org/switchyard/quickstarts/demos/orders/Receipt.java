@@ -19,10 +19,24 @@
 
 package org.switchyard.quickstarts.demos.orders;
 
-public interface OrderService {
+public class Receipt {
     
-    OrderAck submitOrder(Order order);
+    private String customer;
+    private double amount=0;
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
     
-    Receipt makePayment(Payment payment);
-    
+    public String getCustomer() {
+        return customer;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
 }

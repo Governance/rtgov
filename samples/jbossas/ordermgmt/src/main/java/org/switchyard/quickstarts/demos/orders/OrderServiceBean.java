@@ -68,4 +68,12 @@ public class OrderServiceBean implements OrderService {
         return orderAck;
     }
 
+    public Receipt makePayment(Payment payment) {
+        Receipt ret=new Receipt();
+        
+        ret.setCustomer(payment.getCustomer());
+        ret.setAmount(payment.getAmount());
+        
+        return (ret);
+    }
 }

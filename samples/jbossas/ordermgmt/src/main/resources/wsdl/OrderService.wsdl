@@ -42,6 +42,33 @@
                 <xs:element name="total" type="xs:double"/>
             </xs:sequence>
         </xs:complexType>
+
+        <xs:element name="makePayment" type="tns:makePaymentType"/>
+        <xs:element name="makePaymentResponse" type="tns:makePaymentResponseType"/>
+        <xs:element name="payment" type="tns:paymentType"/>
+        <xs:element name="receipt" type="tns:receiptType"/>
+        <xs:complexType name="makePaymentType">
+            <xs:sequence>
+                <xs:element name="payment" type="tns:paymentType"/>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:complexType name="makePaymentResponseType">
+            <xs:sequence>
+                <xs:element name="receipt" type="tns:receiptType"/>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:complexType name="paymentType">
+            <xs:sequence>
+                <xs:element name="customer" type="xs:string"/>
+                <xs:element name="amount" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
+        <xs:complexType name="receiptType">
+            <xs:sequence>
+                <xs:element name="customer" type="xs:string"/>
+                <xs:element name="amount" type="xs:double"/>
+            </xs:sequence>
+        </xs:complexType>
     </xsd:schema>
   </types>
   
@@ -51,17 +78,36 @@
   <message name="submitOrderResponse">
     <part name="parameters" element="tns:submitOrderResponse"/>
   </message>
+  <message name="makePayment">
+    <part name="parameters" element="tns:makePayment"/>
+  </message>
+  <message name="makePaymentResponse">
+    <part name="parameters" element="tns:makePaymentResponse"/>
+  </message>
   
   <portType name="OrderService">
     <operation name="submitOrder">
       <input message="tns:submitOrder"/>
       <output message="tns:submitOrderResponse"/>
     </operation>
+    <operation name="makePayment">
+      <input message="tns:payment"/>
+      <output message="tns:paymentResponse"/>
+    </operation>
   </portType>
   
   <binding name="OrderServiceBinding" type="tns:OrderService">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
     <operation name="submitOrder">
+      <soap:operation soapAction="urn:switchyard-quickstart-demo:orders:1.0"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="makePayment">
       <soap:operation soapAction="urn:switchyard-quickstart-demo:orders:1.0"/>
       <input>
         <soap:body use="literal"/>

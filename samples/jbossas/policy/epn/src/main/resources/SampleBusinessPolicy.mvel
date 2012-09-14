@@ -1,5 +1,5 @@
 
-if (event.operation == "buy") {
+if (event.operation == "submitOrder") {
 
 	if (!event.request) {
 	
@@ -42,11 +42,11 @@ if (event.operation == "buy") {
 			epn.forward("+"+customer);
 		}
 	}
-} else if (event.operation == "pay") {
+} else if (event.operation == "makePayment") {
 
 	if (!event.request) {
 	
-		int total=event.properties.get("total");
+		int amount=event.properties.get("amount");
 		String customer=event.properties.get("customer");
 		
 /** START: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
@@ -54,11 +54,11 @@ if (event.operation == "buy") {
 		int endInd=event.content.indexOf("\"", startInd+11);
 		customer = event.content.substring(startInd+10, endInd);
 		
-		startInd=event.content.indexOf("total=");
-		endInd=event.content.indexOf("\"", startInd+8);
-		totalstr = event.content.substring(startInd+7, endInd);
+		startInd=event.content.indexOf("amount=");
+		endInd=event.content.indexOf("\"", startInd+9);
+		amountstr = event.content.substring(startInd+8, endInd);
 		
-		total = Integer.parseInt(totalstr);
+		amount = Integer.parseInt(amountstr);
 /** END: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
 
 		cm = epn.getService("CacheManager");
@@ -74,15 +74,15 @@ if (event.operation == "buy") {
 		int current=exposure.get(customer);
 		
 		if (current != null) {
-			int newtotal=current-total;
+			int newamount=current-amount;
 			
-			if (newtotal > 0) {
-				exposure.put(customer, newtotal);
+			if (newamount > 0) {
+				exposure.put(customer, newamount);
 			} else {
 				exposure.remove(customer);
 			}
 			
-			if (newtotal <= 150 && current > 150) {
+			if (newamount <= 150 && current > 150) {
 				epn.forward("-"+customer);
 			}
 		}
