@@ -62,26 +62,26 @@ public class EPNTest {
         
         RequestSent rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqs.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
         
         RequestReceived rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqr.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
         
         ResponseSent rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rps.setContent("<OrderAck><customer>Fred</customer><total>100</total></OrderAck>");
+        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rps.setContent("{\"total\":100,\"customer\":\"Fred\"}");
         
         rps.getProperties().put("total", "100");
         rps.getProperties().put("customer", "Fred");
         
         ResponseReceived rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rpr.setContent("<OrderAck><customer>Fred</customer><total>100</total></OrderAck>");
+        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rpr.setContent("{\"total\":100,\"customer\":\"Fred\"}");
         
         events.add(rqs);
         events.add(rqr);
@@ -107,26 +107,26 @@ public class EPNTest {
     
         rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqs.setContent("<Order><customer>Fred</customer><total>170</total></Order>");
         
         rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqr.setContent("<Order><customer>Fred</customer><total>170</total></Order>");
         
         rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rps.setContent("<OrderAck><customer>Fred</customer><total>170</total></OrderAck>");
+        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rps.setContent("{\"customer\":\"Fred\",\"total\":170}");
         
         rps.getProperties().put("total", "170");
         rps.getProperties().put("customer", "Fred");
         
         rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rpr.setContent("<OrderAck><customer>Fred</customer><total>170</total></OrderAck>");
+        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rpr.setContent("{\"customer\":\"Fred\",\"total\":170}");
         
         events.add(rqs);
         events.add(rqr);
@@ -181,26 +181,26 @@ public class EPNTest {
         
         RequestSent rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqs.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
         
         RequestReceived rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqr.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
         
         ResponseSent rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rps.setContent("<OrderAck><customer>Fred</customer><total>100</total></OrderAck>");
+        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rps.setContent("{\"total\":100,\"customer\":\"Fred\"}");
         
         rps.getProperties().put("total", "100");
         rps.getProperties().put("customer", "Fred");
         
         ResponseReceived rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rpr.setContent("<OrderAck><customer>Fred</customer><total>100</total></OrderAck>");
+        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rpr.setContent("{\"total\":100,\"customer\":\"Fred\"}");
         
         events.add(rqs);
         events.add(rqr);
@@ -226,26 +226,26 @@ public class EPNTest {
     
         rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqs.setContent("<Order><customer>Joe</customer><total>100</total></Order>");
         
         rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqr.setContent("<Order><customer>Joe</customer><total>100</total></Order>");
         
         rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rps.setContent("<OrderAck><customer>Joe</customer><total>100</total></OrderAck>");
+        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rps.setContent("{\"total\":100,\"customer\":\"Joe\"}");
         
         rps.getProperties().put("total", "100");
         rps.getProperties().put("customer", "Joe");
         
         rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rpr.setContent("<OrderAck><customer>Joe</customer><total>100</total></OrderAck>");
+        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rpr.setContent("{\"total\":100,\"customer\":\"Joe\"}");
         
         events.add(rqs);
         events.add(rqr);
@@ -292,26 +292,26 @@ public class EPNTest {
         
         RequestSent rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqs.setContent("<Order><customer>Fred</customer><total>200</total></Order>");
         
         RequestReceived rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqr.setContent("<Order><customer>Fred</customer><total>200</total></Order>");
         
         ResponseSent rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rps.setContent("<OrderAck><customer>Fred</customer><total>200</total></OrderAck>");
+        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rps.setContent("{\"total\":200,\"customer\":\"Fred\"}");
         
         rps.getProperties().put("total", "200");
         rps.getProperties().put("customer", "Fred");
         
         ResponseReceived rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rps.setContent("<OrderAck><customer>Fred</customer><total>200</total></OrderAck>");
+        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rps.setContent("{\"total\":200,\"customer\":\"Fred\"}");
         
         events.add(rqs);
         events.add(rqr);
@@ -337,26 +337,26 @@ public class EPNTest {
     
         rqs=new RequestSent();
         rqs.setOperation("makePayment");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqs.setContent("<Payment><customer>Fred</customer><amount>170</amount></Payment>");
         
         rqr=new RequestReceived();
         rqr.setOperation("makePayment");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
+        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
         rqr.setContent("<Payment><customer>Fred</customer><amount>170</amount></Payment>");
         
         rps=new ResponseSent();
         rps.setOperation("makePayment");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rps.setContent("<Receipt><customer>Fred</customer><amount>170</amount></Receipt>");
+        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rps.setContent("{\"amount\":170,\"customer\":\"Fred\"}");
         
         rps.getProperties().put("total", "170");
         rps.getProperties().put("customer", "Fred");
         
         rpr=new ResponseReceived();
         rpr.setOperation("makePayment");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:1.0}OrderService");
-        rpr.setContent("<Receipt><customer>Fred</customer><amount>170</amount></Receipt>");
+        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
+        rpr.setContent("{\"amount\":170,\"customer\":\"Fred\"}");
         
         events.add(rqs);
         events.add(rqr);

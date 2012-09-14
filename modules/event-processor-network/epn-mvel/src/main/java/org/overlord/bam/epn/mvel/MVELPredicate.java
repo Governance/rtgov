@@ -115,8 +115,10 @@ public class MVELPredicate extends Predicate {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Evaluate event '"+event
-                    +"' on MVEL Predicate '"+getScript()
-                    +"'");
+                    +"' on MVEL Predicate "
+                    +(getScript() != null ? "script="+getScript()
+                                        : "expression="+getExpression())
+                    +"]");
         }
 
         if (_compiled != null) {

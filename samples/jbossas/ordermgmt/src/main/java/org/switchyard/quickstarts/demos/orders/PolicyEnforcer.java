@@ -113,8 +113,10 @@ public class PolicyEnforcer implements ExchangeHandler {
                         
                         if (LOG.isLoggable(Level.FINE)) {
                             LOG.fine("*********** Policy Enforcer: customer '"
-                                        +customer+"' has not been suspended");
+                                    +customer+"' has not been suspended");
                         }
+System.out.println("*********** Policy Enforcer: customer '"
+                                +customer+"' has not been suspended");
                     }
                 }
             }

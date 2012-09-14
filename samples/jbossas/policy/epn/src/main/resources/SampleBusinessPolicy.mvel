@@ -3,19 +3,26 @@ if (event.operation == "submitOrder") {
 
 	if (!event.request) {
 	
-		int total=event.properties.get("total");
+		double total=event.properties.get("total");
 		String customer=event.properties.get("customer");
 		
 /** START: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
-		int startInd=event.content.indexOf("<customer>");
-		int endInd=event.content.indexOf("</", startInd);
-		customer = event.content.substring(startInd+10, endInd);
+		int startInd=event.content.indexOf("\"customer\":\"");
+		int endInd=event.content.indexOf("\"", startInd+12);
+		customer = event.content.substring(startInd+12, endInd);
 		
-		startInd=event.content.indexOf("<total>");
-		endInd=event.content.indexOf("</", startInd);
-		totalstr = event.content.substring(startInd+7, endInd);
+		startInd=event.content.indexOf("\"total\":");
+		endInd=event.content.indexOf("}", startInd+8);
 		
-		total = Integer.parseInt(totalstr);
+		int tmpInd=event.content.indexOf(",", startInd+8);
+		
+		if (tmpInd != -1 && tmpInd < endInd) {
+			endInd = tmpInd;
+		}
+		
+		totalstr = event.content.substring(startInd+8, endInd);
+		
+		total = Double.parseDouble(totalstr);
 /** END: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
 		
 		cm = epn.getService("CacheManager");
@@ -46,19 +53,26 @@ if (event.operation == "submitOrder") {
 
 	if (!event.request) {
 	
-		int amount=event.properties.get("amount");
+		double amount=event.properties.get("amount");
 		String customer=event.properties.get("customer");
 		
 /** START: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
-		int startInd=event.content.indexOf("<customer>");
-		int endInd=event.content.indexOf("</", startInd);
-		customer = event.content.substring(startInd+10, endInd);
+		int startInd=event.content.indexOf("\"customer\":\"");
+		int endInd=event.content.indexOf("\"", startInd+12);
+		customer = event.content.substring(startInd+12, endInd);
 		
-		startInd=event.content.indexOf("<amount>");
-		endInd=event.content.indexOf("</", startInd);
-		amountstr = event.content.substring(startInd+8, endInd);
+		startInd=event.content.indexOf("\"amount\":");
+		endInd=event.content.indexOf("}", startInd+9);
 		
-		amount = Integer.parseInt(amountstr);
+		int tmpInd=event.content.indexOf(",", startInd+9);
+		
+		if (tmpInd != -1 && tmpInd < endInd) {
+			endInd = tmpInd;
+		}
+		
+		amountstr = event.content.substring(startInd+9, endInd);
+		
+		amount = Double.parseDouble(amountstr);
 /** END: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
 
 		cm = epn.getService("CacheManager");

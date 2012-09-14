@@ -16,6 +16,7 @@
 
 	<modules>
 		<module>custom_events</module>
+		<module>policy</module>
 		<module>slamonitor</module>
 	</modules>
 

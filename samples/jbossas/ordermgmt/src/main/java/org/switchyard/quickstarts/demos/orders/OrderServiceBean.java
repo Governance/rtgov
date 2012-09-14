@@ -41,7 +41,6 @@ public class OrderServiceBean implements OrderService {
         OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId());
         // Check the inventory
         try {
-            
             if (order.getItemId().equals("JAM")) {
                 try {
                     Thread.sleep(500);
@@ -62,6 +61,9 @@ public class OrderServiceBean implements OrderService {
             } else {
                 orderAck.setAccepted(false).setStatus("Insufficient Quantity");
             }
+            
+            orderAck.setCustomer(order.getCustomer());
+            
         } catch (ItemNotFoundException infEx) {
             orderAck.setAccepted(false).setStatus("Item Not Available");
         }
