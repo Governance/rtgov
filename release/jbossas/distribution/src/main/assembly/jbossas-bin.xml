@@ -43,14 +43,13 @@
 			<directory>../../../samples/jbossas</directory>
 			<outputDirectory>samples</outputDirectory>
 			<excludes>
-				<exclude>slamonitor/pom.xml</exclude>
 				<exclude>**/.*</exclude>
 				<exclude>**/target/**</exclude>
 				<exclude>**/.settings/**</exclude>
 			</excludes>
 		</fileSet>
 
-		<!-- Copy modules and deployments - overwriting samples/slamonitor pom -->
+		<!-- Copy modules and deployments -->
 		<fileSet>
 			<directory>src/main/jbossas</directory>
 			<outputDirectory>/</outputDirectory>

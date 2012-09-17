@@ -104,7 +104,7 @@ public class PolicyEnforcer implements ExchangeHandler {
                     if (end != -1) {
                         String customer=content.substring(start+10, end);
                         
-                        if (_suspendedCustomers.get(customer) != null) {
+                        if (_suspendedCustomers.containsKey(customer)) {
                             // Customer is suspended
                             
                             throw new HandlerException("Customer '"+customer
@@ -115,8 +115,6 @@ public class PolicyEnforcer implements ExchangeHandler {
                             LOG.fine("*********** Policy Enforcer: customer '"
                                     +customer+"' has not been suspended");
                         }
-System.out.println("*********** Policy Enforcer: customer '"
-                                +customer+"' has not been suspended");
                     }
                 }
             }

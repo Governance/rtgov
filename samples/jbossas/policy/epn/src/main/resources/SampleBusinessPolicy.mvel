@@ -1,104 +1,98 @@
 
 if (event.operation == "submitOrder") {
-
-	if (!event.request) {
 	
-		double total=event.properties.get("total");
-		String customer=event.properties.get("customer");
-		
+	double total=event.properties.get("total");
+	String customer=event.properties.get("customer");
+	
 /** START: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
-		int startInd=event.content.indexOf("\"customer\":\"");
-		int endInd=event.content.indexOf("\"", startInd+12);
-		customer = event.content.substring(startInd+12, endInd);
-		
-		startInd=event.content.indexOf("\"total\":");
-		endInd=event.content.indexOf("}", startInd+8);
-		
-		int tmpInd=event.content.indexOf(",", startInd+8);
-		
-		if (tmpInd != -1 && tmpInd < endInd) {
-			endInd = tmpInd;
-		}
-		
-		totalstr = event.content.substring(startInd+8, endInd);
-		
-		total = Double.parseDouble(totalstr);
+	int startInd=event.content.indexOf("\"customer\":\"");
+	int endInd=event.content.indexOf("\"", startInd+12);
+	customer = event.content.substring(startInd+12, endInd);
+	
+	startInd=event.content.indexOf("\"total\":");
+	endInd=event.content.indexOf("}", startInd+8);
+	
+	int tmpInd=event.content.indexOf(",", startInd+8);
+	
+	if (tmpInd != -1 && tmpInd < endInd) {
+		endInd = tmpInd;
+	}
+	
+	totalstr = event.content.substring(startInd+8, endInd);
+	
+	total = Double.parseDouble(totalstr);
 /** END: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
 		
-		cm = epn.getService("CacheManager");
-		
-		// Attempt to lock the entry
-		if (!cm.lock("CustomerExposure", customer)) {
-			throw new Exception("Unable to lock exposure entry for customer '"+customer+"'");
-		}
-		
-		// Access the cache of customer exposure
-		exposure = cm.getCache("CustomerExposure");
-		
-		int current=exposure.get(customer);
-		
-		if (current == null) {
-			current = 0;
-		}
-		
-		int newtotal=current+total;
-		
-		exposure.put(customer, newtotal);
-		
-		if (newtotal > 150 && current <= 150) {
-			epn.forward("+"+customer);
-		}
+	cm = epn.getService("CacheManager");
+	
+	// Attempt to lock the entry
+	if (!cm.lock("CustomerExposure", customer)) {
+		throw new Exception("Unable to lock exposure entry for customer '"+customer+"'");
+	}
+	
+	// Access the cache of customer exposure
+	exposure = cm.getCache("CustomerExposure");
+	
+	int current=exposure.get(customer);
+	
+	if (current == null) {
+		current = 0;
+	}
+	
+	int newtotal=current+total;
+	
+	exposure.put(customer, newtotal);
+	
+	if (newtotal > 150 && current <= 150) {
+		epn.forward("+"+customer);
 	}
 } else if (event.operation == "makePayment") {
 
-	if (!event.request) {
-	
-		double amount=event.properties.get("amount");
-		String customer=event.properties.get("customer");
+	double amount=event.properties.get("amount");
+	String customer=event.properties.get("customer");
 		
 /** START: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
-		int startInd=event.content.indexOf("\"customer\":\"");
-		int endInd=event.content.indexOf("\"", startInd+12);
-		customer = event.content.substring(startInd+12, endInd);
-		
-		startInd=event.content.indexOf("\"amount\":");
-		endInd=event.content.indexOf("}", startInd+9);
-		
-		int tmpInd=event.content.indexOf(",", startInd+9);
-		
-		if (tmpInd != -1 && tmpInd < endInd) {
-			endInd = tmpInd;
-		}
-		
-		amountstr = event.content.substring(startInd+9, endInd);
-		
-		amount = Double.parseDouble(amountstr);
+	int startInd=event.content.indexOf("\"customer\":\"");
+	int endInd=event.content.indexOf("\"", startInd+12);
+	customer = event.content.substring(startInd+12, endInd);
+	
+	startInd=event.content.indexOf("\"amount\":");
+	endInd=event.content.indexOf("}", startInd+9);
+	
+	int tmpInd=event.content.indexOf(",", startInd+9);
+	
+	if (tmpInd != -1 && tmpInd < endInd) {
+		endInd = tmpInd;
+	}
+	
+	amountstr = event.content.substring(startInd+9, endInd);
+	
+	amount = Double.parseDouble(amountstr);
 /** END: TEMPORARY UNTIL PROPERTY EXTRACTION IS SUPPORTED **/
 
-		cm = epn.getService("CacheManager");
+	cm = epn.getService("CacheManager");
+	
+	// Attempt to lock the entry
+	if (!cm.lock("CustomerExposure", customer)) {
+		throw new Exception("Unable to lock exposure entry for customer '"+customer+"'");
+	}
+	
+	// Access the cache of customer exposure
+	exposure = cm.getCache("CustomerExposure");
+	
+	int current=exposure.get(customer);
+	
+	if (current != null) {
+		int newamount=current-amount;
 		
-		// Attempt to lock the entry
-		if (!cm.lock("CustomerExposure", customer)) {
-			throw new Exception("Unable to lock exposure entry for customer '"+customer+"'");
+		if (newamount > 0) {
+			exposure.put(customer, newamount);
+		} else {
+			exposure.remove(customer);
 		}
 		
-		// Access the cache of customer exposure
-		exposure = cm.getCache("CustomerExposure");
-		
-		int current=exposure.get(customer);
-		
-		if (current != null) {
-			int newamount=current-amount;
-			
-			if (newamount > 0) {
-				exposure.put(customer, newamount);
-			} else {
-				exposure.remove(customer);
-			}
-			
-			if (newamount <= 150 && current > 150) {
-				epn.forward("-"+customer);
-			}
+		if (newamount <= 150 && current > 150) {
+			epn.forward("-"+customer);
 		}
 	}
 }

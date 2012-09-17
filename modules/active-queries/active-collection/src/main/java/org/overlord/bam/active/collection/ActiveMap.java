@@ -113,6 +113,17 @@ public class ActiveMap extends ActiveCollection implements java.lang.Iterable<Ob
     }
     
     /**
+     * This method returns whether the map contains the supplied
+     * key.
+     * 
+     * @param key The key
+     * @return Whether the map contains the supplied key
+     */
+    public boolean containsKey(Object key) {
+        return (_map.containsKey(key));
+    }
+    
+    /**
      * {@inheritDoc}
      */
     @Override
