@@ -32,10 +32,6 @@ and detect SLA violations.
 - monitor: this component provides a custom REST service for colating the response time and SLA violation
 information for access by a client application
 
-- orders: this component represents the Switchyard application with additional 'Exchange Handler'
-used to intercept service communications and report them to the BAM infrastructure.
-
-
 
 Running the example
 -------------------
@@ -48,30 +44,32 @@ The initial message could be:
 
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-    <soap:Body>
-        <orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0">
-            <order>
-                <orderId>PO-19838-XYZ</orderId>
-                <itemId>BUTTER</itemId>
-                <quantity>400</quantity>
-            </order>
-        </orders:submitOrder>
-    </soap:Body>
+   <soap:Body>
+      <orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0">
+         <order>
+            <orderId>PO-19838-XYZ</orderId>
+            <itemId>BUTTER</itemId>
+            <quantity>400</quantity>
+            <customer>Fred</customer>
+         </order>
+      </orders:submitOrder>
+   </soap:Body>
 </soap:Envelope>
 
 which should result in an 'order accepted'. Then send the following message:
 
 <?xml version="1.0" encoding="UTF-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-    <soap:Body>
-        <orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0">
-            <order>
-                <orderId>PO-19838-XYZ</orderId>
-                <itemId>BUTTER</itemId>
-                <quantity>1400</quantity>
-            </order>
-        </orders:submitOrder>
-    </soap:Body>
+   <soap:Body>
+      <orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0">
+         <order>
+            <orderId>PO-19838-XYZ</orderId>
+            <itemId>BUTTER</itemId>
+            <quantity>1400</quantity>
+            <customer>Fred</customer>
+         </order>
+      </orders:submitOrder>
+   </soap:Body>
 </soap:Envelope>
 
 which should result in an 'insufficient quantity' response.
@@ -89,9 +87,9 @@ http://localhost:8080/slamonitor-monitor/monitor/responseTimes - returns all res
 
 http://localhost:8080/slamonitor-monitor/monitor/responseTimes?operation=submitOrder - returns only response times for this operation
 
-http://localhost:8080/slamonitor-monitor/monitor/violations - returns all SLA violations
+http://localhost:8080/slamonitor-monitor/monitor/situations - returns all SLA violations
 
-You can also view the SLA violations using a JMX console (e.g. jconsole). The example registers an MBean with the object name 'overlord.sample.slamonitor:name=SLAViolations'. Subscribe to the notifications for this management bean to also see the violations.
+You can also view the SLA violations using a JMX console (e.g. jconsole). The example registers an MBean with the object name 'overlord.bam:name=Situations'. Subscribe to the notifications for this management bean to also see the violations.
 
 
 
