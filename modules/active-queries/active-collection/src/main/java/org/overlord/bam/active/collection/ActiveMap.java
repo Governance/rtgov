@@ -17,7 +17,10 @@
  */
 package org.overlord.bam.active.collection;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.overlord.bam.active.collection.predicate.Predicate;
@@ -26,7 +29,8 @@ import org.overlord.bam.active.collection.predicate.Predicate;
  * This interface represents an active map.
  *
  */
-public class ActiveMap extends ActiveCollection implements java.lang.Iterable<Object> {
+public class ActiveMap extends ActiveCollection
+            implements java.lang.Iterable<Object>, java.util.Map<Object,Object> {
     
     private static final int INITIAL_CAPACITY = 1000;
 
@@ -110,17 +114,6 @@ public class ActiveMap extends ActiveCollection implements java.lang.Iterable<Ob
      */
     public Object get(Object key) {
         return (_map.get(key));
-    }
-    
-    /**
-     * This method returns whether the map contains the supplied
-     * key.
-     * 
-     * @param key The key
-     * @return Whether the map contains the supplied key
-     */
-    public boolean containsKey(Object key) {
-        return (_map.containsKey(key));
     }
     
     /**
@@ -275,6 +268,83 @@ public class ActiveMap extends ActiveCollection implements java.lang.Iterable<Ob
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEmpty() {
+        return (_map.isEmpty());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int size() {
+        return (getSize());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean containsKey(Object key) {
+        return (_map.containsKey(key));
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean containsValue(Object value) {
+        return (_map.containsValue(value));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object put(Object key, Object value) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object remove(Object key) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void putAll(Map<? extends Object, ? extends Object> m) {
+        throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Set<Object> keySet() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Collection<Object> values() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Set<java.util.Map.Entry<Object, Object>> entrySet() {
+        throw new UnsupportedOperationException();
     }
 
     /**

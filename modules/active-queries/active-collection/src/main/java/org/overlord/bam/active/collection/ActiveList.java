@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.active.collection;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
@@ -316,6 +317,90 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean isEmpty() {
+        return (_list.isEmpty());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean contains(Object o) {
+        return (_list.contains(o));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int size() {
+        return (getSize());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object[] toArray() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public <T> T[] toArray(T[] a) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean add(Object e) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean containsAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean addAll(Collection<? extends Object> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        throw new UnsupportedOperationException();
     }
 
 }

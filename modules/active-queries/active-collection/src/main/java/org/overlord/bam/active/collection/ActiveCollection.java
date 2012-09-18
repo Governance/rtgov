@@ -24,7 +24,7 @@ import org.overlord.bam.active.collection.predicate.Predicate;
  *
  */
 public abstract class ActiveCollection implements ActiveCollectionMBean,
-                            java.lang.Iterable<Object> {
+                          java.lang.Iterable<Object> {
 
     private String _name=null;
     private java.util.List<ActiveChangeListener> _listeners=
