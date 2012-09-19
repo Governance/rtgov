@@ -3,7 +3,6 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.activity-management</groupId>
 	<artifactId>activity-store-jpa</artifactId> 
-	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Overlord BAM::Modules::Activity Management::Activity Store JPA</name>
 
@@ -17,12 +16,11 @@
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-           		<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

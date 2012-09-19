@@ -12,6 +12,12 @@
 		The Business Activity Monitor project
 	</description>
 
+	<parent>
+		<groupId>org.jboss</groupId>
+		<artifactId>jboss-parent</artifactId>
+		<version>8</version>
+	</parent>
+
 	<scm>
 		<connection>https://github.com/Governance</connection>
 		<url>https://github.com/Governance</url>
@@ -51,16 +57,16 @@
 
 	<properties>
 		<bam.version>1.0.0-SNAPSHOT</bam.version>
-		<gadgets.version>1.0.0-SNAPSHOT</gadgets.version>
-		<switchyard.version>0.4.0.Final</switchyard.version>
 		<drools.version>5.3.0.Final</drools.version>
-		<guava.version>r06</guava.version>
-		<infinispan.version>5.0.1.FINAL</infinispan.version>
-		<jackson.version>1.9.2</jackson.version>
-		<jms.version>1.1-rev-1</jms.version>
-		<junit.version>4.8.1</junit.version>
-		<resteasy.version>2.3.0.GA</resteasy.version>
+		<gadgets.version>1.0.0-SNAPSHOT</gadgets.version>
+		<javaee-api.version>6.0</javaee-api.version>
+		<jbossas.version>7.1.1.Final</jbossas.version>
+		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<mvel.version>2.1.0.drools16</mvel.version>
+		<switchyard.version>0.4.0.Final</switchyard.version>
+
+
+		<guava.version>r06</guava.version>
 		<arquillian.jbossas.version>7.1.1.Final</arquillian.jbossas.version>
 		<arquillian.version>1.0.0.Final</arquillian.version>
 	</properties>
@@ -74,6 +80,103 @@
 		<module>release</module>
 	</modules>
 
+	<dependencyManagement>
+		<dependencies>
+			<!-- Imported dependencies -->
+			<dependency>
+				<groupId>org.jboss.as</groupId>
+				<artifactId>jboss-as-parent</artifactId>
+				<version>${jbossas.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.arquillian</groupId>
+				<artifactId>arquillian-bom</artifactId>
+				<version>${arquillian.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.as</groupId>
+				<artifactId>jboss-as-arquillian-container-managed</artifactId>
+				<version>${arquillian.jbossas.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.overlord.gadgets.server</groupId>
+				<artifactId>gadgets</artifactId>
+				<version>${gadgets.version}</version>
+				<type>war</type>
+			</dependency>
+			<dependency>
+				<groupId>org.overlord.gadgets.server</groupId>
+				<artifactId>gadget-server</artifactId>
+				<version>${gadgets.version}</version>
+				<type>war</type>
+			</dependency>
+			<dependency>
+				<groupId>org.overlord.gadgets.server</groupId>
+				<artifactId>gadget-web</artifactId>
+				<version>${gadgets.version}</version>
+				<type>war</type>
+			</dependency>
+
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-core</artifactId>
+				<version>${drools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-compiler</artifactId>
+				<version>${drools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mvel</groupId>
+				<artifactId>mvel2</artifactId>
+				<version>${mvel.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>${javaee-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.naming</groupId>
+				<artifactId>jnp-client</artifactId>
+				<version>${jnp-client.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-api</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-plugin</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard.components</groupId>
+				<artifactId>switchyard-component-bean</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard.components</groupId>
+				<artifactId>switchyard-component-soap</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-test</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<build>
 		<!-- This section defines the default plugin settings inherited by child projects. -->
 		<pluginManagement>
@@ -82,16 +185,19 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.2</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.8.1</version>
 					<configuration>
 						<aggregate>true</aggregate>
 						<excludePackageNames>org.overlord.bam.tests.*:*.internal.*</excludePackageNames>
 					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.switchyard</groupId>
+					<artifactId>switchyard-plugin</artifactId>
+					<version>${switchyard.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -100,7 +206,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-                		<version>2.0.2</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
@@ -134,7 +239,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.6</version>
 				<configuration>
 					<configLocation>checkstyle/checkstyle.xml</configLocation>
 					<consoleOutput>false</consoleOutput>

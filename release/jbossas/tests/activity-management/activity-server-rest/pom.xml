@@ -5,7 +5,6 @@
 	<groupId>org.overlord.bam.release.jbossas.tests.activity-management</groupId>
 	<artifactId>tests-actmgmt-jbossas-activity-server-rest</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.0-SNAPSHOT</version>
 	<name>Overlord BAM::Release::JBossAS::Tests::Activity Management::Activity Server REST</name>
 
 	<parent>
@@ -14,39 +13,26 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.jboss.arquillian</groupId>
-				<artifactId>arquillian-bom</artifactId>
-				<version>${arquillian.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
-	
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity-server-impl</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity-store-mem</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity-server-rests</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 		    <groupId>javax</groupId>
 		    <artifactId>javaee-api</artifactId>
-		    <version>6.0</version>
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -62,12 +48,10 @@
 		<dependency>
 			<groupId>org.jboss.as</groupId>
 			<artifactId>jboss-as-arquillian-container-managed</artifactId>
-			<version>${arquillian.jbossas.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

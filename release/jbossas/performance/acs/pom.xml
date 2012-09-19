@@ -3,7 +3,6 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.release.jbossas.performance</groupId>
 	<artifactId>performance-jbossas-acs</artifactId> 
-	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Overlord BAM::Release::JBossAS::Performance::ACS</name>
 
@@ -17,36 +16,34 @@
 		<dependency>
 			<groupId>org.overlord.bam.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.active-queries</groupId>
 			<artifactId>acs-loader-jee</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.active-queries</groupId>
 			<artifactId>acs-epn</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.overlord.bam.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
-			<version>6.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -3,7 +3,6 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.release.jbossas.tests.platform.custom_events</groupId>
 	<artifactId>tests-jbossas-custom-events-epn</artifactId> 
-	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Overlord BAM::Release::JBossAS::Tests::Platform::CustomEvents::EPN</name>
 
@@ -17,36 +16,34 @@
 		<dependency>
 			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.release.jbossas.tests.platform.custom_events</groupId>
 			<artifactId>tests-jbossas-custom-events-data</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-loader-jee</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity</artifactId>
-			<version>${bam.version}</version>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
 			<groupId>javax</groupId>
 			<artifactId>javaee-api</artifactId>
-			<version>6.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

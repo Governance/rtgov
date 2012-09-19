@@ -16,12 +16,11 @@
 		<dependency>
 			<groupId>org.overlord.bam.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
-           		<version>${bam.version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-           		<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
