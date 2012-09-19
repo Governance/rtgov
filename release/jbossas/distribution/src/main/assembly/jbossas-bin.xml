@@ -43,6 +43,7 @@
 			<directory>../../../samples/jbossas</directory>
 			<outputDirectory>samples</outputDirectory>
 			<excludes>
+				<exclude>pom.xml</exclude>
 				<exclude>**/.*</exclude>
 				<exclude>**/target/**</exclude>
 				<exclude>**/.settings/**</exclude>
@@ -53,11 +54,6 @@
 		<fileSet>
 			<directory>src/main/jbossas</directory>
 			<outputDirectory>/</outputDirectory>
-			<excludes>
-				<exclude>**/.*</exclude>
-				<exclude>**/target/**</exclude>
-				<exclude>**/.settings/**</exclude>
-			</excludes>
 		</fileSet>
 
 	</fileSets>
