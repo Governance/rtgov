@@ -71,8 +71,8 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * {@inheritDoc}
      */
     @Override
-    public java.util.List<Context> getAllContexts() {
-        java.util.List<Context> ret=super.getAllContexts();
+    public java.util.List<Context> deriveContexts() {
+        java.util.List<Context> ret=super.deriveContexts();
         
         if (_instanceId != null) {
             ret.add(new Context(Context.Type.Endpoint, _instanceId));

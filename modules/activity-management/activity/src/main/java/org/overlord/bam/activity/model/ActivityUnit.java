@@ -38,7 +38,6 @@ public class ActivityUnit implements java.io.Externalizable {
     private String _id=null;
     
     private Origin _origin=null;
-    private java.util.List<Context> _contexts=new java.util.Vector<Context>();
     private java.util.List<ActivityType> _activityTypes=new java.util.Vector<ActivityType>();
     
     /**
@@ -57,10 +56,6 @@ public class ActivityUnit implements java.io.Externalizable {
         
         if (act._origin != null) {
             _origin = new Origin(act._origin);
-        }
-        
-        for (Context context : act._contexts) {
-            _contexts.add(new Context(context));
         }
         
         for (ActivityType actType : _activityTypes) {
@@ -118,35 +113,17 @@ public class ActivityUnit implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the context.
-     * 
-     * @param context The context
-     */
-    public void setContext(java.util.List<Context> context) {
-        _contexts = context;
-    }
-    
-    /**
-     * This method gets the context.
-     * 
-     * @return The context
-     */
-    public java.util.List<Context> getContext() {
-        return (_contexts);
-    }
-    
-    /**
      * This method gets all the context instances associated
      * with the activity unit and its contained activity
      * types. Duplicate contexts will be ignored.
      * 
      * @return The complete list of contexts
      */
-    public java.util.Set<Context> getAllContexts() {
-        java.util.Set<Context> ret=new java.util.HashSet<Context>(_contexts);
+    public java.util.Set<Context> contexts() {
+        java.util.Set<Context> ret=new java.util.HashSet<Context>();
         
         for (ActivityType at : _activityTypes) {
-            ret.addAll(at.getAllContexts());
+            ret.addAll(at.deriveContexts());
         }
         
         return (ret);
@@ -159,7 +136,7 @@ public class ActivityUnit implements java.io.Externalizable {
      * 
      * @return The aggregation of all activity type properties
      */
-    public java.util.Map<String,String> getAllProperties() {
+    public java.util.Map<String,String> properties() {
         java.util.Map<String,String> ret=new java.util.HashMap<String,String>();
         
         for (ActivityType at : _activityTypes) {
@@ -193,8 +170,8 @@ public class ActivityUnit implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public String toString() {
-        return ("ActivityUnit["+_id+"] origin="+_origin+" contexts="
-                    +_contexts+" activityTypes="+_activityTypes);
+        return ("ActivityUnit["+_id+"] origin="+_origin
+                    +" activityTypes="+_activityTypes);
     }
 
     /**
@@ -206,14 +183,7 @@ public class ActivityUnit implements java.io.Externalizable {
         out.writeObject(_id);
         out.writeObject(_origin);
         
-        int len=_contexts.size();
-        
-        out.writeInt(len);
-        for (int i=0; i < len; i++) {
-            out.writeObject(_contexts.get(i));
-        }
-        
-        len = _activityTypes.size();
+        int len = _activityTypes.size();
         
         out.writeInt(len);
         for (int i=0; i < len; i++) {
@@ -232,12 +202,6 @@ public class ActivityUnit implements java.io.Externalizable {
         _origin = (Origin)in.readObject();
         
         int len=in.readInt();
-        
-        for (int i=0; i < len; i++) {
-            _contexts.add((Context)in.readObject());
-        }
-        
-        len = in.readInt();
         
         for (int i=0; i < len; i++) {
             _activityTypes.add((ActivityType)in.readObject());

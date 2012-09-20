@@ -307,7 +307,7 @@ public class ActivityServerImplTest {
         
         as.processActivityUnit(au);
 
-        java.util.Set<Context> ctxs=au.getAllContexts();
+        java.util.Set<Context> ctxs=au.contexts();
         
         if (ctxs.size() != 3) {
             fail("Unexpected number of context entries (3): "+ctxs.size());

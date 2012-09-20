@@ -23,6 +23,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
+import org.overlord.bam.activity.model.mom.MessageSent;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
 import org.overlord.bam.activity.server.QuerySpec;
@@ -155,7 +156,11 @@ public class QuerySpecTest {
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Endpoint,"12345"));
+        MessageSent ms=new MessageSent();
+        
+        ms.getContext().add(new Context(Context.Type.Endpoint,"12345"));
+        
+        au.getActivityTypes().add(ms);
         
         if (!qs.evaluate(au)) {
             fail("Query should evaluate to true");
@@ -192,7 +197,11 @@ public class QuerySpecTest {
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Endpoint,"Joe"));
+        MessageSent ms=new MessageSent();
+        
+        ms.getContext().add(new Context(Context.Type.Endpoint,"Joe"));
+        
+        au.getActivityTypes().add(ms);
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");
@@ -482,7 +491,11 @@ public class QuerySpecTest {
         ActivityUnit au=new ActivityUnit();
         au.setId("TestId");
         
-        au.getContext().add(new Context(Context.Type.Message,"5"));
+        MessageSent ms=new MessageSent();
+        
+        ms.getContext().add(new Context(Context.Type.Message,"5"));
+        
+        au.getActivityTypes().add(ms);
         
         if (qs.evaluate(au)) {
             fail("Query should evaluate to false");

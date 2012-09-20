@@ -160,7 +160,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @return The list of all explicit and derived context information
      */
-    public java.util.List<Context> getAllContexts() {
+    protected java.util.List<Context> deriveContexts() {
         return (new java.util.ArrayList<Context>(_contexts));
     }
     

@@ -42,16 +42,6 @@ public class ActivityUtilTest {
         origin.setThread("MyThread");
         act.setOrigin(origin);
 
-        Context c1=new Context();
-        c1.setType(Context.Type.Conversation);
-        c1.setValue("12345");
-        act.getContext().add(c1);
-        
-        Context c2=new Context();
-        c2.setType(Context.Type.Endpoint);
-        c2.setValue("abc123");
-        act.getContext().add(c2);
-        
         RequestSent me1=new RequestSent();
         me1.setTimestamp(1000);
         me1.setContent("<tns:Order xmlns:tns=\"http://www.savara.org\" amount=\"100\" />");
@@ -59,6 +49,11 @@ public class ActivityUtilTest {
         me1.setOperation("myOp");
         me1.setServiceType("{http://service}OrderService");
         me1.setMessageId("corr1");
+        
+        Context c1=new Context();
+        c1.setType(Context.Type.Conversation);
+        c1.setValue("12345");
+        me1.getContext().add(c1);
         
         act.getActivityTypes().add(me1);
         
@@ -70,6 +65,11 @@ public class ActivityUtilTest {
         me2.setOperation("myOp");
         me2.setServiceType("{http://service}OrderService");
         me2.setMessageId("corr1");
+        
+        Context c2=new Context();
+        c2.setType(Context.Type.Endpoint);
+        c2.setValue("abc123");
+        me2.getContext().add(c2);
         
         act.getActivityTypes().add(me2);
         

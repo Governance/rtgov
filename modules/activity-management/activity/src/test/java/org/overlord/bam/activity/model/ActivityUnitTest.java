@@ -33,25 +33,28 @@ public class ActivityUnitTest {
         c1.setType(Context.Type.Conversation);
         c1.setValue("v1");
         
-        au.getContext().add(c1);
+        MessageSent ms1=new MessageSent();
+        au.getActivityTypes().add(ms1);
         
-        MessageSent ms=new MessageSent();
-        au.getActivityTypes().add(ms);
+        ms1.getContext().add(c1);
+        
+        MessageSent ms2=new MessageSent();
+        au.getActivityTypes().add(ms2);
         
         Context c2=new Context();
         c2.setType(Context.Type.Conversation);
         c2.setValue("v1");
         
-        ms.getContext().add(c2);
+        ms2.getContext().add(c2);
         
         Context c3=new Context();
         c3.setType(Context.Type.Endpoint);
         c3.setValue("v3");
         
-        ms.getContext().add(c3);
+        ms2.getContext().add(c3);
         
-        if (au.getAllContexts().size() != 2) {
-            fail("Should be 2 contexts: "+au.getAllContexts().size());
+        if (au.contexts().size() != 2) {
+            fail("Should be 2 contexts: "+au.contexts().size());
         }
     }
 
@@ -63,7 +66,7 @@ public class ActivityUnitTest {
         rs.setMessageId("mid");
         au.getActivityTypes().add(rs);
         
-        java.util.Set<Context> contexts=au.getAllContexts();
+        java.util.Set<Context> contexts=au.contexts();
         
         if (contexts.size() != 1) {
             fail("Should be 1 context: "+contexts.size());

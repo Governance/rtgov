@@ -223,8 +223,8 @@ public class AbstractActivityCollectorTest {
             fail("Should be 1 activity unit: "+al.getActivityUnits().size());
         }
         
-        if (al.getActivityUnits().get(0).getAllContexts().size() != 3) {
-            fail("Should be 3 contexts: "+al.getActivityUnits().get(0).getAllContexts().size());
+        if (al.getActivityUnits().get(0).contexts().size() != 3) {
+            fail("Should be 3 contexts: "+al.getActivityUnits().get(0).contexts().size());
         }
     }
 

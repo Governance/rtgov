@@ -357,7 +357,7 @@ public class QuerySpec implements java.io.Externalizable {
          * @return The result of the evaluation
          */
         public boolean evaluate(ActivityUnit au) {
-            return (evaluate(au.getAllContexts(), au.getAllProperties()));
+            return (evaluate(au.contexts(), au.properties()));
         }
         
         /**
