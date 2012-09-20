@@ -107,17 +107,20 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 
                 if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
                     _activityCollector.startScope();
+                } else {
+                    // Only record the request being sent, if the
+                    // source is a component, not a binding
+                
+                    RequestSent sent=new RequestSent();
+                    
+                    sent.setServiceType(serviceType.toString());   
+                    sent.setOperation(opName);
+                    sent.setContent(content);
+                    sent.setMessageType(contentType);
+                    sent.setMessageId(messageId);
+                    
+                    _activityCollector.record(sent);
                 }
-                
-                RequestSent sent=new RequestSent();
-                
-                sent.setServiceType(serviceType.toString());   
-                sent.setOperation(opName);
-                sent.setContent(content);
-                sent.setMessageType(contentType);
-                sent.setMessageId(messageId);
-                
-                _activityCollector.record(sent);
                 
                 RequestReceived recvd=new RequestReceived();
                 
@@ -141,21 +144,22 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 
                 _activityCollector.record(sent);
                 
-                ResponseReceived recvd=new ResponseReceived();
-                
-                recvd.setServiceType(serviceType.toString());                
-                recvd.setOperation(opName);
-                recvd.setContent(content);
-                recvd.setMessageType(contentType);
-                recvd.setMessageId(messageId);
-                recvd.setReplyToId(relatesTo);
-                
-                _activityCollector.record(recvd);
-                
                 if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
                     _activityCollector.endScope();
+                } else {
+                    // Only record the response being received, if the
+                    // target is a component, not a binding
+                    ResponseReceived recvd=new ResponseReceived();
+                    
+                    recvd.setServiceType(serviceType.toString());                
+                    recvd.setOperation(opName);
+                    recvd.setContent(content);
+                    recvd.setMessageType(contentType);
+                    recvd.setMessageId(messageId);
+                    recvd.setReplyToId(relatesTo);
+                    
+                    _activityCollector.record(recvd);   
                 }
-
             }
         }
     }

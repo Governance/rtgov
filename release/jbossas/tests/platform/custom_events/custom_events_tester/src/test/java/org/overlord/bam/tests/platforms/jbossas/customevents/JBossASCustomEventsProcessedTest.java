@@ -196,8 +196,8 @@ public class JBossASCustomEventsProcessedTest {
                 fail("No events returned");
             }
             
-            if (events.size() != 12) {
-                fail("12 events expected, but got: "+events.size());
+            if (events.size() != 10) {
+                fail("10 events expected, but got: "+events.size());
             }
             
             java.util.List<?> acsresults=getACSEvents();
