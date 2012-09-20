@@ -108,7 +108,7 @@ public class PolicyEnforcer implements ExchangeHandler {
                             // Customer is suspended
                             
                             throw new HandlerException("Customer '"+customer
-                                    +"' has been suspended");
+                                   +"' has been suspended");
                         }
                         
                         if (LOG.isLoggable(Level.FINE)) {

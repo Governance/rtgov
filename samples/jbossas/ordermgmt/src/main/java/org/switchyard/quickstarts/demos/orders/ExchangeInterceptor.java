@@ -39,8 +39,6 @@ import org.switchyard.Property;
 
 public class ExchangeInterceptor implements ExchangeHandler {
     
-    private static final String START_SCOPE = "org.overlord.bam.activity.collector.startScope";
-
     private static final Logger LOG=Logger.getLogger(ExchangeInterceptor.class.getName());
     
     private static final String ACTIVITY_COLLECTOR = "java:global/overlord-bam/ActivityCollector";
@@ -99,17 +97,22 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 }
             }
             
+            // Extract service type and operation from the consumer
+            // (service reference), as provider is not available until
+            // request handled
+            QName serviceType=exchange.getConsumer().getName();
+            String opName=exchange.getContract().getConsumerOperation().getName();
+
             if (exchange.getPhase() == ExchangePhase.IN) {
                 
-                if (!_activityCollector.isScopeActive()) {
+                if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
                     _activityCollector.startScope();
-                    exchange.getContext().setProperty(START_SCOPE, Boolean.TRUE);
                 }
                 
                 RequestSent sent=new RequestSent();
                 
-                sent.setServiceType(exchange.getServiceName().toString());   
-                sent.setOperation(exchange.getContract().getServiceOperation().getName());
+                sent.setServiceType(serviceType.toString());   
+                sent.setOperation(opName);
                 sent.setContent(content);
                 sent.setMessageType(contentType);
                 sent.setMessageId(messageId);
@@ -118,8 +121,8 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 
                 RequestReceived recvd=new RequestReceived();
                 
-                recvd.setServiceType(exchange.getServiceName().toString());                
-                recvd.setOperation(exchange.getContract().getServiceOperation().getName());
+                recvd.setServiceType(serviceType.toString());                
+                recvd.setOperation(opName);
                 recvd.setContent(content);
                 recvd.setMessageType(contentType);
                 recvd.setMessageId(messageId);
@@ -129,8 +132,8 @@ public class ExchangeInterceptor implements ExchangeHandler {
             } else if (exchange.getPhase() == ExchangePhase.OUT) {
                 ResponseSent sent=new ResponseSent();
                                 
-                sent.setServiceType(exchange.getServiceName().toString());                
-                sent.setOperation(exchange.getContract().getServiceOperation().getName());
+                sent.setServiceType(serviceType.toString());                
+                sent.setOperation(opName);
                 sent.setContent(content);
                 sent.setMessageType(contentType);
                 sent.setMessageId(messageId);
@@ -140,8 +143,8 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 
                 ResponseReceived recvd=new ResponseReceived();
                 
-                recvd.setServiceType(exchange.getServiceName().toString());                
-                recvd.setOperation(exchange.getContract().getServiceOperation().getName());
+                recvd.setServiceType(serviceType.toString());                
+                recvd.setOperation(opName);
                 recvd.setContent(content);
                 recvd.setMessageType(contentType);
                 recvd.setMessageId(messageId);
@@ -149,7 +152,7 @@ public class ExchangeInterceptor implements ExchangeHandler {
                 
                 _activityCollector.record(recvd);
                 
-                if (exchange.getContext().getProperty(START_SCOPE) != null) {
+                if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
                     _activityCollector.endScope();
                 }
 
