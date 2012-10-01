@@ -27,7 +27,7 @@ if (event.operation == "submitOrder") {
 	
 	// Attempt to lock the entry
 	if (!cm.lock("Principals", customer)) {
-		throw new Exception("Unable to lock exposure entry for customer '"+customer+"'");
+		throw new Exception("Unable to lock entry for principal '"+customer+"'");
 	}
 	
 	// Access the cache of principals
@@ -84,28 +84,29 @@ if (event.operation == "submitOrder") {
 	
 	// Attempt to lock the entry
 	if (!cm.lock("Principals", customer)) {
-		throw new Exception("Unable to lock exposure entry for customer '"+customer+"'");
+		throw new Exception("Unable to lock entry for principal '"+customer+"'");
 	}
 	
-	// Access the cache of customer exposure
 	// Access the cache of principals
 	principals = cm.getCache("Principals");
 	
 	principal = principals.get(customer);
 	
-	int current=principal.get("exposure");
-	
-	if (current != null) {
-		int newamount=current-amount;
+	if (principal != null) {
+		int current=principal.get("exposure");
 		
-		principal.put("exposure", newamount);
-		principals.put(customer, principal);
-		
-		if (newamount <= 150 && current > 150) {
-			result = new org.overlord.bam.analytics.principal.PrincipalAction();
-			result.setPrincipal(customer);
-			result.setProperty("suspended", Boolean.FALSE);
-			epn.forward(result);
+		if (current != null) {
+			int newamount=current-amount;
+			
+			principal.put("exposure", newamount);
+			principals.put(customer, principal);
+			
+			if (newamount <= 150 && current > 150) {
+				result = new org.overlord.bam.analytics.principal.PrincipalAction();
+				result.setPrincipal(customer);
+				result.setProperty("suspended", Boolean.FALSE);
+				epn.forward(result);
+			}
 		}
 	}
 }
