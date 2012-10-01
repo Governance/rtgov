@@ -31,10 +31,6 @@ NOTE: The components are as follows:
 - epn: this component represents the Event Processor Network (EPN) used to evaluate the business policies
 and record any suspended customers.
 
-- orders: this component represents the Switchyard application with additional 'Exchange Handler'
-used to intercept service communications and report them to the BAM infrastructure, as well as
-handlers to intercept and block purchase requests from suspended customers.
-
 
 
 Running the example

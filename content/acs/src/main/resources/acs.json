@@ -35,5 +35,11 @@
     	"descriptionScript" : "SituationDescription.mvel",
     	"insertTypeScript" : "SituationType.mvel"
 	} ]
+  },{
+    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "Principals",
+    "type" : "Map",
+    "subject" : "Principals",
+    "maintenanceScript" : "MaintainPrincipals.mvel"
   }
 ]

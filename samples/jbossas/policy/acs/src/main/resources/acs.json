@@ -1,9 +1,0 @@
-[
-  {
-    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
-    "name" : "SuspendedCustomers",
-    "type" : "Map",
-    "subject" : "SuspendedCustomers",
-    "maintenanceScript" : "MaintainSuspendedCustomers.mvel"
-  }
-]

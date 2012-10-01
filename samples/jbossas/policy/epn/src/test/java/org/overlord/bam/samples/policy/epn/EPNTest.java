@@ -24,6 +24,7 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
+import org.overlord.bam.analytics.principal.PrincipalAction;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.NotificationListener;
@@ -39,7 +40,7 @@ public class EPNTest {
         
         TestNotificationListener l=new TestNotificationListener();
         
-        epnm.addNotificationListener("SuspendedCustomers", l);
+        epnm.addNotificationListener("Principals", l);
         
         // Load network
         try {
@@ -147,8 +148,18 @@ public class EPNTest {
             fail("Was expecting 1 notified results: "+l.getEvents().size());
         }
         
-        if (!l.getEvents().get(0).equals("+Fred")) {
-            fail("Expecting +Fred");
+        if (!(l.getEvents().get(0) instanceof PrincipalAction)) {
+            fail("Expecting principal action");
+        }
+        
+        PrincipalAction pa=(PrincipalAction)l.getEvents().get(0);
+        
+        if (!pa.getPrincipal().equals("Fred")) {
+            fail("Principal is not Fred");
+        }
+        
+        if (pa.getProperties().get("suspended") != Boolean.TRUE) {
+            fail("Fred is not suspended");
         }
     }
 
@@ -158,7 +169,7 @@ public class EPNTest {
         
         TestNotificationListener l=new TestNotificationListener();
         
-        epnm.addNotificationListener("SuspendedCustomers", l);
+        epnm.addNotificationListener("Principals", l);
         
         // Load network
         try {
@@ -330,7 +341,7 @@ public class EPNTest {
         
         TestNotificationListener l=new TestNotificationListener();
         
-        epnm.addNotificationListener("SuspendedCustomers", l);
+        epnm.addNotificationListener("Principals", l);
         
         // Make second purchase that takes the customer above the level
         events=new java.util.ArrayList<java.io.Serializable>();
@@ -377,8 +388,18 @@ public class EPNTest {
             fail("Was expecting 1 notified results: "+l.getEvents().size());
         }
         
-        if (!l.getEvents().get(0).equals("-Fred")) {
-            fail("Expecting -Fred");
+        if (!(l.getEvents().get(0) instanceof PrincipalAction)) {
+            fail("Expecting principal action");
+        }
+        
+        PrincipalAction pa=(PrincipalAction)l.getEvents().get(0);
+        
+        if (!pa.getPrincipal().equals("Fred")) {
+            fail("Principal is not Fred");
+        }
+        
+        if (pa.getProperties().get("suspended") != Boolean.FALSE) {
+            fail("Fred is suspended");
         }
     }
 

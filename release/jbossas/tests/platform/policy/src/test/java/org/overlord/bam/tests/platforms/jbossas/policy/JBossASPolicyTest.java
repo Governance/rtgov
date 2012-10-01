@@ -86,19 +86,8 @@ public class JBossASPolicyTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="policy-acs", order=5)
+    @Deployment(name="policy-epn", order=5)
     public static WebArchive createDeployment5() {
-        String version=System.getProperty("bam.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas.policy:samples-jbossas-policy-acs:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
-    }
-    
-    @Deployment(name="policy-epn", order=6)
-    public static WebArchive createDeployment6() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)

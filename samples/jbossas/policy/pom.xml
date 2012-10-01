@@ -15,7 +15,6 @@
 	</parent>
 
 	<modules>
-		<module>acs</module>
 		<module>epn</module>
 	</modules>
 

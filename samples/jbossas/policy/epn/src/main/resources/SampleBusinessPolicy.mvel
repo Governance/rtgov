@@ -26,14 +26,20 @@ if (event.operation == "submitOrder") {
 	cm = epn.getService("CacheManager");
 	
 	// Attempt to lock the entry
-	if (!cm.lock("CustomerExposure", customer)) {
+	if (!cm.lock("Principals", customer)) {
 		throw new Exception("Unable to lock exposure entry for customer '"+customer+"'");
 	}
 	
-	// Access the cache of customer exposure
-	exposure = cm.getCache("CustomerExposure");
+	// Access the cache of principals
+	principals = cm.getCache("Principals");
 	
-	int current=exposure.get(customer);
+	principal = principals.get(customer);
+	
+	if (principal == null) {
+		principal = new java.util.HashMap();
+	}
+	
+	int current=principal.get("exposure");
 	
 	if (current == null) {
 		current = 0;
@@ -41,10 +47,14 @@ if (event.operation == "submitOrder") {
 	
 	int newtotal=current+total;
 	
-	exposure.put(customer, newtotal);
+	principal.put("exposure", newtotal);
+	principals.put(customer, principal);
 	
 	if (newtotal > 150 && current <= 150) {
-		epn.forward("+"+customer);
+		result = new org.overlord.bam.analytics.principal.PrincipalAction();
+		result.setPrincipal(customer);
+		result.setProperty("suspended", Boolean.TRUE);
+		epn.forward(result);
 	}
 } else if (event.operation == "makePayment") {
 
@@ -73,26 +83,29 @@ if (event.operation == "submitOrder") {
 	cm = epn.getService("CacheManager");
 	
 	// Attempt to lock the entry
-	if (!cm.lock("CustomerExposure", customer)) {
+	if (!cm.lock("Principals", customer)) {
 		throw new Exception("Unable to lock exposure entry for customer '"+customer+"'");
 	}
 	
 	// Access the cache of customer exposure
-	exposure = cm.getCache("CustomerExposure");
+	// Access the cache of principals
+	principals = cm.getCache("Principals");
 	
-	int current=exposure.get(customer);
+	principal = principals.get(customer);
+	
+	int current=principal.get("exposure");
 	
 	if (current != null) {
 		int newamount=current-amount;
 		
-		if (newamount > 0) {
-			exposure.put(customer, newamount);
-		} else {
-			exposure.remove(customer);
-		}
+		principal.put("exposure", newamount);
+		principals.put(customer, principal);
 		
 		if (newamount <= 150 && current > 150) {
-			epn.forward("-"+customer);
+			result = new org.overlord.bam.analytics.principal.PrincipalAction();
+			result.setPrincipal(customer);
+			result.setProperty("suspended", Boolean.FALSE);
+			epn.forward(result);
 		}
 	}
 }

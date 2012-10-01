@@ -21,12 +21,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.samples.jbossas.policy</groupId>
-			<artifactId>samples-jbossas-policy-acs</artifactId>
-			<type>war</type>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.samples.jbossas.policy</groupId>
 			<artifactId>samples-jbossas-policy-epn</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>

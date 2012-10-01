@@ -1,0 +1,19 @@
+// Key is null when the event source is a node within an EPN,
+// so need to derive the key from the event (value)
+
+org.overlord.bam.analytics.principal.PrincipalAction action=value;
+
+org.overlord.bam.active.collection.ActiveMap map=
+	(org.overlord.bam.active.collection.ActiveMap)acs.getActiveCollection();
+
+if (action.type == org.overlord.bam.analytics.principal.PrincipalAction.Type.Set) {
+	java.util.Map properties=map.get(action.principal);
+	
+	if (properties == null) {
+		acs.insert(action.principal, value.properties);
+	} else {
+		properties.putAll(value.properties);
+		
+		acs.update(action.principal, properties);
+	}
+}

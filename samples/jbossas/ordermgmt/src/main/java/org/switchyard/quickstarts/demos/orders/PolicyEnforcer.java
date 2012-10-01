@@ -36,14 +36,14 @@ import org.switchyard.Property;
 
 public class PolicyEnforcer implements ExchangeHandler {
     
-    private static final String SUSPENDED_CUSTOMERS = "SuspendedCustomers";
+    private static final String PRINCIPALS = "Principals";
 
     private static final Logger LOG=Logger.getLogger(PolicyEnforcer.class.getName());
     
     private static final String ACTIVE_COLLECTION_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
 
     private ActiveCollectionManager _activeCollectionManager=null;
-    private ActiveMap _suspendedCustomers=null;
+    private ActiveMap _principals=null;
     
     private boolean _initialized=false;
     
@@ -56,8 +56,8 @@ public class PolicyEnforcer implements ExchangeHandler {
                 _activeCollectionManager = (ActiveCollectionManager)ctx.lookup(ACTIVE_COLLECTION_MANAGER);
                 
                 if (_activeCollectionManager != null) {
-                    _suspendedCustomers = (ActiveMap)
-                            _activeCollectionManager.getActiveCollection(SUSPENDED_CUSTOMERS);
+                    _principals = (ActiveMap)
+                            _activeCollectionManager.getActiveCollection(PRINCIPALS);
                 }
             } catch(Exception e) {
                 LOG.log(Level.SEVERE, "Failed to initialize active collection manager", e);
@@ -66,7 +66,7 @@ public class PolicyEnforcer implements ExchangeHandler {
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("*********** Policy Enforcer Initialized with acm="
-                        +_activeCollectionManager+" ac="+_suspendedCustomers);
+                        +_activeCollectionManager+" ac="+_principals);
         }
         
         _initialized = true;
@@ -81,7 +81,7 @@ public class PolicyEnforcer implements ExchangeHandler {
             LOG.fine("********* Exchange="+exchange);
         }
         
-        if (_suspendedCustomers != null) {            
+        if (_principals != null) {            
             String contentType=null;
             
             for (Property p : exchange.getContext().getProperties(
@@ -104,16 +104,25 @@ public class PolicyEnforcer implements ExchangeHandler {
                     if (end != -1) {
                         String customer=content.substring(start+10, end);
                         
-                        if (_suspendedCustomers.containsKey(customer)) {
-                            // Customer is suspended
+                        if (_principals.containsKey(customer)) {
                             
-                            throw new HandlerException("Customer '"+customer
-                                   +"' has been suspended");
+                            @SuppressWarnings("unchecked")
+                            java.util.Map<String,java.io.Serializable> props=
+                                    (java.util.Map<String,java.io.Serializable>)
+                                            _principals.get(customer);
+                            
+                            // Check if customer is suspended
+                            if (props.containsKey("suspended")
+                                    && props.get("suspended").equals(Boolean.TRUE)) {                            
+                                throw new HandlerException("Customer '"+customer
+                                        +"' has been suspended");
+                            }
                         }
                         
                         if (LOG.isLoggable(Level.FINE)) {
                             LOG.fine("*********** Policy Enforcer: customer '"
                                     +customer+"' has not been suspended");
+                            LOG.fine("*********** Principal: "+_principals.get(customer));
                         }
                     }
                 }
