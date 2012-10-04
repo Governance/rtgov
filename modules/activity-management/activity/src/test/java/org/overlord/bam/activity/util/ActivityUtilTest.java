@@ -49,6 +49,8 @@ public class ActivityUtilTest {
         me1.setOperation("myOp");
         me1.setServiceType("{http://service}OrderService");
         me1.setMessageId("corr1");
+        me1.getProperties().put("customer", "Fred");
+        me1.getProperties().put("trader", "Joe");
         
         Context c1=new Context();
         c1.setType(Context.Type.Conversation);
@@ -65,6 +67,8 @@ public class ActivityUtilTest {
         me2.setOperation("myOp");
         me2.setServiceType("{http://service}OrderService");
         me2.setMessageId("corr1");
+        me2.getProperties().put("customer", "Fred");
+        me2.getProperties().put("trader", "Joe");
         
         Context c2=new Context();
         c2.setType(Context.Type.Endpoint);
