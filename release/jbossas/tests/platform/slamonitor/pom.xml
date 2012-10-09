@@ -45,6 +45,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.bam.event-processor-network</groupId>
+			<artifactId>epn-infinispan</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-mvel</artifactId>
 			<version>${project.version}</version>
 		</dependency>

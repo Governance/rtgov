@@ -24,15 +24,7 @@
 				</exclusion>
 				<exclusion>
 					<groupId>org.overlord.bam.activity-analysis</groupId>
-					<artifactId>service-dependency</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.overlord.bam.activity-analysis</groupId>
-					<artifactId>service-dependency-svg</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.overlord.bam.activity-analysis</groupId>
-					<artifactId>service-analytics</artifactId>
+					<artifactId>analytics</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>

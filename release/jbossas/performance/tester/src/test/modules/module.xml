@@ -25,21 +25,21 @@
 <module xmlns="urn:jboss:module:1.0" name="org.overlord.bam">
 
     <resources>
-        <resource-root path="activity.jar"/>
-        <resource-root path="epn-core.jar"/>
-        <resource-root path="epn-cep.jar"/>
-        <resource-root path="epn-mvel.jar"/>
-        <resource-root path="active-collection.jar"/>
         <resource-root path="acs-epn.jar"/>
+        <resource-root path="active-collection.jar"/>
+        <resource-root path="activity.jar"/>
         <resource-root path="analytics.jar"/>
-
-        <resource-root path="jackson-core-asl.jar"/>
-        <resource-root path="jackson-mapper-asl.jar"/>
+        <resource-root path="epn-cep.jar"/>
+        <resource-root path="epn-core.jar"/>
+        <resource-root path="epn-infinispan.jar"/>
+        <resource-root path="epn-mvel.jar"/>
     </resources>
 
     <dependencies>
         <module name="javaee.api" export="true"/>
         <module name="org.drools"/>
         <module name="org.mvel.mvel2"/>
+        <module name="org.codehaus.jackson.jackson-core-asl" export="true" />
+        <module name="org.codehaus.jackson.jackson-mapper-asl" export="true" />
     </dependencies>
 </module>

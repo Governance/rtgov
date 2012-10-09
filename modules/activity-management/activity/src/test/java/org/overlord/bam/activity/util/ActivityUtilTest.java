@@ -20,6 +20,7 @@ package org.overlord.bam.activity.util;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.Origin;
@@ -171,6 +172,20 @@ public class ActivityUtilTest {
             
             ois.close();
             is.close();
+            
+            // Compare property lists
+            if (act1.properties().size() != act2.properties().size()) {
+                fail("Number of properties differ");
+            }
+            
+            // Clear properties, as map results in non-deterministic order
+            for (ActivityType at : act1.getActivityTypes()) {
+                at.getProperties().clear();
+            }
+            
+            for (ActivityType at : act2.getActivityTypes()) {
+                at.getProperties().clear();
+            }
             
             String s1=new String(ActivityUtil.serializeActivityUnit(act1));
             String s2=new String(ActivityUtil.serializeActivityUnit(act2));

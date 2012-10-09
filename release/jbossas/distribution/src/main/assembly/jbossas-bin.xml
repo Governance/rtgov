@@ -50,6 +50,17 @@
 			</excludes>
 		</fileSet>
 
+		<!-- Copy war build module -->
+		<fileSet>
+			<directory>../war</directory>
+			<outputDirectory>build</outputDirectory>
+			<excludes>
+				<exclude>**/.*</exclude>
+				<exclude>**/target/**</exclude>
+				<exclude>**/.settings/**</exclude>
+			</excludes>
+		</fileSet>
+
 		<!-- Copy modules and deployments -->
 		<fileSet>
 			<directory>src/main/jbossas</directory>
@@ -93,10 +104,6 @@
 				<include>org.overlord.bam.active-queries:active-collection:jar</include>
 				<include>org.overlord.bam.active-queries:acs-epn:jar</include>
 				<include>org.overlord.bam.activity-analysis:analytics:jar</include>
-				<include>org.overlord.bam.activity-analysis:service-dependency:jar</include>
-				<include>org.overlord.bam.activity-analysis:service-dependency-svg:jar</include>
-				<include>org.codehaus.jackson:jackson-core-asl:jar</include>
-				<include>org.codehaus.jackson:jackson-mapper-asl:jar</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
