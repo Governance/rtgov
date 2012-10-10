@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.epn.embedded;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -207,7 +208,10 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                 if (channel instanceof EmbeddedChannel) {
                     ((EmbeddedChannel)channel).send(events);
                 } else {
-                    LOG.severe("Unknown channel type '"+channel+"'");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "epn-container-embedded.Messages").getString("EPN-CONTAINER-EMBEDDED-1"),
+                            channel));
                 }
             }
         }
@@ -380,7 +384,8 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                 retries = process(_network, _node,
                                 _source, _events, _retriesLeft);            
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to handle events", e);
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "epn-container-embedded.Messages").getString("EPN-CONTAINER-EMBEDDED-2"), e);
                 
                 retries = _events;
             }
@@ -390,11 +395,13 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                     try {
                         _channel.send(retries, _retriesLeft-1);
                     } catch (Exception e) {
-                        LOG.log(Level.SEVERE, "Failed to retry events", e);
+                        LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                                "epn-container-embedded.Messages").getString("EPN-CONTAINER-EMBEDDED-3"), e);
                     }
                 } else {
                     // TODO: Should this be reported via the manager?
-                    LOG.severe("No more retries left");
+                    LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                            "epn-container-embedded.Messages").getString("EPN-CONTAINER-EMBEDDED-4"));
                 }
             }
         }

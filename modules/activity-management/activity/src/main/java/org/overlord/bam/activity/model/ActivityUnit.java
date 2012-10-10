@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.lang.reflect.Constructor;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,12 +67,15 @@ public class ActivityUnit implements java.io.Externalizable {
                 if (con != null) {
                      _activityTypes.add(con.newInstance(actType));
                 } else {
-                    LOG.severe("Failed to create copy - can't find copy constructor for '"
-                                +actType.getClass().getName()+"'");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "activity.Messages").getString("ACTIVITY-4"),
+                                actType.getClass().getName()));
                 }
                 
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to create copy", e);
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-5"), e);
             }
         }
     }

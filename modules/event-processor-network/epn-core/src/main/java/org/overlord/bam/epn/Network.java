@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.epn;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -242,8 +243,9 @@ public class Network implements NetworkMBean {
                     Node sourceNode=getNode(nodeName);
                     
                     if (sourceNode == null) {
-                        LOG.severe("Network '"+getName()+"' version '"+getVersion()
-                                +"' node '"+node.getName()+"' has unknown source node '"+nodeName+"'");
+                        LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                                "epn-core.Messages").getString("EPN-CORE-4"),
+                                getName(), getVersion(), node.getName(), nodeName));
                     } else {
                         sourceNode.getChannels().add(container.getChannel(this, nodeName, node.getName()));
                     }

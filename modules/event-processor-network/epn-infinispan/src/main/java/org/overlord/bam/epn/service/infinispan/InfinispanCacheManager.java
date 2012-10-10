@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.epn.service.infinispan;
 
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,8 +73,9 @@ public class InfinispanCacheManager extends CacheManager {
                     ctx.lookup(_container);
             
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to obtain Infinispan Cache Container '"
-                    +_container+"'", e);
+            LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                    "epn-infinispan.Messages").getString("EPN-INFINISPAN-1"),
+                    _container), e);
             
             throw e;
         }

@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.active.collection;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -132,7 +133,10 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                     _listTimestamps.add((Integer)key, System.currentTimeMillis());
                 }
             } else {
-                LOG.severe("Unknown key type '"+key+"' - should be integer");
+                LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-7"),
+                        key));
             }
             
             _readCopy = null;
@@ -157,7 +161,10 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                     
                     updated(key, value);
                 } else {
-                    LOG.severe("Unknown key '"+key+"' for update");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-8"),
+                            key));
                 }
             } else {
                 // Can only assume that value maintains its own identity
@@ -165,7 +172,10 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                 
                 if (index == -1) {
                     // Can't find updated entry, so log error
-                    LOG.severe("Unable to find list entry for value in list '"+getName()+"': "+value);
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-9"),
+                            getName(), value));
                 } else {
                     _list.set(index, value);
                     
@@ -202,7 +212,10 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                     _listTimestamps.remove(pos);
                 }
             } else {
-                LOG.severe("Unable to remove value from list '"+getName()+"': "+value);
+                LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-10"),
+                        getName(), value));
             }
             _readCopy = null;
         }

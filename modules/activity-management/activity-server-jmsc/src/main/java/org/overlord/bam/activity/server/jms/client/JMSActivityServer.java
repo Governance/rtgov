@@ -70,7 +70,8 @@ public class JMSActivityServer implements ActivityServer {
 
             _producer = _session.createProducer(queue);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to setup JMS connection", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "activity-server-jmsc.Messages").getString("ACTIVITY-SERVER-JMSC-1"));
         }
     }
     
@@ -102,7 +103,8 @@ public class JMSActivityServer implements ActivityServer {
             _session.close();
             _connection.close();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to close JMS connection", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "activity-server-jmsc.Messages").getString("ACTIVITY-SERVER-JMSC-2"));
         }
     }
 }

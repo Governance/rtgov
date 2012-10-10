@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.active.collection;
 
+import java.text.MessageFormat;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -415,7 +416,10 @@ public class ActiveCollectionSource {
                 java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_aggregationScript);
                 
                 if (is == null) {
-                    LOG.severe("Unable to locate '"+_aggregationScript+"'");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-1"),
+                            _aggregationScript));
                 } else {
                     byte[] b=new byte[is.available()];
                     is.read(b);
@@ -436,7 +440,10 @@ public class ActiveCollectionSource {
                 java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_maintenanceScript);
                 
                 if (is == null) {
-                    LOG.severe("Unable to locate '"+_maintenanceScript+"'");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-1"),
+                            _maintenanceScript));
                 } else {
                     byte[] b=new byte[is.available()];
                     is.read(b);
@@ -458,8 +465,11 @@ public class ActiveCollectionSource {
                 java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_scheduledScript);
                 
                 if (is == null) {
-                    LOG.severe("Unable to locate '"+_scheduledScript+"'");
-                } else {
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-1"),
+                            _scheduledScript));
+                 } else {
                     byte[] b=new byte[is.available()];
                     is.read(b);
                     is.close();
@@ -656,7 +666,10 @@ public class ActiveCollectionSource {
             }
             
             if (key == null) {
-                LOG.severe("Failed to evaluate expression '"+_groupBy+"' on event: "+event);
+                LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-4"),
+                        _groupBy, event));
             } else {
                 java.util.List<Object> list=_groupedEvents.get(key);
                 
@@ -705,7 +718,8 @@ public class ActiveCollectionSource {
                     Object result= MVEL.executeExpression(_aggregationScriptCompiled, vars);
                     
                     if (result == null) {
-                        LOG.severe("Aggregation script failed to return a result");
+                        LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                                "active-collection.Messages").getString("ACTIVE-COLLECTION-5"));
                         
                         if (LOG.isLoggable(Level.FINEST)) {
                             LOG.finest("Script="+_aggregationScript);
@@ -720,7 +734,10 @@ public class ActiveCollectionSource {
                     }
                 }
             } else {
-                LOG.severe("No aggregation script to process events: "+source);
+                LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-6"),
+                        source));
             }
         }
     }

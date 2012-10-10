@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.service.dependency.svg;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -734,7 +735,9 @@ public class SVGServiceGraphGenerator {
             is.close();
             
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to load template '"+name+"'", e);
+            LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                    "service-dependency-svg.Messages").getString("SERVICE-DEPENDENCY-SVG-1"),
+                    name), e);
         }
         
         return (ret);

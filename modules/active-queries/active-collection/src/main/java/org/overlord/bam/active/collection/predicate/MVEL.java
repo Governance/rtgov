@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.active.collection.predicate;
 
+import java.text.MessageFormat;
 import java.util.logging.Logger;
 
 /**
@@ -92,9 +93,10 @@ public class MVEL extends Predicate {
             if (result instanceof Boolean) {
                 ret = ((Boolean)result).booleanValue();
             } else {
-                LOG.severe("Expression '"+_expression
-                        +"' returned non-boolean result '"+result
-                        +"' for item: "+item);
+                LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-2"),
+                        _expression, result, item));
             }
         }
         

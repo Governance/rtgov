@@ -20,6 +20,7 @@ package org.overlord.bam.epn.jee.jmx;
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
 import java.lang.management.ManagementFactory;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +81,8 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             
             mbs.registerMBean(this, objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register MBean for EPNManagement", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-1"), e);
         }
         
         _epnManager.addNetworkListener(this);
@@ -111,7 +113,8 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister MBean for EPNManagement", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-2"), e);
         }
     }
 
@@ -124,8 +127,10 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             
             mbs.registerMBean(network, getObjectName(network)); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register MBean for network "
-                        +network.getName()+"["+network.getVersion()+"]", e);
+            LOG.log(Level.SEVERE, MessageFormat.format(
+                    java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-3"),
+                    network.getName(), network.getVersion()), e);
         }   
         
         _numOfNetworks++;
@@ -153,8 +158,10 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             
             mbs.unregisterMBean(getObjectName(network)); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister MBean for network "
-                        +network.getName()+"["+network.getVersion()+"]", e);
+            LOG.log(Level.SEVERE, MessageFormat.format(
+                    java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-4"),
+                    network.getName(), network.getVersion()), e);
         }
         
         _numOfNetworks--;

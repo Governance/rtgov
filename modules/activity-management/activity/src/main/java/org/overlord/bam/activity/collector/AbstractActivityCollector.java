@@ -172,7 +172,8 @@ public class AbstractActivityCollector implements ActivityCollector {
 
             _activityUnit.remove();
         } else {
-            LOG.severe("End scope called but no ActivityUnit available");
+            LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                    "activity.Messages").getString("ACTIVITY-1"));
         }
     }
 
@@ -215,7 +216,8 @@ public class AbstractActivityCollector implements ActivityCollector {
                     }
                     
                 } catch (Exception e) {
-                    LOG.log(Level.SEVERE, "Failed to register synchronization with transaction", e);
+                    LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                            "activity.Messages").getString("ACTIVITY-2"), e);
                     transactional = false;
                 }
             } else {

@@ -50,7 +50,8 @@ public class JBossAS7CollectorContext implements CollectorContext {
             _transactionManager = (TransactionManager)ctx.lookup(TRANSACTION_MANAGER);
             
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to initialize the transaction manager", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "bam-jbossas.Messages").getString("BAM-JBOSSAS-1"), e);
         }
     }
     

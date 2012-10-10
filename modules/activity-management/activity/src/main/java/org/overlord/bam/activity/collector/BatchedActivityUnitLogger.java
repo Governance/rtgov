@@ -110,7 +110,8 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
                                         reset();
                                     }
                                 } catch (Exception e) {
-                                    LOG.log(Level.SEVERE, "Failed to send activity event", e);
+                                    LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                                            "activity.Messages").getString("ACTIVITY-3"), e);
                                 }
                             }                         
                          };
@@ -131,7 +132,8 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
              }
              
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to send activity event", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "activity.Messages").getString("ACTIVITY-3"), e);
         }
     }
 

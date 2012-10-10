@@ -130,7 +130,8 @@ public class ActiveMap extends ActiveCollection
                     _mapTimestamps.put(key, System.currentTimeMillis());
                 }
             } else {
-                LOG.severe("Key not defined");
+                LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-11"));
             }
             
             _readCopy = null;
@@ -152,7 +153,8 @@ public class ActiveMap extends ActiveCollection
                     _mapTimestamps.put(key, System.currentTimeMillis());
                 }
             } else {
-                LOG.severe("Key not defined");
+                LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-11"));
             }
             
             _readCopy = null;
@@ -175,7 +177,8 @@ public class ActiveMap extends ActiveCollection
                     _mapTimestamps.remove(key);
                 }
             } else {
-                LOG.severe("Key not defined");
+                LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-11"));
             }
             
             _readCopy = null;

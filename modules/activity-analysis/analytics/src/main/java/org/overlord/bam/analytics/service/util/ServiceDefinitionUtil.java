@@ -373,7 +373,8 @@ public final class ServiceDefinitionUtil {
                     try {
                         sd.merge(sds.get(key));
                     } catch (Exception e) {
-                        LOG.log(Level.SEVERE, "Failed to merge service definitions", e);
+                        LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                                "activity-server-jmsc.Messages").getString("ANALTICS-1"), e);
                     }
                 }
             }

@@ -90,7 +90,8 @@ public class EPNNotificationServer implements MessageListener {
             try {
                 _epnManager.handleNotificationsMessage(message);
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to handle notification message", e);
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-6"), e);
             }
         }
     }

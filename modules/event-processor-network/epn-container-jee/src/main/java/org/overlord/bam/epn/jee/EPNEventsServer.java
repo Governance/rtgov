@@ -91,7 +91,8 @@ public class EPNEventsServer implements MessageListener {
             try {
                 _epnManager.handleEventsMessage(message);
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to handle events message", e);
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-5"), e);
             }
         }
     }

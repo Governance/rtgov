@@ -72,7 +72,8 @@ public class CollectorManagement {
             
             mbs.registerMBean(_activityCollector.getActivityUnitLogger(), objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register MBean for ActivityLogger", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "collector-jee.Messages").getString("COLLECTOR-JEE-1"), e);
         }
     }
 
@@ -89,7 +90,8 @@ public class CollectorManagement {
             
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister MBean for ActivityLogger", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "collector-jee.Messages").getString("COLLECTOR-JEE-2"), e);
         }
     }
 

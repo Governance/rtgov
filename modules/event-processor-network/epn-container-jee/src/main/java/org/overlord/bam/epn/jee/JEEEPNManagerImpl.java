@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.epn.jee;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import java.util.logging.Level;
@@ -114,7 +115,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             _connection.start();
             
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to initialize the JMS EPN Manager", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-7"), e);
         }
         
         setUsePrePostEventListProcessing(true);
@@ -163,7 +165,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                 dispatchToNodes(network, version, node, source, events, retriesLeft);
             }
         } else {
-            LOG.severe("Unsupport message '"+message+"' received");
+            LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-8"), message));
         }
     }
     
@@ -234,7 +237,9 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
         Network network=getNetwork(networkName, version);
         
         if (network == null) {
-            String mesg="Unable to find network '"+networkName+"' version '"+version+"'";
+            String mesg=MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-9"),
+                    networkName, version);
             
             LOG.severe(mesg);
             
@@ -279,7 +284,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             dispatchNotificationToListeners(subject, networkName, version,
                             nodeName, type, events);
         } else {
-            LOG.severe("Unsupport message '"+message+"' received");
+            LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-8"), message));
         }
     }
 
@@ -347,8 +353,9 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
         } else {
             // Events failed to be processed
             // TODO: Should this be reported via the manager?
-            LOG.severe("Unable to process events for network="+networkName+"["
-                                +version+"] node="+nodeName);
+            LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-10"),
+                    networkName, version, nodeName));
         }
     }
     
@@ -383,7 +390,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             _session.close();
             _connection.close();
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to close JMS", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-11"), e);
         }
     }
     
@@ -466,7 +474,9 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                             }
                         }
                     } else {
-                        LOG.severe("Unexpected channel type '"+channel+"'");
+                        LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                                "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-12"),
+                                channel));
                     }
                 }
                 

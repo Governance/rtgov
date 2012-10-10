@@ -67,7 +67,8 @@ public class RESTServiceDependencyServer {
             _acmManager = (ActiveCollectionManager)ctx.lookup(ACT_COLL_MANAGER);
             
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to obtain Active Collection Manager", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-1"), e);
         }
     }
     
@@ -152,7 +153,8 @@ public class RESTServiceDependencyServer {
             selector.init();
             generator.setColorSelector(selector);
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to initialize color selector", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-2"), e);
         }     
         
         java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();

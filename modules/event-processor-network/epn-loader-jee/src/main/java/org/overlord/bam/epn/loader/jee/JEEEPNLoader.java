@@ -73,7 +73,8 @@ public class JEEEPNLoader extends AbstractEPNLoader {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(EPN_JSON);
             
             if (is == null) {
-                LOG.severe("Unable to locate '"+EPN_JSON+"'");
+                LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                        "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-1"));
             } else {
                 byte[] b=new byte[is.available()];
                 is.read(b);
@@ -91,7 +92,8 @@ public class JEEEPNLoader extends AbstractEPNLoader {
                 _epnManager.register(_network);
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to load network", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-2"), e);
         }
     }
     
@@ -105,7 +107,8 @@ public class JEEEPNLoader extends AbstractEPNLoader {
             try {
                 _epnManager.unregister(_network.getName(), _network.getVersion());
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to unregister network", e);
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-3"), e);
             }
         }
     }       

@@ -148,7 +148,8 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
                 _epnManager = (EPNManager)ctx.lookup(EPNManager.URI);
                 
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to obtain Event Processor Network Manager", e);
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                           "acs-epn.Messages").getString("ACS-EPN-1"), e);
                 
                 throw e;
             }

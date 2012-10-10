@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.active.collection.jmx;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -218,7 +219,10 @@ public class JMXNotifier extends AbstractActiveChangeListener
                 java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_descriptionScript);
                 
                 if (is == null) {
-                    LOG.severe("Unable to locate '"+_descriptionScript+"'");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-1"),
+                            _descriptionScript));
                 } else {
                     byte[] b=new byte[is.available()];
                     is.read(b);
@@ -239,7 +243,10 @@ public class JMXNotifier extends AbstractActiveChangeListener
                 java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_insertTypeScript);
                 
                 if (is == null) {
-                    LOG.severe("Unable to locate '"+_insertTypeScript+"'");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-1"),
+                            _insertTypeScript));
                 } else {
                     byte[] b=new byte[is.available()];
                     is.read(b);
@@ -260,7 +267,10 @@ public class JMXNotifier extends AbstractActiveChangeListener
                 java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_updateTypeScript);
                 
                 if (is == null) {
-                    LOG.severe("Unable to locate '"+_updateTypeScript+"'");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-1"),
+                            _updateTypeScript));
                 } else {
                     byte[] b=new byte[is.available()];
                     is.read(b);
@@ -281,7 +291,10 @@ public class JMXNotifier extends AbstractActiveChangeListener
                 java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_removeTypeScript);
                 
                 if (is == null) {
-                    LOG.severe("Unable to locate '"+_removeTypeScript+"'");
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-1"),
+                            _removeTypeScript));
                 } else {
                     byte[] b=new byte[is.available()];
                     is.read(b);

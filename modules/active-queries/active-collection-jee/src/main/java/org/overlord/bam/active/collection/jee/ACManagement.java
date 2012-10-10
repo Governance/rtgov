@@ -20,6 +20,7 @@ package org.overlord.bam.active.collection.jee;
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
 import java.lang.management.ManagementFactory;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +81,8 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             
             mbs.registerMBean(this, objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register MBean for ACManagement", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-1"), e);
         }
         
         _acManager.addActiveCollectionListener(this);
@@ -103,7 +105,9 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
                 _acManager.removeActiveCollectionListener(this);
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister active collection listener", e);
+            
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-2"), e);
         }
         
         try {
@@ -112,7 +116,8 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister MBean for ACManagement", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-3"), e);
         }
     }
 
@@ -134,8 +139,10 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             }
             
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register MBean for active collection '"
-                        +ac.getName()+"'", e);
+            LOG.log(Level.SEVERE, MessageFormat.format(
+                    java.util.PropertyResourceBundle.getBundle(
+                    "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-4"),
+                    ac.getName()), e);
         }   
     }
 
@@ -169,8 +176,10 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             }
             
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to unregister MBean for active collection '"
-                        +ac.getName()+"'", e);
+            LOG.log(Level.SEVERE, MessageFormat.format(
+                    java.util.PropertyResourceBundle.getBundle(
+                    "active-collection.Messages").getString("ACTIVE-COLLECTION-JEE-5"),
+                    ac.getName()), e);
         }
     }
 

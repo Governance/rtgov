@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.epn.cep;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -174,7 +175,10 @@ public class CEPEventProcessor extends EventProcessor {
             }
 
             if (builder.hasErrors()) {
-                LOG.severe("CEP rules have errors: "+builder.getErrors());
+                LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "epn-cep.Messages").getString("EPN-CEP-1"),
+                        builder.getErrors()));
             } else {
                 KnowledgeBaseConfiguration conf = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
                 conf.setOption(EventProcessingOption.STREAM);
@@ -185,8 +189,10 @@ public class CEPEventProcessor extends EventProcessor {
             }
         
         } catch (Throwable e) {
-            LOG.log(Level.SEVERE, "Failed to load CEP rules '"
-                    +cepRuleBase+"' for Event Processor '"+getRuleName()+"'", e);
+            LOG.log(Level.SEVERE, MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "epn-cep.Messages").getString("EPN-CEP-2"),
+                            cepRuleBase, getRuleName()), e);
         }
 
         return (null);

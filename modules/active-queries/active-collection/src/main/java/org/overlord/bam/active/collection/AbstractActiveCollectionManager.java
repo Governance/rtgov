@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.active.collection;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -255,8 +256,10 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
                 try {
                     ac.cleanup();
                 } catch (Exception e) {
-                    LOG.log(Level.SEVERE, "Failed to perform cleanup on active collection '"
-                            +ac.getName()+"'", e);
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-3"),
+                            ac.getName()));
                 }
                 
                 // Check whether the high water mark has been breached

@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.epn;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -484,7 +485,9 @@ public abstract class AbstractEPNManager implements EPNManager {
                     try {
                         preProcessEvents(events, nl.getClass().getClassLoader());
                     } catch (Throwable t) {
-                        LOG.log(Level.SEVERE, "Unable to dispatch events to listener '"+nl.getClass().getName()+"'", t);
+                        LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                                "epn-core.Messages").getString("EPN-CORE-1"),
+                                nl.getClass().getName()), t);
                 
                         // Don't attempt to send events to the node listener
                         continue;

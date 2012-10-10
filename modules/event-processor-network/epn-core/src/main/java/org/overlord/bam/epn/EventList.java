@@ -67,9 +67,12 @@ public class EventList implements java.io.Serializable, java.lang.Iterable<java.
                 LOG.finest("Serialized event list: "+_list);
             }
         } catch (Throwable e) {
-            LOG.severe("Failed to serialize the supplied list");
+            String mesg=java.util.PropertyResourceBundle.getBundle(
+                    "epn-core.Messages").getString("EPN-CORE-2");
             
-            throw new IllegalArgumentException("Failed to serialize the supplied event list", e);
+            LOG.severe(mesg);
+            
+            throw new IllegalArgumentException(mesg, e);
         }
     }
 
@@ -100,9 +103,12 @@ public class EventList implements java.io.Serializable, java.lang.Iterable<java.
             bais.close();
             
         } catch (Throwable e) {
-            LOG.severe("Failed to deserialize the event list");
+            String mesg=java.util.PropertyResourceBundle.getBundle(
+                    "epn-core.Messages").getString("EPN-CORE-3");
             
-            throw new IllegalArgumentException("Failed to deserialize the event list", e);
+            LOG.severe(mesg);
+            
+            throw new IllegalArgumentException(mesg, e);
         }
     }
     

@@ -74,7 +74,8 @@ public class JEEACSLoader extends AbstractACSLoader {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(ACS_JSON);
             
             if (is == null) {
-                LOG.severe("Unable to locate '"+ACS_JSON+"'");
+                LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                        "acs-epn.Messages").getString("ACS-LOADER-JEE-1"));
             } else {
                 byte[] b=new byte[is.available()];
                 is.read(b);
@@ -83,7 +84,8 @@ public class JEEACSLoader extends AbstractACSLoader {
                 _activeCollectionSources = ActiveCollectionUtil.deserializeACS(b);
                 
                 if (_activeCollectionSources == null) {
-                    LOG.severe("Failed to load active collection sources");
+                    LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                            "acs-epn.Messages").getString("ACS-LOADER-JEE-2"));
                 } else {
                     for (ActiveCollectionSource acs : _activeCollectionSources) {
                         // Pre-initialize the source to avoid any contextual class
@@ -98,7 +100,8 @@ public class JEEACSLoader extends AbstractACSLoader {
                 }
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to register active collection sources", e);
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "acs-epn.Messages").getString("ACS-LOADER-JEE-3"), e);
         }
     }
     
@@ -114,7 +117,8 @@ public class JEEACSLoader extends AbstractACSLoader {
                     _acmManager.unregister(acs);
                 }
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to unregister active collection source", e);
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "acs-epn.Messages").getString("ACS-LOADER-JEE-4"), e);
             }
         }
     }       
