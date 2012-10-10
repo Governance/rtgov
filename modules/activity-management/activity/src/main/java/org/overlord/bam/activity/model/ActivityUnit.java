@@ -25,17 +25,22 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /**
  * This class represents an activity unit, which generally relates
  * to the activities that occur within a transaction scope.
  *
  */
+@Entity
 public class ActivityUnit implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
     private static final Logger LOG=Logger.getLogger(ActivityUnit.class.getName());
     
+    @Id
     private String _id=null;
     
     private Origin _origin=null;

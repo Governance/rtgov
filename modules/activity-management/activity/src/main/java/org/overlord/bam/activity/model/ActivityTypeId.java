@@ -21,22 +21,25 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Embeddable;
+
 /**
  * This class represents a reference to an ActivityType contained within an
  * ActivityUnit.
  *
  */
-public class ActivityTypeRef implements java.io.Externalizable {
+@Embeddable
+public class ActivityTypeId implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
     private String _activityUnitId=null;
-    private int _activityUnitIndex=0;
+    private int _activityTypeIndex=0;
 
     /**
      * The default constructor.
      */
-    public ActivityTypeRef() {
+    public ActivityTypeId() {
     }
     
     /**
@@ -44,9 +47,9 @@ public class ActivityTypeRef implements java.io.Externalizable {
      * 
      * @param act The activity to copy.
      */
-    public ActivityTypeRef(ActivityTypeRef act) {
+    public ActivityTypeId(ActivityTypeId act) {
         _activityUnitId = act._activityUnitId;
-        _activityUnitIndex = act._activityUnitIndex;
+        _activityTypeIndex = act._activityTypeIndex;
     }
     
     /**
@@ -56,9 +59,9 @@ public class ActivityTypeRef implements java.io.Externalizable {
      * @param id The activity unit id
      * @param index The activity type index within the unit
      */
-    public ActivityTypeRef(String id, int index) {
+    public ActivityTypeId(String id, int index) {
         _activityUnitId = id;
-        _activityUnitIndex = index;
+        _activityTypeIndex = index;
     }
     
     /**
@@ -80,23 +83,23 @@ public class ActivityTypeRef implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the index of this activity
+     * This method sets the index of the activity
      * type within the activity unit.
      * 
-     * @param index The activity unit index
+     * @param index The index
      */
-    public void setActivityUnitIndex(int index) {
-        _activityUnitIndex = index;
+    public void setActivityTypeIndex(int index) {
+        _activityTypeIndex = index;
     }
     
     /**
-     * This method sets the index of this activity
+     * This method sets the index of the activity
      * type within the activity unit.
      * 
-     * @return The activity unit index
+     * @return The index
      */
-    public int getActivityUnitIndex() {
-        return (_activityUnitIndex);
+    public int getActivityTypeIndex() {
+        return (_activityTypeIndex);
     }
     
     /**
@@ -106,7 +109,7 @@ public class ActivityTypeRef implements java.io.Externalizable {
         out.writeInt(VERSION);
         
         out.writeObject(_activityUnitId);
-        out.writeInt(_activityUnitIndex);
+        out.writeInt(_activityTypeIndex);
     }
 
     /**
@@ -117,7 +120,7 @@ public class ActivityTypeRef implements java.io.Externalizable {
         in.readInt(); // Consume version, as not required for now
         
         _activityUnitId = (String)in.readObject();
-        _activityUnitIndex = in.readInt();
+        _activityTypeIndex = in.readInt();
     }
     
 }

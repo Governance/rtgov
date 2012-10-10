@@ -1,4 +1,3 @@
-import org.overlord.bam.activity.model.ActivityTypeRef
 import org.overlord.bam.analytics.service.ResponseTime
 import org.overlord.bam.analytics.Situation
 

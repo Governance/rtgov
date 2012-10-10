@@ -58,6 +58,10 @@ public class CEPEventProcessor extends EventProcessor {
         _context = new DefaultEPNContext(getServices());
         
         _session = createSession();
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("CEPEventProcessor init: ruleName="+_ruleName+" session="+_session);
+        }
     }
     
     /**

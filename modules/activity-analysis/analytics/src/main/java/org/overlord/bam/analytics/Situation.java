@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import org.overlord.bam.activity.model.ActivityTypeRef;
+import org.overlord.bam.activity.model.ActivityTypeId;
 
 /**
  * This class represents the occurrence of an SLA violation.
@@ -64,8 +64,8 @@ public class Situation implements java.io.Externalizable {
     private String _description=null;
     private long _timestamp=0;
     private Severity _severity=null;
-    private java.util.List<ActivityTypeRef> _activityTypeRefs=
-                        new java.util.ArrayList<ActivityTypeRef>();
+    private java.util.List<ActivityTypeId> _activityTypeIds=
+                        new java.util.ArrayList<ActivityTypeId>();
 
     /**
      * This method sets the situation type.
@@ -158,13 +158,13 @@ public class Situation implements java.io.Externalizable {
     }
 
     /**
-     * This method returns the list of activity type references
+     * This method returns the list of activity type ids
      * associated with the violation.
      * 
-     * @return The related activity type refs
+     * @return The related activity type ids
      */
-    public java.util.List<ActivityTypeRef> getActivityTypeRefs() {
-        return (_activityTypeRefs);
+    public java.util.List<ActivityTypeId> getActivityTypeIds() {
+        return (_activityTypeIds);
     }
     
     /**
@@ -229,9 +229,9 @@ public class Situation implements java.io.Externalizable {
         out.writeObject(_severity);
         out.writeLong(_timestamp);
         
-        out.writeInt(_activityTypeRefs.size());
-        for (int i=0; i < _activityTypeRefs.size(); i++) {
-            out.writeObject(_activityTypeRefs.get(i));            
+        out.writeInt(_activityTypeIds.size());
+        for (int i=0; i < _activityTypeIds.size(); i++) {
+            out.writeObject(_activityTypeIds.get(i));            
         }
     }
 
@@ -250,7 +250,7 @@ public class Situation implements java.io.Externalizable {
         
         int len=in.readInt();
         for (int i=0; i < len; i++) {
-            _activityTypeRefs.add((ActivityTypeRef)in.readObject());
+            _activityTypeIds.add((ActivityTypeId)in.readObject());
         }
     }
 }

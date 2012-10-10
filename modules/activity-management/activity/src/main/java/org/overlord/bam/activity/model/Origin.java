@@ -21,11 +21,14 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Embeddable;
+
 /**
  * This class represents information about the origin of the activity
  * events reported.
  *
  */
+@Embeddable
 public class Origin implements java.io.Externalizable {
 
     private static final int VERSION = 1;

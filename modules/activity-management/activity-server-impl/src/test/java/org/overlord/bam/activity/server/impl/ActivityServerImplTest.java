@@ -261,11 +261,11 @@ public class ActivityServerImplTest {
         
         int pos=0;
         for (ActivityType at : au.getActivityTypes()) {
-            if (!at.getActivityUnitId().equals(au.getId())) {
-                fail("Activity type's unit id invalid: "+at.getActivityUnitId());
+            if (!at.getId().getActivityUnitId().equals(au.getId())) {
+                fail("Activity type's unit id invalid: "+at.getId().getActivityUnitId());
             }
-            if (at.getActivityUnitIndex() != pos) {
-                fail("Activity type's unit index ("+pos+") incorrect: "+at.getActivityUnitIndex());
+            if (at.getId().getActivityTypeIndex() != pos) {
+                fail("Activity type's unit index ("+pos+") incorrect: "+at.getId().getActivityTypeIndex());
             }
             pos++;
         }
