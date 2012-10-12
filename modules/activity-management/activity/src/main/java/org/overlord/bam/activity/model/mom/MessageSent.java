@@ -21,10 +21,13 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Entity;
+
 /**
  * This activity type represents a sent message.
  *
  */
+@Entity
 public class MessageSent extends MessageExchange implements java.io.Externalizable {
 
     private static final int VERSION = 1;

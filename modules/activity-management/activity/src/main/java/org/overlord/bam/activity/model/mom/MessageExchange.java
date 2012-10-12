@@ -21,12 +21,15 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Entity;
+
 import org.overlord.bam.activity.model.ActivityType;
 
 /**
  * This activity type represents a message exchange.
  *
  */
+@Entity
 public abstract class MessageExchange extends ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;

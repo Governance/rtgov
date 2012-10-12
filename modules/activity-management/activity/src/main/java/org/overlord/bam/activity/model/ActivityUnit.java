@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.Entity;
+import javax.persistence.Embedded;
 import javax.persistence.Id;
 
 /**
@@ -40,9 +41,7 @@ public class ActivityUnit implements java.io.Externalizable {
     
     private static final Logger LOG=Logger.getLogger(ActivityUnit.class.getName());
     
-    @Id
     private String _id=null;
-    
     private Origin _origin=null;
     private java.util.List<ActivityType> _activityTypes=new java.util.Vector<ActivityType>();
     
@@ -99,6 +98,7 @@ public class ActivityUnit implements java.io.Externalizable {
      * 
      * @return The id
      */
+    @Id
     public String getId() {
         return (_id);
     }
@@ -117,6 +117,7 @@ public class ActivityUnit implements java.io.Externalizable {
      * 
      * @return The origin
      */
+    @Embedded
     public Origin getOrigin() {
         return (_origin);
     }

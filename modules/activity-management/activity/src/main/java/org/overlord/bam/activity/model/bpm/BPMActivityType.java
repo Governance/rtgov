@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Entity;
+
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.Context;
 
@@ -28,6 +30,7 @@ import org.overlord.bam.activity.model.Context;
  * This activity type represents a BPM actvity.
  *
  */
+@Entity
 public abstract class BPMActivityType extends ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;

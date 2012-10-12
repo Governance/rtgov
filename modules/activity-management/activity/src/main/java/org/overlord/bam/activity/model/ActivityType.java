@@ -21,8 +21,9 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
@@ -50,12 +51,13 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
     @Type(value=ProcessCompleted.class),
     @Type(value=ProcessStarted.class) })
 @Entity
+@IdClass(value=ActivityTypeId.class)
 public abstract class ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    @EmbeddedId
-    private ActivityTypeId _activityTypeId=null;
+    private String _unitId=null;
+    private int _unitIndex=0;
     
     private long _timestamp=0;
     
@@ -74,7 +76,8 @@ public abstract class ActivityType implements java.io.Externalizable {
      * @param act The activity to copy.
      */
     public ActivityType(ActivityType act) {
-        _activityTypeId = new ActivityTypeId(act._activityTypeId);
+        _unitId = act._unitId;
+        _unitIndex = act._unitIndex;
         _timestamp = act._timestamp;
         
         for (Context ctx : act._contexts) {
@@ -85,21 +88,43 @@ public abstract class ActivityType implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the activity type id.
+     * This method sets the activity unit id.
      * 
-     * @param id The activity type id
+     * @param id The activity unit id
      */
-    public void setId(ActivityTypeId id) {
-        _activityTypeId = id;
+    public void setUnitId(String id) {
+        _unitId = id;
     }
     
     /**
-     * This method gets the activity type id.
+     * This method gets the activity unit id.
      * 
-     * @return The activity type id
+     * @return The activity unit id
      */
-    public ActivityTypeId getId() {
-        return (_activityTypeId);
+    @Id
+    public String getUnitId() {
+        return (_unitId);
+    }
+    
+    /**
+     * This method sets the index of the activity
+     * type within the activity unit.
+     * 
+     * @param index The index
+     */
+    public void setUnitIndex(int index) {
+        _unitIndex = index;
+    }
+    
+    /**
+     * This method sets the index of the activity
+     * type within the activity unit.
+     * 
+     * @return The index
+     */
+    @Id
+    public int getUnitIndex() {
+        return (_unitIndex);
     }
     
     /**
@@ -172,7 +197,8 @@ public abstract class ActivityType implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_activityTypeId);
+        out.writeObject(_unitId);
+        out.writeInt(_unitIndex);
         out.writeLong(_timestamp);
         
         int len=_contexts.size();
@@ -193,7 +219,8 @@ public abstract class ActivityType implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _activityTypeId = (ActivityTypeId)in.readObject();
+        _unitId = (String)in.readObject();
+        _unitIndex = in.readInt();
         _timestamp = in.readLong();
         
         int len=in.readInt();

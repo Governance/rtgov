@@ -24,7 +24,6 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityTypeId;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityNotifier;
 import org.overlord.bam.activity.server.ActivityServer;
@@ -121,11 +120,8 @@ public class ActivityServerImpl implements ActivityServer {
         int index=0;
         
         for (ActivityType at : au.getActivityTypes()) {
-            if (at.getId() == null) {
-                at.setId(new ActivityTypeId());
-            }
-            at.getId().setActivityUnitId(au.getId());
-            at.getId().setActivityTypeIndex(index++);
+            at.setUnitId(au.getId());
+            at.setUnitIndex(index++);
         }
     }
     

@@ -33,8 +33,8 @@ public class ActivityTypeId implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    private String _activityUnitId=null;
-    private int _activityTypeIndex=0;
+    private String _unitId=null;
+    private int _unitIndex=0;
 
     /**
      * The default constructor.
@@ -48,8 +48,8 @@ public class ActivityTypeId implements java.io.Externalizable {
      * @param act The activity to copy.
      */
     public ActivityTypeId(ActivityTypeId act) {
-        _activityUnitId = act._activityUnitId;
-        _activityTypeIndex = act._activityTypeIndex;
+        _unitId = act._unitId;
+        _unitIndex = act._unitIndex;
     }
     
     /**
@@ -60,8 +60,8 @@ public class ActivityTypeId implements java.io.Externalizable {
      * @param index The activity type index within the unit
      */
     public ActivityTypeId(String id, int index) {
-        _activityUnitId = id;
-        _activityTypeIndex = index;
+        _unitId = id;
+        _unitIndex = index;
     }
     
     /**
@@ -69,8 +69,8 @@ public class ActivityTypeId implements java.io.Externalizable {
      * 
      * @param id The activity unit id
      */
-    public void setActivityUnitId(String id) {
-        _activityUnitId = id;
+    public void setUnitId(String id) {
+        _unitId = id;
     }
     
     /**
@@ -78,8 +78,8 @@ public class ActivityTypeId implements java.io.Externalizable {
      * 
      * @return The activity unit id
      */
-    public String getActivityUnitId() {
-        return (_activityUnitId);
+    public String getUnitId() {
+        return (_unitId);
     }
     
     /**
@@ -88,8 +88,8 @@ public class ActivityTypeId implements java.io.Externalizable {
      * 
      * @param index The index
      */
-    public void setActivityTypeIndex(int index) {
-        _activityTypeIndex = index;
+    public void setUnitIndex(int index) {
+        _unitIndex = index;
     }
     
     /**
@@ -98,8 +98,8 @@ public class ActivityTypeId implements java.io.Externalizable {
      * 
      * @return The index
      */
-    public int getActivityTypeIndex() {
-        return (_activityTypeIndex);
+    public int getUnitIndex() {
+        return (_unitIndex);
     }
     
     /**
@@ -108,8 +108,8 @@ public class ActivityTypeId implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_activityUnitId);
-        out.writeInt(_activityTypeIndex);
+        out.writeObject(_unitId);
+        out.writeInt(_unitIndex);
     }
 
     /**
@@ -119,8 +119,8 @@ public class ActivityTypeId implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _activityUnitId = (String)in.readObject();
-        _activityTypeIndex = in.readInt();
+        _unitId = (String)in.readObject();
+        _unitIndex = in.readInt();
     }
     
 }
