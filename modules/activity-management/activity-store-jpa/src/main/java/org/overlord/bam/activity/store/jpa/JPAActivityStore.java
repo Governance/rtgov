@@ -24,6 +24,12 @@ import java.util.logging.Logger;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
+//import org.overlord.bam.activity.server.ActivityStore;
+//import org.overlord.bam.activity.server.QuerySpec;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * This class provides the JPA implementation of the Activity Store.
@@ -33,20 +39,71 @@ public class JPAActivityStore implements ActivityStore {
 
     private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
     
+    private static EntityManagerFactory EMF;
+    
+    private EntityManager _entityManager=null;
+    
+    static {
+        java.util.Map<String,Object> props=new java.util.HashMap<String, Object>();
+        
+        EMF = Persistence.createEntityManagerFactory("overlord-bam-activity", props);
+    }
+    
+    /**
+     * This is the default constructor for the JPA activity store.
+     */
+    public JPAActivityStore() {
+        _entityManager = EMF.createEntityManager();
+    }
+    
     /**
      * {@inheritDoc}
      */
     public void store(List<ActivityUnit> activities) throws Exception {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Store="+activities);
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Store="+activities);
         }
+        
+        _entityManager.getTransaction().begin();
+        
+        for (ActivityUnit au : activities) {
+            _entityManager.persist(au);
+        }
+        
+        _entityManager.flush();
+        
+        _entityManager.getTransaction().commit();
     }
 
     /**
      * {@inheritDoc}
      */
-    public List<ActivityUnit> query(QuerySpec query) throws Exception {
-        return new java.util.Vector<ActivityUnit>();
+    public List<ActivityUnit> query(QuerySpec query) throws Exception {  
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Query="+query);
+        }
+
+        @SuppressWarnings("unchecked")
+        List<ActivityUnit> ret=(List<ActivityUnit>)
+                _entityManager.createQuery(createQueryExpression(query))
+                .getResultList();
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Query="+query+" Result="+ret);
+        }
+
+        return (ret);
     }
 
+    /**
+     * This method returns the JP-QL query expression associated with the
+     * supplied spec.
+     * 
+     * @param query The query expression
+     * @return
+     */
+    private String createQueryExpression(QuerySpec query) {
+        return ("SELECT au FROM ActivityUnit au");
+    }
 }

@@ -22,6 +22,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * This activity type represents a sent request.
@@ -52,6 +53,7 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
     /**
      * {@inheritDoc}
      */
+    @Transient
     public boolean isRequest() {
         return (false);
     }
@@ -59,6 +61,7 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
     /**
      * {@inheritDoc}
      */
+    @Transient
     public boolean isServiceProvider() {
         return (true);
     }

@@ -21,12 +21,15 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Embeddable;
+
 /**
  * This class represents context information that can be used to
  * correlate this (set of) activity with other activities related
  * to the same business/service transaction.
  *
  */
+@Embeddable
 public class Context implements java.io.Externalizable {
 
     private static final int VERSION = 1;

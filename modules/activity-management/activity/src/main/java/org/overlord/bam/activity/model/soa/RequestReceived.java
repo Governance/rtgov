@@ -22,6 +22,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * This activity type represents a received request.
@@ -49,6 +50,7 @@ public class RequestReceived extends RPCActivityType implements java.io.External
     /**
      * {@inheritDoc}
      */
+    @Transient
     public boolean isRequest() {
         return (true);
     }
@@ -56,6 +58,7 @@ public class RequestReceived extends RPCActivityType implements java.io.External
     /**
      * {@inheritDoc}
      */
+    @Transient
     public boolean isServiceProvider() {
         return (true);
     }

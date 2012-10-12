@@ -21,9 +21,18 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.InheritanceType;
+import javax.persistence.DiscriminatorType;
 
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
@@ -52,6 +61,11 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
     @Type(value=ProcessStarted.class) })
 @Entity
 @IdClass(value=ActivityTypeId.class)
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+    name="type",
+    discriminatorType=DiscriminatorType.STRING
+)
 public abstract class ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
@@ -159,6 +173,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @return The context
      */
+    @ElementCollection()
     public java.util.List<Context> getContext() {
         return (_contexts);
     }
@@ -187,6 +202,12 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @return The properties
      */
+    @ElementCollection(targetClass=String.class)
+    @MapKeyColumn(name="name")
+    @Column(name="value")
+    @CollectionTable(name="activity_properties",joinColumns={
+            @JoinColumn(name="unit_id",referencedColumnName="unitId"),
+            @JoinColumn(name="unit_index",referencedColumnName="unitIndex")})
     public java.util.Map<String,String> getProperties() {
         return (_properties);
     }

@@ -22,6 +22,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.Context;
@@ -70,6 +71,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      * 
      * @return Whether associated with the service provider
      */
+    @Transient
     public abstract boolean isServiceProvider();
     
     /**
@@ -78,6 +80,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      * 
      * @return Whether a request
      */
+    @Transient
     public abstract boolean isRequest();
     
     /**

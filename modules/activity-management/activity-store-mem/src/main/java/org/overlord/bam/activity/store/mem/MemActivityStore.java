@@ -38,6 +38,8 @@ public class MemActivityStore implements ActivityStore {
 
     private List<ActivityUnit> _activities=new java.util.ArrayList<ActivityUnit>();
     
+    private static final int MAX_ITEMS=1000;
+    
     /**
      * This method clears the activity store.
      */
@@ -54,6 +56,10 @@ public class MemActivityStore implements ActivityStore {
         }
         
         _activities.addAll(activities);
+        
+        while (_activities.size() > MAX_ITEMS) {
+            _activities.remove(0);
+        }
     }
 
     /**

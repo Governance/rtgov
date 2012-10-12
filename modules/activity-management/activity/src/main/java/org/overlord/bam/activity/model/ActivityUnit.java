@@ -27,7 +27,11 @@ import java.util.logging.Logger;
 
 import javax.persistence.Entity;
 import javax.persistence.Embedded;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.CascadeType;
 
 /**
  * This class represents an activity unit, which generally relates
@@ -172,6 +176,8 @@ public class ActivityUnit implements java.io.Externalizable {
      * 
      * @return The activity types
      */
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @JoinColumn(name="unitId")
     public java.util.List<ActivityType> getActivityTypes() {
         return (_activityTypes);
     }
