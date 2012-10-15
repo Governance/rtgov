@@ -182,11 +182,11 @@ public class JBossASSLAMonitorACSViolationsTest {
                 fail("No violations returned");
             }
             
-            if (violations.size() != 1) {
-                fail("1 violation expected, but got: "+violations.size());
-            }
-            
             System.out.println("VIOLATIONS="+violations);
+            
+            if (violations.size() != 2) {
+                fail("2 violation expected, but got: "+violations.size());
+            }
 
         } catch (Exception e) {
             fail("Failed to invoke service: "+e);

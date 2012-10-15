@@ -51,6 +51,7 @@
 		</fileSet>
 
 		<!-- Copy war build module -->
+<!--
 		<fileSet>
 			<directory>../war</directory>
 			<outputDirectory>build</outputDirectory>
@@ -60,6 +61,7 @@
 				<exclude>**/.settings/**</exclude>
 			</excludes>
 		</fileSet>
+-->
 
 		<!-- Copy modules and deployments -->
 		<fileSet>

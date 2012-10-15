@@ -231,8 +231,8 @@ public class JBossASSLAMonitorTest {
                 fail("Expecting sla violations results");
             }
             
-            if (tl.getResults(SITUATIONS).size() != 1) {
-                fail("Expecting 1 (sla violations) results events, but got: "+tl.getResults(SITUATIONS).size());
+            if (tl.getResults(SITUATIONS).size() != 2) {
+                fail("Expecting 2 (sla violations) results events, but got: "+tl.getResults(SITUATIONS).size());
             }
 
         } catch (Exception e) {

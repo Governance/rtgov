@@ -174,8 +174,8 @@ public class JBossASACMgrACSViolationsTest {
                 fail("Result 1 is null");
             }
             
-            if (result1.size() != 1) {
-                fail("1 event expected, but got: "+result1.size());
+            if (result1.size() != 2) {
+                fail("2 event expected, but got: "+result1.size());
             }
 
         } catch (Exception e) {

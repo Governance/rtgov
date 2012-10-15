@@ -22,6 +22,8 @@ import java.util.Random;
 import javax.transaction.TransactionManager;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.TypeReference;
 import org.overlord.bam.activity.collector.ActivityCollector;
 import org.overlord.bam.activity.collector.CollectorContext;
@@ -47,6 +49,16 @@ public class ActivityClient {
                         new java.util.HashMap<String, java.io.File>();
     private java.util.List<String> _txnList=new java.util.Vector<String>();
 
+    private static final ObjectMapper MAPPER=new ObjectMapper();
+
+    static {
+        SerializationConfig config=MAPPER.getSerializationConfig()
+                .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
+                .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+        
+        MAPPER.setSerializationConfig(config);
+    }
+    
     /**
      * The main method.
      * 
@@ -270,10 +282,8 @@ public class ActivityClient {
             
             is = new java.io.ByteArrayInputStream(txn.getBytes());
             
-            ObjectMapper mapper=new ObjectMapper();
-            
             java.util.List<ActivityType> actTypes=
-                      mapper.readValue(is,
+                      MAPPER.readValue(is,
                              new TypeReference<java.util.List<ActivityType>>(){});
             
             is.close();

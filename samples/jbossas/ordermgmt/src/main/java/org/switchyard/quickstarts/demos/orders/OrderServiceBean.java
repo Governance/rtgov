@@ -41,15 +41,8 @@ public class OrderServiceBean implements OrderService {
         OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId());
         // Check the inventory
         try {
-            if (order.getItemId().equals("JAM")) {
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            
             Item orderItem = _inventory.lookupItem(order.getItemId());
+            
             // Check quantity on hand and generate the ack
             if (orderItem.getQuantity() >= order.getQuantity()) {
                 

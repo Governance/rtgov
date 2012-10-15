@@ -52,6 +52,14 @@ public class InventoryServiceBean implements InventoryService {
             throw new ItemNotFoundException("We don't got any " + itemId);
         }
         
+        if (itemId.equals("JAM")) {
+            try {
+                Thread.sleep(500);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
         return item;
     }
 }

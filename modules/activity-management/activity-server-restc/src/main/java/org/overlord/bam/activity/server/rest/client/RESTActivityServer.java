@@ -24,10 +24,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.bam.activity.util.ActivityUtil;
 
 /**
  * This class provides the REST client implementation of the activity server.
@@ -84,7 +84,7 @@ public class RESTActivityServer implements ActivityServer {
 
         java.io.OutputStream os=connection.getOutputStream();
         
-        MAPPER.writeValue(os, activities);
+        os.write(ActivityUtil.serializeActivityUnitList(activities));
         
         os.flush();
         os.close();
@@ -133,9 +133,13 @@ public class RESTActivityServer implements ActivityServer {
         
         java.io.InputStream is=connection.getInputStream();
 
-        ret = MAPPER.readValue(is, new TypeReference<java.util.List<ActivityUnit>>() {});
+        byte[] b=new byte[is.available()];
+        
+        is.read(b);
         
         is.close();
+        
+        ret = ActivityUtil.deserializeActivityUnitList(b);
         
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("RESTActivityServer result: "+ret);
