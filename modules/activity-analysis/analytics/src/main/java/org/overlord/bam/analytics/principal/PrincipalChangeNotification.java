@@ -22,10 +22,10 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 /**
- * This class represents an action related to a principal.
+ * This class represents a change notification related to a principal.
  *
  */
-public class PrincipalAction implements java.io.Externalizable {
+public class PrincipalChangeNotification implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
@@ -51,9 +51,9 @@ public class PrincipalAction implements java.io.Externalizable {
      * This method sets the principal.
      * 
      * @param principal The principal
-     * @return The action
+     * @return The notification
      */
-    public PrincipalAction setPrincipal(String principal) {
+    public PrincipalChangeNotification setPrincipal(String principal) {
         _principal = principal;
         return (this);
     }
@@ -68,21 +68,21 @@ public class PrincipalAction implements java.io.Externalizable {
     }
     
     /**
-     * This method returns the action type.
+     * This method returns the change type.
      * 
-     * @return The action type
+     * @return The change type
      */
     public Type getType() {
         return _type;
     }
 
     /**
-     * This method sets the action type.
+     * This method sets the change type.
      * 
-     * @param actionType The action type
+     * @param type The change type
      */
-    public void setType(Type actionType) {
-        _type = actionType;
+    public void setType(Type type) {
+        _type = type;
     }
 
     /**
@@ -91,9 +91,9 @@ public class PrincipalAction implements java.io.Externalizable {
      * 
      * @param name The name
      * @param value The value
-     * @return The action
+     * @return The notification
      */
-    public PrincipalAction setProperty(String name, java.io.Serializable value) {
+    public PrincipalChangeNotification setProperty(String name, java.io.Serializable value) {
         _properties.put(name, value);
         
         return (this);
@@ -101,7 +101,7 @@ public class PrincipalAction implements java.io.Externalizable {
     
     /**
      * This method returns the properties associated with the
-     * action.
+     * notification.
      * 
      * @return The properties
      */

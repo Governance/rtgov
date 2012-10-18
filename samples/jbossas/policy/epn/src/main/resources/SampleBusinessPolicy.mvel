@@ -51,7 +51,7 @@ if (event.operation == "submitOrder") {
 	principals.put(customer, principal);
 	
 	if (newtotal > 150 && current <= 150) {
-		result = new org.overlord.bam.analytics.principal.PrincipalAction();
+		result = new org.overlord.bam.analytics.principal.PrincipalChangeNotification();
 		result.setPrincipal(customer);
 		result.setProperty("suspended", Boolean.TRUE);
 		epn.forward(result);
@@ -102,7 +102,7 @@ if (event.operation == "submitOrder") {
 			principals.put(customer, principal);
 			
 			if (newamount <= 150 && current > 150) {
-				result = new org.overlord.bam.analytics.principal.PrincipalAction();
+				result = new org.overlord.bam.analytics.principal.PrincipalChangeNotification();
 				result.setPrincipal(customer);
 				result.setProperty("suspended", Boolean.FALSE);
 				epn.forward(result);

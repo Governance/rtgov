@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.mvel2.MVEL;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
 import org.overlord.bam.active.collection.ActiveMap;
-import org.overlord.bam.analytics.principal.PrincipalAction;
+import org.overlord.bam.analytics.principal.PrincipalChangeNotification;
 
 public class MaintainPrincipalsMvelTest {
 
@@ -65,12 +65,12 @@ public class MaintainPrincipalsMvelTest {
         fred.put("suspended", Boolean.TRUE);
         acs.insert("fred", fred);
         
-        PrincipalAction action1=new PrincipalAction();
-        action1.setPrincipal("fred");
-        action1.getProperties().put("suspended", Boolean.FALSE);
+        PrincipalChangeNotification n1=new PrincipalChangeNotification();
+        n1.setPrincipal("fred");
+        n1.getProperties().put("suspended", Boolean.FALSE);
        
         vars.put("acs", acs);
-        vars.put("value", action1);
+        vars.put("value", n1);
         
         MVEL.executeExpression(expression, vars);
         

@@ -24,7 +24,7 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.analytics.principal.PrincipalAction;
+import org.overlord.bam.analytics.principal.PrincipalChangeNotification;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.NotificationListener;
@@ -148,11 +148,11 @@ public class EPNTest {
             fail("Was expecting 1 notified results: "+l.getEvents().size());
         }
         
-        if (!(l.getEvents().get(0) instanceof PrincipalAction)) {
+        if (!(l.getEvents().get(0) instanceof PrincipalChangeNotification)) {
             fail("Expecting principal action");
         }
         
-        PrincipalAction pa=(PrincipalAction)l.getEvents().get(0);
+        PrincipalChangeNotification pa=(PrincipalChangeNotification)l.getEvents().get(0);
         
         if (!pa.getPrincipal().equals("Fred")) {
             fail("Principal is not Fred");
@@ -388,11 +388,11 @@ public class EPNTest {
             fail("Was expecting 1 notified results: "+l.getEvents().size());
         }
         
-        if (!(l.getEvents().get(0) instanceof PrincipalAction)) {
+        if (!(l.getEvents().get(0) instanceof PrincipalChangeNotification)) {
             fail("Expecting principal action");
         }
         
-        PrincipalAction pa=(PrincipalAction)l.getEvents().get(0);
+        PrincipalChangeNotification pa=(PrincipalChangeNotification)l.getEvents().get(0);
         
         if (!pa.getPrincipal().equals("Fred")) {
             fail("Principal is not Fred");
