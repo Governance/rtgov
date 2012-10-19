@@ -94,36 +94,29 @@ public class PolicyEnforcer implements ExchangeHandler {
             if (exchange.getPhase() == ExchangePhase.IN
                     && contentType != null
                     && contentType.equals("{urn:switchyard-quickstart-demo:orders:1.0}submitOrder")) {
-                String content=getMessageContent(exchange);
 
-                int start=content.indexOf("<customer>");
-                
-                if (start != -1) {
-                    int end=content.indexOf("</", start);
+                String customer=getCustomer(exchange);
+                       
+                if (customer != null) {
+                    if (_principals.containsKey(customer)) {
+                        
+                        @SuppressWarnings("unchecked")
+                        java.util.Map<String,java.io.Serializable> props=
+                                (java.util.Map<String,java.io.Serializable>)
+                                        _principals.get(customer);
+                        
+                        // Check if customer is suspended
+                        if (props.containsKey("suspended")
+                                && props.get("suspended").equals(Boolean.TRUE)) {                            
+                            throw new HandlerException("Customer '"+customer
+                                    +"' has been suspended");
+                        }
+                    }
                     
-                    if (end != -1) {
-                        String customer=content.substring(start+10, end);
-                        
-                        if (_principals.containsKey(customer)) {
-                            
-                            @SuppressWarnings("unchecked")
-                            java.util.Map<String,java.io.Serializable> props=
-                                    (java.util.Map<String,java.io.Serializable>)
-                                            _principals.get(customer);
-                            
-                            // Check if customer is suspended
-                            if (props.containsKey("suspended")
-                                    && props.get("suspended").equals(Boolean.TRUE)) {                            
-                                throw new HandlerException("Customer '"+customer
-                                        +"' has been suspended");
-                            }
-                        }
-                        
-                        if (LOG.isLoggable(Level.FINE)) {
-                            LOG.fine("*********** Policy Enforcer: customer '"
-                                    +customer+"' has not been suspended");
-                            LOG.fine("*********** Principal: "+_principals.get(customer));
-                        }
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("*********** Policy Enforcer: customer '"
+                                +customer+"' has not been suspended");
+                        LOG.fine("*********** Principal: "+_principals.get(customer));
                     }
                 }
             }
@@ -142,6 +135,31 @@ public class PolicyEnforcer implements ExchangeHandler {
         // TODO: Handle faults
     }
 
+    /**
+     * This method returns the customer associated with the
+     * exchange.
+     * 
+     * @param exchange The exchange
+     * @return The customer
+     */
+    protected String getCustomer(Exchange exchange) {
+        String customer=null;
+
+        String content=getMessageContent(exchange);
+
+        int start=content.indexOf("<customer>");
+        
+        if (start != -1) {
+            int end=content.indexOf("</", start);
+            
+            if (end != -1) {
+                customer = content.substring(start+10, end);
+            }
+        }
+        
+        return (customer);
+    }
+    
     /**
      * This method returns a string representation of the
      * message content, or null if no available.

@@ -122,27 +122,31 @@ public class ExchangeInterceptor implements ExchangeHandler {
                     _activityCollector.record(sent);
                 }
                 
-                RequestReceived recvd=new RequestReceived();
-                
-                recvd.setServiceType(serviceType.toString());                
-                recvd.setOperation(opName);
-                recvd.setContent(content);
-                recvd.setMessageType(contentType);
-                recvd.setMessageId(messageId);
-                
-                _activityCollector.record(recvd);
+                //if (!exchange.getProvider().getProviderMetadata().isBinding()) {
+                    RequestReceived recvd=new RequestReceived();
+                    
+                    recvd.setServiceType(serviceType.toString());                
+                    recvd.setOperation(opName);
+                    recvd.setContent(content);
+                    recvd.setMessageType(contentType);
+                    recvd.setMessageId(messageId);
+                    
+                    _activityCollector.record(recvd);
+                //}
                 
             } else if (exchange.getPhase() == ExchangePhase.OUT) {
-                ResponseSent sent=new ResponseSent();
-                                
-                sent.setServiceType(serviceType.toString());                
-                sent.setOperation(opName);
-                sent.setContent(content);
-                sent.setMessageType(contentType);
-                sent.setMessageId(messageId);
-                sent.setReplyToId(relatesTo);
-                
-                _activityCollector.record(sent);
+                //if (!exchange.getProvider().getProviderMetadata().isBinding()) {
+                    ResponseSent sent=new ResponseSent();
+                                    
+                    sent.setServiceType(serviceType.toString());                
+                    sent.setOperation(opName);
+                    sent.setContent(content);
+                    sent.setMessageType(contentType);
+                    sent.setMessageId(messageId);
+                    sent.setReplyToId(relatesTo);
+                    
+                    _activityCollector.record(sent);
+                //}
                 
                 if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
                     _activityCollector.endScope();
