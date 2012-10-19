@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.QuerySpec;
@@ -37,9 +37,8 @@ public class RESTActivityServer implements ActivityServer {
 
     private static final Logger LOG=Logger.getLogger(RESTActivityServer.class.getName());
     
-    private static final ObjectMapper MAPPER=new ObjectMapper();
-    
     private static final String STORE="/overlord-bam/activity/store";
+    private static final String UNIT="/overlord-bam/activity/unit";
     private static final String QUERY="/overlord-bam/activity/query";
     
     private String _url="http://localhost:8080";
@@ -91,7 +90,7 @@ public class RESTActivityServer implements ActivityServer {
         
         java.io.InputStream is=connection.getInputStream();
         
-        byte[] b=new byte[is.available()];
+        byte[] b = new byte[is.available()];
         
         is.read(b);
         
@@ -105,8 +104,47 @@ public class RESTActivityServer implements ActivityServer {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityUnit> query(QuerySpec query) throws Exception {
-        List<ActivityUnit> ret=null;
+    public ActivityUnit getActivityUnit(String id) throws Exception {
+        ActivityUnit ret=null;
+        
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("RESTActivityServer getActivityUnit: "+id);
+        }
+        
+        URL queryUrl = new URL(_url+UNIT+"?id="+id);
+        
+        HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
+        connection.setRequestMethod("GET");
+
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setUseCaches(false);
+        connection.setAllowUserInteraction(false);
+        connection.setRequestProperty("Content-Type",
+                    "application/json");
+
+        java.io.InputStream is=connection.getInputStream();
+        
+        byte[] b=new byte[is.available()];
+        
+        is.read(b);
+        
+        is.close();
+        
+        ret = ActivityUtil.deserializeActivityUnit(b);
+        
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("RESTActivityServer getActivityUnit result: "+ret);
+        }
+        
+        return (ret);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> query(QuerySpec query) throws Exception {
+        List<ActivityType> ret=null;
         
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("RESTActivityServer query: "+query);
@@ -126,20 +164,20 @@ public class RESTActivityServer implements ActivityServer {
 
         java.io.OutputStream os=connection.getOutputStream();
         
-        MAPPER.writeValue(os, query);
+        byte[] b=ActivityUtil.serializeQuerySpec(query);
+        os.write(b);
         
         os.flush();
         os.close();
         
         java.io.InputStream is=connection.getInputStream();
 
-        byte[] b=new byte[is.available()];
-        
+        b = new byte[is.available()];
         is.read(b);
         
-        is.close();
+        ret = ActivityUtil.deserializeActivityTypeList(b);
         
-        ret = ActivityUtil.deserializeActivityUnitList(b);
+        is.close();
         
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("RESTActivityServer result: "+ret);

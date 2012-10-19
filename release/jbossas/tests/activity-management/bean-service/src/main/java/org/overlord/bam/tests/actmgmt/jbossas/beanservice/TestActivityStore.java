@@ -20,6 +20,7 @@ package org.overlord.bam.tests.actmgmt.jbossas.beanservice;
 import java.util.List;
 
 
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
@@ -71,7 +72,15 @@ public class TestActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityUnit> query(QuerySpec query) throws Exception {
+    public List<ActivityType> query(QuerySpec query) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ActivityUnit getActivityUnit(String id) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }

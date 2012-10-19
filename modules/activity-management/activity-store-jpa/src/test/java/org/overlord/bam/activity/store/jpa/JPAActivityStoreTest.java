@@ -20,6 +20,7 @@ package org.overlord.bam.activity.store.jpa;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Origin;
 import org.overlord.bam.activity.model.Context;
@@ -28,6 +29,8 @@ import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.server.QuerySpec;
 
 public class JPAActivityStoreTest {
+
+    private static final String OVERLORD_BAM_ACTIVITY_ORM = "overlord-bam-activity-orm";
 
     public ActivityUnit createTestActivityUnit(String id) {
         ActivityUnit act=new ActivityUnit();
@@ -72,9 +75,10 @@ public class JPAActivityStoreTest {
         me2.setMessageType("{http://message}Confirmation");
         me2.setOperation("myOp");
         me2.setServiceType("{http://service}OrderService");
-        me2.setMessageId("corr1");
+        me2.setMessageId("corr2");
+        me2.setReplyToId("corr1");
         me2.getProperties().put("customer", "Fred");
-        me2.getProperties().put("trader", "Joe");
+        me2.getProperties().put("manager", "Jane");
         
         Context c2=new Context();
         c2.setType(Context.Type.Endpoint);
@@ -87,8 +91,31 @@ public class JPAActivityStoreTest {
     }
     
     @Test
-    public void testStore() {
+    public void testStoreAndQueryAllORM() {
+        testStoreAndQuery(OVERLORD_BAM_ACTIVITY_ORM, new QuerySpec());
+    }
+    
+    @Test
+    public void testQueryActivityFieldORM() {        
+        java.util.List<ActivityType> results=
+                testStoreAndQuery(OVERLORD_BAM_ACTIVITY_ORM,
+                      "select evt from ActivityType evt "+
+                              "where evt.operation = 'myOp'");
+                        //"join evt.properties p "+
+                        //"where p.value = 'Joe'");
+        //"inner join evt.properties p \n"+
+        //"where p.name = 'trader' and p.value = 'Joe'");
+        
+        System.out.println("RESULTS="+results);
+    }
+
+    protected java.util.List<ActivityType> testStoreAndQuery(String emname, QuerySpec qs) {
+        java.util.List<ActivityType> results=null;
+        
         JPAActivityStore astore=new JPAActivityStore();
+        
+        astore.setEntityManagerName(emname);
+        astore.init();
         
         java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
         
@@ -102,15 +129,48 @@ public class JPAActivityStoreTest {
         }
         
         try {
-            QuerySpec qs=new QuerySpec();
-            
-            java.util.List<ActivityUnit> results=astore.query(qs);
+            results = astore.query(qs);
             
             System.out.println("RESULTS="+results);
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         }
         
+        astore.close();
+        
+        return (results);
+    }
+
+    protected java.util.List<ActivityType> testStoreAndQuery(String emname, String query) {
+        java.util.List<ActivityType> results=null;
+        
+        JPAActivityStore astore=new JPAActivityStore();
+        
+        astore.setEntityManagerName(emname);
+        astore.init();
+        
+        java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
+        
+        activities.add(createTestActivityUnit("au1"));
+        activities.add(createTestActivityUnit("au2"));
+        
+        try {
+            astore.store(activities);
+        } catch(Exception e) {
+            fail("Failed to store activities: "+e);
+        }
+        
+        try {
+            results = astore.query(query);
+            
+            System.out.println("RESULTS="+results);
+        } catch(Exception e) {
+            fail("Failed to query activities: "+e);
+        }
+        
+        astore.close();
+        
+        return (results);
     }
 
 }

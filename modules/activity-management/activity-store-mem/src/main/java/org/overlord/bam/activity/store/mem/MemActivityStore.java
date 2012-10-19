@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Singleton;
 
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
@@ -65,8 +66,21 @@ public class MemActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityUnit> query(QuerySpec query) throws Exception {
-        List<ActivityUnit> ret=query.evaluate(_activities);
+    public ActivityUnit getActivityUnit(String id) throws Exception {
+        for (ActivityUnit au : _activities) {
+            if (au.getId().equals(id)) {
+                return (au);
+            }
+        }
+        
+        return (null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> query(QuerySpec query) throws Exception {
+        List<ActivityType> ret=query.evaluate(_activities);
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Query ("+this+") "+query+" = "+ret);

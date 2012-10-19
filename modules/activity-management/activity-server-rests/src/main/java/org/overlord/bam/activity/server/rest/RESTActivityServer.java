@@ -20,6 +20,7 @@ package org.overlord.bam.activity.server.rest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.QuerySpec;
@@ -30,9 +31,11 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -104,6 +107,42 @@ public class RESTActivityServer {
      * @return The list of activity events
      * @throws Exception Failed to query activity events
      */
+    @GET
+    @Path("/unit")
+    @Produces("application/json")
+    public String getActivityUnit(@QueryParam("id") String id) throws Exception {
+        String ret="";
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Activity Server Get Activity Unit="+id);        
+        }
+        
+        if (_activityServer == null) {
+            throw new Exception("Activity Server is not available");
+        }
+        
+        ActivityUnit au=_activityServer.getActivityUnit(id);
+        
+        if (au != null) {
+            byte[] b=ActivityUtil.serializeActivityUnit(au);
+            
+            ret = new String(b);
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Activity Server Query Result="+ret);        
+        }
+
+        return (ret);
+    }
+
+    /**
+     * This method handles queries for activity events.
+     * 
+     * @param qspec The query spec
+     * @return The list of activity events
+     * @throws Exception Failed to query activity events
+     */
     @POST
     @Path("/query")
     @Produces("application/json")
@@ -120,10 +159,10 @@ public class RESTActivityServer {
             throw new Exception("Activity Server is not available");
         }
         
-        java.util.List<ActivityUnit> list=_activityServer.query(qs);
+        java.util.List<ActivityType> list=_activityServer.query(qs);
         
         if (list != null) {
-            byte[] b=ActivityUtil.serializeActivityUnitList(list);
+            byte[] b=ActivityUtil.serializeActivityTypeList(list);
             
             ret = new String(b);
         }

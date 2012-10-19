@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
 
@@ -32,7 +33,6 @@ public class QuerySpec implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
-    private String _id=null;
     private long _fromTimestamp=0;
     private long _toTimestamp=0;
     private Expression _expression=null;
@@ -41,26 +41,6 @@ public class QuerySpec implements java.io.Externalizable {
      * This is the default constructor.
      */
     public QuerySpec() {
-    }
-    
-    /**
-     * This method sets the activity unit id to retrieve.
-     * 
-     * @param id The activity unit id
-     * @return The query spec
-     */
-    public QuerySpec setId(String id) {
-        _id = id;
-        return (this);
-    }
-    
-    /**
-     * This method returns the activity unit id to retrieve.
-     * 
-     * @return The activity unit id, or null if not relevant
-     */
-    public String getId() {
-        return (_id);
     }
     
     /**
@@ -133,17 +113,19 @@ public class QuerySpec implements java.io.Externalizable {
     
     /**
      * This method applies the query spec to the supplied list of activity units, returning
-     * the subset that pass the query criteria.
+     * the list of contained activity events that pass the query criteria.
      * 
      * @param activities The list of activity units to evaluate
-     * @return The list of activity units that pass the query criteria
+     * @return The list of activity types that pass the query criteria
      */
-    public java.util.List<ActivityUnit> evaluate(java.util.List<ActivityUnit> activities) {
-        java.util.List<ActivityUnit> ret=new java.util.ArrayList<ActivityUnit>();
+    public java.util.List<ActivityType> evaluate(java.util.List<ActivityUnit> activities) {
+        java.util.List<ActivityType> ret=new java.util.ArrayList<ActivityType>();
         
         for (ActivityUnit au : activities) {
-            if (evaluate(au)) {
-                ret.add(au);
+            for (ActivityType at : au.getActivityTypes()) {
+                if (evaluate(at)) {
+                    ret.add(at);
+                }
             }
         }
         
@@ -151,28 +133,26 @@ public class QuerySpec implements java.io.Externalizable {
     }
     
     /**
-     * This method evaluates the supplied activity unit against the
+     * This method evaluates the supplied activity type against the
      * criteria defined by this query spec.
      * 
-     * @param au The activity unit
-     * @return Whether the activity unit matches the query spec
+     * @param at The activity type
+     * @return Whether the activity type matches the query spec
      */
-    protected boolean evaluate(ActivityUnit au) {
+    protected boolean evaluate(ActivityType at) {
         boolean ret=true;
         
-        if (_id != null && !_id.equals(au.getId())) {
+        if (_fromTimestamp != 0
+                && _fromTimestamp > at.getTimestamp()) {
             ret = false;
-        } else if (_fromTimestamp != 0 && au.getActivityTypes().size() > 0
-                && _fromTimestamp > au.getActivityTypes().get(au.getActivityTypes().size()-1).getTimestamp()) {
-            ret = false;
-        } else if (_toTimestamp != 0 && au.getActivityTypes().size() > 0
-                && _toTimestamp < au.getActivityTypes().get(0).getTimestamp()) {
+        } else if (_toTimestamp != 0
+                && _toTimestamp < at.getTimestamp()) {
             ret = false;
         }
         
         // Evaluate the expression
         if (ret && _expression != null) {
-            ret = _expression.evaluate(au);
+            ret = _expression.evaluate(at);
         }
         
         return (ret);
@@ -182,7 +162,7 @@ public class QuerySpec implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public String toString() {
-        return ("QuerySpec[id="+_id+" from="+_fromTimestamp+" to="+_toTimestamp
+        return ("QuerySpec[from="+_fromTimestamp+" to="+_toTimestamp
                 +" expression="+_expression+"]");
     }
     
@@ -192,7 +172,6 @@ public class QuerySpec implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_id);
         out.writeLong(_fromTimestamp);
         out.writeLong(_toTimestamp);
         out.writeObject(_expression);
@@ -205,7 +184,6 @@ public class QuerySpec implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version number - not required at the moment
         
-        _id = (String)in.readObject();
         _fromTimestamp = in.readLong();
         _toTimestamp = in.readLong();
         _expression = (Expression)in.readObject();
@@ -350,25 +328,25 @@ public class QuerySpec implements java.io.Externalizable {
         }
         
         /**
-         * This method evaluates the supplied activity unit
+         * This method evaluates the supplied activity type
          * against the expression.
          * 
-         * @param au The activity unit
+         * @param at The activity type
          * @return The result of the evaluation
          */
-        public boolean evaluate(ActivityUnit au) {
-            return (evaluate(au.contexts(), au.properties()));
+        public boolean evaluate(ActivityType at) {
+            return (evaluate(at.getContext(), at.getProperties()));
         }
         
         /**
          * This method evaluates the supplied activity unit
          * against the expression.
          * 
-         * @param contexts The set of contexts
+         * @param contexts The list of contexts
          * @param properties The set of properties
          * @return The result of the evaluation
          */
-        protected boolean evaluate(java.util.Set<Context> contexts,
+        protected boolean evaluate(java.util.List<Context> contexts,
                 java.util.Map<String,String> properties) {
             boolean ret=false;
             
@@ -388,11 +366,11 @@ public class QuerySpec implements java.io.Externalizable {
         /**
          * This method evaluates the Match operator.
          * 
-         * @param contexts The set of contexts
+         * @param contexts The list of contexts
          * @param properties The set of properties
          * @return The result
          */
-        protected boolean evaluateMatch(java.util.Set<Context> contexts,
+        protected boolean evaluateMatch(java.util.List<Context> contexts,
                 java.util.Map<String,String> properties) {
             if (_contexts.size() > 0) {
                 if (!contexts.contains(_contexts.get(0))
@@ -419,11 +397,11 @@ public class QuerySpec implements java.io.Externalizable {
         /**
          * This method evaluates the And operator.
          * 
-         * @param contexts The set of contexts
+         * @param contexts The list of contexts
          * @param properties The set of properties
          * @return The result
          */
-        protected boolean evaluateAnd(java.util.Set<Context> contexts,
+        protected boolean evaluateAnd(java.util.List<Context> contexts,
                 java.util.Map<String,String> properties) {
             for (Context c : _contexts) {
                 if (!contexts.contains(c)) {
@@ -450,11 +428,11 @@ public class QuerySpec implements java.io.Externalizable {
         /**
          * This method evaluates the Or operator.
          * 
-         * @param contexts The set of contexts
+         * @param contexts The list of contexts
          * @param properties The set of properties
          * @return The result
          */
-        protected boolean evaluateOr(java.util.Set<Context> contexts,
+        protected boolean evaluateOr(java.util.List<Context> contexts,
                 java.util.Map<String,String> properties) {
             for (Context c : _contexts) {
                 if (contexts.contains(c)) {
@@ -481,11 +459,11 @@ public class QuerySpec implements java.io.Externalizable {
         /**
          * This method evaluates the Not operator.
          * 
-         * @param contexts The set of contexts
+         * @param contexts The list of contexts
          * @param properties The set of properties
          * @return The result
          */
-        protected boolean evaluateNot(java.util.Set<Context> contexts,
+        protected boolean evaluateNot(java.util.List<Context> contexts,
                 java.util.Map<String,String> properties) {
             
             if (_contexts.size() > 0) {

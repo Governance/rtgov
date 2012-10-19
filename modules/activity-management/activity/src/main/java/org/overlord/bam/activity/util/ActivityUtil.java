@@ -18,9 +18,11 @@
 package org.overlord.bam.activity.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.TypeReference;
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.QuerySpec;
 
@@ -33,15 +35,21 @@ public final class ActivityUtil {
     
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
-    private static final TypeReference<java.util.List<ActivityUnit>> ACTIVITY_LIST=
-                        new TypeReference<java.util.List<ActivityUnit>>() { };
+    private static final TypeReference<java.util.List<ActivityUnit>> ACTIVITY_UNIT_LIST=
+            new TypeReference<java.util.List<ActivityUnit>>() { };
+    private static final TypeReference<java.util.List<ActivityType>> ACTIVITY_TYPE_LIST=
+            new TypeReference<java.util.List<ActivityType>>() { };
     
+    private static ObjectWriter ATLIST_WRITER=null;
+
     static {
         SerializationConfig config=MAPPER.getSerializationConfig()
                 .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
                 .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
         
         MAPPER.setSerializationConfig(config);
+        
+        ATLIST_WRITER = MAPPER.writerWithType(ACTIVITY_TYPE_LIST);
     }
     
     /**
@@ -114,9 +122,9 @@ public final class ActivityUtil {
     }
 
     /**
-     * This method serializes an Activity event list into a JSON representation.
+     * This method serializes an ActivityUnit  list into a JSON representation.
      * 
-     * @param activities The activity list
+     * @param activities The activity unit list
      * @return The JSON serialized representation
      * @throws Exception Failed to serialize
      */
@@ -126,6 +134,27 @@ public final class ActivityUtil {
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
         
         MAPPER.writeValue(baos, activities);
+        
+        ret = baos.toByteArray();
+        
+        baos.close();
+        
+        return (ret);
+    }
+
+    /**
+     * This method serializes an ActivityType event list into a JSON representation.
+     * 
+     * @param activities The activity type list
+     * @return The JSON serialized representation
+     * @throws Exception Failed to serialize
+     */
+    public static byte[] serializeActivityTypeList(java.util.List<ActivityType> activities) throws Exception {
+        byte[] ret=null;
+        
+        java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+        
+        ATLIST_WRITER.writeValue(baos, activities);
         
         ret = baos.toByteArray();
         
@@ -173,10 +202,10 @@ public final class ActivityUtil {
     }
 
     /**
-     * This method deserializes an Activity event list from a JSON representation.
+     * This method deserializes an Activity Unit list from a JSON representation.
      * 
      * @param act The JSON representation of the activity
-     * @return The Activity event list
+     * @return The ActivityUnit event list
      * @throws Exception Failed to deserialize
      */
     public static java.util.List<ActivityUnit> deserializeActivityUnitList(byte[] act) throws Exception {
@@ -184,7 +213,26 @@ public final class ActivityUtil {
         
         java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(act);
         
-        ret = MAPPER.readValue(bais, ACTIVITY_LIST);
+        ret = MAPPER.readValue(bais, ACTIVITY_UNIT_LIST);
+        
+        bais.close();
+        
+        return (ret);
+    }
+
+    /**
+     * This method deserializes an ActivityType event list from a JSON representation.
+     * 
+     * @param act The JSON representation of the activity
+     * @return The ActivityType event list
+     * @throws Exception Failed to deserialize
+     */
+    public static java.util.List<ActivityType> deserializeActivityTypeList(byte[] act) throws Exception {
+        java.util.List<ActivityType> ret=null;
+        
+        java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(act);
+        
+        ret = MAPPER.readValue(bais, ACTIVITY_TYPE_LIST);
         
         bais.close();
         

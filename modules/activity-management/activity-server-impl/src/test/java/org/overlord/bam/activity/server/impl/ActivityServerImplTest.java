@@ -342,7 +342,12 @@ public class ActivityServerImplTest {
             _store.addAll(activities);
         }
 
-        public List<ActivityUnit> query(QuerySpec query) throws Exception {
+        public ActivityUnit getActivityUnit(String id) throws Exception {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        public List<ActivityType> query(QuerySpec query) throws Exception {
             // TODO Auto-generated method stub
             return null;
         }

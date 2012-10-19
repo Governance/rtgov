@@ -33,6 +33,7 @@ import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.api.jms.HornetQJMSClient;
 import org.hornetq.api.jms.JMSFactoryType;
 import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.QuerySpec;
@@ -90,7 +91,14 @@ public class JMSActivityServer implements ActivityServer {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityUnit> query(QuerySpec query) throws Exception {
+    public ActivityUnit getActivityUnit(String id) throws Exception {
+        throw new java.lang.UnsupportedOperationException();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> query(QuerySpec query) throws Exception {
         throw new java.lang.UnsupportedOperationException();
     }
 
@@ -107,4 +115,5 @@ public class JMSActivityServer implements ActivityServer {
                     "activity-server-jmsc.Messages").getString("ACTIVITY-SERVER-JMSC-2"));
         }
     }
+
 }

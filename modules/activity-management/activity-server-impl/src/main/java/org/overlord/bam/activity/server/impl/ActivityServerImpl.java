@@ -135,14 +135,21 @@ public class ActivityServerImpl implements ActivityServer {
     }
     
     /**
-     * This method retrieves a set of activity events associated
-     * with the supplied query.
-     * 
-     * @param query The query
-     * @return The list of activities
-     * @throws Exception Failed to query the activities
+     * {@inheritDoc}
      */
-    public java.util.List<ActivityUnit> query(QuerySpec query) throws Exception {
+    public ActivityUnit getActivityUnit(String id) throws Exception {
+        
+        if (_store == null) {
+            throw new Exception("Activity Store is unavailable");
+        }
+        
+        return (_store.getActivityUnit(id));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public java.util.List<ActivityType> query(QuerySpec query) throws Exception {
         
         if (_store == null) {
             throw new Exception("Activity Store is unavailable");

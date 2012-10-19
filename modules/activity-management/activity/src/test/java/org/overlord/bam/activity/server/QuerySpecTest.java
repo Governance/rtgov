@@ -32,30 +32,6 @@ import org.overlord.bam.activity.server.QuerySpec.Operator;
 public class QuerySpecTest {
 
     @Test
-    public void testQueryIdValid() {
-        QuerySpec qs=new QuerySpec().setId("TestId");
-        
-        ActivityUnit au=new ActivityUnit();
-        au.setId("TestId");
-        
-        if (!qs.evaluate(au)) {
-            fail("Query should evaluate to true");
-        }
-    }
-
-    @Test
-    public void testQueryIdInvalid() {
-        QuerySpec qs=new QuerySpec().setId("TestId");
-        
-        ActivityUnit au=new ActivityUnit();
-        au.setId("NotTestId");
-        
-        if (qs.evaluate(au)) {
-            fail("Query should evaluate to false");
-        }
-    }
-
-    @Test
     public void testQueryTimestampRangeValid1() {
         QuerySpec qs=new QuerySpec()
                 .setFromTimestamp(100)
@@ -73,76 +49,11 @@ public class QuerySpecTest {
         au.getActivityTypes().add(at1);
         au.getActivityTypes().add(at2);
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(at1)) {
             fail("Query should evaluate to true");
         }
-    }
-
-    @Test
-    public void testQueryTimestampRangeValid2() {
-        QuerySpec qs=new QuerySpec()
-                .setFromTimestamp(200)
-                .setToTimestamp(300);
         
-        ActivityUnit au=new ActivityUnit();
-        au.setId("TestId");
-        
-        RequestReceived at1=new RequestReceived();
-        at1.setTimestamp(150);
-        
-        ResponseSent at2=new ResponseSent();
-        at2.setTimestamp(250);
-        
-        au.getActivityTypes().add(at1);
-        au.getActivityTypes().add(at2);
-        
-        if (!qs.evaluate(au)) {
-            fail("Query should evaluate to true");
-        }
-    }
-
-    @Test
-    public void testQueryTimestampRangeInvalid1() {
-        QuerySpec qs=new QuerySpec()
-                .setFromTimestamp(100)
-                .setToTimestamp(200);
-        
-        ActivityUnit au=new ActivityUnit();
-        au.setId("TestId");
-        
-        RequestReceived at1=new RequestReceived();
-        at1.setTimestamp(50);
-        
-        ResponseSent at2=new ResponseSent();
-        at2.setTimestamp(90);
-        
-        au.getActivityTypes().add(at1);
-        au.getActivityTypes().add(at2);
-        
-        if (qs.evaluate(au)) {
-            fail("Query should evaluate to false");
-        }
-    }
-
-    @Test
-    public void testQueryTimestampRangeInvalid2() {
-        QuerySpec qs=new QuerySpec()
-                .setFromTimestamp(200)
-                .setToTimestamp(300);
-        
-        ActivityUnit au=new ActivityUnit();
-        au.setId("TestId");
-        
-        RequestReceived at1=new RequestReceived();
-        at1.setTimestamp(350);
-        
-        ResponseSent at2=new ResponseSent();
-        at2.setTimestamp(450);
-        
-        au.getActivityTypes().add(at1);
-        au.getActivityTypes().add(at2);
-        
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(at2)) {
             fail("Query should evaluate to false");
         }
     }
@@ -162,7 +73,7 @@ public class QuerySpecTest {
         
         au.getActivityTypes().add(ms);
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(ms)) {
             fail("Query should evaluate to true");
         }
     }
@@ -183,7 +94,7 @@ public class QuerySpecTest {
         
         rr.getProperties().put("trader","Joe");
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(rr)) {
             fail("Query should evaluate to true");
         }
     }
@@ -203,7 +114,7 @@ public class QuerySpecTest {
         
         au.getActivityTypes().add(ms);
         
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(ms)) {
             fail("Query should evaluate to false");
         }
     }
@@ -224,7 +135,7 @@ public class QuerySpecTest {
         
         rr.getProperties().put("trader","Joe");
         
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(rr)) {
             fail("Query should evaluate to false");
         }
     }
@@ -245,7 +156,7 @@ public class QuerySpecTest {
         rr.getContext().add(new Context(Context.Type.Conversation,"123"));
         rr.getProperties().put("trader","Joe");
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(rr)) {
             fail("Query should evaluate to true");
         }
     }
@@ -266,7 +177,7 @@ public class QuerySpecTest {
         rr.getContext().add(new Context(Context.Type.Conversation,"123"));
         rr.getProperties().put("trader","Joe");
         
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(rr)) {
             fail("Query should evaluate to false");
         }
     }
@@ -294,7 +205,7 @@ public class QuerySpecTest {
         rr.getContext().add(new Context(Context.Type.Conversation,"123"));
         rr.getProperties().put("trader","Joe");
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(rr)) {
             fail("Query should evaluate to true");
         }
     }
@@ -319,7 +230,7 @@ public class QuerySpecTest {
         rr.getContext().add(new Context(Context.Type.Conversation,"123"));
         rr.getProperties().put("trader","Joe");
         
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(rr)) {
             fail("Query should evaluate to false");
         }
     }
@@ -341,7 +252,7 @@ public class QuerySpecTest {
         rr.getContext().add(new Context(Context.Type.Conversation,"123"));
         rr.getProperties().put("trader","Fred");
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(rr)) {
             fail("Query should evaluate to true");
         }
     }
@@ -362,7 +273,7 @@ public class QuerySpecTest {
         rr.getContext().add(new Context(Context.Type.Conversation,"321"));
         rr.getProperties().put("trader","Fred");
         
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(rr)) {
             fail("Query should evaluate to false");
         }
     }
@@ -390,7 +301,7 @@ public class QuerySpecTest {
         rr.getContext().add(new Context(Context.Type.Conversation,"321"));
         rr.getProperties().put("trader","Joe");
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(rr)) {
             fail("Query should evaluate to true");
         }
     }
@@ -415,7 +326,7 @@ public class QuerySpecTest {
         rr.getContext().add(new Context(Context.Type.Conversation,"321"));
         rr.getProperties().put("trader","Joe");
         
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(rr)) {
             fail("Query should evaluate to false");
         }
     }
@@ -434,7 +345,7 @@ public class QuerySpecTest {
         
         rr.getProperties().put("trader","Joe");
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(rr)) {
             fail("Query should evaluate to true");
         }
     }
@@ -455,7 +366,7 @@ public class QuerySpecTest {
         
         rr.getProperties().put("trader","Joe");
         
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(rr)) {
             fail("Query should evaluate to false");
         }
     }
@@ -475,7 +386,7 @@ public class QuerySpecTest {
         
         rr.getProperties().put("trader","Joe");
         
-        if (!qs.evaluate(au)) {
+        if (!qs.evaluate(rr)) {
             fail("Query should evaluate to true");
         }
     }
@@ -497,7 +408,7 @@ public class QuerySpecTest {
         
         au.getActivityTypes().add(ms);
         
-        if (qs.evaluate(au)) {
+        if (qs.evaluate(ms)) {
             fail("Query should evaluate to false");
         }
     }
@@ -505,7 +416,6 @@ public class QuerySpecTest {
     @Test
     public void testQuerySerialize() {
         QuerySpec qs=new QuerySpec()
-                .setId("TestId")
                 .setFromTimestamp(500)
                 .setToTimestamp(600)
                 .setExpression(new QuerySpec.Expression(Operator.Or,
@@ -533,7 +443,7 @@ public class QuerySpecTest {
     public void testQueryDeserialize() {
         ObjectMapper mapper=new ObjectMapper();
         
-        String qspec="{\"id\":\"TestId\",\"fromTimestamp\":500,\"toTimestamp\":600,"
+        String qspec="{\"fromTimestamp\":500,\"toTimestamp\":600,"
                 +"\"expression\":{\"properties\":{\"trader\":\"joe\"},\"expressions\":[],"
                 +"\"operator\":\"Or\",\"contexts\":[{\"value\""
                 +":\"123\",\"type\":\"Conversation\"},{\"value\":\"5\",\"type\":\"Message\"}]}}";

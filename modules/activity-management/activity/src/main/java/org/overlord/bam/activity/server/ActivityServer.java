@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.activity.server;
 
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 
 /**
@@ -34,6 +35,16 @@ public interface ActivityServer {
     public void store(java.util.List<ActivityUnit> activities) throws Exception;
     
     /**
+     * This method queries the server for an activity unit
+     * with the supplied id.
+     * 
+     * @param id The activity unit id
+     * @return The activity unit, or null if not found
+     * @throws Exception Failed to get the activity unit
+     */
+    public ActivityUnit getActivityUnit(String id) throws Exception;
+    
+    /**
      * This method retrieves a set of activity events associated
      * with the supplied query.
      * 
@@ -41,6 +52,6 @@ public interface ActivityServer {
      * @return The list of activities
      * @throws Exception Failed to query the activities
      */
-    public java.util.List<ActivityUnit> query(QuerySpec query) throws Exception;
+    public java.util.List<ActivityType> query(QuerySpec query) throws Exception;
     
 }

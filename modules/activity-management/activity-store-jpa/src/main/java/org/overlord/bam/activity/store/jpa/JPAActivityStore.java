@@ -21,12 +21,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
 //import org.overlord.bam.activity.server.ActivityStore;
 //import org.overlord.bam.activity.server.QuerySpec;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -37,23 +40,49 @@ import javax.persistence.Persistence;
  */
 public class JPAActivityStore implements ActivityStore {
 
+    private static final String EMF_NAME = "overlord-bam-activity";
+
     private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
     
-    private static EntityManagerFactory EMF;
-    
     private EntityManager _entityManager=null;
-    
-    static {
-        java.util.Map<String,Object> props=new java.util.HashMap<String, Object>();
-        
-        EMF = Persistence.createEntityManagerFactory("overlord-bam-activity", props);
-    }
+    private String _entityManagerName=EMF_NAME;
     
     /**
      * This is the default constructor for the JPA activity store.
      */
     public JPAActivityStore() {
-        _entityManager = EMF.createEntityManager();
+    }
+    
+    /**
+     * This method returns the entity manager name.
+     * 
+     * @return The entity manager name
+     */
+    public String getEntityManagerName() {
+        return (_entityManagerName);
+    }
+    
+    /**
+     * This method sets the entity manager name.
+     * 
+     * @param name The entity manager name
+     */
+    public void setEntityManagerName(String name) {
+        _entityManagerName = name;
+    }
+    
+    /**
+     * This method initializes the activity store.
+     * 
+     */
+    @PostConstruct
+    public void init() {
+        java.util.Map<String,Object> props=new java.util.HashMap<String, Object>();
+        
+        EntityManagerFactory emf=
+                Persistence.createEntityManagerFactory(_entityManagerName, props);
+
+        _entityManager = emf.createEntityManager();
     }
     
     /**
@@ -78,15 +107,49 @@ public class JPAActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityUnit> query(QuerySpec query) throws Exception {  
+    public ActivityUnit getActivityUnit(String id) throws Exception {  
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Get Activity Unit="+id);
+        }
+
+        ActivityUnit ret=(ActivityUnit)
+                _entityManager.createQuery("SELECT au FROM ActivityUnit au")
+                .getSingleResult();
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("ActivityUnit id="+id+" Result="+ret);
+        }
+
+        return (ret);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> query(QuerySpec query) throws Exception {  
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Query="+query);
         }
 
+        return (query(createQueryExpression(query)));
+    }
+    
+    /**
+     * This method performs the query associated with the supplied
+     * query expression, returning the results as a list of activity
+     * types.
+     * 
+     * @param query The query expression
+     * @return The list of activity types
+     * @throws Exception Failed to perform query
+     */
+    public List<ActivityType> query(String query) throws Exception {
+        
         @SuppressWarnings("unchecked")
-        List<ActivityUnit> ret=(List<ActivityUnit>)
-                _entityManager.createQuery(createQueryExpression(query))
+        List<ActivityType> ret=(List<ActivityType>)
+                _entityManager.createQuery(query)
                 .getResultList();
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -104,6 +167,16 @@ public class JPAActivityStore implements ActivityStore {
      * @return
      */
     private String createQueryExpression(QuerySpec query) {
-        return ("SELECT au FROM ActivityUnit au");
+        return ("SELECT at FROM ActivityType at");
+    }
+    
+    /**
+     * This method closes the entity manager.
+     */
+    @PreDestroy
+    public void close() {
+        if (_entityManager != null) {
+            _entityManager.close();
+        }
     }
 }
