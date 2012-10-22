@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import javax.inject.Singleton;
 
+import org.mvel2.MVEL;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityStore;
@@ -80,7 +81,20 @@ public class MemActivityStore implements ActivityStore {
      * {@inheritDoc}
      */
     public List<ActivityType> query(QuerySpec query) throws Exception {
-        List<ActivityType> ret=query.evaluate(_activities);
+        List<ActivityType> ret=new java.util.ArrayList<ActivityType>();
+        
+        // Check if query format is supported
+        if (!isFormatSupported(query)) {
+            throw new java.lang.IllegalArgumentException("Unknown query format");
+        }
+        
+        for (ActivityUnit unit : _activities) {
+            for (ActivityType activity : unit.getActivityTypes()) {
+                if (evaluate(activity, query)) {
+                    ret.add(activity);
+                }
+            }
+        }
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Query ("+this+") "+query+" = "+ret);
@@ -88,5 +102,40 @@ public class MemActivityStore implements ActivityStore {
         
         return (ret);
     }
+    
+    /**
+     * This method determines whether the query format is supported
+     * by the activity store.
+     * 
+     * @param query The query
+     * @return Whether the format is supported
+     */
+    protected static boolean isFormatSupported(QuerySpec query) {
+        return (query.getFormat() != null
+                && query.getFormat().equalsIgnoreCase("mvel"));
+    }
 
+    /**
+     * This method evaluates whether the supplied activity
+     * passes the supplied predicate.
+     * 
+     * @param activity The activity
+     * @param query The query/predicate
+     * @return Whether the activity passes the predicate
+     */
+    protected static boolean evaluate(ActivityType activity, QuerySpec query) {
+        boolean ret=false;
+        
+        if (query.getFormat() != null
+                && query.getFormat().equalsIgnoreCase("mvel")) {
+            
+            Object result=MVEL.eval(query.getExpression(), activity);
+            
+            if (result instanceof Boolean) {
+                ret = ((Boolean)result).booleanValue();
+            }
+        }
+        
+        return (ret);
+    }
 }

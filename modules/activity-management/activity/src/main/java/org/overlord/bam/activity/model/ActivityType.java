@@ -179,16 +179,6 @@ public abstract class ActivityType implements java.io.Externalizable {
     }
     
     /**
-     * This method returns the explicit and derived
-     * context information associated with the activity type.
-     * 
-     * @return The list of all explicit and derived context information
-     */
-    protected java.util.List<Context> deriveContexts() {
-        return (new java.util.ArrayList<Context>(_contexts));
-    }
-    
-    /**
      * This method sets the properties.
      * 
      * @param props The properties

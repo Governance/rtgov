@@ -24,6 +24,7 @@ import java.io.ObjectOutput;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.Context;
 
@@ -43,8 +44,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     private String _messageType=null;
     private String _content=null;
     
-    private String _messageId=null;
-    
     /**
      * The default constructor.
      */
@@ -62,7 +61,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         _fault = rpc._fault;
         _messageType = rpc._messageType;
         _content = rpc._content;
-        _messageId = rpc._messageId;
     }
     
     /**
@@ -174,15 +172,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     }
     
     /**
-     * This method sets the message id.
-     * 
-     * @param messageId The message id
-     */
-    public void setMessageId(String messageId) {
-        _messageId = messageId;
-    }
-    
-    /**
      * This method gets the message id. When used
      * for correlation against a response, it should
      * only be used to correlate against the
@@ -195,22 +184,42 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      * 
      * @return The message id
      */
+    @Transient
+    @JsonIgnore
     public String getMessageId() {
-        return (_messageId);
+        for (Context context : getContext()) {
+            if (context.getType() == Context.Type.Message) {
+                return (context.getValue());
+            }
+        }
+        
+        return (null);
     }
     
     /**
-     * {@inheritDoc}
+     * This method sets the message id associated with the
+     * activity. The information is actually stored as a
+     * context entry for the Message type.
+     * 
+     * @param id The id
      */
-    @Override
-    public java.util.List<Context> deriveContexts() {
-        java.util.List<Context> ret=super.deriveContexts();
+    public void setMessageId(String id) {
+        Context current=null;
         
-        if (_messageId != null) {
-            ret.add(new Context(Context.Type.Message, _messageId));
+        for (Context context : getContext()) {
+            if (context.getType() == Context.Type.Message) {
+                current = context;
+                break;
+            }
         }
         
-        return (ret);
+        if (current == null) {
+            current = new Context();
+            current.setType(Context.Type.Message);
+            getContext().add(current);
+        }
+        
+        current.setValue(id);
     }
     
     /**
@@ -222,8 +231,7 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
                 +" operation="+_operation
                 +" fault="+_fault
                 +" messageType="+_messageType
-                +" content="+_content
-                +" messageId="+_messageId);
+                +" content="+_content);
     }
     
     /**
@@ -239,7 +247,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         out.writeObject(_fault);
         out.writeObject(_messageType);
         out.writeObject(_content);
-        out.writeObject(_messageId);
     }
 
     /**
@@ -256,6 +263,5 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         _fault = (String)in.readObject();
         _messageType = (String)in.readObject();
         _content = (String)in.readObject();
-        _messageId = (String)in.readObject();
     }
 }

@@ -45,6 +45,7 @@ import static org.junit.Assert.*;
 @RunWith(Arquillian.class)
 public class ActivityServerRESTTest {
     
+    private static final String MVEL_FORMAT = "mvel";
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
     static {
@@ -86,7 +87,8 @@ public class ActivityServerRESTTest {
         try {
 
             // Check if any activity types already exist
-            java.util.List<ActivityType> result=_activityStore.query(new QuerySpec());
+            java.util.List<ActivityType> result=_activityStore.query(
+                    new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (result == null) {
                 fail("Initial query result is null");
@@ -118,7 +120,7 @@ public class ActivityServerRESTTest {
             _activityStore.store(aulist);
             
             // Query via REST interface
-            QuerySpec query=new QuerySpec();
+            QuerySpec query=new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true");
             
             URL queryUrl = new URL("http://localhost:8080/overlord-bam/activity/query");
             
@@ -179,7 +181,8 @@ public class ActivityServerRESTTest {
         
         try {
 
-            java.util.List<ActivityType> atypes=_activityStore.query(new QuerySpec());
+            java.util.List<ActivityType> atypes=_activityStore.query(
+                    new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (atypes == null) {
                 fail("Initial query result is null");
@@ -259,7 +262,8 @@ public class ActivityServerRESTTest {
         
         try {
 
-            java.util.List<ActivityType> result=_activityStore.query(new QuerySpec());
+            java.util.List<ActivityType> result=_activityStore.query(
+                    new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (result == null) {
                 fail("Initial query result is null");
@@ -304,7 +308,7 @@ public class ActivityServerRESTTest {
     
             java.io.OutputStream os=connection.getOutputStream();
             
-            QuerySpec qs=new QuerySpec();
+            QuerySpec qs=new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true");
             
             byte[] b=ActivityUtil.serializeQuerySpec(qs);
             os.write(b);
@@ -358,7 +362,8 @@ public class ActivityServerRESTTest {
         
         try {
 
-            java.util.List<ActivityType> result=_activityStore.query(new QuerySpec());
+            java.util.List<ActivityType> result=_activityStore.query(
+                            new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (result == null) {
                 fail("Initial query result is null");
@@ -417,7 +422,8 @@ public class ActivityServerRESTTest {
             System.out.println("RESULT="+new String(b));
             
             // Re-issue query
-            result = _activityStore.query(new QuerySpec());
+            result = _activityStore.query(
+                    new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (result == null) {
                 fail("Follow-up query result is null");

@@ -18,6 +18,10 @@
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.mvel</groupId>
+			<artifactId>mvel2</artifactId>
+		</dependency>
 		
 		<dependency>
 		    <groupId>javax</groupId>

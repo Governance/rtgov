@@ -22,7 +22,9 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.Context;
 
@@ -34,8 +36,6 @@ import org.overlord.bam.activity.model.Context;
 public abstract class BPMActivityType extends ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
-
-    private String _instanceId=null;
 
     /**
      * The default constructor.
@@ -49,16 +49,6 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * @param ba The bpm activity to copy
      */
     public BPMActivityType(BPMActivityType ba) {
-        _instanceId = ba._instanceId;
-    }
-    
-    /**
-     * This method sets the instance id.
-     * 
-     * @param instanceId The instance id
-     */
-    public void setInstanceId(String instanceId) {
-        _instanceId = instanceId;
     }
     
     /**
@@ -66,22 +56,41 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * 
      * @return The instance id
      */
+    @Transient
+    @JsonIgnore
     public String getInstanceId() {
-        return (_instanceId);
+        for (Context context : getContext()) {
+            if (context.getType() == Context.Type.Endpoint) {
+                return (context.getValue());
+            }
+        }
+        
+        return (null);
     }
     
     /**
-     * {@inheritDoc}
+     * This method sets the instance id. The information is
+     * actually stored as a context entry for the Endpoint type.
+     * 
+     * @param instanceId The instance id
      */
-    @Override
-    public java.util.List<Context> deriveContexts() {
-        java.util.List<Context> ret=super.deriveContexts();
+    public void setInstanceId(String instanceId) {
+        Context current=null;
         
-        if (_instanceId != null) {
-            ret.add(new Context(Context.Type.Endpoint, _instanceId));
+        for (Context context : getContext()) {
+            if (context.getType() == Context.Type.Endpoint) {
+                current = context;
+                break;
+            }
         }
         
-        return (ret);
+        if (current == null) {
+            current = new Context();
+            current.setType(Context.Type.Endpoint);
+            getContext().add(current);
+        }
+        
+        current.setValue(instanceId);
     }
     
     /**
@@ -92,7 +101,6 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
         
         out.writeInt(VERSION);
         
-        out.writeObject(_instanceId);
     }
 
     /**
@@ -104,6 +112,5 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
         
         in.readInt(); // Consume version, as not required for now
         
-        _instanceId = (String)in.readObject();
     }
 }
