@@ -23,4 +23,21 @@
 			<property name="hibernate.show_sql" value="false"/>
 		</properties>
 	</persistence-unit>
+	<persistence-unit name="overlord-bam-activity-ogm-mongodb" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
+		<class>org.overlord.bam.activity.model.ActivityUnit</class>
+		<class>org.overlord.bam.activity.model.ActivityType</class>
+		<class>org.overlord.bam.activity.model.Context</class>
+		<class>org.overlord.bam.activity.model.soa.RPCActivityType</class>
+		<class>org.overlord.bam.activity.model.soa.RequestSent</class>
+		<class>org.overlord.bam.activity.model.soa.RequestReceived</class>
+		<class>org.overlord.bam.activity.model.soa.ResponseSent</class>
+		<class>org.overlord.bam.activity.model.soa.ResponseReceived</class>
+        <properties>
+            <property name="hibernate.ogm.datastore.provider"
+                      value="mongodb" />
+            <property name="hibernate.ogm.mongodb.database"
+            		  value="test" />
+        </properties>
+    </persistence-unit>
 </persistence>

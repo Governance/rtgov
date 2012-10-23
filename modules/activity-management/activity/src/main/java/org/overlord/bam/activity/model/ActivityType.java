@@ -116,6 +116,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * @return The activity unit id
      */
     @Id
+    @Column(name="unitId")
     public String getUnitId() {
         return (_unitId);
     }
@@ -137,6 +138,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * @return The index
      */
     @Id
+    @Column(name="unitIndex")
     public int getUnitIndex() {
         return (_unitIndex);
     }

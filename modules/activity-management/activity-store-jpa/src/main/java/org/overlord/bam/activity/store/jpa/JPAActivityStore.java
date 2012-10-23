@@ -45,6 +45,7 @@ public class JPAActivityStore implements ActivityStore {
     private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
     
     private EntityManager _entityManager=null;
+    private EntityManagerFactory _emf=null;
     private String _entityManagerName=EMF_NAME;
     
     /**
@@ -79,10 +80,14 @@ public class JPAActivityStore implements ActivityStore {
     public void init() {
         java.util.Map<String,Object> props=new java.util.HashMap<String, Object>();
         
-        EntityManagerFactory emf=
-                Persistence.createEntityManagerFactory(_entityManagerName, props);
-
-        _entityManager = emf.createEntityManager();
+        try {
+            _emf = Persistence.createEntityManagerFactory(_entityManagerName, props);
+    
+            _entityManager = _emf.createEntityManager();
+            
+        } catch (Throwable e) {
+            LOG.log(Level.SEVERE, "Failed to create entity manager", e);
+        }
     }
     
     /**
@@ -133,7 +138,7 @@ public class JPAActivityStore implements ActivityStore {
             LOG.finest("Query="+query);
         }
 
-        return (query(createQueryExpression(query)));
+        return (query(query.getExpression()));
     }
     
     /**
@@ -158,16 +163,15 @@ public class JPAActivityStore implements ActivityStore {
 
         return (ret);
     }
-
+    
     /**
-     * This method returns the JP-QL query expression associated with the
-     * supplied spec.
+     * This method removes the supplied activity unit.
      * 
-     * @param query The query expression
-     * @return
+     * @param au The activity unit
+     * @throws Exception Failed to remove activity unit
      */
-    private String createQueryExpression(QuerySpec query) {
-        return ("SELECT at FROM ActivityType at");
+    public void remove(ActivityUnit au) throws Exception {
+        _entityManager.remove(au);
     }
     
     /**
@@ -177,6 +181,9 @@ public class JPAActivityStore implements ActivityStore {
     public void close() {
         if (_entityManager != null) {
             _entityManager.close();
+        }
+        if (_emf != null) {
+            _emf.close();
         }
     }
 }

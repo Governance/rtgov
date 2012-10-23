@@ -60,8 +60,12 @@
 		<arquillian.version>1.0.0.Final</arquillian.version>
 		<drools.version>5.3.0.Final</drools.version>
 		<gadgets.version>1.0.0.20121015-M2</gadgets.version>
+		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
 		<javaee-api.version>6.0</javaee-api.version>
+		<javassist.version>3.9.0.GA</javassist.version>
 		<jbossas.version>7.1.1.Final</jbossas.version>
+		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
+		<jbossts.version>4.16.4.Final</jbossts.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<mvel.version>2.1.0.drools16</mvel.version>
 		<switchyard.version>0.6.0-SNAPSHOT</switchyard.version>
@@ -140,9 +144,34 @@
 				<version>${javaee-api.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss-javaee.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
 				<groupId>org.jboss.naming</groupId>
 				<artifactId>jnp-client</artifactId>
 				<version>${jnp-client.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.jbossts</groupId>
+				<artifactId>jbossjta</artifactId>
+				<version>${jbossts.version}</version>
+			</dependency>
+		
+
+			<dependency>
+				<groupId>org.hibernate.ogm</groupId>
+				<artifactId>hibernate-ogm-mongodb</artifactId>
+				<version>${hibernate-ogm.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>${javassist.version}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<dependency>

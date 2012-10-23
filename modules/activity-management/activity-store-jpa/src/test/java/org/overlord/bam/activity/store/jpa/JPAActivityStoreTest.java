@@ -30,7 +30,10 @@ import org.overlord.bam.activity.server.QuerySpec;
 
 public class JPAActivityStoreTest {
 
+    private static final String JPQL_FORMAT = "jpql";
+    //private static final String MONGODB_FORMAT = "mongodb";
     private static final String OVERLORD_BAM_ACTIVITY_ORM = "overlord-bam-activity-orm";
+    //private static final String OVERLORD_BAM_ACTIVITY_OGM_M = "overlord-bam-activity-ogm-mongodb";
 
     public ActivityUnit createTestActivityUnit(String id) {
         ActivityUnit act=new ActivityUnit();
@@ -92,35 +95,66 @@ public class JPAActivityStoreTest {
     
     @Test
     public void testStoreAndQueryAllORM() {
-        testStoreAndQuery(OVERLORD_BAM_ACTIVITY_ORM, new QuerySpec());
+        java.util.List<ActivityType> results=
+            testStoreAndQuery(OVERLORD_BAM_ACTIVITY_ORM,
+                new QuerySpec()
+                    .setFormat(JPQL_FORMAT)
+                    .setExpression("SELECT at FROM ActivityType at"));
+        
+        if (results.size() != 4) {
+            fail("Expected 4 entries: "+results.size());
+            
+        }
+        
+        System.out.println("RESULTS="+results);
     }
     
     @Test
     public void testQueryActivityFieldORM() {        
         java.util.List<ActivityType> results=
-                testStoreAndQuery(OVERLORD_BAM_ACTIVITY_ORM,
-                      "select evt from ActivityType evt "+
-                              "where evt.operation = 'myOp'");
+            testStoreAndQuery(OVERLORD_BAM_ACTIVITY_ORM,
+                new QuerySpec()
+                    .setFormat(JPQL_FORMAT)
+                    .setExpression("SELECT at from ActivityType at "+
+                              "WHERE at.operation = 'myOp' " +
+                              "AND at.fault = 'MyFault'"));
                         //"join evt.properties p "+
                         //"where p.value = 'Joe'");
         //"inner join evt.properties p \n"+
         //"where p.name = 'trader' and p.value = 'Joe'");
-        
+              
+        if (results.size() != 2) {
+            fail("Expected 2 entries: "+results.size());
+            
+        }
+
         System.out.println("RESULTS="+results);
     }
 
+    /*
+    @Test
+    public void testStoreAndQueryAllOGMM() {
+        testStoreAndQuery(OVERLORD_BAM_ACTIVITY_OGM_M,
+                new QuerySpec().setFormat(MONGODB_FORMAT).
+                    setExpression("db.ActivityType.find()"));
+    }
+    */
+    
     protected java.util.List<ActivityType> testStoreAndQuery(String emname, QuerySpec qs) {
         java.util.List<ActivityType> results=null;
         
-        JPAActivityStore astore=new JPAActivityStore();
+        JPAActivityStore astore=getActivityStore(emname, qs);
         
         astore.setEntityManagerName(emname);
         astore.init();
         
         java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
         
-        activities.add(createTestActivityUnit("au1"));
-        activities.add(createTestActivityUnit("au2"));
+        ActivityUnit au1=createTestActivityUnit("au1");
+        ActivityUnit au2=createTestActivityUnit("au2");
+        
+        activities.add(au1);
+        activities.add(au2);
         
         try {
             astore.store(activities);
@@ -130,17 +164,25 @@ public class JPAActivityStoreTest {
         
         try {
             results = astore.query(qs);
-            
-            System.out.println("RESULTS="+results);
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
+        } finally {
+            try {
+                astore.remove(au1);
+                astore.remove(au2);
+            } catch (Exception e) {
+                fail("Failed to remove activity units: "+e);
+            }
         }
-        
-        astore.close();
         
         return (results);
     }
+    
+    protected JPAActivityStore getActivityStore(String emname, QuerySpec qs) {
+        return (new JPAActivityStore());
+    }
 
+    /*
     protected java.util.List<ActivityType> testStoreAndQuery(String emname, String query) {
         java.util.List<ActivityType> results=null;
         
@@ -172,5 +214,5 @@ public class JPAActivityStoreTest {
         
         return (results);
     }
-
+*/
 }
