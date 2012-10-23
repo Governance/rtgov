@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.overlord.bam.content</groupId>
 		<artifactId>services</artifactId>
-		<version>1.0.0.20121015-M2</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>		

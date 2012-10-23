@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>org.overlord.bam.release.jbossas</groupId>
 		<artifactId>tests</artifactId>
-		<version>1.0.0.20121015-M2</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<modules>
