@@ -21,7 +21,10 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 /**
  * This class represents context information that can be used to
@@ -69,6 +72,8 @@ public class Context implements java.io.Externalizable {
      * 
      * @return The type
      */
+    @Column(name="type")
+    @Enumerated(EnumType.STRING)
     public Type getType() {
         return (_type);
     }
@@ -87,6 +92,7 @@ public class Context implements java.io.Externalizable {
      * 
      * @return The value
      */
+    @Column(name="value")
     public String getValue() {
         return (_value);
     }
