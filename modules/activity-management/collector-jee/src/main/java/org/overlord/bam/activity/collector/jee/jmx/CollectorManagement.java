@@ -33,7 +33,7 @@ import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.overlord.bam.activity.collector.ActivityCollector;
+import org.overlord.bam.activity.collector.ActivityUnitLogger;
 
 /**
  * This class provides the capability to manage the Activity Collector.
@@ -46,12 +46,12 @@ import org.overlord.bam.activity.collector.ActivityCollector;
 public class CollectorManagement {
     
     private static final String OBJECT_NAME_DOMAIN = "overlord.bam.collector";    
-    private static final String OBJECT_NAME_LOGGER = ":name=ActivityLogger";
+    private static final String OBJECT_NAME_LOGGER = OBJECT_NAME_DOMAIN+":name=ActivityLogger";
     
     private static final Logger LOG=Logger.getLogger(CollectorManagement.class.getName());
     
     @Inject
-    private ActivityCollector _activityCollector;
+    private ActivityUnitLogger _activityLogger=null;
     
     /**
      * The constructor.
@@ -64,13 +64,17 @@ public class CollectorManagement {
      */
     @PostConstruct
     public void init() {
-        LOG.info("Register the CollectorManagement MBean: "+_activityCollector);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Register the ActivityUnitLogger MBean["
+                        +OBJECT_NAME_LOGGER+"]: "+_activityLogger);
+        }
         
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
-            ObjectName objname=new ObjectName(OBJECT_NAME_DOMAIN+OBJECT_NAME_LOGGER);
+            ObjectName objname=new ObjectName(OBJECT_NAME_LOGGER);
             
-            mbs.registerMBean(_activityCollector.getActivityUnitLogger(), objname); 
+            mbs.registerMBean(_activityLogger, objname);
+
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                     "collector-jee.Messages").getString("COLLECTOR-JEE-1"), e);
@@ -82,11 +86,14 @@ public class CollectorManagement {
      */
     @PreDestroy
     public void close() throws Exception {
-        LOG.info("Unregister the CollectorManagement MBean");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Unregister the ActivityUnitLogger MBean["
+                        +OBJECT_NAME_LOGGER+"]: "+_activityLogger);
+        }
 
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
-            ObjectName objname=new ObjectName(OBJECT_NAME_DOMAIN+OBJECT_NAME_LOGGER);
+            ObjectName objname=new ObjectName(OBJECT_NAME_LOGGER);
             
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {

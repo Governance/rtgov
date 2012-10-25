@@ -7,8 +7,16 @@
 		<copy file="${basedir}/src/test/modules/module.xml"
 				todir="${jboss.home}/modules/org/overlord/bam/main" />
 
+		<copy file="${org.overlord.bam.active-queries:active-collection:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/active-collection.jar" />
+		<copy file="${org.overlord.bam.active-queries:acs-epn:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/acs-epn.jar" />
+		<copy file="${org.overlord.bam.activity-analysis:analytics:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/analytics.jar" />
 		<copy file="${org.overlord.bam.activity-management:activity:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/activity.jar" />
+		<copy file="${org.overlord.bam:bam-common:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/bam-common.jar" />
 		<copy file="${org.overlord.bam.event-processor-network:epn-core:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-core.jar" />
 		<copy file="${org.overlord.bam.event-processor-network:epn-cep:jar}"
@@ -17,12 +25,6 @@
 				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-infinispan.jar" />
 		<copy file="${org.overlord.bam.event-processor-network:epn-mvel:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-mvel.jar" />
-		<copy file="${org.overlord.bam.active-queries:active-collection:jar}"
-				tofile="${jboss.home}/modules/org/overlord/bam/main/active-collection.jar" />
-		<copy file="${org.overlord.bam.active-queries:acs-epn:jar}"
-				tofile="${jboss.home}/modules/org/overlord/bam/main/acs-epn.jar" />
-		<copy file="${org.overlord.bam.activity-analysis:analytics:jar}"
-				tofile="${jboss.home}/modules/org/overlord/bam/main/analytics.jar" />
 	</target>
 
 	<target name="clean">

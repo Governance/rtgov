@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityServer;
@@ -34,6 +35,7 @@ import org.overlord.bam.activity.collector.BatchedActivityUnitLogger;
  * configured activity server.
  *
  */
+@Singleton
 public class ActivityServerLogger extends BatchedActivityUnitLogger {
 
     private static final Logger LOG=Logger.getLogger(ActivityServerLogger.class.getName());

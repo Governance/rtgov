@@ -26,34 +26,6 @@ import org.overlord.bam.activity.model.ActivityType;
 public interface ActivityCollector {
 
     /**
-     * This method sets the collector context.
-     *
-     * @param cc The collector context
-     */
-    public void setCollectorContext(CollectorContext cc);
-        
-    /**
-     * This method gets the collector context.
-     *
-     * @return The collector context
-     */
-    public CollectorContext getCollectorContext();
-        
-    /**
-     * This method sets the activity unit logger.
-     *
-     * @param activityUnitLogger The activity unit logger
-     */
-    public void setActivityUnitLogger(ActivityUnitLogger activityUnitLogger);
-        
-    /**
-     * This method gets the activity unit logger.
-     *
-     * @return The activity unit logger
-     */
-    public ActivityUnitLogger getActivityUnitLogger();
-     
-    /**
      * This method can be used to create an application controlled
      * scope. Within this scope, all activity types will
      * be recorded in a single activity unit. If a client starts
@@ -76,6 +48,23 @@ public interface ActivityCollector {
      * a response that indicated that a scope had been started.
      */
     public void endScope();
+    
+    /**
+     * This method processes the information associated with the
+     * supplied type, and returns the representation of that
+     * information that should be included with the activity
+     * event. Any additional correlation or property details
+     * derived from this information will be directly associated
+     * with the supplied activity type.
+     * 
+     * @param type The information type
+     * @param info The information
+     * @param actType The activity type being initialized
+     * @return The information representation to include with the
+     *                  activity event
+     */
+    public String processInformation(String type, Object info,
+                        ActivityType actType);
     
     /**
      * This method records the supplied activity type. If a

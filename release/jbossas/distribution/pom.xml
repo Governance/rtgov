@@ -39,6 +39,11 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.bam</groupId>
+			<artifactId>bam-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>

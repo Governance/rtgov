@@ -111,9 +111,9 @@ public class ActivityClient {
         
         activityUnitLogger.init();
         
-        _collector.setActivityUnitLogger(activityUnitLogger);
+        ((EmbeddedActivityCollector)_collector).setActivityUnitLogger(activityUnitLogger);
         
-        _collector.setCollectorContext(new TestCollectorContext());
+        ((EmbeddedActivityCollector)_collector).setCollectorContext(new TestCollectorContext());
     }
     
     /**
@@ -130,7 +130,9 @@ public class ActivityClient {
             e.printStackTrace();
         }
         
-        _collector.getActivityUnitLogger().close();
+        if (_collector instanceof EmbeddedActivityCollector) {
+            ((EmbeddedActivityCollector)_collector).getActivityUnitLogger().close();
+        }
     }
     
     /**

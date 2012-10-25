@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.epn.util.NetworkUtil;
+import org.overlord.bam.common.util.VersionUtil;
 
 /**
  * This class represents the abstract Event Process Network Manager
@@ -533,7 +533,7 @@ public abstract class AbstractEPNManager implements EPNManager {
             synchronized (_networks) {
                 boolean inserted=false;
                 for (int i=0; i < _networks.size(); i++) {
-                    if (NetworkUtil.isNewerVersion(_networks.get(i).getVersion(),
+                    if (VersionUtil.isNewerVersion(_networks.get(i).getVersion(),
                                     network.getVersion())) {
                         _networks.add(i, network);
                         inserted = true;

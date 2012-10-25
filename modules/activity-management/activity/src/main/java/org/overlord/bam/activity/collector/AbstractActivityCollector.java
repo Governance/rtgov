@@ -29,6 +29,7 @@ import javax.transaction.TransactionManager;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Origin;
+import org.overlord.bam.activity.processor.InformationProcessorManager;
 
 /**
  * This class provides an abstract implementation of the activity
@@ -44,6 +45,8 @@ public class AbstractActivityCollector implements ActivityCollector {
     
     @Inject
     private ActivityUnitLogger _activityLogger=null;
+    
+    private InformationProcessorManager _infoProcessorManager=new InformationProcessorManager();
     
     private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();
     
@@ -81,6 +84,24 @@ public class AbstractActivityCollector implements ActivityCollector {
      */
     public ActivityUnitLogger getActivityUnitLogger() {
         return (_activityLogger);
+    }
+    
+    /**
+     * This method gets the information processor manager.
+     * 
+     * @return The information processor manager
+     */
+    public InformationProcessorManager getInformationProcessorManager() {
+        return (_infoProcessorManager);
+    }
+    
+    /**
+     * This method sets the information processor manager.
+     * 
+     * @param ipm The information processor manager
+     */
+    public void setInformationProcessorManager(InformationProcessorManager ipm) {
+        _infoProcessorManager = ipm;
     }
     
     /**
@@ -175,6 +196,17 @@ public class AbstractActivityCollector implements ActivityCollector {
             LOG.severe(java.util.PropertyResourceBundle.getBundle(
                     "activity.Messages").getString("ACTIVITY-1"));
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String processInformation(String type, Object info,
+            ActivityType actType) {
+        if (_infoProcessorManager != null) {
+        }
+        
+        return (null);
     }
 
     /**

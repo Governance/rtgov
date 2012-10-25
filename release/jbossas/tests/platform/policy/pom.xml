@@ -72,6 +72,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.overlord.bam</groupId>
+			<artifactId>bam-common</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.bam.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>
