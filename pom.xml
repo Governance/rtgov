@@ -58,15 +58,17 @@
 	<properties>
 		<arquillian.jbossas.version>7.1.1.Final</arquillian.jbossas.version>
 		<arquillian.version>1.0.0.Final</arquillian.version>
+		<cdi.version>1.0-SP4</cdi.version>
 		<drools.version>5.3.0.Final</drools.version>
 		<gadgets.version>1.0.0.20121015-M2</gadgets.version>
+		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
 		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
 		<javaee-api.version>6.0</javaee-api.version>
 		<javassist.version>3.9.0.GA</javassist.version>
 		<jbossas.version>7.1.1.Final</jbossas.version>
-		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossts.version>4.16.4.Final</jbossts.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
+		<jta.version>1.0.0.Final</jta.version>
 		<mvel.version>2.1.0.drools16</mvel.version>
 		<switchyard.version>0.6.0-SNAPSHOT</switchyard.version>
 	</properties>
@@ -143,12 +145,23 @@
 				<artifactId>javaee-api</artifactId>
 				<version>${javaee-api.version}</version>
 			</dependency>
+
 			<dependency>
-				<groupId>org.jboss.spec</groupId>
-				<artifactId>jboss-javaee-6.0</artifactId>
-				<version>${jboss-javaee.version}</version>
-				<type>pom</type>
+				<groupId>org.hibernate.javax.persistence</groupId>
+				<artifactId>hibernate-jpa-2.0-api</artifactId>
+				<version>${hibernate-jpa.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>javax.enterprise</groupId>
+				<artifactId>cdi-api</artifactId>
+				<version>${cdi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.spec.javax.transaction</groupId>
+				<artifactId>jboss-transaction-api_1.1_spec</artifactId>
+				<version>${jta.version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.jboss.naming</groupId>
 				<artifactId>jnp-client</artifactId>
