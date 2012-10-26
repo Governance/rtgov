@@ -68,8 +68,8 @@ public class InformationProcessorManager {
             if (existing != null) {
                 
                 // Check whether newer version
-                if (VersionUtil.isNewerVersion(ip.getVersion(),
-                        existing.getVersion())) {
+                if (VersionUtil.isNewerVersion(existing.getVersion(),
+                        ip.getVersion())) {
                     
                     if (LOG.isLoggable(Level.FINE)) {
                         LOG.fine("Replace existing information processor version="
@@ -96,6 +96,19 @@ public class InformationProcessorManager {
                 _informationProcessorIndex.put(ip.getName(), ip);
                 _informationProcessors.add(ip);
             }
+        }
+    }
+    
+    /**
+     * This method returns the information processor associated
+     * with the supplied name.
+     * 
+     * @param name The name
+     * @return The information processor, or null if not found
+     */
+    public InformationProcessor getInformationProcessor(String name) {
+        synchronized (_informationProcessorIndex) {
+            return (_informationProcessorIndex.get(name));
         }
     }
     
