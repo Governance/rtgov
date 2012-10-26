@@ -76,6 +76,15 @@ public class ExpressionInformationProcessor implements InformationProcessor {
     /**
      * {@inheritDoc}
      */
+    public void init() throws Exception {
+        for (TypeProcessor tp : _typeProcessors.values()) {
+            tp.init();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public boolean isSupported(String type) {
         return (_typeProcessors.containsKey(type));
     }
@@ -88,13 +97,19 @@ public class ExpressionInformationProcessor implements InformationProcessor {
         
         if (processor != null) {
             // Process the context and property details
-            processor.process(info, actType);
-            
-            // Determine what public representation should be returned
-            return (processor.getRepresentation().evaluate(info));
+            return (processor.process(info, actType));
         }
         
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void close() throws Exception {
+        for (TypeProcessor tp : _typeProcessors.values()) {
+            tp.close();
+        }
     }
 
 }

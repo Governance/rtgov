@@ -98,7 +98,7 @@ public class CEPEventProcessorTest {
             //if (responseTime != TIME_INTERVAL) {
             // To accomodate precision error in rule evaluation, which
             // sometimes returns 2001 as the response time
-            if ((responseTime - TIME_INTERVAL) <= 1) {
+            if ((responseTime - TIME_INTERVAL) > 1 || (responseTime - TIME_INTERVAL) < 0) {
                 fail("Response time should be "+TIME_INTERVAL+": "+responseTime);
             }
             
@@ -160,7 +160,10 @@ public class CEPEventProcessorTest {
             
             long responseTime=(Long)props1.get("responseTime");
             
-            if (responseTime != TIME_INTERVAL) {
+            //if (responseTime != TIME_INTERVAL) {
+            // To accomodate precision error in rule evaluation, which
+            // sometimes returns 2001 as the response time
+            if ((responseTime - TIME_INTERVAL) > 1 || (responseTime - TIME_INTERVAL) < 0) {
                 fail("Response time should be "+TIME_INTERVAL+": "+responseTime);
             }
             

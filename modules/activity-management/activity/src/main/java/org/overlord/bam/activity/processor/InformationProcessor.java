@@ -40,6 +40,13 @@ public interface InformationProcessor {
     public String getVersion();
     
     /**
+     * Initialize the information processor.
+     * 
+     * @throws Exception Failed to initialize
+     */
+    public void init() throws Exception;
+    
+    /**
      * This method determines whether the specified type
      * is handled by the information processor.
      * 
@@ -62,4 +69,11 @@ public interface InformationProcessor {
      */
     public String process(String type, Object info, ActivityType actType);
     
+    /**
+     * Close the information processor.
+     * 
+     * @throws Exception Failed to close
+     */
+    public void close() throws Exception;
+
 }

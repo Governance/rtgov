@@ -35,6 +35,25 @@ public class TypeProcessor {
             new java.util.ArrayList<PropertyEvaluator>();
     
     /**
+     * Initialize the type processor.
+     * 
+     * @throws Exception Failed to initialize
+     */
+    public void init() throws Exception {
+        if (_representation != null) {
+            _representation.init();
+        }
+        
+        for (ContextEvaluator ce : _contextEvaluators) {
+            ce.getEvaluator().init();
+        }
+        
+        for (PropertyEvaluator pe : _propertyEvaluators) {
+            pe.getEvaluator().init();
+        }
+    }
+    
+    /**
      * This method returns the expression evaluator used
      * to derived the public representation of the information.
      * 
@@ -97,8 +116,10 @@ public class TypeProcessor {
      * 
      * @param information The information
      * @param actType The activity type
+     * @return The representation of the information to be made public
      */
-    public void process(Object information, ActivityType actType) {
+    public String process(Object information, ActivityType actType) {
+        String ret=null;
         
         for (int i=0; i < _contextEvaluators.size(); i++) {
             ContextEvaluator ce=_contextEvaluators.get(i);
@@ -119,13 +140,38 @@ public class TypeProcessor {
                 actType.getProperties().put(pe.getName(), val);
             }
         }
+        
+        if (getRepresentation() != null) {
+            ret = getRepresentation().evaluate(information);
+        }
+        
+        return (ret);
     }
     
+    /**
+     * Close the type processor.
+     * 
+     * @throws Exception Failed to close
+     */
+    public void close() throws Exception {
+        if (_representation != null) {
+            _representation.close();
+        }
+        
+        for (ContextEvaluator ce : _contextEvaluators) {
+            ce.getEvaluator().close();
+        }
+        
+        for (PropertyEvaluator pe : _propertyEvaluators) {
+            pe.getEvaluator().close();
+        }
+    }
+
     /**
      * This class identifies the property name to be associated
      * with the value extracted using the expression evaluator.
      */
-    public class PropertyEvaluator {
+    public static class PropertyEvaluator {
         
         private String _name=null;
         private ExpressionEvaluator _evaluator=null;
@@ -176,7 +222,7 @@ public class TypeProcessor {
      * This class identifies the context type to be associated
      * with the value extracted using the expression evaluator.
      */
-    public class ContextEvaluator {
+    public static class ContextEvaluator {
         
         private Context.Type _type=null;
         private ExpressionEvaluator _evaluator=null;

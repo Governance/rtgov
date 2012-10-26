@@ -17,12 +17,47 @@
  */
 package org.overlord.bam.activity.processor;
 
+import org.codehaus.jackson.annotate.JsonSubTypes;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.annotate.JsonSubTypes.Type;
+
 /**
- * This interface represents an expression evaluator.
+ * This abstract class represents an expression evaluator.
  *
  */
-public interface ExpressionEvaluator {
+@JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
+@JsonSubTypes({@Type(value=MVELExpressionEvaluator.class, name="mvel"),
+    @Type(value=XPathExpressionEvaluator.class, name="xpath") })
+public abstract class ExpressionEvaluator {
+    
+    private String _expression=null;
+    
+    /**
+     * This method returns the expression.
+     * 
+     * @return The expression
+     */
+    public String getExpression() {
+        return (_expression);
+    }
+    
+    /**
+     * This method sets the expression.
+     * 
+     * @param expr The expression
+     */
+    public void setExpression(String expr) {
+        _expression = expr;
+    }
 
+    /**
+     * This method initializes the expression evaluator.
+     * 
+     * @throws Exception Failed to initialize
+     */
+    public void init() throws Exception {
+    }
+    
     /**
      * This method evaluates the supplied information to
      * derive and return a result.
@@ -30,6 +65,14 @@ public interface ExpressionEvaluator {
      * @param information The information
      * @return The result, or null if unable to evaluate
      */
-    public String evaluate(Object information);
+    public abstract String evaluate(Object information);
+    
+    /**
+     * This method closes the expression evaluator.
+     * 
+     * @throws Exception Failed to close
+     */
+    public void close() throws Exception {
+    }
     
 }

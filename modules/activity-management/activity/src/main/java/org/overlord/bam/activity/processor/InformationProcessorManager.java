@@ -46,8 +46,9 @@ public class InformationProcessorManager {
      * This method registers the information processor.
      * 
      * @param ip The information processor
+     * @throws Exception Failed to register
      */
-    public void register(InformationProcessor ip) {
+    public void register(InformationProcessor ip) throws Exception {
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Register: information processor name="
@@ -55,7 +56,12 @@ public class InformationProcessorManager {
                         +ip.getVersion()+" ip="+ip);
         }
         
+        // Initialize the information processor
+        ip.init();
+        
         synchronized (_informationProcessorIndex) {
+            boolean f_add=false;
+            
             // Check if information processor for same name already exists
             InformationProcessor existing=_informationProcessorIndex.get(ip.getName());
             
@@ -70,11 +76,11 @@ public class InformationProcessorManager {
                                     +existing.getVersion());
                     }
                     
-                    // Replace old version
-                    _informationProcessorIndex.put(ip.getName(), ip);
+                    // Unregister old version
+                    unregister(existing);
                     
-                    _informationProcessors.remove(existing);
-                    _informationProcessors.add(ip);                    
+                    // Add new version
+                    f_add = true;                  
                 } else {
                                       
                     if (LOG.isLoggable(Level.FINE)) {
@@ -83,6 +89,10 @@ public class InformationProcessorManager {
                     }
                 }
             } else {
+                f_add = true;
+            }
+            
+            if (f_add) {
                 _informationProcessorIndex.put(ip.getName(), ip);
                 _informationProcessors.add(ip);
             }
@@ -93,8 +103,9 @@ public class InformationProcessorManager {
      * This method registers the information processor.
      * 
      * @param ip The information processor
+     * @throws Exception Failed to unregister
      */
-    public void unregister(InformationProcessor ip) {
+    public void unregister(InformationProcessor ip) throws Exception {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Unregister: information processor name="
                         +ip.getName()+" version="
@@ -104,8 +115,11 @@ public class InformationProcessorManager {
         synchronized (_informationProcessorIndex) {
             
             if (_informationProcessors.contains(ip)) {
-                _informationProcessorIndex.remove(ip.getName());
-                _informationProcessors.remove(ip);
+                InformationProcessor removed=
+                            _informationProcessorIndex.remove(ip.getName());
+                _informationProcessors.remove(removed);
+                
+                removed.close();
                 
             } else if (_informationProcessorIndex.containsKey(ip.getName())) {
                 
