@@ -1,73 +1,97 @@
 [ {
     "type" : "RequestSent",
     "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-{ID}-ABC</orderId>                <itemId>BUTTER</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
-    "messageId" : "{ID}-1",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
-    "fault" : null
+    "fault" : null,
+    "context":[{
+    	"value":"{ID}-1",
+    	"type":"Message"
+    }]
   }, {
     "type" : "RequestReceived",
     "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-{ID}-ABC</orderId>                <itemId>BUTTER</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
-    "messageId" : "{ID}-1",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
     "fault" : null,
-    "timestamp" : "50"
+    "timestamp" : "50",
+    "context":[{
+    	"value":"{ID}-1",
+    	"type":"Message"
+    }]
   }, {
     "type" : "RequestSent",
     "content" : "BUTTER",
-    "messageId" : "{ID}-2",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
     "operation" : "lookupItem",
     "messageType" : "java:java.lang.String",
-    "fault" : null
+    "fault" : null,
+    "context":[{
+    	"value":"{ID}-2",
+    	"type":"Message"
+    }]
   }, {
     "type" : "RequestReceived",
     "content" : "BUTTER",
-    "messageId" : "{ID}-2",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
     "operation" : "lookupItem",
     "messageType" : "java:java.lang.String",
     "fault" : null,
-    "timestamp" : "50"
+    "timestamp" : "50",
+    "context":[{
+    	"value":"{ID}-2",
+    	"type":"Message"
+    }]
   }, {
     "type" : "ResponseSent",
     "replyToId" : "{ID}-2",
     "content" : "{\"name\":\"Butter\",\"itemId\":\"BUTTER\",\"quantity\":500}",
-    "messageId" : "{ID}-3",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
     "operation" : "lookupItem",
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.Item",
     "fault" : null,
-    "timestamp" : "60"
+    "timestamp" : "60",
+    "context":[{
+    	"value":"{ID}-3",
+    	"type":"Message"
+    }]
   }, {
     "type" : "ResponseReceived",
     "replyToId" : "{ID}-2",
     "content" : "{\"name\":\"Butter\",\"itemId\":\"BUTTER\",\"quantity\":500}",
-    "messageId" : "{ID}-3",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
     "operation" : "lookupItem",
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.Item",
     "fault" : null,
-    "timestamp" : "50"
+    "timestamp" : "50",
+    "context":[{
+    	"value":"{ID}-3",
+    	"type":"Message"
+    }]
   }, {
     "type" : "ResponseSent",
     "replyToId" : "{ID}-1",
     "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-{ID}-ABC\",\"accepted\":true}",
-    "messageId" : "{ID}-4",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.OrderAck",
-    "fault" : null
+    "fault" : null,
+    "context":[{
+    	"value":"{ID}-4",
+    	"type":"Message"
+    }]
   }, {
     "type" : "ResponseReceived",
     "replyToId" : "{ID}-1",
     "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-{ID}-ABC\",\"accepted\":true}",
-    "messageId" : "{ID}-4",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.OrderAck",
-    "fault" : null
+    "fault" : null,
+    "context":[{
+    	"value":"{ID}-4",
+    	"type":"Message"
+    }]
   } ]

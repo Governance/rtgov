@@ -74,10 +74,12 @@ public class ServiceDefinitionProcessor extends org.overlord.bam.epn.EventProces
                 }
             }
             
-            if (((java.util.LinkedList<Serializable>)ret).size() == 0) {
-                ret = null;
-            } else if (((java.util.LinkedList<Serializable>)ret).size() == 1) {
-                ret = ((java.util.LinkedList<Serializable>)ret).getFirst();
+            if (ret != null) {
+                if (((java.util.LinkedList<Serializable>)ret).size() == 0) {
+                    ret = null;
+                } else if (((java.util.LinkedList<Serializable>)ret).size() == 1) {
+                    ret = ((java.util.LinkedList<Serializable>)ret).getFirst();
+                }
             }
         }
         
