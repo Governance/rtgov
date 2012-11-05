@@ -4,7 +4,7 @@
 	<groupId>org.overlord.bam.release.jbossas</groupId>
 	<artifactId>overlord-bam</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0.20121105-M2</version>
 	<name>Overlord BAM::Release::JBossAS::War</name>
 
 	<profiles>
