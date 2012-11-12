@@ -69,7 +69,7 @@ public class TypeProcessorTest {
         ce1.setType(Type.Message);
         ce1.setEvaluator(eval1);
         
-        processor.getContextEvaluators().add(ce1);
+        processor.getContexts().add(ce1);
         
         MVELExpressionEvaluator eval2=new MVELExpressionEvaluator();        
         eval2.setExpression("value2");
@@ -78,7 +78,7 @@ public class TypeProcessorTest {
         ce2.setType(Type.Endpoint);
         ce2.setEvaluator(eval2);
         
-        processor.getContextEvaluators().add(ce2);
+        processor.getContexts().add(ce2);
         
         try {
             processor.init();
@@ -134,7 +134,7 @@ public class TypeProcessorTest {
         pe1.setName("name1");
         pe1.setEvaluator(eval1);
         
-        processor.getPropertyEvaluators().add(pe1);
+        processor.getProperties().add(pe1);
         
         MVELExpressionEvaluator eval2=new MVELExpressionEvaluator();        
         eval2.setExpression("value2");
@@ -143,7 +143,7 @@ public class TypeProcessorTest {
         pe2.setName("name2");
         pe2.setEvaluator(eval2);
         
-        processor.getPropertyEvaluators().add(pe2);
+        processor.getProperties().add(pe2);
         
         try {
             processor.init();

@@ -14,8 +14,14 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.bam.samples.jbossas</groupId>
-			<artifactId>samples-jbossas-ordermgmt</artifactId>
+			<groupId>org.overlord.bam.samples.jbossas.ordermgmt</groupId>
+			<artifactId>samples-jbossas-ordermgmt-app</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.samples.jbossas.ordermgmt</groupId>
+			<artifactId>samples-jbossas-ordermgmt-ip</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
 		</dependency>

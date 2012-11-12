@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 
+import org.overlord.bam.activity.model.soa.RPCActivityType;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
@@ -81,7 +82,6 @@ public class ExchangeInterceptor implements ExchangeHandler {
             // TODO: If message is transformed, then should the contentType
             // be updated to reflect the transformed type?
             
-            String content=getMessageContent(exchange);
             String messageId=null;
             String relatesTo=null;
             String contentType=null;
@@ -102,7 +102,7 @@ public class ExchangeInterceptor implements ExchangeHandler {
             // request handled
             QName serviceType=exchange.getConsumer().getName();
             String opName=exchange.getContract().getConsumerOperation().getName();
-
+            
             if (exchange.getPhase() == ExchangePhase.IN) {
                 
                 if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
@@ -115,11 +115,9 @@ public class ExchangeInterceptor implements ExchangeHandler {
                     
                     sent.setServiceType(serviceType.toString());   
                     sent.setOperation(opName);
-                    sent.setContent(content);
-                    sent.setMessageType(contentType);
                     sent.setMessageId(messageId);
                     
-                    _activityCollector.record(sent);
+                    record(exchange, contentType, sent); 
                 }
                 
                 //if (!exchange.getProvider().getProviderMetadata().isBinding()) {
@@ -127,11 +125,9 @@ public class ExchangeInterceptor implements ExchangeHandler {
                     
                     recvd.setServiceType(serviceType.toString());                
                     recvd.setOperation(opName);
-                    recvd.setContent(content);
-                    recvd.setMessageType(contentType);
                     recvd.setMessageId(messageId);
                     
-                    _activityCollector.record(recvd);
+                    record(exchange, contentType, recvd); 
                 //}
                 
             } else if (exchange.getPhase() == ExchangePhase.OUT) {
@@ -140,12 +136,10 @@ public class ExchangeInterceptor implements ExchangeHandler {
                                     
                     sent.setServiceType(serviceType.toString());                
                     sent.setOperation(opName);
-                    sent.setContent(content);
-                    sent.setMessageType(contentType);
                     sent.setMessageId(messageId);
                     sent.setReplyToId(relatesTo);
                     
-                    _activityCollector.record(sent);
+                    record(exchange, contentType, sent); 
                 //}
                 
                 if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
@@ -157,14 +151,31 @@ public class ExchangeInterceptor implements ExchangeHandler {
                     
                     recvd.setServiceType(serviceType.toString());                
                     recvd.setOperation(opName);
-                    recvd.setContent(content);
-                    recvd.setMessageType(contentType);
                     recvd.setMessageId(messageId);
                     recvd.setReplyToId(relatesTo);
                     
-                    _activityCollector.record(recvd);   
+                    record(exchange, contentType, recvd); 
                 }
             }
+        }
+    }
+    
+    protected void record(Exchange exchange, String contentType,
+                RPCActivityType at) {
+        if (at != null) {
+            at.setMessageType(contentType);
+            
+            Message msg = exchange.getMessage();
+            
+            at.setContent(_activityCollector.processInformation(null,
+                          contentType, msg.getContent(), at));
+            
+            // Check if content has been set
+            if (at.getContent() == null) {
+                at.setContent(getMessageContent(exchange));
+            }
+            
+            _activityCollector.record(at);
         }
     }
 

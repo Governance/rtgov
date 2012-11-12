@@ -78,7 +78,7 @@ public class TypeProcessor {
      * 
      * @return The context evaluators
      */
-    public java.util.List<ContextEvaluator> getContextEvaluators() {
+    public java.util.List<ContextEvaluator> getContexts() {
         return (_contextEvaluators);
     }
     
@@ -87,7 +87,7 @@ public class TypeProcessor {
      * 
      * @return The context evaluators
      */
-    public void setContextEvaluators(java.util.List<ContextEvaluator> ce) {
+    public void setContexts(java.util.List<ContextEvaluator> ce) {
         _contextEvaluators = ce;
     }
     
@@ -96,7 +96,7 @@ public class TypeProcessor {
      * 
      * @return The property evaluators
      */
-    public java.util.List<PropertyEvaluator> getPropertyEvaluators() {
+    public java.util.List<PropertyEvaluator> getProperties() {
         return (_propertyEvaluators);
     }
     
@@ -105,7 +105,7 @@ public class TypeProcessor {
      * 
      * @return The property evaluators
      */
-    public void setPropertyEvaluators(java.util.List<PropertyEvaluator> pe) {
+    public void setProperties(java.util.List<PropertyEvaluator> pe) {
         _propertyEvaluators = pe;
     }
     

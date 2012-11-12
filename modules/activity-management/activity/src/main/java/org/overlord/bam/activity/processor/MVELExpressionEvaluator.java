@@ -42,7 +42,13 @@ public class MVELExpressionEvaluator extends ExpressionEvaluator {
      * {@inheritDoc}
      */
     public String evaluate(Object information) {
-        return (String) (MVEL.executeExpression(_compiledExpression, information));
+        Object result=MVEL.executeExpression(_compiledExpression, information);
+        
+        if (result != null) {
+            return (result.toString());
+        }
+        
+        return (null);
     }
     
 }

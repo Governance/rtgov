@@ -84,19 +84,30 @@ public class JBossASACMgrACSViolationsTest {
                 TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-epn.war"));
     }
     
-    @Deployment(name="orders", order=4)
+    @Deployment(name="orders-app", order=4)
     public static WebArchive createDeployment4() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas:samples-jbossas-ordermgmt:war:"+version)
+                .artifacts("org.overlord.bam.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-app:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="epn", order=5)
+    @Deployment(name="orders-ip", order=5)
     public static WebArchive createDeployment5() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-ip:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+    }
+    
+    @Deployment(name="epn", order=6)
+    public static WebArchive createDeployment6() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -106,8 +117,8 @@ public class JBossASACMgrACSViolationsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="monitor", order=6)
-    public static WebArchive createDeployment6() {
+    @Deployment(name="monitor", order=7)
+    public static WebArchive createDeployment7() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)

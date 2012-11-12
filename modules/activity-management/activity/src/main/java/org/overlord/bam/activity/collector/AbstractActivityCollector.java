@@ -46,7 +46,8 @@ public class AbstractActivityCollector implements ActivityCollector {
     @Inject
     private ActivityUnitLogger _activityLogger=null;
     
-    private InformationProcessorManager _infoProcessorManager=new InformationProcessorManager();
+    @Inject
+    private InformationProcessorManager _infoProcessorManager=null;
     
     private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();
     
@@ -205,6 +206,9 @@ public class AbstractActivityCollector implements ActivityCollector {
             ActivityType actType) {
         if (_infoProcessorManager != null) {
             return (_infoProcessorManager.process(processor, type, info, actType));
+        } else if (LOG.isLoggable(Level.WARNING)) {
+            LOG.warning("GPB: Information processor manager not specified: " +
+            		"unable to process type '"+type+"' info: "+info);
         }
         
         return (null);

@@ -40,6 +40,7 @@
         <module name="javaee.api" export="true"/>
         <module name="org.drools"/>
         <module name="org.mvel.mvel2" export="true" />
+        <module name="org.jaxen" export="true" />
         <module name="org.codehaus.jackson.jackson-core-asl" export="true" />
         <module name="org.codehaus.jackson.jackson-mapper-asl" export="true" />
     </dependencies>

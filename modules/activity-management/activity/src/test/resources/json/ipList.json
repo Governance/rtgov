@@ -1,0 +1,35 @@
+[{
+	"name":"TestIP",
+	"version":"TestVersion",
+	"typeProcessors":{
+		"Type2":{
+			"properties":[{
+				"name":"Prop2",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"mydoc.field"
+				}
+			}]
+		},
+		"Type1":{
+			"contexts":[{
+				"type":"Conversation",
+				"evaluator":{
+					"type":"xpath",
+					"namespaces":{
+						"ns2":"http://www.myothernamespace",
+						"ns1":"http://www.mynamespace"
+					},
+					"expression":"/ns1:mydoc/ns2:field"
+				}
+			}],
+			"properties":[{
+				"name":"Prop1",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"/mydoc/field"
+				}
+			}]
+		}
+	}
+}]

@@ -25,6 +25,7 @@
 		<module>collector-embedded</module>
 		<module>collector-jee</module>
 		<module>collector-activity-server</module>
+		<module>ip-loader-jee</module>
 	</modules>
 
 </project>

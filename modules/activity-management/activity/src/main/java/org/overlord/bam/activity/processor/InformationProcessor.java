@@ -20,32 +20,75 @@ package org.overlord.bam.activity.processor;
 import org.overlord.bam.activity.model.ActivityType;
 
 /**
- * This interface represents an information processor.
+ * This class provides an information processor that is
+ * based on a set of expressions used to extract relevant data from
+ * the supplied information.
  *
  */
-public interface InformationProcessor {
+public class InformationProcessor {
 
+    private String _name=null;
+    private String _version=null;
+    private java.util.Map<String,TypeProcessor> _typeProcessors=
+            new java.util.HashMap<String,TypeProcessor>();
+    
     /**
      * This method returns the name of the information processor.
      * 
      * @return The name
      */
-    public String getName();
+    public String getName() {
+        return (_name);
+    }
     
+    /**
+     * This method sets the name of the information processor.
+     * 
+     * @param name The name
+     */
+    public void setName(String name) {
+        _name = name;
+    }
+
     /**
      * This method returns the version of the information processor.
      * 
      * @return The version
      */
-    public String getVersion();
+    public String getVersion() {
+        return (_version);
+    }
+
+    /**
+     * This method sets the version of the information processor.
+     * 
+     * @param version The version
+     */
+    public void setVersion(String version) {
+        _version = version;
+    }
     
+    /**
+     * The map of types to processors.
+     * 
+     * @return The type to processor map
+     */
+    public java.util.Map<String, TypeProcessor> getTypeProcessors() {
+        return (_typeProcessors);
+    }
+
     /**
      * Initialize the information processor.
      * 
      * @throws Exception Failed to initialize
      */
-    public void init() throws Exception;
-    
+    public void init() throws Exception {
+        
+        for (TypeProcessor tp : _typeProcessors.values()) {
+            tp.init();
+        }
+    }
+
     /**
      * This method determines whether the specified type
      * is handled by the information processor.
@@ -53,8 +96,10 @@ public interface InformationProcessor {
      * @param type The type
      * @return Whether the information processor handles the type
      */
-    public boolean isSupported(String type);
-    
+    public boolean isSupported(String type) {
+        return (_typeProcessors.containsKey(type));
+    }
+
     /**
      * This method processes supplied information to
      * extract relevant details, and then return an
@@ -67,13 +112,26 @@ public interface InformationProcessor {
      *              details extracted from the information
      * @return The public representation of the information
      */
-    public String process(String type, Object info, ActivityType actType);
-    
+    public String process(String type, Object info, ActivityType actType) {
+        TypeProcessor processor=_typeProcessors.get(type);
+        
+        if (processor != null) {
+            // Process the context and property details
+            return (processor.process(info, actType));
+        }
+        
+        return null;
+    }
+
     /**
      * Close the information processor.
      * 
      * @throws Exception Failed to close
      */
-    public void close() throws Exception;
+    public void close() throws Exception {
+        for (TypeProcessor tp : _typeProcessors.values()) {
+            tp.close();
+        }
+    }
 
 }

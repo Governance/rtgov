@@ -75,7 +75,7 @@ public class JEEACSLoader extends AbstractACSLoader {
             
             if (is == null) {
                 LOG.severe(java.util.PropertyResourceBundle.getBundle(
-                        "acs-epn.Messages").getString("ACS-LOADER-JEE-1"));
+                        "acs-loader-jee.Messages").getString("ACS-LOADER-JEE-1"));
             } else {
                 byte[] b=new byte[is.available()];
                 is.read(b);
@@ -85,7 +85,7 @@ public class JEEACSLoader extends AbstractACSLoader {
                 
                 if (_activeCollectionSources == null) {
                     LOG.severe(java.util.PropertyResourceBundle.getBundle(
-                            "acs-epn.Messages").getString("ACS-LOADER-JEE-2"));
+                            "acs-loader-jee.Messages").getString("ACS-LOADER-JEE-2"));
                 } else {
                     for (ActiveCollectionSource acs : _activeCollectionSources) {
                         // Pre-initialize the source to avoid any contextual class
@@ -101,7 +101,7 @@ public class JEEACSLoader extends AbstractACSLoader {
             }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "acs-epn.Messages").getString("ACS-LOADER-JEE-3"), e);
+                    "acs-loader-jee.Messages").getString("ACS-LOADER-JEE-3"), e);
         }
     }
     
@@ -118,7 +118,7 @@ public class JEEACSLoader extends AbstractACSLoader {
                 }
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                        "acs-epn.Messages").getString("ACS-LOADER-JEE-4"), e);
+                        "acs-loader-jee.Messages").getString("ACS-LOADER-JEE-4"), e);
             }
         }
     }       

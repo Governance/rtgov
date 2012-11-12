@@ -21,15 +21,15 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class InformationProcessorManagerTest {
+public class AbstractInformationProcessorManagerTest {
 
     private static final String IP_NAME1 = "IPName1";
 
     @Test
     public void testRegister() {
-        InformationProcessorManager ipm=new InformationProcessorManager();
+        InformationProcessorManager ipm=new AbstractInformationProcessorManager(){};
         
-        ExpressionInformationProcessor ip=new ExpressionInformationProcessor();
+        InformationProcessor ip=new InformationProcessor();
         ip.setName(IP_NAME1);
         ip.setVersion("1");
         
@@ -46,9 +46,9 @@ public class InformationProcessorManagerTest {
 
     @Test
     public void testRegisterFailed() {
-        InformationProcessorManager ipm=new InformationProcessorManager();
+        InformationProcessorManager ipm=new AbstractInformationProcessorManager(){};
         
-        ExpressionInformationProcessor ip=new ExpressionInformationProcessor() {
+        InformationProcessor ip=new InformationProcessor() {
             
             public void init() throws Exception {
                 throw new Exception("FAIL");
@@ -68,9 +68,9 @@ public class InformationProcessorManagerTest {
 
     @Test
     public void testRegisterNewer() {
-        InformationProcessorManager ipm=new InformationProcessorManager();
+        InformationProcessorManager ipm=new AbstractInformationProcessorManager(){};
         
-        ExpressionInformationProcessor ip1=new ExpressionInformationProcessor();
+        InformationProcessor ip1=new InformationProcessor();
         ip1.setName(IP_NAME1);
         ip1.setVersion("1");
         
@@ -89,7 +89,7 @@ public class InformationProcessorManagerTest {
                         ipm.getInformationProcessor(IP_NAME1).getVersion());
         }
 
-        ExpressionInformationProcessor ip2=new ExpressionInformationProcessor();
+        InformationProcessor ip2=new InformationProcessor();
         ip2.setName(IP_NAME1);
         ip2.setVersion("2");
         
@@ -112,9 +112,9 @@ public class InformationProcessorManagerTest {
     
     @Test
     public void testRegisterOlder() {
-        InformationProcessorManager ipm=new InformationProcessorManager();
+        InformationProcessorManager ipm=new AbstractInformationProcessorManager(){};
         
-        ExpressionInformationProcessor ip1=new ExpressionInformationProcessor();
+        InformationProcessor ip1=new InformationProcessor();
         ip1.setName(IP_NAME1);
         ip1.setVersion("2");
         
@@ -133,7 +133,7 @@ public class InformationProcessorManagerTest {
                         ipm.getInformationProcessor(IP_NAME1).getVersion());
         }
 
-        ExpressionInformationProcessor ip2=new ExpressionInformationProcessor();
+        InformationProcessor ip2=new InformationProcessor();
         ip2.setName(IP_NAME1);
         ip2.setVersion("1");
         
@@ -157,9 +157,9 @@ public class InformationProcessorManagerTest {
     
     @Test
     public void testUnregisterNewerRegisterOlder() {
-        InformationProcessorManager ipm=new InformationProcessorManager();
+        InformationProcessorManager ipm=new AbstractInformationProcessorManager(){};
         
-        ExpressionInformationProcessor ip1=new ExpressionInformationProcessor();
+        InformationProcessor ip1=new InformationProcessor();
         ip1.setName(IP_NAME1);
         ip1.setVersion("2");
         
@@ -184,7 +184,7 @@ public class InformationProcessorManagerTest {
             fail("Failed to unregister");
         }
         
-        ExpressionInformationProcessor ip2=new ExpressionInformationProcessor();
+        InformationProcessor ip2=new InformationProcessor();
         ip2.setName(IP_NAME1);
         ip2.setVersion("1");
         
