@@ -57,14 +57,15 @@ public interface ActivityCollector {
      * derived from this information will be directly associated
      * with the supplied activity type.
      * 
+     * @param processor The optional information processor to use
      * @param type The information type
      * @param info The information
      * @param actType The activity type being initialized
      * @return The information representation to include with the
      *                  activity event
      */
-    public String processInformation(String type, Object info,
-                        ActivityType actType);
+    public String processInformation(String processor, String type,
+                    Object info, ActivityType actType);
     
     /**
      * This method records the supplied activity type. If a

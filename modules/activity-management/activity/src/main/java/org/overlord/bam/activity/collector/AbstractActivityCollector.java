@@ -201,9 +201,10 @@ public class AbstractActivityCollector implements ActivityCollector {
     /**
      * {@inheritDoc}
      */
-    public String processInformation(String type, Object info,
+    public String processInformation(String processor, String type, Object info,
             ActivityType actType) {
         if (_infoProcessorManager != null) {
+            return (_infoProcessorManager.process(processor, type, info, actType));
         }
         
         return (null);
@@ -262,12 +263,6 @@ public class AbstractActivityCollector implements ActivityCollector {
         
         // Set/override timestamp
         actType.setTimestamp(getTimestamp());
-        
-        // TODO: Need to determine how best to collect context
-        // information
-        
-        // TODO: Need to also consider how to deal with filtering
-        // mechanism
         
         au.getActivityTypes().add(actType);
         

@@ -20,6 +20,7 @@ package org.overlord.bam.activity.processor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.common.util.VersionUtil;
 
 /**
@@ -110,6 +111,42 @@ public class InformationProcessorManager {
         synchronized (_informationProcessorIndex) {
             return (_informationProcessorIndex.get(name));
         }
+    }
+    
+    /**
+     * This method processes supplied information to
+     * extract relevant details, and then return an
+     * appropriate representation of that information
+     * for public distribution.
+     * 
+     * @param processor The optional information processor to use
+     * @param type The information type
+     * @param info The information to be processed
+     * @param actType The activity type to be annotated with
+     *              details extracted from the information
+     * @return The public representation of the information
+     */
+    public String process(String processor, String type,
+                    Object info, ActivityType actType) {
+        
+        synchronized (_informationProcessorIndex) {
+            
+            if (processor != null) {
+                InformationProcessor ip=_informationProcessorIndex.get(processor);
+                
+                if (ip.isSupported(type)) {
+                    return (ip.process(type, info, actType));
+                }
+            } else {
+                for (int i=0; i < _informationProcessors.size(); i++) {
+                    if (_informationProcessors.get(i).isSupported(type)) {
+                        return (_informationProcessors.get(i).process(type, info, actType));
+                    }
+                }
+            }
+        }        
+        
+        return (null);
     }
     
     /**
