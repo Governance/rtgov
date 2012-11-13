@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>analytics</module>
+		<module>call-trace</module>
 		<module>service-dependency</module>
 		<module>service-dependency-svg</module>
 	</modules>

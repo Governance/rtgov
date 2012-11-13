@@ -28,6 +28,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.content.services</groupId>
+			<artifactId>call-trace-rests</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.overlord.bam.activity-management</groupId>
+					<artifactId>activity</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		
 		<!-- Test dependencies -->
 		
