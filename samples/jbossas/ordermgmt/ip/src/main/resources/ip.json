@@ -45,6 +45,42 @@
 					"expression":"total"
 				}
 			}]
+		},
+		"{urn:switchyard-quickstart-demo:orders:1.0}makePayment":{
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"xpath",
+					"namespaces":{
+						"orders":"urn:switchyard-quickstart:bean-service:1.0"
+					},
+					"expression":"/orders:makePayment/orders:payment/orders:customer"
+				}
+			},{
+				"name":"amount",
+				"evaluator":{
+					"type":"xpath",
+					"namespaces":{
+						"orders":"urn:switchyard-quickstart:bean-service:1.0"
+					},
+					"expression":"/orders:makePayment/orders:payment/orders:amount"
+				}
+			}]
+		},
+		"java:org.switchyard.quickstarts.demos.orders.Receipt":{
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"customer"
+				}
+			},{
+				"name":"amount",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"amount"
+				}
+			}]
 		}
 	}
 }]

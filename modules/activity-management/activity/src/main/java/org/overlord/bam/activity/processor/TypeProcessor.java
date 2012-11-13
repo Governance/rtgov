@@ -17,6 +17,9 @@
  */
 package org.overlord.bam.activity.processor;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.Context;
 
@@ -25,6 +28,8 @@ import org.overlord.bam.activity.model.Context;
  *
  */
 public class TypeProcessor {
+    
+    private static final Logger LOG=Logger.getLogger(TypeProcessor.class.getName());
 
     private ExpressionEvaluator _representation=null;
     
@@ -121,10 +126,18 @@ public class TypeProcessor {
     public String process(Object information, ActivityType actType) {
         String ret=null;
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Process information: "+information);
+        }
+        
         for (int i=0; i < _contextEvaluators.size(); i++) {
             ContextEvaluator ce=_contextEvaluators.get(i);
 
             String val=ce.getEvaluator().evaluate(information);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Context evaluator '"+ce+"' = "+val);
+            }
             
             if (val != null) {
                 actType.getContext().add(new Context(ce.getType(), val));
@@ -135,6 +148,10 @@ public class TypeProcessor {
             PropertyEvaluator pe=_propertyEvaluators.get(i);
 
             String val=pe.getEvaluator().evaluate(information);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Property evaluator '"+pe+"' = "+val);
+            }
             
             if (val != null) {
                 actType.getProperties().put(pe.getName(), val);
@@ -216,6 +233,13 @@ public class TypeProcessor {
         public void setEvaluator(ExpressionEvaluator evaluator) {
             _evaluator = evaluator;
         }
+        
+        /**
+         * {@inheritDoc}
+         */
+        public String toString() {
+            return ("[ name="+_name+" expression="+_evaluator.getExpression()+" ]");
+        }
     }
     
     /**
@@ -266,6 +290,13 @@ public class TypeProcessor {
          */
         public void setEvaluator(ExpressionEvaluator evaluator) {
             _evaluator = evaluator;
+        }
+        
+        /**
+         * {@inheritDoc}
+         */
+        public String toString() {
+            return ("[ type="+_type+" expression="+_evaluator.getExpression()+" ]");
         }
     }
 }
