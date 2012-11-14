@@ -21,8 +21,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.bam.call.trace.model.Call;
+import org.overlord.bam.call.trace.model.CallTrace;
 import org.overlord.bam.call.trace.model.Task;
-import org.overlord.bam.call.trace.model.TraceNode;
 
 public class CallTraceUtilTest {
 
@@ -72,10 +72,11 @@ public class CallTraceUtilTest {
         
         c1.getTasks().add(t3);
         
-        
+        CallTrace ct=new CallTrace();
+        ct.getTasks().add(node);
         
         try {
-            byte[] b=CallTraceUtil.serializeCallTrace(node);
+            byte[] b=CallTraceUtil.serializeCallTrace(ct);
             
             if (b == null) {
                 fail("null returned");
@@ -88,7 +89,7 @@ public class CallTraceUtilTest {
             is.read(inb2);
             is.close();
             
-            TraceNode node2=CallTraceUtil.deserializeCallTrace(inb2);
+            CallTrace node2=CallTraceUtil.deserializeCallTrace(inb2);
             
             byte[] b2=CallTraceUtil.serializeCallTrace(node2);            
             

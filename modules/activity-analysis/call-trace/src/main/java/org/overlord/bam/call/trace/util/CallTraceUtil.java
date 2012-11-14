@@ -20,7 +20,7 @@ package org.overlord.bam.call.trace.util;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.overlord.bam.call.trace.model.TraceNode;
+import org.overlord.bam.call.trace.model.CallTrace;
 
 /**
  * This class provides utility functions for the call trace
@@ -52,7 +52,7 @@ public final class CallTraceUtil {
      * @return The JSON serialized representation
      * @throws Exception Failed to serialize
      */
-    public static byte[] serializeCallTrace(TraceNode node) throws Exception {
+    public static byte[] serializeCallTrace(CallTrace node) throws Exception {
         byte[] ret=null;
         
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
@@ -73,12 +73,12 @@ public final class CallTraceUtil {
      * @return The call trace
      * @throws Exception Failed to deserialize
      */
-    public static TraceNode deserializeCallTrace(byte[] node) throws Exception {
-        TraceNode ret=null;
+    public static CallTrace deserializeCallTrace(byte[] node) throws Exception {
+        CallTrace ret=null;
         
         java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(node);
         
-        ret = MAPPER.readValue(bais, TraceNode.class);
+        ret = MAPPER.readValue(bais, CallTrace.class);
         
         bais.close();
         

@@ -1,39 +1,43 @@
 {
-	"type":"Call",
-	"component":"TestComponent",
-	"operation":"TestOperation",
-	"fault":"TestFault",
-	"request":"<request/>",
-	"response":"<response/>",
-	"requestLatency":1,
-	"responseLatency":2,
 	"tasks":[
 		{
-			"type":"Task",
-			"description":"This is task 1",
-			"duration":50,"percentage":25
-		},{
 			"type":"Call",
-			"component":"OtherComponent",
-			"operation":"OtherOp",
-			"request":"<req2/>",
+			"component":"TestComponent",
+			"operation":"TestOperation",
+			"fault":"TestFault",
+			"request":"<request/>",
+			"response":"<response/>",
+			"requestLatency":1,
+			"responseLatency":2,
 			"tasks":[
 				{
 					"type":"Task",
-					"description":"This is task 3",
+					"description":"This is task 1",
+					"duration":50,"percentage":25
+				},{
+					"type":"Call",
+					"component":"OtherComponent",
+					"operation":"OtherOp",
+					"request":"<req2/>",
+					"tasks":[
+						{
+							"type":"Task",
+							"description":"This is task 3",
+							"duration":100,
+							"percentage":100
+						}
+					],
 					"duration":100,
-					"percentage":100
+					"percentage":50
+				},{
+					"type":"Task",
+					"description":"This is task 2",
+					"duration":50,
+					"percentage":25
 				}
 			],
-			"duration":100,
-			"percentage":50
-		},{
-			"type":"Task",
-			"description":"This is task 2",
-			"duration":50,
-			"percentage":25
+			"duration":56,
+			"percentage":100
 		}
-	],
-	"duration":56,
-	"percentage":100
+	]
 }

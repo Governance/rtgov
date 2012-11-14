@@ -22,7 +22,7 @@ package org.overlord.bam.call.trace.model;
  * service operation invocation.
  *
  */
-public class Call extends TraceNode {
+public class Call extends ParentNode {
 
     private String _component=null;
     private String _operation=null;
@@ -31,8 +31,6 @@ public class Call extends TraceNode {
     private String _response=null;
     private long _requestLatency=0;
     private long _responseLatency=0;
-    
-    private java.util.List<TraceNode> _tasks=new java.util.ArrayList<TraceNode>();
     
     /**
      * This method returns the name of the component
@@ -164,24 +162,6 @@ public class Call extends TraceNode {
      */
     public void setResponseLatency(long response) {
         _responseLatency = response;
-    }
-    
-    /**
-     * This method returns the tasks.
-     * 
-     * @return The tasks
-     */
-    public java.util.List<TraceNode> getTasks() {
-        return (_tasks);
-    }
-    
-    /**
-     * This method sets the tasks.
-     * 
-     * @param tasks The tasks
-     */
-    public void setTasks(java.util.List<TraceNode> tasks) {
-        _tasks = tasks;
     }
     
 }

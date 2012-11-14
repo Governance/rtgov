@@ -27,8 +27,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.overlord.bam.call.trace.model.Call;
+import org.overlord.bam.call.trace.model.CallTrace;
 import org.overlord.bam.call.trace.model.Task;
-import org.overlord.bam.call.trace.model.TraceNode;
 import org.overlord.bam.call.trace.util.CallTraceUtil;
 
 /**
@@ -61,10 +61,10 @@ public class RESTCallTraceServer {
     public String instance(@QueryParam("correlation") String correlation) throws Exception {
         String ret="";
         
-        TraceNode node=getCallTrace(correlation);
+        CallTrace ct=getCallTrace(correlation);
         
-        if (node != null) {
-            byte[] b=CallTraceUtil.serializeCallTrace(node);
+        if (ct != null) {
+            byte[] b=CallTraceUtil.serializeCallTrace(ct);
             
             if (b != null) {
                 ret = new String(b);
@@ -85,8 +85,8 @@ public class RESTCallTraceServer {
      * @param correlation The correlation value
      * @return The call trace, or null if not found
      */
-    protected TraceNode getCallTrace(String correlation) {
-        TraceNode ret=null;
+    protected CallTrace getCallTrace(String correlation) {
+        CallTrace ret=null;
         
         if (correlation.equals("test")) {
             ret = createTestCallTrace();
@@ -103,13 +103,16 @@ public class RESTCallTraceServer {
      * 
      * @return The test call trace
      */
-    protected TraceNode createTestCallTrace() {
-        Call ret=new Call();
-        ret.setComponent("TestService1");
-        ret.setOperation("op1");
-        ret.setRequest("<op1/>");
-        ret.setResponse("<op1/>");
-        ret.setDuration(2000);
+    protected CallTrace createTestCallTrace() {
+        CallTrace ret=new CallTrace();
+        
+        Call c0=new Call();
+        c0.setComponent("TestService1");
+        c0.setOperation("op1");
+        c0.setRequest("<op1/>");
+        c0.setResponse("<op1/>");
+        c0.setDuration(2000);
+        ret.getTasks().add(c0);
 
         Task t1=new Task();
         t1.setDescription("Assign var1");
