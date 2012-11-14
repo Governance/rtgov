@@ -140,6 +140,25 @@ public class JPAActivityStore implements ActivityStore {
 
         return (query(query.getExpression()));
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> getActivityTypes(String context) throws Exception {
+        
+        @SuppressWarnings("unchecked")
+        List<ActivityType> ret=(List<ActivityType>)
+                _entityManager.createQuery("SELECT at from ActivityType at "+
+                        "JOIN at.context ctx "+
+                        "WHERE ctx.value = '"+context+"'")
+                .getResultList();
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("ActivityTypes context '"+context+"' Result="+ret);
+        }
+
+        return (ret);
+    }
     
     /**
      * This method performs the query associated with the supplied

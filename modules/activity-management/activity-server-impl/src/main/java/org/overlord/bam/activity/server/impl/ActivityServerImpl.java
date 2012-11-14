@@ -17,6 +17,7 @@
  */
 package org.overlord.bam.activity.server.impl;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.enterprise.inject.Any;
@@ -156,6 +157,18 @@ public class ActivityServerImpl implements ActivityServer {
         }
         
         return (_store.query(query));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> getActivityTypes(String context) throws Exception {
+        
+        if (_store == null) {
+            throw new Exception("Activity Store is unavailable");
+        }
+        
+        return (_store.getActivityTypes(context));
     }
     
 }

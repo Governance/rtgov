@@ -30,12 +30,16 @@ import org.overlord.bam.activity.server.QuerySpec;
 
 public class JPAActivityStoreTest {
 
+    private static final String AU_ID_2 = "au2";
+    private static final String AU_ID_1 = "au1";
+    private static final String CONV_ID_2 = "54321";
+    private static final String CONV_ID_1 = "12345";
     private static final String JPQL_FORMAT = "jpql";
     //private static final String MONGODB_FORMAT = "mongodb";
     private static final String OVERLORD_BAM_ACTIVITY_ORM = "overlord-bam-activity-orm";
     //private static final String OVERLORD_BAM_ACTIVITY_OGM_M = "overlord-bam-activity-ogm-mongodb";
 
-    public ActivityUnit createTestActivityUnit(String id) {
+    public ActivityUnit createTestActivityUnit(String id, String convId) {
         ActivityUnit act=new ActivityUnit();
         
         act.setId(id);
@@ -63,7 +67,7 @@ public class JPAActivityStoreTest {
         
         Context c1=new Context();
         c1.setType(Context.Type.Conversation);
-        c1.setValue("12345");
+        c1.setValue(convId);
         me1.getContext().add(c1);
         
         act.getActivityTypes().add(me1);
@@ -131,6 +135,46 @@ public class JPAActivityStoreTest {
         System.out.println("RESULTS="+results);
     }
 
+    @Test
+    public void testStoreAndGetATsORM() {
+        java.util.List<ActivityType> results=null;
+        
+        JPAActivityStore astore=getActivityStore(OVERLORD_BAM_ACTIVITY_ORM);
+        
+        java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
+        
+        ActivityUnit au1=createTestActivityUnit(AU_ID_1, CONV_ID_1);
+        ActivityUnit au2=createTestActivityUnit(AU_ID_2, CONV_ID_2);
+        
+        activities.add(au1);
+        activities.add(au2);
+        
+        try {
+            astore.store(activities);
+        } catch(Exception e) {
+            fail("Failed to store activities: "+e);
+        }
+        
+        try {
+            results = astore.getActivityTypes(CONV_ID_1);
+        } catch(Exception e) {
+            fail("Failed to query activities: "+e);
+        } finally {
+            try {
+                astore.remove(au1);
+                astore.remove(au2);
+            } catch (Exception e) {
+                fail("Failed to remove activity units: "+e);
+            }
+        }
+        
+        System.out.println("RESULTS="+results);
+        
+        if (results.size() != 1) {
+            fail("Only expecting a single activity event: "+results.size());
+        }
+    }
+    
     /*
     @Test
     public void testStoreAndQueryAllOGMM() {
@@ -143,15 +187,12 @@ public class JPAActivityStoreTest {
     protected java.util.List<ActivityType> testStoreAndQuery(String emname, QuerySpec qs) {
         java.util.List<ActivityType> results=null;
         
-        JPAActivityStore astore=getActivityStore(emname, qs);
-        
-        astore.setEntityManagerName(emname);
-        astore.init();
+        JPAActivityStore astore=getActivityStore(emname);
         
         java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
         
-        ActivityUnit au1=createTestActivityUnit("au1");
-        ActivityUnit au2=createTestActivityUnit("au2");
+        ActivityUnit au1=createTestActivityUnit(AU_ID_1, CONV_ID_1);
+        ActivityUnit au2=createTestActivityUnit(AU_ID_2, CONV_ID_2);
         
         activities.add(au1);
         activities.add(au2);
@@ -178,8 +219,13 @@ public class JPAActivityStoreTest {
         return (results);
     }
     
-    protected JPAActivityStore getActivityStore(String emname, QuerySpec qs) {
-        return (new JPAActivityStore());
+    protected JPAActivityStore getActivityStore(String emname) {
+        JPAActivityStore ret=new JPAActivityStore();
+        ret.setEntityManagerName(OVERLORD_BAM_ACTIVITY_ORM);
+        ret.init();
+        
+        return (ret);
+
     }
 
     /*

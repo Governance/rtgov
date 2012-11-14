@@ -18,6 +18,19 @@
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.overlord.bam.activity-management</groupId>
+			<artifactId>activity-store-mem</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.activity-management</groupId>
+			<artifactId>activity-server-impl</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

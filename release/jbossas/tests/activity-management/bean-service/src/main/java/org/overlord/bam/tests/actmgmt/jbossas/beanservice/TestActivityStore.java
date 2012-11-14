@@ -72,6 +72,14 @@ public class TestActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
+    public List<ActivityType> getActivityTypes(String context) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public List<ActivityType> query(QuerySpec query) throws Exception {
         // TODO Auto-generated method stub
         return null;

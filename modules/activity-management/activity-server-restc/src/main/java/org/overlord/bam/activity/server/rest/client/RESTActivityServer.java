@@ -40,6 +40,7 @@ public class RESTActivityServer implements ActivityServer {
     private static final String STORE="/overlord-bam/activity/store";
     private static final String UNIT="/overlord-bam/activity/unit";
     private static final String QUERY="/overlord-bam/activity/query";
+    private static final String EVENTS="/overlord-bam/activity/events";
     
     private String _url="http://localhost:8080";
             
@@ -135,6 +136,44 @@ public class RESTActivityServer implements ActivityServer {
         
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("RESTActivityServer getActivityUnit result: "+ret);
+        }
+        
+        return (ret);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> getActivityTypes(String context) throws Exception {
+        List<ActivityType> ret=null;
+        
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("RESTActivityServer getActivityTypes: "+context);
+        }
+        
+        URL queryUrl = new URL(_url+EVENTS+"?context="+context);
+        
+        HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
+        connection.setRequestMethod("GET");
+
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setUseCaches(false);
+        connection.setAllowUserInteraction(false);
+        connection.setRequestProperty("Content-Type",
+                    "application/json");
+
+        java.io.InputStream is=connection.getInputStream();
+
+        byte[] b = new byte[is.available()];
+        is.read(b);
+        
+        ret = ActivityUtil.deserializeActivityTypeList(b);
+        
+        is.close();
+        
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("RESTActivityServer getActivityTypes result: "+ret);
         }
         
         return (ret);

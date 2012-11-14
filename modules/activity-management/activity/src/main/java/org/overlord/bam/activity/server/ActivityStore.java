@@ -46,6 +46,16 @@ public interface ActivityStore {
     public ActivityUnit getActivityUnit(String id) throws Exception;
     
     /**
+     * This method retrieves a set of activity events associated
+     * with the supplied context value.
+     * 
+     * @param context The context value
+     * @return The list of activities
+     * @throws Exception Failed to retrieve the activities
+     */
+    public java.util.List<ActivityType> getActivityTypes(String context) throws Exception;
+    
+    /**
      * This method queries the persistent store for activity events
      * that satisfy the supplied query.
      * 

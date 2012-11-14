@@ -26,6 +26,7 @@ import javax.inject.Singleton;
 import org.mvel2.MVEL;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
 
@@ -75,6 +76,29 @@ public class MemActivityStore implements ActivityStore {
         }
         
         return (null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> getActivityTypes(String context) throws Exception {
+        List<ActivityType> ret=new java.util.ArrayList<ActivityType>();
+        
+        for (ActivityUnit unit : _activities) {
+            for (ActivityType activity : unit.getActivityTypes()) {
+                for (Context c : activity.getContext()) {
+                    if (c.getValue().equals(context)) {
+                        ret.add(activity);
+                    }
+                }
+            }
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Get Activity Types ("+this+") context["+context+"] = "+ret);
+        }
+        
+        return (ret);
     }
 
     /**

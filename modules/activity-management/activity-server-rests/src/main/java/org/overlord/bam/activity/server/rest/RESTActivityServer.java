@@ -136,6 +136,35 @@ public class RESTActivityServer {
         return (ret);
     }
 
+    @GET
+    @Path("/events")
+    @Produces("application/json")
+    public String getActivityTypes(@QueryParam("context") String context) throws Exception {
+        String ret="";
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Activity Server: Get Activity Types for Context="+context);        
+        }
+        
+        if (_activityServer == null) {
+            throw new Exception("Activity Server is not available");
+        }
+        
+        java.util.List<ActivityType> list=_activityServer.getActivityTypes(context);
+        
+        if (list != null) {
+            byte[] b=ActivityUtil.serializeActivityTypeList(list);
+            
+            ret = new String(b);
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Activity Server: Get Activity Types Result="+ret);        
+        }
+
+        return (ret);
+    }
+    
     /**
      * This method handles queries for activity events.
      * 
