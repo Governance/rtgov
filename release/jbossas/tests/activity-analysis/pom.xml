@@ -1,0 +1,35 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overlord.bam.release.jbossas.tests</groupId>
+	<artifactId>activity-analysis</artifactId>
+	<packaging>pom</packaging>
+	<name>Overlord BAM::Release::JBossAS::Tests::Activity Analysis</name>
+
+	<parent>
+		<groupId>org.overlord.bam.release.jbossas</groupId>
+		<artifactId>tests</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>call-trace-rest</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
+

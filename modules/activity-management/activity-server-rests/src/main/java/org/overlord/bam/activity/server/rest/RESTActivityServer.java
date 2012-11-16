@@ -86,7 +86,8 @@ public class RESTActivityServer {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "activity-server-rests.Messages").getString("CALL-TRACE-RESTS-1"), e);
         }
     }
     

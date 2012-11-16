@@ -108,6 +108,22 @@ public class ActivityUnit implements java.io.Externalizable {
     }
     
     /**
+     * This method initializes the activity unit and its
+     * contained activity events. This method will ensure
+     * that the unit id on the contained activity events,
+     * and the relative index within the unit, are correctly
+     * initialized.
+     */
+    public void init() {
+        int index=0;
+        
+        for (ActivityType at : getActivityTypes()) {
+            at.setUnitId(getId());
+            at.setUnitIndex(index++);
+        }
+    }
+    
+    /**
      * This method sets the origin.
      * 
      * @param origin The origin

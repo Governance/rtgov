@@ -117,13 +117,8 @@ public class ActivityServerImpl implements ActivityServer {
         if (au.getId() == null) {
             au.setId(createUniqueId());
         }
-        
-        int index=0;
-        
-        for (ActivityType at : au.getActivityTypes()) {
-            at.setUnitId(au.getId());
-            at.setUnitIndex(index++);
-        }
+
+        au.init();
     }
     
     /**

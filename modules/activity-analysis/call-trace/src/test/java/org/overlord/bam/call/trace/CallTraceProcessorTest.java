@@ -22,10 +22,19 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
+import org.overlord.bam.activity.model.bpm.ProcessCompleted;
+import org.overlord.bam.activity.model.bpm.ProcessCompleted.Status;
+import org.overlord.bam.activity.model.bpm.ProcessStarted;
+import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
+import org.overlord.bam.activity.model.soa.ResponseReceived;
+import org.overlord.bam.activity.model.soa.ResponseSent;
 import org.overlord.bam.activity.server.impl.ActivityServerImpl;
 import org.overlord.bam.activity.store.mem.MemActivityStore;
 import org.overlord.bam.call.trace.CallTraceProcessor.CTState;
+import org.overlord.bam.call.trace.model.CallTrace;
+import org.overlord.bam.call.trace.util.CallTraceUtil;
+import org.overlord.bam.call.trace.util.CallTraceUtilTest;
 
 public class CallTraceProcessorTest {
 
@@ -251,5 +260,491 @@ public class CallTraceProcessorTest {
         if (state.getActivityUnits().get(1) != au2) {
             fail("Expecting au2 at pos 1");
         }
+    }
+    
+    @Test
+    public void testCursorAllActivityTypes() {
+        ActivityUnit au1=new ActivityUnit();
+        
+        RequestSent rs1=new RequestSent();
+        RequestReceived rr2=new RequestReceived();
+        
+        au1.getActivityTypes().add(rs1);
+        au1.getActivityTypes().add(rr2);
+        
+        CallTraceProcessor.ActivityUnitCursor cursor=
+                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        
+        if (cursor.getActivityTypes().size() != 2) {
+            fail("Expecting 2 events: "+cursor.getActivityTypes().size());
+        }
+    }
+    
+    @Test
+    public void testCursorRemainingActivityTypes() {
+        ActivityUnit au1=new ActivityUnit();
+        
+        RequestSent rs1=new RequestSent();
+        RequestReceived rr2=new RequestReceived();
+        
+        au1.getActivityTypes().add(rs1);
+        au1.getActivityTypes().add(rr2);
+        
+        CallTraceProcessor.ActivityUnitCursor cursor=
+                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        
+        cursor.next();
+        
+        if (cursor.getActivityTypes().size() != 1) {
+            fail("Expecting 1 events: "+cursor.getActivityTypes().size());
+        }
+    }
+    
+    @Test
+    public void testCursorPeek() {
+        ActivityUnit au1=new ActivityUnit();
+        
+        RequestSent rs1=new RequestSent();
+        RequestReceived rr2=new RequestReceived();
+        
+        au1.getActivityTypes().add(rs1);
+        au1.getActivityTypes().add(rr2);
+        
+        CallTraceProcessor.ActivityUnitCursor cursor=
+                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        
+        if (cursor.peek() != rs1) {
+            fail("Peek should return rs1");
+        }
+    }
+    
+    @Test
+    public void testCursorNextThenPeek() {
+        ActivityUnit au1=new ActivityUnit();
+        
+        RequestSent rs1=new RequestSent();
+        RequestReceived rr2=new RequestReceived();
+        
+        au1.getActivityTypes().add(rs1);
+        au1.getActivityTypes().add(rr2);
+        
+        CallTraceProcessor.ActivityUnitCursor cursor=
+                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        
+        if (cursor.next() != rs1) {
+            fail("Next should return rs1");
+        }
+        
+        if (cursor.peek() != rr2) {
+            fail("Peek should return rr2");
+        }
+    }
+    
+    @Test
+    public void testCursorNextWhenEmpty() {
+        ActivityUnit au1=new ActivityUnit();
+        
+        RequestSent rs1=new RequestSent();
+        RequestReceived rr2=new RequestReceived();
+        
+        au1.getActivityTypes().add(rs1);
+        au1.getActivityTypes().add(rr2);
+        
+        CallTraceProcessor.ActivityUnitCursor cursor=
+                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        
+        if (cursor.next() != rs1) {
+            fail("Next should return rs1");
+        }
+        
+        if (cursor.next() != rr2) {
+            fail("Peek should return rr2");
+        }
+        
+        if (cursor.next() != null) {
+            fail("Cursor should now be empty");
+        }
+    }
+    
+    @Test
+    public void testTopLevelAUs1() {
+        ActivityUnit au1=new ActivityUnit();
+        
+        RequestReceived rr1=new RequestReceived();
+        rr1.setServiceType("st1");
+        rr1.setOperation("op1");
+        
+        au1.getActivityTypes().add(rr1);
+        
+        ActivityUnit au2=new ActivityUnit();
+        
+        RequestReceived rr2=new RequestReceived();
+        rr2.setServiceType("st2");
+        rr2.setOperation("op2");
+        
+        au2.getActivityTypes().add(rr2);
+        
+        CTState state=new CTState();
+        state.add(au1);
+        state.add(au2);
+        
+        java.util.List<ActivityUnit> tl=CallTraceProcessor.getTopLevelAUs(state);
+        
+        if (tl.size() != 2) {
+            fail("Should be two top level aus: "+tl.size());
+        }
+    }
+    
+    @Test
+    public void testTopLevelAUs2() {
+        ActivityUnit au1=new ActivityUnit();
+        
+        RequestReceived rr1=new RequestReceived();
+        rr1.setServiceType("st1");
+        rr1.setOperation("op1");
+        
+        au1.getActivityTypes().add(rr1);
+        
+        ActivityUnit au2=new ActivityUnit();
+        
+        RequestReceived rr2=new RequestReceived();
+        rr2.setServiceType("st2");
+        rr2.setOperation("op2");
+        
+        au2.getActivityTypes().add(rr2);
+        
+        ActivityUnit au3=new ActivityUnit();
+        
+        RequestSent rs2=new RequestSent();
+        rs2.setServiceType("st2");
+        rs2.setOperation("op2");
+        
+        au3.getActivityTypes().add(rs2);
+        
+        CTState state=new CTState();
+        state.add(au1);
+        state.add(au2);
+        state.add(au3);
+        
+        java.util.List<ActivityUnit> tl=CallTraceProcessor.getTopLevelAUs(state);
+        
+        if (tl.size() != 1) {
+            fail("Should be 1 top level aus: "+tl.size());
+        }
+        
+        if (tl.get(0) != au1) {
+            fail("Should be au1");
+        }
+    }
+    
+    @Test
+    public void testProcessAUSingleUnit2Service() {
+        
+        ActivityUnit au1=new ActivityUnit();
+        au1.setId("au1");
+        
+        RequestReceived a1=new RequestReceived();
+        a1.setServiceType("st1");
+        a1.setOperation("op1");
+        a1.setTimestamp(0);
+        
+        au1.getActivityTypes().add(a1);
+        
+        ProcessStarted p1=new ProcessStarted();
+        p1.setProcessType("proc1");
+        p1.setVersion("1");
+        p1.setInstanceId("456");
+        p1.setTimestamp(10);
+        
+        au1.getActivityTypes().add(p1);
+        
+        RequestSent a2=new RequestSent();
+        a2.setServiceType("st2");
+        a2.setOperation("op2");
+        a2.setTimestamp(30);
+        
+        au1.getActivityTypes().add(a2);
+        
+        RequestReceived a3=new RequestReceived();
+        a3.setServiceType("st2");
+        a3.setOperation("op2");
+        a3.setTimestamp(37);
+        
+        au1.getActivityTypes().add(a3);
+        
+        ProcessStarted p2=new ProcessStarted();
+        p2.setProcessType("proc2");
+        p2.setVersion("2");
+        p2.setInstanceId("123");
+        p2.setTimestamp(48);
+        
+        au1.getActivityTypes().add(p2);
+        
+        ProcessCompleted p3=new ProcessCompleted();
+        p3.setInstanceId("123");
+        p3.setStatus(Status.Success);
+        p3.setTimestamp(57);
+        
+        au1.getActivityTypes().add(p3);
+        
+        ResponseSent a4=new ResponseSent();
+        a4.setServiceType("st2");
+        a4.setOperation("op2");
+        a4.setTimestamp(59);
+        
+        au1.getActivityTypes().add(a4);
+        
+        ResponseReceived a5=new ResponseReceived();
+        a5.setServiceType("st2");
+        a5.setOperation("op2");
+        a5.setTimestamp(67);
+        
+        au1.getActivityTypes().add(a5);
+        
+        ProcessCompleted p4=new ProcessCompleted();
+        p4.setInstanceId("456");
+        p4.setStatus(Status.Fail);
+        p4.setTimestamp(83);
+        
+        au1.getActivityTypes().add(p4);
+        
+        ResponseSent a6=new ResponseSent();
+        a6.setServiceType("st1");
+        a6.setOperation("op1");
+        a6.setTimestamp(88);
+        
+        au1.getActivityTypes().add(a6);
+        
+        CTState state=new CTState();
+        au1.init();
+        state.add(au1);
+        
+        CallTrace ct=CallTraceProcessor.processAUs(state);
+        
+        compare(ct, "SingleUnit2Service", "CallTrace1");
+    }    
+    
+    @Test
+    public void testProcessAUSeparateUnits2Service() {
+        
+        ActivityUnit au1=new ActivityUnit();
+        au1.setId("au1");
+        
+        ActivityUnit au2=new ActivityUnit();
+        au2.setId("au2");
+        
+        RequestReceived a1=new RequestReceived();
+        a1.setServiceType("st1");
+        a1.setOperation("op1");
+        a1.setTimestamp(0);
+        
+        au1.getActivityTypes().add(a1);
+        
+        ProcessStarted p1=new ProcessStarted();
+        p1.setProcessType("proc1");
+        p1.setVersion("1");
+        p1.setInstanceId("456");
+        p1.setTimestamp(10);
+        
+        au1.getActivityTypes().add(p1);
+        
+        RequestSent a2=new RequestSent();
+        a2.setServiceType("st2");
+        a2.setOperation("op2");
+        a2.setTimestamp(30);
+        
+        au1.getActivityTypes().add(a2);
+        
+        RequestReceived a3=new RequestReceived();
+        a3.setServiceType("st2");
+        a3.setOperation("op2");
+        a3.setTimestamp(37);
+        
+        au2.getActivityTypes().add(a3);
+        
+        ProcessStarted p2=new ProcessStarted();
+        p2.setProcessType("proc2");
+        p2.setVersion("2");
+        p2.setInstanceId("123");
+        p2.setTimestamp(48);
+        
+        au2.getActivityTypes().add(p2);
+        
+        ProcessCompleted p3=new ProcessCompleted();
+        p3.setInstanceId("123");
+        p3.setStatus(Status.Success);
+        p3.setTimestamp(57);
+        
+        au2.getActivityTypes().add(p3);
+        
+        ResponseSent a4=new ResponseSent();
+        a4.setServiceType("st2");
+        a4.setOperation("op2");
+        a4.setTimestamp(59);
+        
+        au2.getActivityTypes().add(a4);
+        
+        ResponseReceived a5=new ResponseReceived();
+        a5.setServiceType("st2");
+        a5.setOperation("op2");
+        a5.setTimestamp(67);
+        
+        au1.getActivityTypes().add(a5);
+        
+        ProcessCompleted p4=new ProcessCompleted();
+        p4.setInstanceId("456");
+        p4.setStatus(Status.Fail);
+        p4.setTimestamp(83);
+        
+        au1.getActivityTypes().add(p4);
+        
+        ResponseSent a6=new ResponseSent();
+        a6.setServiceType("st1");
+        a6.setOperation("op1");
+        a6.setTimestamp(88);
+        
+        au1.getActivityTypes().add(a6);
+        
+        CTState state=new CTState();
+        au1.init();
+        state.add(au1);
+        au2.init();
+        state.add(au2);
+        
+        CallTrace ct=CallTraceProcessor.processAUs(state);
+        
+        compare(ct, "SeparateUnits2Service", "CallTrace1");
+    }
+    
+    @Test
+    public void testProcessAUSeparateUnits2Service2() {
+        
+        ActivityUnit au1=new ActivityUnit();
+        au1.setId("au1");
+        
+        ActivityUnit au2=new ActivityUnit();
+        au2.setId("au2");
+        
+        ActivityUnit au3=new ActivityUnit();
+        au3.setId("au3");
+        
+        RequestReceived a1=new RequestReceived();
+        a1.setServiceType("st1");
+        a1.setOperation("op1");
+        a1.setTimestamp(0);
+        
+        au1.getActivityTypes().add(a1);
+        
+        ProcessStarted p1=new ProcessStarted();
+        p1.setProcessType("proc1");
+        p1.setVersion("1");
+        p1.setInstanceId("456");
+        p1.setTimestamp(10);
+        
+        au1.getActivityTypes().add(p1);
+        
+        RequestSent a2=new RequestSent();
+        a2.setServiceType("st2");
+        a2.setOperation("op2");
+        a2.setTimestamp(30);
+        
+        au1.getActivityTypes().add(a2);
+        
+        RequestReceived a3=new RequestReceived();
+        a3.setServiceType("st2");
+        a3.setOperation("op2");
+        a3.setTimestamp(37);
+        
+        au2.getActivityTypes().add(a3);
+        
+        ProcessStarted p2=new ProcessStarted();
+        p2.setProcessType("proc2");
+        p2.setVersion("2");
+        p2.setInstanceId("123");
+        p2.setTimestamp(48);
+        
+        au2.getActivityTypes().add(p2);
+        
+        ProcessCompleted p3=new ProcessCompleted();
+        p3.setInstanceId("123");
+        p3.setStatus(Status.Success);
+        p3.setTimestamp(57);
+        
+        au3.getActivityTypes().add(p3);
+        
+        ResponseSent a4=new ResponseSent();
+        a4.setServiceType("st2");
+        a4.setOperation("op2");
+        a4.setTimestamp(59);
+        
+        au3.getActivityTypes().add(a4);
+        
+        ResponseReceived a5=new ResponseReceived();
+        a5.setServiceType("st2");
+        a5.setOperation("op2");
+        a5.setTimestamp(67);
+        
+        au1.getActivityTypes().add(a5);
+        
+        ProcessCompleted p4=new ProcessCompleted();
+        p4.setInstanceId("456");
+        p4.setStatus(Status.Fail);
+        p4.setTimestamp(83);
+        
+        au1.getActivityTypes().add(p4);
+        
+        ResponseSent a6=new ResponseSent();
+        a6.setServiceType("st1");
+        a6.setOperation("op1");
+        a6.setTimestamp(88);
+        
+        au1.getActivityTypes().add(a6);
+        
+        CTState state=new CTState();
+        au1.init();
+        state.add(au1);
+        au2.init();
+        state.add(au2);
+        au3.init();
+        state.add(au3);
+        
+        CallTrace ct=CallTraceProcessor.processAUs(state);
+        
+        compare(ct, "SeparateUnits2Service2", "CallTrace1");
+    }
+
+    protected void compare(CallTrace ct, String testname, String filename) {
+        
+        try {
+            byte[] b=CallTraceUtil.serializeCallTrace(ct);
+            
+            if (b == null) {
+                fail("null returned");
+            }
+            
+            System.out.println(testname+": "+new String(b));
+            
+            java.io.InputStream is=
+                    CallTraceUtilTest.class.getResourceAsStream(
+                            "/calltraces/"+filename+".json");
+            byte[] inb2=new byte[is.available()];
+            is.read(inb2);
+            is.close();
+            
+            CallTrace node2=CallTraceUtil.deserializeCallTrace(inb2);
+            
+            byte[] b2=CallTraceUtil.serializeCallTrace(node2);            
+            
+            String s1=new String(b);
+            String s2=new String(b2);
+            
+            if (!s1.equals(s2)) {
+                fail("JSON is different: created="+s1+" stored="+s2);
+            }
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            fail("Failed to serialize: "+e);
+        }        
     }
 }

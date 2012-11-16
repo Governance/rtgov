@@ -21,11 +21,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.naming.InitialContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.overlord.bam.activity.server.ActivityServer;
+import org.overlord.bam.call.trace.CallTraceProcessor;
 import org.overlord.bam.call.trace.model.Call;
 import org.overlord.bam.call.trace.model.CallTrace;
 import org.overlord.bam.call.trace.model.Task;
@@ -41,11 +47,50 @@ public class RESTCallTraceServer {
 
     private static final Logger LOG=Logger.getLogger(RESTCallTraceServer.class.getName());
     
+    private CallTraceProcessor _processor=new CallTraceProcessor();
+    
+    //@javax.inject.Inject
+    private ActivityServer _activityServer=null;
+
     /**
      * This is the default constructor.
      */
+    @SuppressWarnings("unchecked")
     public RESTCallTraceServer() {
         
+        try {
+            // Need to obtain activity server directly, as inject does not
+            // work for REST service, and RESTeasy/CDI integration did not
+            // appear to work in AS7. Directly accessing the bean manager
+            // should be portable.
+            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
+            
+            java.util.Set<Bean<?>> beans=bm.getBeans(ActivityServer.class);
+            
+            for (Bean<?> b : beans) {                
+                CreationalContext<Object> cc=new CreationalContext<Object>() {
+                    public void push(Object arg0) {
+                    }
+                    public void release() {
+                    }                   
+                };
+                
+                _activityServer = (ActivityServer)((Bean<Object>)b).create(cc);
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Activity server="+_activityServer+" for bean="+b);
+                }
+                
+                if (_activityServer != null) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-1"), e);
+        }
+        
+        _processor.setActivityServer(_activityServer);
     }
     
     /**
@@ -84,14 +129,15 @@ public class RESTCallTraceServer {
      * 
      * @param correlation The correlation value
      * @return The call trace, or null if not found
+     * @throws Exception Failed to get call trace
      */
-    protected CallTrace getCallTrace(String correlation) {
+    protected CallTrace getCallTrace(String correlation) throws Exception {
         CallTrace ret=null;
         
         if (correlation.equals("test")) {
             ret = createTestCallTrace();
         } else {
-            
+            ret = _processor.createCallTrace(correlation);
         }
         
         return (ret);
