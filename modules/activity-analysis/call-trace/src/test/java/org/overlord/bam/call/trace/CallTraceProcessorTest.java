@@ -713,6 +713,95 @@ public class CallTraceProcessorTest {
         compare(ct, "SeparateUnits2Service2", "CallTrace1");
     }
 
+    @Test
+    public void testProcessAUSingleUnit2ServiceFault() {
+        
+        ActivityUnit au1=new ActivityUnit();
+        au1.setId("au1");
+        
+        RequestReceived a1=new RequestReceived();
+        a1.setServiceType("st1");
+        a1.setOperation("op1");
+        a1.setTimestamp(0);
+        
+        au1.getActivityTypes().add(a1);
+        
+        ProcessStarted p1=new ProcessStarted();
+        p1.setProcessType("proc1");
+        p1.setVersion("1");
+        p1.setInstanceId("456");
+        p1.setTimestamp(10);
+        
+        au1.getActivityTypes().add(p1);
+        
+        RequestSent a2=new RequestSent();
+        a2.setServiceType("st2");
+        a2.setOperation("op2");
+        a2.setTimestamp(30);
+        
+        au1.getActivityTypes().add(a2);
+        
+        RequestReceived a3=new RequestReceived();
+        a3.setServiceType("st2");
+        a3.setOperation("op2");
+        a3.setTimestamp(37);
+        
+        au1.getActivityTypes().add(a3);
+        
+        ProcessStarted p2=new ProcessStarted();
+        p2.setProcessType("proc2");
+        p2.setVersion("2");
+        p2.setInstanceId("123");
+        p2.setTimestamp(48);
+        
+        au1.getActivityTypes().add(p2);
+        
+        ProcessCompleted p3=new ProcessCompleted();
+        p3.setInstanceId("123");
+        p3.setStatus(Status.Success);
+        p3.setTimestamp(57);
+        
+        au1.getActivityTypes().add(p3);
+        
+        ResponseSent a4=new ResponseSent();
+        a4.setServiceType("st2");
+        a4.setOperation("op2");
+        a4.setFault("Failed");
+        a4.setTimestamp(59);
+        
+        au1.getActivityTypes().add(a4);
+        
+        ResponseReceived a5=new ResponseReceived();
+        a5.setServiceType("st2");
+        a5.setOperation("op2");
+        a5.setFault("Failed");
+        a5.setTimestamp(67);
+        
+        au1.getActivityTypes().add(a5);
+        
+        ProcessCompleted p4=new ProcessCompleted();
+        p4.setInstanceId("456");
+        p4.setStatus(Status.Fail);
+        p4.setTimestamp(83);
+        
+        au1.getActivityTypes().add(p4);
+        
+        ResponseSent a6=new ResponseSent();
+        a6.setServiceType("st1");
+        a6.setOperation("op1");
+        a6.setTimestamp(88);
+        
+        au1.getActivityTypes().add(a6);
+        
+        CTState state=new CTState();
+        au1.init();
+        state.add(au1);
+        
+        CallTrace ct=CallTraceProcessor.processAUs(state);
+        
+        compare(ct, "SingleUnit2ServiceFault", "CallTrace2");
+    }    
+    
     protected void compare(CallTrace ct, String testname, String filename) {
         
         try {

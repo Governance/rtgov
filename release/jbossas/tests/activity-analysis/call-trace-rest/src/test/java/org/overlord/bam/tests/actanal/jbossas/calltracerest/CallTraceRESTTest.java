@@ -50,12 +50,19 @@ import static org.junit.Assert.*;
 public class CallTraceRESTTest {
     
     private static final String TRACE1="{\"tasks\":[{\"type\":\"Call\",\"operation\":\"op1\",\"component\":\"st1\",\"tasks\":" +
-    		"[{\"type\":\"Task\",\"description\":\"ProcessStarted instanceId=456 processType=proc1 version=1\"," +
+    		"[{\"type\":\"Task\"," +
+            "\"properties\":{\"processType\":\"proc1\",\"instanceId\":\"456\",\"version\":\"1\"}," +
+    		"\"description\":\"ProcessStarted instanceId=456 processType=proc1 version=1\"," +
     		"\"duration\":10,\"percentage\":15},{\"type\":\"Call\",\"operation\":\"op2\",\"component\":\"st2\"," +
-    		"\"requestLatency\":7,\"responseLatency\":8,\"tasks\":[{\"type\":\"Task\",\"description\":\"ProcessStarted " +
+    		"\"requestLatency\":7,\"responseLatency\":8,\"tasks\":[{\"type\":\"Task\"," +
+    		"\"properties\":{\"processType\":\"proc2\",\"instanceId\":\"123\",\"version\":\"2\"}," +
+    		"\"description\":\"ProcessStarted " +
     		"instanceId=123 processType=proc2 version=2\",\"duration\":11,\"percentage\":55},{\"type\":\"Task\"," +
+    		"\"properties\":{\"instanceId\":\"123\"},"+
     		"\"description\":\"ProcessCompleted instanceId=123\",\"duration\":9,\"percentage\":45}],\"duration\":37," +
-    		"\"percentage\":58},{\"type\":\"Task\",\"description\":\"ProcessCompleted instanceId=456\",\"duration\":16," +
+    		"\"percentage\":58},{\"type\":\"Task\"," +
+    		"\"properties\":{\"instanceId\":\"456\"},"+
+    		"\"description\":\"ProcessCompleted instanceId=456\",\"duration\":16," +
     		"\"percentage\":25}],\"duration\":88}]}";
     
     @Inject

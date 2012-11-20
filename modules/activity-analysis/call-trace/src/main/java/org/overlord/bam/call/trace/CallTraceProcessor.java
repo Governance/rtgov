@@ -39,6 +39,7 @@ import org.overlord.bam.call.trace.model.Call;
 import org.overlord.bam.call.trace.model.CallTrace;
 import org.overlord.bam.call.trace.model.Task;
 import org.overlord.bam.call.trace.model.TraceNode;
+import org.overlord.bam.call.trace.model.TraceNode.Status;
 
 /**
  * This class is responsible for deriving a call trace from
@@ -299,6 +300,8 @@ public class CallTraceProcessor {
                         // If fault, then need to set the details on the Call
                         if (rs.getFault() != null && rs.getFault().trim().length() > 0) {
                             call.setFault(rs.getFault());
+                            
+                            call.setStatus(Status.Fail);
                         }
                         
                         // If not top level call, then break out
@@ -344,8 +347,7 @@ public class CallTraceProcessor {
                     }
                     
                 } else {
-                    Task task=new Task();
-                    task.setDescription(getDescription(cur));
+                    Task task=getTask(cur);
                     
                     tasks.add(task);
                     
@@ -395,13 +397,14 @@ public class CallTraceProcessor {
     }
     
     /**
-     * This method returns a textual description of the supplied
+     * This method returns a task associated with the supplied
      * activity event.
      * 
      * @param at The activity event
-     * @return The description
+     * @return The task
      */
-    protected static String getDescription(ActivityType at) {
+    protected static Task getTask(ActivityType at) {
+        Task ret=new Task();
         StringBuffer buf=new StringBuffer();
         
         buf.append(at.getClass().getSimpleName());
@@ -415,7 +418,12 @@ public class CallTraceProcessor {
                     buf.append(" "+pd.getDisplayName());
                     
                     try {
-                        buf.append("="+pd.getReadMethod().invoke(at));
+                        Object value=pd.getReadMethod().invoke(at);
+                        buf.append("="+value);
+                        
+                        if (value != null) {
+                            ret.getProperties().put(pd.getDisplayName(), value.toString());
+                        }
                     } catch (Exception ex) {
                         buf.append("=<unavailable>");
                     }
@@ -428,7 +436,9 @@ public class CallTraceProcessor {
                         at.getClass().getName()), e);
         }
         
-        return (buf.toString());
+        ret.setDescription(buf.toString());
+        
+        return (ret);
     }
     
     /**
@@ -701,9 +711,14 @@ public class CallTraceProcessor {
             
             java.util.List<TraceNode> tasks=getTasksStack().peek();
             long duration=0;
+            Status status=Status.Success;
             
             for (TraceNode task : tasks) {
                 duration += task.getDuration();
+                
+                if (task.getStatus().ordinal() > status.ordinal()) {
+                    status = task.getStatus();
+                }
             }
             
             if (duration > 0) {
@@ -717,8 +732,12 @@ public class CallTraceProcessor {
                 LOG.finest("Popping tasks="+getTasksStack().peek());
             }
             
-            getCallStack().pop();
+            Call call=getCallStack().pop();
             getTasksStack().pop();
+            
+            if (status != Status.Success) {
+                call.setStatus(Status.Warning);
+            }
         }
         
         /**

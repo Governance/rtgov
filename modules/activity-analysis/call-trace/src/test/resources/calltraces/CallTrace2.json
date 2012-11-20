@@ -18,6 +18,7 @@
 				},{
 					"type":"Call",
 					"operation":"op2",
+					"fault":"Failed",
 					"component":"st2",
 					"requestLatency":7,
 					"responseLatency":8,
@@ -42,6 +43,7 @@
 							"percentage":45
 						}
 					],
+					"status":"Fail",
 					"duration":37,
 					"percentage":58
 				},{
@@ -54,6 +56,7 @@
 					"percentage":25
 				}
 			],
+			"status":"Warning",
 			"duration":88
 		}
 	]

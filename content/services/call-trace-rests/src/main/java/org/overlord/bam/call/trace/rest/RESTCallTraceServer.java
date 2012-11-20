@@ -35,6 +35,7 @@ import org.overlord.bam.call.trace.CallTraceProcessor;
 import org.overlord.bam.call.trace.model.Call;
 import org.overlord.bam.call.trace.model.CallTrace;
 import org.overlord.bam.call.trace.model.Task;
+import org.overlord.bam.call.trace.model.TraceNode.Status;
 import org.overlord.bam.call.trace.util.CallTraceUtil;
 
 /**
@@ -158,18 +159,21 @@ public class RESTCallTraceServer {
         c0.setRequest("<op1/>");
         c0.setResponse("<op1/>");
         c0.setDuration(2000);
+        c0.setStatus(Status.Warning);
         ret.getTasks().add(c0);
 
         Task t1=new Task();
         t1.setDescription("Assign var1");
         t1.setDuration(100);
         t1.setPercentage(5);
+        t1.getProperties().put("name", "var1");
         ret.getTasks().add(t1);
         
         Task t2=new Task();
         t2.setDescription("Evaluate expr1");
         t2.setDuration(100);
         t2.setPercentage(5);
+        t2.getProperties().put("expression", "a + b");
         ret.getTasks().add(t2);
         
         Call c3=new Call();
@@ -192,6 +196,8 @@ public class RESTCallTraceServer {
         c4.setPercentage(35);
         c4.setRequestLatency(10);
         c4.setResponseLatency(10);
+        c4.setFault("TestFault");
+        c4.setStatus(Status.Fail);
         ret.getTasks().add(c4);
         
         Task t5=new Task();
@@ -204,18 +210,24 @@ public class RESTCallTraceServer {
         t31.setDescription("Store var31");
         t31.setDuration(680);
         t31.setPercentage(100);
+        t31.getProperties().put("name", "var31");
+        t31.getProperties().put("value", "xyz");
         c3.getTasks().add(t31);
         
         Task t41=new Task();
         t41.setDescription("Store var41");
         t41.setDuration(340);
         t41.setPercentage(50);
+        t41.getProperties().put("name", "var41");
+        t41.getProperties().put("value", "abc");
         c4.getTasks().add(t41);
         
         Task t42=new Task();
         t42.setDescription("Store var42");
         t42.setDuration(340);
         t42.setPercentage(50);
+        t42.getProperties().put("name", "var42");
+        t42.getProperties().put("value", "ghj");
         c4.getTasks().add(t42);
         
         return (ret);

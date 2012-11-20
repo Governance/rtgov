@@ -33,6 +33,7 @@ public abstract class TraceNode {
 
     private long _duration=0;
     private int _percentage=0;
+    private Status _status=Status.Success;
     
     /**
      * This method returns the duration of the task.
@@ -70,5 +71,46 @@ public abstract class TraceNode {
      */
     public void setPercentage(int percentage) {
         _percentage = percentage;
+    }
+
+    /**
+     * This method returns the status.
+     * 
+     * @return The status
+     */
+    public Status getStatus() {
+        return (_status);
+    }
+    
+    /**
+     * This method sets the status.
+     * 
+     * @param status The status
+     */
+    public void setStatus(Status status) {
+        _status = status;
+    }
+    
+    /**
+     * This enumerated type represents the completion status
+     * of the call.
+     *
+     */
+    public static enum Status {
+        
+        /**
+         * Completed successfully.
+         */
+        Success,
+        
+        /**
+         * A problem occurred within the scope of the node.
+         */
+        Warning,
+
+        /**
+         * Completed unsuccessfully.
+         */
+        Fail        
     }
 }
