@@ -8,6 +8,9 @@
     "context":[{
     	"value":"{ID}-1",
     	"type":"Message"
+    },{
+    	"value":"{ID}",
+    	"type":"Conversation"
     }]
   }, {
     "type" : "RequestReceived",
@@ -20,6 +23,9 @@
     "context":[{
     	"value":"{ID}-1",
     	"type":"Message"
+    },{
+    	"value":"{ID}",
+    	"type":"Conversation"
     }]
   }, {
     "type" : "RequestSent",
@@ -31,6 +37,9 @@
     "context":[{
     	"value":"{ID}-2",
     	"type":"Message"
+    },{
+    	"value":"{ID}",
+    	"type":"Conversation"
     }]
   }, {
     "type" : "RequestReceived",
@@ -43,6 +52,9 @@
     "context":[{
     	"value":"{ID}-2",
     	"type":"Message"
+    },{
+    	"value":"{ID}",
+    	"type":"Conversation"
     }]
   }, {
     "type" : "ResponseSent",
@@ -56,6 +68,9 @@
     "context":[{
     	"value":"{ID}-3",
     	"type":"Message"
+    },{
+    	"value":"{ID}",
+    	"type":"Conversation"
     }]
   }, {
     "type" : "ResponseReceived",
@@ -69,6 +84,9 @@
     "context":[{
     	"value":"{ID}-3",
     	"type":"Message"
+    },{
+    	"value":"{ID}",
+    	"type":"Conversation"
     }]
   }, {
     "type" : "ResponseSent",
@@ -81,6 +99,9 @@
     "context":[{
     	"value":"{ID}-4",
     	"type":"Message"
+    },{
+    	"value":"{ID}",
+    	"type":"Conversation"
     }]
   }, {
     "type" : "ResponseReceived",
@@ -93,5 +114,8 @@
     "context":[{
     	"value":"{ID}-4",
     	"type":"Message"
+    },{
+    	"value":"{ID}",
+    	"type":"Conversation"
     }]
   } ]

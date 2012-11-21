@@ -304,6 +304,14 @@ public class CallTraceProcessor {
                             call.setStatus(Status.Fail);
                         }
                         
+                        // Finalise the tasks in the scope, and pop the stack
+                        state.finalizeScope();
+
+                        // Get new values
+                        call = (state.getCallStack().size() > 0 ?
+                                state.getCallStack().peek() : null);
+                        tasks = state.getTasksStack().peek();
+                        
                         // If not top level call, then break out
                         // of loop, to finish processing the scope
                         if (state.getCallStack().size() > 0) {
@@ -316,31 +324,27 @@ public class CallTraceProcessor {
                             break;
                         }
                         
-                        // Finalise the tasks in the scope, and pop the stack
-                        state.finalizeScope();
-
-                        // Get new values
-                        call = (state.getCallStack().size() > 0 ?
-                                state.getCallStack().peek() : null);
-                        tasks = state.getTasksStack().peek();
-                        
                     } else if (cur instanceof ResponseReceived) {
-
-                        // Set duration of call, if based on client side scope
-                        if (state.getTriggerActivities().get(call)
-                                    instanceof RequestSent) {
-                            call.setDuration(cur.getTimestamp()-
-                                    state.getTriggerActivities().get(call).getTimestamp());
-                        }                    
-
-                        // Finalise the tasks in the scope, and pop the stack
-                        state.finalizeScope();
-
-                        // Get new values
-                        call = (state.getCallStack().size() > 0 ?
-                                state.getCallStack().peek() : null);
-                        tasks = state.getTasksStack().peek();
+                        ResponseReceived rr=(ResponseReceived)cur;
                         
+                        // Find completed call for this operation
+                        for (int j=state.getCompletedCallStack().size()-1; j >= 0; j--) {
+                            Call c=state.getCompletedCallStack().get(j);
+                            
+                            // Set duration of call, if based on client side scope
+                            if (state.getTriggerActivities().get(c)
+                                        instanceof RequestSent) {
+                                RequestSent rs=(RequestSent)state.getTriggerActivities().get(c);
+
+                                if (rs.getOperation().equals(rr.getOperation())
+                                        && rs.getServiceType().equals(rr.getServiceType())) {
+                                    c.setDuration(rr.getTimestamp()-
+                                            rs.getTimestamp());
+                                    break;
+                                }   
+                            }
+                        }
+
                         // Set end flag, to break out of this method once
                         // this cursor has finished
                         f_end = true;
@@ -576,6 +580,7 @@ public class CallTraceProcessor {
         private java.util.Map<String,ActivityUnitCursor> _cursors=
                 new java.util.HashMap<String,ActivityUnitCursor>();
         private java.util.Stack<Call> _callStack=new java.util.Stack<Call>();
+        private java.util.Stack<Call> _completedCallStack=new java.util.Stack<Call>();
         private java.util.Stack<java.util.List<TraceNode>> _tasksStack=new java.util.Stack<java.util.List<TraceNode>>();
         private java.util.Map<Call,RPCActivityType> _triggerActivity=
                 new java.util.HashMap<Call,RPCActivityType>();
@@ -691,6 +696,15 @@ public class CallTraceProcessor {
         }
         
         /**
+         * This method returns the completed call stack.
+         * 
+         * @return The stack of completed Call nodes
+         */
+        public java.util.Stack<Call> getCompletedCallStack() {
+            return (_completedCallStack);
+        }
+        
+        /**
          * This method returns the tasks stack.
          * 
          * @return The stack of Tasks
@@ -727,17 +741,22 @@ public class CallTraceProcessor {
                 }
             }
             
+            Call call=(getCallStack().size()>0 ? getCallStack().pop() : null);
+            
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Popping call="+getCallStack().peek());
+                LOG.finest("Popping call="+call);
                 LOG.finest("Popping tasks="+getTasksStack().peek());
             }
             
-            Call call=getCallStack().pop();
-            getTasksStack().pop();
-            
-            if (status != Status.Success) {
-                call.setStatus(Status.Warning);
+            if (call != null) {
+                _completedCallStack.push(call);
+                
+                if (status != Status.Success) {
+                    call.setStatus(Status.Warning);
+                }
             }
+            
+            getTasksStack().pop();
         }
         
         /**

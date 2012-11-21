@@ -57,7 +57,8 @@
 				}
 			],
 			"status":"Warning",
-			"duration":88
+			"duration":88,
+			"percentage":100
 		}
 	]
 }

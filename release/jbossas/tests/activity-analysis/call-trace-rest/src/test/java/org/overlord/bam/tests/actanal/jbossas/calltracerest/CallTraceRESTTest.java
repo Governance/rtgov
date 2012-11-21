@@ -63,7 +63,7 @@ public class CallTraceRESTTest {
     		"\"percentage\":58},{\"type\":\"Task\"," +
     		"\"properties\":{\"instanceId\":\"456\"},"+
     		"\"description\":\"ProcessCompleted instanceId=456\",\"duration\":16," +
-    		"\"percentage\":25}],\"duration\":88}]}";
+    		"\"percentage\":25}],\"duration\":88,\"percentage\":100}]}";
     
     @Inject
     org.overlord.bam.activity.server.ActivityStore _activityStore=null;
