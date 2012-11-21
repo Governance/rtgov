@@ -235,7 +235,7 @@ public class CallTraceProcessor {
                         
                         // Create call, and search for activity unit
                         // containing scoped tasks
-                        call = new Call();
+                        call = createCall((RPCActivityType)cur);
                         
                         if (LOG.isLoggable(Level.FINEST)) {
                             LOG.finest("Created call="+call);     
@@ -252,9 +252,6 @@ public class CallTraceProcessor {
 
                         state.getCallStack().push(call);
                         state.getTasksStack().push(tasks);
-                        
-                        call.setComponent(((RPCActivityType)cur).getServiceType());
-                        call.setOperation(((RPCActivityType)cur).getOperation());
                         
                         state.getTriggerActivities().put(call, (RPCActivityType)cur);
                     }
@@ -283,6 +280,9 @@ public class CallTraceProcessor {
                         ResponseSent rs=(ResponseSent)cur;
                         
                         call.setResponse(rs.getContent());
+                        
+                        // Add further properties from the response
+                        call.getProperties().putAll(cur.getProperties());
                         
                         RPCActivityType rr=state.getSOAActivity(ResponseReceived.class,
                                 rs.getServiceType(), rs.getOperation());
@@ -354,7 +354,7 @@ public class CallTraceProcessor {
                     }
                     
                 } else {
-                    Task task=getTask(cur);
+                    Task task=createTask(cur);
                     
                     tasks.add(task);
                     
@@ -408,14 +408,37 @@ public class CallTraceProcessor {
     }
     
     /**
+     * This method returns a call node associated with the supplied
+     * activity event.
+     * 
+     * @param at The activity event
+     * @return The Call node
+     */
+    protected static Call createCall(RPCActivityType at) {
+        Call call = new Call();
+        
+        call.setComponent(at.getServiceType());
+        call.setOperation(at.getOperation());
+        
+        call.getProperties().putAll(at.getProperties());
+        
+        return (call);
+    }
+    
+    /**
      * This method returns a task associated with the supplied
      * activity event.
      * 
      * @param at The activity event
      * @return The task
      */
-    protected static Task getTask(ActivityType at) {
+    protected static Task createTask(ActivityType at) {
         Task ret=new Task();
+        
+        // Transfer properties
+        ret.getProperties().putAll(at.getProperties());
+        
+        // Construct description
         StringBuffer buf=new StringBuffer();
         
         buf.append(at.getClass().getSimpleName());

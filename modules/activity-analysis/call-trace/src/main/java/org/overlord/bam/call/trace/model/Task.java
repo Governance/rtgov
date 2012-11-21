@@ -25,7 +25,6 @@ package org.overlord.bam.call.trace.model;
 public class Task extends TraceNode {
 
     private String _description=null;
-    private java.util.Map<String,String> _properties=new java.util.HashMap<String, String>();
     
     /**
      * This method returns the description of the task.
@@ -43,24 +42,6 @@ public class Task extends TraceNode {
      */
     public void setDescription(String description) {
         _description = description;
-    }
-
-    /**
-     * This method returns the properties of the task.
-     *
-     * @return The properties
-     */
-    public java.util.Map<String,String> getProperties() {
-        return (_properties);
-    }
-    
-    /**
-     * This method sets the properties of the task.
-     * 
-     * @param properties The properties
-     */
-    public void setProperties(java.util.Map<String,String> properties) {
-        _properties = properties;
     }
 
 }

@@ -34,6 +34,7 @@ public abstract class TraceNode {
     private long _duration=0;
     private int _percentage=0;
     private Status _status=Status.Success;
+    private java.util.Map<String,String> _properties=new java.util.HashMap<String, String>();
     
     /**
      * This method returns the duration of the task.
@@ -91,6 +92,24 @@ public abstract class TraceNode {
         _status = status;
     }
     
+    /**
+     * This method returns the properties of the task.
+     *
+     * @return The properties
+     */
+    public java.util.Map<String,String> getProperties() {
+        return (_properties);
+    }
+    
+    /**
+     * This method sets the properties of the task.
+     * 
+     * @param properties The properties
+     */
+    public void setProperties(java.util.Map<String,String> properties) {
+        _properties = properties;
+    }
+
     /**
      * This enumerated type represents the completion status
      * of the call.

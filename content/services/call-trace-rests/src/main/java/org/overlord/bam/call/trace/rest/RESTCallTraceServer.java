@@ -160,6 +160,8 @@ public class RESTCallTraceServer {
         c0.setResponse("<op1/>");
         c0.setDuration(2000);
         c0.setStatus(Status.Warning);
+        c0.getProperties().put("customer", "Acme Inc");
+        c0.getProperties().put("trader", "Fred Bloggs");
         ret.getTasks().add(c0);
 
         Task t1=new Task();
@@ -185,6 +187,7 @@ public class RESTCallTraceServer {
         c3.setPercentage(35);
         c3.setRequestLatency(10);
         c3.setResponseLatency(10);
+        c3.getProperties().put("customer", "Acme Inc");
         ret.getTasks().add(c3);
         
         Call c4=new Call();
@@ -198,6 +201,7 @@ public class RESTCallTraceServer {
         c4.setResponseLatency(10);
         c4.setFault("TestFault");
         c4.setStatus(Status.Fail);
+        c4.getProperties().put("trader", "Fred Bloggs");
         ret.getTasks().add(c4);
         
         Task t5=new Task();
