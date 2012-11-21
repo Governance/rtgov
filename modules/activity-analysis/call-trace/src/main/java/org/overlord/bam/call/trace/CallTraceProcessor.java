@@ -196,6 +196,7 @@ public class CallTraceProcessor {
         }
         
         boolean f_end=false;
+        boolean f_scopeFinalized=false;
         
         // Process a sequence of activity units, starting with the one supplied,
         // but skipping any that are listed in the top level collection.
@@ -306,6 +307,8 @@ public class CallTraceProcessor {
                         
                         // Finalise the tasks in the scope, and pop the stack
                         state.finalizeScope();
+                        
+                        f_scopeFinalized = true;
 
                         // Get new values
                         call = (state.getCallStack().size() > 0 ?
@@ -362,6 +365,10 @@ public class CallTraceProcessor {
                 
                 prev = cur;
             }
+        }
+        
+        if (!f_scopeFinalized) {
+            state.finalizeScope();
         }
         
         if (LOG.isLoggable(Level.FINEST)) {

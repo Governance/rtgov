@@ -891,7 +891,93 @@ public class CallTraceProcessorTest {
         
         CallTrace ct=CallTraceProcessor.processAUs(state);
         
-        compare(ct, "SeparateUnits2Service2", "CallTrace3");
+        compare(ct, "testProcessAUSeparateUnits2ServiceOneWayWithSentResp", "CallTrace3");
+    }
+
+    
+    @Test
+    public void testProcessAUSeparateUnits2ServiceOneWayNoResp() {
+        
+        ActivityUnit au1=new ActivityUnit();
+        au1.setId("au1");
+        
+        ActivityUnit au2=new ActivityUnit();
+        au2.setId("au2");
+        
+        ActivityUnit au3=new ActivityUnit();
+        au3.setId("au3");
+        
+        RequestReceived a1=new RequestReceived();
+        a1.setServiceType("st1");
+        a1.setOperation("op1");
+        a1.setTimestamp(0);
+        
+        au1.getActivityTypes().add(a1);
+        
+        ProcessStarted p1=new ProcessStarted();
+        p1.setProcessType("proc1");
+        p1.setVersion("1");
+        p1.setInstanceId("456");
+        p1.setTimestamp(10);
+        
+        au1.getActivityTypes().add(p1);
+        
+        RequestSent a2=new RequestSent();
+        a2.setServiceType("st2");
+        a2.setOperation("op2");
+        a2.setTimestamp(30);
+        
+        au1.getActivityTypes().add(a2);
+        
+        RequestReceived a3=new RequestReceived();
+        a3.setServiceType("st2");
+        a3.setOperation("op2");
+        a3.setTimestamp(37);
+        
+        au2.getActivityTypes().add(a3);
+        
+        ProcessStarted p2=new ProcessStarted();
+        p2.setProcessType("proc2");
+        p2.setVersion("2");
+        p2.setInstanceId("123");
+        p2.setTimestamp(48);
+        
+        au2.getActivityTypes().add(p2);
+        
+        ProcessCompleted p3=new ProcessCompleted();
+        p3.setInstanceId("123");
+        p3.setStatus(Status.Success);
+        p3.setTimestamp(57);
+        
+        au3.getActivityTypes().add(p3);
+        
+        // NO RESPONSE SENT OR RECEIVED
+        
+        ProcessCompleted p4=new ProcessCompleted();
+        p4.setInstanceId("456");
+        p4.setStatus(Status.Fail);
+        p4.setTimestamp(83);
+        
+        au1.getActivityTypes().add(p4);
+        
+        ResponseSent a6=new ResponseSent();
+        a6.setServiceType("st1");
+        a6.setOperation("op1");
+        a6.setTimestamp(88);
+        
+        au1.getActivityTypes().add(a6);
+        
+        CTState state=new CTState();
+        au1.init();
+        state.add(au1);
+        au2.init();
+        state.add(au2);
+        au3.init();
+        state.add(au3);
+        
+        CallTrace ct=CallTraceProcessor.processAUs(state);
+        
+        compare(ct, "testProcessAUSeparateUnits2ServiceOneWayNoResp", "CallTrace3");
     }
 
     protected void compare(CallTrace ct, String testname, String filename) {
