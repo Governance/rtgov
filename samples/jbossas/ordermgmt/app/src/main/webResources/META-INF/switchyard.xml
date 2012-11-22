@@ -12,8 +12,7 @@
     </composite>
     <domain name="TestDomain">
         <handlers>
-            <handler class="org.switchyard.quickstarts.demos.orders.ExchangeInterceptor" name="handler1"/>
-            <handler class="org.switchyard.quickstarts.demos.orders.PolicyEnforcer" name="handler2"/>
+            <handler class="org.switchyard.quickstarts.demos.orders.PolicyEnforcer" name="PolicyEnforcer"/>
         </handlers>
     </domain>
 </switchyard>

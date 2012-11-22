@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Named;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 
@@ -32,13 +33,16 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
 import org.overlord.bam.activity.util.ActivityUtil;
 import org.overlord.bam.activity.collector.ActivityCollector;
 import org.switchyard.Exchange;
-import org.switchyard.ExchangeHandler;
 import org.switchyard.ExchangePhase;
-import org.switchyard.HandlerException;
 import org.switchyard.Message;
 import org.switchyard.Property;
+import org.switchyard.bus.camel.audit.Audit;
+import org.switchyard.bus.camel.audit.Auditor;
+import org.switchyard.bus.camel.processors.Processors;
 
-public class ExchangeInterceptor implements ExchangeHandler {
+@Audit({Processors.TRANSFORMATION})
+@Named("BAMInterceptor")
+public class ExchangeInterceptor implements Auditor {
     
     private static final Logger LOG=Logger.getLogger(ExchangeInterceptor.class.getName());
     
@@ -68,13 +72,41 @@ public class ExchangeInterceptor implements ExchangeHandler {
         _initialized = true;
     }
 
-    public void handleMessage(Exchange exchange) throws HandlerException {
+    @Override
+    public void afterCall(Processors processor, org.apache.camel.Exchange exch) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void beforeCall(Processors processor, org.apache.camel.Exchange exch) {
+
         if (!_initialized) {
             init();
         }
         
+        // Obtain switchyard exchange
+        org.switchyard.Exchange exchange =
+                exch.getProperty(org.switchyard.bus.camel.ExchangeDispatcher.SY_EXCHANGE,
+                        org.switchyard.Exchange.class);
+        
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("********* Exchange="+exchange);
+        }
+        
+        if (exchange == null) {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Returning as not a switchyard exchange");
+            }
+            return;
+        }
+        
+        if (exchange.getProvider() == null) {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Unable to obtain activity information from exchange, " +
+            		"as no provider - probably an exception: "+exchange.getMessage().getContent());
+            }
+            return;
         }
         
         if (_activityCollector != null) {
@@ -104,7 +136,6 @@ public class ExchangeInterceptor implements ExchangeHandler {
             String opName=exchange.getContract().getConsumerOperation().getName();
             
             if (exchange.getPhase() == ExchangePhase.IN) {
-                
                 if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
                     _activityCollector.startScope();
                 } else {
@@ -120,7 +151,7 @@ public class ExchangeInterceptor implements ExchangeHandler {
                     record(exchange, contentType, sent); 
                 }
                 
-                //if (!exchange.getProvider().getProviderMetadata().isBinding()) {
+                if (!exchange.getProvider().getProviderMetadata().isBinding()) {
                     RequestReceived recvd=new RequestReceived();
                     
                     recvd.setServiceType(serviceType.toString());                
@@ -128,10 +159,10 @@ public class ExchangeInterceptor implements ExchangeHandler {
                     recvd.setMessageId(messageId);
                     
                     record(exchange, contentType, recvd); 
-                //}
+                }
                 
             } else if (exchange.getPhase() == ExchangePhase.OUT) {
-                //if (!exchange.getProvider().getProviderMetadata().isBinding()) {
+                if (!exchange.getProvider().getProviderMetadata().isBinding()) {
                     ResponseSent sent=new ResponseSent();
                                     
                     sent.setServiceType(serviceType.toString());                
@@ -140,7 +171,7 @@ public class ExchangeInterceptor implements ExchangeHandler {
                     sent.setReplyToId(relatesTo);
                     
                     record(exchange, contentType, sent); 
-                //}
+                }
                 
                 if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
                     _activityCollector.endScope();
@@ -177,18 +208,6 @@ public class ExchangeInterceptor implements ExchangeHandler {
             
             _activityCollector.record(at);
         }
-    }
-
-    public void handleFault(Exchange exchange) {
-        if (!_initialized) {
-            init();
-        }
-        
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("********* Fault="+exchange);
-        }
-        
-        // TODO: Handle faults
     }
 
     /**
