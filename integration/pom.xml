@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>jbossas</module>
+		<module>switchyard</module>
 	</modules>
 
 </project>

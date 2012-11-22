@@ -40,6 +40,11 @@ import org.switchyard.bus.camel.audit.Audit;
 import org.switchyard.bus.camel.audit.Auditor;
 import org.switchyard.bus.camel.processors.Processors;
 
+/**
+ * This class observes exchanges and uses the information to create activity
+ * events.
+ *
+ */
 @Audit({Processors.TRANSFORMATION})
 @Named("BAMInterceptor")
 public class ExchangeInterceptor implements Auditor {
@@ -52,6 +57,9 @@ public class ExchangeInterceptor implements Auditor {
     
     private boolean _initialized=false;
     
+    /**
+     * This method initializes the auditor.
+     */
     @PostConstruct
     protected void init() {
         if (_activityCollector == null) {
@@ -72,13 +80,15 @@ public class ExchangeInterceptor implements Auditor {
         _initialized = true;
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public void afterCall(Processors processor, org.apache.camel.Exchange exch) {
-        // TODO Auto-generated method stub
-        
     }
 
-    @Override
+    /**
+     * {@inheritDoc}
+     */
     public void beforeCall(Processors processor, org.apache.camel.Exchange exch) {
 
         if (!_initialized) {
@@ -191,6 +201,14 @@ public class ExchangeInterceptor implements Auditor {
         }
     }
     
+    /**
+     * This method records the supplied information as an activity
+     * event.
+     * 
+     * @param exchange The exchange
+     * @param contentType The message content type
+     * @param at The activity type
+     */
     protected void record(Exchange exchange, String contentType,
                 RPCActivityType at) {
         if (at != null) {

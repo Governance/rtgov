@@ -70,7 +70,7 @@
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jta.version>1.0.0.Final</jta.version>
 		<mvel.version>2.1.0.drools16</mvel.version>
-		<switchyard.version>0.6.0.Beta2</switchyard.version>
+		<switchyard.version>0.6.0.Final</switchyard.version>
 	</properties>
 
 	<modules>
@@ -195,6 +195,11 @@
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-plugin</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-bus-camel</artifactId>
 				<version>${switchyard.version}</version>
 			</dependency>
 			<dependency>

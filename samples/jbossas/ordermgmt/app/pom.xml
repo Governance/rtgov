@@ -27,6 +27,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.bam.integration</groupId>
+			<artifactId>bam-switchyard</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.switchyard</groupId>
 			<artifactId>switchyard-api</artifactId>
 			<scope>provided</scope>
