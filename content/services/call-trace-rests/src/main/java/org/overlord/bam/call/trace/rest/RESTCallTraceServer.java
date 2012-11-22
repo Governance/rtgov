@@ -104,10 +104,10 @@ public class RESTCallTraceServer {
     @GET
     @Path("/instance")
     @Produces("image/svg+xml")
-    public String instance(@QueryParam("correlation") String correlation) throws Exception {
+    public String instance(@QueryParam("identifier") String identifier) throws Exception {
         String ret="";
         
-        CallTrace ct=getCallTrace(correlation);
+        CallTrace ct=getCallTrace(identifier);
         
         if (ct != null) {
             byte[] b=CallTraceUtil.serializeCallTrace(ct);
@@ -169,14 +169,14 @@ public class RESTCallTraceServer {
         t1.setDuration(100);
         t1.setPercentage(5);
         t1.getProperties().put("name", "var1");
-        ret.getTasks().add(t1);
+        c0.getTasks().add(t1);
         
         Task t2=new Task();
         t2.setDescription("Evaluate expr1");
         t2.setDuration(100);
         t2.setPercentage(5);
         t2.getProperties().put("expression", "a + b");
-        ret.getTasks().add(t2);
+        c0.getTasks().add(t2);
         
         Call c3=new Call();
         c3.setComponent("TestService2");
@@ -188,7 +188,7 @@ public class RESTCallTraceServer {
         c3.setRequestLatency(10);
         c3.setResponseLatency(10);
         c3.getProperties().put("customer", "Acme Inc");
-        ret.getTasks().add(c3);
+        c0.getTasks().add(c3);
         
         Call c4=new Call();
         c4.setComponent("TestService3");
@@ -202,13 +202,13 @@ public class RESTCallTraceServer {
         c4.setFault("TestFault");
         c4.setStatus(Status.Fail);
         c4.getProperties().put("trader", "Fred Bloggs");
-        ret.getTasks().add(c4);
+        c0.getTasks().add(c4);
         
         Task t5=new Task();
         t5.setDescription("Store var1");
         t5.setDuration(100);
         t5.setPercentage(5);
-        ret.getTasks().add(t5);
+        c0.getTasks().add(t5);
         
         Task t31=new Task();
         t31.setDescription("Store var31");

@@ -188,7 +188,7 @@ public class CallTraceRESTTest {
             _activityStore.store(activities);
         
             // Query server
-            URL getUrl = new URL("http://localhost:8080/overlord-bam-services/call/trace/instance?correlation=1");
+            URL getUrl = new URL("http://localhost:8080/overlord-bam-services/call/trace/instance?identifier=1");
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("GET");
             
