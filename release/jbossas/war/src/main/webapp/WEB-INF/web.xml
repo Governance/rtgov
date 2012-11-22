@@ -16,6 +16,11 @@
         </init-param>
     </servlet>
 
+    <servlet-mapping>
+        <servlet-name>ActivityServer</servlet-name>
+        <url-pattern>/activity/*</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>ActiveCollectionManager</servlet-name>
         <servlet-class>
@@ -28,13 +33,42 @@
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ActivityServer</servlet-name>
-        <url-pattern>/activity/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>ActiveCollectionManager</servlet-name>
         <url-pattern>/acm/*</url-pattern>
+    </servlet-mapping>
+
+	<!-- Services -->
+	
+    <servlet>
+        <servlet-name>ServiceDependency</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.bam.service.dependency.rest.RESTServiceDependencyServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ServiceDependency</servlet-name>
+        <url-pattern>/service/dependency/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CallTrace</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.bam.call.trace.rest.RESTCallTraceServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CallTrace</servlet-name>
+        <url-pattern>/call/trace/*</url-pattern>
     </servlet-mapping>
 
 </web-app>

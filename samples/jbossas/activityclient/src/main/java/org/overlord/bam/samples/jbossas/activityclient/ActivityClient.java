@@ -252,7 +252,7 @@ public class ActivityClient {
             
             String txnName=_txnList.get(pos);
             
-            send(txnName);
+            send(txnName, count);
             
             count++;
         }
@@ -264,10 +264,10 @@ public class ActivityClient {
      * 
      * @param txnName The txnName
      */
-    public void send(String txnName) {
+    public void send(String txnName, int count) {
 
         try {
-            int rand=_random.nextInt();
+            int id=count;
             
             java.io.InputStream is=new java.io.FileInputStream(_txnFileMap.get(txnName));
             
@@ -280,7 +280,7 @@ public class ActivityClient {
             // Transform any ID fields in the txn with the unique id
             String txn=new String(b);
             
-            txn = txn.replaceAll("\\{ID\\}", ""+rand);
+            txn = txn.replaceAll("\\{ID\\}", ""+id);
             
             is = new java.io.ByteArrayInputStream(txn.getBytes());
             
@@ -295,7 +295,7 @@ public class ActivityClient {
             for (ActivityType actType : actTypes) {
                 
                 // Preprocess message ids
-                preProcess(actType, rand);
+                preProcess(actType, id);
                 
                 // Check the timestamp, to see if a delay should occur
                 if (actType.getTimestamp() > 0) {

@@ -72,7 +72,7 @@ public class CallTraceRESTTest {
     public static WebArchive createDeployment() {
         String version=System.getProperty("bam.version");
         
-        return ShrinkWrap.create(WebArchive.class, "overlord-bam-services.war")
+        return ShrinkWrap.create(WebArchive.class, "overlord-bam.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .setWebXML("web.xml")
             .addAsLibraries(
@@ -188,7 +188,7 @@ public class CallTraceRESTTest {
             _activityStore.store(activities);
         
             // Query server
-            URL getUrl = new URL("http://localhost:8080/overlord-bam-services/call/trace/instance?identifier=1");
+            URL getUrl = new URL("http://localhost:8080/overlord-bam/call/trace/instance?identifier=1");
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("GET");
             

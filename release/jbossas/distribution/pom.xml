@@ -33,12 +33,6 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam.content.services</groupId>
-			<artifactId>overlord-bam-services</artifactId>
-			<version>${project.version}</version>
-			<type>war</type>
-		</dependency>
-		<dependency>
 			<groupId>org.overlord.bam</groupId>
 			<artifactId>bam-common</artifactId>
 			<version>${project.version}</version>

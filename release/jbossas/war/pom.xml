@@ -162,6 +162,35 @@
 				</exclusion>
 			</exclusions>
 		</dependency>		
+		
+		<!-- Services -->
+		
+		<dependency>
+			<groupId>org.overlord.bam.content.services</groupId>
+			<artifactId>service-dependency-rests</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.overlord.bam.active-queries</groupId>
+					<artifactId>active-collection</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.overlord.bam.activity-analysis</groupId>
+					<artifactId>analytics</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.bam.content.services</groupId>
+			<artifactId>call-trace-rests</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.overlord.bam.activity-management</groupId>
+					<artifactId>activity</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
 		<!-- JBossAS Specific -->
 		

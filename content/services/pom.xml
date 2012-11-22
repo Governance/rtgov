@@ -16,7 +16,6 @@
 	<modules>
 		<module>call-trace-rests</module>
 		<module>service-dependency-rests</module>
-		<module>war</module>
 	</modules>
 
 </project>

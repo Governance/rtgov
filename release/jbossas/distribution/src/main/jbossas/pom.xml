@@ -61,7 +61,6 @@
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/overlord-bam.war"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/overlord-bam-acs.war"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/overlord-bam-epn.war"/>
-								<delete file="${env.JBOSS_HOME}/standalone/deployments/overlord-bam-services.war"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/gadgets.war"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/gadget-server.war"/>
 								<delete file="${env.JBOSS_HOME}/standalone/deployments/gadget-web.war"/>
