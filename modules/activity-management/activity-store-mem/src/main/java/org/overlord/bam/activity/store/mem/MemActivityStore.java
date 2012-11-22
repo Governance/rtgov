@@ -69,12 +69,24 @@ public class MemActivityStore implements ActivityStore {
      * {@inheritDoc}
      */
     public ActivityUnit getActivityUnit(String id) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("getActivityUnit[id="+id+"] ("+this+")");
+        }
+
         for (ActivityUnit au : _activities) {
             if (au.getId().equals(id)) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("getActivityUnit[id="+id+"] ("+this+") ret="+au);
+                }
                 return (au);
             }
         }
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("getActivityUnit[id="+id+"] ("+this+
+                    ") Did not find unit for id="+id);
+        }
+
         return (null);
     }
 
@@ -82,6 +94,10 @@ public class MemActivityStore implements ActivityStore {
      * {@inheritDoc}
      */
     public List<ActivityType> getActivityTypes(String context) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("getActivityTypes[context="+context+"] ("+this+")");
+        }
+
         List<ActivityType> ret=new java.util.ArrayList<ActivityType>();
         
         for (ActivityUnit unit : _activities) {
@@ -95,7 +111,7 @@ public class MemActivityStore implements ActivityStore {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Get Activity Types ("+this+") context["+context+"] = "+ret);
+            LOG.finest("getActivityTypes context["+context+"] ("+this+") ret="+ret);
         }
         
         return (ret);
@@ -105,6 +121,10 @@ public class MemActivityStore implements ActivityStore {
      * {@inheritDoc}
      */
     public List<ActivityType> query(QuerySpec query) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("query[spec="+query+"] ("+this+")");
+        }
+
         List<ActivityType> ret=new java.util.ArrayList<ActivityType>();
         
         // Check if query format is supported
@@ -121,7 +141,7 @@ public class MemActivityStore implements ActivityStore {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Query ("+this+") "+query+" = "+ret);
+            LOG.finest("query[spec="+query+"] ("+this+") ret="+ret);
         }
         
         return (ret);
