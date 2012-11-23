@@ -35,7 +35,8 @@
 	<properties>
 		<javaee-api.version>6.0</javaee-api.version>
 		<jbossas.version>7.1.1.Final</jbossas.version>
-		<switchyard.version>0.6.0.Beta2</switchyard.version>
+		<jbossts.version>4.16.4.Final</jbossts.version>
+		<switchyard.version>0.6.0.Final</switchyard.version>
 	</properties>
 
 	<modules>
@@ -60,6 +61,11 @@
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>
 				<version>${javaee-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.jbossts</groupId>
+				<artifactId>jbossjta</artifactId>
+				<version>${jbossts.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>

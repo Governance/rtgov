@@ -17,7 +17,7 @@
       "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor1",
       "services" : {
         "testCache" : {
-          "@class" : "org.overlord.bam.epn.service.EmbeddedCacheManager"
+          "@class" : "org.overlord.bam.epn.service.InMemoryCacheManager"
         }
       }
     },

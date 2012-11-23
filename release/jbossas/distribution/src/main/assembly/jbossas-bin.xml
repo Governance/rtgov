@@ -95,20 +95,12 @@
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>modules/org/overlord/bam/main</outputDirectory>
-			<unpack>false</unpack>
+			<outputDirectory>/</outputDirectory>
+			<unpack>true</unpack>
 			<includes>
-				<include>org.overlord.bam:bam-common:jar</include>
-				<include>org.overlord.bam.activity-management:activity:jar</include>
-				<include>org.overlord.bam.event-processor-network:epn-core:jar</include>
-				<include>org.overlord.bam.event-processor-network:epn-cep:jar</include>
-				<include>org.overlord.bam.event-processor-network:epn-mvel:jar</include>
-				<include>org.overlord.bam.event-processor-network:epn-infinispan:jar</include>
-				<include>org.overlord.bam.active-queries:active-collection:jar</include>
-				<include>org.overlord.bam.active-queries:acs-epn:jar</include>
-				<include>org.overlord.bam.activity-analysis:analytics:jar</include>
+				<include>org.overlord.bam.release.jbossas:module:zip</include>
 			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+			<outputFileNameMapping>${artifact.artifactId}</outputFileNameMapping>
 		</dependencySet>
         
 	</dependencySets>

@@ -16,18 +16,14 @@
         "script" : "SampleBusinessPolicy.mvel",
         "services" : {
           "CacheManager" : {
-            "@class" : "org.overlord.bam.epn.service.EmbeddedCacheManager"
+            "@class" : "org.overlord.bam.epn.service.infinispan.InfinispanCacheManager"
           }
         }
       },
       "predicate" : {
         "@class" : "org.overlord.bam.epn.mvel.MVELPredicate",
         "expression" : "event.serviceProvider && !event.request && event.serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\""
-      },
-      "notifications" : [ {
-      	 "type" : "Results",
-      	 "subject" : "Principals"
-      } ]
+      }
     }
   ],
   "version" : "1"

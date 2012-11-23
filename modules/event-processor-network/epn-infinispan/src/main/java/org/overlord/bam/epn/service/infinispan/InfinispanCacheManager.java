@@ -18,6 +18,7 @@
 package org.overlord.bam.epn.service.infinispan;
 
 import java.text.MessageFormat;
+
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +26,8 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 
 import org.infinispan.Cache;
+import org.infinispan.transaction.TransactionMode;
+import org.infinispan.manager.CacheContainer;
 import org.overlord.bam.epn.service.CacheManager;
 
 /**
@@ -36,70 +39,87 @@ public class InfinispanCacheManager extends CacheManager {
 
     private static final Logger LOG=Logger.getLogger(InfinispanCacheManager.class.getName());
 
-    private String _container=null;
+    private String _jndiName=null;
     
-    private org.infinispan.manager.CacheContainer _cacheContainer=null;
+    private CacheContainer _cacheContainer=null;
     
     /**
-     * This method sets the container resource.
+     * This method sets the JNDI name for the container resource.
      * 
-     * @param container The container resource
+     * @param jndiName The JNDI name for the container resource
      */
-    public void setContainer(String container) {
-        _container = null;
+    public void setJNDIName(String jndiName) {
+        _jndiName = jndiName;
     }
     
     /**
-     * This method returns the container resource.
+     * This method returns the JNDI name used to obtain
+     * the container resource.
      * 
-     * @return The container resource
+     * @return The JNDI name for the container resource
      */
-    public String getContainer() {
-        return (_container);
+    public String getJNDIName() {
+        return (_jndiName);
     }
     
     /**
-     * {@inheritDoc}
+     * This method returns the cache container for the current thread.
+     * 
+     * @return The cache container
      */
-    public void init() throws Exception {
-        if (_container == null) {
-            throw new Exception("Container has not been defined");
+    protected CacheContainer getCacheContainer() {
+        if (_cacheContainer == null) {
+            if (_jndiName != null) {
+                try {
+                    InitialContext ctx=new InitialContext();
+                    
+                    _cacheContainer = (org.infinispan.manager.CacheContainer)
+                            ctx.lookup(_jndiName);
+                    
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                            "epn-infinispan.Messages").getString("EPN-INFINISPAN-1"),
+                            _jndiName), e);
+                }
+            } else {
+                try {
+                    _cacheContainer = org.overlord.bam.common.util.InfinispanUtil.getCacheContainer();
+                    
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                            "epn-infinispan.Messages").getString("EPN-INFINISPAN-2"), e);
+                }
+            }
         }
         
-        try {
-            InitialContext ctx=new InitialContext();
-            
-            _cacheContainer = (org.infinispan.manager.CacheContainer)
-                    ctx.lookup(_container);
-            
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                    "epn-infinispan.Messages").getString("EPN-INFINISPAN-1"),
-                    _container), e);
-            
-            throw e;
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Returning cache container [jndi="+_jndiName+"] = "+_cacheContainer);
         }
+        
+        return (_cacheContainer);
     }
     
     /**
      * {@inheritDoc}
      */
     public <K,V> Map<K,V> getCache(String name) {
-        if (_cacheContainer == null) {
+        CacheContainer container=getCacheContainer();
+        
+        if (container == null) {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Requested cache '"+name
-                        +"', but no cache container ("+_container+")");
+                        +"', but no cache container ("+_jndiName+")");
             }
             return (null);
         }
         
-        Map<K,V> ret=_cacheContainer.<K,V>getCache(name);
+        Map<K,V> ret=container.<K,V>getCache(name);
         
-        if (LOG.isLoggable(Level.FINEST)) {
+        if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Returning cache '"+name
                     +"' = "+ret);
         }
-        
+
         return (ret);
     }
 
@@ -107,10 +127,29 @@ public class InfinispanCacheManager extends CacheManager {
      * {@inheritDoc}
      */
     public boolean lock(String cacheName, Object key) {
-        if (_cacheContainer != null) {
-            Cache<Object,Object> cache=_cacheContainer.getCache(cacheName);
+
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("About to lock: "+cacheName+" key="+key);
+        }
+        
+        CacheContainer container=getCacheContainer();
+        
+        if (container != null) {
+            Cache<Object,Object> cache=container.getCache(cacheName);
             
             if (cache != null) {
+                
+                // Check if cache is transactional
+                if (cache.getAdvancedCache().getCacheConfiguration().
+                            transaction().transactionMode() !=
+                                TransactionMode.TRANSACTIONAL) {
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Not transactional, so returning true");
+                    }
+
+                    return true;
+                }
+                
                 boolean ret=cache.getAdvancedCache().lock(key);
                 
                 if (LOG.isLoggable(Level.FINEST)) {
@@ -119,6 +158,7 @@ public class InfinispanCacheManager extends CacheManager {
                 }
 
                 return (ret);
+                
             } else if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Cannot lock cache '"+cacheName
                         +"' key '"+key+"' as cache does not exist");
@@ -129,16 +169,6 @@ public class InfinispanCacheManager extends CacheManager {
         }
         
         return false;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void close() throws Exception {
-        if (_cacheContainer != null) {
-            _cacheContainer.stop();
-            _cacheContainer = null;
-        }
     }
 
 }

@@ -28,15 +28,13 @@ if (event.operation == "submitOrder") {
 	
 	int newtotal=current+total;
 	
+	if (newtotal > 150 && current <= 150) {
+		principal.put("suspended", Boolean.TRUE);
+	}
+	
 	principal.put("exposure", newtotal);
 	principals.put(customer, principal);
 	
-	if (newtotal > 150 && current <= 150) {
-		result = new org.overlord.bam.analytics.principal.PrincipalChangeNotification();
-		result.setPrincipal(customer);
-		result.setProperty("suspended", Boolean.TRUE);
-		epn.forward(result);
-	}
 } else if (event.operation == "makePayment") {
 
 	double amount=event.properties.get("amount");
@@ -60,15 +58,12 @@ if (event.operation == "submitOrder") {
 		if (current != null) {
 			int newamount=current-amount;
 			
-			principal.put("exposure", newamount);
-			principals.put(customer, principal);
-			
 			if (newamount <= 150 && current > 150) {
-				result = new org.overlord.bam.analytics.principal.PrincipalChangeNotification();
-				result.setPrincipal(customer);
-				result.setProperty("suspended", Boolean.FALSE);
-				epn.forward(result);
+				principal.put("suspended", Boolean.FALSE);
 			}
+			
+			principal.put("exposure", newamount);
+			principals.put(customer, principal);			
 		}
 	}
 }

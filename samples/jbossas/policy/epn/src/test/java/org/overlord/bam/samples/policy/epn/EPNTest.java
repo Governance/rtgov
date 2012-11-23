@@ -19,16 +19,14 @@ package org.overlord.bam.samples.policy.epn;
 
 import static org.junit.Assert.*;
 
+import org.infinispan.manager.CacheContainer;
 import org.junit.Test;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.analytics.principal.PrincipalChangeNotification;
-import org.overlord.bam.epn.EventList;
+import org.overlord.bam.common.util.InfinispanUtil;
 import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.NotificationListener;
-import org.overlord.bam.epn.NotificationType;
 import org.overlord.bam.epn.embedded.EmbeddedEPNManager;
 import org.overlord.bam.epn.util.NetworkUtil;
 
@@ -38,11 +36,9 @@ public class EPNTest {
     public void testSuspendCustomer() {
         EmbeddedEPNManager epnm=new EmbeddedEPNManager();
         
-        TestNotificationListener l=new TestNotificationListener();
-        
-        epnm.addNotificationListener("Principals", l);
-        
         // Load network
+        Network network=null;
+        
         try {
             java.io.InputStream is=ClassLoader.getSystemResourceAsStream("epn.json");
             
@@ -51,11 +47,25 @@ public class EPNTest {
             
             is.close();
             
-            Network network=NetworkUtil.deserialize(b);
+            network = NetworkUtil.deserialize(b);
             
             epnm.register(network);
         } catch (Exception e) {
             fail("Failed to register network: "+e);
+        }
+        
+        // Obtain Principals cache
+        java.util.Map<Object,Object> cache=null;
+        
+        try {
+            CacheContainer cc=InfinispanUtil.getCacheContainer();
+            
+            cache = cc.getCache("Principals");
+            
+            cache.clear();
+            
+        } catch (Exception e) {
+            fail("Failed to get default cache container: "+e);
         }
         
         java.util.List<java.io.Serializable> events=
@@ -99,8 +109,15 @@ public class EPNTest {
             fail("Failed to publish events: "+e);
         }
         
-        if (l.getEvents().size() != 0) {
-            fail("Was not expecting any notified results: "+l.getEvents().size());
+        if (!cache.containsKey("Fred")) {
+            fail("Principal is not Fred: "+cache);
+        }
+        
+        @SuppressWarnings("unchecked")
+        java.util.Map<String,Object> props1=(java.util.Map<String,Object>)cache.get("Fred");
+        
+        if (props1.containsKey("suspended")) {
+            fail("Fred should not have a 'suspended' property yet: "+props1.get("suspended"));
         }
         
         // Make second purchase that takes the customer above the level
@@ -109,25 +126,25 @@ public class EPNTest {
         rqs=new RequestSent();
         rqs.setOperation("submitOrder");
         rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqs.setContent("<Order><customer>Fred</customer><total>170</total></Order>");
+        rqs.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
         
         rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
         rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqr.setContent("<Order><customer>Fred</customer><total>170</total></Order>");
+        rqr.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
         
         rps=new ResponseSent();
         rps.setOperation("submitOrder");
         rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rps.setContent("{\"customer\":\"Fred\",\"total\":170}");
+        rps.setContent("{\"customer\":\"Fred\",\"total\":100}");
         
-        rps.getProperties().put("total", "170");
+        rps.getProperties().put("total", "100");
         rps.getProperties().put("customer", "Fred");
         
         rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
         rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rpr.setContent("{\"customer\":\"Fred\",\"total\":170}");
+        rpr.setContent("{\"customer\":\"Fred\",\"total\":100}");
         
         events.add(rqs);
         events.add(rqr);
@@ -144,21 +161,14 @@ public class EPNTest {
             fail("Failed to publish events: "+e);
         }
         
-        if (l.getEvents().size() != 1) {
-            fail("Was expecting 1 notified results: "+l.getEvents().size());
+        if (!cache.containsKey("Fred")) {
+            fail("Principal is not Fred: "+cache);
         }
         
-        if (!(l.getEvents().get(0) instanceof PrincipalChangeNotification)) {
-            fail("Expecting principal action");
-        }
+        @SuppressWarnings("unchecked")
+        java.util.Map<String,Object> props2 = (java.util.Map<String,Object>)cache.get("Fred");
         
-        PrincipalChangeNotification pa=(PrincipalChangeNotification)l.getEvents().get(0);
-        
-        if (!pa.getPrincipal().equals("Fred")) {
-            fail("Principal is not Fred");
-        }
-        
-        if (pa.getProperties().get("suspended") != Boolean.TRUE) {
+        if (props2.get("suspended") != Boolean.TRUE) {
             fail("Fred is not suspended");
         }
     }
@@ -166,10 +176,6 @@ public class EPNTest {
     @Test
     public void testCustomerIsolation() {
         EmbeddedEPNManager epnm=new EmbeddedEPNManager();
-        
-        TestNotificationListener l=new TestNotificationListener();
-        
-        epnm.addNotificationListener("Principals", l);
         
         // Load network
         try {
@@ -185,6 +191,20 @@ public class EPNTest {
             epnm.register(network);
         } catch (Exception e) {
             fail("Failed to register network: "+e);
+        }
+        
+        // Obtain Principals cache
+        java.util.Map<Object,Object> cache=null;
+        
+        try {
+            CacheContainer cc=InfinispanUtil.getCacheContainer();
+            
+            cache = cc.getCache("Principals");
+            
+            cache.clear();
+            
+        } catch (Exception e) {
+            fail("Failed to get default cache container: "+e);
         }
         
         java.util.List<java.io.Serializable> events=
@@ -228,11 +248,18 @@ public class EPNTest {
             fail("Failed to publish events: "+e);
         }
         
-        if (l.getEvents().size() != 0) {
-            fail("Was not expecting any notified results: "+l.getEvents().size());
+        if (!cache.containsKey("Fred")) {
+            fail("Principal is not Fred: "+cache);
         }
         
-        // Make second purchase that takes the customer above the level
+        @SuppressWarnings("unchecked")
+        java.util.Map<String,Object> props1=(java.util.Map<String,Object>)cache.get("Fred");
+        
+        if (props1.containsKey("suspended")) {
+            fail("Fred should not have a 'suspended' property yet: "+props1.get("suspended"));
+        }
+        
+        // Make second purchase but for different customer
         events=new java.util.ArrayList<java.io.Serializable>();
     
         rqs=new RequestSent();
@@ -273,9 +300,17 @@ public class EPNTest {
             fail("Failed to publish events: "+e);
         }
         
-        if (l.getEvents().size() != 0) {
-            fail("Was still expecting no notified results: "+l.getEvents().size());
+        if (!cache.containsKey("Joe")) {
+            fail("Principal is not Joe: "+cache);
         }
+        
+        @SuppressWarnings("unchecked")
+        java.util.Map<String,Object> props2=(java.util.Map<String,Object>)cache.get("Joe");
+        
+        if (props2.containsKey("suspended")) {
+            fail("Joe should not have a 'suspended' property yet: "+props2.get("suspended"));
+        }
+        
     }
 
     @Test
@@ -296,6 +331,20 @@ public class EPNTest {
             epnm.register(network);
         } catch (Exception e) {
             fail("Failed to register network: "+e);
+        }
+        
+        // Obtain Principals cache
+        java.util.Map<Object,Object> cache=null;
+        
+        try {
+            CacheContainer cc=InfinispanUtil.getCacheContainer();
+            
+            cache = cc.getCache("Principals");
+            
+            cache.clear();
+            
+        } catch (Exception e) {
+            fail("Failed to get default cache container: "+e);
         }
         
         java.util.List<java.io.Serializable> events=
@@ -339,9 +388,20 @@ public class EPNTest {
             fail("Failed to publish events: "+e);
         }
         
-        TestNotificationListener l=new TestNotificationListener();
+        if (!cache.containsKey("Fred")) {
+            fail("Principal is not Fred: "+cache);
+        }
         
-        epnm.addNotificationListener("Principals", l);
+        @SuppressWarnings("unchecked")
+        java.util.Map<String,Object> props1=(java.util.Map<String,Object>)cache.get("Fred");
+        
+        if (!props1.containsKey("suspended")) {
+            fail("Fred should have a 'suspended' property");
+        }
+        
+        if (props1.get("suspended") != Boolean.TRUE) {
+            fail("Fred should be suspended");
+        }
         
         // Make second purchase that takes the customer above the level
         events=new java.util.ArrayList<java.io.Serializable>();
@@ -384,39 +444,19 @@ public class EPNTest {
             fail("Failed to publish events: "+e);
         }
         
-        if (l.getEvents().size() != 1) {
-            fail("Was expecting 1 notified results: "+l.getEvents().size());
+        if (!cache.containsKey("Fred")) {
+            fail("Principal is not Fred: "+cache);
         }
         
-        if (!(l.getEvents().get(0) instanceof PrincipalChangeNotification)) {
-            fail("Expecting principal action");
+        @SuppressWarnings("unchecked")
+        java.util.Map<String,Object> props2=(java.util.Map<String,Object>)cache.get("Fred");
+        
+        if (!props2.containsKey("suspended")) {
+            fail("Fred should have a 'suspended' property");
         }
         
-        PrincipalChangeNotification pa=(PrincipalChangeNotification)l.getEvents().get(0);
-        
-        if (!pa.getPrincipal().equals("Fred")) {
-            fail("Principal is not Fred");
-        }
-        
-        if (pa.getProperties().get("suspended") != Boolean.FALSE) {
-            fail("Fred is suspended");
-        }
-    }
-
-    public class TestNotificationListener implements NotificationListener {
-        
-        private java.util.List<Object> _events=new java.util.ArrayList<Object>();
-
-        public void notify(String subject, String network, String version,
-                String node, NotificationType type, EventList events) {
-            
-            for (Object evt : events) {
-                _events.add(evt);
-            }
-        }
-        
-        public java.util.List<Object> getEvents() {
-            return (_events);
+        if (props2.get("suspended") != Boolean.FALSE) {
+            fail("Fred should be unsuspended");
         }
     }
 }

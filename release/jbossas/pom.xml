@@ -23,8 +23,9 @@
 	</profiles>
 
 	<modules>
-		<module>tests</module>
 		<module>war</module>
+		<module>module</module>
+		<module>tests</module>
 		<module>distribution</module>
 	</modules>
 

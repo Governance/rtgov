@@ -237,7 +237,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.bam export</Dependencies>
+							<Dependencies>org.overlord.bam export, org.infinispan export</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

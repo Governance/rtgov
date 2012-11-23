@@ -63,6 +63,22 @@ public class ActiveMap extends ActiveCollection
     }
     
     /**
+     * This constructor initializes the active map.
+     * 
+     * @param name The name
+     * @param map The map
+     * @param itemExpiration Item expiration time, or 0 if not relevant
+     * @param maxItems Max number of items, or 0 if not relevant
+     * @param highWaterMark Generate warning if number of items exceed high water mark
+     */
+    public ActiveMap(String name, java.util.Map<Object,Object> map,
+            long itemExpiration, int maxItems, int highWaterMark) {
+        super(name, itemExpiration, maxItems, highWaterMark);
+        
+        _map = map;
+    }
+    
+    /**
      * This constructor initializes the active list.
      * 
      * @param name The name
@@ -94,6 +110,15 @@ public class ActiveMap extends ActiveCollection
                 insert(entry.getKey(), entry.getValue());
             }
         }
+    }
+    
+    /**
+     * This method returns the map.
+     * 
+     * @return The map
+     */
+    protected java.util.Map<Object,Object> getMap() {
+        return (_map);
     }
     
     /**

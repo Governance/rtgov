@@ -14,6 +14,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.overlord.bam</groupId>
+			<artifactId>bam-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.bam.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
 			<version>${project.version}</version>
@@ -25,6 +30,26 @@
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<scope>test</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.jgroups</groupId>
+			<artifactId>jgroups</artifactId>
+			<scope>test</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.jboss.marshalling</groupId>
+			<artifactId>jboss-marshalling</artifactId>
+			<scope>test</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.jboss.marshalling</groupId>
+			<artifactId>jboss-marshalling-river</artifactId>
+			<scope>test</scope>
 		</dependency>		
 		<dependency>
 			<groupId>junit</groupId>

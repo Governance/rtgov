@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * JBoss, Home of Professional Open Source
+ * Copyright 2008-12, JBoss Inc., and others contributors as indicated 
+ * by the @authors tag. All rights reserved. 
+ * See the copyright.txt in the distribution for a
+ * full listing of individual contributors. 
+ * This copyrighted material is made available to anyone wishing to use,
+ * modify, copy, or redistribute it subject to the terms and conditions
+ * of the GNU Lesser General Public License, v. 2.1.
+ * This program is distributed in the hope that it will be useful, but WITHOUT A 
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+ * PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public License,
+ * v.2.1 along with this distribution; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, 
+ * MA  02110-1301, USA.
+ * 
+ * (C) 2008
+-->
+<assembly>
+	<!-- id typically identifies the "type" (src vs bin etc) of the assembly -->
+	<id>bin</id>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<formats>
+		<format>zip</format>
+	</formats>
+
+	<fileSets>
+
+		<!-- Copy modules and deployments -->
+		<fileSet>
+			<directory>src/main/jbossas/modules</directory>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+
+	</fileSets>
+    
+	<dependencySets>
+
+		<dependencySet>
+			<outputDirectory>org/overlord/bam/main</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.bam:bam-common:jar</include>
+				<include>org.overlord.bam.activity-management:activity:jar</include>
+				<include>org.overlord.bam.event-processor-network:epn-core:jar</include>
+				<include>org.overlord.bam.event-processor-network:epn-cep:jar</include>
+				<include>org.overlord.bam.event-processor-network:epn-mvel:jar</include>
+				<include>org.overlord.bam.event-processor-network:epn-infinispan:jar</include>
+				<include>org.overlord.bam.active-queries:active-collection:jar</include>
+				<include>org.overlord.bam.active-queries:active-collection-infinispan:jar</include>
+				<include>org.overlord.bam.active-queries:acs-epn:jar</include>
+				<include>org.overlord.bam.activity-analysis:analytics:jar</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+        
+	</dependencySets>
+
+</assembly>

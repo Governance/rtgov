@@ -27,6 +27,7 @@
     <resources>
         <resource-root path="acs-epn.jar"/>
         <resource-root path="active-collection.jar"/>
+        <resource-root path="active-collection-infinispan.jar"/>
         <resource-root path="activity.jar"/>
         <resource-root path="analytics.jar"/>
         <resource-root path="bam-common.jar"/>

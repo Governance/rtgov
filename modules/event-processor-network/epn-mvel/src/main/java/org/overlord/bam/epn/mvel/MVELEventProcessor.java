@@ -42,6 +42,7 @@ public class MVELEventProcessor extends EventProcessor {
      * {@inheritDoc}
      */
     public void init() throws Exception {
+        super.init();
         
         // Load the script
         java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_script);

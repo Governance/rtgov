@@ -41,6 +41,9 @@ public class ActiveCollectionSource {
     
     private String _name=null;
     private ActiveCollectionType _type=ActiveCollectionType.List;
+    
+    private ActiveCollectionFactory _factory=null;
+    
     private long _itemExpiration=0;
     private int _maxItems=0;
     private int _highWaterMark=0;
@@ -150,6 +153,26 @@ public class ActiveCollectionSource {
         _type = type;
     }
 
+    /**
+     * This method returns the factory responsible for
+     * creating the active collection.
+     * 
+     * @return The factory
+     */
+    public ActiveCollectionFactory getFactory() {
+        return (_factory);
+    }
+    
+    /**
+     * This method sets the factory responsible for
+     * creating the active collection.
+     * 
+     * @param factory The factory
+     */
+    public void setFactory(ActiveCollectionFactory factory) {
+       _factory = factory;
+    }
+    
     /**
      * This method returns the item expiration duration.
      * 
@@ -498,15 +521,23 @@ public class ActiveCollectionSource {
         
         preInit();
         
+        // Create the active collection, if not already defined
+        if (_activeCollection == null) {
+            ActiveCollectionFactory factory=(_factory == null ?
+                    ActiveCollectionFactory.DEFAULT_FACTORY : _factory);
+            
+            _activeCollection = factory.createActiveCollection(this);
+        }
+        
+        // Check that active collection has been set
+        if (_activeCollection == null) {
+            throw new Exception("Active collection has not been associated with the '"
+                                +getName()+"' source");
+        }
+        
         // If active change listeners defined, then instantiate them
         // and add them to the active collection
         if (_listeners.size() > 0) {
-            
-            // Check that active collection has been set
-            if (_activeCollection == null) {
-                throw new Exception("Active collection has not been associated with the '"
-                                    +getName()+"' source");
-            }
             
             for (AbstractActiveChangeListener l : _listeners) {
                 

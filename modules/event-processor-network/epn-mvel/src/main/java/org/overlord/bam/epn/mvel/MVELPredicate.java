@@ -63,8 +63,7 @@ public class MVELPredicate extends Predicate {
             _compiled = MVEL.compileExpression(expr);
 
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Initialized expression="+expr
-                        +" compiled="+_compiled);
+                LOG.fine("Initialized expression="+expr);
             }
         } else {
             throw new Exception("No expression or script specified");

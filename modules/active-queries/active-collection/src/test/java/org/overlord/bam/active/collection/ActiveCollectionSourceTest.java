@@ -38,6 +38,13 @@ public class ActiveCollectionSourceTest {
         
         acs.getActiveChangeListeners().add(new TestActiveChangeListener());
         
+        acs.setFactory(new ActiveCollectionFactory() {
+            @Override
+            public ActiveCollection createActiveCollection(ActiveCollectionSource acs) {
+                return (null);
+            }
+        });
+        
         try {
             acs.init();
         

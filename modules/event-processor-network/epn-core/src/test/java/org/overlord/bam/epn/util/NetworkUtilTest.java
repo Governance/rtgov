@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.Node;
 import org.overlord.bam.epn.Subscription;
-import org.overlord.bam.epn.service.EmbeddedCacheManager;
+import org.overlord.bam.epn.service.InMemoryCacheManager;
 import org.overlord.bam.epn.testdata.TestEventProcessor1;
 import org.overlord.bam.epn.testdata.TestEventProcessor2;
 import org.overlord.bam.epn.testdata.TestEventProcessor3;
@@ -60,7 +60,7 @@ public class NetworkUtilTest {
         n0.setPredicate(new TestPredicate1());   
         
         n0.getEventProcessor().getServices().put("testCache",
-                            new EmbeddedCacheManager());
+                            new InMemoryCacheManager());
         
         // Node 1
         Node n1=new Node();
@@ -129,7 +129,7 @@ public class NetworkUtilTest {
             }
             
             TestEventProcessor1 tep1=(TestEventProcessor1)n1.getEventProcessor();
-            if (!(tep1.getServices().get("testCache") instanceof EmbeddedCacheManager)) {
+            if (!(tep1.getServices().get("testCache") instanceof InMemoryCacheManager)) {
                 fail("Failed to find test cache");
             }
             

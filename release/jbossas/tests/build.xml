@@ -4,11 +4,17 @@
 	
 		<delete dir="${jboss.home}/modules/org/overlord/bam" />
 		
+		<unzip src="${org.overlord.bam.release.jbossas:module:zip}"
+			dest="${jboss.home}" />
+
+<!--
 		<copy file="${basedir}/src/test/modules/module.xml"
 				todir="${jboss.home}/modules/org/overlord/bam/main" />
 
 		<copy file="${org.overlord.bam.active-queries:active-collection:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/active-collection.jar" />
+		<copy file="${org.overlord.bam.active-queries:active-collection-infinispan:jar}"
+				tofile="${jboss.home}/modules/org/overlord/bam/main/active-collection-infinispan.jar" />
 		<copy file="${org.overlord.bam.active-queries:acs-epn:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/acs-epn.jar" />
 		<copy file="${org.overlord.bam.activity-analysis:analytics:jar}"
@@ -25,6 +31,7 @@
 				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-infinispan.jar" />
 		<copy file="${org.overlord.bam.event-processor-network:epn-mvel:jar}"
 				tofile="${jboss.home}/modules/org/overlord/bam/main/epn-mvel.jar" />
+-->
 	</target>
 
 	<target name="clean">

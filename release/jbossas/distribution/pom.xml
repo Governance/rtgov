@@ -33,60 +33,12 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam</groupId>
-			<artifactId>bam-common</artifactId>
+			<groupId>org.overlord.bam.release.jbossas</groupId>
+			<artifactId>module</artifactId>
 			<version>${project.version}</version>
+			<type>zip</type>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.activity-management</groupId>
-			<artifactId>activity</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-cep</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-mvel</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
-			<artifactId>epn-infinispan</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.active-queries</groupId>
-			<artifactId>active-collection</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.active-queries</groupId>
-			<artifactId>acs-epn</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.activity-analysis</groupId>
-			<artifactId>analytics</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.activity-analysis</groupId>
-			<artifactId>service-dependency</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.activity-analysis</groupId>
-			<artifactId>service-dependency-svg</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.overlord.gadgets.server</groupId>
 			<artifactId>gadgets</artifactId>

@@ -36,10 +36,12 @@
     	"insertTypeScript" : "SituationType.mvel"
 	} ]
   },{
-    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "@class" : "org.overlord.bam.active.collection.ActiveCollectionSource",
     "name" : "Principals",
     "type" : "Map",
-    "subject" : "Principals",
-    "maintenanceScript" : "MaintainPrincipals.mvel"
+    "factory" : {
+        "@class" : "org.overlord.bam.active.collection.infinispan.InfinispanActiveCollectionFactory",
+        "cache" : "Principals"
+    }
   }
 ]
