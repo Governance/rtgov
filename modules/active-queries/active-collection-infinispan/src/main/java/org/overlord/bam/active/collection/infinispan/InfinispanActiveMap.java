@@ -37,7 +37,13 @@ public class InfinispanActiveMap extends ActiveMap {
     private InfinispanCacheListener _listener=new InfinispanCacheListener();
 
     /**
-     * {@inheritDoc}
+     * This constructor initializes the active map.
+     * 
+     * @param name The name
+     * @param map The map
+     * @param itemExpiration Item expiration time, or 0 if not relevant
+     * @param maxItems Max number of items, or 0 if not relevant
+     * @param highWaterMark Generate warning if number of items exceed high water mark
      */
     public InfinispanActiveMap(String name, Map<Object, Object> map,
             long itemExpiration, int maxItems, int highWaterMark) {
@@ -62,6 +68,10 @@ public class InfinispanActiveMap extends ActiveMap {
         }
     }
 
+    /**
+     * This class represents the infinispan cache listener.
+     *
+     */
     @Listener
     public class InfinispanCacheListener {
         

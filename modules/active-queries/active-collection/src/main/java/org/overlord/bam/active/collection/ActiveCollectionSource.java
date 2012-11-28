@@ -523,8 +523,8 @@ public class ActiveCollectionSource {
         
         // Create the active collection, if not already defined
         if (_activeCollection == null) {
-            ActiveCollectionFactory factory=(_factory == null ?
-                    ActiveCollectionFactory.DEFAULT_FACTORY : _factory);
+            ActiveCollectionFactory factory=(_factory == null
+                    ? ActiveCollectionFactory.DEFAULT_FACTORY : _factory);
             
             _activeCollection = factory.createActiveCollection(this);
         }

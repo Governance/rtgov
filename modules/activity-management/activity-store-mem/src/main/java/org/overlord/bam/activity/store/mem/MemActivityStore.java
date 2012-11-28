@@ -83,8 +83,8 @@ public class MemActivityStore implements ActivityStore {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("getActivityUnit[id="+id+"] ("+this+
-                    ") Did not find unit for id="+id);
+            LOG.finest("getActivityUnit[id="+id+"] ("+this
+                    +") Did not find unit for id="+id);
         }
 
         return (null);

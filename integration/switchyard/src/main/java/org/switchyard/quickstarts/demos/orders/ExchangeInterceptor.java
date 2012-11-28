@@ -68,7 +68,7 @@ public class ExchangeInterceptor implements Auditor {
                 
                 _activityCollector = (ActivityCollector)ctx.lookup(ACTIVITY_COLLECTOR);
                 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Failed to initialize activity collector", e);
             }
         }
@@ -113,8 +113,9 @@ public class ExchangeInterceptor implements Auditor {
         
         if (exchange.getProvider() == null) {
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Unable to obtain activity information from exchange, " +
-            		"as no provider - probably an exception: "+exchange.getMessage().getContent());
+                LOG.fine("Unable to obtain activity information from exchange, "
+                        +"as no provider - probably an exception: "
+                        +exchange.getMessage().getContent());
             }
             return;
         }
@@ -265,6 +266,6 @@ public class ExchangeInterceptor implements Auditor {
             }
         }
 
-        return(ret);
+        return (ret);
     }
 }

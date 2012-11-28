@@ -104,7 +104,7 @@ public class RESTActivityServer {
     /**
      * This method handles queries for activity events.
      * 
-     * @param qspec The query spec
+     * @param id The id
      * @return The list of activity events
      * @throws Exception Failed to query activity events
      */
@@ -137,6 +137,14 @@ public class RESTActivityServer {
         return (ret);
     }
 
+    /**
+     * This method returns activity types (events) associated with
+     * the supplied context value.
+     * 
+     * @param context The context
+     * @return The list of activity types
+     * @throws Exception Failed to obtain activity types
+     */
     @GET
     @Path("/events")
     @Produces("application/json")

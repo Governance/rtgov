@@ -90,7 +90,7 @@ public class TypeProcessor {
     /**
      * This method sets the context evaluators.
      * 
-     * @return The context evaluators
+     * @param ce The context evaluators
      */
     public void setContexts(java.util.List<ContextEvaluator> ce) {
         _contextEvaluators = ce;
@@ -108,7 +108,7 @@ public class TypeProcessor {
     /**
      * This method sets the property evaluators.
      * 
-     * @return The property evaluators
+     * @param pe The property evaluators
      */
     public void setProperties(java.util.List<PropertyEvaluator> pe) {
         _propertyEvaluators = pe;
@@ -193,6 +193,9 @@ public class TypeProcessor {
         private String _name=null;
         private ExpressionEvaluator _evaluator=null;
         
+        /**
+         * The default constructor for the property evaluator.
+         */
         public PropertyEvaluator() {
         }
         
@@ -228,7 +231,7 @@ public class TypeProcessor {
          * This method sets the context value's
          * expression evaluator.
          * 
-         * @param type The expression evaluator
+         * @param evaluator The expression evaluator
          */
         public void setEvaluator(ExpressionEvaluator evaluator) {
             _evaluator = evaluator;
@@ -251,6 +254,9 @@ public class TypeProcessor {
         private Context.Type _type=null;
         private ExpressionEvaluator _evaluator=null;
         
+        /**
+         * The default constructor for the context evaluator.
+         */
         public ContextEvaluator() {
         }
         
@@ -286,7 +292,7 @@ public class TypeProcessor {
          * This method sets the context value's
          * expression evaluator.
          * 
-         * @param type The expression evaluator
+         * @param evaluator The expression evaluator
          */
         public void setEvaluator(ExpressionEvaluator evaluator) {
             _evaluator = evaluator;

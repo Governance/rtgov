@@ -24,12 +24,18 @@ import org.infinispan.manager.DefaultCacheManager;
  * This class provides utility functions for working with Infinispan.
  *
  */
-public class InfinispanUtil {
+public final class InfinispanUtil {
 
     private static final String INFINISPAN_CONFIG = "bam-infinispan.xml";
     
     private static CacheContainer _cacheContainer=null;
 
+    /**
+     * Private constructor.
+     */
+    private InfinispanUtil() {
+    }
+    
     /**
      * This method returns the cache container.
      * 

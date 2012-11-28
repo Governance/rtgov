@@ -172,7 +172,7 @@ public class CallTraceProcessor {
      * 
      * @param state The state
      * @param startau The activity unit being processed
-     * @param toplevel The top level activity units
+     * @param topLevel The top level activity units
      */
     protected static void processAU(CTState state, ActivityUnit startau,
                 java.util.List<ActivityUnit> topLevel) {
@@ -222,25 +222,18 @@ public class CallTraceProcessor {
                 }
                 
                 if (shouldPostpone(state, au, topLevel, cur)) {
-                    if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.finest("Postponing processing of unit="+au+" cur="+cur);     
-                    }
                     break;
                 }
                 
                 if (cur instanceof RPCActivityType) {
                     
-                    if (cur instanceof RequestSent ||
-                            (cur instanceof RequestReceived && call == null)) {
+                    if (cur instanceof RequestSent
+                            || (cur instanceof RequestReceived && call == null)) {
                         
                         // Create call, and search for activity unit
                         // containing scoped tasks
                         call = createCall((RPCActivityType)cur);
                         
-                        if (LOG.isLoggable(Level.FINEST)) {
-                            LOG.finest("Created call="+call);     
-                        }
-
                         tasks.add(call);
 
                         tasks = call.getTasks();
@@ -277,33 +270,7 @@ public class CallTraceProcessor {
                         call.setRequest(((RequestReceived)cur).getContent());
                         
                     } else if (cur instanceof ResponseSent) {
-                        ResponseSent rs=(ResponseSent)cur;
-                        
-                        call.setResponse(rs.getContent());
-                        
-                        // Add further properties from the response
-                        call.getProperties().putAll(cur.getProperties());
-                        
-                        RPCActivityType rr=state.getSOAActivity(ResponseReceived.class,
-                                rs.getServiceType(), rs.getOperation());
-                        
-                        if (rr != null) {
-                            call.setResponseLatency(rr.getTimestamp()-rs.getTimestamp());
-                        }
-                        
-                        // Set duration of call, if based on server side scope
-                        if (state.getTriggerActivities().get(call)
-                                    instanceof RequestReceived) {
-                            call.setDuration(cur.getTimestamp()-
-                                    state.getTriggerActivities().get(call).getTimestamp());
-                        }
-                        
-                        // If fault, then need to set the details on the Call
-                        if (rs.getFault() != null && rs.getFault().trim().length() > 0) {
-                            call.setFault(rs.getFault());
-                            
-                            call.setStatus(Status.Fail);
-                        }
+                        initializeResponseSent(state, (ResponseSent)cur, call);
                         
                         // Finalise the tasks in the scope, and pop the stack
                         state.finalizeScope();
@@ -311,8 +278,8 @@ public class CallTraceProcessor {
                         f_scopeFinalized = true;
 
                         // Get new values
-                        call = (state.getCallStack().size() > 0 ?
-                                state.getCallStack().peek() : null);
+                        call = (state.getCallStack().size() > 0
+                                ? state.getCallStack().peek() : null);
                         tasks = state.getTasksStack().peek();
                         
                         // If not top level call, then break out
@@ -328,25 +295,7 @@ public class CallTraceProcessor {
                         }
                         
                     } else if (cur instanceof ResponseReceived) {
-                        ResponseReceived rr=(ResponseReceived)cur;
-                        
-                        // Find completed call for this operation
-                        for (int j=state.getCompletedCallStack().size()-1; j >= 0; j--) {
-                            Call c=state.getCompletedCallStack().get(j);
-                            
-                            // Set duration of call, if based on client side scope
-                            if (state.getTriggerActivities().get(c)
-                                        instanceof RequestSent) {
-                                RequestSent rs=(RequestSent)state.getTriggerActivities().get(c);
-
-                                if (rs.getOperation().equals(rr.getOperation())
-                                        && rs.getServiceType().equals(rr.getServiceType())) {
-                                    c.setDuration(rr.getTimestamp()-
-                                            rs.getTimestamp());
-                                    break;
-                                }   
-                            }
-                        }
+                        initializeResponseReceived(state, (ResponseReceived)cur);
 
                         // Set end flag, to break out of this method once
                         // this cursor has finished
@@ -373,6 +322,70 @@ public class CallTraceProcessor {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Finished Process Initial AU="+startau);
+        }
+    }
+    
+    /**
+     * This method initializes the call details based on current
+     * state and the supplied response sent.
+     * 
+     * @param state The state
+     * @param rs The response sent event
+     * @param call The call
+     */
+    protected static void initializeResponseSent(CTState state, ResponseSent rs, Call call) {
+        call.setResponse(rs.getContent());
+        
+        // Add further properties from the response
+        call.getProperties().putAll(rs.getProperties());
+        
+        RPCActivityType rr=state.getSOAActivity(ResponseReceived.class,
+                rs.getServiceType(), rs.getOperation());
+        
+        if (rr != null) {
+            call.setResponseLatency(rr.getTimestamp()-rs.getTimestamp());
+        }
+        
+        // Set duration of call, if based on server side scope
+        if (state.getTriggerActivities().get(call)
+                    instanceof RequestReceived) {
+            call.setDuration(rs.getTimestamp()
+                    - state.getTriggerActivities().get(call).getTimestamp());
+        }
+        
+        // If fault, then need to set the details on the Call
+        if (rs.getFault() != null && rs.getFault().trim().length() > 0) {
+            call.setFault(rs.getFault());
+            
+            call.setStatus(Status.Fail);
+        }
+    }
+
+    /**
+     * This method initializes the call details based on current
+     * state and the supplied response received event.
+     * 
+     * @param state The state
+     * @param rr The response received event
+     */
+    protected static void initializeResponseReceived(CTState state, ResponseReceived rr) {
+        
+        // Find completed call for this operation
+        for (int j=state.getCompletedCallStack().size()-1; j >= 0; j--) {
+            Call c=state.getCompletedCallStack().get(j);
+            
+            // Set duration of call, if based on client side scope
+            if (state.getTriggerActivities().get(c)
+                        instanceof RequestSent) {
+                RequestSent rs=(RequestSent)state.getTriggerActivities().get(c);
+
+                if (rs.getOperation().equals(rr.getOperation())
+                        && rs.getServiceType().equals(rr.getServiceType())) {
+                    c.setDuration(rr.getTimestamp()
+                            - rs.getTimestamp());
+                    break;
+                }   
+            }
         }
     }
     
@@ -404,6 +417,10 @@ public class CallTraceProcessor {
             ret = true;
         }
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Should postpone processing of unit="+au+" cur="+cur+"? ret="+ret);     
+        }
+
         return (ret);
     }
     
@@ -422,6 +439,10 @@ public class CallTraceProcessor {
         
         call.getProperties().putAll(at.getProperties());
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Created call="+call);     
+        }
+
         return (call);
     }
     
@@ -516,8 +537,8 @@ public class CallTraceProcessor {
         for (ActivityUnit au : state.getActivityUnits()) {
             
             for (ActivityType at : au.getActivityTypes()) {
-                if (at instanceof RequestReceived &&
-                        state.getSOAActivity(RequestSent.class,
+                if (at instanceof RequestReceived
+                        && state.getSOAActivity(RequestSent.class,
                             ((RequestReceived)at).getServiceType(),
                             ((RequestReceived)at).getOperation()) == null) {
                     ret.add(au);
@@ -709,8 +730,8 @@ public class CallTraceProcessor {
             Collections.sort(_units, new Comparator<ActivityUnit>() {
 
                 public int compare(ActivityUnit o1, ActivityUnit o2) {
-                    return ((int)(o1.getActivityTypes().get(0).getTimestamp()-
-                            o2.getActivityTypes().get(0).getTimestamp()));
+                    return ((int)(o1.getActivityTypes().get(0).getTimestamp()
+                            - o2.getActivityTypes().get(0).getTimestamp()));
                 }
                 
             });
@@ -767,7 +788,7 @@ public class CallTraceProcessor {
             
             if (duration > 0) {
                 for (TraceNode task : tasks) {
-                    task.setPercentage((int)(((double)task.getDuration()/duration)*100));
+                    task.setPercentage((int)(((double)task.getDuration()/duration) * 100));
                 }
             }
             

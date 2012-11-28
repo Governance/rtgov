@@ -207,8 +207,8 @@ public class AbstractActivityCollector implements ActivityCollector {
         if (_infoProcessorManager != null) {
             return (_infoProcessorManager.process(processor, type, info, actType));
         } else if (LOG.isLoggable(Level.WARNING)) {
-            LOG.warning("GPB: Information processor manager not specified: " +
-            		"unable to process type '"+type+"' info: "+info);
+            LOG.warning("Information processor manager not specified: "
+                    +"unable to process type '"+type+"' info: "+info);
         }
         
         return (null);

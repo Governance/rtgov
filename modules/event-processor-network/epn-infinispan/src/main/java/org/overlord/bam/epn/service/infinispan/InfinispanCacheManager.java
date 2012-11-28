@@ -141,8 +141,7 @@ public class InfinispanCacheManager extends CacheManager {
                 
                 // Check if cache is transactional
                 if (cache.getAdvancedCache().getCacheConfiguration().
-                            transaction().transactionMode() !=
-                                TransactionMode.TRANSACTIONAL) {
+                            transaction().transactionMode() != TransactionMode.TRANSACTIONAL) {
                     if (LOG.isLoggable(Level.FINEST)) {
                         LOG.finest("Not transactional, so returning true");
                     }

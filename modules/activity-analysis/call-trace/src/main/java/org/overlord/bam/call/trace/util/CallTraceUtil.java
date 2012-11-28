@@ -69,7 +69,7 @@ public final class CallTraceUtil {
     /**
      * This method deserializes a call trace from a JSON representation.
      * 
-     * @param act The JSON representation of the call trace
+     * @param node The JSON representation of the call trace
      * @return The call trace
      * @throws Exception Failed to deserialize
      */

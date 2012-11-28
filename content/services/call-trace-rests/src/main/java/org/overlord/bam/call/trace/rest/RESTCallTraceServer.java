@@ -95,11 +95,11 @@ public class RESTCallTraceServer {
     }
     
     /**
-     * This method handles queries.
+     * This method returns the call trace for the specified identifier.
      * 
-     * @param width The optional width
-     * @return The list of objects
-     * @throws Exception Failed to query
+     * @param identifier The identifier
+     * @return The call trace for the identifier
+     * @throws Exception Failed to obtain call trace
      */
     @GET
     @Path("/instance")
