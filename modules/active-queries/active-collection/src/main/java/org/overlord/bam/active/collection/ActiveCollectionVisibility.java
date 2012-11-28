@@ -17,36 +17,20 @@
  */
 package org.overlord.bam.active.collection;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-
 /**
- * This class represents a factory for creating active collections.
+ * This enumerated type represents the visibility of the
+ * active collection.
  *
  */
-@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
-public class ActiveCollectionFactory {
+public enum ActiveCollectionVisibility {
 
     /**
-     * This is the default factory.
+     * The active collection is public.
      */
-    public static final ActiveCollectionFactory DEFAULT_FACTORY=new ActiveCollectionFactory();
+    Public,
     
     /**
-     * This method creates an active collection based on the supplied source.
-     * 
-     * @param acs The source
-     * @return The active collection, or null if unable to create
+     * The active collection is private.
      */
-    public ActiveCollection createActiveCollection(ActiveCollectionSource acs) {
-        ActiveCollection ret=null;
-        
-        if (acs.getType() == ActiveCollectionType.List) {
-            ret = new ActiveList(acs);
-        } else if (acs.getType() == ActiveCollectionType.Map) {
-            ret = new ActiveMap(acs);
-        }
-
-        return (ret);
-    }
-    
+    Private
 }

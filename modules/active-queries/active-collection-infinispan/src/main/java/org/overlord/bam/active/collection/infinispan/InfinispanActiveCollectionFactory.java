@@ -137,8 +137,7 @@ public class InfinispanActiveCollectionFactory extends ActiveCollectionFactory {
                                 +_config+" name="+_cache+"] = "+ac);
                 }
  
-                ret = new InfinispanActiveMap(acs.getName(), ac,
-                        acs.getItemExpiration(), acs.getMaxItems(), acs.getHighWaterMark());
+                ret = new InfinispanActiveMap(acs, ac);
             }
             
         }

@@ -51,30 +51,22 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
     }
     
     /**
-     * This constructor initializes the active list.
+     * This constructor initializes the active collection.
      * 
-     * @param name The name
-     * @param itemExpiration Item expiration time, or 0 if not relevant
-     * @param maxItems Max number of items, or 0 if not relevant
-     * @param highWaterMark Generate warning if number of items exceed high water mark
+     * @param acs The Active Collection source
      */
-    public ActiveList(String name, long itemExpiration, int maxItems,
-                            int highWaterMark) {
-        super(name, itemExpiration, maxItems, highWaterMark);
+    public ActiveList(ActiveCollectionSource acs) {
+        super(acs);
     }
     
     /**
      * This constructor initializes the active list.
      * 
-     * @param name The name
+     * @param acs The Active Collection source
      * @param list The list
-     * @param itemExpiration Item expiration time, or 0 if not relevant
-     * @param maxItems Max number of items, or 0 if not relevant
-     * @param highWaterMark Generate warning if number of items exceed high water mark
      */
-    public ActiveList(String name, java.util.List<Object> list,
-            long itemExpiration, int maxItems, int highWaterMark) {
-        super(name, itemExpiration, maxItems, highWaterMark);
+    public ActiveList(ActiveCollectionSource acs, java.util.List<Object> list) {
+        super(acs);
         
         _list = list;
     }

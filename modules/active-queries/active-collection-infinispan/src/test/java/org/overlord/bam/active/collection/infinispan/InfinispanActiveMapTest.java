@@ -23,6 +23,7 @@ import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 import org.junit.Test;
 import org.overlord.bam.active.collection.ActiveChangeListener;
+import org.overlord.bam.active.collection.ActiveCollectionSource;
 import org.overlord.bam.active.collection.infinispan.InfinispanActiveMapTest.TestChange.TestChangeType;
 
 public class InfinispanActiveMapTest {
@@ -40,7 +41,10 @@ public class InfinispanActiveMapTest {
         
         Cache<Object,Object> cache=cc.getCache("Test");
         
-        InfinispanActiveMap iam=new InfinispanActiveMap("Test", cache, 0, 0, 0);
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        acs.setName("Test");
+        
+        InfinispanActiveMap iam=new InfinispanActiveMap(acs, cache);
         
         TestListener l=new TestListener();
         

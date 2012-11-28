@@ -25,6 +25,7 @@ import org.infinispan.notifications.cachelistener.annotation.CacheEntryModified;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryRemoved;
 import org.infinispan.notifications.cachelistener.event.CacheEntryModifiedEvent;
 import org.infinispan.notifications.cachelistener.event.CacheEntryRemovedEvent;
+import org.overlord.bam.active.collection.ActiveCollectionSource;
 import org.overlord.bam.active.collection.ActiveMap;
 
 /**
@@ -39,15 +40,11 @@ public class InfinispanActiveMap extends ActiveMap {
     /**
      * This constructor initializes the active map.
      * 
-     * @param name The name
+     * @param acs The Active Collection source
      * @param map The map
-     * @param itemExpiration Item expiration time, or 0 if not relevant
-     * @param maxItems Max number of items, or 0 if not relevant
-     * @param highWaterMark Generate warning if number of items exceed high water mark
      */
-    public InfinispanActiveMap(String name, Map<Object, Object> map,
-            long itemExpiration, int maxItems, int highWaterMark) {
-        super(name, map, itemExpiration, maxItems, highWaterMark);
+    public InfinispanActiveMap(ActiveCollectionSource acs, Map<Object, Object> map) {
+        super(acs, map);
         
         // Add listener for change notifications
         if (map instanceof Cache) {

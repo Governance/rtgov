@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.overlord.bam.active.collection.ActiveCollection;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
+import org.overlord.bam.active.collection.ActiveCollectionVisibility;
 import org.overlord.bam.active.collection.QuerySpec;
 import org.overlord.bam.active.collection.util.ActiveCollectionUtil;
 
@@ -147,6 +148,12 @@ public class RESTActiveCollectionServer {
         }
 
         if (actColl != null) {
+            
+            // Check if active collection is public
+            if (actColl.getVisibility() != ActiveCollectionVisibility.Public) {
+                LOG.warning("Attempt to access restricted collection: "+qs);
+                throw new Exception("Access to collection is restricted");
+            }
             
             java.io.ByteArrayOutputStream out=new java.io.ByteArrayOutputStream();
         

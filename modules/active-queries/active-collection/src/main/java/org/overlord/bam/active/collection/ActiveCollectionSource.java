@@ -41,6 +41,7 @@ public class ActiveCollectionSource {
     
     private String _name=null;
     private ActiveCollectionType _type=ActiveCollectionType.List;
+    private ActiveCollectionVisibility _visibility=ActiveCollectionVisibility.Public;
     
     private ActiveCollectionFactory _factory=null;
     
@@ -91,6 +92,7 @@ public class ActiveCollectionSource {
     public ActiveCollectionSource(ActiveCollectionSource source) {
         _name = source._name;
         _type = source._type;
+        _visibility = source._visibility;
         _itemExpiration = source._itemExpiration;
         _maxItems = source._maxItems;
         _highWaterMark = source._highWaterMark;
@@ -151,6 +153,25 @@ public class ActiveCollectionSource {
      */
     public void setType(ActiveCollectionType type) {
         _type = type;
+    }
+
+    /**
+     * This method returns the active collection visibility associated
+     * with the source.
+     * 
+     * @return The visibility
+     */
+    public ActiveCollectionVisibility getVisibility() {
+        return (_visibility);
+    }
+    
+    /**
+     * This method sets the active collection visibility.
+     * 
+     * @param visibility The visibility
+     */
+    public void setVisibility(ActiveCollectionVisibility visibility) {
+        _visibility = visibility;
     }
 
     /**

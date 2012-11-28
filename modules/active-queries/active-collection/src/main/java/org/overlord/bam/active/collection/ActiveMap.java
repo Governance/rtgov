@@ -50,30 +50,22 @@ public class ActiveMap extends ActiveCollection
     }
     
     /**
-     * This constructor initializes the active map.
+     * This constructor initializes the active collection.
      * 
-     * @param name The name
-     * @param itemExpiration Item expiration time, or 0 if not relevant
-     * @param maxItems Max number of items, or 0 if not relevant
-     * @param highWaterMark Generate warning if number of items exceed high water mark
+     * @param acs The Active Collection source
      */
-    public ActiveMap(String name, long itemExpiration, int maxItems,
-                            int highWaterMark) {
-        super(name, itemExpiration, maxItems, highWaterMark);
+    public ActiveMap(ActiveCollectionSource acs) {
+        super(acs);
     }
     
     /**
      * This constructor initializes the active map.
      * 
-     * @param name The name
+     * @param acs The Active Collection source
      * @param map The map
-     * @param itemExpiration Item expiration time, or 0 if not relevant
-     * @param maxItems Max number of items, or 0 if not relevant
-     * @param highWaterMark Generate warning if number of items exceed high water mark
      */
-    public ActiveMap(String name, java.util.Map<Object,Object> map,
-            long itemExpiration, int maxItems, int highWaterMark) {
-        super(name, itemExpiration, maxItems, highWaterMark);
+    public ActiveMap(ActiveCollectionSource acs, java.util.Map<Object,Object> map) {
+        super(acs);
         
         _map = map;
     }

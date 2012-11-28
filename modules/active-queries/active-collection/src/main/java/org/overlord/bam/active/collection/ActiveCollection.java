@@ -27,6 +27,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
                           java.lang.Iterable<Object> {
 
     private String _name=null;
+    private ActiveCollectionVisibility _visibility=null;
     private java.util.List<ActiveChangeListener> _listeners=
                     new java.util.ArrayList<ActiveChangeListener>();
     private ActiveCollectionAdapter _adapter=null;
@@ -47,17 +48,14 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
     /**
      * This constructor initializes the active collection.
      * 
-     * @param name The name
-     * @param itemExpiration Item expiration time, or 0 if not relevant
-     * @param maxItems Max number of items, or 0 if not relevant
-     * @param highWaterMark Generate warning if number of items exceed high water mark
+     * @param acs The Active Collection source
      */
-    public ActiveCollection(String name, long itemExpiration, int maxItems,
-                            int highWaterMark) {
-        _name = name;
-        _itemExpiration = itemExpiration;
-        _maxItems = maxItems;
-        _highWaterMark = highWaterMark;
+    public ActiveCollection(ActiveCollectionSource acs) {
+        _name = acs.getName();
+        _visibility = acs.getVisibility();
+        _itemExpiration = acs.getItemExpiration();
+        _maxItems = acs.getMaxItems();
+        _highWaterMark = acs.getHighWaterMark();
     }
     
     /**
@@ -72,6 +70,8 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
         this(name);
         
         _adapter = new ActiveCollectionAdapter(parent, predicate);
+        
+        _visibility = parent.getVisibility();
     }
 
     /**
@@ -81,6 +81,24 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
      */
     public String getName() {
         return (_name);
+    }
+
+    /**
+     * This method returns the visibility.
+     * 
+     * @return The visibility
+     */
+    public ActiveCollectionVisibility getVisibility() {
+        return (_visibility);
+    }
+    
+    /**
+     * This method sets the visibility.
+     * 
+     * @param visibility The visibility
+     */
+    protected void setVisibility(ActiveCollectionVisibility visibility) {
+        _visibility = visibility;
     }
 
     /**
