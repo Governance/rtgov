@@ -9,8 +9,6 @@
        <property name="deploymentExportPath">target/</property>
    </engine>
  
-	<defaultProtocol type="Servlet 2.5" />
-
 	<container qualifier="jboss7" default="true">
 		<protocol type="Servlet 3.0">
 			<property name="executionType">MANAGED</property>

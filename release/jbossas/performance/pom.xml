@@ -13,6 +13,15 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.bam.release.jbossas</groupId>
+			<artifactId>module</artifactId>
+			<type>zip</type>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
 	<modules>
 		<module>app</module>
 		<module>acs</module>
