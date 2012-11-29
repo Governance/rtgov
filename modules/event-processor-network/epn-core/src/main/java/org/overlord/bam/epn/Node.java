@@ -253,6 +253,11 @@ public class Node {
                 try {
                     java.io.Serializable processed=getEventProcessor().process(source, event, retriesLeft);
                     
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.log(Level.FINEST, "Processed event (retriesLeft="+retriesLeft+"): "
+                                    +event+" processed="+processed);
+                    }
+
                     if (processed != null) {
                         if (results == null) {
                             results = new java.util.ArrayList<Serializable>();

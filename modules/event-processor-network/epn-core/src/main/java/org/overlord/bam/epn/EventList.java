@@ -129,6 +129,11 @@ public class EventList implements java.io.Serializable, java.lang.Iterable<java.
         if (_list != null) {
             return ((Iterator<Serializable>)_list.iterator());
         }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Event list is null");
+        }
+        
         return (null);
     }
     

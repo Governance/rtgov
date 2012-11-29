@@ -143,30 +143,33 @@ public final class ServiceDefinitionUtil {
             if (at1 instanceof RequestReceived) {
                 RequestReceived rqr=(RequestReceived)at1;
                 
-                // Locate the matching response sent activity
-                for (int j=i+1; j < to; j++) {
-                    ActivityType at2=actUnit.getActivityTypes().get(j);
-                    
-                    if (at2 instanceof ResponseSent
-                            && ((ResponseSent)at2).getReplyToId().equals(
-                                    rqr.getMessageId())) {
-                        ResponseSent rps=(ResponseSent)at2;
+                if (rqr.getMessageId() != null) {
+                    // Locate the matching response sent activity
+                    for (int j=i+1; j < to; j++) {
+                        ActivityType at2=actUnit.getActivityTypes().get(j);
                         
-                        // Process the activities related to this
-                        // matched interaction
-                        MEPDefinition resp=processServiceInvoked(sdefs, rqr, rps);
-                        
-                        // Check if any invocations are performed in the
-                        // scope of this req/resp
-                        checkForExternalInvocations(sdefs, actUnit, resp, i+1, j);
-                        
-                        // Advance 'i' so only checks after the sent
-                        // response
-                        i = j;
-                        
-                        // Escape from this loop, as the response has
-                        // been found
-                        break;
+                        if (at2 instanceof ResponseSent
+                                && ((ResponseSent)at2).getReplyToId() != null
+                                && ((ResponseSent)at2).getReplyToId().equals(
+                                        rqr.getMessageId())) {
+                            ResponseSent rps=(ResponseSent)at2;
+                            
+                            // Process the activities related to this
+                            // matched interaction
+                            MEPDefinition resp=processServiceInvoked(sdefs, rqr, rps);
+                            
+                            // Check if any invocations are performed in the
+                            // scope of this req/resp
+                            checkForExternalInvocations(sdefs, actUnit, resp, i+1, j);
+                            
+                            // Advance 'i' so only checks after the sent
+                            // response
+                            i = j;
+                            
+                            // Escape from this loop, as the response has
+                            // been found
+                            break;
+                        }
                     }
                 }
             }

@@ -1,29 +1,29 @@
 {
   "name" : "CustomEventsEPN",
   "subscriptions" : [ {
-    "nodeName" : "SOAEvents",
-    "subject" : "ActivityUnits"
+    "nodeName" : "CreateCustomEvents",
+    "subject" : "SOAEvents"
   } ],
   "nodes" : [
     {
-      "name" : "SOAEvents",
+      "name" : "CreateCustomEvents",
       "sourceNodes" : [ ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.SOAActivityTypeEventDetector"
+        "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.CreateCustomActivityEventProcessor"
       },
       "predicate" : null,
       "notifications" : [ ]
     },{
-      "name" : "CustomEvents",
-      "sourceNodes" : [ "SOAEvents" ],
+      "name" : "HandleCustomEvents",
+      "sourceNodes" : [ "CreateCustomEvents" ],
       "destinationSubjects" : [ ],
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.CustomActivityEventProcessor"
+        "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.HandleCustomActivityEventProcessor"
       },
       "predicate" : null,
       "notifications" : [ {

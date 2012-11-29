@@ -21,17 +21,23 @@ then
 		situation.setSubject($rt.getServiceType()+"/"+$rt.getOperation());
 		situation.setTimestamp(System.currentTimeMillis());
 		
+		String serviceName=$rt.getServiceType();
+		
+		if (serviceName.startsWith("{")) {
+			serviceName = javax.xml.namespace.QName.valueOf(serviceName).getLocalPart();
+		}
+		
 		if ($rt.getAverage() > 400) {
-			situation.setDescription("Service exceeded maximum response time of 400 ms");
+			situation.setDescription(serviceName+" exceeded maximum response time of 400 ms");
 			situation.setSeverity(Situation.Severity.Critical);
 		} else if ($rt.getAverage() > 320) {
-			situation.setDescription("Service exceeded response time of 320 ms");
+			situation.setDescription(serviceName+" exceeded response time of 320 ms");
 			situation.setSeverity(Situation.Severity.High);
 		} else if ($rt.getAverage() > 260) {
-			situation.setDescription("Service exceeded response time of 260 ms");
+			situation.setDescription(serviceName+" exceeded response time of 260 ms");
 			situation.setSeverity(Situation.Severity.Medium);
 		} else {
-			situation.setDescription("Service exceeded response time of 200 ms");
+			situation.setDescription(serviceName+" exceeded response time of 200 ms");
 			situation.setSeverity(Situation.Severity.Low);
 		}
 		

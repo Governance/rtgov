@@ -27,7 +27,7 @@ import org.overlord.bam.tests.platforms.jbossas.customevent.data.CustomActivityE
  * interface, used to receive custom events.
  *
  */
-public class CustomActivityEventProcessor extends org.overlord.bam.epn.EventProcessor {
+public class HandleCustomActivityEventProcessor extends org.overlord.bam.epn.EventProcessor {
 
     /**
      * {@inheritDoc}
@@ -48,6 +48,8 @@ public class CustomActivityEventProcessor extends org.overlord.bam.epn.EventProc
                     ret = event;
                 }
             }
+        } else {
+            System.out.println(">>> NOT CUSTOM ACTIVITY EVENT: "+event);
         }
         
         return (ret);

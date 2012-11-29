@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.switchyard.quickstarts.demos.orders;
+package org.overlord.bam.switchyard;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -111,13 +111,10 @@ public class ExchangeInterceptor implements Auditor {
             return;
         }
         
-        if (exchange.getProvider() == null) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Unable to obtain activity information from exchange, "
-                        +"as no provider - probably an exception: "
+        if (exchange.getProvider() == null
+                && LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("No provider specified - probably an exception: "
                         +exchange.getMessage().getContent());
-            }
-            return;
         }
         
         if (_activityCollector != null) {
@@ -141,8 +138,7 @@ public class ExchangeInterceptor implements Auditor {
             }
             
             // Extract service type and operation from the consumer
-            // (service reference), as provider is not available until
-            // request handled
+            // (service reference), as provider is not always available
             QName serviceType=exchange.getConsumer().getName();
             String opName=exchange.getContract().getConsumerOperation().getName();
             
@@ -162,7 +158,8 @@ public class ExchangeInterceptor implements Auditor {
                     record(exchange, contentType, sent); 
                 }
                 
-                if (!exchange.getProvider().getProviderMetadata().isBinding()) {
+                if (exchange.getProvider() == null
+                        || !exchange.getProvider().getProviderMetadata().isBinding()) {
                     RequestReceived recvd=new RequestReceived();
                     
                     recvd.setServiceType(serviceType.toString());                
@@ -173,7 +170,8 @@ public class ExchangeInterceptor implements Auditor {
                 }
                 
             } else if (exchange.getPhase() == ExchangePhase.OUT) {
-                if (!exchange.getProvider().getProviderMetadata().isBinding()) {
+                if (exchange.getProvider() == null
+                        || !exchange.getProvider().getProviderMetadata().isBinding()) {
                     ResponseSent sent=new ResponseSent();
                                     
                     sent.setServiceType(serviceType.toString());                

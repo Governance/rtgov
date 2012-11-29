@@ -114,6 +114,18 @@ public class JBossASCustomEventsResultsTest {
                         copyToTmpFile(archiveFiles[0],"custom-events-monitor.war"));
     }
     
+    @Deployment(name="overlord-bam-epn", order=7)
+    public static WebArchive createDeployment7() {
+        String version=System.getProperty("bam.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.bam.content:overlord-bam-epn:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class,
+                        copyToTmpFile(archiveFiles[0],"overlord-bam-epn.war"));
+    }
+    
     private static java.io.File copyToTmpFile(java.io.File source, String filename) {
         String tmpdir=System.getProperty("java.io.tmpdir");
         java.io.File dir=new java.io.File(tmpdir+java.io.File.separator+"bamtests"+System.currentTimeMillis());
