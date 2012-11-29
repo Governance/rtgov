@@ -220,6 +220,10 @@ public class JBossASCustomEventsResultsTest {
             // Reset event list
             getEvents();
             
+            java.util.List<?> acsresults=getACSEvents();
+            
+            int acsSize=acsresults.size();
+            
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
             
@@ -272,18 +276,101 @@ public class JBossASCustomEventsResultsTest {
                 fail("12 events expected, but got: "+events.size());
             }
             
-            java.util.List<?> acsresults=getACSEvents();
+            acsresults = getACSEvents();
             
             if (acsresults == null) {
                 fail("No acsresults returned");
             }
             
-            if (acsresults.size() != 2) {
-                fail("2 acsresults expected, but got: "+acsresults.size());
+            if (acsresults.size() != acsSize+2) {
+                fail("Size of acs results should be 2 more: was "
+                                +acsSize+" now "+acsresults.size());
             }
             
         } catch (Exception e) {
             fail("Failed to invoke service via SOAP: "+e);
         }
     }
+
+    @Test
+    @OperateOnDeployment(value="monitor")
+    public void testActivityEventsProcessed() {
+        
+        try {
+            
+            // Pre-request events, to initialize the rest service and
+            // reset the event list
+            getEvents();
+            
+            java.util.List<?> acsresults=getACSEvents();
+            
+            int acsSize=acsresults.size();
+            
+            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
+            SOAPConnection con=factory.createConnection();
+            
+            java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
+            
+            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
+                        "   <soap:Body>"+
+                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
+                        "            <order>"+
+                        "                <orderId>PO-19838-XYZ</orderId>"+
+                        "                <itemId>BUTTER</itemId>"+
+                        "                <quantity>200</quantity>"+
+                        "                <customer>Fred</customer>"+
+                        "            </order>"+
+                        "        </orders:submitOrder>"+
+                        "    </soap:Body>"+
+                        "</soap:Envelope>";
+            
+            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
+            
+            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
+            
+            is.close();
+            
+            SOAPMessage response=con.call(request, url);
+
+            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+            
+            response.writeTo(baos);
+            
+            String resp=baos.toString();
+
+            baos.close();
+            
+            if (!resp.contains("<accepted>true</accepted>")) {
+                fail("Order was not accepted: "+resp);
+            }
+            
+            // Wait for events to propagate
+            Thread.sleep(2000);
+            
+            java.util.List<?> events=getEvents();
+            
+            if (events == null) {
+                fail("No events returned");
+            }
+            
+            if (events.size() != 10) {
+                fail("10 events expected, but got: "+events.size());
+            }
+            
+            acsresults = getACSEvents();
+            
+            if (acsresults == null) {
+                fail("No acsresults returned");
+            }
+            
+            if (acsresults.size() != acsSize) {
+                fail("Size if acs results should not have changed: was "
+                                +acsSize+" now "+acsresults.size());
+            }
+            
+        } catch (Exception e) {
+            fail("Failed to invoke service via SOAP: "+e);
+        }
+    }
+    
 }
