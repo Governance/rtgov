@@ -37,6 +37,7 @@ import javax.persistence.DiscriminatorType;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.overlord.bam.activity.model.app.LogMessage;
 import org.overlord.bam.activity.model.bpm.ProcessCompleted;
 import org.overlord.bam.activity.model.bpm.ProcessStarted;
 import org.overlord.bam.activity.model.mom.MessageReceived;
@@ -58,7 +59,8 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
     @Type(value=ResponseReceived.class),
     @Type(value=ResponseSent.class),
     @Type(value=ProcessCompleted.class),
-    @Type(value=ProcessStarted.class) })
+    @Type(value=ProcessStarted.class),
+    @Type(value=LogMessage.class) })
 @Entity
 @IdClass(value=ActivityTypeId.class)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)

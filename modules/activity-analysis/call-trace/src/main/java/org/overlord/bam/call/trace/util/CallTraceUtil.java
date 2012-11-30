@@ -17,6 +17,8 @@
  */
 package org.overlord.bam.call.trace.util;
 
+import java.beans.PropertyDescriptor;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -85,4 +87,29 @@ public final class CallTraceUtil {
         return (ret);
     }
 
+    /**
+     * This method determines whether the supplied property
+     * descriptor should be included in the activity type event's
+     * description.
+     * 
+     * @param pd The property descriptor
+     * @return Whether the property's description should be included
+     */
+    public static boolean shouldIncludeProperty(PropertyDescriptor pd) {
+        boolean ret=false;
+        
+        if (pd.getPropertyType().isPrimitive() || pd.getPropertyType() == String.class) {
+            
+            // Check excluded names
+            if (pd.getName().equals("timestamp")
+                    || pd.getName().startsWith("unit")) {
+                return (false);
+            }
+            
+            ret = true;
+        }
+                
+        return (ret);
+    }
+    
 }

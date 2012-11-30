@@ -29,17 +29,20 @@ import java.util.logging.Logger;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
+import org.overlord.bam.activity.model.app.LogMessage;
 import org.overlord.bam.activity.model.soa.RPCActivityType;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
 import org.overlord.bam.activity.server.ActivityServer;
+import org.overlord.bam.call.trace.descriptors.TaskDescriptorFactory;
 import org.overlord.bam.call.trace.model.Call;
 import org.overlord.bam.call.trace.model.CallTrace;
 import org.overlord.bam.call.trace.model.Task;
 import org.overlord.bam.call.trace.model.TraceNode;
 import org.overlord.bam.call.trace.model.TraceNode.Status;
+import org.overlord.bam.call.trace.util.CallTraceUtil;
 
 /**
  * This class is responsible for deriving a call trace from
@@ -459,28 +462,21 @@ public class CallTraceProcessor {
         // Transfer properties
         ret.getProperties().putAll(at.getProperties());
         
-        // Construct description
-        StringBuffer buf=new StringBuffer();
-        
-        buf.append(at.getClass().getSimpleName());
-        
         try {
             BeanInfo bi=java.beans.Introspector.getBeanInfo(at.getClass());
             
             for (PropertyDescriptor pd : bi.getPropertyDescriptors()) {
                 
-                if (shouldIncludeProperty(pd)) {
-                    buf.append(" "+pd.getDisplayName());
-                    
+                if (CallTraceUtil.shouldIncludeProperty(pd)) {
                     try {
                         Object value=pd.getReadMethod().invoke(at);
-                        buf.append("="+value);
-                        
+                         
                         if (value != null) {
                             ret.getProperties().put(pd.getDisplayName(), value.toString());
                         }
                     } catch (Exception ex) {
-                        buf.append("=<unavailable>");
+                        LOG.log(Level.SEVERE, "Failed to get property '"
+                                +pd.getDisplayName()+"'", ex);
                     }
                 }
             }
@@ -491,33 +487,34 @@ public class CallTraceProcessor {
                         at.getClass().getName()), e);
         }
         
-        ret.setDescription(buf.toString());
+        // Set the description
+        ret.setDescription(TaskDescriptorFactory.getTaskDescriptor(at).getDescription(at));
+        
+        ret.setStatus(getStatus(at));
         
         return (ret);
     }
     
     /**
-     * This method determines whether the supplied property
-     * descriptor should be included in the activity type event's
-     * description.
+     * This method determines the status for the supplied
+     * activity type.
      * 
-     * @param pd The property descriptor
-     * @return Whether the property's description should be included
+     * @param at The activity type
+     * @return The status
      */
-    protected static boolean shouldIncludeProperty(PropertyDescriptor pd) {
-        boolean ret=false;
+    protected static Status getStatus(ActivityType at) {
+        Status ret=Status.Success;
         
-        if (pd.getPropertyType().isPrimitive() || pd.getPropertyType() == String.class) {
+        if (at instanceof LogMessage) {
+            LogMessage lm=(LogMessage)at;
             
-            // Check excluded names
-            if (pd.getName().equals("timestamp")
-                    || pd.getName().startsWith("unit")) {
-                return (false);
+            if (lm.getLevel() == LogMessage.Level.Warning) {
+                ret = Status.Warning;
+            } else if (lm.getLevel() == LogMessage.Level.Error) {
+                ret = Status.Fail;
             }
-            
-            ret = true;
         }
-                
+        
         return (ret);
     }
     

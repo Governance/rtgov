@@ -22,12 +22,18 @@ package org.switchyard.quickstarts.demos.orders;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import org.overlord.bam.switchyard.ActivityReporter;
 import org.switchyard.component.bean.Service;
 
 @Service(InventoryService.class)
 public class InventoryServiceBean implements InventoryService {
 
     private final Map<String, Item> _inventory = new HashMap<String, Item>();
+    
+    @Inject
+    private ActivityReporter _reporter=null;
     
     public InventoryServiceBean() {
         Item butter = new Item()
@@ -49,10 +55,16 @@ public class InventoryServiceBean implements InventoryService {
     public Item lookupItem(String itemId) throws ItemNotFoundException {
         Item item = _inventory.get(itemId);
         if (item == null) {
+            if (_reporter != null) {
+                _reporter.logError("No item found for id '"+itemId+"'");
+            }
             throw new ItemNotFoundException("We don't got any " + itemId);
         }
         
         if (itemId.equals("JAM")) {
+            if (_reporter != null) {
+                _reporter.logWarning("Going to take a bit of time ....");
+            }
             try {
                 Thread.sleep(500);
             } catch (Exception e) {
@@ -60,6 +72,10 @@ public class InventoryServiceBean implements InventoryService {
             }
         }
         
+        if (_reporter != null) {
+            _reporter.logInfo("Found the item '"+itemId+"'");
+        }
+
         return item;
     }
 }
