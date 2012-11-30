@@ -81,6 +81,12 @@
 					"expression":"amount"
 				}
 			}]
+		},
+		"java:org.switchyard.quickstarts.demos.orders.ItemNotFoundException":{
+			"script":{
+				"type":"mvel",
+				"expression":"activity.fault = \"ItemNotFound\""
+			}
 		}
 	}
 }]

@@ -1,8 +1,12 @@
+String customer=event.properties.get("customer");
+
+if (customer == null) {
+	return;
+}
 
 if (event.operation == "submitOrder") {
 	
 	double total=event.properties.get("total");
-	String customer=event.properties.get("customer");
 	
 	cm = epn.getService("CacheManager");
 	
@@ -38,7 +42,6 @@ if (event.operation == "submitOrder") {
 } else if (event.operation == "makePayment") {
 
 	double amount=event.properties.get("amount");
-	String customer=event.properties.get("customer");
 		
 	cm = epn.getService("CacheManager");
 	

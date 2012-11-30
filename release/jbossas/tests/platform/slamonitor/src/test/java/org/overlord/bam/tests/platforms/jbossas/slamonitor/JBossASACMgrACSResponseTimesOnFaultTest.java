@@ -33,7 +33,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.bam.active.collection.QuerySpec;
@@ -131,7 +130,7 @@ public class JBossASACMgrACSResponseTimesOnFaultTest {
     }
     
     @Test @OperateOnDeployment("overlord-bam")
-    @Ignore
+    @org.junit.Ignore
     public void testResponseTimes() {
         
         try {

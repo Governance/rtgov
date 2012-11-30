@@ -128,6 +128,11 @@ public class ExchangeInterceptor implements Auditor {
             
             for (Property p : exchange.getContext().getProperties(
                     org.switchyard.Scope.valueOf(exchange.getPhase().toString()))) {
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Switchyard property: name="+p.getName()+" value="+p.getValue());
+                }
+                
                 if (p.getName().equals("org.switchyard.messageId")) {
                     messageId = (String)p.getValue();
                 } else if (p.getName().equals("org.switchyard.relatesTo")) {

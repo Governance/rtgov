@@ -39,6 +39,8 @@ public class TypeProcessor {
     private java.util.List<PropertyEvaluator> _propertyEvaluators=
             new java.util.ArrayList<PropertyEvaluator>();
     
+    private ScriptEvaluator _scriptEvaluator=null;
+    
     /**
      * Initialize the type processor.
      * 
@@ -55,6 +57,10 @@ public class TypeProcessor {
         
         for (PropertyEvaluator pe : _propertyEvaluators) {
             pe.getEvaluator().init();
+        }
+        
+        if (_scriptEvaluator != null) {
+            _scriptEvaluator.init();
         }
     }
     
@@ -115,6 +121,24 @@ public class TypeProcessor {
     }
     
     /**
+     * This method returns the script evaluator.
+     * 
+     * @return The script evaluator
+     */
+    public ScriptEvaluator getScript() {
+        return (_scriptEvaluator);
+    }
+    
+    /**
+     * This method sets the script evaluator.
+     * 
+     * @param script The script evaluator
+     */
+    public void setScript(ScriptEvaluator script) {
+        _scriptEvaluator = script;
+    }
+    
+    /**
      * This method processes the supplied information to extract the
      * context and property details for association with the supplied
      * activity type.
@@ -158,6 +182,10 @@ public class TypeProcessor {
             }
         }
         
+        if (getScript() != null) {
+            getScript().evaluate(information, actType);
+        }
+        
         if (getRepresentation() != null) {
             ret = getRepresentation().evaluate(information);
         }
@@ -181,6 +209,10 @@ public class TypeProcessor {
         
         for (PropertyEvaluator pe : _propertyEvaluators) {
             pe.getEvaluator().close();
+        }
+        
+        if (_scriptEvaluator != null) {
+            _scriptEvaluator.close();
         }
     }
 
