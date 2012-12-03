@@ -58,7 +58,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.bam</Dependencies>
+							<Dependencies>deployment.overlord-bam.war</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

@@ -19,6 +19,11 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.bam.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.switchyard</groupId>
 			<artifactId>switchyard-bus-camel</artifactId>
 			<scope>provided</scope>

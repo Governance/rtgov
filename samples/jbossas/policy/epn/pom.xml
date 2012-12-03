@@ -30,12 +30,8 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.activity-analysis</groupId>
-			<artifactId>analytics</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
+
+		<!-- The following dependencies are only required for testing the EPN -->
 
 		<dependency>
 			<groupId>org.jboss.jbossts</groupId>
@@ -102,7 +98,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.bam</Dependencies>
+							<Dependencies>deployment.overlord-bam.war</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

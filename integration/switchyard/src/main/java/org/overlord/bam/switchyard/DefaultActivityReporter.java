@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.switchyard.internal;
+package org.overlord.bam.switchyard;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +26,7 @@ import javax.naming.InitialContext;
 import org.overlord.bam.activity.collector.ActivityCollector;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.app.LogMessage;
-import org.overlord.bam.switchyard.ActivityReporter;
+import org.overlord.bam.switchyard.internal.ExchangeInterceptor;
 
 /**
  * This interface represents the capability for recording

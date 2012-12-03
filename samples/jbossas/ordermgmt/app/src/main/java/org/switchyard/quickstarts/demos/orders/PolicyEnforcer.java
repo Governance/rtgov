@@ -20,13 +20,10 @@ package org.switchyard.quickstarts.demos.orders;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.naming.InitialContext;
-import javax.xml.namespace.QName;
-
-import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveMap;
 import org.overlord.bam.activity.util.ActivityUtil;
+import org.overlord.bam.switchyard.CollectionManager;
+import org.overlord.bam.switchyard.DefaultCollectionManager;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangeHandler;
 import org.switchyard.ExchangePhase;
@@ -40,33 +37,21 @@ public class PolicyEnforcer implements ExchangeHandler {
 
     private static final Logger LOG=Logger.getLogger(PolicyEnforcer.class.getName());
     
-    private static final String ACTIVE_COLLECTION_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
-
-    private ActiveCollectionManager _activeCollectionManager=null;
+    private CollectionManager _collectionManager=new DefaultCollectionManager();
+    
     private ActiveMap _principals=null;
     
     private boolean _initialized=false;
     
-    @PostConstruct
     protected void init() {
-        if (_activeCollectionManager == null) {
-            try {
-                InitialContext ctx=new InitialContext();
                 
-                _activeCollectionManager = (ActiveCollectionManager)ctx.lookup(ACTIVE_COLLECTION_MANAGER);
-                
-                if (_activeCollectionManager != null) {
-                    _principals = (ActiveMap)
-                            _activeCollectionManager.getActiveCollection(PRINCIPALS);
-                }
-            } catch(Exception e) {
-                LOG.log(Level.SEVERE, "Failed to initialize active collection manager", e);
-            }
+        if (_collectionManager != null) {
+            _principals = _collectionManager.getMap(PRINCIPALS);
         }
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("*********** Policy Enforcer Initialized with acm="
-                        +_activeCollectionManager+" ac="+_principals);
+                        +_collectionManager+" ac="+_principals);
         }
         
         _initialized = true;
@@ -82,18 +67,12 @@ public class PolicyEnforcer implements ExchangeHandler {
         }
         
         if (_principals != null) {            
-            String contentType=null;
+            Property p = exchange.getContext().getProperty("org.switchyard.contentType",
+                    org.switchyard.Scope.valueOf(exchange.getPhase().toString()));
             
-            for (Property p : exchange.getContext().getProperties(
-                    org.switchyard.Scope.valueOf(exchange.getPhase().toString()))) {
-                if (p.getName().equals("org.switchyard.contentType")) {
-                    contentType = ((QName)p.getValue()).toString();
-                }
-            }
-            
-            if (exchange.getPhase() == ExchangePhase.IN
-                    && contentType != null
-                    && contentType.equals("{urn:switchyard-quickstart-demo:orders:1.0}submitOrder")) {
+            if (p != null && exchange.getPhase() == ExchangePhase.IN
+                    && p.getValue().toString().equals(
+                            "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder")) {
 
                 String customer=getCustomer(exchange);
                        
@@ -131,8 +110,6 @@ public class PolicyEnforcer implements ExchangeHandler {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("********* Fault="+exchange);
         }
-        
-        // TODO: Handle faults
     }
 
     /**
