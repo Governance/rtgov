@@ -799,7 +799,12 @@ public class CallTraceProcessor {
             if (call != null) {
                 _completedCallStack.push(call);
                 
-                if (status != Status.Success) {
+                // Only overwrite the status of the call, if the lowest status
+                // of its contained task nodes is not success, and it is
+                // a lower status than warning (i.e. to avoid reducing the
+                // status of the call node based on its contents)
+                if (status != Status.Success
+                        && call.getStatus().ordinal() < Status.Warning.ordinal()) {
                     call.setStatus(Status.Warning);
                 }
             }
