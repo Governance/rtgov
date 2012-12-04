@@ -8,6 +8,13 @@
 		<class>org.overlord.bam.activity.model.ActivityUnit</class>
 		<class>org.overlord.bam.activity.model.ActivityType</class>
 		<class>org.overlord.bam.activity.model.Context</class>
+		<class>org.overlord.bam.activity.model.app.LogMessage</class>
+		<class>org.overlord.bam.activity.model.bpm.BPMActivityType</class>
+		<class>org.overlord.bam.activity.model.bpm.ProcessCompleted</class>
+		<class>org.overlord.bam.activity.model.bpm.ProcessStarted</class>
+		<class>org.overlord.bam.activity.model.mom.MessageExchange</class>
+		<class>org.overlord.bam.activity.model.mom.MessageReceived</class>
+		<class>org.overlord.bam.activity.model.mom.MessageSent</class>
 		<class>org.overlord.bam.activity.model.soa.RPCActivityType</class>
 		<class>org.overlord.bam.activity.model.soa.RequestSent</class>
 		<class>org.overlord.bam.activity.model.soa.RequestReceived</class>
@@ -28,6 +35,13 @@
 		<class>org.overlord.bam.activity.model.ActivityUnit</class>
 		<class>org.overlord.bam.activity.model.ActivityType</class>
 		<class>org.overlord.bam.activity.model.Context</class>
+		<class>org.overlord.bam.activity.model.app.LogMessage</class>
+		<class>org.overlord.bam.activity.model.bpm.BPMActivityType</class>
+		<class>org.overlord.bam.activity.model.bpm.ProcessCompleted</class>
+		<class>org.overlord.bam.activity.model.bpm.ProcessStarted</class>
+		<class>org.overlord.bam.activity.model.mom.MessageExchange</class>
+		<class>org.overlord.bam.activity.model.mom.MessageReceived</class>
+		<class>org.overlord.bam.activity.model.mom.MessageSent</class>
 		<class>org.overlord.bam.activity.model.soa.RPCActivityType</class>
 		<class>org.overlord.bam.activity.model.soa.RequestSent</class>
 		<class>org.overlord.bam.activity.model.soa.RequestReceived</class>

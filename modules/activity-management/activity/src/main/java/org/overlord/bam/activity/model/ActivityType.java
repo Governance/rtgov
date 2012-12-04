@@ -33,6 +33,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.InheritanceType;
 import javax.persistence.DiscriminatorType;
+import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
@@ -68,6 +69,7 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
     name="type",
     discriminatorType=DiscriminatorType.STRING
 )
+@Table(name="BAM_ACTIVITIES")
 public abstract class ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
@@ -178,6 +180,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * @return The context
      */
     @ElementCollection()
+    @CollectionTable(name="BAM_ACTIVITY_CONTEXT")
     public java.util.List<Context> getContext() {
         return (_contexts);
     }
@@ -199,7 +202,7 @@ public abstract class ActivityType implements java.io.Externalizable {
     @ElementCollection(targetClass=String.class)
     @MapKeyColumn(name="name")
     @Column(name="value")
-    @CollectionTable(name="activity_properties",joinColumns={
+    @CollectionTable(name="BAM_ACTIVITY_PROPERTIES",joinColumns={
             @JoinColumn(name="unit_id",referencedColumnName="unitId"),
             @JoinColumn(name="unit_index",referencedColumnName="unitIndex")})
     public java.util.Map<String,String> getProperties() {

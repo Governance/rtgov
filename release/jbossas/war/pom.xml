@@ -31,13 +31,29 @@
 					</exclusions>
 				</dependency>
 			</dependencies>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+		 					<archive>
+								<manifestEntries>
+									<Dependencies>org.overlord.bam export</Dependencies>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<profile>
 			<id>ActivityStoreJPA</id>
 			<activation>
 				<property>
-					<name>activityStore</name>
-					<value>jpa</value>
+					<name>db</name>
 				</property>
 			</activation>
 
@@ -54,6 +70,39 @@
 					</exclusions>
 				</dependency>
 			</dependencies>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-war-plugin</artifactId>
+						<configuration>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+		 					<archive>
+								<manifestEntries>
+									<Dependencies>org.overlord.bam export</Dependencies>
+								</manifestEntries>
+							</archive>
+							<webResources>
+								<resource>
+									<directory>db/${db}</directory>
+									<targetPath>WEB-INF/classes/META-INF</targetPath>
+									<includes>
+										<include>persistence.xml</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>db/${db}</directory>
+									<targetPath>META-INF</targetPath>
+									<includes>
+										<include>bam-ds.xml</include>
+									</includes>
+								</resource>
+							</webResources>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 
@@ -229,6 +278,8 @@
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
+
+<!--
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -237,12 +288,13 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.bam export, org.infinispan export</Dependencies>
+							<Dependencies>org.overlord.bam export</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
+-->
 		<pluginManagement>
 			<plugins>
 				<plugin>

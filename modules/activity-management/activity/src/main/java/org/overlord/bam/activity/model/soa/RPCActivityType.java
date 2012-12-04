@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -167,6 +169,8 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      * 
      * @return The content
      */
+    @Column(length=10240)
+    @Lob
     public String getContent() {
         return (_content);
     }

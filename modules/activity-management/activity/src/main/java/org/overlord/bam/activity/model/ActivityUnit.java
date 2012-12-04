@@ -32,6 +32,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
+import javax.persistence.Table;
 
 /**
  * This class represents an activity unit, which generally relates
@@ -39,6 +40,7 @@ import javax.persistence.CascadeType;
  *
  */
 @Entity
+@Table(name="BAM_ACTIVITY_UNITS")
 public class ActivityUnit implements java.io.Externalizable {
 
     private static final int VERSION = 1;
