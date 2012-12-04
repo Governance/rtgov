@@ -19,6 +19,7 @@ package org.overlord.bam.activity.store.jpa;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
@@ -35,9 +36,9 @@ public class JPAActivityStoreTest {
     private static final String CONV_ID_2 = "54321";
     private static final String CONV_ID_1 = "12345";
     private static final String JPQL_FORMAT = "jpql";
-    //private static final String MONGODB_FORMAT = "mongodb";
+    private static final String MONGODB_FORMAT = "mongodb";
     private static final String OVERLORD_BAM_ACTIVITY_ORM = "overlord-bam-activity-orm";
-    //private static final String OVERLORD_BAM_ACTIVITY_OGM_M = "overlord-bam-activity-ogm-mongodb";
+    private static final String OVERLORD_BAM_ACTIVITY_OGM_M = "overlord-bam-activity-ogm-mongodb";
 
     public ActivityUnit createTestActivityUnit(String id, String convId) {
         ActivityUnit act=new ActivityUnit();
@@ -175,14 +176,13 @@ public class JPAActivityStoreTest {
         }
     }
     
-    /*
     @Test
+    @Ignore
     public void testStoreAndQueryAllOGMM() {
         testStoreAndQuery(OVERLORD_BAM_ACTIVITY_OGM_M,
                 new QuerySpec().setFormat(MONGODB_FORMAT).
                     setExpression("db.ActivityType.find()"));
     }
-    */
     
     protected java.util.List<ActivityType> testStoreAndQuery(String emname, QuerySpec qs) {
         java.util.List<ActivityType> results=null;
@@ -221,7 +221,7 @@ public class JPAActivityStoreTest {
     
     protected JPAActivityStore getActivityStore(String emname) {
         JPAActivityStore ret=new JPAActivityStore();
-        ret.setEntityManagerName(OVERLORD_BAM_ACTIVITY_ORM);
+        ret.setEntityManagerName(emname);
         ret.init();
         
         return (ret);
