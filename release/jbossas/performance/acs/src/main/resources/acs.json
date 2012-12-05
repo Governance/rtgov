@@ -1,15 +1,8 @@
 [
   {
     "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
-    "name" : "ServiceResponseTime",
+    "name" : "ResponseTimesProcessed",
     "type" : "List",
-    "itemExpiration" : 0,
-    "maxItems" : 0,
-    "network" : "JEEMonitorEPN",
-    "node" : "ResponseTimes",
-    "notifyType" : "Results",
-    "aggregationDuration" : 1000,
-    "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
-    "aggregationScript" : "ServiceResponseTime.mvel"
+    "subject" : "ResponseTimesProcessed"
   }
 ]

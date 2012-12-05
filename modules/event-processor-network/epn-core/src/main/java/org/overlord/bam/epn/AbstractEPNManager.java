@@ -155,7 +155,7 @@ public abstract class AbstractEPNManager implements EPNManager {
             java.util.List<Network> networks=_subjectMap.get(subject);
             
             if (networks == null) {
-                networks = new java.util.ArrayList<Network>();
+                networks = new java.util.concurrent.CopyOnWriteArrayList<Network>();
                 _subjectMap.put(subject, networks);
             }
             
@@ -472,7 +472,7 @@ public abstract class AbstractEPNManager implements EPNManager {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Notify processed events on  subject="+subject
                     +" network="+networkName+" node="+nodeName
-                    +" type="+type+"events="+events);
+                    +" type="+type+" events="+events);
         }
         
         java.util.List<NotificationListener> listeners=_notificationListeners.get(subject);

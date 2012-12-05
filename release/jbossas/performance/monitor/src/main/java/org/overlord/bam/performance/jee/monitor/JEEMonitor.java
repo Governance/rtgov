@@ -30,7 +30,6 @@ import javax.ws.rs.core.Response;
 import org.overlord.bam.active.collection.ActiveChangeListener;
 import org.overlord.bam.active.collection.ActiveCollectionManager;
 import org.overlord.bam.active.collection.ActiveList;
-import org.overlord.bam.analytics.service.ResponseTime;
 
 /**
  * This is the custom event monitor that receives node notifications
@@ -41,14 +40,14 @@ import org.overlord.bam.analytics.service.ResponseTime;
 @ApplicationScoped
 public class JEEMonitor implements ActiveChangeListener {
 
-    private static final String SERVICE_RESPONSE_TIME = "ServiceResponseTime";
+    private static final String RESPONSE_TIMES_PROCESSED = "ResponseTimesProcessed";
 
     private static final Logger LOG=Logger.getLogger(JEEMonitor.class.getName());
     
     private static final String ACM_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
-    private ActiveList _serviceResponseTime=null;
+    private ActiveList _responseTimesProcessed=null;
     private long _testStart=0;
     private long _firstInsert=0;
     private long _lastInsert=0;
@@ -63,9 +62,9 @@ public class JEEMonitor implements ActiveChangeListener {
             
             _acmManager = (ActiveCollectionManager)ctx.lookup(ACM_MANAGER);
 
-            _serviceResponseTime = (ActiveList)
-                        _acmManager.getActiveCollection(SERVICE_RESPONSE_TIME);
-            _serviceResponseTime.addActiveChangeListener(this);
+            _responseTimesProcessed = (ActiveList)
+                        _acmManager.getActiveCollection(RESPONSE_TIMES_PROCESSED);
+            _responseTimesProcessed.addActiveChangeListener(this);
             
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to initialize active collection manager", e);
@@ -85,7 +84,7 @@ public class JEEMonitor implements ActiveChangeListener {
     	_testStart = System.currentTimeMillis();
     	
     	if (LOG.isLoggable(Level.FINE)) {
-    		LOG.fine("Test started="+_testStart);
+    		LOG.fine("PerformanceTest: Monitor started="+_testStart);
     	}
     	
     	return Response.status(200).entity("test started").build();
@@ -100,12 +99,12 @@ public class JEEMonitor implements ActiveChangeListener {
     @Path("/latency")
     @Produces("application/json")
     public long getLatency() {
-    	if ((System.currentTimeMillis()-_lastInsert) < 10000) {
+    	if (_firstInsert == 0 || (System.currentTimeMillis()-_lastInsert) < 5000) {
     		return (0);
     	}
     	
     	if (LOG.isLoggable(Level.FINE)) {
-    		LOG.fine("Latency="+(_firstInsert - _testStart));
+    		LOG.fine("PerformanceTest: Monitor latency from start to first event="+(_firstInsert - _testStart));
     	}
     	
     	return (_firstInsert - _testStart);
@@ -120,42 +119,30 @@ public class JEEMonitor implements ActiveChangeListener {
     @Path("/duration")
     @Produces("application/json")
     public long getDuration() {
-    	if (System.currentTimeMillis()-_lastInsert < 10000) {
+    	if (System.currentTimeMillis()-_lastInsert < 5000) {
     		return (0);
     	}
     	
     	if (LOG.isLoggable(Level.FINE)) {
-    		LOG.fine("Duration="+(_lastInsert - _firstInsert));
+    		LOG.fine("PerformanceTest: Monitor duration from first to last event="+(_lastInsert - _firstInsert));
     	}
     	
     	return (_lastInsert - _firstInsert);
     }
 
-    /**
-     * This method returns the list of response times.
-     * 
-     * @return The response times
-     */
-    @GET
-    @Path("/responseTimes")
-    @Produces("application/json")
-    public java.util.List<ResponseTime> getResponseTimes() {
-        java.util.List<ResponseTime> ret=new java.util.ArrayList<ResponseTime>();
-
-        for (Object obj : _serviceResponseTime) {
-            if (obj instanceof ResponseTime) {
-                ret.add((ResponseTime)obj);
-            }
-        }
-        
-        return (ret);
-    }
-
     public void inserted(Object key, Object value) {
 		_lastInsert = System.currentTimeMillis();
 		
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("PerformanceTest: Inserted="+key+" value="+value);
+        }
+        
 		if (_firstInsert == 0) {
 			_firstInsert = _lastInsert;
+			
+	        if (LOG.isLoggable(Level.FINE)) {
+	            LOG.fine("PerformanceTest: Monitor first event received="+_firstInsert);
+	        }
 		}
 	}
 

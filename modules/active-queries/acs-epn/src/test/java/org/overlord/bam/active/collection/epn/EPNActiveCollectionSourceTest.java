@@ -47,14 +47,13 @@ public class EPNActiveCollectionSourceTest {
     private static final String TEST_SUBJECT3 = "TestSubject3";
 
     @Test
-    public void testNodeAndTypeFiltering() {
+    public void testSubjectAndTypeFiltering() {
         EPNActiveCollectionSource acs=new EPNActiveCollectionSource();
         
         acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
         acs.setName(TEST_ACTIVE_LIST);
         
-        acs.setNetwork(TEST_NETWORK);
-        acs.setNode(TEST_NODE1);
+        acs.setSubject(TEST_SUBJECT1);
         
         acs.setNotifyType(NotificationType.Results);
         

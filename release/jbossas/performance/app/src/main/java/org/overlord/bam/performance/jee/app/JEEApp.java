@@ -81,6 +81,10 @@ public class JEEApp {
     	    	
         if (_firstTxn == 0) {
         	_firstTxn = System.currentTimeMillis();
+        	
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("PerformanceTest: App first transaction created="+_firstTxn);
+            }
         }
     	
     	_activityCollector.startScope();
@@ -205,7 +209,7 @@ public class JEEApp {
     @Produces("application/json")
     public long getDuration() {
     	if (LOG.isLoggable(Level.FINE)) {
-    		LOG.fine("Duration="+(_lastTxn - _firstTxn));
+    		LOG.fine("PerformanceTest: App duration between first and last transaction="+(_lastTxn - _firstTxn));
     	}
     	return (_lastTxn - _firstTxn);
     }

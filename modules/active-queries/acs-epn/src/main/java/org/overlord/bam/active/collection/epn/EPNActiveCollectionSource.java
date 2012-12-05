@@ -39,8 +39,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
 
     private EPNManager _epnManager=null;
     private String _subject=null;
-    private String _network=null;
-    private String _node=null;
     private NotificationType _notifyType=null;
     
     
@@ -74,42 +72,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
      */
     public String getSubject() {
         return (_subject);
-    }
-    
-    /**
-     * This method sets the network name.
-     * 
-     * @param network The network name
-     */
-    public void setNetwork(String network) {
-        _network = network;
-    }
-    
-    /**
-     * This method gets the network name.
-     * 
-     * @return The network name
-     */
-    public String getNetwork() {
-        return (_network);
-    }
-    
-    /**
-     * This method sets the node name.
-     * 
-     * @param node The node name
-     */
-    public void setNode(String node) {
-        _node = node;
-    }
-    
-    /**
-     * This method gets the node name.
-     * 
-     * @return The node name
-     */
-    public String getNode() {
-        return (_node);
     }
     
     /**
@@ -250,14 +212,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
             return (false);
         }
 
-        if (_network != null && !network.equals(_network)) {
-            return (false);
-        }
-        
-        if (_node != null && !node.equals(_node)) {
-            return (false);
-        }
-        
         if (_notifyType != null && !type.equals(_notifyType)) {
             return (false);
         }
