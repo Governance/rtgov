@@ -28,10 +28,10 @@
       "predicate" : null,
       "notifications" : [ {
       	"type" : "Processed",
-      	"subject" : "CustomEvents"
+      	"subject" : "CustomEventsProcessed"
       },{
       	"type" : "Results",
-      	"subject" : "CustomEvents"
+      	"subject" : "CustomEventsResults"
       } ]
     }
   ],

@@ -43,7 +43,6 @@ import org.overlord.bam.epn.EPNContainer;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.Node;
-import org.overlord.bam.epn.NotificationType;
 
 /**
  * This class provides the JMS implementation of
@@ -276,13 +275,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             EventList events=(EventList)((ObjectMessage)message).getObject();
             
             String subject=message.getStringProperty(JEEEPNManagerImpl.EPN_SUBJECTS);
-            String networkName=message.getStringProperty(JEEEPNManagerImpl.EPN_NETWORK);
-            String version=message.getStringProperty(JEEEPNManagerImpl.EPN_VERSION);
-            String nodeName=message.getStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES);
-            NotificationType type=NotificationType.valueOf(message.getStringProperty(JEEEPNManagerImpl.EPN_NOTIFY_TYPE));
             
-            dispatchNotificationToListeners(subject, networkName, version,
-                            nodeName, type, events);
+            dispatchNotificationToListeners(subject, events);
         } else {
             LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
                     "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-8"), message));
@@ -363,19 +357,12 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
      * {@inheritDoc}
      */
     @Override
-    protected void notifyListeners(String subject, String networkName, String version,
-                    String nodeName, NotificationType type,
-                    EventList events) throws Exception {
+    protected void notifyListeners(String subject, EventList events) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Notify type '"+type.name()+"' subject="+subject+" "
-                      +networkName+"/"+version+"/"+nodeName+" events="+events);
+            LOG.finest("Notify subject="+subject+" events="+events);
         }
 
         javax.jms.ObjectMessage mesg=_session.createObjectMessage(events);
-        mesg.setStringProperty(JEEEPNManagerImpl.EPN_NETWORK, networkName);
-        mesg.setStringProperty(JEEEPNManagerImpl.EPN_VERSION, version);
-        mesg.setStringProperty(JEEEPNManagerImpl.EPN_DESTINATION_NODES, nodeName);
-        mesg.setStringProperty(JEEEPNManagerImpl.EPN_NOTIFY_TYPE, type.name());
         mesg.setStringProperty(JEEEPNManagerImpl.EPN_SUBJECTS, subject);
         _notificationsProducer.send(mesg);
     }
@@ -450,10 +437,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                             // Send immediately as no details
                             // need to be aggregated
 
-                            notifyListeners(jmsc.getSubject(),
-                                    jmsc.getNetworkName(), jmsc.getVersion(),
-                                    jmsc.getSourceNode(), NotificationType.Results,
-                                    events);
+                            notifyListeners(jmsc.getSubject(), events);
 
                         // Check if channel has internal pub/sub subjects
                         } else if (jmsc.getSubject() != null) {

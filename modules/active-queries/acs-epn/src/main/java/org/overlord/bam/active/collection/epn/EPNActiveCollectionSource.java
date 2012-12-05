@@ -26,7 +26,6 @@ import org.overlord.bam.active.collection.ActiveCollectionSource;
 import org.overlord.bam.epn.ContextualNotificationListener;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.NotificationType;
 
 /**
  * This class provides the Active Collection Source for listening to
@@ -38,9 +37,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
     private static final Logger LOG=Logger.getLogger(EPNActiveCollectionSource.class.getName());
 
     private EPNManager _epnManager=null;
-    private String _subject=null;
-    private NotificationType _notifyType=null;
-    
+    private String _subject=null;    
     
     private ClassLoader _contextClassLoader=null;
     private boolean _preinitialized=false;
@@ -72,24 +69,6 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
      */
     public String getSubject() {
         return (_subject);
-    }
-    
-    /**
-     * This method sets the notification type.
-     * 
-     * @param type The notification type
-     */
-    public void setNotifyType(NotificationType type) {
-        _notifyType = type;
-    }
-    
-    /**
-     * This method gets the notification type.
-     * 
-     * @return The notification type
-     */
-    public NotificationType getNotifyType() {
-        return (_notifyType);
     }
     
     /**
@@ -154,20 +133,12 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
      * particular duration.
      * 
      * @param subject The subject
-     * @param network The network
-     * @param version The version
-     * @param node The node
-     * @param type The type
      * @param events The list of events to be processed
      */
-    protected void aggregateEvents(String subject, String network,
-                        String version, String node,
-                            NotificationType type, EventList events) {
+    protected void aggregateEvents(String subject, EventList events) {
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("aggregateEvents subject="+subject+" network="
-                    +network+" version="+version
-                    +" node="+node+" type="+type+" events="+events);
+            LOG.finest("aggregateEvents subject="+subject+"events="+events);
         }
         
         for (java.io.Serializable event : events) {
@@ -194,34 +165,24 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
      * active collection source.
      * 
      * @param subject The subject
-     * @param network The network
-     * @param version The version
-     * @param node The node
-     * @param type The type
      * @return Whether the notification is relevant
      */
-    protected boolean isRelevant(String subject, String network, String version, String node,
-                            NotificationType type) {
+    protected boolean isRelevant(String subject) {
+        boolean ret=true;
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("isRelevant subject="+subject+" network="
-                     +network+" version="+version+" node="+node+" type="+type+"?");
+            LOG.finest("isRelevant subject="+subject+"?");
         }
         
         if (_subject != null && !subject.equals(_subject)) {
-            return (false);
+            ret = false;
         }
 
-        if (_notifyType != null && !type.equals(_notifyType)) {
-            return (false);
-        }
-        
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("isRelevant subject="+subject+" network="
-                    +network+" version="+version+" node="+node+" type="+type+" TRUE");
+            LOG.finest("isRelevant subject="+subject+" ret="+ret);
         }
         
-        return (true);
+        return (ret);
     }
     
     /**
@@ -229,20 +190,13 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
      * accordingly.
      * 
      * @param subject The subject
-     * @param network The network
-     * @param version The version
-     * @param node The node
-     * @param type The type
      * @param events The list of events to be processed
      */
-    protected void processNotification(String subject, String network,
-                            String version, String node,
-                            NotificationType type, EventList events) {
+    protected void processNotification(String subject, EventList events) {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("processNotification subject="+subject
-                    +" network="+network+" version="+version
-                    +" node="+node+" type="+type+" events="+events);
+                    +" events="+events);
         }
         
         // Default behaviour is to simply add all events to the
@@ -268,14 +222,13 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         /**
          * {@inheritDoc}
          */
-        public void handleEvents(String subject, String network, String version, String node,
-                NotificationType type, EventList events) {
-            if (isRelevant(subject, network, version, node, type)) {
+        public void handleEvents(String subject, EventList events) {
+            if (isRelevant(subject)) {
                 
                 if (getAggregationDuration() > 0 && getGroupBy() != null) {
-                    aggregateEvents(subject, network, version, node, type, events);
+                    aggregateEvents(subject, events);
                 } else {
-                    processNotification(subject, network, version, node, type, events);
+                    processNotification(subject, events);
                 }
             }            
         }

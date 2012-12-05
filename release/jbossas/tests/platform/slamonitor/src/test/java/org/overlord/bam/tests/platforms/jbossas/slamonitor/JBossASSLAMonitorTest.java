@@ -37,7 +37,6 @@ import org.junit.runner.RunWith;
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.NotificationListener;
-import org.overlord.bam.epn.NotificationType;
 
 import static org.junit.Assert.*;
 
@@ -173,12 +172,12 @@ public class JBossASSLAMonitorTest {
             // Wait for events to propagate
             Thread.sleep(2000);
             
-            if (tl.getProcessed(SITUATIONS_PROCESSED) == null) {
+            if (tl.getEvents(SITUATIONS_PROCESSED) == null) {
                 fail("Expecting situations processed");
             }
             
-            if (tl.getProcessed(SITUATIONS_PROCESSED).size() != 3) {
-                fail("Expecting 3 (sla situations) processed events, but got: "+tl.getProcessed(SITUATIONS_PROCESSED).size());
+            if (tl.getEvents(SITUATIONS_PROCESSED).size() != 3) {
+                fail("Expecting 3 (sla situations) processed events, but got: "+tl.getEvents(SITUATIONS_PROCESSED).size());
             }
 
         } catch (Exception e) {
@@ -238,12 +237,12 @@ public class JBossASSLAMonitorTest {
             Thread.sleep(2000);
             
             // Check that all events have been processed
-            if (tl.getResults(SITUATIONS) == null) {
+            if (tl.getEvents(SITUATIONS) == null) {
                 fail("Expecting sla violations results");
             }
             
-            if (tl.getResults(SITUATIONS).size() != 2) {
-                fail("Expecting 2 (sla violations) results events, but got: "+tl.getResults(SITUATIONS).size());
+            if (tl.getEvents(SITUATIONS).size() != 2) {
+                fail("Expecting 2 (sla violations) results events, but got: "+tl.getEvents(SITUATIONS).size());
             }
 
         } catch (Exception e) {
@@ -254,43 +253,25 @@ public class JBossASSLAMonitorTest {
     
     public class TestListener implements NotificationListener {
         
-        private java.util.Map<String, java.util.List<Serializable>> _processed=
-                    new java.util.HashMap<String, java.util.List<Serializable>>();
-        private java.util.Map<String, java.util.List<Serializable>> _results=
+        private java.util.Map<String, java.util.List<Serializable>> _events=
                     new java.util.HashMap<String, java.util.List<Serializable>>();
 
         /**
          * {@inheritDoc}
          */
-        public void notify(String subject, String network, String version, String node,
-                NotificationType type, EventList events) {
-            if (type == NotificationType.Processed) {
-                java.util.List<Serializable> list=_processed.get(subject);
-                if (list == null) {
-                    list = new java.util.ArrayList<Serializable>();
-                    _processed.put(subject, list);
-                }
-                for (Serializable event : events) {
-                    list.add(event);
-                }
-            } else if (type == NotificationType.Results) {
-                java.util.List<Serializable> list=_results.get(subject);
-                if (list == null) {
-                    list = new java.util.ArrayList<Serializable>();
-                    _results.put(subject, list);
-                }
-                for (Serializable event : events) {
-                    list.add(event);
-                }
+        public void notify(String subject, EventList events) {
+            java.util.List<Serializable> list=_events.get(subject);
+            if (list == null) {
+                list = new java.util.ArrayList<Serializable>();
+                _events.put(subject, list);
+            }
+            for (Serializable event : events) {
+                list.add(event);
             }
         }
         
-        public java.util.List<Serializable> getProcessed(String node) {
-            return (_processed.get(node));
-        }
-        
-        public java.util.List<Serializable> getResults(String node) {
-            return (_results.get(node));
+        public java.util.List<Serializable> getEvents(String subject) {
+            return (_events.get(subject));
         }
     }
 }

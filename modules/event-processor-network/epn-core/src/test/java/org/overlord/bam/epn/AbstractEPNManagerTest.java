@@ -267,13 +267,9 @@ public class AbstractEPNManagerTest {
                 fail("Processed Event te1 should have been processed");
             }
             
-            if (!nl.getEntries().get(0).getNetwork().equals(TEST_NETWORK)) {
-                fail("Processed Event network name incorrect");
+            if (!nl.getEntries().get(0).getSubject().equals(SUBJECT1)) {
+                fail("Processed Event subject name incorrect");
             }           
-            
-            if (!nl.getEntries().get(0).getNode().equals(N1)) {
-                fail("Processed Event node name incorrect");
-            }
             
             if (anothernl.getEntries().size() > 0) {
                 fail("Should be no entries in other listener");

@@ -31,7 +31,6 @@ import org.overlord.bam.epn.EPNContainer;
 import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.Node;
-import org.overlord.bam.epn.NotificationType;
 
 /**
  * This class provides the embedded implementation of
@@ -310,8 +309,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
          */
         public void send(EventList events) throws Exception {
             if (isNotificationChannel()) {
-                notifyListeners(_subject, _network.getName(), _network.getVersion(),
-                                _source, NotificationType.Results, events);
+                notifyListeners(_subject, events);
             } else {
                 send(events, _node.getMaxRetries());
             }

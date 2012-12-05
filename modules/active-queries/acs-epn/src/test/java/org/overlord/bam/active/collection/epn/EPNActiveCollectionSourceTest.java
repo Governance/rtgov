@@ -31,16 +31,12 @@ import org.overlord.bam.epn.EventList;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.NetworkListener;
 import org.overlord.bam.epn.NotificationListener;
-import org.overlord.bam.epn.NotificationType;
 
 public class EPNActiveCollectionSourceTest {
 
     private static final String T_OBJ3 = "TObj3";
     private static final String T_OBJ2 = "TObj2";
     private static final String T_OBJ1 = "TObj1";
-    private static final String TEST_NODE1 = "TestNode1";
-    private static final String TEST_NODE2 = "TestNode2";
-    private static final String TEST_NETWORK = "TestNetwork";
     private static final String TEST_ACTIVE_LIST = "TestActiveList";
     private static final String TEST_SUBJECT1 = "TestSubject1";
     private static final String TEST_SUBJECT2 = "TestSubject2";
@@ -54,8 +50,6 @@ public class EPNActiveCollectionSourceTest {
         acs.setName(TEST_ACTIVE_LIST);
         
         acs.setSubject(TEST_SUBJECT1);
-        
-        acs.setNotifyType(NotificationType.Results);
         
         acs.setType(ActiveCollectionType.List);
         
@@ -79,7 +73,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events=new EventList(eventList);
         
-        mgr.publish(TEST_SUBJECT1, TEST_NODE1, NotificationType.Results, events);
+        mgr.publish(TEST_SUBJECT1, events);
         
         java.util.List<Serializable> eventList2=new java.util.ArrayList<Serializable>();
         eventList2.add(new TestObject("TObj21", 21));
@@ -88,7 +82,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events2=new EventList(eventList2);
         
-        mgr.publish(TEST_SUBJECT2, TEST_NODE2, NotificationType.Results, events2);
+        mgr.publish(TEST_SUBJECT2, events2);
         
         java.util.List<Serializable> eventList3=new java.util.ArrayList<Serializable>();
         eventList3.add(new TestObject("TObj31", 31));
@@ -99,7 +93,7 @@ public class EPNActiveCollectionSourceTest {
 
         EventList events3=new EventList(eventList3);
         
-        mgr.publish(TEST_SUBJECT1, TEST_NODE1, NotificationType.Results, events3);
+        mgr.publish(TEST_SUBJECT1, events3);
         
         java.util.List<Serializable> eventList4=new java.util.ArrayList<Serializable>();
         eventList4.add(new TestObject("TObj41", 41));
@@ -108,7 +102,7 @@ public class EPNActiveCollectionSourceTest {
         
         EventList events4=new EventList(eventList4);
         
-        mgr.publish(TEST_SUBJECT3, TEST_NODE1, NotificationType.Processed, events4);
+        mgr.publish(TEST_SUBJECT3, events4);
         
         // Review results
         ActiveList al=(ActiveList)acs.getActiveCollection();
@@ -155,9 +149,9 @@ public class EPNActiveCollectionSourceTest {
             _networkListeners.remove(l);
         }
         
-        public void publish(String subject, String node, NotificationType type, EventList events) {
+        public void publish(String subject, EventList events) {
             for (NotificationListener l : _nodeListeners) {
-                l.notify(subject, TEST_NETWORK, null, node, type, events);
+                l.notify(subject, events);
             }
         }
 

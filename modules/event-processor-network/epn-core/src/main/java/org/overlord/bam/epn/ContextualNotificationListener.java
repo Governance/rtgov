@@ -30,14 +30,9 @@ public abstract class ContextualNotificationListener implements NotificationList
      * of events.
      * 
      * @param subject The subject
-     * @param network The network name
-     * @param version The version of the network that processed the events
-     * @param node The node name
-     * @param type The type of notification
      * @param events The events that have been processed
      */
-    public final void notify(String subject, String network, String version,
-                    String node, NotificationType type, EventList events) {
+    public final void notify(String subject, EventList events) {
         // Reset to make sure context class loader related classes are used
         events.reset();
         
@@ -46,7 +41,7 @@ public abstract class ContextualNotificationListener implements NotificationList
         events.resolve(getContextClassLoader());
         
         // Get the client to handle the events
-        handleEvents(subject, network, version, node, type, events);
+        handleEvents(subject, events);
     }
     
     /**
@@ -63,13 +58,8 @@ public abstract class ContextualNotificationListener implements NotificationList
      * concerning a list of events.
      * 
      * @param subject The subject
-     * @param network The network name
-     * @param version The version of the network that processed the events
-     * @param node The node name
-     * @param type The type of notification
      * @param events The events that have been processed
      */
-    public abstract void handleEvents(String subject, String network, String version,
-                    String node, NotificationType type, EventList events);
+    public abstract void handleEvents(String subject, EventList events);
     
 }

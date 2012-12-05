@@ -1,11 +1,17 @@
 [
   {
     "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
-    "name" : "CustomEvents",
+    "name" : "CustomEventsResults",
     "type" : "List",
     "itemExpiration" : 0,
     "maxItems" : 0,
-    "subject" : "CustomEvents",
-    "notifyType" : "Results"
+    "subject" : "CustomEventsResults"
+  },{
+    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "CustomEventsProcessed",
+    "type" : "List",
+    "itemExpiration" : 0,
+    "maxItems" : 0,
+    "subject" : "CustomEventsProcessed"
   }
 ]

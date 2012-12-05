@@ -26,16 +26,11 @@ public interface NotificationListener {
 
     /**
      * This method notifies the listener when events occurs
-     * on the identified subject, providing the source network/version/node.
+     * on the identified subject.
      * 
      * @param subject The subject
-     * @param network The network name
-     * @param version The version of the network that processed the events
-     * @param node The node name
-     * @param type The type of notification
      * @param events The events that have been processed
      */
-    public void notify(String subject, String network, String version, String node,
-            NotificationType type, EventList events);
+    public void notify(String subject, EventList events);
     
 }
