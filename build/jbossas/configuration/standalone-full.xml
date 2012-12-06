@@ -66,7 +66,7 @@
                 </formatter>
             </console-handler>
             <periodic-rotating-file-handler name="FILE">
-                <level name="FINEST"/>
+                <!--level name="FINEST"/-->
                 <formatter>
                     <pattern-formatter pattern="%d{HH:mm:ss,SSS} %-5p [%c] (%t) %s%E%n"/>
                 </formatter>
@@ -74,9 +74,9 @@
                 <suffix value=".yyyy-MM-dd"/>
                 <append value="true"/>
             </periodic-rotating-file-handler>
-            <logger category="org.overlord.bam">
+            <!--logger category="org.overlord.bam">
                 <level name="FINEST"/>
-            </logger>
+            </logger-->
             <logger category="com.arjuna">
                 <level name="WARN"/>
             </logger>

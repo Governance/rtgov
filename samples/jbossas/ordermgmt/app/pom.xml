@@ -15,22 +15,11 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.bam.activity-management</groupId>
-			<artifactId>activity</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.bam.active-queries</groupId>
-			<artifactId>active-collection</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.overlord.bam.integration</groupId>
 			<artifactId>bam-switchyard</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.switchyard</groupId>
 			<artifactId>switchyard-api</artifactId>

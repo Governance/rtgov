@@ -40,7 +40,6 @@ public class InfinispanActiveCollectionFactory extends ActiveCollectionFactory {
 
     private String _cache=null;
     private String _jndiName=null;
-    private String _config=null;
     
     /**
      * This method sets the JNDI name for the container resource.
@@ -59,24 +58,6 @@ public class InfinispanActiveCollectionFactory extends ActiveCollectionFactory {
      */
     public String getJNDIName() {
         return (_jndiName);
-    }
-    
-    /**
-     * This method returns the cache configuration.
-     * 
-     * @return The cache configuration filename
-     */
-    public String getConfig() {
-        return (_config);
-    }
-    
-    /**
-     * This method sets the cache configuration filename.
-     * 
-     * @param config The cache configuration
-     */
-    public void setConfig(String config) {
-        _config = config;
     }
     
     /**
@@ -133,8 +114,7 @@ public class InfinispanActiveCollectionFactory extends ActiveCollectionFactory {
                 java.util.Map<Object,Object> ac=cacheContainer.getCache(_cache);
                                 
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Infinispan cache [jndiName="+_jndiName+" config="
-                                +_config+" name="+_cache+"] = "+ac);
+                    LOG.fine("Infinispan cache [jndiName="+_jndiName+" name="+_cache+"] = "+ac);
                 }
  
                 ret = new InfinispanActiveMap(acs, ac);

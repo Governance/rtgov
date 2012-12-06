@@ -27,8 +27,7 @@ import org.overlord.bam.activity.model.ActivityType;
  *
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
-@JsonSubTypes({@Type(value=MVELScriptEvaluator.class, name="mvel"),
-    @Type(value=XPathExpressionEvaluator.class, name="xpath") })
+@JsonSubTypes({@Type(value=MVELScriptEvaluator.class, name="mvel") })
 public abstract class ScriptEvaluator {
     
     private String _expression=null;
