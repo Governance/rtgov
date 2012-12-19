@@ -21,17 +21,17 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.drools.KnowledgeBase;
-import org.drools.KnowledgeBaseConfiguration;
-import org.drools.KnowledgeBaseFactory;
-import org.drools.builder.KnowledgeBuilder;
-import org.drools.builder.KnowledgeBuilderFactory;
-import org.drools.builder.ResourceType;
-import org.drools.conf.EventProcessingOption;
-import org.drools.conf.MBeansOption;
-import org.drools.io.ResourceFactory;
-import org.drools.runtime.StatefulKnowledgeSession;
-import org.drools.runtime.rule.WorkingMemoryEntryPoint;
+import org.kie.KieBaseConfiguration;
+import org.kie.KnowledgeBase;
+import org.kie.KnowledgeBaseFactory;
+import org.kie.builder.KnowledgeBuilder;
+import org.kie.builder.KnowledgeBuilderFactory;
+import org.kie.conf.EventProcessingOption;
+import org.kie.conf.MBeansOption;
+import org.kie.io.ResourceFactory;
+import org.kie.io.ResourceType;
+import org.kie.runtime.StatefulKnowledgeSession;
+import org.kie.runtime.rule.SessionEntryPoint;
 import org.overlord.bam.epn.EventProcessor;
 import org.overlord.bam.internal.epn.DefaultEPNContext;
 
@@ -98,7 +98,7 @@ public class CEPEventProcessor extends EventProcessor {
         
         // Get entry point
         // TODO: If not simple lookup, then may want to cache this
-        WorkingMemoryEntryPoint entryPoint=_session.getWorkingMemoryEntryPoint(source);
+        SessionEntryPoint entryPoint=_session.getEntryPoint(source);
         
         if (entryPoint != null) {
             if (LOG.isLoggable(Level.FINEST)) {
@@ -184,7 +184,7 @@ public class CEPEventProcessor extends EventProcessor {
                         "epn-cep.Messages").getString("EPN-CEP-1"),
                         builder.getErrors()));
             } else {
-                KnowledgeBaseConfiguration conf = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
+                KieBaseConfiguration conf = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
                 conf.setOption(EventProcessingOption.STREAM);
                 conf.setOption(MBeansOption.ENABLED);
                 KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase(getRuleName(), conf);
