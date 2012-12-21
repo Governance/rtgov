@@ -21,16 +21,17 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kie.KieBaseConfiguration;
-import org.kie.KnowledgeBase;
-import org.kie.KnowledgeBaseFactory;
-import org.kie.builder.KnowledgeBuilder;
-import org.kie.builder.KnowledgeBuilderFactory;
+import org.kie.KieBase;
+import org.kie.KieServices;
+import org.kie.builder.KieBaseModel;
+import org.kie.builder.KieBuilder;
+import org.kie.builder.KieFileSystem;
+import org.kie.builder.KieModuleModel;
+import org.kie.builder.KieRepository;
+import org.kie.conf.EqualityBehaviorOption;
 import org.kie.conf.EventProcessingOption;
-import org.kie.conf.MBeansOption;
-import org.kie.io.ResourceFactory;
-import org.kie.io.ResourceType;
-import org.kie.runtime.StatefulKnowledgeSession;
+import org.kie.runtime.KieContainer;
+import org.kie.runtime.KieSession;
 import org.kie.runtime.rule.SessionEntryPoint;
 import org.overlord.bam.epn.EventProcessor;
 import org.overlord.bam.internal.epn.DefaultEPNContext;
@@ -46,9 +47,9 @@ public class CEPEventProcessor extends EventProcessor {
 
     private DefaultEPNContext _context=null; //new DefaultEPNContext();
 
-    private static final java.util.Map<String,StatefulKnowledgeSession> SESSIONS=
-                new java.util.HashMap<String,StatefulKnowledgeSession>();
-    private StatefulKnowledgeSession _session=null;
+    private static final java.util.Map<String,KieSession> SESSIONS=
+                new java.util.HashMap<String,KieSession>();
+    private KieSession _session=null;
     private String _ruleName=null;
 
     /**
@@ -128,23 +129,25 @@ public class CEPEventProcessor extends EventProcessor {
      * 
      * @return The stateful knowledge session
      */
-    private StatefulKnowledgeSession createSession() {
-        StatefulKnowledgeSession ret=null;
+    private KieSession createSession() {
+        KieSession ret=null;
         
         synchronized (SESSIONS) {
             ret = SESSIONS.get(getRuleName());
             
             if (ret == null) {              
-                KnowledgeBase kbase = loadRuleBase();
+                KieBase kbase = loadRuleBase();
                 
                 if (kbase != null) {
-                    ret = kbase.newStatefulKnowledgeSession();
+                    ret = kbase.newKieSession();
 
                     if (ret != null) {
                         ret.setGlobal("epn", _context);
                         ret.fireAllRules();
                         
                         SESSIONS.put(getRuleName(), ret);
+                    } else {
+                    	System.out.println("The kieSession is null!!!");
                     }
                 }
             }
@@ -159,38 +162,31 @@ public class CEPEventProcessor extends EventProcessor {
      * 
      * @return The knowledge base
      */
-    private KnowledgeBase loadRuleBase() {
+    private KieBase loadRuleBase() {
         String cepRuleBase=getRuleName()+".drl";
 
         try {
-            KnowledgeBuilder builder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-            
-            java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream("/"+cepRuleBase);
-            
-            if (is == null) {
-                is = Thread.currentThread().getContextClassLoader().getResourceAsStream(cepRuleBase);
-            }
-
-            builder.add(ResourceFactory.newInputStreamResource(is),
-                    ResourceType.determineResourceType(cepRuleBase));
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Loaded CEP rules '"+cepRuleBase+"'");     
-            }
-
-            if (builder.hasErrors()) {
-                LOG.severe(MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "epn-cep.Messages").getString("EPN-CEP-1"),
-                        builder.getErrors()));
-            } else {
-                KieBaseConfiguration conf = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
-                conf.setOption(EventProcessingOption.STREAM);
-                conf.setOption(MBeansOption.ENABLED);
-                KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase(getRuleName(), conf);
-                kbase.addKnowledgePackages(builder.getKnowledgePackages());
-                return kbase;
-            }
+        	KieServices ks = KieServices.Factory.get();
+        	KieRepository kr = ks.getRepository();
+        	
+        	KieModuleModel kmm = ks.newKieModuleModel();
+        	KieBaseModel kbm = kmm.newKieBaseModel(getRuleName())
+        							.setEqualsBehavior(EqualityBehaviorOption.EQUALITY)
+        							.setEventProcessingMode(EventProcessingOption.STREAM);
+        	kbm.setDefault(true);
+        	
+        	KieFileSystem kfs = ks.newKieFileSystem();
+        	kfs.write("src/main/resources/" + kbm.getName() + "/rule1.drl", ks.getResources().newClassPathResource(cepRuleBase));
+        	kfs.writeKModuleXML(kmm.toXML());
+        	
+        	KieBuilder kb = ks.newKieBuilder(kfs);
+        	kb.buildAll();
+        	
+        	KieContainer container = ks.newKieContainer(kr.getDefaultReleaseId());
+        	KieBase kbase = container.getKieBase();
+        	//TODO: hack it for now, this attribute should be supported in the following drools6 release.
+        	System.setProperty("kie.mbean", "enabled");
+        	return kbase;
         
         } catch (Throwable e) {
             LOG.log(Level.SEVERE, MessageFormat.format(
