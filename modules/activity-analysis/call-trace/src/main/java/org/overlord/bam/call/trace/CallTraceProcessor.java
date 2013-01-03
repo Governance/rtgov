@@ -337,6 +337,16 @@ public class CallTraceProcessor {
      * @param call The call
      */
     protected static void initializeResponseSent(CTState state, ResponseSent rs, Call call) {
+        
+        // Check if call node found
+        if (call == null) {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("No call, so unable to initialize ResponseSent '"
+                            +rs+"' for state="+state);
+            }
+            return;
+        }
+        
         call.setResponse(rs.getContent());
         
         // Add further properties from the response
