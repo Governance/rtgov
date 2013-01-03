@@ -95,10 +95,7 @@ public class CEPEventProcessorTest {
             
             long responseTime=(Long)props3.get("responseTime");
             
-            //if (responseTime != TIME_INTERVAL) {
-            // To accomodate precision error in rule evaluation, which
-            // sometimes returns 2001 as the response time
-            if ((responseTime - TIME_INTERVAL) > 1 || (responseTime - TIME_INTERVAL) < 0) {
+            if (responseTime != TIME_INTERVAL) {
                 fail("Response time should be "+TIME_INTERVAL+": "+responseTime);
             }
             
@@ -123,7 +120,7 @@ public class CEPEventProcessorTest {
         ActivityUnit e5=new ActivityUnit();
         e5.setId("e5");
         ResponseSent me5=new ResponseSent();
-        me5.setTimestamp(System.currentTimeMillis()+GAP_INTERVAL+TIME_INTERVAL);
+        me5.setTimestamp(me4.getTimestamp()+TIME_INTERVAL);
         me5.setMessageId("me5");
         me5.setReplyToId("me4");
         e5.getActivityTypes().add(me5);
@@ -160,10 +157,7 @@ public class CEPEventProcessorTest {
             
             long responseTime=(Long)props1.get("responseTime");
             
-            //if (responseTime != TIME_INTERVAL) {
-            // To accomodate precision error in rule evaluation, which
-            // sometimes returns 2001 as the response time
-            if ((responseTime - TIME_INTERVAL) > 1 || (responseTime - TIME_INTERVAL) < 0) {
+            if (responseTime != TIME_INTERVAL) {
                 fail("Response time should be "+TIME_INTERVAL+": "+responseTime);
             }
             

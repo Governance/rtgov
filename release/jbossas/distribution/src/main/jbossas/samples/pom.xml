@@ -36,7 +36,7 @@
 		<javaee-api.version>6.0</javaee-api.version>
 		<jbossas.version>7.1.1.Final</jbossas.version>
 		<jbossts.version>4.16.4.Final</jbossts.version>
-		<switchyard.version>0.6.0.Final</switchyard.version>
+		<switchyard.version>0.7.0.Final</switchyard.version>
 	</properties>
 
 	<modules>

@@ -21,7 +21,7 @@ when
     $resp : ResponseSent( replyToId == $id, this after[0,2m20s] $req )  from entry-point "Purchasing"
 then
 
-	epn.logInfo("REQUEST: "+$req+" WITH RESPONSE: "+$resp);
+	epn.logInfo("REQUEST: "+$req+" RESPONSE: "+$resp);
 
 	java.util.Properties props=new java.util.Properties();
 	props.put("requestId", $req.getMessageId());
