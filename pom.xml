@@ -69,6 +69,7 @@
 		<jbossts.version>4.16.4.Final</jbossts.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jta.version>1.0.0.Final</jta.version>
+		<kie.version>6.0.0.Alpha6</kie.version>
 		<mvel.version>2.1.3.Final</mvel.version>
 		<switchyard.version>0.7.0.Final</switchyard.version>
 	</properties>
@@ -125,6 +126,16 @@
 				<type>war</type>
 			</dependency>
 
+			<dependency>
+				<groupId>org.kie</groupId>
+				<artifactId>kie-api</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie</groupId>
+				<artifactId>kie-internal</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-core</artifactId>
