@@ -181,7 +181,7 @@ public class CallTraceProcessor {
                 java.util.List<ActivityUnit> topLevel) {
         ActivityType cur=null;
         Call call=(state.getCallStack().size() > 0 ? state.getCallStack().peek() : null);
-        java.util.List<TraceNode> tasks=state.getTasksStack().peek();
+        java.util.List<TraceNode> tasks=(state.getTasksStack().size() > 0 ? state.getTasksStack().peek() : null);
         
         ActivityType prev=null;
        
@@ -237,7 +237,11 @@ public class CallTraceProcessor {
                         // containing scoped tasks
                         call = createCall((RPCActivityType)cur);
                         
-                        tasks.add(call);
+                        if (tasks != null) {
+                            tasks.add(call);
+                        } else if (LOG.isLoggable(Level.FINE)) {
+                            LOG.fine("Attempt to add call node to 'null' tasks list");
+                        }
 
                         tasks = call.getTasks();
 
@@ -283,7 +287,8 @@ public class CallTraceProcessor {
                         // Get new values
                         call = (state.getCallStack().size() > 0
                                 ? state.getCallStack().peek() : null);
-                        tasks = state.getTasksStack().peek();
+                        tasks = (state.getTasksStack().size() > 0
+                                ? state.getTasksStack().peek() : null);
                         
                         // If not top level call, then break out
                         // of loop, to finish processing the scope
