@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.samples.jbossas</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.0.0.20130107-M3</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Overlord BAM::Samples::JBossAS</name>
 	<url>http://www.overlord.org</url>

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.0.0.20130107-M3</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Overlord BAM</name>
 	<url>http://www.jboss.org/overlord</url>
@@ -60,7 +60,7 @@
 		<arquillian.version>1.0.0.Final</arquillian.version>
 		<cdi.version>1.0-SP4</cdi.version>
 		<drools.version>6.0.0.Alpha6</drools.version>
-		<gadgets.version>1.0.0.20130107-M3</gadgets.version>
+		<gadgets.version>1.0.0-SNAPSHOT</gadgets.version>
 		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
 		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
 		<javaee-api.version>6.0</javaee-api.version>
