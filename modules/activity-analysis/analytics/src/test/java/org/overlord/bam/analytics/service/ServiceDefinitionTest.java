@@ -20,6 +20,7 @@ package org.overlord.bam.analytics.service;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.analytics.service.OperationDefinition;
 import org.overlord.bam.analytics.service.ServiceDefinition;
 
@@ -42,7 +43,7 @@ public class ServiceDefinitionTest {
         sd2.setServiceType(SERVICE_TYPE_2);
         
         try {
-            sd1.merge(sd2);
+            sd1.merge(sd2, false);
             
             fail("Should have thrown exception");
         } catch (Exception e) {
@@ -51,7 +52,7 @@ public class ServiceDefinitionTest {
     }
 
     @Test
-    public void testMerge() {
+    public void testMergeOperations() {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
@@ -73,9 +74,13 @@ public class ServiceDefinitionTest {
         sd2.getOperations().add(op3);
        
         try {
-            sd1.merge(sd2);  
+            sd1.merge(sd2, false);  
         } catch (Exception e) {
             fail("Failed to merge: "+e);
+        }
+        
+        if (sd1.getContext().size() != 0) {
+            fail("Should be 0 context: "+sd1.getContext().size());
         }
         
         if (sd1.getOperations().size() != 2) {
@@ -91,4 +96,52 @@ public class ServiceDefinitionTest {
         }
     }
 
+    @Test
+    public void testMergeWithoutContext() {
+        
+        ServiceDefinition sd1=new ServiceDefinition();
+        
+        sd1.setServiceType(SERVICE_TYPE_1);
+        
+        OperationDefinition op1=new OperationDefinition();
+        op1.setName(OPERATION_1);
+        
+        ServiceDefinition sd2=new ServiceDefinition();
+        
+        sd2.setServiceType(SERVICE_TYPE_1);
+        sd2.getContext().add(new Context(Context.Type.Conversation, "c2"));
+        
+        try {
+            sd1.merge(sd2, false);  
+        } catch (Exception e) {
+            fail("Failed to merge: "+e);
+        }
+        
+        if (sd1.getContext().size() != 0) {
+            fail("Should be 0 context: "+sd1.getContext().size());
+        }
+    }
+
+    @Test
+    public void testMergeWithContext() {
+        
+        ServiceDefinition sd1=new ServiceDefinition();
+        
+        sd1.setServiceType(SERVICE_TYPE_1);
+        
+        ServiceDefinition sd2=new ServiceDefinition();
+        
+        sd2.setServiceType(SERVICE_TYPE_1);
+        sd2.getContext().add(new Context(Context.Type.Conversation, "c2"));
+        
+        try {
+            sd1.merge(sd2, true);  
+        } catch (Exception e) {
+            fail("Failed to merge: "+e);
+        }
+        
+        if (sd1.getContext().size() != 1) {
+            fail("Should be 1 context: "+sd1.getContext().size());
+        }
+    }
 }

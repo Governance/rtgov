@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import org.overlord.bam.activity.model.ActivityTypeId;
+
 /**
  * This class represents an abstract response within a service operation.
  *
@@ -29,6 +31,10 @@ public abstract class MEPDefinition implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
+    private ActivityTypeId _requestId=null;
+    private ActivityTypeId _responseId=null;
+    private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
+    
     private java.util.List<InvocationDefinition> _invocations=
                 new java.util.ArrayList<InvocationDefinition>();
     
@@ -47,6 +53,10 @@ public abstract class MEPDefinition implements java.io.Externalizable {
      */
     public MEPDefinition(MEPDefinition md) {
          
+        _requestId = md.getRequestId();
+        _responseId = md.getResponseId();
+        _properties.putAll(md.getProperties());
+
         for (InvocationDefinition id : md.getInvocations()) {
             _invocations.add(new InvocationDefinition(id));
         }
@@ -56,6 +66,68 @@ public abstract class MEPDefinition implements java.io.Externalizable {
         }
     }
     
+    /**
+     * This method sets the request activity type id.
+     * 
+     * @param id The request activity type id
+     */
+    public void setRequestId(ActivityTypeId id) {
+        _requestId = id;
+    }
+    
+    /**
+     * This method gets the request activity type id.
+     * This information will only be available if the
+     * definition represents a single MEP exchange,
+     * as opposed to the aggregation of multiple
+     * exchanges.
+     * 
+     * @return The request activity type id
+     */
+    public ActivityTypeId getRequestId() {
+        return (_requestId);
+    }
+    
+    /**
+     * This method sets the response activity type id.
+     * 
+     * @param id The response activity type id
+     */
+    public void setResponseId(ActivityTypeId id) {
+        _responseId = id;
+    }
+    
+    /**
+     * This method gets the response activity type id.
+     * This information will only be available if the
+     * definition represents a single MEP exchange,
+     * as opposed to the aggregation of multiple
+     * exchanges.
+     * 
+     * @return The response activity type id
+     */
+    public ActivityTypeId getResponseId() {
+        return (_responseId);
+    }
+    
+    /**
+     * This method sets the properties.
+     * 
+     * @param props The properties
+     */
+    public void setProperties(java.util.Map<String,String> props) {
+        _properties = props;
+    }
+
+    /**
+     * This method gets the properties.
+     * 
+     * @return The properties
+     */
+    public java.util.Map<String,String> getProperties() {
+        return (_properties);
+    }
+
     /**
      * This method sets the list of invocations associated
      * with the operation.
@@ -126,14 +198,24 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     
     /**
      * This method merges the information from the supplied
-     * MEP definition.
+     * MEP definition. Merging will result in any request
+     * and response ids being cleared, as the definition
+     * no longer relates to a single exchange.
      * 
      * @param mep The MEP definition to merge
      */
     public void merge(MEPDefinition mep) {
         
+        // Clear the request/response ids, and properties,
+        // as merged results no longer relate to a single exchange
+        _requestId = null;
+        _responseId = null;
+        _properties.clear();
+        
+        // Merge metrics
         getMetrics().merge(mep.getMetrics());
         
+        // Merge invocation information
         for (int i=0; i < mep.getInvocations().size(); i++) {
             InvocationDefinition id=mep.getInvocations().get(i);
             
@@ -154,6 +236,10 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
+        out.writeObject(_requestId);
+        out.writeObject(_responseId);
+        out.writeObject(_properties);    
+
         out.writeObject(_metrics);
         
         out.writeInt(_invocations.size());
@@ -165,10 +251,15 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
+        _requestId = (ActivityTypeId)in.readObject();
+        _responseId = (ActivityTypeId)in.readObject();
+        _properties = (java.util.Map<String, String>)in.readObject();
+
         _metrics = (InvocationMetric)in.readObject();
         
         int len=in.readInt();

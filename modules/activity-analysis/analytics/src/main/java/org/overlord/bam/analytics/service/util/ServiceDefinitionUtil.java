@@ -26,7 +26,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.overlord.bam.activity.model.ActivityType;
+import org.overlord.bam.activity.model.ActivityTypeId;
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
@@ -269,6 +271,14 @@ public final class ServiceDefinitionUtil {
             if (nrd == null) {
                 nrd = new RequestResponseDefinition();
                 op.setRequestResponse(nrd);
+                
+                // Set the request and response ids
+                nrd.setRequestId(ActivityTypeId.createId(rqr));
+                nrd.setResponseId(ActivityTypeId.createId(rps));
+                
+                // Copy the properties
+                nrd.getProperties().putAll(rqr.getProperties());
+                nrd.getProperties().putAll(rps.getProperties());
             }
             
             metrics = nrd.getMetrics();
@@ -281,6 +291,14 @@ public final class ServiceDefinitionUtil {
                 frd = new RequestFaultDefinition();
                 frd.setFault(rps.getFault());
                 
+                // Set the request and response ids
+                frd.setRequestId(ActivityTypeId.createId(rqr));
+                frd.setResponseId(ActivityTypeId.createId(rps));
+                
+                // Copy the properties
+                frd.getProperties().putAll(rqr.getProperties());
+                frd.getProperties().putAll(rps.getProperties());
+
                 op.getRequestFaults().add(frd);
             }
             
@@ -303,6 +321,15 @@ public final class ServiceDefinitionUtil {
         }
 
         metrics.setCount(metrics.getCount()+1);
+        
+        // Store context details
+        sd.getContext().addAll(rqr.getContext());
+        
+        for (Context c : rps.getContext()) {
+            if (!sd.getContext().contains(c)) {
+                sd.getContext().add(c);
+            }
+        }
         
         return (ret);
     }
@@ -353,10 +380,12 @@ public final class ServiceDefinitionUtil {
      * This method merges the supplied service definition snapshots.
      * 
      * @param snapshots The snapshots to merge
+     * @param retainContexts Whether to retain and merge context information
      * @return The merged service definitions
      */
     public static java.util.Map<String,ServiceDefinition> mergeSnapshots(
-                    java.util.List<java.util.Map<String,ServiceDefinition>> snapshots) {
+                    java.util.List<java.util.Map<String,ServiceDefinition>> snapshots,
+                    boolean retainContexts) {
         java.util.Map<String,ServiceDefinition> ret=
                         new java.util.HashMap<String, ServiceDefinition>();
         
@@ -378,7 +407,7 @@ public final class ServiceDefinitionUtil {
             for (java.util.Map<String,ServiceDefinition> sds : snapshots) {
                 if (sds.containsKey(key)) {
                     try {
-                        sd.merge(sds.get(key));
+                        sd.merge(sds.get(key), retainContexts);
                     } catch (Exception e) {
                         LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                                 "activity-server-jmsc.Messages").getString("ANALTICS-1"), e);

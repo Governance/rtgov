@@ -21,6 +21,17 @@ then
 		situation.setSubject($rt.getServiceType()+"/"+$rt.getOperation());
 		situation.setTimestamp(System.currentTimeMillis());
 		
+		situation.getProperties().putAll($rt.getProperties());
+
+		if ($rt.getRequestId() != null) {
+			situation.getActivityTypeIds().add($rt.getRequestId());
+		}
+		if ($rt.getResponseId() != null) {
+			situation.getActivityTypeIds().add($rt.getResponseId());
+		}
+		
+		situation.getContext().addAll($rt.getContext());
+		
 		String serviceName=$rt.getServiceType();
 		
 		if (serviceName.startsWith("{")) {

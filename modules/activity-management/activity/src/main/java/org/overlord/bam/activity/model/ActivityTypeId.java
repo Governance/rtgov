@@ -103,6 +103,17 @@ public class ActivityTypeId implements java.io.Externalizable {
     }
     
     /**
+     * This method creates an id associated with the
+     * supplied activity type.
+     * 
+     * @param at The activity type
+     * @return The id for the activity type
+     */
+    public static ActivityTypeId createId(ActivityType at) {
+        return (new ActivityTypeId(at.getUnitId(), at.getUnitIndex()));
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {

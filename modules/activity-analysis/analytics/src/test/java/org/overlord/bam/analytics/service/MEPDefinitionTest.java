@@ -20,6 +20,7 @@ package org.overlord.bam.analytics.service;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.bam.activity.model.ActivityTypeId;
 import org.overlord.bam.analytics.service.InvocationDefinition;
 import org.overlord.bam.analytics.service.MEPDefinition;
 
@@ -67,6 +68,26 @@ public class MEPDefinitionTest {
         
         if (mep1.getInvocation(SERVICE_TYPE_2, OPERATION_2, null) == null) {
             fail("Failed to get st2/op2");
+        }
+    }
+    
+    @Test
+    public void testMergeClearReqRespId() {
+        
+        MEPDefinition mep1=new MEPDefinition() {};
+        mep1.setRequestId(new ActivityTypeId());
+        mep1.setResponseId(new ActivityTypeId());
+        
+        MEPDefinition mep2=new MEPDefinition() {};
+        
+        mep1.merge(mep2);  
+        
+        if (mep1.getRequestId() != null) {
+            fail("Request id should be null");
+        }
+        
+        if (mep1.getResponseId() != null) {
+            fail("Response id should be null");
         }
     }
 }

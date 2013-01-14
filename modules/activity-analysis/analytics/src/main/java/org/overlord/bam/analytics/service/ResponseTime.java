@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import org.overlord.bam.activity.model.ActivityTypeId;
+import org.overlord.bam.activity.model.Context;
+
 /**
  * This class represents response time information associated with
  * the invocation of a service.
@@ -37,6 +40,14 @@ public class ResponseTime implements java.io.Externalizable {
     private long _max=0;
     private long _min=0;
     private long _timestamp=0;
+    
+    private ActivityTypeId _requestId=null;
+    private ActivityTypeId _responseId=null;
+    private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
+    
+    private java.util.List<Context> _contexts=
+                    new java.util.ArrayList<Context>();
+
 
     /**
      * Default constructor.
@@ -57,6 +68,12 @@ public class ResponseTime implements java.io.Externalizable {
         _max = rt.getMax();
         _min = rt.getMin();
         _timestamp = rt.getTimestamp();
+        
+        _requestId = rt.getRequestId();
+        _responseId = rt.getResponseId();
+        _properties.putAll(rt.getProperties());
+
+        _contexts.addAll(rt.getContext());
     }
     
     /**
@@ -186,6 +203,78 @@ public class ResponseTime implements java.io.Externalizable {
     }
     
     /**
+     * This method sets the request activity type id.
+     * 
+     * @param id The request activity type id
+     */
+    public void setRequestId(ActivityTypeId id) {
+        _requestId = id;
+    }
+    
+    /**
+     * This method sets the request activity type id.
+     * 
+     * @return The request activity type id
+     */
+    public ActivityTypeId getRequestId() {
+        return (_requestId);
+    }
+    
+    /**
+     * This method sets the response activity type id.
+     * 
+     * @param id The response activity type id
+     */
+    public void setResponseId(ActivityTypeId id) {
+        _responseId = id;
+    }
+    
+    /**
+     * This method sets the response activity type id.
+     * 
+     * @return The response activity type id
+     */
+    public ActivityTypeId getResponseId() {
+        return (_responseId);
+    }
+    
+    /**
+     * This method sets the properties.
+     * 
+     * @param props The properties
+     */
+    public void setProperties(java.util.Map<String,String> props) {
+        _properties = props;
+    }
+
+    /**
+     * This method gets the properties.
+     * 
+     * @return The properties
+     */
+    public java.util.Map<String,String> getProperties() {
+        return (_properties);
+    }
+
+    /**
+     * This method sets the context.
+     * 
+     * @param context The context
+     */
+    public void setContext(java.util.List<Context> context) {
+        _contexts = context;
+    }
+    
+    /**
+     * This method gets the context.
+     * 
+     * @return The context
+     */
+    public java.util.List<Context> getContext() {
+        return (_contexts);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public String toString() {
@@ -207,11 +296,21 @@ public class ResponseTime implements java.io.Externalizable {
         out.writeLong(_max);
         out.writeLong(_min);
         out.writeLong(_timestamp);
+        
+        out.writeObject(_requestId);
+        out.writeObject(_responseId);
+        out.writeObject(_properties);    
+
+        out.writeInt(_contexts.size());
+        for (int i=0; i < _contexts.size(); i++) {
+            out.writeObject(_contexts.get(i));
+        }
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
@@ -223,5 +322,14 @@ public class ResponseTime implements java.io.Externalizable {
         _max = in.readLong();
         _min = in.readLong();
         _timestamp = in.readLong();
+        
+        _requestId = (ActivityTypeId)in.readObject();
+        _responseId = (ActivityTypeId)in.readObject();
+        _properties = (java.util.Map<String, String>)in.readObject();
+
+        int len = in.readInt();
+        for (int i=0; i < len; i++) {
+            _contexts.add((Context)in.readObject());
+        }
     }
 }

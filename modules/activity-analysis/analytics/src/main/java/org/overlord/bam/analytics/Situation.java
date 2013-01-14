@@ -22,6 +22,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import org.overlord.bam.activity.model.ActivityTypeId;
+import org.overlord.bam.activity.model.Context;
 
 /**
  * This class represents the occurrence of an SLA violation.
@@ -66,6 +67,9 @@ public class Situation implements java.io.Externalizable {
     private Severity _severity=null;
     private java.util.List<ActivityTypeId> _activityTypeIds=
                         new java.util.ArrayList<ActivityTypeId>();
+    private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
+    private java.util.List<Context> _contexts=
+                        new java.util.ArrayList<Context>();
 
     /**
      * This method sets the situation type.
@@ -158,6 +162,15 @@ public class Situation implements java.io.Externalizable {
     }
 
     /**
+     * This method sets the list of activity type ids.
+     * 
+     * @param activityTypeIds The list of activity type ids
+     */
+    public void setActivityTypeIds(java.util.List<ActivityTypeId> activityTypeIds) {
+        _activityTypeIds = activityTypeIds;
+    }
+    
+    /**
      * This method returns the list of activity type ids
      * associated with the violation.
      * 
@@ -167,6 +180,42 @@ public class Situation implements java.io.Externalizable {
         return (_activityTypeIds);
     }
     
+    /**
+     * This method sets the properties.
+     * 
+     * @param props The properties
+     */
+    public void setProperties(java.util.Map<String,String> props) {
+        _properties = props;
+    }
+
+    /**
+     * This method gets the properties.
+     * 
+     * @return The properties
+     */
+    public java.util.Map<String,String> getProperties() {
+        return (_properties);
+    }
+
+    /**
+     * This method sets the context.
+     * 
+     * @param context The context
+     */
+    public void setContext(java.util.List<Context> context) {
+        _contexts = context;
+    }
+    
+    /**
+     * This method gets the context.
+     * 
+     * @return The context
+     */
+    public java.util.List<Context> getContext() {
+        return (_contexts);
+    }
+
     /**
      * This method returns the highest severity associated with the supplied
      * list of situations.
@@ -233,11 +282,19 @@ public class Situation implements java.io.Externalizable {
         for (int i=0; i < _activityTypeIds.size(); i++) {
             out.writeObject(_activityTypeIds.get(i));            
         }
+        
+        out.writeObject(_properties);    
+        
+        out.writeInt(_contexts.size());
+        for (int i=0; i < _contexts.size(); i++) {
+            out.writeObject(_contexts.get(i));
+        }
     }
 
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
@@ -251,6 +308,13 @@ public class Situation implements java.io.Externalizable {
         int len=in.readInt();
         for (int i=0; i < len; i++) {
             _activityTypeIds.add((ActivityTypeId)in.readObject());
+        }
+        
+        _properties = (java.util.Map<String, String>)in.readObject();
+
+        len = in.readInt();
+        for (int i=0; i < len; i++) {
+            _contexts.add((Context)in.readObject());
         }
     }
 }

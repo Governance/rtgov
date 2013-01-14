@@ -23,6 +23,7 @@ import java.io.ObjectOutput;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.analytics.service.util.ServiceDefinitionUtil;
 
 /**
@@ -39,6 +40,7 @@ public class ServiceDefinition implements java.io.Externalizable {
     private String _serviceType=null;
     private java.util.List<OperationDefinition> _operations=
                     new java.util.ArrayList<OperationDefinition>();
+    private java.util.List<Context> _contexts=new java.util.Vector<Context>();
     
     /**
      * Default constructor.
@@ -56,6 +58,11 @@ public class ServiceDefinition implements java.io.Externalizable {
         
         for (OperationDefinition op : sd.getOperations()) {
             _operations.add(new OperationDefinition(op));
+        }
+        
+        // Copy contexts
+        for (Context c : sd.getContext()) {
+            _contexts.add(new Context(c));
         }
     }
 
@@ -118,6 +125,24 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method sets the context.
+     * 
+     * @param context The context
+     */
+    public void setContext(java.util.List<Context> context) {
+        _contexts = context;
+    }
+    
+    /**
+     * This method gets the context.
+     * 
+     * @return The context
+     */
+    public java.util.List<Context> getContext() {
+        return (_contexts);
+    }
+
+    /**
      * This method returns the aggregated invocation metric information
      * from the operations.
      * 
@@ -135,33 +160,14 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
     
     /**
-     * {@inheritDoc}
-     */
-    public int hashCode() {
-        return (_serviceType.hashCode());
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals(Object obj) {
-        
-        if (obj instanceof ServiceDefinition
-                  && ((ServiceDefinition)obj).getServiceType().equals(_serviceType)) {
-            return (true);
-        }
-        
-        return (false);
-    }
-    
-    /**
      * This method merges the supplied definition with this
      * service definition.
      * 
      * @param sd The service definition to merge
+     * @param retainContexts Whether to merge context information
      * @throws Exception Failed to merge
      */
-    public void merge(ServiceDefinition sd) throws Exception {
+    public void merge(ServiceDefinition sd, boolean retainContexts) throws Exception {
         
         if (sd == null || !sd.getServiceType().equals(getServiceType())) {
             throw new IllegalArgumentException("Invalid service definition");
@@ -184,10 +190,38 @@ public class ServiceDefinition implements java.io.Externalizable {
                 getOperations().add(new OperationDefinition(opdef));
             }
         }
+        
+        if (retainContexts) {
+            for (Context c : sd.getContext()) {
+                if (!_contexts.contains(c)) {
+                    _contexts.add(c);
+                }
+            }
+        }
 
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Post-merge this=["+this+"]");
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return (_serviceType.hashCode());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object obj) {
+        
+        if (obj instanceof ServiceDefinition
+                  && ((ServiceDefinition)obj).getServiceType().equals(_serviceType)) {
+            return (true);
+        }
+        
+        return (false);
     }
     
     /**
@@ -217,6 +251,11 @@ public class ServiceDefinition implements java.io.Externalizable {
         for (int i=0; i < _operations.size(); i++) {
             out.writeObject(_operations.get(i));
         }
+        
+        out.writeInt(_contexts.size());
+        for (int i=0; i < _contexts.size(); i++) {
+            out.writeObject(_contexts.get(i));
+        }
     }
 
     /**
@@ -231,6 +270,11 @@ public class ServiceDefinition implements java.io.Externalizable {
         int len=in.readInt();
         for (int i=0; i < len; i++) {
             _operations.add((OperationDefinition)in.readObject());
+        }
+        
+        len = in.readInt();
+        for (int i=0; i < len; i++) {
+            _contexts.add((Context)in.readObject());
         }
     }
 }

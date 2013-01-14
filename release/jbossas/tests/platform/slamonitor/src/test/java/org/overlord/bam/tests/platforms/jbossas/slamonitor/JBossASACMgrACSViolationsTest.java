@@ -138,11 +138,13 @@ public class JBossASACMgrACSViolationsTest {
             
             java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
             
+            String orderId="PO-19838-XYZ";
+            
             String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
                         "   <soap:Body>"+
                         "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
                         "            <order>"+
-                        "                <orderId>PO-19838-XYZ</orderId>"+
+                        "                <orderId>"+orderId+"</orderId>"+
                         "                <itemId>JAM</itemId>"+
                         "                <quantity>200</quantity>"+
                         "                <customer>Fred</customer>"+
@@ -188,7 +190,47 @@ public class JBossASACMgrACSViolationsTest {
             if (result1.size() != 2) {
                 fail("2 event expected, but got: "+result1.size());
             }
+            
+            @SuppressWarnings("unchecked")
+            java.util.Map<String,?> results=(java.util.Map<String,?>)result1.get(1);
+            
+            System.out.println("RESULT KEYS="+results.keySet());
+            
+            // Check that conversation id is in the context
+            java.util.List<?> contextList=(java.util.List<?>)results.get("context");
+            
+            if (contextList.size() != 3) {
+                fail("Expecting 3 entries in context list: "+contextList.size());
+            }
 
+            @SuppressWarnings("unchecked")
+            java.util.Map<String,String> contextEntry=(java.util.Map<String,String>)contextList.get(2);
+            
+            if (!contextEntry.containsKey("value")) {
+                fail("'value' property not found in context entry");
+            }
+            
+            if (!contextEntry.get("value").equals(orderId)) {
+                fail("Value should be order id '"+orderId+"': "+contextEntry.get("value"));
+            }
+            
+            // Check that the customer properties has been included
+            @SuppressWarnings("unchecked")
+            java.util.Map<String,String> properties=
+                    (java.util.Map<String,String>)results.get("properties");
+            
+            if (properties.size() != 2) {
+                fail("Expecting 2 entries in property list: "+properties.size());
+            }
+            
+            if (!properties.containsKey("customer")) {
+                fail("Properties did not contain customer");
+            }
+            
+            if (!properties.get("customer").equals("Fred")) {
+                fail("Customer property not Fred: "+properties.get("customer"));
+            }
+            
         } catch (Exception e) {
             fail("Failed to invoke service: "+e);
         }

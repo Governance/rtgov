@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
@@ -247,6 +248,77 @@ public class ServiceDefinitionUtilTest {
         
         if (metrics.getCount() != 1) {
             fail("Count not 1: "+metrics.getCount());
+        }
+    }
+
+    @Test
+    public void testSingleServiceInvokedNormalWithContext() {
+        
+        // Create example activity events
+        ActivityUnit au=new ActivityUnit();
+        
+        RequestReceived rqr1=new RequestReceived();
+        rqr1.setUnitId("unit1");
+        rqr1.setUnitIndex(1);
+        rqr1.setServiceType(SERVICE_TYPE_1);
+        rqr1.setOperation(OPERATION_1);
+        rqr1.setMessageId("1");
+        rqr1.setTimestamp(10);
+        
+        Context c1=new Context(Context.Type.Conversation, "c1");
+        rqr1.getContext().add(c1);
+        
+        au.getActivityTypes().add(rqr1);
+
+        ResponseSent rps1=new ResponseSent();
+        rps1.setUnitId("unit1");
+        rps1.setUnitIndex(2);
+        rps1.setServiceType(SERVICE_TYPE_1);
+        rps1.setOperation(OPERATION_1);
+        rps1.setMessageId("2");
+        rps1.setReplyToId("1");
+        rps1.setTimestamp(20);
+        
+        rps1.getContext().add(c1);
+        
+        Context c2=new Context(Context.Type.Conversation, "c2");
+        rps1.getContext().add(c2);
+        
+        au.getActivityTypes().add(rps1);
+        
+        // Create service definition
+        java.util.Collection<ServiceDefinition> sdefs=
+                        ServiceDefinitionUtil.derive(au);
+        
+        if (sdefs.size() != 1) {
+            fail("One definition expected: "+sdefs.size());
+        }
+        
+        ServiceDefinition sdef=sdefs.iterator().next();
+        
+        // Check contexts - cardinality is same as combined activities, minus the 1 common context
+        if (sdef.getContext().size() != (rqr1.getContext().size()+rps1.getContext().size()-1)) {
+            fail("Unexpected number of contexts: "+sdef.getContext().size());
+        }
+        
+        if (!sdef.getContext().contains(c1)) {
+            fail("Context does not contain c1");
+        }
+        
+        if (!sdef.getContext().contains(c2)) {
+            fail("Context does not contain c2");
+        }
+        
+        OperationDefinition op=sdef.getOperation(OPERATION_1);
+        
+        RequestResponseDefinition rrd=op.getRequestResponse();
+        
+        if (rrd.getRequestId() == null) {
+            fail("Request id not set");
+        }
+        
+        if (rrd.getResponseId() == null) {
+            fail("Response id not set");
         }
     }
 
@@ -737,6 +809,7 @@ public class ServiceDefinitionUtilTest {
         
         ServiceDefinition st1=new ServiceDefinition();
         st1.setServiceType("st1");
+        st1.getContext().add(new Context(Context.Type.Conversation, "c1"));
         
         OperationDefinition op1=new OperationDefinition();
         st1.getOperations().add(op1);
@@ -771,6 +844,7 @@ public class ServiceDefinitionUtilTest {
         
         ServiceDefinition st2=new ServiceDefinition();
         st2.setServiceType("st2");
+        st2.getContext().add(new Context(Context.Type.Conversation, "c2"));
         
         OperationDefinition op2=new OperationDefinition();
         st2.getOperations().add(op2);
@@ -805,6 +879,7 @@ public class ServiceDefinitionUtilTest {
         
         ServiceDefinition st3=new ServiceDefinition();
         st3.setServiceType("st1");
+        st3.getContext().add(new Context(Context.Type.Conversation, "c3"));
         
         OperationDefinition op3=new OperationDefinition();
         st3.getOperations().add(op3);
@@ -850,7 +925,7 @@ public class ServiceDefinitionUtilTest {
         list.add(sds1);
         list.add(sds2);
         
-        java.util.Map<String,ServiceDefinition> merged=ServiceDefinitionUtil.mergeSnapshots(list);
+        java.util.Map<String,ServiceDefinition> merged=ServiceDefinitionUtil.mergeSnapshots(list, false);
         
         if (merged == null) {
             fail("No merged results");
@@ -869,6 +944,14 @@ public class ServiceDefinitionUtilTest {
         
         if (sd2 == null) {
             fail("SD2 is null");
+        }
+        
+        if (sd1.getContext().size() != 0) {
+            fail("SD1 No context should be retained");
+        }
+        
+        if (sd2.getContext().size() != 0) {
+            fail("SD2 No context should be retained");
         }
         
         if (sd1.getOperations().size() != 1) {
@@ -893,5 +976,151 @@ public class ServiceDefinitionUtilTest {
         if (opd1.getRequestResponse().getMetrics().getCount() != 15) {
             fail("Expecting count 15: "+opd1.getRequestResponse().getMetrics().getCount());
         }
+    }
+    
+    @Test
+    public void testMergeSnapshotsWithContext() {
+        
+        ServiceDefinition st1=new ServiceDefinition();
+        st1.setServiceType("st");
+        st1.getContext().add(new Context(Context.Type.Conversation, "c1"));
+        
+        OperationDefinition op1=new OperationDefinition();
+        st1.getOperations().add(op1);
+        
+        op1.setName("op1");
+        
+        RequestResponseDefinition nrd1=new RequestResponseDefinition();
+        nrd1.getMetrics().setCount(10);
+        nrd1.getMetrics().setAverage(1000);
+        nrd1.getMetrics().setMin(500);
+        nrd1.getMetrics().setMax(1500);
+        nrd1.getMetrics().setCountChange(+5);
+        nrd1.getMetrics().setAverageChange(+2);
+        nrd1.getMetrics().setMinChange(-5);
+        nrd1.getMetrics().setMaxChange(+20);
+        
+        op1.setRequestResponse(nrd1);
+        
+        RequestFaultDefinition frd1=new RequestFaultDefinition();
+        frd1.setFault("fault1");
+        
+        frd1.getMetrics().setCount(20);
+        frd1.getMetrics().setAverage(2000);
+        frd1.getMetrics().setMin(1500);
+        frd1.getMetrics().setMax(2500);
+        frd1.getMetrics().setCountChange(-10);
+        frd1.getMetrics().setAverageChange(+6);
+        frd1.getMetrics().setMinChange(0);
+        frd1.getMetrics().setMaxChange(+10);
+        
+        op1.getRequestFaults().add(frd1);
+        
+        ServiceDefinition st2=new ServiceDefinition();
+        st2.setServiceType("st");
+        st2.getContext().add(new Context(Context.Type.Conversation, "c2"));
+        
+        OperationDefinition op2=new OperationDefinition();
+        st2.getOperations().add(op2);
+        
+        op2.setName("op2");
+        
+        RequestResponseDefinition nrd2=new RequestResponseDefinition();
+        nrd2.getMetrics().setCount(10);
+        nrd2.getMetrics().setAverage(1000);
+        nrd2.getMetrics().setMin(500);
+        nrd2.getMetrics().setMax(1500);
+        nrd2.getMetrics().setCountChange(+5);
+        nrd2.getMetrics().setAverageChange(+2);
+        nrd2.getMetrics().setMinChange(-5);
+        nrd2.getMetrics().setMaxChange(+20);
+        
+        op2.setRequestResponse(nrd1);
+        
+        RequestFaultDefinition frd2=new RequestFaultDefinition();
+        frd2.setFault("fault2");
+        
+        frd2.getMetrics().setCount(20);
+        frd2.getMetrics().setAverage(2000);
+        frd2.getMetrics().setMin(1500);
+        frd2.getMetrics().setMax(2500);
+        frd2.getMetrics().setCountChange(-10);
+        frd2.getMetrics().setAverageChange(+6);
+        frd2.getMetrics().setMinChange(0);
+        frd2.getMetrics().setMaxChange(+10);
+        
+        op2.getRequestFaults().add(frd2);
+        
+        ServiceDefinition st3=new ServiceDefinition();
+        st3.setServiceType("st");
+        st3.getContext().add(new Context(Context.Type.Conversation, "c3"));
+        
+        OperationDefinition op3=new OperationDefinition();
+        st3.getOperations().add(op3);
+        
+        op3.setName("op1");
+        
+        RequestResponseDefinition nrd3=new RequestResponseDefinition();
+        nrd3.getMetrics().setCount(5);
+        nrd3.getMetrics().setAverage(500);
+        nrd3.getMetrics().setMin(250);
+        nrd3.getMetrics().setMax(750);
+        nrd3.getMetrics().setCountChange(+2);
+        nrd3.getMetrics().setAverageChange(+1);
+        nrd3.getMetrics().setMinChange(-2);
+        nrd3.getMetrics().setMaxChange(+10);
+        
+        op3.setRequestResponse(nrd3);
+        
+        RequestFaultDefinition frd3=new RequestFaultDefinition();
+        frd3.setFault("fault3");
+        
+        frd3.getMetrics().setCount(20);
+        frd3.getMetrics().setAverage(2000);
+        frd3.getMetrics().setMin(1500);
+        frd3.getMetrics().setMax(2500);
+        frd3.getMetrics().setCountChange(-10);
+        frd3.getMetrics().setAverageChange(+6);
+        frd3.getMetrics().setMinChange(0);
+        frd3.getMetrics().setMaxChange(+10);
+        
+        op3.getRequestFaults().add(frd3);
+        
+        
+        java.util.Map<String,ServiceDefinition> sds1=new java.util.HashMap<String,ServiceDefinition>();
+        sds1.put(st1.getServiceType(), st1);
+        
+        java.util.Map<String,ServiceDefinition> sds2=new java.util.HashMap<String,ServiceDefinition>();
+        sds2.put(st2.getServiceType(), st2);
+        
+        java.util.Map<String,ServiceDefinition> sds3=new java.util.HashMap<String,ServiceDefinition>();
+        sds3.put(st3.getServiceType(), st3);
+        
+        java.util.List<java.util.Map<String,ServiceDefinition>> list=
+                new java.util.ArrayList<java.util.Map<String,ServiceDefinition>>();
+        list.add(sds1);
+        list.add(sds2);
+        list.add(sds3);
+        
+        java.util.Map<String,ServiceDefinition> merged=ServiceDefinitionUtil.mergeSnapshots(list, true);
+        
+        if (merged == null) {
+            fail("No merged results");
+        }
+        
+        if (merged.size() != 1) {
+            fail("One service defintion expected");
+        }
+        
+        ServiceDefinition sd=merged.get("st");
+        
+        if (sd == null) {
+            fail("SD is null");
+        }
+        
+        if (sd.getContext().size() != 3) {
+            fail("Expecting 3 context to be retained: "+sd.getContext().size());
+        }
+        
     }
 }

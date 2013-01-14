@@ -107,6 +107,16 @@ public class ServiceResponseTimeProcessor extends org.overlord.bam.epn.EventProc
         
         rt.setTimestamp(System.currentTimeMillis());
         
+        // Copy the request/response activity type ids
+        rt.setRequestId(mep.getRequestId());
+        rt.setResponseId(mep.getResponseId());
+        
+        // Copy the properties
+        rt.getProperties().putAll(mep.getProperties());
+        
+        // Obtain context information from the service definition
+        rt.getContext().addAll(sdef.getContext());
+        
         rts.add(rt);
     }
 }
