@@ -23,16 +23,22 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.util.ActivityUtil;
 
+import org.overlord.bam.common.config.BAMConfig;
+
 /**
  * This class provides the REST client implementation of the activity server.
  *
  */
+@Singleton
 public class RESTActivityServer implements ActivityServer {
 
     private static final Logger LOG=Logger.getLogger(RESTActivityServer.class.getName());
@@ -42,7 +48,8 @@ public class RESTActivityServer implements ActivityServer {
     private static final String QUERY="/overlord-bam/activity/query";
     private static final String EVENTS="/overlord-bam/activity/events";
     
-    private String _url="http://localhost:8080";
+    @Inject @BAMConfig
+    private String _serverURL="http://localhost:8080";
             
     /**
      * This method sets the URL of the Activity Server.
@@ -50,7 +57,7 @@ public class RESTActivityServer implements ActivityServer {
      * @param url The URL
      */
     public void setServerURL(String url) {
-        _url = url;
+        _serverURL = url;
     }
 
     /**
@@ -59,18 +66,20 @@ public class RESTActivityServer implements ActivityServer {
      * @return The URL
      */
     public String getServerURL() {
-        return (_url);
+        return (_serverURL);
     }
 
     /**
      * {@inheritDoc}
      */
     public void store(List<ActivityUnit> activities) throws Exception {
-        URL storeUrl = new URL(_url+STORE);
+        URL storeUrl = new URL(_serverURL+STORE);
         
         if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("RESTActivityServer store: "+activities);
+            LOG.finer("RESTActivityServer["+storeUrl+"] store: "+activities);
         }
+        
+        LOG.info("STORE to "+storeUrl);
 
         HttpURLConnection connection = (HttpURLConnection) storeUrl.openConnection();
         connection.setRequestMethod("POST");
@@ -108,11 +117,11 @@ public class RESTActivityServer implements ActivityServer {
     public ActivityUnit getActivityUnit(String id) throws Exception {
         ActivityUnit ret=null;
         
-        if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("RESTActivityServer getActivityUnit: "+id);
-        }
+        URL queryUrl = new URL(_serverURL+UNIT+"?id="+id);
         
-        URL queryUrl = new URL(_url+UNIT+"?id="+id);
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("RESTActivityServer["+queryUrl+"] getActivityUnit: "+id);
+        }
         
         HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
         connection.setRequestMethod("GET");
@@ -147,11 +156,11 @@ public class RESTActivityServer implements ActivityServer {
     public List<ActivityType> getActivityTypes(String context) throws Exception {
         List<ActivityType> ret=null;
         
-        if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("RESTActivityServer getActivityTypes: "+context);
-        }
+        URL queryUrl = new URL(_serverURL+EVENTS+"?context="+context);
         
-        URL queryUrl = new URL(_url+EVENTS+"?context="+context);
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("RESTActivityServer["+queryUrl+"] getActivityTypes: "+context);
+        }
         
         HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
         connection.setRequestMethod("GET");
@@ -185,11 +194,11 @@ public class RESTActivityServer implements ActivityServer {
     public List<ActivityType> query(QuerySpec query) throws Exception {
         List<ActivityType> ret=null;
         
-        if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("RESTActivityServer query: "+query);
-        }
+        URL queryUrl = new URL(_serverURL+QUERY);
         
-        URL queryUrl = new URL(_url+QUERY);
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("RESTActivityServer["+queryUrl+"] query: "+query);
+        }
         
         HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
         connection.setRequestMethod("POST");

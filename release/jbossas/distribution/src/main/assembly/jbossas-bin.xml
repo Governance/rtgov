@@ -74,25 +74,26 @@
 	<dependencySets>
 
 		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
+			<outputDirectory>deployments/server</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.bam.release.jbossas:overlord-bam:war</include>
 				<include>org.overlord.bam.content:overlord-bam-epn:war</include>
 				<include>org.overlord.bam.content:overlord-bam-acs:war</include>
 				<include>org.overlord.bam.content.services:overlord-bam-services:war</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
-			<unpack>false</unpack>
-			<includes>
 				<include>org.overlord.gadgets.server:gadgets:war</include>
 				<include>org.overlord.gadgets.server:gadget-server:war</include>
 				<include>org.overlord.gadgets.server:gadget-web:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>deployments/restc</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.bam.release.jbossas:overlord-bam-client-rest:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-bam.war</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>/</outputDirectory>

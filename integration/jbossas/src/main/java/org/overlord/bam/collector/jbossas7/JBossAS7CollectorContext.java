@@ -66,14 +66,14 @@ public class JBossAS7CollectorContext implements CollectorContext {
      * {@inheritDoc}
      */
     public String getHost() {
-        return ("MySystem");
+        return (System.getProperty("jboss.qualified.host.name","Unknown-Host"));
     }
 
     /**
      * {@inheritDoc}
      */
     public String getNode() {
-        return ("MyNode");
+        return (System.getProperty("jboss.node.name","Unknown-Node"));
     }
 
     /**

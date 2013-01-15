@@ -380,6 +380,17 @@ public final class ServiceDefinitionUtil {
      * This method merges the supplied service definition snapshots.
      * 
      * @param snapshots The snapshots to merge
+     * @return The merged service definitions
+     */
+    public static java.util.Map<String,ServiceDefinition> mergeSnapshots(
+                    java.util.List<java.util.Map<String,ServiceDefinition>> snapshots) {
+        return (mergeSnapshots(snapshots, false));
+    }
+    
+    /**
+     * This method merges the supplied service definition snapshots.
+     * 
+     * @param snapshots The snapshots to merge
      * @param retainContexts Whether to retain and merge context information
      * @return The merged service definitions
      */
