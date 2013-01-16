@@ -59,7 +59,7 @@ public class JBossAS7CollectorContext implements CollectorContext {
      * {@inheritDoc}
      */
     public String getPrincipal() {
-        return ("Me");
+        return ("Unknown-Principal");
     }
 
     /**
@@ -74,13 +74,6 @@ public class JBossAS7CollectorContext implements CollectorContext {
      */
     public String getNode() {
         return (System.getProperty("jboss.node.name","Unknown-Node"));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getPort() {
-        return ("8080");
     }
 
     /**

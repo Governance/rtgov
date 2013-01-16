@@ -48,7 +48,6 @@ public class JPAActivityStoreTest {
         Origin origin=new Origin();
         origin.setHost("MyHost");
         origin.setNode("MyNode");
-        origin.setPort("1010");
         origin.setPrincipal("Me");
         origin.setThread("MyThread");
         act.setOrigin(origin);

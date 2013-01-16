@@ -37,7 +37,6 @@ public class Origin implements java.io.Externalizable {
     private String _thread=null;
     private String _host=null;
     private String _node=null;
-    private String _port=null;
 
     /**
      * The default constructor.
@@ -55,7 +54,6 @@ public class Origin implements java.io.Externalizable {
         _thread = origin._thread;
         _host = origin._host;
         _node = origin._node;
-        _port = origin._port;
     }
     
     /**
@@ -135,24 +133,6 @@ public class Origin implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the port.
-     * 
-     * @param port The port
-     */
-    public void setPort(String port) {
-        _port = port;
-    }
-    
-    /**
-     * This method gets the port.
-     * 
-     * @return The port
-     */
-    public String getPort() {
-        return (_port);
-    }
-    
-    /**
      * {@inheritDoc}
      */
     public void writeExternal(ObjectOutput out) throws IOException {
@@ -162,7 +142,6 @@ public class Origin implements java.io.Externalizable {
         out.writeObject(_thread);
         out.writeObject(_host);
         out.writeObject(_node);
-        out.writeObject(_port);
     }
 
     /**
@@ -176,6 +155,5 @@ public class Origin implements java.io.Externalizable {
         _thread = (String)in.readObject();
         _host = (String)in.readObject();
         _node = (String)in.readObject();
-        _port = (String)in.readObject();
     }
 }

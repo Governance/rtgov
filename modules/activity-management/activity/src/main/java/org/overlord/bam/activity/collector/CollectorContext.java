@@ -53,15 +53,6 @@ public interface CollectorContext {
     public String getNode();
     
     /**
-     * This method returns the server port. If multiple
-     * servers are started on the same host, then this
-     * may provide the information to distinguish them.
-     * 
-     * @return The server port
-     */
-    public String getPort();
-    
-    /**
      * This method returns the transaction manager,
      * if available.
      * 
