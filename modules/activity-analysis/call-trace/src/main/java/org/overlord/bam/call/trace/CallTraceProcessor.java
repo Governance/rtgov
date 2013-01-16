@@ -269,8 +269,10 @@ public class CallTraceProcessor {
                             if (subAU != null) {
                                 processAU(state, subAU, topLevel);
                                 
-                                call = state.getCallStack().peek();
-                                tasks = state.getTasksStack().peek();
+                                call = (state.getCallStack().size() > 0
+                                        ? state.getCallStack().peek() : null);
+                                tasks = (state.getTasksStack().size() > 0
+                                        ? state.getTasksStack().peek() : null);
                             }
                         }
                     } else if (cur instanceof RequestReceived) {                    
