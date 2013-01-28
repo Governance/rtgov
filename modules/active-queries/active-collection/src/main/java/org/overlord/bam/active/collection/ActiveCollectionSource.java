@@ -44,6 +44,7 @@ public class ActiveCollectionSource {
     private ActiveCollectionVisibility _visibility=ActiveCollectionVisibility.Public;
     
     private ActiveCollectionFactory _factory=null;
+    private boolean _lazy=false;
     
     private long _itemExpiration=0;
     private int _maxItems=0;
@@ -93,6 +94,8 @@ public class ActiveCollectionSource {
         _name = source._name;
         _type = source._type;
         _visibility = source._visibility;
+        _factory = source._factory;
+        _lazy = source._lazy;
         _itemExpiration = source._itemExpiration;
         _maxItems = source._maxItems;
         _highWaterMark = source._highWaterMark;
@@ -195,6 +198,26 @@ public class ActiveCollectionSource {
     }
     
     /**
+     * This method returns whether the active collection associated
+     * with this source should be created lazily or upon registration.
+     * 
+     * @return Whether to create active collection lazily (default is false)
+     */
+    public boolean getLazy() {
+        return (_lazy);
+    }
+    
+    /**
+     * This method sets whether the active collection associated
+     * with this source should be created lazily or upon registration.
+     * 
+     * @param lazy Whether to create active collection lazily
+     */
+    public void setLazy(boolean lazy) {
+        _lazy = lazy;
+    }
+    
+    /**
      * This method returns the item expiration duration.
      * 
      * @return The number of milliseconds that the item should remain
@@ -257,13 +280,47 @@ public class ActiveCollectionSource {
     }
     
     /**
+     * This method determines whether the source has an associated
+     * active collection.
+     * 
+     * @return Whether an active collection has been created for the source
+     */
+    public boolean hasActiveCollection() {
+        return (_activeCollection != null);
+    }
+    
+    /**
      * This method returns the Active Collection associated with the
      * source.
      * 
      * @return The active collection
      */
     @JsonIgnore
-    public ActiveCollection getActiveCollection() {
+    public synchronized ActiveCollection getActiveCollection() {
+        
+        // Create the active collection, if not already defined
+        if (_activeCollection == null) {
+            ActiveCollectionFactory factory=(_factory == null
+                    ? ActiveCollectionFactory.DEFAULT_FACTORY : _factory);
+            
+            _activeCollection = factory.createActiveCollection(this);
+
+            // If active change listeners defined, then 
+            // add them to the active collection
+            if (_activeCollection != null && _listeners.size() > 0) {
+                
+                for (AbstractActiveChangeListener l : _listeners) {
+                    
+                    if (LOG.isLoggable(Level.FINER)) {
+                        LOG.finer("Register active collection '"
+                                   +getName()+"' with listener from source: "+l);
+                    }
+                    
+                    _activeCollection.addActiveChangeListener(l);
+                }
+            }
+        }
+
         return (_activeCollection);
     }
 
@@ -541,23 +598,8 @@ public class ActiveCollectionSource {
     public void init() throws Exception {
         
         preInit();
-        
-        // Create the active collection, if not already defined
-        if (_activeCollection == null) {
-            ActiveCollectionFactory factory=(_factory == null
-                    ? ActiveCollectionFactory.DEFAULT_FACTORY : _factory);
-            
-            _activeCollection = factory.createActiveCollection(this);
-        }
-        
-        // Check that active collection has been set
-        if (_activeCollection == null) {
-            throw new Exception("Active collection has not been associated with the '"
-                                +getName()+"' source");
-        }
-        
-        // If active change listeners defined, then instantiate them
-        // and add them to the active collection
+
+        // If active change listeners defined, then initialize them
         if (_listeners.size() > 0) {
             
             for (AbstractActiveChangeListener l : _listeners) {
@@ -569,7 +611,9 @@ public class ActiveCollectionSource {
                 
                 l.init();
                 
-                _activeCollection.addActiveChangeListener(l);
+                if (_activeCollection != null) {
+                    _activeCollection.addActiveChangeListener(l);
+                }
             }
         }
         
@@ -647,9 +691,9 @@ public class ActiveCollectionSource {
      */
     public void insert(Object key, Object value) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("insert key="+key+" value="+value+" ac="+_activeCollection);
+            LOG.finest("insert key="+key+" value="+value+" ac="+getActiveCollection());
         }
-        _activeCollection.insert(key, value);
+        getActiveCollection().insert(key, value);
     }
 
     /**
@@ -664,9 +708,9 @@ public class ActiveCollectionSource {
      */
     public void update(Object key, Object value) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("update key="+key+" value="+value+" ac="+_activeCollection);
+            LOG.finest("update key="+key+" value="+value+" ac="+getActiveCollection());
         }
-        _activeCollection.update(key, value);        
+        getActiveCollection().update(key, value);        
     }
 
     /**
@@ -677,9 +721,9 @@ public class ActiveCollectionSource {
      */
     public void remove(Object key, Object value) {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("remove key="+key+" value="+value+" ac="+_activeCollection);
+            LOG.finest("remove key="+key+" value="+value+" ac="+getActiveCollection());
         }
-        _activeCollection.remove(key, value);
+        getActiveCollection().remove(key, value);
     }
     
     /**
@@ -802,7 +846,7 @@ public class ActiveCollectionSource {
     public void close() throws Exception {
         
         // Unregister any pre-defined listeners
-        if (_listeners.size() > 0) {
+        if (_listeners.size() > 0 && _activeCollection != null) {
                         
             for (AbstractActiveChangeListener l : _listeners) {
                 _activeCollection.removeActiveChangeListener(l);

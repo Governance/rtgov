@@ -65,6 +65,7 @@
 		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
 		<javaee-api.version>6.0</javaee-api.version>
 		<javassist.version>3.9.0.GA</javassist.version>
+		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.1.1.Final</jbossas.version>
 		<jbossts.version>4.16.4.Final</jbossts.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
@@ -157,6 +158,12 @@
 				<version>${javaee-api.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss-javaee.version}</version>
+				<type>pom</type>
+			</dependency>
 			<dependency>
 				<groupId>org.hibernate.javax.persistence</groupId>
 				<artifactId>hibernate-jpa-2.0-api</artifactId>

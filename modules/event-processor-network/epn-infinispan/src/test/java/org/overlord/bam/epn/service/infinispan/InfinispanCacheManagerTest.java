@@ -1,8 +1,3 @@
-package org.overlord.bam.epn.service.infinispan;
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 /*
  * JBoss, Home of Professional Open Source
  * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
@@ -20,6 +15,11 @@ import org.junit.Test;
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
+package org.overlord.bam.epn.service.infinispan;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 public class InfinispanCacheManagerTest {
 

@@ -1,6 +1,6 @@
 [ {
     "type" : "RequestSent",
-    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-{ID}-ABC</orderId>                <itemId>BUTTER</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
+    "content" : "<orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"><order><orderId>{ID}</orderId><itemId>BUTTER</itemId><quantity>100</quantity><customer>Fred</customer></order></orders:submitOrder>",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
@@ -14,7 +14,7 @@
     }]
   }, {
     "type" : "RequestReceived",
-    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-{ID}-ABC</orderId>                <itemId>BUTTER</itemId>                <quantity>50</quantity>            </order>        </orders:submitOrder>",
+    "content" : "<orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"><order><orderId>{ID}</orderId><itemId>BUTTER</itemId><quantity>100</quantity><customer>Fred</customer></order></orders:submitOrder>",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
@@ -26,7 +26,10 @@
     },{
     	"value":"{ID}",
     	"type":"Conversation"
-    }]
+    }],
+    "properties" : {
+    	"customer":"Fred"
+    }
   }, {
     "type" : "RequestSent",
     "content" : "BUTTER",
@@ -40,7 +43,10 @@
     },{
     	"value":"{ID}",
     	"type":"Conversation"
-    }]
+    }],
+    "properties" : {
+    	"customer":"Fred"
+    }
   }, {
     "type" : "RequestReceived",
     "content" : "BUTTER",
@@ -91,7 +97,7 @@
   }, {
     "type" : "ResponseSent",
     "replyToId" : "{ID}-1",
-    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-{ID}-ABC\",\"accepted\":true}",
+    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"{ID}\",\"accepted\":true}",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.OrderAck",
@@ -102,11 +108,15 @@
     },{
     	"value":"{ID}",
     	"type":"Conversation"
-    }]
+    }],
+    "properties" : {
+    	"customer":"Fred",
+    	"total":"250"
+    }
   }, {
     "type" : "ResponseReceived",
     "replyToId" : "{ID}-1",
-    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"PO-{ID}-ABC\",\"accepted\":true}",
+    "content" : "{\"status\":\"Order Accepted\",\"orderId\":\"{ID}\",\"accepted\":true}",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "java:org.switchyard.quickstarts.demos.orders.OrderAck",
@@ -117,5 +127,9 @@
     },{
     	"value":"{ID}",
     	"type":"Conversation"
-    }]
+    }],
+    "properties" : {
+    	"customer":"Fred",
+    	"total":"250"
+    }
   } ]

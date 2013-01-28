@@ -72,6 +72,10 @@ public class AbstractActiveCollectionManagerTest {
         
         try {
             mgr.register(acs);
+            
+            // Forces creation of active collection which is instantiated
+            // lazily by the mgr
+            mgr.getActiveCollection(acs.getName());
         } catch (Exception e) {
             fail("Failed to register active collection source: "+e);
         }
@@ -137,11 +141,6 @@ public class AbstractActiveCollectionManagerTest {
             mgr.unregister(acs);
         } catch (Exception e) {
             fail("Failed to unregister active collection source: "+e);
-        }
-        
-        // Check that the active collection for this source has been removed
-        if (acs.getActiveCollection() != null) {
-            fail("Active collection on source should not be set");
         }
         
         if (mgr.getActiveCollection(TEST_AC) != null) {

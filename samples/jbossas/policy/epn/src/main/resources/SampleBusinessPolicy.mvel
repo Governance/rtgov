@@ -36,8 +36,10 @@ if (event.operation == "submitOrder") {
 		principal.put("suspended", Boolean.TRUE);
 	}
 	
-	principal.put("exposure", newtotal);
+	principal.put("exposure", newtotal);	
 	principals.put(customer, principal);
+	
+	epn.logDebug("Updated principal '"+customer+"': "+principals.get(customer));	
 	
 } else if (event.operation == "makePayment") {
 
@@ -66,7 +68,9 @@ if (event.operation == "submitOrder") {
 			}
 			
 			principal.put("exposure", newamount);
-			principals.put(customer, principal);			
+			principals.put(customer, principal);
+				
+			epn.logDebug("Updated principal '"+customer+"': "+principals.get(customer));	
 		}
 	}
 }

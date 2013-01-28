@@ -47,10 +47,16 @@ public class ActiveCollectionSourceTest {
         
         try {
             acs.init();
-        
-            fail("Should have failed initialization as no active collection");
+            
         } catch (Exception e) {
+            fail("Should not have failed init: "+e);
         }
+        
+        // Need to pre-empt creation if lazy instantiation
+        if (acs.getActiveCollection() != null) {
+            fail("Active collection should be null");
+        }
+    
     }
     
     @Test

@@ -142,7 +142,7 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
      * @throws Exception Failed to handle message
      */
     public void handleEventsMessage(Message message) throws Exception {
-        if (message instanceof ObjectMessage) {
+        if (message instanceof ObjectMessage) {            
             
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("EPNManager("+this+"): Received event batch: "+message);

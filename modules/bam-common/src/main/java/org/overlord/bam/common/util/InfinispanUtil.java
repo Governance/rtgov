@@ -17,8 +17,15 @@
  */
 package org.overlord.bam.common.util;
 
+import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+
 import org.infinispan.manager.CacheContainer;
 import org.infinispan.manager.DefaultCacheManager;
+import org.overlord.bam.common.config.BAMProperties;
 
 /**
  * This class provides utility functions for working with Infinispan.
@@ -26,9 +33,13 @@ import org.infinispan.manager.DefaultCacheManager;
  */
 public final class InfinispanUtil {
 
+    private static final String INFINISPAN_CONTAINER = "infinispan.container";
+
     private static final String INFINISPAN_CONFIG = "bam-infinispan.xml";
     
     private static CacheContainer _cacheContainer=null;
+    
+    private static final Logger LOG=Logger.getLogger(InfinispanUtil.class.getName());
 
     /**
      * Private constructor.
@@ -37,15 +48,59 @@ public final class InfinispanUtil {
     }
     
     /**
-     * This method returns the cache container.
+     * This method returns the cache container. If no JNDI name is
+     * provided, then the details will be obtained from configuration.
      * 
-     * @return The cache container
-     * @throws Exception Failed to get cache container
+     * @param container The optional container JNDI name
+     * @return The cache container, or null if failed to obtain
      */
-    public static CacheContainer getCacheContainer() throws Exception {
-        if (_cacheContainer == null) {
-            _cacheContainer = new DefaultCacheManager(INFINISPAN_CONFIG);
+    public static synchronized CacheContainer getCacheContainer(String container) {
+        CacheContainer ret=null;
+        boolean f_initDefault=false;
+        
+        // If container not defined, and default container not initialized,
+        // then check if default container name has been defined in the BAM
+        // properties
+        if (container == null && _cacheContainer == null) {
+            container = BAMProperties.getProperty(INFINISPAN_CONTAINER);
+            
+            // If default container retrieved from bam properties, then
+            // need to save retrieved container reference
+            f_initDefault = true;
         }
+        
+        if (container != null) {
+            try {
+                InitialContext ctx=new InitialContext();
+                
+                ret = (org.infinispan.manager.CacheContainer)
+                        ctx.lookup(container);
+                
+                ret.start();
+                
+                if (f_initDefault) {
+                    _cacheContainer = ret;
+                }
+                
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                        "bam-common.Messages").getString("BAM-COMMON-1"),
+                        container), e);
+            }
+        } else {
+            if (_cacheContainer == null) {
+                try {
+                    _cacheContainer = new DefaultCacheManager(INFINISPAN_CONFIG);
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                            "bam-common.Messages").getString("BAM-COMMON-2"),
+                            container), e);
+                }
+            }
+            
+            ret = _cacheContainer;
+        }
+        
         return (_cacheContainer);
     }
 }

@@ -58,7 +58,7 @@ public class EPNTest {
         java.util.Map<Object,Object> cache=null;
         
         try {
-            CacheContainer cc=InfinispanUtil.getCacheContainer();
+            CacheContainer cc=InfinispanUtil.getCacheContainer(null);
             
             cache = cc.getCache("Principals");
             
@@ -197,7 +197,7 @@ public class EPNTest {
         java.util.Map<Object,Object> cache=null;
         
         try {
-            CacheContainer cc=InfinispanUtil.getCacheContainer();
+            CacheContainer cc=InfinispanUtil.getCacheContainer(null);
             
             cache = cc.getCache("Principals");
             
@@ -337,7 +337,7 @@ public class EPNTest {
         java.util.Map<Object,Object> cache=null;
         
         try {
-            CacheContainer cc=InfinispanUtil.getCacheContainer();
+            CacheContainer cc=InfinispanUtil.getCacheContainer(null);
             
             cache = cc.getCache("Principals");
             

@@ -31,12 +31,10 @@ public class InfinispanActiveMapTest {
     @Test
     public void testNotifications() {
         
-        CacheContainer cc=null;
+        CacheContainer cc=org.overlord.bam.common.util.InfinispanUtil.getCacheContainer(null);
         
-        try {
-            cc = org.overlord.bam.common.util.InfinispanUtil.getCacheContainer();
-        } catch (Exception e) {
-            fail("Failed to get default cache container: "+e);
+        if (cc == null) {
+            fail("Failed to get default cache container");
         }
         
         Cache<Object,Object> cache=cc.getCache("Test");

@@ -34,7 +34,9 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     private static final Logger LOG=Logger.getLogger(AbstractActiveCollectionManager.class.getName());
 
     private java.util.Map<String, ActiveCollection> _activeCollections=
-                new java.util.HashMap<String, ActiveCollection>();
+            new java.util.HashMap<String, ActiveCollection>();
+    private java.util.Map<String, ActiveCollectionSource> _activeCollectionSources=
+            new java.util.HashMap<String, ActiveCollectionSource>();
     private java.util.Map<String, java.lang.ref.SoftReference<ActiveCollection>> _derivedActiveCollections=
                 new java.util.HashMap<String, java.lang.ref.SoftReference<ActiveCollection>>();
     private java.util.List<ActiveCollectionListener> _activeCollectionListeners=
@@ -83,20 +85,31 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
         ActiveCollection ac=null;
         
         // Check whether active collection for name has already been created
-        synchronized (_activeCollections) {
-            if (_activeCollections.containsKey(acs.getName())) {
-                throw new IllegalArgumentException("Active collection already exists for '"
+        synchronized (_activeCollectionSources) {
+            if (_activeCollectionSources.containsKey(acs.getName())) {
+                throw new IllegalArgumentException("Active collection source already exists for '"
                         +acs.getName()+"'");
             }
             
             // Initialize the active collection source
             acs.init();
             
-            ac = acs.getActiveCollection();
+            _activeCollectionSources.put(acs.getName(), acs);
             
-            _activeCollections.put(acs.getName(), ac);
-            
-            LOG.info("Registered active collection for source '"+acs.getName()+"'");            
+            LOG.info("Registered active collection source '"+acs.getName()+"'");            
+        }
+        
+        // If not lazy instantiation
+        if (!acs.getLazy()) {
+            synchronized (_activeCollections) {
+                ac = acs.getActiveCollection();
+
+                _activeCollections.put(acs.getName(), ac);
+
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Registered active collection '"+acs.getName()+"' immediately");
+                }
+            }
         }
         
         if (ac != null) {
@@ -112,20 +125,25 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
      * {@inheritDoc}
      */
     public void unregister(ActiveCollectionSource acs) throws Exception {
+        ActiveCollection ac=null;
         
-        if (acs.getActiveCollection() != null) {
+        synchronized (_activeCollections) {
+            ac = _activeCollections.remove(acs.getName());
+        }
+        
+        if (ac != null) {
             // Active collection needs to be unregistered before closing
             // the active collection source, as the source unregisters
             // any active change listeners associated with the collection
             synchronized (_activeCollectionListeners) {
                 for (int i=0; i < _activeCollectionListeners.size(); i++) {
-                    _activeCollectionListeners.get(i).unregistered(acs.getActiveCollection());
+                    _activeCollectionListeners.get(i).unregistered(ac);
                 }
             }
         }
         
-        synchronized (_activeCollections) {
-            if (!_activeCollections.containsKey(acs.getName())) {
+        synchronized (_activeCollectionSources) {
+            if (!_activeCollectionSources.containsKey(acs.getName())) {
                 throw new IllegalArgumentException("Active collection '"
                         +acs.getName()+"' is not registered");
             }
@@ -135,7 +153,7 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
           
             acs.setActiveCollection(null);
             
-            _activeCollections.remove(acs.getName());
+            _activeCollectionSources.remove(acs.getName());
             
             LOG.info("Unregistered active collection for source '"+acs.getName()+"'");
         }
@@ -148,10 +166,36 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
         ActiveCollection ret=_activeCollections.get(name);
         
         if (ret == null) {
-            java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
-            
-            if (ref != null) {
-                ret = ref.get();
+            // Check if active collection source exists
+            if (_activeCollectionSources.containsKey(name)) {
+                synchronized (_activeCollections) {
+                    // Check again, to make sure active collection wasn't
+                    // created in another thread outside sync block
+                    if (_activeCollections.containsKey(name)) {
+                        ret = _activeCollections.get(name);
+                    } else {
+                        ActiveCollectionSource acs=_activeCollectionSources.get(name);
+                        ret = acs.getActiveCollection();
+                        
+                        if (ret != null) {
+                            _activeCollections.put(acs.getName(), ret);
+                            
+                            // Register listeners
+                            synchronized (_activeCollectionListeners) {
+                                for (int i=0; i < _activeCollectionListeners.size(); i++) {
+                                    _activeCollectionListeners.get(i).registered(ret);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {       
+                // Check if a derived active collection
+                java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
+                
+                if (ref != null) {
+                    ret = ref.get();
+                }
             }
         }
         
@@ -225,43 +269,47 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
             LOG.finest("Running active collection cleanup ....");
         }
         
-        synchronized (_activeCollections) {
-            for (ActiveCollection ac : _activeCollections.values()) {
+        synchronized (_activeCollectionSources) {
+            for (ActiveCollectionSource acs : _activeCollectionSources.values()) {
                 
-                try {
-                    ac.cleanup();
-                } catch (Exception e) {
-                    LOG.severe(MessageFormat.format(
-                            java.util.PropertyResourceBundle.getBundle(
-                            "active-collection.Messages").getString("ACTIVE-COLLECTION-3"),
-                            ac.getName()));
-                }
-                
-                // Check whether the high water mark has been breached
-                if (ac.getHighWaterMark() > 0) {
+                if (acs.hasActiveCollection()) {
+                    ActiveCollection ac=acs.getActiveCollection();
                     
-                    if (ac.getHighWaterMarkWarningIssued()) {
+                    try {
+                        ac.cleanup();
+                    } catch (Exception e) {
+                        LOG.severe(MessageFormat.format(
+                                java.util.PropertyResourceBundle.getBundle(
+                                "active-collection.Messages").getString("ACTIVE-COLLECTION-3"),
+                                ac.getName()));
+                    }
+                    
+                    // Check whether the high water mark has been breached
+                    if (ac.getHighWaterMark() > 0) {
                         
-                        if (ac.getSize() < ac.getHighWaterMark()) {
+                        if (ac.getHighWaterMarkWarningIssued()) {
+                            
+                            if (ac.getSize() < ac.getHighWaterMark()) {
+                                // TODO: Currently log message, but should also
+                                // report via MBean when implemented
+                                LOG.info("Active collection '"+ac.getName()
+                                        +"' has returned below its high water mark ("
+                                        +ac.getHighWaterMark()+")");
+    
+                                // Reset warning indicator
+                                ac.setHighWaterMarkWarningIssued(false);
+                            }
+                        } else if (ac.getSize() > ac.getHighWaterMark()) {
+                            
+                            // Issue warning
                             // TODO: Currently log message, but should also
                             // report via MBean when implemented
-                            LOG.info("Active collection '"+ac.getName()
-                                    +"' has returned below its high water mark ("
+                            LOG.warning("Active collection '"+ac.getName()
+                                    +"' has exceeded its high water mark ("
                                     +ac.getHighWaterMark()+")");
-
-                            // Reset warning indicator
-                            ac.setHighWaterMarkWarningIssued(false);
+                            
+                            ac.setHighWaterMarkWarningIssued(true);
                         }
-                    } else if (ac.getSize() > ac.getHighWaterMark()) {
-                        
-                        // Issue warning
-                        // TODO: Currently log message, but should also
-                        // report via MBean when implemented
-                        LOG.warning("Active collection '"+ac.getName()
-                                +"' has exceeded its high water mark ("
-                                +ac.getHighWaterMark()+")");
-                        
-                        ac.setHighWaterMarkWarningIssued(true);
                     }
                 }
             }

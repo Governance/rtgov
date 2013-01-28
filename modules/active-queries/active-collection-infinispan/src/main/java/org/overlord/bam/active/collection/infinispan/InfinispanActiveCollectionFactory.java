@@ -17,11 +17,8 @@
  */
 package org.overlord.bam.active.collection.infinispan;
 
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
 
 import org.overlord.bam.active.collection.ActiveCollection;
 import org.overlord.bam.active.collection.ActiveCollectionFactory;
@@ -39,15 +36,15 @@ public class InfinispanActiveCollectionFactory extends ActiveCollectionFactory {
     private static final Logger LOG=Logger.getLogger(InfinispanActiveCollectionFactory.class.getName());
 
     private String _cache=null;
-    private String _jndiName=null;
+    private String _container=null;
     
     /**
      * This method sets the JNDI name for the container resource.
      * 
      * @param jndiName The JNDI name for the container resource
      */
-    public void setJNDIName(String jndiName) {
-        _jndiName = jndiName;
+    public void setContainer(String jndiName) {
+        _container = jndiName;
     }
     
     /**
@@ -56,8 +53,8 @@ public class InfinispanActiveCollectionFactory extends ActiveCollectionFactory {
      * 
      * @return The JNDI name for the container resource
      */
-    public String getJNDIName() {
-        return (_jndiName);
+    public String getContainer() {
+        return (_container);
     }
     
     /**
@@ -87,34 +84,13 @@ public class InfinispanActiveCollectionFactory extends ActiveCollectionFactory {
         if (acs.getType() == ActiveCollectionType.Map) {
             
             // Obtain the infinspan cache
-            org.infinispan.manager.CacheContainer cacheContainer=null;
-
-            if (_jndiName != null) {
-                try {
-                    InitialContext ctx=new InitialContext();
-                    
-                    cacheContainer = (org.infinispan.manager.CacheContainer)
-                            ctx.lookup(_jndiName);
-                } catch (Exception e) {
-                    LOG.log(Level.WARNING, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                            "active-collection-infinispan.Messages").getString("ACTIVE-COLLECTION-INFINISPAN-1"),
-                            _jndiName), e);
-                }
-            } else {
-                try {
-                    cacheContainer = InfinispanUtil.getCacheContainer();
-                    
-                } catch (Exception e) {
-                    LOG.log(Level.WARNING, java.util.PropertyResourceBundle.getBundle(
-                            "active-collection-infinispan.Messages").getString("ACTIVE-COLLECTION-INFINISPAN-2"), e);
-                }
-            }
-            
+            org.infinispan.manager.CacheContainer cacheContainer=InfinispanUtil.getCacheContainer(_container);
+                
             if (cacheContainer != null) {
                 java.util.Map<Object,Object> ac=cacheContainer.getCache(_cache);
                                 
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Infinispan cache [jndiName="+_jndiName+" name="+_cache+"] = "+ac);
+                    LOG.fine("Infinispan cache [container="+_container+" name="+_cache+"] = "+ac);
                 }
  
                 ret = new InfinispanActiveMap(acs, ac);

@@ -39,6 +39,7 @@
     "@class" : "org.overlord.bam.active.collection.ActiveCollectionSource",
     "name" : "Principals",
     "type" : "Map",
+    "lazy" : true,
     "visibility" : "Private",
     "factory" : {
         "@class" : "org.overlord.bam.active.collection.infinispan.InfinispanActiveCollectionFactory",

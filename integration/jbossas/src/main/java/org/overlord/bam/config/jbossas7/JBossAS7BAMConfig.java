@@ -24,13 +24,14 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.overlord.bam.common.config.BAMConfig;
+import org.overlord.bam.common.config.BAMPropertiesProvider;
 
 /**
  * This class is responsible for providing configuration values
  * for code that injects the BAMConfig annotation.
  *
  */
-public class JBossAS7BAMConfig {
+public class JBossAS7BAMConfig implements BAMPropertiesProvider {
     
     private static final String OVERLORD_BAM_FOLDER = "overlord-bam";
 
@@ -39,7 +40,7 @@ public class JBossAS7BAMConfig {
     private static final Logger LOG=Logger.getLogger(JBossAS7BAMConfig.class.getName());
     
     private static java.util.Properties _properties=null;
-
+    
     /**
      * This method provides configuration information for injection
      * points identified by the BAMConfig annotation.
@@ -112,4 +113,18 @@ public class JBossAS7BAMConfig {
         
         return (_properties);
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String getProperty(String name) {
+        java.util.Properties props=getProperties();
+        
+        if (props != null) {
+            return (props.getProperty(name));
+        }
+        
+        return (null);
+    }
+
 }

@@ -17,13 +17,9 @@
  */
 package org.overlord.bam.epn.service.infinispan;
 
-import java.text.MessageFormat;
-
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
 
 import org.infinispan.Cache;
 import org.infinispan.transaction.TransactionMode;
@@ -39,7 +35,7 @@ public class InfinispanCacheManager extends CacheManager {
 
     private static final Logger LOG=Logger.getLogger(InfinispanCacheManager.class.getName());
 
-    private String _jndiName=null;
+    private String _container=null;
     
     private CacheContainer _cacheContainer=null;
     
@@ -48,8 +44,8 @@ public class InfinispanCacheManager extends CacheManager {
      * 
      * @param jndiName The JNDI name for the container resource
      */
-    public void setJNDIName(String jndiName) {
-        _jndiName = jndiName;
+    public void setContainer(String jndiName) {
+        _container = jndiName;
     }
     
     /**
@@ -58,8 +54,8 @@ public class InfinispanCacheManager extends CacheManager {
      * 
      * @return The JNDI name for the container resource
      */
-    public String getJNDIName() {
-        return (_jndiName);
+    public String getContainer() {
+        return (_container);
     }
     
     /**
@@ -69,31 +65,11 @@ public class InfinispanCacheManager extends CacheManager {
      */
     protected CacheContainer getCacheContainer() {
         if (_cacheContainer == null) {
-            if (_jndiName != null) {
-                try {
-                    InitialContext ctx=new InitialContext();
-                    
-                    _cacheContainer = (org.infinispan.manager.CacheContainer)
-                            ctx.lookup(_jndiName);
-                    
-                } catch (Exception e) {
-                    LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                            "epn-infinispan.Messages").getString("EPN-INFINISPAN-1"),
-                            _jndiName), e);
-                }
-            } else {
-                try {
-                    _cacheContainer = org.overlord.bam.common.util.InfinispanUtil.getCacheContainer();
-                    
-                } catch (Exception e) {
-                    LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                            "epn-infinispan.Messages").getString("EPN-INFINISPAN-2"), e);
-                }
-            }
+            _cacheContainer = org.overlord.bam.common.util.InfinispanUtil.getCacheContainer(_container);
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Returning cache container [jndi="+_jndiName+"] = "+_cacheContainer);
+            LOG.finest("Returning cache container [container="+_container+"] = "+_cacheContainer);
         }
         
         return (_cacheContainer);
@@ -108,7 +84,7 @@ public class InfinispanCacheManager extends CacheManager {
         if (container == null) {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Requested cache '"+name
-                        +"', but no cache container ("+_jndiName+")");
+                        +"', but no cache container ("+_container+")");
             }
             return (null);
         }
@@ -148,7 +124,7 @@ public class InfinispanCacheManager extends CacheManager {
 
                     return true;
                 }
-                
+
                 boolean ret=cache.getAdvancedCache().lock(key);
                 
                 if (LOG.isLoggable(Level.FINEST)) {
