@@ -33,8 +33,6 @@ import org.overlord.bam.common.config.BAMPropertiesProvider;
  */
 public class JBossAS7BAMConfig implements BAMPropertiesProvider {
     
-    private static final String OVERLORD_BAM_FOLDER = "overlord-bam";
-
     private static final String OVERLORD_BAM_PROPERTIES = "overlord-bam.properties";
 
     private static final Logger LOG=Logger.getLogger(JBossAS7BAMConfig.class.getName());
@@ -90,8 +88,7 @@ public class JBossAS7BAMConfig implements BAMPropertiesProvider {
                 if (configPath == null) {
                     LOG.warning("Unable to find JBoss server configuration directory (jboss.server.config.dir)");
                 } else {
-                    java.io.File f=new java.io.File(configPath+java.io.File.separator+OVERLORD_BAM_FOLDER,
-                                        OVERLORD_BAM_PROPERTIES);
+                    java.io.File f=new java.io.File(configPath, OVERLORD_BAM_PROPERTIES);
                     
                     if (!f.exists()) {
                         LOG.warning(java.util.PropertyResourceBundle.getBundle(

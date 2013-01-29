@@ -49,7 +49,7 @@
 								<copy todir="${env.JBOSS_HOME}/standalone/deployments/overlord-bam" >
 									<fileset dir="deployments/${type}" />
 								</copy>
-								<copy todir="${env.JBOSS_HOME}/standalone/configuration/overlord-bam" >
+								<copy todir="${env.JBOSS_HOME}/standalone/configuration" >
 									<fileset dir="configuration/${type}" />
 								</copy>
 							</target>
@@ -66,7 +66,7 @@
 								<echo message="Remove Overlord BAM from: ${env.JBOSS_HOME}"/>
 								<delete dir="${env.JBOSS_HOME}/modules/org/overlord/bam"/>
 								<delete dir="${env.JBOSS_HOME}/standalone/deployments/overlord-bam"/>
-								<delete dir="${env.JBOSS_HOME}/standalone/configuration/overlord-bam"/>
+								<delete file="${env.JBOSS_HOME}/standalone/configuration/overlord-bam.properties"/>
 							</target>
 						</configuration>
 						<goals>
