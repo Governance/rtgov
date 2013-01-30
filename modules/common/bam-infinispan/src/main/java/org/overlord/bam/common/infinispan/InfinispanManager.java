@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.common.util;
+package org.overlord.bam.common.infinispan;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
@@ -25,26 +25,28 @@ import javax.naming.InitialContext;
 
 import org.infinispan.manager.CacheContainer;
 import org.infinispan.manager.DefaultCacheManager;
-import org.overlord.bam.common.config.BAMProperties;
+import org.overlord.bam.common.util.BAMProperties;
 
 /**
  * This class provides utility functions for working with Infinispan.
  *
  */
-public final class InfinispanUtil {
+public final class InfinispanManager {
 
     private static final String INFINISPAN_CONTAINER = "infinispan.container";
 
     private static final String INFINISPAN_CONFIG = "bam-infinispan.xml";
     
-    private static CacheContainer _cacheContainer=null;
+    // Untyped to avoid classloading issues when CDI scans classes, if Infinispan
+    // is not in class path
+    private static Object _cacheContainer=null;
     
-    private static final Logger LOG=Logger.getLogger(InfinispanUtil.class.getName());
+    private static final Logger LOG=Logger.getLogger(InfinispanManager.class.getName());
 
     /**
      * Private constructor.
      */
-    private InfinispanUtil() {
+    private InfinispanManager() {
     }
     
     /**
@@ -84,7 +86,7 @@ public final class InfinispanUtil {
                 
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                        "bam-common.Messages").getString("BAM-COMMON-1"),
+                        "bam-infinspan.Messages").getString("BAM-INFINISPAN-1"),
                         container), e);
             }
         } else {
@@ -93,14 +95,14 @@ public final class InfinispanUtil {
                     _cacheContainer = new DefaultCacheManager(INFINISPAN_CONFIG);
                 } catch (Exception e) {
                     LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                            "bam-common.Messages").getString("BAM-COMMON-2"),
+                            "bam-infinspan.Messages").getString("BAM-INFINISPAN-2"),
                             container), e);
                 }
             }
             
-            ret = _cacheContainer;
+            ret = (CacheContainer)_cacheContainer;
         }
         
-        return (_cacheContainer);
+        return (ret);
     }
 }

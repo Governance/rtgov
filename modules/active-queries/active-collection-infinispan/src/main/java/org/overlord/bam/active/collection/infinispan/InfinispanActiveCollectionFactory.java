@@ -24,7 +24,7 @@ import org.overlord.bam.active.collection.ActiveCollection;
 import org.overlord.bam.active.collection.ActiveCollectionFactory;
 import org.overlord.bam.active.collection.ActiveCollectionSource;
 import org.overlord.bam.active.collection.ActiveCollectionType;
-import org.overlord.bam.common.util.InfinispanUtil;
+import org.overlord.bam.common.infinispan.InfinispanManager;
 
 
 /**
@@ -84,7 +84,7 @@ public class InfinispanActiveCollectionFactory extends ActiveCollectionFactory {
         if (acs.getType() == ActiveCollectionType.Map) {
             
             // Obtain the infinspan cache
-            org.infinispan.manager.CacheContainer cacheContainer=InfinispanUtil.getCacheContainer(_container);
+            org.infinispan.manager.CacheContainer cacheContainer=InfinispanManager.getCacheContainer(_container);
                 
             if (cacheContainer != null) {
                 java.util.Map<Object,Object> ac=cacheContainer.getCache(_cache);

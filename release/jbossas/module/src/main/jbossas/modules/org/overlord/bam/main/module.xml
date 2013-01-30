@@ -30,7 +30,8 @@
         <resource-root path="active-collection-infinispan.jar"/>
         <resource-root path="activity.jar"/>
         <resource-root path="analytics.jar"/>
-        <resource-root path="bam-common.jar"/>
+        <resource-root path="bam-infinispan.jar"/>
+        <resource-root path="bam-util.jar"/>
         <resource-root path="epn-cep.jar"/>
         <resource-root path="epn-core.jar"/>
         <resource-root path="epn-infinispan.jar"/>

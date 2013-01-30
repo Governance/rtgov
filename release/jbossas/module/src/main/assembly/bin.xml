@@ -42,7 +42,8 @@
 			<outputDirectory>org/overlord/bam/main</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
-				<include>org.overlord.bam:bam-common:jar</include>
+				<include>org.overlord.bam.common:bam-util:jar</include>
+				<include>org.overlord.bam.common:bam-infinispan:jar</include>
 				<include>org.overlord.bam.activity-management:activity:jar</include>
 				<include>org.overlord.bam.event-processor-network:epn-core:jar</include>
 				<include>org.overlord.bam.event-processor-network:epn-cep:jar</include>

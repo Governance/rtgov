@@ -30,12 +30,9 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.naming.InitialContext;
 
 import org.overlord.bam.epn.EPNManager;
 import org.overlord.bam.epn.Network;
@@ -95,17 +92,13 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
     public void close() throws Exception {
         LOG.info("Unregister the EPNManagement MBean");
 
+        /* BAM-22 - comment out for now, as only an issue on shutdown
         try {
-            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
-            
-            java.util.Set<Bean<?>> beans=bm.getBeans(EPNManager.class);
-            
-            if (beans.size() > 0) {
-                _epnManager.removeNetworkListener(this);
-            }
+            _epnManager.removeNetworkListener(this);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to unregister network listener", e);
         }
+        */
         
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 

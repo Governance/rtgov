@@ -23,8 +23,8 @@ import java.util.logging.Logger;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
-import org.overlord.bam.common.config.BAMConfig;
-import org.overlord.bam.common.config.BAMPropertiesProvider;
+import org.overlord.bam.common.util.BAMConfig;
+import org.overlord.bam.common.util.BAMPropertiesProvider;
 
 /**
  * This class is responsible for providing configuration values

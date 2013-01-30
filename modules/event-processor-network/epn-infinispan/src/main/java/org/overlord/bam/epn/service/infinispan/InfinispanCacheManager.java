@@ -65,7 +65,7 @@ public class InfinispanCacheManager extends CacheManager {
      */
     protected CacheContainer getCacheContainer() {
         if (_cacheContainer == null) {
-            _cacheContainer = org.overlord.bam.common.util.InfinispanUtil.getCacheContainer(_container);
+            _cacheContainer = org.overlord.bam.common.infinispan.InfinispanManager.getCacheContainer(_container);
         }
         
         if (LOG.isLoggable(Level.FINEST)) {

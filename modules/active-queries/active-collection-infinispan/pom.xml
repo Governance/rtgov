@@ -19,8 +19,8 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam</groupId>
-			<artifactId>bam-common</artifactId>
+			<groupId>org.overlord.bam.common</groupId>
+			<artifactId>bam-infinispan</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

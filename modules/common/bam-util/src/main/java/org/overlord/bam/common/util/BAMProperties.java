@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.common.config;
+package org.overlord.bam.common.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,7 +80,7 @@ public class BAMProperties {
                 }
             } catch (Exception e) {                
                 LOG.warning(java.util.PropertyResourceBundle.getBundle(
-                        "bam-common.Messages").getString("BAM-COMMON-3"));
+                        "bam-util.Messages").getString("BAM-UTIL-1"));
             }
             
             _initialized = true;

@@ -25,7 +25,7 @@ import org.overlord.bam.activity.model.soa.RequestReceived;
 import org.overlord.bam.activity.model.soa.RequestSent;
 import org.overlord.bam.activity.model.soa.ResponseReceived;
 import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.common.util.InfinispanUtil;
+import org.overlord.bam.common.infinispan.InfinispanManager;
 import org.overlord.bam.epn.Network;
 import org.overlord.bam.epn.embedded.EmbeddedEPNManager;
 import org.overlord.bam.epn.util.NetworkUtil;
@@ -58,7 +58,7 @@ public class EPNTest {
         java.util.Map<Object,Object> cache=null;
         
         try {
-            CacheContainer cc=InfinispanUtil.getCacheContainer(null);
+            CacheContainer cc=InfinispanManager.getCacheContainer(null);
             
             cache = cc.getCache("Principals");
             
@@ -197,7 +197,7 @@ public class EPNTest {
         java.util.Map<Object,Object> cache=null;
         
         try {
-            CacheContainer cc=InfinispanUtil.getCacheContainer(null);
+            CacheContainer cc=InfinispanManager.getCacheContainer(null);
             
             cache = cc.getCache("Principals");
             
@@ -337,7 +337,7 @@ public class EPNTest {
         java.util.Map<Object,Object> cache=null;
         
         try {
-            CacheContainer cc=InfinispanUtil.getCacheContainer(null);
+            CacheContainer cc=InfinispanManager.getCacheContainer(null);
             
             cache = cc.getCache("Principals");
             

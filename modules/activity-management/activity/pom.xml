@@ -14,8 +14,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.bam</groupId>
-			<artifactId>bam-common</artifactId>
+			<groupId>org.overlord.bam.common</groupId>
+			<artifactId>bam-util</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		

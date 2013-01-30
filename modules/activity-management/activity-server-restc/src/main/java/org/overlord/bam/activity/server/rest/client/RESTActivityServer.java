@@ -32,7 +32,7 @@ import org.overlord.bam.activity.server.ActivityServer;
 import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.util.ActivityUtil;
 
-import org.overlord.bam.common.config.BAMConfig;
+import org.overlord.bam.common.util.BAMConfig;
 
 /**
  * This class provides the REST client implementation of the activity server.

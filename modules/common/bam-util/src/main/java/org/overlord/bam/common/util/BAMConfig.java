@@ -15,21 +15,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.common.config;
+package org.overlord.bam.common.util;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+
+import javax.inject.Qualifier;
 
 /**
- * This interface provides access to BAM properties.
+ * This annotation represents an injectable configuration field.
  *
  */
-public interface BAMPropertiesProvider {
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+public @interface BAMConfig {
 
-    /**
-     * This method returns the property associated with the
-     * supplied name.
-     * 
-     * @param name The property name
-     * @return The value, or null if not found
-     */
-    public String getProperty(String name);
-    
 }

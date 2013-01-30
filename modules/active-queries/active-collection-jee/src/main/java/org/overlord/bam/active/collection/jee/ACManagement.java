@@ -30,12 +30,9 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.naming.InitialContext;
 
 import org.overlord.bam.active.collection.ActiveChangeListener;
 import org.overlord.bam.active.collection.ActiveCollection;
@@ -96,19 +93,14 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
     public void close() throws Exception {
         LOG.info("Unregister the ACManagement MBean");
 
+        /* BAM-22 - comment out for now, as only an issue on shutdown
         try {
-            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
-            
-            java.util.Set<Bean<?>> beans=bm.getBeans(ActiveCollectionManager.class);
-            
-            if (beans.size() > 0) {
-                _acManager.removeActiveCollectionListener(this);
-            }
+            _acManager.removeActiveCollectionListener(this);
         } catch (Exception e) {
-            
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-2"), e);
+                        "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-2"), e);
         }
+        */
         
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 

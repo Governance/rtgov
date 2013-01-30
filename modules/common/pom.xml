@@ -3,22 +3,19 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam</groupId>
-	<artifactId>modules</artifactId>
+	<artifactId>common</artifactId>
 	<packaging>pom</packaging>
-	<name>Overlord BAM::Modules</name>
+	<name>Overlord BAM::Modules::Common</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>modules</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<modules>
-		<module>common</module>
-		<module>activity-management</module>
-		<module>activity-analysis</module>
-		<module>event-processor-network</module>
-		<module>active-queries</module>
+		<module>bam-util</module>
+		<module>bam-infinispan</module>
 	</modules>
 
 </project>
