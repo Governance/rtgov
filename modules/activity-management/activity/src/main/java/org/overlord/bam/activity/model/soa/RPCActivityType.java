@@ -21,21 +21,19 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.Context;
+import org.overlord.bam.activity.model.common.MessageExchange;
 
 /**
  * This activity type represents a RPC activity.
  *
  */
 @Entity
-public abstract class RPCActivityType extends ActivityType implements java.io.Externalizable {
+public abstract class RPCActivityType extends MessageExchange implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
@@ -43,9 +41,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     private String _operation=null;
     private String _fault=null;
 
-    private String _messageType=null;
-    private String _content=null;
-    
     /**
      * The default constructor.
      */
@@ -58,11 +53,10 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
      * @param rpc The RPC activity to copy
      */
     public RPCActivityType(RPCActivityType rpc) {
+        super(rpc);
         _serviceType = rpc._serviceType;
         _operation = rpc._operation;
         _fault = rpc._fault;
-        _messageType = rpc._messageType;
-        _content = rpc._content;
     }
     
     /**
@@ -138,44 +132,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
     }
     
     /**
-     * This method sets the message type.
-     * 
-     * @param mtype The message type
-     */
-    public void setMessageType(String mtype) {
-        _messageType = mtype;
-    }
-    
-    /**
-     * This method gets the message type.
-     * 
-     * @return The message type
-     */
-    public String getMessageType() {
-        return (_messageType);
-    }
-    
-    /**
-     * This method sets the content.
-     * 
-     * @param content The content
-     */
-    public void setContent(String content) {
-        _content = content;
-    }
-    
-    /**
-     * This method gets the content.
-     * 
-     * @return The content
-     */
-    @Column(length=10240)
-    @Lob
-    public String getContent() {
-        return (_content);
-    }
-    
-    /**
      * This method gets the message id. When used
      * for correlation against a response, it should
      * only be used to correlate against the
@@ -234,8 +190,8 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
                 +" serviceType="+_serviceType
                 +" operation="+_operation
                 +" fault="+_fault
-                +" messageType="+_messageType
-                +" content="+_content);
+                +" messageType="+getMessageType()
+                +" content="+getContent());
     }
     
     /**
@@ -249,8 +205,6 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         out.writeObject(_serviceType);
         out.writeObject(_operation);
         out.writeObject(_fault);
-        out.writeObject(_messageType);
-        out.writeObject(_content);
     }
 
     /**
@@ -265,7 +219,5 @@ public abstract class RPCActivityType extends ActivityType implements java.io.Ex
         _serviceType = (String)in.readObject();
         _operation = (String)in.readObject();
         _fault = (String)in.readObject();
-        _messageType = (String)in.readObject();
-        _content = (String)in.readObject();
     }
 }

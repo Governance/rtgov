@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model.bpm;
+package org.overlord.bam.activity.model.mom;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -23,69 +23,51 @@ import java.io.ObjectOutput;
 
 import javax.persistence.Entity;
 
+import org.overlord.bam.activity.model.common.MessageExchange;
+
 /**
- * This activity type represents a process started event.
+ * This activity type represents a MOM activity type.
  *
  */
 @Entity
-public class ProcessStarted extends BPMActivityType implements java.io.Externalizable {
+public abstract class MOMActivityType extends MessageExchange implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    private String _processType=null;
-    private String _version=null;
+    private String _destination=null;
 
     /**
      * The default constructor.
      */
-    public ProcessStarted() {
+    public MOMActivityType() {
     }
     
     /**
      * The copy constructor.
      * 
-     * @param ba The bpm activity to copy
+     * @param mat The activity type to copy
      */
-    public ProcessStarted(ProcessStarted ba) {
-        super(ba);
-        _processType = ba._processType;
-        _version = ba._version;
+    public MOMActivityType(MOMActivityType mat) {
+        super(mat);
+        _destination = mat._destination;
     }
     
     /**
-     * This method sets the process type.
+     * This method sets the destination.
      * 
-     * @param processType The process type
+     * @param destination The destination
      */
-    public void setProcessType(String processType) {
-        _processType = processType;
+    public void setDestination(String destination) {
+        _destination = destination;
     }
     
     /**
-     * This method gets the process type.
+     * This method gets the destination.
      * 
-     * @return The process type
+     * @return The destination
      */
-    public String getProcessType() {
-        return (_processType);
-    }
-    
-    /**
-     * This method sets the version.
-     * 
-     * @param version The version
-     */
-    public void setVersion(String version) {
-        _version = version;
-    }
-    
-    /**
-     * This method gets the version.
-     * 
-     * @return The version
-     */
-    public String getVersion() {
-        return (_version);
+    public String getDestination() {
+        return (_destination);
     }
     
     /**
@@ -96,8 +78,7 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
         
         out.writeInt(VERSION);
         
-        out.writeObject(_processType);
-        out.writeObject(_version);
+        out.writeObject(_destination);
     }
 
     /**
@@ -109,7 +90,6 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
         
         in.readInt(); // Consume version, as not required for now
         
-        _processType = (String)in.readObject();
-        _version = (String)in.readObject();
+        _destination = (String)in.readObject();
     }
 }

@@ -47,6 +47,7 @@ public class ResponseSent extends RPCActivityType implements java.io.Externaliza
      * @param rpc The rpc activity to copy
      */
     public ResponseSent(ResponseSent rpc) {
+        super(rpc);
         _replyToId = rpc._replyToId;
     }
     

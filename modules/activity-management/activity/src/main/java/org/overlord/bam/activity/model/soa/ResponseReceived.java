@@ -47,6 +47,7 @@ public class ResponseReceived extends RPCActivityType implements java.io.Externa
      * @param rpc The rpc activity to copy
      */
     public ResponseReceived(ResponseReceived rpc) {
+        super(rpc);
         _replyToId = rpc._replyToId;
     }
     

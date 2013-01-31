@@ -28,7 +28,7 @@ import javax.persistence.Entity;
  *
  */
 @Entity
-public class MessageReceived extends MessageExchange implements java.io.Externalizable {
+public class MessageReceived extends MOMActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
@@ -44,6 +44,7 @@ public class MessageReceived extends MessageExchange implements java.io.External
      * @param mex The message exchange to copy
      */
     public MessageReceived(MessageReceived mex) {
+        super(mex);
     }
     
     /**

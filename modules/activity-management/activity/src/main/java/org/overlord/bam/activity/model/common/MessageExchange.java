@@ -15,77 +15,83 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model.bpm;
+package org.overlord.bam.activity.model.common;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
+
+import org.overlord.bam.activity.model.ActivityType;
 
 /**
- * This activity type represents a process started event.
+ * This activity type represents a message exchange.
  *
  */
 @Entity
-public class ProcessStarted extends BPMActivityType implements java.io.Externalizable {
+public abstract class MessageExchange extends ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    private String _processType=null;
-    private String _version=null;
-
+    private String _messageType=null;
+    private String _content=null;
+    
     /**
      * The default constructor.
      */
-    public ProcessStarted() {
+    public MessageExchange() {
     }
     
     /**
      * The copy constructor.
      * 
-     * @param ba The bpm activity to copy
+     * @param mex The message exchange to copy
      */
-    public ProcessStarted(ProcessStarted ba) {
-        super(ba);
-        _processType = ba._processType;
-        _version = ba._version;
+    public MessageExchange(MessageExchange mex) {
+        super(mex);
+        _messageType = mex._messageType;
+        _content = mex._content;
     }
     
     /**
-     * This method sets the process type.
+     * This method sets the message type.
      * 
-     * @param processType The process type
+     * @param mtype The message type
      */
-    public void setProcessType(String processType) {
-        _processType = processType;
+    public void setMessageType(String mtype) {
+        _messageType = mtype;
     }
     
     /**
-     * This method gets the process type.
+     * This method gets the message type.
      * 
-     * @return The process type
+     * @return The message type
      */
-    public String getProcessType() {
-        return (_processType);
+    public String getMessageType() {
+        return (_messageType);
     }
     
     /**
-     * This method sets the version.
+     * This method sets the content.
      * 
-     * @param version The version
+     * @param content The content
      */
-    public void setVersion(String version) {
-        _version = version;
+    public void setContent(String content) {
+        _content = content;
     }
     
     /**
-     * This method gets the version.
+     * This method gets the content.
      * 
-     * @return The version
+     * @return The content
      */
-    public String getVersion() {
-        return (_version);
+    @Column(length=10240)
+    @Lob
+    public String getContent() {
+        return (_content);
     }
     
     /**
@@ -96,8 +102,8 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
         
         out.writeInt(VERSION);
         
-        out.writeObject(_processType);
-        out.writeObject(_version);
+        out.writeObject(_messageType);
+        out.writeObject(_content);
     }
 
     /**
@@ -109,7 +115,7 @@ public class ProcessStarted extends BPMActivityType implements java.io.Externali
         
         in.readInt(); // Consume version, as not required for now
         
-        _processType = (String)in.readObject();
-        _version = (String)in.readObject();
+        _messageType = (String)in.readObject();
+        _content = (String)in.readObject();
     }
 }

@@ -49,6 +49,7 @@ public class LogMessage extends ActivityType implements java.io.Externalizable {
      * @param lm The log message to copy
      */
     public LogMessage(LogMessage lm) {
+        super(lm);
         _message = lm._message;
         _level = lm._level;
     }

@@ -45,6 +45,7 @@ public class RequestReceived extends RPCActivityType implements java.io.External
      * @param rpc The rpc activity to copy
      */
     public RequestReceived(RequestReceived rpc) {
+        super(rpc);
     }
     
     /**

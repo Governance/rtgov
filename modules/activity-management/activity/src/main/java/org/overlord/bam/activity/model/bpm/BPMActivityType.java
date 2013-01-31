@@ -49,6 +49,7 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * @param ba The bpm activity to copy
      */
     public BPMActivityType(BPMActivityType ba) {
+        super(ba);
     }
     
     /**

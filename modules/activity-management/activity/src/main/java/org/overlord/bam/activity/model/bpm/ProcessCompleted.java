@@ -57,7 +57,9 @@ public class ProcessCompleted extends BPMActivityType implements java.io.Externa
      * @param ba The bpm activity to copy
      */
     public ProcessCompleted(ProcessCompleted ba) {
-     }
+        super(ba);
+        _status = ba._status;
+    }
     
     /**
      * This method sets the status.

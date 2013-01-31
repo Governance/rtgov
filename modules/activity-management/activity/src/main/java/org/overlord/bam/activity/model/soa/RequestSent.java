@@ -45,6 +45,7 @@ public class RequestSent extends RPCActivityType implements java.io.Externalizab
      * @param rpc The rpc activity to copy
      */
     public RequestSent(RequestSent rpc) {
+        super(rpc);
     }
     
     /**

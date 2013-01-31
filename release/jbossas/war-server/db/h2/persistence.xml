@@ -15,7 +15,8 @@
 		<class>org.overlord.bam.activity.model.bpm.BPMActivityType</class>
 		<class>org.overlord.bam.activity.model.bpm.ProcessCompleted</class>
 		<class>org.overlord.bam.activity.model.bpm.ProcessStarted</class>
-		<class>org.overlord.bam.activity.model.mom.MessageExchange</class>
+		<class>org.overlord.bam.activity.model.common.MessageExchange</class>
+		<class>org.overlord.bam.activity.model.mom.MOMActivityType</class>
 		<class>org.overlord.bam.activity.model.mom.MessageReceived</class>
 		<class>org.overlord.bam.activity.model.mom.MessageSent</class>
 		<class>org.overlord.bam.activity.model.soa.RPCActivityType</class>
