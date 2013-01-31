@@ -21,7 +21,9 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 import org.overlord.bam.activity.model.ActivityType;
 
@@ -88,6 +90,8 @@ public abstract class MessageExchange extends ActivityType implements java.io.Ex
      * 
      * @return The content
      */
+    @Column(length=10240)
+    @Lob
     public String getContent() {
         return (_content);
     }
