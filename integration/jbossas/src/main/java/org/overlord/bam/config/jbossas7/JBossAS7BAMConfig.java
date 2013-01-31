@@ -73,11 +73,11 @@ public class JBossAS7BAMConfig implements BAMPropertiesProvider {
     }
     
     /**
-     * This method loads the properties.
+     * This method returns the properties.
      * 
      * @return The properties
      */
-    protected java.util.Properties getProperties() {
+    public java.util.Properties getProperties() {
         
         if (_properties == null) {
             _properties = new java.util.Properties();

@@ -1,4 +1,4 @@
-<project default="setup">
+<project default="setup" name="bamtests" >
 	<target name="setup">
 		<echo message="Setting up BAM modules"/>
 	
@@ -7,11 +7,21 @@
 		<unzip src="${org.overlord.bam.release.jbossas:module:zip}"
 			dest="${jboss.home}" />
 
+		<echo message="Setting up BAM deployments"/>
+
+		<delete dir="${jboss.home}/standalone/deployments/overlord-bam" />
+
+		<copy todir="${jboss.home}/standalone/deployments/overlord-bam" >
+			<fileset dir="${ant.file.bamtests}/../../distribution/src/main/jbossas/deployments/server" />
+		</copy>
 	</target>
 
 	<target name="clean">
 		<echo message="Cleaning up BAM modules"/>
 		<delete dir="${jboss.home}/modules/org/overlord/bam" />
+
+		<echo message="Cleaning up BAM deployments"/>
+		<delete dir="${jboss.home}/standalone/deployments/overlord-bam" />
 	</target>
 
 </project>

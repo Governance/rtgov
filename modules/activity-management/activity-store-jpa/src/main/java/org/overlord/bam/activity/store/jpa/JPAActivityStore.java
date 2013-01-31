@@ -25,11 +25,13 @@ import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.bam.common.util.BAMPropertiesProvider;
 //import org.overlord.bam.activity.server.ActivityStore;
 //import org.overlord.bam.activity.server.QuerySpec;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -47,6 +49,9 @@ public class JPAActivityStore implements ActivityStore {
     private EntityManager _entityManager=null;
     private EntityManagerFactory _emf=null;
     private String _entityManagerName=EMF_NAME;
+    
+    @Inject
+    private BAMPropertiesProvider _properties=null;
     
     /**
      * This is the default constructor for the JPA activity store.
@@ -78,9 +83,17 @@ public class JPAActivityStore implements ActivityStore {
      */
     @PostConstruct
     public void init() {
-        java.util.Map<String,Object> props=new java.util.HashMap<String, Object>();
+        java.util.Properties props=null;
         
         try {
+            if (_properties != null) {
+                props = _properties.getProperties();
+            }
+            
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Properties passed to entity manager factory creation: "+props);                
+            }
+            
             _emf = Persistence.createEntityManagerFactory(_entityManagerName, props);
     
             _entityManager = _emf.createEntityManager();
@@ -98,7 +111,18 @@ public class JPAActivityStore implements ActivityStore {
             LOG.finest("Store="+activities);
         }
         
-        _entityManager.getTransaction().begin();
+        boolean localtxn=false;
+        
+        if (!_entityManager.getTransaction().isActive()) {
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Beginning a local transaction");
+            }
+           
+            _entityManager.getTransaction().begin();
+            
+            localtxn = true;
+        }
         
         for (ActivityUnit au : activities) {
             _entityManager.persist(au);
@@ -106,7 +130,12 @@ public class JPAActivityStore implements ActivityStore {
         
         _entityManager.flush();
         
-        _entityManager.getTransaction().commit();
+        if (localtxn) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Committing a local transaction");
+            }
+            _entityManager.getTransaction().commit();
+        }
     }
 
     /**

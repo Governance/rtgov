@@ -32,4 +32,11 @@ public interface BAMPropertiesProvider {
      */
     public String getProperty(String name);
     
+    /**
+     * This method returns the BAM properties.
+     * 
+     * @return The properties, or null if not available
+     */
+    public java.util.Properties getProperties();
+    
 }

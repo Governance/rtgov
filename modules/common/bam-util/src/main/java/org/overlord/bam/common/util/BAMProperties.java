@@ -108,4 +108,23 @@ public class BAMProperties {
 
         return (ret);
     }
+    
+    /**
+     * This method returns the BAM properties.
+     * 
+     * @return The properties, or null if not available
+     */
+    public static java.util.Properties getProperties() {
+        java.util.Properties ret=null;
+        
+        if (getPropertiesProvider() != null) {
+            ret = getPropertiesProvider().getProperties();
+        }
+        
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("BAM properties = "+ret);
+        }
+
+        return (ret);
+    }
 }

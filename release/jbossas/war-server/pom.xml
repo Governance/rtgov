@@ -7,105 +7,6 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Overlord BAM::Release::JBossAS::War-Server</name>
 
-	<profiles>
-		<profile>
-			<id>ActivityStoreInMem</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-
-			<dependencies>
-				<dependency>
-					<groupId>org.overlord.bam.activity-management</groupId>
-					<artifactId>activity-store-mem</artifactId>
-					<version>${project.version}</version>
-					<exclusions>
-						<exclusion>
-							<groupId>org.overlord.bam.activity-management</groupId>
-							<artifactId>activity</artifactId>
-						</exclusion>
-						<exclusion>
-							<groupId>org.mvel</groupId>
-							<artifactId>mvel2</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-			</dependencies>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-war-plugin</artifactId>
-						<configuration>
-							<failOnMissingWebXml>false</failOnMissingWebXml>
-		 					<archive>
-								<manifestEntries>
-									<Dependencies>org.overlord.bam export</Dependencies>
-								</manifestEntries>
-							</archive>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<id>ActivityStoreJPA</id>
-			<activation>
-				<property>
-					<name>db</name>
-				</property>
-			</activation>
-
-			<dependencies>
-				<dependency>
-					<groupId>org.overlord.bam.activity-management</groupId>
-					<artifactId>activity-store-jpa</artifactId>
-					<version>${project.version}</version>
-					<exclusions>
-						<exclusion>
-							<groupId>org.overlord.bam.activity-management</groupId>
-							<artifactId>activity</artifactId>
-						</exclusion>
-					</exclusions>
-				</dependency>
-			</dependencies>
-
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-war-plugin</artifactId>
-						<configuration>
-							<failOnMissingWebXml>false</failOnMissingWebXml>
-		 					<archive>
-								<manifestEntries>
-									<Dependencies>org.overlord.bam export</Dependencies>
-								</manifestEntries>
-							</archive>
-							<webResources>
-								<resource>
-									<directory>db/${db}</directory>
-									<targetPath>WEB-INF/classes/META-INF</targetPath>
-									<includes>
-										<include>persistence.xml</include>
-									</includes>
-								</resource>
-								<resource>
-									<directory>db/${db}</directory>
-									<targetPath>META-INF</targetPath>
-									<includes>
-										<include>bam-ds.xml</include>
-									</includes>
-								</resource>
-							</webResources>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-
 	<dependencies>		
 		<!-- Collector modules -->
 		
@@ -173,6 +74,18 @@
 			</exclusions>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.overlord.bam.activity-management</groupId>
+			<artifactId>activity-store-jpa</artifactId>
+			<version>${project.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.overlord.bam.activity-management</groupId>
+					<artifactId>activity</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<!-- Event Processor Network modules -->
 			
 		<dependency>
@@ -279,7 +192,6 @@
 	<build>
 		<finalName>${project.artifactId}</finalName>
 
-<!--
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -294,7 +206,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
--->
+
 		<pluginManagement>
 			<plugins>
 				<plugin>
