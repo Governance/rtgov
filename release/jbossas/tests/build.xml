@@ -14,6 +14,14 @@
 		<copy todir="${jboss.home}/standalone/deployments/overlord-bam" >
 			<fileset dir="${ant.file.bamtests}/../../distribution/src/main/jbossas/deployments/server" />
 		</copy>
+
+		<echo message="Setting up BAM configuration"/>
+
+		<delete file="${jboss.home}/standalone/configuration/overlord-bam.properties" />
+
+		<copy todir="${jboss.home}/standalone/configuration" >
+			<fileset file="${ant.file.bamtests}/../../distribution/src/main/jbossas/configuration/server/overlord-bam.properties" />
+		</copy>
 	</target>
 
 	<target name="clean">
@@ -22,6 +30,9 @@
 
 		<echo message="Cleaning up BAM deployments"/>
 		<delete dir="${jboss.home}/standalone/deployments/overlord-bam" />
+
+		<echo message="Cleaning up BAM configuration"/>
+		<delete file="${jboss.home}/standalone/configuration/overlord-bam.properties" />
 	</target>
 
 </project>

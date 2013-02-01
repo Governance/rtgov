@@ -26,10 +26,7 @@ import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.common.util.BAMPropertiesProvider;
-//import org.overlord.bam.activity.server.ActivityStore;
-//import org.overlord.bam.activity.server.QuerySpec;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -81,25 +78,26 @@ public class JPAActivityStore implements ActivityStore {
      * This method initializes the activity store.
      * 
      */
-    @PostConstruct
-    public void init() {
+    protected synchronized void init() {
         java.util.Properties props=null;
         
-        try {
-            if (_properties != null) {
-                props = _properties.getProperties();
+        if (_entityManager == null) {
+            try {
+                if (_properties != null) {
+                    props = _properties.getProperties();
+                }
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Properties passed to entity manager factory creation: "+props);                
+                }
+                
+                _emf = Persistence.createEntityManagerFactory(_entityManagerName, props);
+        
+                _entityManager = _emf.createEntityManager();
+                
+            } catch (Throwable e) {
+                LOG.log(Level.SEVERE, "Failed to create entity manager", e);
             }
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Properties passed to entity manager factory creation: "+props);                
-            }
-            
-            _emf = Persistence.createEntityManagerFactory(_entityManagerName, props);
-    
-            _entityManager = _emf.createEntityManager();
-            
-        } catch (Throwable e) {
-            LOG.log(Level.SEVERE, "Failed to create entity manager", e);
         }
     }
     
@@ -107,6 +105,11 @@ public class JPAActivityStore implements ActivityStore {
      * {@inheritDoc}
      */
     public void store(List<ActivityUnit> activities) throws Exception {
+        
+        if (_entityManager == null) {
+            init();
+        }
+        
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Store="+activities);
         }
@@ -147,6 +150,10 @@ public class JPAActivityStore implements ActivityStore {
             LOG.finest("Get Activity Unit="+id);
         }
 
+        if (_entityManager == null) {
+            init();
+        }
+
         ActivityUnit ret=(ActivityUnit)
                 _entityManager.createQuery("SELECT au FROM ActivityUnit au")
                 .getSingleResult();
@@ -167,6 +174,10 @@ public class JPAActivityStore implements ActivityStore {
             LOG.finest("Query="+query);
         }
 
+        if (_entityManager == null) {
+            init();
+        }
+
         return (query(query.getExpression()));
     }
 
@@ -175,6 +186,10 @@ public class JPAActivityStore implements ActivityStore {
      */
     public List<ActivityType> getActivityTypes(String context) throws Exception {
         
+        if (_entityManager == null) {
+            init();
+        }
+
         @SuppressWarnings("unchecked")
         List<ActivityType> ret=(List<ActivityType>)
                 _entityManager.createQuery("SELECT at from ActivityType at "
@@ -200,6 +215,10 @@ public class JPAActivityStore implements ActivityStore {
      */
     public List<ActivityType> query(String query) throws Exception {
         
+        if (_entityManager == null) {
+            init();
+        }
+
         @SuppressWarnings("unchecked")
         List<ActivityType> ret=(List<ActivityType>)
                 _entityManager.createQuery(query)
@@ -219,6 +238,10 @@ public class JPAActivityStore implements ActivityStore {
      * @throws Exception Failed to remove activity unit
      */
     public void remove(ActivityUnit au) throws Exception {
+        if (_entityManager == null) {
+            init();
+        }
+
         _entityManager.remove(au);
     }
     
