@@ -130,7 +130,6 @@ public class JBossASACMgrACSResponseTimesOnFaultTest {
     }
     
     @Test @OperateOnDeployment("overlord-bam")
-    @org.junit.Ignore
     public void testResponseTimes() {
         
         try {
@@ -180,7 +179,7 @@ public class JBossASACMgrACSResponseTimesOnFaultTest {
             
             java.util.List<?> result1 = performACMQuery(qs1);
             
-            System.out.println("RETRIEVED RESULTS 1="+result1);
+            System.out.println("RETRIEVED RESULTS (Fault)="+result1);
             
             if (result1 == null) {
                 fail("Result 1 is null");
