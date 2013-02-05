@@ -23,6 +23,7 @@ import java.util.UUID;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
@@ -35,6 +36,7 @@ import org.overlord.bam.activity.server.QuerySpec;
  * This class represents the default implementation of the activity server.
  *
  */
+@Singleton
 public class ActivityServerImpl implements ActivityServer {
 
     @Inject

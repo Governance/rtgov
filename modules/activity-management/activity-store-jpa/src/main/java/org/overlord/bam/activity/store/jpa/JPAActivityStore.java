@@ -29,6 +29,7 @@ import org.overlord.bam.common.util.BAMPropertiesProvider;
 
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -37,6 +38,7 @@ import javax.persistence.Persistence;
  * This class provides the JPA implementation of the Activity Store.
  *
  */
+@Singleton
 public class JPAActivityStore implements ActivityStore {
 
     private static final String EMF_NAME = "overlord-bam-activity";
@@ -155,7 +157,8 @@ public class JPAActivityStore implements ActivityStore {
         }
 
         ActivityUnit ret=(ActivityUnit)
-                _entityManager.createQuery("SELECT au FROM ActivityUnit au")
+                _entityManager.createQuery("SELECT au FROM ActivityUnit au "+
+                        "WHERE au.id = '"+id+"'")
                 .getSingleResult();
         
         if (LOG.isLoggable(Level.FINEST)) {
