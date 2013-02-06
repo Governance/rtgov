@@ -1,0 +1,147 @@
+{
+	"tasks":[{
+		"type":"Call",
+		"operation":"submitOrder",
+		"request":"<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">\n            <order>\n                <orderId>1</orderId>\n                <itemId>BUTTER</itemId>\n                <quantity>100</quantity>\n            \t <customer>Fred</customer>\n            </order>\n        </orders:submitOrder>",
+		"response":"{\"accepted\":true,\"total\":125.0,\"customer\":\"Fred\",\"orderId\":\"1\",\"status\":\"Order Accepted\"}",
+		"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+		"tasks":[{
+			"type":"Call",
+			"operation":"lookupItem",
+			"request":"BUTTER","response":"{\"unitPrice\":1.25,\"itemId\":\"BUTTER\",\"quantity\":1000,\"name\":\"Not Parkay\"}",
+			"responseLatency":2,
+			"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
+			"tasks":[{
+				"type":"Task",
+				"description":"Information: Found the item 'BUTTER'",
+				"properties":{
+					"message":"Found the item 'BUTTER'"
+				},
+				"duration":2,
+				"percentage":100
+			}],
+			"duration":12,
+			"percentage":60
+		},{
+			"type":"Call",
+			"operation":"deliver",
+			"requestLatency":1,
+			"request":"{\"orderId\":\"1\",\"itemId\":\"BUTTER\",\"quantity\":100,\"customer\":\"Fred\"}",
+			"response":"{\"orderId\":\"1\"}",
+			"responseLatency":1,
+			"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}LogisticsService",
+			"tasks":[{
+				"type":"Task",
+				"description":"Information: Delivering the goods",
+				"properties":{
+					"message":"Delivering the goods"
+				},
+				"duration":2,
+				"percentage":100
+			}],
+			"duration":8,
+			"percentage":40
+		}],
+		"properties":{
+			"total":"125.0",
+			"customer":"Fred"
+		},
+		"duration":46,
+		"percentage":40
+	},{
+		"type":"Call",
+		"operation":"submitOrder",
+		"request":"<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">\n            <order>\n                <orderId>1</orderId>\n                <itemId>BUTTER</itemId>\n                <quantity>100</quantity>\n            \t <customer>Fred</customer>\n            </order>\n        </orders:submitOrder>",
+		"response":"{\"accepted\":true,\"total\":125.0,\"customer\":\"Fred\",\"orderId\":\"1\",\"status\":\"Order Accepted\"}",
+		"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+		"tasks":[{
+			"type":"Call",
+			"operation":"lookupItem",
+			"request":"BUTTER",
+			"response":"{\"unitPrice\":1.25,\"itemId\":\"BUTTER\",\"quantity\":1000,\"name\":\"Not Parkay\"}",
+			"responseLatency":1,
+			"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
+			"tasks":[{
+				"type":"Task",
+				"description":"Information: Found the item 'BUTTER'",
+				"properties":{
+					"message":"Found the item 'BUTTER'"
+				},
+				"duration":1,
+				"percentage":100
+			}],
+			"duration":6,
+			"percentage":54
+		},{
+			"type":"Call",
+			"operation":"deliver",
+			"requestLatency":1,
+			"request":"{\"orderId\":\"1\",\"itemId\":\"BUTTER\",\"quantity\":100,\"customer\":\"Fred\"}",
+			"response":"{\"orderId\":\"1\"}",
+			"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}LogisticsService",
+			"tasks":[{
+				"type":"Task",
+				"description":"Information: Delivering the goods",
+				"properties":{
+					"message":"Delivering the goods"
+				}
+			}],
+			"duration":5,
+			"percentage":45
+		}],
+		"properties":{
+			"total":"125.0",
+			"customer":"Fred"
+		},
+		"duration":32,
+		"percentage":28
+	},{
+		"type":"Call",
+		"operation":"submitOrder",
+		"request":"<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">\n            <order>\n                <orderId>1</orderId>\n                <itemId>BUTTER</itemId>\n                <quantity>100</quantity>\n            \t <customer>Fred</customer>\n            </order>\n        </orders:submitOrder>",
+		"response":"{\"accepted\":true,\"total\":125.0,\"customer\":\"Fred\",\"orderId\":\"1\",\"status\":\"Order Accepted\"}",
+		"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+		"tasks":[{
+			"type":"Call",
+			"operation":"lookupItem",
+			"requestLatency":1,
+			"request":"BUTTER",
+			"response":"{\"unitPrice\":1.25,\"itemId\":\"BUTTER\",\"quantity\":1000,\"name\":\"Not Parkay\"}",
+			"responseLatency":1,"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
+			"tasks":[{
+				"type":"Task",
+				"description":"Information: Found the item 'BUTTER'",
+				"properties":{
+					"message":"Found the item 'BUTTER'"
+				},
+				"duration":1,
+				"percentage":100
+			}],
+			"duration":6,
+			"percentage":66
+		},{
+			"type":"Call",
+			"operation":"deliver",
+			"request":"{\"orderId\":\"1\",\"itemId\":\"BUTTER\",\"quantity\":100,\"customer\":\"Fred\"}",
+			"response":"{\"orderId\":\"1\"}",
+			"component":"{urn:switchyard-quickstart-demo:orders:0.1.0}LogisticsService",
+			"tasks":[{
+				"type":"Task",
+				"description":"Information: Delivering the goods",
+				"properties":{
+					"message":"Delivering the goods"
+				},
+				"duration":1,
+				"percentage":100
+			}],
+			"duration":3,
+			"percentage":33
+		}],
+		"properties":{
+			"total":"125.0",
+			"customer":"Fred"
+		},
+		"duration":35,
+		"percentage":30
+	}]
+}

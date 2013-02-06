@@ -263,7 +263,7 @@ public class JBossASCustomEventsResultsTest {
             }
             
             // Wait for events to propagate
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             
             java.util.List<?> events=getEvents();
             
@@ -345,7 +345,7 @@ public class JBossASCustomEventsResultsTest {
             }
             
             // Wait for events to propagate
-            Thread.sleep(2000);
+            Thread.sleep(3000);
             
             java.util.List<?> events=getEvents();
             

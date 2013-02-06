@@ -29,6 +29,7 @@ import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.model.Context;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.bam.activity.util.ActivityUtil;
 
 /**
  * This class provides the in-memory implementation of the Activity Store.
@@ -55,7 +56,8 @@ public class MemActivityStore implements ActivityStore {
      */
     public void store(List<ActivityUnit> activities) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Store ("+this+") = "+activities);
+            LOG.finest("Store ("+this+") = "
+                    +new String(ActivityUtil.serializeActivityUnitList(activities)));
         }
         
         _activities.addAll(activities);
@@ -111,7 +113,8 @@ public class MemActivityStore implements ActivityStore {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("getActivityTypes context["+context+"] ("+this+") ret="+ret);
+            LOG.finest("getActivityTypes context["+context+"] ("+this+") ret="
+                        +new String(ActivityUtil.serializeActivityTypeList(ret)));
         }
         
         return (ret);
@@ -141,7 +144,8 @@ public class MemActivityStore implements ActivityStore {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("query[spec="+query+"] ("+this+") ret="+ret);
+            LOG.finest("query[spec="+query+"] ("+this+") ret="
+                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
         }
         
         return (ret);

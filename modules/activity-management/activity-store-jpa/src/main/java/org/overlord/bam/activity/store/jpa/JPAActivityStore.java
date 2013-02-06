@@ -25,6 +25,7 @@ import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.ActivityUnit;
 import org.overlord.bam.activity.server.ActivityStore;
 import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.bam.activity.util.ActivityUtil;
 import org.overlord.bam.common.util.BAMPropertiesProvider;
 
 import javax.annotation.PreDestroy;
@@ -113,7 +114,7 @@ public class JPAActivityStore implements ActivityStore {
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Store="+activities);
+            LOG.finest("Store="+new String(ActivityUtil.serializeActivityUnitList(activities)));
         }
         
         boolean localtxn=false;
@@ -162,7 +163,8 @@ public class JPAActivityStore implements ActivityStore {
                 .getSingleResult();
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("ActivityUnit id="+id+" Result="+ret);
+            LOG.finest("ActivityUnit id="+id+" Result="
+                    +new String(ActivityUtil.serializeActivityUnit(ret)));
         }
 
         return (ret);
@@ -201,7 +203,8 @@ public class JPAActivityStore implements ActivityStore {
                 .getResultList();
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("ActivityTypes context '"+context+"' Result="+ret);
+            LOG.finest("ActivityTypes context '"+context+"' Result="
+                        +new String(ActivityUtil.serializeActivityTypeList(ret)));
         }
 
         return (ret);
@@ -228,7 +231,8 @@ public class JPAActivityStore implements ActivityStore {
                 .getResultList();
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Query="+query+" Result="+ret);
+            LOG.finest("Query="+query+" Result="
+                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
         }
 
         return (ret);

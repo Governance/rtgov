@@ -788,6 +788,11 @@ public class CallTraceProcessor {
                 LOG.finest("Finalize scope");
             }
             
+            // If no work performed in this scope, then just return
+            if (getTasksStack().isEmpty()) {
+                return;
+            }
+            
             java.util.List<TraceNode> tasks=getTasksStack().peek();
             long duration=0;
             Status status=Status.Success;
@@ -841,7 +846,10 @@ public class CallTraceProcessor {
         protected RPCActivityType getSOAActivity(Class<?> cls,
                         String serviceType, String operation) {
             
-            for (ActivityUnitCursor cursor : _cursors.values()) {
+            // Use the activity unit order found in the units field
+            for (ActivityUnit au : _units) {
+                ActivityUnitCursor cursor=_cursors.get(au.getId());
+                
                 for (ActivityType at : cursor.getActivityTypes()) {
                     if (at.getClass() == cls
                             && ((RPCActivityType)at).getServiceType().equals(serviceType)
