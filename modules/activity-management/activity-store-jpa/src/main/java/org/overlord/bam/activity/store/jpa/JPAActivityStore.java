@@ -18,6 +18,8 @@
 package org.overlord.bam.activity.store.jpa;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,12 +30,15 @@ import org.overlord.bam.activity.server.QuerySpec;
 import org.overlord.bam.activity.util.ActivityUtil;
 import org.overlord.bam.common.util.BAMPropertiesProvider;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.transaction.TransactionManager;
 
 /**
  * This class provides the JPA implementation of the Activity Store.
@@ -42,6 +47,9 @@ import javax.persistence.Persistence;
 @Singleton
 public class JPAActivityStore implements ActivityStore {
 
+    private static final String TRANSACTION_MANAGER_PROPERTY = "transaction.manager";
+    private static final String DEFAULT_TRANSACTION_MANAGER = "java:jboss/TransactionManager";
+
     private static final String EMF_NAME = "overlord-bam-activity";
 
     private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
@@ -49,6 +57,8 @@ public class JPAActivityStore implements ActivityStore {
     private EntityManager _entityManager=null;
     private EntityManagerFactory _emf=null;
     private String _entityManagerName=EMF_NAME;
+    
+    private javax.transaction.TransactionManager _transactionManager=null;
     
     @Inject
     private BAMPropertiesProvider _properties=null;
@@ -81,25 +91,55 @@ public class JPAActivityStore implements ActivityStore {
      * This method initializes the activity store.
      * 
      */
+    @PostConstruct
     protected synchronized void init() {
-        java.util.Properties props=null;
         
         if (_entityManager == null) {
             try {
-                if (_properties != null) {
-                    props = _properties.getProperties();
+                // BAM-120 Use separate thread as causes problem when hibernate creates
+                // the schema within a transaction scope
+                Executors.newSingleThreadExecutor().submit(new Runnable() {
+                    public void run() {                    
+                        java.util.Properties props=null;
+                        
+                        try {
+                            if (_properties != null) {
+                                props = _properties.getProperties();
+                            }
+                            
+                            if (LOG.isLoggable(Level.FINE)) {
+                                LOG.fine("Properties passed to entity manager factory creation: "+props);                
+                            }
+                            
+                            _emf = Persistence.createEntityManagerFactory(_entityManagerName, props);
+                    
+                            _entityManager = _emf.createEntityManager();
+                            
+                            if (LOG.isLoggable(Level.FINE)) {
+                                LOG.fine("BAM EntityManager created");                
+                            }
+                        } catch (Throwable e) {
+                            LOG.log(Level.SEVERE, "Failed to create entity manager", e);
+                        }
+                    }
+                }).get(5000, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Failed to initialize entity manager using executor", e);
+            }
+            
+            try {
+                InitialContext ctx=new InitialContext();
+                
+                String txnMgr=DEFAULT_TRANSACTION_MANAGER;
+                        
+                if (_properties != null && _properties.getProperties().containsKey(TRANSACTION_MANAGER_PROPERTY)) {
+                    txnMgr = _properties.getProperty(TRANSACTION_MANAGER_PROPERTY);
                 }
                 
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Properties passed to entity manager factory creation: "+props);                
-                }
+                _transactionManager = (TransactionManager)ctx.lookup(txnMgr);
                 
-                _emf = Persistence.createEntityManagerFactory(_entityManagerName, props);
-        
-                _entityManager = _emf.createEntityManager();
-                
-            } catch (Throwable e) {
-                LOG.log(Level.SEVERE, "Failed to create entity manager", e);
+            } catch (Exception e) {
+                LOG.log(Level.FINE, "Unable to obtain transaction manager", e);
             }
         }
     }
@@ -119,7 +159,7 @@ public class JPAActivityStore implements ActivityStore {
         
         boolean localtxn=false;
         
-        if (!_entityManager.getTransaction().isActive()) {
+        if (_transactionManager == null && !_entityManager.getTransaction().isActive()) {
             
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Beginning a local transaction");
@@ -134,9 +174,9 @@ public class JPAActivityStore implements ActivityStore {
             _entityManager.persist(au);
         }
         
-        _entityManager.flush();
-        
         if (localtxn) {
+            _entityManager.flush();
+            
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Committing a local transaction");
             }
