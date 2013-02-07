@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.switchyard;
+package org.overlord.bam.jee;
 
 import org.overlord.bam.active.collection.ActiveList;
 import org.overlord.bam.active.collection.ActiveMap;

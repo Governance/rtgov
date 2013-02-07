@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.switchyard;
+package org.overlord.bam.jee;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +27,6 @@ import org.overlord.bam.activity.collector.ActivityCollector;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.app.CustomActivity;
 import org.overlord.bam.activity.model.app.LogMessage;
-import org.overlord.bam.switchyard.internal.ExchangeInterceptor;
 
 /**
  * This interface represents the capability for recording
@@ -36,7 +35,7 @@ import org.overlord.bam.switchyard.internal.ExchangeInterceptor;
  */
 public class DefaultActivityReporter implements ActivityReporter {
 
-    private static final Logger LOG=Logger.getLogger(ExchangeInterceptor.class.getName());
+    private static final Logger LOG=Logger.getLogger(DefaultActivityReporter.class.getName());
     
     private static final String ACTIVITY_COLLECTOR = "java:global/overlord-bam/ActivityCollector";
 
@@ -61,7 +60,7 @@ public class DefaultActivityReporter implements ActivityReporter {
         }
         
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("*********** Exchange Interceptor Initialized with collector="+_activityCollector);
+            LOG.fine("*********** Default Activity Reporter initialized with collector="+_activityCollector);
         }
         
         _initialized = true;
@@ -77,7 +76,7 @@ public class DefaultActivityReporter implements ActivityReporter {
         lm.setMessage(info);
         lm.setLevel(LogMessage.Level.Information);
         
-        reportActivity(lm);
+        report(lm);
     }
     
     /**
@@ -90,7 +89,7 @@ public class DefaultActivityReporter implements ActivityReporter {
         lm.setMessage(warning);
         lm.setLevel(LogMessage.Level.Warning);
         
-        reportActivity(lm);
+        report(lm);
     }
     
     /**
@@ -103,7 +102,7 @@ public class DefaultActivityReporter implements ActivityReporter {
         lm.setMessage(error);
         lm.setLevel(LogMessage.Level.Error);
         
-        reportActivity(lm);
+        report(lm);
     }
     
     /**
@@ -117,7 +116,7 @@ public class DefaultActivityReporter implements ActivityReporter {
         ca.setCustomType(type);        
         ca.setProperties(props);
         
-        reportActivity(ca);
+        report(ca);
     }
     
     /**
@@ -126,7 +125,7 @@ public class DefaultActivityReporter implements ActivityReporter {
      * 
      * @param actType The activity type
      */
-    protected void reportActivity(ActivityType actType) {
+    public void report(ActivityType actType) {
         if (!_initialized) {
             init();
         }

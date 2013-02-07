@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.bam.integration</groupId>
-	<artifactId>bam-switchyard</artifactId> 
+	<artifactId>bam-jee</artifactId> 
 	<packaging>jar</packaging>
-	<name>Overlord BAM::Integration::SwitchYard</name>
+	<name>Overlord BAM::Integration::JEE</name>
 
 	<parent>
 		<groupId>org.overlord.bam</groupId>
@@ -22,20 +22,6 @@
 			<groupId>org.overlord.bam.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-
-		<!-- Add dependency on integration jee module, to make
-			the utilities available to switchyard apps -->
-		<dependency>
-			<groupId>org.overlord.bam.integration</groupId>
-			<artifactId>bam-jee</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.switchyard</groupId>
-			<artifactId>switchyard-bus-camel</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

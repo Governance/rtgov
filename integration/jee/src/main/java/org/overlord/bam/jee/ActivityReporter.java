@@ -15,7 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.switchyard;
+package org.overlord.bam.jee;
+
+import org.overlord.bam.activity.model.ActivityType;
 
 /**
  * This interface represents the capability for recording
@@ -52,5 +54,13 @@ public interface ActivityReporter {
      * @param props The properties
      */
     public void logActivity(String type, java.util.Map<String,String> props);
+
+    /**
+     * This method reports the activity event to the
+     * collector.
+     * 
+     * @param actType The activity type
+     */
+    public void report(ActivityType actType);
 
 }

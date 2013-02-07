@@ -22,8 +22,8 @@ import java.util.logging.Logger;
 
 import org.overlord.bam.active.collection.ActiveMap;
 import org.overlord.bam.activity.util.ActivityUtil;
-import org.overlord.bam.switchyard.CollectionManager;
-import org.overlord.bam.switchyard.DefaultCollectionManager;
+import org.overlord.bam.jee.CollectionManager;
+import org.overlord.bam.jee.DefaultCollectionManager;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangeHandler;
 import org.switchyard.ExchangePhase;
