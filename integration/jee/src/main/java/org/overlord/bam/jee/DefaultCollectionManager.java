@@ -50,7 +50,7 @@ public class DefaultCollectionManager implements CollectionManager {
                 
                 _activeCollectionManager = (ActiveCollectionManager)ctx.lookup(ACTIVE_COLLECTION_MANAGER);
                 
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Failed to initialize active collection manager", e);
             }
         }

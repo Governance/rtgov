@@ -28,6 +28,11 @@ import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.app.LogMessage;
 import org.overlord.bam.call.trace.util.CallTraceUtil;
 
+/**
+ * This class provides a default descriptor for activities that may be
+ * presented within the call trace.
+ *
+ */
 public class DefaultTaskDescriptor implements TaskDescriptor {
 
     private static final Logger LOG=Logger.getLogger(DefaultTaskDescriptor.class.getName());

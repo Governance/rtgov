@@ -19,6 +19,11 @@ package org.overlord.bam.call.trace.descriptors;
 
 import org.overlord.bam.activity.model.ActivityType;
 
+/**
+ * This class provides a descriptor for activities that may be
+ * presented within the call trace.
+ *
+ */
 public interface TaskDescriptor {
 
     /**

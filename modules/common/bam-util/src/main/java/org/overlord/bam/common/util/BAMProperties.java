@@ -29,12 +29,18 @@ import javax.naming.InitialContext;
  * This class provides access to BAM properties.
  *
  */
-public class BAMProperties {
+public final class BAMProperties {
     
     private static final Logger LOG=Logger.getLogger(BAMProperties.class.getName());
     
     private static BAMPropertiesProvider _provider=null;
     private static boolean _initialized=false;
+    
+    /**
+     * Make constructor private.
+     */
+    private BAMProperties() {
+    }
 
     /**
      * This method sets the BAM properties.

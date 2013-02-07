@@ -23,7 +23,7 @@ import org.overlord.bam.activity.model.ActivityType;
  * This class provides a factory for task descriptors.
  *
  */
-public class TaskDescriptorFactory {
+public final class TaskDescriptorFactory {
 
     private static TaskDescriptor _defaultDescriptor=new DefaultTaskDescriptor();
     
@@ -32,6 +32,12 @@ public class TaskDescriptorFactory {
     
     static {
         _descriptors.add(new LogMessageTaskDescriptor());
+    }
+    
+    /**
+     * Private constructor.
+     */
+    private TaskDescriptorFactory() {
     }
     
     /**

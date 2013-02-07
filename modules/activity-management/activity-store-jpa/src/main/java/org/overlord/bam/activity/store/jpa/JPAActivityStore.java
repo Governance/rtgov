@@ -198,8 +198,8 @@ public class JPAActivityStore implements ActivityStore {
         }
 
         ActivityUnit ret=(ActivityUnit)
-                _entityManager.createQuery("SELECT au FROM ActivityUnit au "+
-                        "WHERE au.id = '"+id+"'")
+                _entityManager.createQuery("SELECT au FROM ActivityUnit au "
+                        +"WHERE au.id = '"+id+"'")
                 .getSingleResult();
         
         if (LOG.isLoggable(Level.FINEST)) {

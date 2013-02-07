@@ -147,7 +147,7 @@ public class CEPEventProcessor extends EventProcessor {
                         
                         SESSIONS.put(getRuleName(), ret);
                     } else {
-                    	System.out.println("The kieSession is null!!!");
+                        System.out.println("The kieSession is null!!!");
                     }
                 }
             }
@@ -166,28 +166,28 @@ public class CEPEventProcessor extends EventProcessor {
         String cepRuleBase=getRuleName()+".drl";
 
         try {
-        	KieServices ks = KieServices.Factory.get();
-        	KieRepository kr = ks.getRepository();
-        	
-        	KieModuleModel kmm = ks.newKieModuleModel();
-        	KieBaseModel kbm = kmm.newKieBaseModel(getRuleName())
-        							.setEqualsBehavior(EqualityBehaviorOption.EQUALITY)
-        							.setEventProcessingMode(EventProcessingOption.STREAM);
-        	kbm.setDefault(true);
-        	
-        	KieFileSystem kfs = ks.newKieFileSystem();
-        	kfs.write("src/main/resources/" + kbm.getName() + "/rule1.drl", ks.getResources().newClassPathResource(cepRuleBase));
-        	kfs.writeKModuleXML(kmm.toXML());
-        	
-        	KieBuilder kb = ks.newKieBuilder(kfs);
-        	kb.buildAll();
-        	
-        	KieContainer container = ks.newKieContainer(kr.getDefaultReleaseId());
-        	KieBase kbase = container.getKieBase();
-        	//TODO: hack it for now, this attribute should be supported in the following drools6 release.
-        	System.setProperty("kie.mbean", "enabled");
-        	return kbase;
-        
+            KieServices ks = KieServices.Factory.get();
+            KieRepository kr = ks.getRepository();
+
+            KieModuleModel kmm = ks.newKieModuleModel();
+            KieBaseModel kbm = kmm.newKieBaseModel(getRuleName())
+                        .setEqualsBehavior(EqualityBehaviorOption.EQUALITY)
+                        .setEventProcessingMode(EventProcessingOption.STREAM);
+            kbm.setDefault(true);
+
+            KieFileSystem kfs = ks.newKieFileSystem();
+            kfs.write("src/main/resources/" + kbm.getName() + "/rule1.drl", ks.getResources().newClassPathResource(cepRuleBase));
+            kfs.writeKModuleXML(kmm.toXML());
+
+            KieBuilder kb = ks.newKieBuilder(kfs);
+            kb.buildAll();
+
+            KieContainer container = ks.newKieContainer(kr.getDefaultReleaseId());
+            KieBase kbase = container.getKieBase();
+            //TODO: hack it for now, this attribute should be supported in the following drools6 release.
+            System.setProperty("kie.mbean", "enabled");
+            return kbase;
+
         } catch (Throwable e) {
             LOG.log(Level.SEVERE, MessageFormat.format(
                             java.util.PropertyResourceBundle.getBundle(

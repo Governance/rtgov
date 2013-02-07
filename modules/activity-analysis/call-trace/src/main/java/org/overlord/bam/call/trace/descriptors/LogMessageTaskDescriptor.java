@@ -20,6 +20,11 @@ package org.overlord.bam.call.trace.descriptors;
 import org.overlord.bam.activity.model.ActivityType;
 import org.overlord.bam.activity.model.app.LogMessage;
 
+/**
+ * This class provides a descriptor for the LogMessage
+ * activity.
+ *
+ */
 public class LogMessageTaskDescriptor implements TaskDescriptor {
 
     /**

@@ -181,8 +181,7 @@ public class CallTraceProcessor {
                 java.util.List<ActivityUnit> topLevel) {
         ActivityType cur=null;
         Call call=(state.getCallStack().size() > 0 ? state.getCallStack().peek() : null);
-        java.util.List<TraceNode> tasks=(state.getTasksStack().size() > 0 ? state.getTasksStack().peek() : null);
-        
+        java.util.List<TraceNode> tasks=(state.getTasksStack().size() > 0 ? state.getTasksStack().peek() : null);        
         ActivityType prev=null;
        
         if (LOG.isLoggable(Level.FINEST)) {
@@ -191,8 +190,7 @@ public class CallTraceProcessor {
 
         java.util.List<ActivityUnit> aus=state.getActivityUnits();
         
-        int aupos=aus.indexOf(startau);
-        
+        int aupos=aus.indexOf(startau);        
         if (aupos == -1) {
             LOG.severe("Failed to find activity unit in list="+startau);
             return;
@@ -269,10 +267,8 @@ public class CallTraceProcessor {
                             if (subAU != null) {
                                 processAU(state, subAU, topLevel);
                                 
-                                call = (state.getCallStack().size() > 0
-                                        ? state.getCallStack().peek() : null);
-                                tasks = (state.getTasksStack().size() > 0
-                                        ? state.getTasksStack().peek() : null);
+                                call = (state.getCallStack().size() > 0 ? state.getCallStack().peek() : null);
+                                tasks = (state.getTasksStack().size() > 0 ? state.getTasksStack().peek() : null);
                             }
                         }
                     } else if (cur instanceof RequestReceived) {                    
@@ -287,10 +283,8 @@ public class CallTraceProcessor {
                         f_scopeFinalized = true;
 
                         // Get new values
-                        call = (state.getCallStack().size() > 0
-                                ? state.getCallStack().peek() : null);
-                        tasks = (state.getTasksStack().size() > 0
-                                ? state.getTasksStack().peek() : null);
+                        call = (state.getCallStack().size() > 0 ? state.getCallStack().peek() : null);
+                        tasks = (state.getTasksStack().size() > 0 ? state.getTasksStack().peek() : null);
                         
                         // If not top level call, then break out
                         // of loop, to finish processing the scope
