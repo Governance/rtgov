@@ -25,6 +25,7 @@ import javax.naming.InitialContext;
 
 import org.overlord.bam.activity.collector.ActivityCollector;
 import org.overlord.bam.activity.model.ActivityType;
+import org.overlord.bam.activity.model.app.CustomActivity;
 import org.overlord.bam.activity.model.app.LogMessage;
 import org.overlord.bam.switchyard.internal.ExchangeInterceptor;
 
@@ -103,6 +104,20 @@ public class DefaultActivityReporter implements ActivityReporter {
         lm.setLevel(LogMessage.Level.Error);
         
         reportActivity(lm);
+    }
+    
+    /**
+     * This method can be used to report activity information.
+     * 
+     * @param type The activity type
+     * @param props The properties
+     */
+    public void logActivity(String type, java.util.Map<String,String> props) {
+        CustomActivity ca=new CustomActivity();
+        ca.setCustomType(type);        
+        ca.setProperties(props);
+        
+        reportActivity(ca);
     }
     
     /**

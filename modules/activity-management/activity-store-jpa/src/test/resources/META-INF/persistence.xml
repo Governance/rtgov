@@ -8,6 +8,7 @@
 		<class>org.overlord.bam.activity.model.ActivityUnit</class>
 		<class>org.overlord.bam.activity.model.ActivityType</class>
 		<class>org.overlord.bam.activity.model.Context</class>
+		<class>org.overlord.bam.activity.model.app.CustomActivity</class>
 		<class>org.overlord.bam.activity.model.app.LogMessage</class>
 		<class>org.overlord.bam.activity.model.bpm.BPMActivityType</class>
 		<class>org.overlord.bam.activity.model.bpm.ProcessCompleted</class>
@@ -36,6 +37,7 @@
 		<class>org.overlord.bam.activity.model.ActivityUnit</class>
 		<class>org.overlord.bam.activity.model.ActivityType</class>
 		<class>org.overlord.bam.activity.model.Context</class>
+		<class>org.overlord.bam.activity.model.app.CustomActivity</class>
 		<class>org.overlord.bam.activity.model.app.LogMessage</class>
 		<class>org.overlord.bam.activity.model.bpm.BPMActivityType</class>
 		<class>org.overlord.bam.activity.model.bpm.ProcessCompleted</class>

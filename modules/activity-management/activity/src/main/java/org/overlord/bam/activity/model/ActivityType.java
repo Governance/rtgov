@@ -38,6 +38,7 @@ import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.overlord.bam.activity.model.app.CustomActivity;
 import org.overlord.bam.activity.model.app.LogMessage;
 import org.overlord.bam.activity.model.bpm.ProcessCompleted;
 import org.overlord.bam.activity.model.bpm.ProcessStarted;
@@ -61,6 +62,7 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
     @Type(value=ResponseSent.class),
     @Type(value=ProcessCompleted.class),
     @Type(value=ProcessStarted.class),
+    @Type(value=CustomActivity.class),
     @Type(value=LogMessage.class) })
 @Entity
 @IdClass(value=ActivityTypeId.class)

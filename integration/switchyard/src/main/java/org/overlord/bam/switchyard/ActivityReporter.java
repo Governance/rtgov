@@ -45,4 +45,12 @@ public interface ActivityReporter {
      */
     public void logError(String error);
     
+    /**
+     * This method can be used to report activity information.
+     * 
+     * @param type The activity type
+     * @param props The properties
+     */
+    public void logActivity(String type, java.util.Map<String,String> props);
+
 }
