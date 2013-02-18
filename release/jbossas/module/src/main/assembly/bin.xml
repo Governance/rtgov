@@ -32,6 +32,7 @@
 		<fileSet>
 			<directory>src/main/jbossas/modules</directory>
 			<outputDirectory>/</outputDirectory>
+			<filtered>true</filtered>
 		</fileSet>
 
 	</fileSets>
@@ -54,7 +55,14 @@
 				<include>org.overlord.bam.active-queries:acs-epn:jar</include>
 				<include>org.overlord.bam.activity-analysis:analytics:jar</include>
 			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+        
+		<dependencySet>
+			<outputDirectory>org/mvel/mvel2/main</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.mvel:mvel2:jar</include>
+			</includes>
 		</dependencySet>
         
 	</dependencySets>

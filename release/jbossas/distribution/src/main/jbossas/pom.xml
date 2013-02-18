@@ -43,8 +43,8 @@
 						<configuration>
 							<target>
 								<echo message="Install Overlord BAM at: ${env.JBOSS_HOME}"/>
-								<copy todir="${env.JBOSS_HOME}/modules/org/overlord/bam" >
-									<fileset dir="modules/org/overlord/bam" />
+								<copy todir="${env.JBOSS_HOME}/modules" >
+									<fileset dir="modules" />
 								</copy>
 								<copy todir="${env.JBOSS_HOME}/standalone/deployments/overlord-bam" >
 									<fileset dir="deployments/${type}" />

@@ -11,6 +11,7 @@
 
 		<delete dir="${jboss.home}/standalone/deployments/overlord-bam" />
 
+		<!-- Copy data source definitions -->
 		<copy todir="${jboss.home}/standalone/deployments/overlord-bam" >
 			<fileset dir="${ant.file.bamtests}/../../distribution/src/main/jbossas/deployments/server" />
 		</copy>

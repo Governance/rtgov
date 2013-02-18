@@ -1,6 +1,6 @@
 [ {
     "type" : "RequestSent",
-    "content" : "<orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"><order><orderId>{ID}</orderId><itemId>BUTTER</itemId><quantity>100</quantity><customer>Fred</customer></order></orders:submitOrder>",
+    "content" : "<orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\"><order><orderId>{ID}</orderId><itemId>BUTTER</itemId><quantity>100</quantity><customer>Fred</customer></order></orders:submitOrder>",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
@@ -14,7 +14,7 @@
     }]
   }, {
     "type" : "RequestReceived",
-    "content" : "<orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"><order><orderId>{ID}</orderId><itemId>BUTTER</itemId><quantity>100</quantity><customer>Fred</customer></order></orders:submitOrder>",
+    "content" : "<orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\"><order><orderId>{ID}</orderId><itemId>BUTTER</itemId><quantity>100</quantity><customer>Fred</customer></order></orders:submitOrder>",
     "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
     "operation" : "submitOrder",
     "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",

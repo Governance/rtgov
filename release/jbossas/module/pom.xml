@@ -79,6 +79,12 @@
 			<artifactId>service-dependency-svg</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.mvel</groupId>
+			<artifactId>mvel2</artifactId>
+		</dependency>
+
 	</dependencies> 
 
 	<build>
