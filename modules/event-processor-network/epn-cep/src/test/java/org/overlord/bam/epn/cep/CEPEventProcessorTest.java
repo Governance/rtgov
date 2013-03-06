@@ -15,15 +15,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.cep;
+package org.overlord.rtgov.epn.cep;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.epn.cep.CEPEventProcessor;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.epn.cep.CEPEventProcessor;
 
 public class CEPEventProcessorTest {
 

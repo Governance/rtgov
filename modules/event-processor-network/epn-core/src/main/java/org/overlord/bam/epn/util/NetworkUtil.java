@@ -15,11 +15,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.util;
+package org.overlord.rtgov.epn.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
-import org.overlord.bam.epn.Network;
+import org.overlord.rtgov.epn.Network;
 
 /**
  * This class provides utility functions for the EPN

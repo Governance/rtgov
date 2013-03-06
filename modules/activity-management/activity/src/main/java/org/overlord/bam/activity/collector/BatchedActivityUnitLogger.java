@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector;
+package org.overlord.rtgov.activity.collector;
 
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.ActivityUnit;
 
 /**
  * This class provides the abstract activity unit logger implementation that

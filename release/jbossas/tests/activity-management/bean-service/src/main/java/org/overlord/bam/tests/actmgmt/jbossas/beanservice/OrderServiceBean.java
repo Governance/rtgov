@@ -17,7 +17,7 @@
  * MA  02110-1301, USA.
  */
 
-package org.overlord.bam.tests.actmgmt.jbossas.beanservice;
+package org.overlord.rtgov.tests.actmgmt.jbossas.beanservice;
 
 import javax.inject.Inject;
 

@@ -1,4 +1,4 @@
-org.overlord.bam.active.collection.TestObject result=new org.overlord.bam.active.collection.TestObject();
+org.overlord.rtgov.active.collection.TestObject result=new org.overlord.rtgov.active.collection.TestObject();
 
 int total=0;
 int min=0, max=0;

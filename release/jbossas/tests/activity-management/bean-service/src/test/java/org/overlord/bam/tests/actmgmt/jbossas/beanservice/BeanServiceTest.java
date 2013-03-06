@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.actmgmt.jbossas.beanservice;
+package org.overlord.rtgov.tests.actmgmt.jbossas.beanservice;
 
 import javax.inject.Inject;
 import javax.xml.soap.MessageFactory;
@@ -32,22 +32,22 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.ExchangeInterceptor;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.InventoryService;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.InventoryServiceBean;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.Item;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.ItemNotFoundException;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.Order;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.OrderAck;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.OrderService;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.OrderServiceBean;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.TestActivityStore;
-import org.overlord.bam.tests.actmgmt.jbossas.beanservice.Transformers;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.ExchangeInterceptor;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.InventoryService;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.InventoryServiceBean;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Item;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.ItemNotFoundException;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Order;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.OrderAck;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.OrderService;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.OrderServiceBean;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.TestActivityStore;
+import org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Transformers;
 
 import static org.junit.Assert.*;
 
@@ -58,7 +58,7 @@ public class BeanServiceTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
         
         return ShrinkWrap.create(WebArchive.class)
             .addClass(InventoryService.class)
@@ -81,18 +81,18 @@ public class BeanServiceTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.bam.activity-management:collector-jee:"+version,
-                            "org.overlord.bam.integration:bam-jbossas:"+version,
-                            "org.overlord.bam.activity-management:activity-server-impl:"+version,
-                            "org.overlord.bam.activity-management:collector-activity-server:"+version)
+                    .artifacts("org.overlord.rtgov.activity-management:collector-jee:"+version,
+                            "org.overlord.rtgov.integration:rtgov-jbossas:"+version,
+                            "org.overlord.rtgov.activity-management:activity-server-impl:"+version,
+                            "org.overlord.rtgov.activity-management:collector-activity-server:"+version)
                     .resolveAsFiles());
     }
 
     @Inject
-    org.overlord.bam.tests.actmgmt.jbossas.beanservice.OrderService _orderService;
+    org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.OrderService _orderService;
 
     @Inject
-    org.overlord.bam.activity.collector.CollectorContext _collectorContext;
+    org.overlord.rtgov.activity.collector.CollectorContext _collectorContext;
 
     @Test
     public void submitOrderDirectNoTxn() {

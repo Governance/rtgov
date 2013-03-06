@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector.jee;
+package org.overlord.rtgov.activity.collector.jee;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
-import org.overlord.bam.activity.processor.AbstractInformationProcessorManager;
-import org.overlord.bam.activity.processor.InformationProcessorManager;
+import org.overlord.rtgov.activity.processor.AbstractInformationProcessorManager;
+import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 
 /**
  * This class provides a JEE implementation of the information

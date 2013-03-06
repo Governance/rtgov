@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.performance.jee.app;
+package org.overlord.rtgov.performance.jee.app;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,11 +28,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.activity.collector.ActivityCollector;
 
 /**
  * REST app for creating activity events related to a virtual
@@ -45,7 +45,7 @@ public class JEEApp {
 
     private static final Logger LOG=Logger.getLogger(JEEApp.class.getName());
     
-    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-bam/ActivityCollector";
+    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
 
     private ActivityCollector _activityCollector=null;
     

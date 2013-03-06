@@ -15,12 +15,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.embedded;
+package org.overlord.rtgov.epn.embedded;
 
 import java.io.Serializable;
 
-import org.overlord.bam.epn.Channel;
-import org.overlord.bam.epn.EventList;
+import org.overlord.rtgov.epn.Channel;
+import org.overlord.rtgov.epn.EventList;
 
 public class TestChannel implements Channel {
     

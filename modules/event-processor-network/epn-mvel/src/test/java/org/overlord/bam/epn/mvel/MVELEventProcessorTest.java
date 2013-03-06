@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.mvel;
+package org.overlord.rtgov.epn.mvel;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.epn.mvel.MVELEventProcessor;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.epn.mvel.MVELEventProcessor;
 
 public class MVELEventProcessorTest {
 

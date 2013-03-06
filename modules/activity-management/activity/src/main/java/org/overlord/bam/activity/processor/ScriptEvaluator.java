@@ -15,12 +15,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.processor;
+package org.overlord.rtgov.activity.processor;
 
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
-import org.overlord.bam.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
  * This abstract class represents a script evaluator.

@@ -15,18 +15,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.epn.jbossas.embedded;
+package org.overlord.rtgov.tests.epn.jbossas.embedded;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.epn.EPNManager;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.Node;
-import org.overlord.bam.tests.epn.Child;
-import org.overlord.bam.tests.epn.NetworkLoader;
-import org.overlord.bam.tests.epn.Obj1;
-import org.overlord.bam.tests.epn.Obj2;
+import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.Node;
+import org.overlord.rtgov.tests.epn.Child;
+import org.overlord.rtgov.tests.epn.NetworkLoader;
+import org.overlord.rtgov.tests.epn.Obj1;
+import org.overlord.rtgov.tests.epn.Obj2;
 
 
 public class NetworkLoaderTest {
@@ -47,7 +47,7 @@ public class NetworkLoaderTest {
         
         try {
             Class<?> cls=
-                    NetworkLoaderTest.class.getClassLoader().loadClass("org.overlord.bam.epn.embedded.EmbeddedEPNManager");
+                    NetworkLoaderTest.class.getClassLoader().loadClass("org.overlord.rtgov.epn.embedded.EmbeddedEPNManager");
             ret = (EPNManager)cls.newInstance();
             
         } catch(Exception e) {

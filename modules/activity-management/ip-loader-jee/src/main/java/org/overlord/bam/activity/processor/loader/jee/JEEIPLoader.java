@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.processor.loader.jee;
+package org.overlord.rtgov.activity.processor.loader.jee;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -30,9 +30,9 @@ import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
 
-import org.overlord.bam.activity.processor.InformationProcessor;
-import org.overlord.bam.activity.processor.InformationProcessorManager;
-import org.overlord.bam.activity.util.InformationProcessorUtil;
+import org.overlord.rtgov.activity.processor.InformationProcessor;
+import org.overlord.rtgov.activity.processor.InformationProcessorManager;
+import org.overlord.rtgov.activity.util.InformationProcessorUtil;
 
 /**
  * This class provides the capability to load Information Processors from a
@@ -48,7 +48,7 @@ public class JEEIPLoader {
     private static final Logger LOG=Logger.getLogger(JEEIPLoader.class.getName());
     
     private static final String IP_JSON = "ip.json";
-    private static final String IP_MANAGER = "java:global/overlord-bam/InformationProcessorManager";
+    private static final String IP_MANAGER = "java:global/overlord-rtgov/InformationProcessorManager";
     
     private InformationProcessorManager _ipManager=null;
     private java.util.List<InformationProcessor> _informationProcessors=null;

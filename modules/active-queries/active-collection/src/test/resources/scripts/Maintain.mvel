@@ -1,15 +1,15 @@
-org.overlord.bam.active.collection.ActiveList list=
-	(org.overlord.bam.active.collection.ActiveList)acs.getActiveCollection();
+org.overlord.rtgov.active.collection.ActiveList list=
+	(org.overlord.rtgov.active.collection.ActiveList)acs.getActiveCollection();
 
 if (list.getSize() == 0) {
 	acs.insert(null, value);
 
 } else if (list.getSize() == 1) {
 	Object result=list.query(
-			new org.overlord.bam.active.collection.QuerySpec());
+			new org.overlord.rtgov.active.collection.QuerySpec());
 			
-	org.overlord.bam.active.collection.TestObject to=
-		(org.overlord.bam.active.collection.TestObject)result.get(0);
+	org.overlord.rtgov.active.collection.TestObject to=
+		(org.overlord.rtgov.active.collection.TestObject)result.get(0);
 		
 	to.setName("UPDATED");
 	
@@ -17,10 +17,10 @@ if (list.getSize() == 0) {
 	
 } else {
 	Object result=list.query(
-			new org.overlord.bam.active.collection.QuerySpec());
+			new org.overlord.rtgov.active.collection.QuerySpec());
 			
-	org.overlord.bam.active.collection.TestObject to=
-		(org.overlord.bam.active.collection.TestObject)result.get(0);
+	org.overlord.rtgov.active.collection.TestObject to=
+		(org.overlord.rtgov.active.collection.TestObject)result.get(0);
 		
 	acs.remove(0, to);
 }

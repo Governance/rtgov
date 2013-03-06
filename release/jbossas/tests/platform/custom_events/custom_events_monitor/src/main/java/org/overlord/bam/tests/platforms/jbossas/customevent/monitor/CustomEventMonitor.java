@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.platforms.jbossas.customevent.monitor;
+package org.overlord.rtgov.tests.platforms.jbossas.customevent.monitor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,12 +26,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.ActiveList;
-import org.overlord.bam.epn.EPNManager;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.NotificationListener;
-import org.overlord.bam.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveList;
+import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.NotificationListener;
+import org.overlord.rtgov.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
 
 /**
  * This is the custom event monitor that receives node notifications
@@ -49,7 +49,7 @@ public class CustomEventMonitor implements NotificationListener {
 
     private static final Logger LOG=Logger.getLogger(CustomEventMonitor.class.getName());
     
-    private static final String ACS_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
+    private static final String ACS_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
     private EPNManager _epnManager=null;
     private ActiveCollectionManager _activeCollectionManager;

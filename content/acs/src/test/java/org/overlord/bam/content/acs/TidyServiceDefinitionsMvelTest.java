@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.content.acs;
+package org.overlord.rtgov.content.acs;
 
 import static org.junit.Assert.*;
 
@@ -23,9 +23,9 @@ import java.util.List;
 
 import org.junit.Test;
 import org.mvel2.MVEL;
-import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.active.collection.ActiveMap;
-import org.overlord.bam.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.active.collection.ActiveCollectionSource;
+import org.overlord.rtgov.active.collection.ActiveMap;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
 
 public class TidyServiceDefinitionsMvelTest {
 

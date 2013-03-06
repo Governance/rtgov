@@ -15,12 +15,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.epn;
+package org.overlord.rtgov.tests.epn;
 
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.Node;
-import org.overlord.bam.epn.Subscription;
-import org.overlord.bam.epn.util.NetworkUtil;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.Node;
+import org.overlord.rtgov.epn.Subscription;
+import org.overlord.rtgov.epn.util.NetworkUtil;
 
 /**
  * This class is responsible for loading the test network and registering it with the

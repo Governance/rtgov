@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.performance.jee.tester;
+package org.overlord.rtgov.performance.jee.tester;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -42,16 +42,16 @@ public class PerformanceJEETest {
 	
 	private static final Logger LOG=Logger.getLogger(PerformanceJEETest.class.getName());
 
-    @Deployment(name="overlord-bam", order=1)
+    @Deployment(name="overlord-rtgov", order=1)
     public static WebArchive createDeployment1() {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.release.jbossas:overlord-bam:war:"+version)
+                .artifacts("org.overlord.rtgov.release.jbossas:overlord-rtgov:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
-                copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
+                copyToTmpFile(archiveFiles[0],"overlord-rtgov.war"));
     }
     
     @Deployment(name="app", order=2)
@@ -59,7 +59,7 @@ public class PerformanceJEETest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.release.jbossas.performance:performance-jbossas-app:war:"+version)
+                .artifacts("org.overlord.rtgov.release.jbossas.performance:performance-jbossas-app:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
@@ -71,7 +71,7 @@ public class PerformanceJEETest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.release.jbossas.performance:performance-jbossas-epn:war:"+version)
+                .artifacts("org.overlord.rtgov.release.jbossas.performance:performance-jbossas-epn:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -82,7 +82,7 @@ public class PerformanceJEETest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.release.jbossas.performance:performance-jbossas-acs:war:"+version)
+                .artifacts("org.overlord.rtgov.release.jbossas.performance:performance-jbossas-acs:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -93,7 +93,7 @@ public class PerformanceJEETest {
         String version=System.getProperty("bam.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.release.jbossas.performance:performance-jbossas-monitor:war:"+version)
+                .artifacts("org.overlord.rtgov.release.jbossas.performance:performance-jbossas-monitor:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
@@ -136,7 +136,7 @@ public class PerformanceJEETest {
         return(ret);
     }
 
-    @Test @OperateOnDeployment("overlord-bam")
+    @Test @OperateOnDeployment("overlord-rtgov")
     public void createTransactions() {
         
         try {

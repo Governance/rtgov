@@ -15,22 +15,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn;
+package org.overlord.rtgov.epn;
 
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
 
 import org.junit.Test;
-import org.overlord.bam.epn.AbstractEPNManager;
-import org.overlord.bam.epn.EPNContainer;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.Node;
-import org.overlord.bam.epn.testdata.TestEvent1;
-import org.overlord.bam.epn.testdata.TestEvent2;
-import org.overlord.bam.epn.testdata.TestEventProcessorA;
-import org.overlord.bam.epn.testdata.TestNotificationListener;
+import org.overlord.rtgov.epn.AbstractEPNManager;
+import org.overlord.rtgov.epn.EPNContainer;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.Node;
+import org.overlord.rtgov.epn.testdata.TestEvent1;
+import org.overlord.rtgov.epn.testdata.TestEvent2;
+import org.overlord.rtgov.epn.testdata.TestEventProcessorA;
+import org.overlord.rtgov.epn.testdata.TestNotificationListener;
 
 public class AbstractEPNManagerTest {
 

@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.call.trace.util;
+package org.overlord.rtgov.call.trace.util;
 
 import java.beans.PropertyDescriptor;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.overlord.bam.call.trace.model.CallTrace;
+import org.overlord.rtgov.call.trace.model.CallTrace;
 
 /**
  * This class provides utility functions for the call trace

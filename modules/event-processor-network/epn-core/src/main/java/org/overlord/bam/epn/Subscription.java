@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn;
+package org.overlord.rtgov.epn;
 
 /**
  * This class represents a subscription used to define a route for events

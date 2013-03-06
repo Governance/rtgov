@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.cep;
+package org.overlord.rtgov.epn.cep;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
@@ -33,8 +33,8 @@ import org.kie.conf.EventProcessingOption;
 import org.kie.runtime.KieContainer;
 import org.kie.runtime.KieSession;
 import org.kie.runtime.rule.SessionEntryPoint;
-import org.overlord.bam.epn.EventProcessor;
-import org.overlord.bam.internal.epn.DefaultEPNContext;
+import org.overlord.rtgov.epn.EventProcessor;
+import org.overlord.rtgov.internal.epn.DefaultEPNContext;
 
 /**
  * This class represents the CEP implementation of the Event

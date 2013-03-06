@@ -15,19 +15,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.store.jpa;
+package org.overlord.rtgov.activity.store.jpa;
 
 import static org.junit.Assert.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Origin;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Origin;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.server.QuerySpec;
 
 public class JPAActivityStoreTest {
 
@@ -37,8 +37,8 @@ public class JPAActivityStoreTest {
     private static final String CONV_ID_1 = "12345";
     private static final String JPQL_FORMAT = "jpql";
     private static final String MONGODB_FORMAT = "mongodb";
-    private static final String OVERLORD_BAM_ACTIVITY_ORM = "overlord-bam-activity-orm";
-    private static final String OVERLORD_BAM_ACTIVITY_OGM_M = "overlord-bam-activity-ogm-mongodb";
+    private static final String OVERLORD_RTGOV_ACTIVITY_ORM = "overlord-rtgov-activity-orm";
+    private static final String OVERLORD_RTGOV_ACTIVITY_OGM_M = "overlord-rtgov-activity-ogm-mongodb";
 
     public ActivityUnit createTestActivityUnit(String id, String convId) {
         ActivityUnit act=new ActivityUnit();
@@ -100,7 +100,7 @@ public class JPAActivityStoreTest {
     @Test
     public void testStoreAndQueryAllORM() {
         java.util.List<ActivityType> results=
-            testStoreAndQuery(OVERLORD_BAM_ACTIVITY_ORM,
+            testStoreAndQuery(OVERLORD_RTGOV_ACTIVITY_ORM,
                 new QuerySpec()
                     .setFormat(JPQL_FORMAT)
                     .setExpression("SELECT at FROM ActivityType at"));
@@ -116,7 +116,7 @@ public class JPAActivityStoreTest {
     @Test
     public void testQueryActivityFieldORM() {        
         java.util.List<ActivityType> results=
-            testStoreAndQuery(OVERLORD_BAM_ACTIVITY_ORM,
+            testStoreAndQuery(OVERLORD_RTGOV_ACTIVITY_ORM,
                 new QuerySpec()
                     .setFormat(JPQL_FORMAT)
                     .setExpression("SELECT at from ActivityType at "+
@@ -139,7 +139,7 @@ public class JPAActivityStoreTest {
     public void testStoreAndGetATsORM() {
         java.util.List<ActivityType> results=null;
         
-        JPAActivityStore astore=getActivityStore(OVERLORD_BAM_ACTIVITY_ORM);
+        JPAActivityStore astore=getActivityStore(OVERLORD_RTGOV_ACTIVITY_ORM);
         
         java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
         
@@ -178,7 +178,7 @@ public class JPAActivityStoreTest {
     @Test
     @Ignore
     public void testStoreAndQueryAllOGMM() {
-        testStoreAndQuery(OVERLORD_BAM_ACTIVITY_OGM_M,
+        testStoreAndQuery(OVERLORD_RTGOV_ACTIVITY_OGM_M,
                 new QuerySpec().setFormat(MONGODB_FORMAT).
                     setExpression("db.ActivityType.find()"));
     }

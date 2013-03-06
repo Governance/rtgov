@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-package org.overlord.bam.tests.actmgmt.jbossas.beanservice;
+package org.overlord.rtgov.tests.actmgmt.jbossas.beanservice;
 
 import java.util.HashMap;
 import java.util.Map;

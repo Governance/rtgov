@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model;
+package org.overlord.rtgov.activity.model;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.activity.model.mom.MessageSent;
-import org.overlord.bam.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.mom.MessageSent;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
 
 public class ActivityUnitTest {
 

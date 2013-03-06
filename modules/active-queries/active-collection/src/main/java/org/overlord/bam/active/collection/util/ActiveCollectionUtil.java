@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.util;
+package org.overlord.rtgov.active.collection.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.type.TypeReference;
-import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.active.collection.QuerySpec;
+import org.overlord.rtgov.active.collection.ActiveCollectionSource;
+import org.overlord.rtgov.active.collection.QuerySpec;
 
 /**
  * This class provides utility functions for the Active Collection

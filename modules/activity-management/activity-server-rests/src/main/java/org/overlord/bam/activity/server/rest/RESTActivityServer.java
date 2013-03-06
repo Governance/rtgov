@@ -15,16 +15,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server.rest;
+package org.overlord.rtgov.activity.server.rest;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityServer;
-import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.util.ActivityUtil;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;

@@ -15,10 +15,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector.embedded;
+package org.overlord.rtgov.activity.collector.embedded;
 
-import org.overlord.bam.activity.collector.AbstractActivityCollector;
-import org.overlord.bam.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.AbstractActivityCollector;
+import org.overlord.rtgov.activity.collector.ActivityCollector;
 
 /**
  * This class provides an embedded implementation of the activity

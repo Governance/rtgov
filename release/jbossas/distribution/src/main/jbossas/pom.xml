@@ -2,14 +2,14 @@
 	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.bam</groupId>
+	<groupId>org.overlord.rtgov</groupId>
 	<artifactId>install</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Overlord BAM::Install</name>
+	<name>Overlord RTGov::Install</name>
 	<url>http://www.jboss.org/overlord</url>
 	<description>
-		The Business Activity Monitor project
+		The Overlord Runtime Governance project
 	</description>
 
 	<scm>
@@ -42,11 +42,11 @@
 						<phase>install</phase>
 						<configuration>
 							<target>
-								<echo message="Install Overlord BAM at: ${env.JBOSS_HOME}"/>
+								<echo message="Install Overlord Runtime Governance at: ${env.JBOSS_HOME}"/>
 								<copy todir="${env.JBOSS_HOME}/modules" >
 									<fileset dir="modules" />
 								</copy>
-								<copy todir="${env.JBOSS_HOME}/standalone/deployments/overlord-bam" >
+								<copy todir="${env.JBOSS_HOME}/standalone/deployments/overlord-rtgov" >
 									<fileset dir="deployments/${type}" />
 								</copy>
 								<copy todir="${env.JBOSS_HOME}/standalone/configuration" >
@@ -63,10 +63,10 @@
 						<phase>clean</phase>
 						<configuration>
 							<target>
-								<echo message="Remove Overlord BAM from: ${env.JBOSS_HOME}"/>
-								<delete dir="${env.JBOSS_HOME}/modules/org/overlord/bam"/>
-								<delete dir="${env.JBOSS_HOME}/standalone/deployments/overlord-bam"/>
-								<delete file="${env.JBOSS_HOME}/standalone/configuration/overlord-bam.properties"/>
+								<echo message="Remove Overlord Runtime Governance from: ${env.JBOSS_HOME}"/>
+								<delete dir="${env.JBOSS_HOME}/modules/org/overlord/rtgov"/>
+								<delete dir="${env.JBOSS_HOME}/standalone/deployments/overlord-rtgov"/>
+								<delete file="${env.JBOSS_HOME}/standalone/configuration/overlord-rtgov.properties"/>
 							</target>
 						</configuration>
 						<goals>

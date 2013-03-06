@@ -15,15 +15,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.actmgmt.jbossas.beanservice;
+package org.overlord.rtgov.tests.actmgmt.jbossas.beanservice;
 
 import java.util.List;
 
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityStore;
-import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.QuerySpec;
 
 public class TestActivityStore implements ActivityStore {
 

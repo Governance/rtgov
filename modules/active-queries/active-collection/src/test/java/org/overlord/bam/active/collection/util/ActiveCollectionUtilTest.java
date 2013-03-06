@@ -15,17 +15,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.util;
+package org.overlord.rtgov.active.collection.util;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.active.collection.QuerySpec;
-import org.overlord.bam.active.collection.QuerySpec.Style;
-import org.overlord.bam.active.collection.QuerySpec.Truncate;
-import org.overlord.bam.active.collection.predicate.MVEL;
-import org.overlord.bam.active.collection.util.ActiveCollectionUtil;
+import org.overlord.rtgov.active.collection.ActiveCollectionSource;
+import org.overlord.rtgov.active.collection.QuerySpec;
+import org.overlord.rtgov.active.collection.QuerySpec.Style;
+import org.overlord.rtgov.active.collection.QuerySpec.Truncate;
+import org.overlord.rtgov.active.collection.predicate.MVEL;
+import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
 
 public class ActiveCollectionUtilTest {
 

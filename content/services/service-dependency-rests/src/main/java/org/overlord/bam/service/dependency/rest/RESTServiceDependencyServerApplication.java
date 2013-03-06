@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency.rest;
+package org.overlord.rtgov.service.dependency.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

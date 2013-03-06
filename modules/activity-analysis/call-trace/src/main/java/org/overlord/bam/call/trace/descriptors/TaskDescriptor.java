@@ -15,9 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.call.trace.descriptors;
+package org.overlord.rtgov.call.trace.descriptors;
 
-import org.overlord.bam.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
  * This class provides a descriptor for activities that may be

@@ -24,7 +24,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.overlord.bam.jee.ActivityReporter;
+import org.overlord.rtgov.jee.ActivityReporter;
 import org.switchyard.component.bean.Service;
 
 @Service(InventoryService.class)

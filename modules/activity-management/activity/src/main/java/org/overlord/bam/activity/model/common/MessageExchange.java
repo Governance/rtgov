@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model.common;
+package org.overlord.rtgov.activity.model.common;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -25,7 +25,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 
-import org.overlord.bam.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
  * This activity type represents a message exchange.

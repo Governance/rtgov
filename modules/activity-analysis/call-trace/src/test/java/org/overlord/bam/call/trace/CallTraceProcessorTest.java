@@ -15,26 +15,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.call.trace;
+package org.overlord.rtgov.call.trace;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.bpm.ProcessCompleted;
-import org.overlord.bam.activity.model.bpm.ProcessCompleted.Status;
-import org.overlord.bam.activity.model.bpm.ProcessStarted;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.activity.server.impl.ActivityServerImpl;
-import org.overlord.bam.activity.store.mem.MemActivityStore;
-import org.overlord.bam.call.trace.CallTraceProcessor.CTState;
-import org.overlord.bam.call.trace.model.CallTrace;
-import org.overlord.bam.call.trace.util.CallTraceUtil;
-import org.overlord.bam.call.trace.util.CallTraceUtilTest;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.model.bpm.ProcessCompleted;
+import org.overlord.rtgov.activity.model.bpm.ProcessCompleted.Status;
+import org.overlord.rtgov.activity.model.bpm.ProcessStarted;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.activity.server.impl.ActivityServerImpl;
+import org.overlord.rtgov.activity.store.mem.MemActivityStore;
+import org.overlord.rtgov.call.trace.CallTraceProcessor.CTState;
+import org.overlord.rtgov.call.trace.model.CallTrace;
+import org.overlord.rtgov.call.trace.util.CallTraceUtil;
+import org.overlord.rtgov.call.trace.util.CallTraceUtilTest;
 
 public class CallTraceProcessorTest {
 

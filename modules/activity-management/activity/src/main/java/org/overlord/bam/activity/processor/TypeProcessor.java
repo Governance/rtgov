@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.processor;
+package org.overlord.rtgov.activity.processor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.Context;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.Context;
 
 /**
  * This class is responsible for processing a type of information.

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.jee;
+package org.overlord.rtgov.epn.jee;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -37,12 +37,12 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
-import org.overlord.bam.epn.AbstractEPNManager;
-import org.overlord.bam.epn.Channel;
-import org.overlord.bam.epn.EPNContainer;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.Node;
+import org.overlord.rtgov.epn.AbstractEPNManager;
+import org.overlord.rtgov.epn.Channel;
+import org.overlord.rtgov.epn.EPNContainer;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.Node;
 
 /**
  * This class provides the JMS implementation of

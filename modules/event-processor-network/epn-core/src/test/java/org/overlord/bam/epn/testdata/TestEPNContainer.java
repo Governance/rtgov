@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.testdata;
+package org.overlord.rtgov.epn.testdata;
 
 import java.util.List;
 
-import org.overlord.bam.epn.Channel;
-import org.overlord.bam.epn.EPNContainer;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.Network;
+import org.overlord.rtgov.epn.Channel;
+import org.overlord.rtgov.epn.EPNContainer;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.Network;
 
 public class TestEPNContainer implements EPNContainer {
     

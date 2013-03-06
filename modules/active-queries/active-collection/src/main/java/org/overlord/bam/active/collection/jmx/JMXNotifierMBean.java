@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.jmx;
+package org.overlord.rtgov.active.collection.jmx;
 
 /**
  * This interface defines the attributes and operations to expose

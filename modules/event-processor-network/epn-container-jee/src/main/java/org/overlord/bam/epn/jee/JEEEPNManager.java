@@ -15,11 +15,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.jee;
+package org.overlord.rtgov.epn.jee;
 
 import javax.jms.Message;
 
-import org.overlord.bam.epn.EPNManager;
+import org.overlord.rtgov.epn.EPNManager;
 
 /**
  * This interface provides the JMS extension to

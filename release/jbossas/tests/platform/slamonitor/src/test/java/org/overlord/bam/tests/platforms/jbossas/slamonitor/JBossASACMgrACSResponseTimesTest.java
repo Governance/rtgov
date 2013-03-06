@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.platforms.jbossas.slamonitor;
+package org.overlord.rtgov.tests.platforms.jbossas.slamonitor;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,8 +35,8 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.overlord.bam.active.collection.predicate.MVEL;
-import org.overlord.bam.active.collection.QuerySpec;
+import org.overlord.rtgov.active.collection.predicate.MVEL;
+import org.overlord.rtgov.active.collection.QuerySpec;
 
 import static org.junit.Assert.*;
 
@@ -49,48 +49,48 @@ public class JBossASACMgrACSResponseTimesTest {
 
     private static final String SERVICE_RESPONSE_TIMES = "ServiceResponseTimes";
     
-    @Deployment(name="overlord-bam", order=1)
+    @Deployment(name="overlord-rtgov", order=1)
     public static WebArchive createDeployment1() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.release.jbossas:overlord-bam:war:"+version)
+                .artifacts("org.overlord.rtgov.release.jbossas:overlord-rtgov:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
-                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam.war"));
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov.war"));
     }
     
-    @Deployment(name="overlord-bam-acs", order=2)
+    @Deployment(name="overlord-rtgov-acs", order=2)
     public static WebArchive createDeployment2() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.content:overlord-bam-acs:war:"+version)
+                .artifacts("org.overlord.rtgov.content:overlord-rtgov-acs:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
-                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-acs.war"));
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov-acs.war"));
     }
     
-    @Deployment(name="overlord-bam-epn", order=3)
+    @Deployment(name="overlord-rtgov-epn", order=3)
     public static WebArchive createDeployment3() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.content:overlord-bam-epn:war:"+version)
+                .artifacts("org.overlord.rtgov.content:overlord-rtgov-epn:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
-                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-bam-epn.war"));
+                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov-epn.war"));
     }
     
     @Deployment(name="orders-app", order=4)
     public static WebArchive createDeployment4() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-app:war:"+version)
+                .artifacts("org.overlord.rtgov.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-app:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -98,10 +98,10 @@ public class JBossASACMgrACSResponseTimesTest {
     
     @Deployment(name="orders-ip", order=5)
     public static WebArchive createDeployment5() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-ip:war:"+version)
+                .artifacts("org.overlord.rtgov.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-ip:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -109,10 +109,10 @@ public class JBossASACMgrACSResponseTimesTest {
     
     @Deployment(name="epn", order=6)
     public static WebArchive createDeployment6() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-epn:war:"+version)
+                .artifacts("org.overlord.rtgov.samples.jbossas.slamonitor:samples-jbossas-slamonitor-epn:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
@@ -120,17 +120,17 @@ public class JBossASACMgrACSResponseTimesTest {
     
     @Deployment(name="monitor", order=7)
     public static WebArchive createDeployment7() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.bam.samples.jbossas.slamonitor:samples-jbossas-slamonitor-monitor:war:"+version)
+                .artifacts("org.overlord.rtgov.samples.jbossas.slamonitor:samples-jbossas-slamonitor-monitor:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
                         TestUtils.copyToTmpFile(archiveFiles[0],"slamonitor.war"));
     }
     
-    @Test @OperateOnDeployment("overlord-bam")
+    @Test @OperateOnDeployment("overlord-rtgov")
     public void testResponseTimes() {
         
         try {
@@ -214,7 +214,7 @@ public class JBossASACMgrACSResponseTimesTest {
     }
 
     public static java.util.List<?> performACMQuery(QuerySpec qs) throws Exception {
-        URL getUrl = new URL("http://localhost:8080/overlord-bam/acm/query");
+        URL getUrl = new URL("http://localhost:8080/overlord-rtgov/acm/query");
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("POST");
 

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.performance.jee.monitor;
+package org.overlord.rtgov.performance.jee.monitor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,9 +27,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import org.overlord.bam.active.collection.ActiveChangeListener;
-import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.ActiveList;
+import org.overlord.rtgov.active.collection.ActiveChangeListener;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveList;
 
 /**
  * This is the custom event monitor that receives node notifications
@@ -44,7 +44,7 @@ public class JEEMonitor implements ActiveChangeListener {
 
     private static final Logger LOG=Logger.getLogger(JEEMonitor.class.getName());
     
-    private static final String ACM_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
+    private static final String ACM_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
     private ActiveList _responseTimesProcessed=null;

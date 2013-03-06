@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.call.trace.descriptors;
+package org.overlord.rtgov.call.trace.descriptors;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -24,9 +24,9 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.app.LogMessage;
-import org.overlord.bam.call.trace.util.CallTraceUtil;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.app.LogMessage;
+import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 
 /**
  * This class provides a default descriptor for activities that may be

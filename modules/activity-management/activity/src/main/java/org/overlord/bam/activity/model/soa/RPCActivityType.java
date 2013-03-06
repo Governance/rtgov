@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model.soa;
+package org.overlord.rtgov.activity.model.soa;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -25,8 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.common.MessageExchange;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.model.common.MessageExchange;
 
 /**
  * This activity type represents a RPC activity.

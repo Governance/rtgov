@@ -3,7 +3,7 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-    <display-name>BAM</display-name>
+    <display-name>Runtime Governance</display-name>
 
     <servlet>
         <servlet-name>ActivityServer</servlet-name>
@@ -12,7 +12,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.bam.activity.server.rest.RESTActivityServerApplication</param-value>
+            <param-value>org.overlord.rtgov.activity.server.rest.RESTActivityServerApplication</param-value>
         </init-param>
     </servlet>
 
@@ -28,7 +28,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.bam.active.collection.rest.RESTActiveCollectionServerApplication</param-value>
+            <param-value>org.overlord.rtgov.active.collection.rest.RESTActiveCollectionServerApplication</param-value>
         </init-param>
     </servlet>
 
@@ -46,7 +46,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.bam.service.dependency.rest.RESTServiceDependencyServerApplication</param-value>
+            <param-value>org.overlord.rtgov.service.dependency.rest.RESTServiceDependencyServerApplication</param-value>
         </init-param>
     </servlet>
 
@@ -62,7 +62,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.bam.call.trace.rest.RESTCallTraceServerApplication</param-value>
+            <param-value>org.overlord.rtgov.call.trace.rest.RESTCallTraceServerApplication</param-value>
         </init-param>
     </servlet>
 

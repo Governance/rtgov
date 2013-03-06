@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn;
+package org.overlord.rtgov.epn;
 
 /**
  * This interfaces represents the Event Process Network
@@ -27,7 +27,7 @@ public interface EPNManager {
     /**
      * The URI for the EPNManager registered in JNDI.
      */
-    public static final String URI="java:global/overlord-bam/EPNManager";
+    public static final String URI="java:global/overlord-rtgov/EPNManager";
 
     /**
      * This method registers a network.

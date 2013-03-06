@@ -11,7 +11,7 @@
 	  "maxRetries" : 3,
 	  "retryInterval" : 0,
 	  "eventProcessor" : {
-	    "@class" : "org.overlord.bam.performance.jee.epn.SOAActivityTypeEventSplitter"
+	    "@class" : "org.overlord.rtgov.performance.jee.epn.SOAActivityTypeEventSplitter"
 	  },
 	  "predicate" : null,
       "notifications" : [ ]
@@ -22,7 +22,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.epn.cep.CEPEventProcessor",
+        "@class" : "org.overlord.rtgov.epn.cep.CEPEventProcessor",
         "ruleName" : "ResponseTime"
       },
       "predicate" : null,
@@ -40,7 +40,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.epn.cep.CEPEventProcessor",
+        "@class" : "org.overlord.rtgov.epn.cep.CEPEventProcessor",
         "ruleName" : "SLAViolation"
       },
       "predicate" : null,

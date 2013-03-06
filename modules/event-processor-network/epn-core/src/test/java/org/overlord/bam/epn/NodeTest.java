@@ -15,21 +15,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn;
+package org.overlord.rtgov.epn;
 
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
 
 import org.junit.Test;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.Node;
-import org.overlord.bam.epn.Predicate;
-import org.overlord.bam.epn.testdata.TestChannel;
-import org.overlord.bam.epn.testdata.TestEPNContainer;
-import org.overlord.bam.epn.testdata.TestEvent1;
-import org.overlord.bam.epn.testdata.TestEvent2;
-import org.overlord.bam.epn.testdata.TestEventProcessorA;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.Node;
+import org.overlord.rtgov.epn.Predicate;
+import org.overlord.rtgov.epn.testdata.TestChannel;
+import org.overlord.rtgov.epn.testdata.TestEPNContainer;
+import org.overlord.rtgov.epn.testdata.TestEvent1;
+import org.overlord.rtgov.epn.testdata.TestEvent2;
+import org.overlord.rtgov.epn.testdata.TestEventProcessorA;
 
 public class NodeTest {
 

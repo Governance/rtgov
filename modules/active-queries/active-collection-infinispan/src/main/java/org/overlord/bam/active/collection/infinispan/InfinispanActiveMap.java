@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.infinispan;
+package org.overlord.rtgov.active.collection.infinispan;
 
 import java.util.Map;
 
@@ -25,8 +25,8 @@ import org.infinispan.notifications.cachelistener.annotation.CacheEntryModified;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryRemoved;
 import org.infinispan.notifications.cachelistener.event.CacheEntryModifiedEvent;
 import org.infinispan.notifications.cachelistener.event.CacheEntryRemovedEvent;
-import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.active.collection.ActiveMap;
+import org.overlord.rtgov.active.collection.ActiveCollectionSource;
+import org.overlord.rtgov.active.collection.ActiveMap;
 
 /**
  * This class represents an infinispan specific active map

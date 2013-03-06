@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector;
+package org.overlord.rtgov.activity.collector;
 
 import java.util.UUID;
 import java.util.logging.Level;
@@ -26,10 +26,10 @@ import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Origin;
-import org.overlord.bam.activity.processor.InformationProcessorManager;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Origin;
+import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 
 /**
  * This class provides an abstract implementation of the activity

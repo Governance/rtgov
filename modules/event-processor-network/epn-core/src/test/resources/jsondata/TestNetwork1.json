@@ -11,13 +11,13 @@
   "nodes" : [ {
     "name" : "N0",
     "predicate" : {
-      "@class" : "org.overlord.bam.epn.testdata.TestPredicate1"
+      "@class" : "org.overlord.rtgov.epn.testdata.TestPredicate1"
     },
     "eventProcessor" : {
-      "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor1",
+      "@class" : "org.overlord.rtgov.epn.testdata.TestEventProcessor1",
       "services" : {
         "testCache" : {
-          "@class" : "org.overlord.bam.epn.service.InMemoryCacheManager"
+          "@class" : "org.overlord.rtgov.epn.service.InMemoryCacheManager"
         }
       }
     },
@@ -29,11 +29,11 @@
   }, {
     "name" : "N1",
     "predicate" : {
-      "@class" : "org.overlord.bam.epn.testdata.TestPredicate2",
+      "@class" : "org.overlord.rtgov.epn.testdata.TestPredicate2",
       "someProperty" : "TestProperty"
     },
     "eventProcessor" : {
-      "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor2"
+      "@class" : "org.overlord.rtgov.epn.testdata.TestEventProcessor2"
     },
     "sourceNodes" : [ "N0" ],
     "notifications" : [ ],
@@ -44,7 +44,7 @@
     "name" : "N2",
     "predicate" : null,
     "eventProcessor" : {
-      "@class" : "org.overlord.bam.epn.testdata.TestEventProcessor3"
+      "@class" : "org.overlord.rtgov.epn.testdata.TestEventProcessor3"
     },
     "sourceNodes" : [ "N0" ],
     "notifications" : [ ],

@@ -15,19 +15,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency.layout;
+package org.overlord.rtgov.service.dependency.layout;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.analytics.service.InvocationDefinition;
-import org.overlord.bam.analytics.service.OperationDefinition;
-import org.overlord.bam.analytics.service.RequestFaultDefinition;
-import org.overlord.bam.analytics.service.RequestResponseDefinition;
-import org.overlord.bam.analytics.service.ServiceDefinition;
-import org.overlord.bam.service.dependency.ServiceDependencyBuilder;
-import org.overlord.bam.service.dependency.ServiceGraph;
-import org.overlord.bam.service.dependency.ServiceNode;
+import org.overlord.rtgov.analytics.service.InvocationDefinition;
+import org.overlord.rtgov.analytics.service.OperationDefinition;
+import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
+import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
+import org.overlord.rtgov.service.dependency.ServiceGraph;
+import org.overlord.rtgov.service.dependency.ServiceNode;
 
 public class ServiceGraphLayoutImplTest {
 

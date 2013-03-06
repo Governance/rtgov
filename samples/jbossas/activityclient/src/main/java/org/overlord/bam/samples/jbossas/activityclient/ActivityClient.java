@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.samples.jbossas.activityclient;
+package org.overlord.rtgov.samples.jbossas.activityclient;
 
 import java.util.Random;
 
@@ -25,14 +25,14 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.TypeReference;
-import org.overlord.bam.activity.collector.ActivityCollector;
-import org.overlord.bam.activity.collector.CollectorContext;
-import org.overlord.bam.activity.collector.activity.server.ActivityServerLogger;
-import org.overlord.bam.activity.collector.embedded.EmbeddedActivityCollector;
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.activity.server.rest.client.RESTActivityServer;
+import org.overlord.rtgov.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.CollectorContext;
+import org.overlord.rtgov.activity.collector.activity.server.ActivityServerLogger;
+import org.overlord.rtgov.activity.collector.embedded.EmbeddedActivityCollector;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.activity.server.rest.client.RESTActivityServer;
 
 /**
  * This class provides a test client for sending sample activity
@@ -143,9 +143,9 @@ public class ActivityClient {
      */
     protected void preProcess(ActivityType actType, int txnId) {
         
-        if (actType instanceof org.overlord.bam.activity.model.soa.RPCActivityType) {
-            org.overlord.bam.activity.model.soa.RPCActivityType rpcType=
-                    (org.overlord.bam.activity.model.soa.RPCActivityType)actType;
+        if (actType instanceof org.overlord.rtgov.activity.model.soa.RPCActivityType) {
+            org.overlord.rtgov.activity.model.soa.RPCActivityType rpcType=
+                    (org.overlord.rtgov.activity.model.soa.RPCActivityType)actType;
             
             rpcType.setMessageId(txnId+"-"+rpcType.getMessageId());
             

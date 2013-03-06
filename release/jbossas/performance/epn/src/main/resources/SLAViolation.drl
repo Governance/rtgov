@@ -1,7 +1,7 @@
-import org.overlord.bam.analytics.service.ResponseTime
-import org.overlord.bam.analytics.Situation
+import org.overlord.rtgov.analytics.service.ResponseTime
+import org.overlord.rtgov.analytics.Situation
 
-global org.overlord.bam.epn.EPNContext epn
+global org.overlord.rtgov.epn.EPNContext epn
 
 declare ResponseTime
     @role( event )

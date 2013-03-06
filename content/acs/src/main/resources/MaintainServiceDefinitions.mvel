@@ -1,18 +1,18 @@
 // Key is null when the event source is a node within an EPN,
 // so need to derive the key from the event (value)
 
-org.overlord.bam.analytics.service.ServiceDefinition newsd=
-	(org.overlord.bam.analytics.service.ServiceDefinition)value;
+org.overlord.rtgov.analytics.service.ServiceDefinition newsd=
+	(org.overlord.rtgov.analytics.service.ServiceDefinition)value;
 	
-org.overlord.bam.active.collection.ActiveMap map=
-	(org.overlord.bam.active.collection.ActiveMap)acs.getActiveCollection();
+org.overlord.rtgov.active.collection.ActiveMap map=
+	(org.overlord.rtgov.active.collection.ActiveMap)acs.getActiveCollection();
 	
-org.overlord.bam.analytics.service.ServiceDefinition existingsd=
-	(org.overlord.bam.analytics.service.ServiceDefinition)map.get(newsd.getServiceType());
+org.overlord.rtgov.analytics.service.ServiceDefinition existingsd=
+	(org.overlord.rtgov.analytics.service.ServiceDefinition)map.get(newsd.getServiceType());
 
 if (existingsd == null) {
 	acs.insert(newsd.getServiceType(),
-			new org.overlord.bam.analytics.service.ServiceDefinition(newsd));
+			new org.overlord.rtgov.analytics.service.ServiceDefinition(newsd));
 } else {
 	existingsd.merge(newsd);
 	

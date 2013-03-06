@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server.jms.client;
+package org.overlord.rtgov.activity.server.jms.client;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -33,10 +33,10 @@ import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.api.jms.HornetQJMSClient;
 import org.hornetq.api.jms.JMSFactoryType;
 import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityServer;
-import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.activity.server.QuerySpec;
 
 /**
  * This class provides the JMS client implementation of the activity server.

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.embedded;
+package org.overlord.rtgov.epn.embedded;
 
 public class TestEvent2 implements java.io.Serializable {
 

@@ -15,12 +15,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.jmx;
+package org.overlord.rtgov.active.collection.jmx;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.active.collection.TestObject;
+import org.overlord.rtgov.active.collection.TestObject;
 
 public class JMXNotifierTest {
 

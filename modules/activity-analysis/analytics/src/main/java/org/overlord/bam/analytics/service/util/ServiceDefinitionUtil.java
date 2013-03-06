@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.analytics.service.util;
+package org.overlord.rtgov.analytics.service.util;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,21 +25,21 @@ import org.codehaus.jackson.map.DeserializationConfig.Feature;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityTypeId;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.analytics.service.InvocationDefinition;
-import org.overlord.bam.analytics.service.InvocationMetric;
-import org.overlord.bam.analytics.service.MEPDefinition;
-import org.overlord.bam.analytics.service.OperationDefinition;
-import org.overlord.bam.analytics.service.RequestFaultDefinition;
-import org.overlord.bam.analytics.service.RequestResponseDefinition;
-import org.overlord.bam.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityTypeId;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.analytics.service.InvocationDefinition;
+import org.overlord.rtgov.analytics.service.InvocationMetric;
+import org.overlord.rtgov.analytics.service.MEPDefinition;
+import org.overlord.rtgov.analytics.service.OperationDefinition;
+import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
+import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
 
 /**
  * This class provides utility functions related to the service

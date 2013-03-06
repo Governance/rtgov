@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.epn.jbossas.jee;
+package org.overlord.rtgov.tests.epn.jbossas.jee;
 
 import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -27,12 +27,12 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.Node;
-import org.overlord.bam.tests.epn.Child;
-import org.overlord.bam.tests.epn.NetworkLoader;
-import org.overlord.bam.tests.epn.Obj1;
-import org.overlord.bam.tests.epn.Obj2;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.Node;
+import org.overlord.rtgov.tests.epn.Child;
+import org.overlord.rtgov.tests.epn.NetworkLoader;
+import org.overlord.rtgov.tests.epn.Obj1;
+import org.overlord.rtgov.tests.epn.Obj2;
 
 
 import static org.junit.Assert.*;
@@ -41,27 +41,27 @@ import static org.junit.Assert.*;
 public class NetworkLoaderTest {
 
     @Inject
-    org.overlord.bam.epn.EPNManager _epnManager;
+    org.overlord.rtgov.epn.EPNManager _epnManager;
 
     @Deployment
     public static WebArchive createDeployment() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
 
         return ShrinkWrap.create(WebArchive.class)
-            .addClass(org.overlord.bam.tests.epn.Child.class)
-            .addClass(org.overlord.bam.tests.epn.ChildPredicate.class)
-            .addClass(org.overlord.bam.tests.epn.NetworkLoader.class)
-            .addClass(org.overlord.bam.tests.epn.Obj1.class)
-            .addClass(org.overlord.bam.tests.epn.Obj2.class)
-            .addClass(org.overlord.bam.tests.epn.Root.class)
+            .addClass(org.overlord.rtgov.tests.epn.Child.class)
+            .addClass(org.overlord.rtgov.tests.epn.ChildPredicate.class)
+            .addClass(org.overlord.rtgov.tests.epn.NetworkLoader.class)
+            .addClass(org.overlord.rtgov.tests.epn.Obj1.class)
+            .addClass(org.overlord.rtgov.tests.epn.Obj2.class)
+            .addClass(org.overlord.rtgov.tests.epn.Root.class)
             .addAsResource("networks/TestNetwork.json")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-            .addAsManifestResource("bam-epn-hornetq-jms.xml")
+            .addAsManifestResource("rtgov-epn-hornetq-jms.xml")
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.bam.event-processor-network:epn-core:"+version,
-                            "org.overlord.bam.event-processor-network:epn-container-jee:"+version)
+                    .artifacts("org.overlord.rtgov.event-processor-network:epn-core:"+version,
+                            "org.overlord.rtgov.event-processor-network:epn-container-jee:"+version)
                     .resolveAsFiles());
     }
 

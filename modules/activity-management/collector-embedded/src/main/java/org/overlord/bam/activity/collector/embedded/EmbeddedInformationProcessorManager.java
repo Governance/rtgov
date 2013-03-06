@@ -15,10 +15,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector.embedded;
+package org.overlord.rtgov.activity.collector.embedded;
 
-import org.overlord.bam.activity.processor.AbstractInformationProcessorManager;
-import org.overlord.bam.activity.processor.InformationProcessorManager;
+import org.overlord.rtgov.activity.processor.AbstractInformationProcessorManager;
+import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 
 /**
  * This class provides an embedded implementation of the information

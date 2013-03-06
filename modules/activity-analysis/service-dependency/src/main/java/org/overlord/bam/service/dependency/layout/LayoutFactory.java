@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency.layout;
+package org.overlord.rtgov.service.dependency.layout;
 
 /**
  * This class provides a factory for the layout

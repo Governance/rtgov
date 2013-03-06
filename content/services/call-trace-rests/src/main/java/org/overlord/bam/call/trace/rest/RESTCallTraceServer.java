@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.call.trace.rest;
+package org.overlord.rtgov.call.trace.rest;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,13 +30,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.overlord.bam.activity.server.ActivityServer;
-import org.overlord.bam.call.trace.CallTraceProcessor;
-import org.overlord.bam.call.trace.model.Call;
-import org.overlord.bam.call.trace.model.CallTrace;
-import org.overlord.bam.call.trace.model.Task;
-import org.overlord.bam.call.trace.model.TraceNode.Status;
-import org.overlord.bam.call.trace.util.CallTraceUtil;
+import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.call.trace.CallTraceProcessor;
+import org.overlord.rtgov.call.trace.model.Call;
+import org.overlord.rtgov.call.trace.model.CallTrace;
+import org.overlord.rtgov.call.trace.model.Task;
+import org.overlord.rtgov.call.trace.model.TraceNode.Status;
+import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 
 /**
  * This class represents the RESTful interface to the call trace server.

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.jmx;
+package org.overlord.rtgov.active.collection.jmx;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
@@ -28,7 +28,7 @@ import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 
 import org.mvel2.MVEL;
-import org.overlord.bam.active.collection.AbstractActiveChangeListener;
+import org.overlord.rtgov.active.collection.AbstractActiveChangeListener;
 
 /**
  * This class provides an active change listener for reporting

@@ -15,9 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector;
+package org.overlord.rtgov.activity.collector;
 
-import org.overlord.bam.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.ActivityUnit;
 
 /**
  * This interface represents an activity event collector.

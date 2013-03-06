@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.jee;
+package org.overlord.rtgov.epn.jee;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.epn.Channel;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.Network;
+import org.overlord.rtgov.epn.Channel;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.Network;
 
 /**
  * This class represents a JMS implementation of the event destination

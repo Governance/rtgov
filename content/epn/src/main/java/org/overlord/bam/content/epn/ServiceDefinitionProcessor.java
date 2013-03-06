@@ -15,16 +15,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.content.epn;
+package org.overlord.rtgov.content.epn;
 
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.util.ActivityUtil;
-import org.overlord.bam.analytics.service.ServiceDefinition;
-import org.overlord.bam.analytics.service.util.ServiceDefinitionUtil;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.util.ActivityUtil;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.service.util.ServiceDefinitionUtil;
 
 /**
  * This class provides an implementation of the EventProcessor
@@ -32,7 +32,7 @@ import org.overlord.bam.analytics.service.util.ServiceDefinitionUtil;
  * stream of activity units.
  *
  */
-public class ServiceDefinitionProcessor extends org.overlord.bam.epn.EventProcessor {
+public class ServiceDefinitionProcessor extends org.overlord.rtgov.epn.EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(ServiceDefinitionProcessor.class.getName());
     

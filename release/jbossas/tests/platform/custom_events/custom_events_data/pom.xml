@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.bam.release.jbossas.tests.platform.custom_events</groupId>
+	<groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
 	<artifactId>tests-jbossas-custom-events-data</artifactId> 
 	<packaging>jar</packaging>
-	<name>Overlord BAM::Release::JBossAS::Tests::Platform::CustomEvents::Data</name>
+	<name>Overlord RTGov::Release::JBossAS::Tests::Platform::CustomEvents::Data</name>
 
 	<parent>
-		<groupId>org.overlord.bam.release.jbossas.tests.platform</groupId>
+		<groupId>org.overlord.rtgov.release.jbossas.tests.platform</groupId>
 		<artifactId>custom_events</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.bam.activity-management</groupId>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
@@ -39,7 +39,7 @@
 				<configuration>
  					<archive>
 						<manifestEntries>
-							<Dependencies>deployment.overlord-bam.war</Dependencies>
+							<Dependencies>deployment.overlord-rtgov.war</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

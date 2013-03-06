@@ -15,10 +15,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn;
+package org.overlord.rtgov.epn;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.overlord.bam.epn.service.EPNService;
+import org.overlord.rtgov.epn.service.EPNService;
 
 /**
  * This interface defines an event processor responsible

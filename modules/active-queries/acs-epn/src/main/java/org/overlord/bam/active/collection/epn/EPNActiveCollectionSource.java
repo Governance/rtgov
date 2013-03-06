@@ -15,17 +15,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.epn;
+package org.overlord.rtgov.active.collection.epn;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
 
-import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.epn.ContextualNotificationListener;
-import org.overlord.bam.epn.EPNManager;
-import org.overlord.bam.epn.EventList;
+import org.overlord.rtgov.active.collection.ActiveCollectionSource;
+import org.overlord.rtgov.epn.ContextualNotificationListener;
+import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.EventList;
 
 /**
  * This class provides the Active Collection Source for listening to

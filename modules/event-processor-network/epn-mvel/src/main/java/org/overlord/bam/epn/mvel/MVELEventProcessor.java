@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.mvel;
+package org.overlord.rtgov.epn.mvel;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.mvel2.MVEL;
-import org.overlord.bam.epn.EventProcessor;
-import org.overlord.bam.internal.epn.DefaultEPNContext;
+import org.overlord.rtgov.epn.EventProcessor;
+import org.overlord.rtgov.internal.epn.DefaultEPNContext;
 
 /**
  * This class represents the MVEL implementation of the Event

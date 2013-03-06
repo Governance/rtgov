@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection;
+package org.overlord.rtgov.active.collection;
 
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
 
 import org.junit.Test;
-import org.overlord.bam.active.collection.ActiveList;
+import org.overlord.rtgov.active.collection.ActiveList;
 
 public class ActiveCollectionSourceTest {
 

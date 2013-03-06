@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector;
+package org.overlord.rtgov.activity.collector;
 
 import static org.junit.Assert.*;
 
@@ -31,12 +31,12 @@ import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 
 import org.junit.Test;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.collector.ActivityUnitLogger;
-import org.overlord.bam.activity.collector.CollectorContext;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.collector.ActivityUnitLogger;
+import org.overlord.rtgov.activity.collector.CollectorContext;
 
 public class AbstractActivityCollectorTest {
 

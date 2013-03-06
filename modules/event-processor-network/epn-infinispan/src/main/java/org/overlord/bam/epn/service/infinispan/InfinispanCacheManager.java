@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.service.infinispan;
+package org.overlord.rtgov.epn.service.infinispan;
 
 import java.util.Map;
 import java.util.logging.Level;
@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import org.infinispan.Cache;
 import org.infinispan.transaction.TransactionMode;
 import org.infinispan.manager.CacheContainer;
-import org.overlord.bam.epn.service.CacheManager;
+import org.overlord.rtgov.epn.service.CacheManager;
 
 /**
  * This class represents the MVEL implementation of the Event
@@ -65,7 +65,7 @@ public class InfinispanCacheManager extends CacheManager {
      */
     protected CacheContainer getCacheContainer() {
         if (_cacheContainer == null) {
-            _cacheContainer = org.overlord.bam.common.infinispan.InfinispanManager.getCacheContainer(_container);
+            _cacheContainer = org.overlord.rtgov.common.infinispan.InfinispanManager.getCacheContainer(_container);
         }
         
         if (LOG.isLoggable(Level.FINEST)) {

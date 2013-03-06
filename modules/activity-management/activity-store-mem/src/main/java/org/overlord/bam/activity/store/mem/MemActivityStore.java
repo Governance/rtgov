@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.store.mem;
+package org.overlord.rtgov.activity.store.mem;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -24,12 +24,12 @@ import java.util.logging.Logger;
 import javax.inject.Singleton;
 
 import org.mvel2.MVEL;
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.server.ActivityStore;
-import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.util.ActivityUtil;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 
 /**
  * This class provides the in-memory implementation of the Activity Store.

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model;
+package org.overlord.rtgov.activity.model;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -40,7 +40,7 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name="BAM_ACTIVITY_UNITS")
+@Table(name="RTGOV_ACTIVITY_UNITS")
 public class ActivityUnit implements java.io.Externalizable {
 
     private static final int VERSION = 1;

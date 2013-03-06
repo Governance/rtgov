@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.collector.activity.server;
+package org.overlord.rtgov.activity.collector.activity.server;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,9 +25,9 @@ import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityServer;
-import org.overlord.bam.activity.collector.BatchedActivityUnitLogger;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.activity.collector.BatchedActivityUnitLogger;
 
 /**
  * This class provides a bridge between the Collector and Activity Server,

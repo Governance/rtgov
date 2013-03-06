@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.call.trace;
+package org.overlord.rtgov.call.trace;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -26,23 +26,23 @@ import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.app.LogMessage;
-import org.overlord.bam.activity.model.soa.RPCActivityType;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.activity.server.ActivityServer;
-import org.overlord.bam.call.trace.descriptors.TaskDescriptorFactory;
-import org.overlord.bam.call.trace.model.Call;
-import org.overlord.bam.call.trace.model.CallTrace;
-import org.overlord.bam.call.trace.model.Task;
-import org.overlord.bam.call.trace.model.TraceNode;
-import org.overlord.bam.call.trace.model.TraceNode.Status;
-import org.overlord.bam.call.trace.util.CallTraceUtil;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.model.app.LogMessage;
+import org.overlord.rtgov.activity.model.soa.RPCActivityType;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.call.trace.descriptors.TaskDescriptorFactory;
+import org.overlord.rtgov.call.trace.model.Call;
+import org.overlord.rtgov.call.trace.model.CallTrace;
+import org.overlord.rtgov.call.trace.model.Task;
+import org.overlord.rtgov.call.trace.model.TraceNode;
+import org.overlord.rtgov.call.trace.model.TraceNode.Status;
+import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 
 /**
  * This class is responsible for deriving a call trace from

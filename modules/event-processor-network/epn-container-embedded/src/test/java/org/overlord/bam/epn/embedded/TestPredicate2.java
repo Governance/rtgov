@@ -15,9 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.embedded;
+package org.overlord.rtgov.epn.embedded;
 
-import org.overlord.bam.epn.Predicate;
+import org.overlord.rtgov.epn.Predicate;
 
 public class TestPredicate2 extends Predicate {
 

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency.svg;
+package org.overlord.rtgov.service.dependency.svg;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
@@ -25,15 +25,15 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.overlord.bam.analytics.Situation;
-import org.overlord.bam.analytics.service.InvocationDefinition;
-import org.overlord.bam.analytics.service.InvocationMetric;
-import org.overlord.bam.service.dependency.InvocationLink;
-import org.overlord.bam.service.dependency.OperationNode;
-import org.overlord.bam.service.dependency.ServiceGraph;
-import org.overlord.bam.service.dependency.ServiceNode;
-import org.overlord.bam.service.dependency.UsageLink;
-import org.overlord.bam.service.dependency.layout.ServiceGraphLayout;
+import org.overlord.rtgov.analytics.Situation;
+import org.overlord.rtgov.analytics.service.InvocationDefinition;
+import org.overlord.rtgov.analytics.service.InvocationMetric;
+import org.overlord.rtgov.service.dependency.InvocationLink;
+import org.overlord.rtgov.service.dependency.OperationNode;
+import org.overlord.rtgov.service.dependency.ServiceGraph;
+import org.overlord.rtgov.service.dependency.ServiceNode;
+import org.overlord.rtgov.service.dependency.UsageLink;
+import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayout;
 
 /**
  * This class generates a SVG representation of a

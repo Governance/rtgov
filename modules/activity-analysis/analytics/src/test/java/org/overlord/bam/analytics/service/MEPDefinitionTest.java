@@ -15,14 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.analytics.service;
+package org.overlord.rtgov.analytics.service;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.activity.model.ActivityTypeId;
-import org.overlord.bam.analytics.service.InvocationDefinition;
-import org.overlord.bam.analytics.service.MEPDefinition;
+import org.overlord.rtgov.activity.model.ActivityTypeId;
+import org.overlord.rtgov.analytics.service.InvocationDefinition;
+import org.overlord.rtgov.analytics.service.MEPDefinition;
 
 public class MEPDefinitionTest {
 

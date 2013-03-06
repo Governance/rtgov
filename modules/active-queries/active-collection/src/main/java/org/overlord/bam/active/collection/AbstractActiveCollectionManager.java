@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection;
+package org.overlord.rtgov.active.collection;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.active.collection.predicate.Predicate;
+import org.overlord.rtgov.active.collection.predicate.Predicate;
 
 /**
  * This class provides the abstract base implementation of the ActiveCollectionManager

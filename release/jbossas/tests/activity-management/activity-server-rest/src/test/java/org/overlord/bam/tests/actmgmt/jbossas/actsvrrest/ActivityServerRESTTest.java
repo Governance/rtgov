@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.actmgmt.jbossas.actsvrrest;
+package org.overlord.rtgov.tests.actmgmt.jbossas.actsvrrest;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,12 +33,12 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.store.mem.MemActivityStore;
-import org.overlord.bam.activity.util.ActivityUtil;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.store.mem.MemActivityStore;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 
 import static org.junit.Assert.*;
 
@@ -55,21 +55,21 @@ public class ActivityServerRESTTest {
     }
 
     @Inject
-    org.overlord.bam.activity.server.ActivityStore _activityStore=null;
+    org.overlord.rtgov.activity.server.ActivityStore _activityStore=null;
 
     @Deployment
     public static WebArchive createDeployment() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
         
-        return ShrinkWrap.create(WebArchive.class, "overlord-bam.war")
+        return ShrinkWrap.create(WebArchive.class, "overlord-rtgov.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .setWebXML("web.xml")
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.bam.activity-management:activity-server-impl:"+version,
-                            "org.overlord.bam.activity-management:activity-store-mem:"+version,
-                            "org.overlord.bam.activity-management:activity-server-rests:"+version)
+                    .artifacts("org.overlord.rtgov.activity-management:activity-server-impl:"+version,
+                            "org.overlord.rtgov.activity-management:activity-store-mem:"+version,
+                            "org.overlord.rtgov.activity-management:activity-server-rests:"+version)
                     .resolveAsFiles());
     }
     
@@ -122,7 +122,7 @@ public class ActivityServerRESTTest {
             // Query via REST interface
             QuerySpec query=new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true");
             
-            URL queryUrl = new URL("http://localhost:8080/overlord-bam/activity/query");
+            URL queryUrl = new URL("http://localhost:8080/overlord-rtgov/activity/query");
             
             HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
             connection.setRequestMethod("POST");
@@ -214,7 +214,7 @@ public class ActivityServerRESTTest {
             _activityStore.store(aulist);
             
             // Query via REST interface
-            URL getUrl = new URL("http://localhost:8080/overlord-bam/activity/unit?id="+au2.getId());
+            URL getUrl = new URL("http://localhost:8080/overlord-rtgov/activity/unit?id="+au2.getId());
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("GET");
     
@@ -295,7 +295,7 @@ public class ActivityServerRESTTest {
             _activityStore.store(aulist);
             
             // Query via REST interface
-            URL getUrl = new URL("http://localhost:8080/overlord-bam/activity/query");
+            URL getUrl = new URL("http://localhost:8080/overlord-rtgov/activity/query");
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("POST");
     
@@ -373,7 +373,7 @@ public class ActivityServerRESTTest {
                 fail("Initial query result should be 0: "+result.size());
             }
             
-            URL getUrl = new URL("http://localhost:8080/overlord-bam/activity/store");
+            URL getUrl = new URL("http://localhost:8080/overlord-rtgov/activity/store");
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("POST");
             

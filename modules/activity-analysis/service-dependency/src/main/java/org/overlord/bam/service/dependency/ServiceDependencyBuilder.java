@@ -15,15 +15,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency;
+package org.overlord.rtgov.service.dependency;
 
 import java.util.logging.Logger;
 
-import org.overlord.bam.analytics.Situation;
-import org.overlord.bam.analytics.service.InvocationDefinition;
-import org.overlord.bam.analytics.service.OperationDefinition;
-import org.overlord.bam.analytics.service.RequestFaultDefinition;
-import org.overlord.bam.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.Situation;
+import org.overlord.rtgov.analytics.service.InvocationDefinition;
+import org.overlord.rtgov.analytics.service.OperationDefinition;
+import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
 
 /**
  * This class builds a service view representing the

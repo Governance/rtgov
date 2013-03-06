@@ -74,7 +74,7 @@
                 <suffix value=".yyyy-MM-dd"/>
                 <append value="true"/>
             </periodic-rotating-file-handler>
-            <!--logger category="org.overlord.bam">
+            <!--logger category="org.overlord.rtgov">
                 <level name="FINEST"/>
             </logger-->
             <logger category="com.arjuna">

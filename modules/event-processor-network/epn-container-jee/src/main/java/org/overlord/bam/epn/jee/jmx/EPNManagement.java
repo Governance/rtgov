@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.jee.jmx;
+package org.overlord.rtgov.epn.jee.jmx;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -34,9 +34,9 @@ import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import org.overlord.bam.epn.EPNManager;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.NetworkListener;
+import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.NetworkListener;
 
 /**
  * This class provides the capability to manage the EPN Manager.

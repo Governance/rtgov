@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.performance.jee.epn;
+package org.overlord.rtgov.performance.jee.epn;
 
 import java.io.Serializable;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.soa.RPCActivityType;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.soa.RPCActivityType;
 
 /**
  * This class provides a test implementation of the EventProcessor
@@ -29,7 +29,7 @@ import org.overlord.bam.activity.model.soa.RPCActivityType;
  * for use by subsequent event processor nodes.
  *
  */
-public class SOAActivityTypeEventSplitter extends org.overlord.bam.epn.EventProcessor {
+public class SOAActivityTypeEventSplitter extends org.overlord.rtgov.epn.EventProcessor {
 
     /**
      * {@inheritDoc}

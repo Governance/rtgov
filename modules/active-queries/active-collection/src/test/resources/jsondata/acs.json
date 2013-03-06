@@ -1,6 +1,6 @@
 [
   {
-    "@class" : "org.overlord.bam.active.collection.ActiveCollectionSource",
+    "@class" : "org.overlord.rtgov.active.collection.ActiveCollectionSource",
     "name" : "TestACS",
     "type" : "List",
     "itemExpiration" : 200,

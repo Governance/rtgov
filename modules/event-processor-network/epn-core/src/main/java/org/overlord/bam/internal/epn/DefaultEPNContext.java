@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.internal.epn;
+package org.overlord.rtgov.internal.epn;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.epn.EPNContext;
-import org.overlord.bam.epn.service.EPNService;
+import org.overlord.rtgov.epn.EPNContext;
+import org.overlord.rtgov.epn.service.EPNService;
 
 /**
  * This class provides services to the EventProcessor

@@ -15,9 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency.svg;
+package org.overlord.rtgov.service.dependency.svg;
 
-import org.overlord.bam.analytics.service.InvocationMetric;
+import org.overlord.rtgov.analytics.service.InvocationMetric;
 
 /**
  * This interface represents a color selector algorithm used to

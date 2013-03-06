@@ -1,6 +1,6 @@
 [
   {
-    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
     "name" : "ServiceResponseTimes",
     "type" : "List",
     "itemExpiration" : 0,
@@ -10,7 +10,7 @@
     "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
     "aggregationScript" : "AggregateServiceResponseTime.mvel"
   },{
-    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
     "name" : "ServiceDefinitions",
     "type" : "Map",
     "itemExpiration" : 0,
@@ -23,26 +23,26 @@
     },
     "maintenanceScript" : "MaintainServiceDefinitions.mvel"
   },{
-    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
     "name" : "Situations",
     "type" : "List",
     "itemExpiration" : 40000,
     "maxItems" : 0,
     "subject" : "Situations",
     "activeChangeListeners" : [ {
-        "@class" : "org.overlord.bam.active.collection.jmx.JMXNotifier",
-    	"objectName" : "overlord.bam:name=Situations",
+        "@class" : "org.overlord.rtgov.active.collection.jmx.JMXNotifier",
+    	"objectName" : "overlord.rtgov:name=Situations",
     	"descriptionScript" : "SituationDescription.mvel",
     	"insertTypeScript" : "SituationType.mvel"
 	} ]
   },{
-    "@class" : "org.overlord.bam.active.collection.ActiveCollectionSource",
+    "@class" : "org.overlord.rtgov.active.collection.ActiveCollectionSource",
     "name" : "Principals",
     "type" : "Map",
     "lazy" : true,
     "visibility" : "Private",
     "factory" : {
-        "@class" : "org.overlord.bam.active.collection.infinispan.InfinispanActiveCollectionFactory",
+        "@class" : "org.overlord.rtgov.active.collection.infinispan.InfinispanActiveCollectionFactory",
         "cache" : "Principals"
     }
   }

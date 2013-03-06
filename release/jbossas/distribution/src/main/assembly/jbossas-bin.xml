@@ -77,10 +77,10 @@
 			<outputDirectory>deployments/server</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
-				<include>org.overlord.bam.release.jbossas:overlord-bam:war</include>
-				<include>org.overlord.bam.content:overlord-bam-epn:war</include>
-				<include>org.overlord.bam.content:overlord-bam-acs:war</include>
-				<include>org.overlord.bam.content.services:overlord-bam-services:war</include>
+				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov:war</include>
+				<include>org.overlord.rtgov.content:overlord-rtgov-epn:war</include>
+				<include>org.overlord.rtgov.content:overlord-rtgov-acs:war</include>
+				<include>org.overlord.rtgov.content.services:overlord-rtgov-services:war</include>
 				<include>org.overlord.gadgets.server:gadgets:war</include>
 				<include>org.overlord.gadgets.server:gadget-server:war</include>
 				<include>org.overlord.gadgets.server:gadget-web:war</include>
@@ -91,15 +91,15 @@
 			<outputDirectory>deployments/restc</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
-				<include>org.overlord.bam.release.jbossas:overlord-bam-client-rest:war</include>
+				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov-client-rest:war</include>
 			</includes>
-			<outputFileNameMapping>overlord-bam.war</outputFileNameMapping>
+			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>/</outputDirectory>
 			<unpack>true</unpack>
 			<includes>
-				<include>org.overlord.bam.release.jbossas:module:zip</include>
+				<include>org.overlord.rtgov.release.jbossas:module:zip</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}</outputFileNameMapping>
 		</dependencySet>

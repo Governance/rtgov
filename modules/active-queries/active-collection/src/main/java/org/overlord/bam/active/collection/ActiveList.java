@@ -15,16 +15,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection;
+package org.overlord.rtgov.active.collection;
 
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
-import org.overlord.bam.active.collection.QuerySpec.Style;
-import org.overlord.bam.active.collection.QuerySpec.Truncate;
-import org.overlord.bam.active.collection.predicate.Predicate;
+import org.overlord.rtgov.active.collection.QuerySpec.Style;
+import org.overlord.rtgov.active.collection.QuerySpec.Truncate;
+import org.overlord.rtgov.active.collection.predicate.Predicate;
 
 /**
  * This interface represents an active list.

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model;
+package org.overlord.rtgov.activity.model;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -38,16 +38,16 @@ import javax.persistence.Table;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.overlord.bam.activity.model.app.CustomActivity;
-import org.overlord.bam.activity.model.app.LogMessage;
-import org.overlord.bam.activity.model.bpm.ProcessCompleted;
-import org.overlord.bam.activity.model.bpm.ProcessStarted;
-import org.overlord.bam.activity.model.mom.MessageReceived;
-import org.overlord.bam.activity.model.mom.MessageSent;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.activity.model.app.CustomActivity;
+import org.overlord.rtgov.activity.model.app.LogMessage;
+import org.overlord.rtgov.activity.model.bpm.ProcessCompleted;
+import org.overlord.rtgov.activity.model.bpm.ProcessStarted;
+import org.overlord.rtgov.activity.model.mom.MessageReceived;
+import org.overlord.rtgov.activity.model.mom.MessageSent;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
 
 /**
  * This abstract class is the super type of all activity type classes.
@@ -71,7 +71,7 @@ import org.overlord.bam.activity.model.soa.ResponseSent;
     name="type",
     discriminatorType=DiscriminatorType.STRING
 )
-@Table(name="BAM_ACTIVITIES")
+@Table(name="RTGOV_ACTIVITIES")
 public abstract class ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
@@ -182,7 +182,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * @return The context
      */
     @ElementCollection()
-    @CollectionTable(name="BAM_ACTIVITY_CONTEXT")
+    @CollectionTable(name="RTGOV_ACTIVITY_CONTEXT")
     public java.util.List<Context> getContext() {
         return (_contexts);
     }
@@ -204,7 +204,7 @@ public abstract class ActivityType implements java.io.Externalizable {
     @ElementCollection(targetClass=String.class)
     @MapKeyColumn(name="name")
     @Column(name="value")
-    @CollectionTable(name="BAM_ACTIVITY_PROPERTIES",joinColumns={
+    @CollectionTable(name="RTGOV_ACTIVITY_PROPERTIES",joinColumns={
             @JoinColumn(name="unit_id",referencedColumnName="unitId"),
             @JoinColumn(name="unit_index",referencedColumnName="unitIndex")})
     public java.util.Map<String,String> getProperties() {

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model.bpm;
+package org.overlord.rtgov.activity.model.bpm;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -25,8 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.Context;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.Context;
 
 /**
  * This activity type represents a BPM actvity.

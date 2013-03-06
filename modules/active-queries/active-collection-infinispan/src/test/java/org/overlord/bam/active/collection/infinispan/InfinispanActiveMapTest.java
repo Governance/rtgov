@@ -15,23 +15,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.infinispan;
+package org.overlord.rtgov.active.collection.infinispan;
 
 import static org.junit.Assert.*;
 
 import org.infinispan.Cache;
 import org.infinispan.manager.CacheContainer;
 import org.junit.Test;
-import org.overlord.bam.active.collection.ActiveChangeListener;
-import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.active.collection.infinispan.InfinispanActiveMapTest.TestChange.TestChangeType;
+import org.overlord.rtgov.active.collection.ActiveChangeListener;
+import org.overlord.rtgov.active.collection.ActiveCollectionSource;
+import org.overlord.rtgov.active.collection.infinispan.InfinispanActiveMapTest.TestChange.TestChangeType;
 
 public class InfinispanActiveMapTest {
 
     @Test
     public void testNotifications() {
         
-        CacheContainer cc=org.overlord.bam.common.infinispan.InfinispanManager.getCacheContainer(null);
+        CacheContainer cc=org.overlord.rtgov.common.infinispan.InfinispanManager.getCacheContainer(null);
         
         if (cc == null) {
             fail("Failed to get default cache container");

@@ -15,21 +15,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.util;
+package org.overlord.rtgov.epn.util;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.Node;
-import org.overlord.bam.epn.Subscription;
-import org.overlord.bam.epn.service.InMemoryCacheManager;
-import org.overlord.bam.epn.testdata.TestEventProcessor1;
-import org.overlord.bam.epn.testdata.TestEventProcessor2;
-import org.overlord.bam.epn.testdata.TestEventProcessor3;
-import org.overlord.bam.epn.testdata.TestPredicate1;
-import org.overlord.bam.epn.testdata.TestPredicate2;
-import org.overlord.bam.epn.util.NetworkUtil;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.Node;
+import org.overlord.rtgov.epn.Subscription;
+import org.overlord.rtgov.epn.service.InMemoryCacheManager;
+import org.overlord.rtgov.epn.testdata.TestEventProcessor1;
+import org.overlord.rtgov.epn.testdata.TestEventProcessor2;
+import org.overlord.rtgov.epn.testdata.TestEventProcessor3;
+import org.overlord.rtgov.epn.testdata.TestPredicate1;
+import org.overlord.rtgov.epn.testdata.TestPredicate2;
+import org.overlord.rtgov.epn.util.NetworkUtil;
 
 public class NetworkUtilTest {
 

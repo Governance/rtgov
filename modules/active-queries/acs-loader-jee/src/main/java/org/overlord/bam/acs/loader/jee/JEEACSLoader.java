@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.acs.loader.jee;
+package org.overlord.rtgov.acs.loader.jee;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -30,10 +30,10 @@ import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
 
-import org.overlord.bam.active.collection.AbstractACSLoader;
-import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.ActiveCollectionSource;
-import org.overlord.bam.active.collection.util.ActiveCollectionUtil;
+import org.overlord.rtgov.active.collection.AbstractACSLoader;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionSource;
+import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
 
 /**
  * This class provides the capability to load an Active Collection Source from a
@@ -49,7 +49,7 @@ public class JEEACSLoader extends AbstractACSLoader {
     private static final Logger LOG=Logger.getLogger(JEEACSLoader.class.getName());
     
     private static final String ACS_JSON = "acs.json";
-    private static final String ACT_COLL_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
+    private static final String ACT_COLL_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
     private java.util.List<ActiveCollectionSource> _activeCollectionSources=null;

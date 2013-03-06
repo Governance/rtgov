@@ -2,30 +2,30 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.bam.release.jbossas.tests.activity-management</groupId>
+	<groupId>org.overlord.rtgov.release.jbossas.tests.activity-management</groupId>
 	<artifactId>tests-actmgmt-jbossas-activity-server-rest</artifactId>
 	<packaging>jar</packaging>
-	<name>Overlord BAM::Release::JBossAS::Tests::Activity Management::Activity Server REST</name>
+	<name>Overlord RTGov::Release::JBossAS::Tests::Activity Management::Activity Server REST</name>
 
 	<parent>
-		<groupId>org.overlord.bam.release.jbossas.tests</groupId>
+		<groupId>org.overlord.rtgov.release.jbossas.tests</groupId>
 		<artifactId>activity-management</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.bam.activity-management</groupId>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-impl</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam.activity-management</groupId>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-store-mem</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam.activity-management</groupId>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-rests</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -82,7 +82,7 @@
 				<configuration>
 					<systemProperties>
 						<property>
-							<name>bam.version</name>
+							<name>rtgov.version</name>
 							<value>${project.version}</value>
 						</property>
 					</systemProperties>

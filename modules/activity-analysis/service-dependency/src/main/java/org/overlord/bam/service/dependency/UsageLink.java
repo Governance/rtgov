@@ -15,9 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency;
+package org.overlord.rtgov.service.dependency;
 
-import org.overlord.bam.analytics.service.InvocationDefinition;
+import org.overlord.rtgov.analytics.service.InvocationDefinition;
 
 /**
  * This class represents the usage link between two service

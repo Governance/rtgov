@@ -1,39 +1,39 @@
-<project default="setup" name="bamtests" >
+<project default="setup" name="rtgovtests" >
 	<target name="setup">
-		<echo message="Setting up BAM modules"/>
+		<echo message="Setting up Overlord Runtime Governance modules"/>
 	
-		<delete dir="${jboss.home}/modules/org/overlord/bam" />
+		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />
 		
-		<unzip src="${org.overlord.bam.release.jbossas:module:zip}"
+		<unzip src="${org.overlord.rtgov.release.jbossas:module:zip}"
 			dest="${jboss.home}" />
 
-		<echo message="Setting up BAM deployments"/>
+		<echo message="Setting up Overlord Runtime Governance deployments"/>
 
-		<delete dir="${jboss.home}/standalone/deployments/overlord-bam" />
+		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov" />
 
 		<!-- Copy data source definitions -->
-		<copy todir="${jboss.home}/standalone/deployments/overlord-bam" >
-			<fileset dir="${ant.file.bamtests}/../../distribution/src/main/jbossas/deployments/server" />
+		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
+			<fileset dir="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/deployments/server" />
 		</copy>
 
-		<echo message="Setting up BAM configuration"/>
+		<echo message="Setting up Overlord Runtime Governance configuration"/>
 
-		<delete file="${jboss.home}/standalone/configuration/overlord-bam.properties" />
+		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties" />
 
 		<copy todir="${jboss.home}/standalone/configuration" >
-			<fileset file="${ant.file.bamtests}/../../distribution/src/main/jbossas/configuration/server/overlord-bam.properties" />
+			<fileset file="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/configuration/server/overlord-rtgov.properties" />
 		</copy>
 	</target>
 
 	<target name="clean">
-		<echo message="Cleaning up BAM modules"/>
-		<delete dir="${jboss.home}/modules/org/overlord/bam" />
+		<echo message="Cleaning up Overlord Runtime Governance modules"/>
+		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />
 
-		<echo message="Cleaning up BAM deployments"/>
-		<delete dir="${jboss.home}/standalone/deployments/overlord-bam" />
+		<echo message="Cleaning up Overlord Runtime Governance deployments"/>
+		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov" />
 
-		<echo message="Cleaning up BAM configuration"/>
-		<delete file="${jboss.home}/standalone/configuration/overlord-bam.properties" />
+		<echo message="Cleaning up Overlord Runtime Governance configuration"/>
+		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties" />
 	</target>
 
 </project>

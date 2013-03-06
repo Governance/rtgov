@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server.impl;
+package org.overlord.rtgov.activity.server.impl;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,12 +25,12 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityNotifier;
-import org.overlord.bam.activity.server.ActivityServer;
-import org.overlord.bam.activity.server.ActivityStore;
-import org.overlord.bam.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.server.ActivityNotifier;
+import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.QuerySpec;
 
 /**
  * This class represents the default implementation of the activity server.

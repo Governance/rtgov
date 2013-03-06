@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.model;
+package org.overlord.rtgov.activity.model;
 
 import java.io.IOException;
 import java.io.ObjectInput;

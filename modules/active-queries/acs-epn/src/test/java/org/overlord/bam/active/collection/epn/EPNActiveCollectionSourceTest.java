@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.epn;
+package org.overlord.rtgov.active.collection.epn;
 
 import static org.junit.Assert.*;
 
@@ -23,14 +23,14 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.junit.Test;
-import org.overlord.bam.active.collection.ActiveCollectionType;
-import org.overlord.bam.active.collection.ActiveList;
-import org.overlord.bam.active.collection.epn.EPNActiveCollectionSource;
-import org.overlord.bam.epn.EPNManager;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.NetworkListener;
-import org.overlord.bam.epn.NotificationListener;
+import org.overlord.rtgov.active.collection.ActiveCollectionType;
+import org.overlord.rtgov.active.collection.ActiveList;
+import org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource;
+import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.NetworkListener;
+import org.overlord.rtgov.epn.NotificationListener;
 
 public class EPNActiveCollectionSourceTest {
 

@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.jee;
+package org.overlord.rtgov.active.collection.jee;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -24,8 +24,8 @@ import javax.annotation.PreDestroy;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 
-import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.AbstractActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.AbstractActiveCollectionManager;
 
 
 /**

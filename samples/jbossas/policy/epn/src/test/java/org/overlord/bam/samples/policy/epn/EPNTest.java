@@ -15,20 +15,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.samples.policy.epn;
+package org.overlord.rtgov.samples.policy.epn;
 
 import static org.junit.Assert.*;
 
 import org.infinispan.manager.CacheContainer;
 import org.junit.Test;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.common.infinispan.InfinispanManager;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.embedded.EmbeddedEPNManager;
-import org.overlord.bam.epn.util.NetworkUtil;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.common.infinispan.InfinispanManager;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.embedded.EmbeddedEPNManager;
+import org.overlord.rtgov.epn.util.NetworkUtil;
 
 public class EPNTest {
 

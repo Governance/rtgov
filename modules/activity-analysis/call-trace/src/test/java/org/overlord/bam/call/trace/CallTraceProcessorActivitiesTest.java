@@ -15,17 +15,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.call.trace;
+package org.overlord.rtgov.call.trace;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.activity.server.impl.ActivityServerImpl;
-import org.overlord.bam.activity.store.mem.MemActivityStore;
-import org.overlord.bam.activity.util.ActivityUtil;
-import org.overlord.bam.call.trace.model.CallTrace;
-import org.overlord.bam.call.trace.util.CallTraceUtil;
-import org.overlord.bam.call.trace.util.CallTraceUtilTest;
+import org.overlord.rtgov.activity.server.impl.ActivityServerImpl;
+import org.overlord.rtgov.activity.store.mem.MemActivityStore;
+import org.overlord.rtgov.activity.util.ActivityUtil;
+import org.overlord.rtgov.call.trace.model.CallTrace;
+import org.overlord.rtgov.call.trace.util.CallTraceUtil;
+import org.overlord.rtgov.call.trace.util.CallTraceUtilTest;
 
 public class CallTraceProcessorActivitiesTest {
 

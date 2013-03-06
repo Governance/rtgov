@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server.rest.client;
+package org.overlord.rtgov.activity.server.rest.client;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,13 +26,13 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityServer;
-import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.util.ActivityUtil;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.server.ActivityServer;
+import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 
-import org.overlord.bam.common.util.BAMConfig;
+import org.overlord.rtgov.common.util.RTGovConfig;
 
 /**
  * This class provides the REST client implementation of the activity server.
@@ -43,12 +43,12 @@ public class RESTActivityServer implements ActivityServer {
 
     private static final Logger LOG=Logger.getLogger(RESTActivityServer.class.getName());
     
-    private static final String STORE="/overlord-bam/activity/store";
-    private static final String UNIT="/overlord-bam/activity/unit";
-    private static final String QUERY="/overlord-bam/activity/query";
-    private static final String EVENTS="/overlord-bam/activity/events";
+    private static final String STORE="/overlord-rtgov/activity/store";
+    private static final String UNIT="/overlord-rtgov/activity/unit";
+    private static final String QUERY="/overlord-rtgov/activity/query";
+    private static final String EVENTS="/overlord-rtgov/activity/events";
     
-    @Inject @BAMConfig
+    @Inject @RTGovConfig
     private String _serverURL="http://localhost:8080";
             
     /**

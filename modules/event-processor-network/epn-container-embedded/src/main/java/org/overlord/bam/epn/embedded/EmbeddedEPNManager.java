@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.embedded;
+package org.overlord.rtgov.epn.embedded;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -25,12 +25,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.epn.AbstractEPNManager;
-import org.overlord.bam.epn.Channel;
-import org.overlord.bam.epn.EPNContainer;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.Node;
+import org.overlord.rtgov.epn.AbstractEPNManager;
+import org.overlord.rtgov.epn.Channel;
+import org.overlord.rtgov.epn.EPNContainer;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.Node;
 
 /**
  * This class provides the embedded implementation of

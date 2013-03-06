@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection.embedded;
+package org.overlord.rtgov.active.collection.embedded;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.AbstractActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.AbstractActiveCollectionManager;
 
 
 /**

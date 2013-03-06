@@ -15,9 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn;
+package org.overlord.rtgov.epn;
 
-import org.overlord.bam.epn.service.EPNService;
+import org.overlord.rtgov.epn.service.EPNService;
 
 /**
  * This interface provides services to the EventProcessor

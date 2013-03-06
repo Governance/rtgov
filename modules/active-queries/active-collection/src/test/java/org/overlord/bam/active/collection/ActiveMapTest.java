@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.active.collection;
+package org.overlord.rtgov.active.collection;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.active.collection.ActiveChangeListener;
-import org.overlord.bam.active.collection.predicate.Predicate;
+import org.overlord.rtgov.active.collection.ActiveChangeListener;
+import org.overlord.rtgov.active.collection.predicate.Predicate;
 
 public class ActiveMapTest {
 

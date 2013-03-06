@@ -15,12 +15,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency.layout;
+package org.overlord.rtgov.service.dependency.layout;
 
-import org.overlord.bam.service.dependency.OperationNode;
-import org.overlord.bam.service.dependency.ServiceGraph;
-import org.overlord.bam.service.dependency.ServiceNode;
-import org.overlord.bam.service.dependency.UsageLink;
+import org.overlord.rtgov.service.dependency.OperationNode;
+import org.overlord.rtgov.service.dependency.ServiceGraph;
+import org.overlord.rtgov.service.dependency.ServiceNode;
+import org.overlord.rtgov.service.dependency.UsageLink;
 
 /**
  * This class represents the default service graph layout

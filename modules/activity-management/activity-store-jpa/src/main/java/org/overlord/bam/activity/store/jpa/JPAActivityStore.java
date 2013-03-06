@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.store.jpa;
+package org.overlord.rtgov.activity.store.jpa;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -23,12 +23,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.activity.model.ActivityType;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityStore;
-import org.overlord.bam.activity.server.QuerySpec;
-import org.overlord.bam.activity.util.ActivityUtil;
-import org.overlord.bam.common.util.BAMPropertiesProvider;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.util.ActivityUtil;
+import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -52,7 +52,7 @@ public class JPAActivityStore implements ActivityStore {
     private static final String ENTITY_MANAGER_PROPERTY = "entity.manager";
     private static final String DEFAULT_TRANSACTION_MANAGER = "java:jboss/TransactionManager";
 
-    private static final String EMF_NAME = "overlord-bam-activity";
+    private static final String EMF_NAME = "overlord-rtgov-activity";
 
     private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
     
@@ -63,7 +63,7 @@ public class JPAActivityStore implements ActivityStore {
     private javax.transaction.TransactionManager _transactionManager=null;
     
     @Inject
-    private BAMPropertiesProvider _properties=null;
+    private RTGovPropertiesProvider _properties=null;
     
     /**
      * This is the default constructor for the JPA activity store.

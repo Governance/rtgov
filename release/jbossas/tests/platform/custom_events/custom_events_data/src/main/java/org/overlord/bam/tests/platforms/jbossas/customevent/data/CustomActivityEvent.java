@@ -15,9 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.platforms.jbossas.customevent.data;
+package org.overlord.rtgov.tests.platforms.jbossas.customevent.data;
 
-import org.overlord.bam.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
  * This class provides a custom event to be passed between nodes

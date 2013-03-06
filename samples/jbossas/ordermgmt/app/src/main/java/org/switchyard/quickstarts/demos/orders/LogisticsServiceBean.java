@@ -21,7 +21,7 @@ package org.switchyard.quickstarts.demos.orders;
 
 import javax.inject.Inject;
 
-import org.overlord.bam.jee.ActivityReporter;
+import org.overlord.rtgov.jee.ActivityReporter;
 import org.switchyard.component.bean.Service;
 
 @Service(LogisticsService.class)

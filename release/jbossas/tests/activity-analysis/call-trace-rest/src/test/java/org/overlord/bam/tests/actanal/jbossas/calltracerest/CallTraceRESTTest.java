@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.actanal.jbossas.calltracerest;
+package org.overlord.rtgov.tests.actanal.jbossas.calltracerest;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -31,18 +31,18 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.model.Context.Type;
-import org.overlord.bam.activity.model.bpm.ProcessCompleted;
-import org.overlord.bam.activity.model.bpm.ProcessStarted;
-import org.overlord.bam.activity.model.bpm.ProcessCompleted.Status;
-import org.overlord.bam.activity.model.soa.RequestReceived;
-import org.overlord.bam.activity.model.soa.RequestSent;
-import org.overlord.bam.activity.model.soa.ResponseReceived;
-import org.overlord.bam.activity.model.soa.ResponseSent;
-import org.overlord.bam.call.trace.model.CallTrace;
-import org.overlord.bam.call.trace.util.CallTraceUtil;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.model.Context.Type;
+import org.overlord.rtgov.activity.model.bpm.ProcessCompleted;
+import org.overlord.rtgov.activity.model.bpm.ProcessStarted;
+import org.overlord.rtgov.activity.model.bpm.ProcessCompleted.Status;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.ResponseReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.call.trace.model.CallTrace;
+import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 
 import static org.junit.Assert.*;
 
@@ -66,22 +66,22 @@ public class CallTraceRESTTest {
     		"\"percentage\":25}],\"duration\":88,\"percentage\":100}]}";
     
     @Inject
-    org.overlord.bam.activity.server.ActivityStore _activityStore=null;
+    org.overlord.rtgov.activity.server.ActivityStore _activityStore=null;
 
     @Deployment
     public static WebArchive createDeployment() {
-        String version=System.getProperty("bam.version");
+        String version=System.getProperty("rtgov.version");
         
-        return ShrinkWrap.create(WebArchive.class, "overlord-bam.war")
+        return ShrinkWrap.create(WebArchive.class, "overlord-rtgov.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .setWebXML("web.xml")
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.bam.activity-management:activity-server-impl:"+version,
-                            "org.overlord.bam.activity-management:activity-store-mem:"+version,
-                            "org.overlord.bam.activity-analysis:call-trace:"+version,
-                            "org.overlord.bam.content.services:call-trace-rests:"+version)
+                    .artifacts("org.overlord.rtgov.activity-management:activity-server-impl:"+version,
+                            "org.overlord.rtgov.activity-management:activity-store-mem:"+version,
+                            "org.overlord.rtgov.activity-analysis:call-trace:"+version,
+                            "org.overlord.rtgov.content.services:call-trace-rests:"+version)
                     .resolveAsFiles());
     }
     
@@ -188,7 +188,7 @@ public class CallTraceRESTTest {
             _activityStore.store(activities);
         
             // Query server
-            URL getUrl = new URL("http://localhost:8080/overlord-bam/call/trace/instance?identifier=1");
+            URL getUrl = new URL("http://localhost:8080/overlord-rtgov/call/trace/instance?identifier=1");
             HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
             connection.setRequestMethod("GET");
             

@@ -1,46 +1,46 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.bam.release.jbossas.tests.platform</groupId>
+	<groupId>org.overlord.rtgov.release.jbossas.tests.platform</groupId>
 	<artifactId>tests-jbossas-slamonitor</artifactId> 
 	<packaging>jar</packaging>
-	<name>Overlord BAM::Release::JBossAS::Tests::Platform::SLAMonitor</name>
+	<name>Overlord RTGov::Release::JBossAS::Tests::Platform::SLAMonitor</name>
 
 	<parent>
-		<groupId>org.overlord.bam.release.jbossas.tests</groupId>
+		<groupId>org.overlord.rtgov.release.jbossas.tests</groupId>
 		<artifactId>platform</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.bam.samples.jbossas.ordermgmt</groupId>
+			<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			<artifactId>samples-jbossas-ordermgmt-app</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam.samples.jbossas.ordermgmt</groupId>
+			<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			<artifactId>samples-jbossas-ordermgmt-ip</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.bam.samples.jbossas.slamonitor</groupId>
+			<groupId>org.overlord.rtgov.samples.jbossas.slamonitor</groupId>
 			<artifactId>samples-jbossas-slamonitor-epn</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.overlord.bam.release.jbossas</groupId>
-			<artifactId>overlord-bam</artifactId>
+			<groupId>org.overlord.rtgov.release.jbossas</groupId>
+			<artifactId>overlord-rtgov</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>org.overlord.bam.event-processor-network</groupId>
+			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
@@ -80,7 +80,7 @@
 				<configuration>
 					<systemProperties>
 						<property>
-							<name>bam.version</name>
+							<name>rtgov.version</name>
 							<value>${project.version}</value>
 						</property>
 					</systemProperties>

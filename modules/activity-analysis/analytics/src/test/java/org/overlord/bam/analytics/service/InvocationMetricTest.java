@@ -15,12 +15,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.analytics.service;
+package org.overlord.rtgov.analytics.service;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.analytics.service.InvocationMetric;
+import org.overlord.rtgov.analytics.service.InvocationMetric;
 
 public class InvocationMetricTest {
 

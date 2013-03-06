@@ -12,7 +12,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.CreateCustomActivityEventProcessor"
+        "@class" : "org.overlord.rtgov.tests.platforms.jbossas.customevent.epn.CreateCustomActivityEventProcessor"
       },
       "predicate" : null,
       "notifications" : [ ]
@@ -23,7 +23,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.tests.platforms.jbossas.customevent.epn.HandleCustomActivityEventProcessor"
+        "@class" : "org.overlord.rtgov.tests.platforms.jbossas.customevent.epn.HandleCustomActivityEventProcessor"
       },
       "predicate" : null,
       "notifications" : [ {

@@ -16,7 +16,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.content.epn.SOAActivityTypeEventSplitter"
+        "@class" : "org.overlord.rtgov.content.epn.SOAActivityTypeEventSplitter"
       },
       "predicate" : null,
       "notifications" : [ ]
@@ -27,7 +27,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.content.epn.ServiceDefinitionProcessor"
+        "@class" : "org.overlord.rtgov.content.epn.ServiceDefinitionProcessor"
       },
       "predicate" : null,
       "notifications" : [ {
@@ -41,7 +41,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.content.epn.ServiceResponseTimeProcessor"
+        "@class" : "org.overlord.rtgov.content.epn.ServiceResponseTimeProcessor"
       },
       "predicate" : null,
       "notifications" : [ {

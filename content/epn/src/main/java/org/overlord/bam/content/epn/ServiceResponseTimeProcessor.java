@@ -15,15 +15,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.content.epn;
+package org.overlord.rtgov.content.epn;
 
 import java.io.Serializable;
 
-import org.overlord.bam.analytics.service.MEPDefinition;
-import org.overlord.bam.analytics.service.OperationDefinition;
-import org.overlord.bam.analytics.service.RequestFaultDefinition;
-import org.overlord.bam.analytics.service.ResponseTime;
-import org.overlord.bam.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.service.MEPDefinition;
+import org.overlord.rtgov.analytics.service.OperationDefinition;
+import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
+import org.overlord.rtgov.analytics.service.ResponseTime;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
 
 /**
  * This class provides an implementation of the EventProcessor
@@ -31,7 +31,7 @@ import org.overlord.bam.analytics.service.ServiceDefinition;
  * for use by subsequent event processor nodes.
  *
  */
-public class ServiceResponseTimeProcessor extends org.overlord.bam.epn.EventProcessor {
+public class ServiceResponseTimeProcessor extends org.overlord.rtgov.epn.EventProcessor {
 
     /**
      * {@inheritDoc}

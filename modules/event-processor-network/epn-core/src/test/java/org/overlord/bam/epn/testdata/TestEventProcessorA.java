@@ -15,11 +15,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.testdata;
+package org.overlord.rtgov.epn.testdata;
 
 import java.io.Serializable;
 
-import org.overlord.bam.epn.EventProcessor;
+import org.overlord.rtgov.epn.EventProcessor;
 
 public class TestEventProcessorA extends EventProcessor {
 

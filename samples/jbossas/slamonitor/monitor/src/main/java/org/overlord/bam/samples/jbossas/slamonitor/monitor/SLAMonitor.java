@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.samples.jbossas.slamonitor.monitor;
+package org.overlord.rtgov.samples.jbossas.slamonitor.monitor;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,12 +27,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.ActiveList;
-import org.overlord.bam.active.collection.predicate.MVEL;
-import org.overlord.bam.active.collection.predicate.Predicate;
-import org.overlord.bam.analytics.Situation;
-import org.overlord.bam.analytics.service.ResponseTime;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveList;
+import org.overlord.rtgov.active.collection.predicate.MVEL;
+import org.overlord.rtgov.active.collection.predicate.Predicate;
+import org.overlord.rtgov.analytics.Situation;
+import org.overlord.rtgov.analytics.service.ResponseTime;
 
 /**
  * This is the custom event monitor that receives node notifications
@@ -48,7 +48,7 @@ public class SLAMonitor {
 
     private static final Logger LOG=Logger.getLogger(SLAMonitor.class.getName());
     
-    private static final String ACM_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
+    private static final String ACM_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
     private ActiveList _serviceResponseTime=null;

@@ -1,13 +1,13 @@
 [
   {
-    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
     "name" : "CustomEventsResults",
     "type" : "List",
     "itemExpiration" : 0,
     "maxItems" : 0,
     "subject" : "CustomEventsResults"
   },{
-    "@class" : "org.overlord.bam.active.collection.epn.EPNActiveCollectionSource",
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
     "name" : "CustomEventsProcessed",
     "type" : "List",
     "itemExpiration" : 0,

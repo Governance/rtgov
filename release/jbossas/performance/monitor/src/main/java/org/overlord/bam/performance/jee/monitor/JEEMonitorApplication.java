@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.performance.jee.monitor;
+package org.overlord.rtgov.performance.jee.monitor;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.core.Application;

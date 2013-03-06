@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.analytics.service;
+package org.overlord.rtgov.analytics.service;
 
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import org.overlord.bam.activity.model.ActivityTypeId;
+import org.overlord.rtgov.activity.model.ActivityTypeId;
 
 /**
  * This class represents an abstract response within a service operation.

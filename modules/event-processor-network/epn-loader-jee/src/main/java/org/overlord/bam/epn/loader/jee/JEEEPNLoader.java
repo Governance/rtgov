@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.loader.jee;
+package org.overlord.rtgov.epn.loader.jee;
 
 import static javax.ejb.ConcurrencyManagementType.BEAN;
 
@@ -30,10 +30,10 @@ import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
 
-import org.overlord.bam.epn.AbstractEPNLoader;
-import org.overlord.bam.epn.EPNManager;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.util.NetworkUtil;
+import org.overlord.rtgov.epn.AbstractEPNLoader;
+import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.util.NetworkUtil;
 
 /**
  * This class provides the capability to load an EPN Network from a

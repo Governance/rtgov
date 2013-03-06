@@ -15,10 +15,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.testdata;
+package org.overlord.rtgov.epn.testdata;
 
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.NotificationListener;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.NotificationListener;
 
 public class TestNotificationListener implements NotificationListener {
 

@@ -12,7 +12,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.tests.epn.Root"
+        "@class" : "org.overlord.rtgov.tests.epn.Root"
       },
       "predicate" : null,
       "notifications" : [ ]
@@ -23,10 +23,10 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.tests.epn.Child"
+        "@class" : "org.overlord.rtgov.tests.epn.Child"
       },
       "predicate" : {
-        "@class" : "org.overlord.bam.tests.epn.ChildPredicate",
+        "@class" : "org.overlord.rtgov.tests.epn.ChildPredicate",
         "min" : 0,
         "max" : 9
       },
@@ -38,10 +38,10 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.bam.tests.epn.Child"
+        "@class" : "org.overlord.rtgov.tests.epn.Child"
       },
       "predicate" : {
-        "@class" : "org.overlord.bam.tests.epn.ChildPredicate",
+        "@class" : "org.overlord.rtgov.tests.epn.ChildPredicate",
         "min" : 10,
         "max" : 19
       },

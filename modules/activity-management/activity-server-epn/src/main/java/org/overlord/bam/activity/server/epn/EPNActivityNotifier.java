@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.server.epn;
+package org.overlord.rtgov.activity.server.epn;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -25,9 +25,9 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 
-import org.overlord.bam.activity.model.ActivityUnit;
-import org.overlord.bam.activity.server.ActivityNotifier;
-import org.overlord.bam.epn.EPNManager;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.server.ActivityNotifier;
+import org.overlord.rtgov.epn.EPNManager;
 
 /**
  * This class provides a bridge between the Activity Server, where

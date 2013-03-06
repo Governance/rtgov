@@ -15,19 +15,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.tests.platforms.jbossas.customevent.epn;
+package org.overlord.rtgov.tests.platforms.jbossas.customevent.epn;
 
 import java.io.Serializable;
 
-import org.overlord.bam.activity.model.soa.RPCActivityType;
-import org.overlord.bam.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
+import org.overlord.rtgov.activity.model.soa.RPCActivityType;
+import org.overlord.rtgov.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
 
 /**
  * This class provides a test implementation of the EventProcessor
  * interface, used to receive custom events.
  *
  */
-public class CreateCustomActivityEventProcessor extends org.overlord.bam.epn.EventProcessor {
+public class CreateCustomActivityEventProcessor extends org.overlord.rtgov.epn.EventProcessor {
 
     /**
      * {@inheritDoc}

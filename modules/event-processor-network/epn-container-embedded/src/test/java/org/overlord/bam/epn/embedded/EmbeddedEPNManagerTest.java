@@ -15,19 +15,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.epn.embedded;
+package org.overlord.rtgov.epn.embedded;
 
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
 
 import org.junit.Test;
-import org.overlord.bam.epn.EventList;
-import org.overlord.bam.epn.Network;
-import org.overlord.bam.epn.Node;
-import org.overlord.bam.epn.Subscription;
-import org.overlord.bam.epn.embedded.EmbeddedEPNManager;
-import org.overlord.bam.epn.embedded.EmbeddedEPNManager.EmbeddedChannel;
+import org.overlord.rtgov.epn.EventList;
+import org.overlord.rtgov.epn.Network;
+import org.overlord.rtgov.epn.Node;
+import org.overlord.rtgov.epn.Subscription;
+import org.overlord.rtgov.epn.embedded.EmbeddedEPNManager;
+import org.overlord.rtgov.epn.embedded.EmbeddedEPNManager.EmbeddedChannel;
 
 public class EmbeddedEPNManagerTest {
 

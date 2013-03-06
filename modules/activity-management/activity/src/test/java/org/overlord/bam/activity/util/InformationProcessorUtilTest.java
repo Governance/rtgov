@@ -15,16 +15,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.activity.util;
+package org.overlord.rtgov.activity.util;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.bam.activity.model.Context;
-import org.overlord.bam.activity.processor.InformationProcessor;
-import org.overlord.bam.activity.processor.MVELExpressionEvaluator;
-import org.overlord.bam.activity.processor.TypeProcessor;
-import org.overlord.bam.activity.processor.XPathExpressionEvaluator;
+import org.overlord.rtgov.activity.model.Context;
+import org.overlord.rtgov.activity.processor.InformationProcessor;
+import org.overlord.rtgov.activity.processor.MVELExpressionEvaluator;
+import org.overlord.rtgov.activity.processor.TypeProcessor;
+import org.overlord.rtgov.activity.processor.XPathExpressionEvaluator;
 
 public class InformationProcessorUtilTest {
 

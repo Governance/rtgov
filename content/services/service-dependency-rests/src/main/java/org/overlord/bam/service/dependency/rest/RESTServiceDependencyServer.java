@@ -15,21 +15,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.bam.service.dependency.rest;
+package org.overlord.rtgov.service.dependency.rest;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.bam.active.collection.ActiveCollection;
-import org.overlord.bam.active.collection.ActiveCollectionManager;
-import org.overlord.bam.active.collection.ActiveMap;
-import org.overlord.bam.analytics.Situation;
-import org.overlord.bam.analytics.service.ServiceDefinition;
-import org.overlord.bam.service.dependency.ServiceDependencyBuilder;
-import org.overlord.bam.service.dependency.ServiceGraph;
-import org.overlord.bam.service.dependency.layout.ServiceGraphLayoutImpl;
-import org.overlord.bam.service.dependency.svg.MVELColorSelector;
-import org.overlord.bam.service.dependency.svg.SVGServiceGraphGenerator;
+import org.overlord.rtgov.active.collection.ActiveCollection;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveMap;
+import org.overlord.rtgov.analytics.Situation;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
+import org.overlord.rtgov.service.dependency.ServiceGraph;
+import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;
+import org.overlord.rtgov.service.dependency.svg.MVELColorSelector;
+import org.overlord.rtgov.service.dependency.svg.SVGServiceGraphGenerator;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.naming.InitialContext;
@@ -49,7 +49,7 @@ public class RESTServiceDependencyServer {
 
     private static final Logger LOG=Logger.getLogger(RESTServiceDependencyServer.class.getName());
     
-    private static final String ACT_COLL_MANAGER = "java:global/overlord-bam/ActiveCollectionManager";
+    private static final String ACT_COLL_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
     
