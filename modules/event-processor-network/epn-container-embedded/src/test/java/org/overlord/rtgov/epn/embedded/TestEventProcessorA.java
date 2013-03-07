@@ -19,7 +19,7 @@ package org.overlord.rtgov.epn.embedded;
 
 import java.io.Serializable;
 
-import org.overlord.rtgov.epn.EventProcessor;
+import org.overlord.rtgov.ep.EventProcessor;
 
 public class TestEventProcessorA extends EventProcessor {
 

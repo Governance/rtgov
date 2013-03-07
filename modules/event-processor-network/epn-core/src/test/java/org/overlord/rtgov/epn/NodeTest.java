@@ -24,7 +24,7 @@ import java.io.Serializable;
 import org.junit.Test;
 import org.overlord.rtgov.epn.EventList;
 import org.overlord.rtgov.epn.Node;
-import org.overlord.rtgov.epn.Predicate;
+import org.overlord.rtgov.ep.Predicate;
 import org.overlord.rtgov.epn.testdata.TestChannel;
 import org.overlord.rtgov.epn.testdata.TestEPNContainer;
 import org.overlord.rtgov.epn.testdata.TestEvent1;

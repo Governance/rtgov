@@ -32,10 +32,11 @@
         <resource-root path="analytics-${project.version}.jar"/>
         <resource-root path="rtgov-infinispan-${project.version}.jar"/>
         <resource-root path="rtgov-util-${project.version}.jar"/>
-        <resource-root path="epn-cep-${project.version}.jar"/>
+        <resource-root path="ep-cep-${project.version}.jar"/>
+        <resource-root path="ep-core-${project.version}.jar"/>
+        <resource-root path="ep-infinispan-${project.version}.jar"/>
+        <resource-root path="ep-mvel-${project.version}.jar"/>
         <resource-root path="epn-core-${project.version}.jar"/>
-        <resource-root path="epn-infinispan-${project.version}.jar"/>
-        <resource-root path="epn-mvel-${project.version}.jar"/>
     </resources>
 
     <dependencies>

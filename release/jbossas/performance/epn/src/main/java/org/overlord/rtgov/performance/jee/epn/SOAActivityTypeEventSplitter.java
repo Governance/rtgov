@@ -29,7 +29,7 @@ import org.overlord.rtgov.activity.model.soa.RPCActivityType;
  * for use by subsequent event processor nodes.
  *
  */
-public class SOAActivityTypeEventSplitter extends org.overlord.rtgov.epn.EventProcessor {
+public class SOAActivityTypeEventSplitter extends org.overlord.rtgov.ep.EventProcessor {
 
     /**
      * {@inheritDoc}

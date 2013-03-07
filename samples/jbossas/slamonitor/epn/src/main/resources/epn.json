@@ -12,7 +12,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.rtgov.epn.cep.CEPEventProcessor",
+        "@class" : "org.overlord.rtgov.ep.cep.CEPEventProcessor",
         "ruleName" : "SLAViolation"
       },
       "predicate" : null,

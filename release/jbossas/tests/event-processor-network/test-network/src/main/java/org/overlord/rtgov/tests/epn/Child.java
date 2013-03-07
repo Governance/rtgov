@@ -19,7 +19,7 @@ package org.overlord.rtgov.tests.epn;
 
 import java.io.Serializable;
 
-import org.overlord.rtgov.epn.EventProcessor;
+import org.overlord.rtgov.ep.EventProcessor;
 
 /**
  * This class provides the child event processor.

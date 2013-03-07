@@ -8,7 +8,7 @@ if (event.operation == "submitOrder") {
 	
 	double total=event.properties.get("total");
 	
-	cm = epn.getService("CacheManager");
+	cm = epc.getService("CacheManager");
 	
 	// Attempt to lock the entry
 	if (!cm.lock("Principals", customer)) {
@@ -39,13 +39,13 @@ if (event.operation == "submitOrder") {
 	principal.put("exposure", newtotal);	
 	principals.put(customer, principal);
 	
-	epn.logDebug("Updated principal '"+customer+"': "+principals.get(customer));	
+	epc.logDebug("Updated principal '"+customer+"': "+principals.get(customer));	
 	
 } else if (event.operation == "makePayment") {
 
 	double amount=event.properties.get("amount");
 		
-	cm = epn.getService("CacheManager");
+	cm = epc.getService("CacheManager");
 	
 	// Attempt to lock the entry
 	if (!cm.lock("Principals", customer)) {
@@ -70,7 +70,7 @@ if (event.operation == "submitOrder") {
 			principal.put("exposure", newamount);
 			principals.put(customer, principal);
 				
-			epn.logDebug("Updated principal '"+customer+"': "+principals.get(customer));	
+			epc.logDebug("Updated principal '"+customer+"': "+principals.get(customer));	
 		}
 	}
 }

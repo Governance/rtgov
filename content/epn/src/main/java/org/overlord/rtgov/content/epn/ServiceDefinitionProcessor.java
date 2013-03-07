@@ -32,7 +32,7 @@ import org.overlord.rtgov.analytics.service.util.ServiceDefinitionUtil;
  * stream of activity units.
  *
  */
-public class ServiceDefinitionProcessor extends org.overlord.rtgov.epn.EventProcessor {
+public class ServiceDefinitionProcessor extends org.overlord.rtgov.ep.EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(ServiceDefinitionProcessor.class.getName());
     

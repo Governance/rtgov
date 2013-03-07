@@ -1,0 +1,38 @@
+import org.overlord.rtgov.activity.model.soa.RequestReceived
+import org.overlord.rtgov.activity.model.soa.ResponseSent
+
+global org.overlord.rtgov.ep.EPContext epc
+
+declare RequestReceived
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+declare ResponseSent
+    @role( event )
+    @timestamp( timestamp )
+    @expires( 2m20s )
+end
+
+rule "correlate request and response"
+when
+    $req : RequestReceived( $id : messageId ) from entry-point "Purchasing" 
+    $resp : ResponseSent( replyToId == $id, this after[0,2m20s] $req )  from entry-point "Purchasing"
+then
+
+	epc.logInfo("REQUEST: "+$req+" RESPONSE: "+$resp);
+
+	java.util.Properties props=new java.util.Properties();
+	props.put("requestId", $req.getMessageId());
+	props.put("responseId", $resp.getMessageId());
+
+	long responseTime=$resp.getTimestamp()-$req.getTimestamp();
+	
+	epc.logDebug("CORRELATION on id '"+$id+"' response time "+responseTime);
+	
+	props.put("responseTime", responseTime);
+	
+    epc.handle(props);
+
+end

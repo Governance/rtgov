@@ -31,7 +31,7 @@ import org.overlord.rtgov.analytics.service.ServiceDefinition;
  * for use by subsequent event processor nodes.
  *
  */
-public class ServiceResponseTimeProcessor extends org.overlord.rtgov.epn.EventProcessor {
+public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventProcessor {
 
     /**
      * {@inheritDoc}

@@ -68,7 +68,7 @@ public class EventList implements java.io.Serializable, java.lang.Iterable<java.
             }
         } catch (Throwable e) {
             String mesg=java.util.PropertyResourceBundle.getBundle(
-                    "epn-core.Messages").getString("EPN-CORE-2");
+                    "epn-core.Messages").getString("EPN-CORE-3");
             
             LOG.severe(mesg);
             
@@ -104,7 +104,7 @@ public class EventList implements java.io.Serializable, java.lang.Iterable<java.
             
         } catch (Throwable e) {
             String mesg=java.util.PropertyResourceBundle.getBundle(
-                    "epn-core.Messages").getString("EPN-CORE-3");
+                    "epn-core.Messages").getString("EPN-CORE-4");
             
             LOG.severe(mesg);
             

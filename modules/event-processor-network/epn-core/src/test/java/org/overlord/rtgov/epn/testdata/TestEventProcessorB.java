@@ -17,7 +17,7 @@
  */
 package org.overlord.rtgov.epn.testdata;
 
-import org.overlord.rtgov.epn.EventProcessor;
+import org.overlord.rtgov.ep.EventProcessor;
 
 public class TestEventProcessorB extends EventProcessor {
 

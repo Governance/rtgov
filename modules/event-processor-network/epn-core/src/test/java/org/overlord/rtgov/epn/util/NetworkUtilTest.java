@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.overlord.rtgov.epn.Network;
 import org.overlord.rtgov.epn.Node;
 import org.overlord.rtgov.epn.Subscription;
-import org.overlord.rtgov.epn.service.InMemoryCacheManager;
+import org.overlord.rtgov.ep.service.InMemoryCacheManager;
 import org.overlord.rtgov.epn.testdata.TestEventProcessor1;
 import org.overlord.rtgov.epn.testdata.TestEventProcessor2;
 import org.overlord.rtgov.epn.testdata.TestEventProcessor3;

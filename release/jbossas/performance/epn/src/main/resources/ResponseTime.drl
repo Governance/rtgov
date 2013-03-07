@@ -2,7 +2,7 @@ import org.overlord.rtgov.activity.model.soa.RequestReceived
 import org.overlord.rtgov.activity.model.soa.ResponseSent
 import org.overlord.rtgov.analytics.service.ResponseTime
 
-global org.overlord.rtgov.epn.EPNContext epn
+global org.overlord.rtgov.ep.EPContext epc
 
 declare RequestReceived
     @role( event )
@@ -32,6 +32,6 @@ then
 	
 	rt.setAverage(responseTime);
 	
-    epn.forward(rt);
+    epc.handle(rt);
 
 end

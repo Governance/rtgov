@@ -17,6 +17,7 @@
 		<module>common</module>
 		<module>activity-management</module>
 		<module>activity-analysis</module>
+		<module>event-processor</module>
 		<module>event-processor-network</module>
 		<module>active-queries</module>
 	</modules>

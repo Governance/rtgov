@@ -17,7 +17,7 @@
  */
 package org.overlord.rtgov.epn.embedded;
 
-import org.overlord.rtgov.epn.Predicate;
+import org.overlord.rtgov.ep.Predicate;
 
 public class TestPredicate1 extends Predicate {
 

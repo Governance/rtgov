@@ -17,7 +17,7 @@
  */
 package org.overlord.rtgov.epn.embedded;
 
-import org.overlord.rtgov.epn.EventProcessor;
+import org.overlord.rtgov.ep.EventProcessor;
 
 /**
  * This test event processor throws exceptions when processing event, and

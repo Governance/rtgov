@@ -45,14 +45,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-mvel</artifactId>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mvel</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-infinispan</artifactId>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-infinispan</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>

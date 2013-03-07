@@ -21,6 +21,9 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.rtgov.ep.EventProcessor;
+import org.overlord.rtgov.ep.Predicate;
+
 
 /**
  * This class represents a node in the Event Processor Network.
@@ -315,14 +318,6 @@ public class Node {
         
         for (Channel ch : _channels) {
             ch.close();
-        }
-        
-        if (getPredicate() != null) {
-            getPredicate().close();
-        }
-        
-        if (getEventProcessor() == null) {
-            getEventProcessor().close();
         }
     }
     

@@ -27,7 +27,7 @@ import org.overlord.rtgov.tests.platforms.jbossas.customevent.data.CustomActivit
  * interface, used to receive custom events.
  *
  */
-public class CreateCustomActivityEventProcessor extends org.overlord.rtgov.epn.EventProcessor {
+public class CreateCustomActivityEventProcessor extends org.overlord.rtgov.ep.EventProcessor {
 
     /**
      * {@inheritDoc}

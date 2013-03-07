@@ -17,7 +17,7 @@
  */
 package org.overlord.rtgov.epn.embedded;
 
-import org.overlord.rtgov.epn.EventProcessor;
+import org.overlord.rtgov.ep.EventProcessor;
 
 public class TestEventProcessor1 extends EventProcessor {
 

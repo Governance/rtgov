@@ -1,7 +1,7 @@
 import org.overlord.rtgov.analytics.service.ResponseTime
 import org.overlord.rtgov.analytics.Situation
 
-global org.overlord.rtgov.epn.EPNContext epn
+global org.overlord.rtgov.ep.EPContext epc
 
 declare ResponseTime
     @role( event )
@@ -13,7 +13,7 @@ when
 then
 
 	if ($rt.getAverage() > 200) {
-		epn.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
+		epc.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
 		
 		Situation situation=new Situation();
 		
@@ -52,7 +52,7 @@ then
 			situation.setSeverity(Situation.Severity.Low);
 		}
 		
-		epn.forward(situation);
+		epc.handle(situation);
 	}	
 
 end

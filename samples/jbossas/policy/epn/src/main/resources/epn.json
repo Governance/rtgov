@@ -12,16 +12,16 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.rtgov.epn.mvel.MVELEventProcessor",
+        "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
         "script" : "SampleBusinessPolicy.mvel",
         "services" : {
           "CacheManager" : {
-            "@class" : "org.overlord.rtgov.epn.service.infinispan.InfinispanCacheManager"
+            "@class" : "org.overlord.rtgov.ep.service.infinispan.InfinispanCacheManager"
           }
         }
       },
       "predicate" : {
-        "@class" : "org.overlord.rtgov.epn.mvel.MVELPredicate",
+        "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
         "expression" : "event.serviceProvider && !event.request && event.serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\""
       }
     }

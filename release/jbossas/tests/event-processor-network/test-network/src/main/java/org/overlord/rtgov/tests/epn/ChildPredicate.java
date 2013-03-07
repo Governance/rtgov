@@ -17,7 +17,7 @@
  */
 package org.overlord.rtgov.tests.epn;
 
-import org.overlord.rtgov.epn.Predicate;
+import org.overlord.rtgov.ep.Predicate;
 
 /**
  * This class provides the child predicate.

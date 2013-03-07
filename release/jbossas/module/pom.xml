@@ -35,18 +35,23 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-cep</artifactId>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-mvel</artifactId>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-cep</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-infinispan</artifactId>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mvel</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-infinispan</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
