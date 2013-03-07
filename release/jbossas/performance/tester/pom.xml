@@ -95,7 +95,7 @@
 				<configuration>
 					<systemProperties>
 						<property>
-							<name>bam.version</name>
+							<name>rtgov.version</name>
 							<value>${project.version}</value>
 						</property>
 					</systemProperties>
