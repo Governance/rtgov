@@ -77,18 +77,17 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
         String ret=null;
         
         try {
+        	boolean reparse=false;
+        	
         	if (information instanceof javax.xml.transform.dom.DOMSource) {
-        		java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+        		information = ((javax.xml.transform.dom.DOMSource)information).getNode();
         		
-        		javax.xml.transform.stream.StreamResult result=
-        				new javax.xml.transform.stream.StreamResult(baos);
+        		if (LOG.isLoggable(Level.FINEST)) {
+        			LOG.finest("Extracted node from DOMSource: "+information);
+        		}
         		
-        		javax.xml.transform.Transformer transformer=
-        				javax.xml.transform.TransformerFactory.newInstance().newTransformer();
-	        		
-        		transformer.transform((javax.xml.transform.dom.DOMSource)information, result);
-        		
-        		information = new String(baos.toByteArray());
+        		// RTGOV-141 - workaround to overcome xpath evaluation issue
+        		reparse = true;
         	}
 
             if (information instanceof String) {
@@ -111,28 +110,51 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
                 ret = _domXPath.stringValueOf(doc.getDocumentElement());
                 
             } else if (information instanceof org.w3c.dom.Node) {
-                ret = _domXPath.stringValueOf(information);
-                
-            /*
-            } else if (information instanceof javax.xml.transform.dom.DOMSource) {
-            	org.w3c.dom.Node node=((javax.xml.transform.dom.DOMSource)information).getNode();
+            	org.w3c.dom.Node node=(org.w3c.dom.Node)information;
             	
-            	if (LOG.isLoggable(Level.FINEST)) {
-            		LOG.finest("DOMSource node="+node);
+            	// Check if namespace aware
+            	if (reparse || !isNamespaceAware(node)) {
             		
+            		if (LOG.isLoggable(Level.FINEST)) {
+            			LOG.finest("Converting non-namespace-aware node: "+node);
+            		}
+            		
+            		java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+            		
+            		javax.xml.transform.dom.DOMSource source=
+            				new javax.xml.transform.dom.DOMSource(node);
             		javax.xml.transform.stream.StreamResult result=
-            				new javax.xml.transform.stream.StreamResult(System.out);
+            				new javax.xml.transform.stream.StreamResult(baos);
             		
             		javax.xml.transform.Transformer transformer=
             				javax.xml.transform.TransformerFactory.newInstance().newTransformer();
+    	        		
+            		transformer.transform(source, result);
             		
-            		System.out.println("\r\n\r\n>>>>>:");
-            		transformer.transform((javax.xml.transform.dom.DOMSource)information, result);
-            		System.out.println(":\r\n\r\n");
+                    javax.xml.parsers.DocumentBuilderFactory factory=
+                            javax.xml.parsers.DocumentBuilderFactory.newInstance();
+                    
+                    factory.setNamespaceAware(true);
+                    
+                    javax.xml.parsers.DocumentBuilder builder=
+                            factory.newDocumentBuilder();
+                    
+                    java.io.InputStream is=
+                            new java.io.ByteArrayInputStream(baos.toByteArray());
+                    
+                    org.w3c.dom.Document doc=builder.parse(is);
+                    
+                    is.close();
+                    
+                    information = doc.getDocumentElement();
+
+            		if (LOG.isLoggable(Level.FINEST)) {
+            			LOG.finest("Converted node: "+information);
+            		}            		
             	}
             	
-            	ret = _domXPath.stringValueOf(node);
-            */
+                ret = _domXPath.stringValueOf(information);
+                
             } else {
                 
                 ret = _beanXPath.stringValueOf(information);
@@ -152,4 +174,22 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
         return (ret);
     }
     
+    /**
+     * This method determines whether the node is namespace aware.
+     * 
+     * @param node The node
+     * @return Whether the node is namespace aware
+     */
+    protected static boolean isNamespaceAware(org.w3c.dom.Node node) {
+    	boolean ret=(node.getLocalName() != null);
+    	
+		if (LOG.isLoggable(Level.FINEST)) {
+			LOG.finest("Is node "+node+" namespace aware? "+ret);
+			LOG.finest("nodeName="+node.getNodeName());
+			LOG.finest("localName="+node.getLocalName());
+			LOG.finest("namespace="+node.getNamespaceURI());
+		}  
+		
+    	return (ret);
+    }
 }

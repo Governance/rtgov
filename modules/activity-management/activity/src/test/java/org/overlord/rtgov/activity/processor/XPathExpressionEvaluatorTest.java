@@ -156,6 +156,53 @@ public class XPathExpressionEvaluatorTest {
     }
     
     @Test
+    public void testEvaluateDOMNamespaceUnaware() {
+        String value="hello";
+        String xml="<ns1:mydoc xmlns:ns1=\"http://www.mynamespace\" ><ns1:field>"+value+"</ns1:field></ns1:mydoc>";
+        
+        XPathExpressionEvaluator evaluator=new XPathExpressionEvaluator();
+        
+        evaluator.setExpression("/ns2:mydoc/ns2:field");
+        
+        evaluator.getNamespaces().put("ns2", "http://www.mynamespace");
+        
+        try {
+            evaluator.init();
+        } catch(Exception e) {
+            fail("Failed to initialize: "+e);
+        }
+        
+        org.w3c.dom.Document doc=null;
+        
+        try {
+            javax.xml.parsers.DocumentBuilderFactory factory=
+                    javax.xml.parsers.DocumentBuilderFactory.newInstance();
+            
+            javax.xml.parsers.DocumentBuilder builder=
+                    factory.newDocumentBuilder();
+            
+            java.io.InputStream is=
+                    new java.io.ByteArrayInputStream(xml.getBytes());
+            
+            doc = builder.parse(is);
+                    
+            is.close();
+        } catch(Exception e) {
+            fail("Failed to parse xml: "+e);
+        }
+        
+        String result=evaluator.evaluate(doc.getDocumentElement());
+        
+        if (result == null) {
+            fail("Failed to get result");
+        }
+        
+        if (!result.equals(value)) {
+            fail("Result not expected: "+result);
+        }
+    }
+    
+    @Test
     public void testEvaluateDOMSource() {
         String value="hello";
         String xml="<ns1:mydoc xmlns:ns1=\"http://www.mynamespace\" ><ns1:field>"+value+"</ns1:field></ns1:mydoc>";
@@ -230,6 +277,55 @@ public class XPathExpressionEvaluatorTest {
                     javax.xml.parsers.DocumentBuilderFactory.newInstance();
             
             factory.setNamespaceAware(true);
+            
+            javax.xml.parsers.DocumentBuilder builder=
+                    factory.newDocumentBuilder();
+            
+            java.io.InputStream is=
+                    new java.io.ByteArrayInputStream(xml.getBytes());
+            
+            doc = builder.parse(is);
+                    
+            is.close();
+        } catch(Exception e) {
+            fail("Failed to parse xml: "+e);
+        }
+        
+        javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(doc.getDocumentElement());
+        
+        String result=evaluator.evaluate(source);
+        
+        if (result == null) {
+            fail("Failed to get result");
+        }
+        
+        if (!result.equals(value)) {
+            fail("Result not expected: "+result);
+        }
+    }
+    
+    @Test
+    public void testEvaluateDOMSource2NamespaceUnaware() {
+        String value="Fred";
+        String xml="<?xml version=\"1.0\" encoding=\"UTF-8\"?><orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">            <order>                <orderId>PO-19838-XYZ</orderId>                <itemId>BUTTER</itemId>                <quantity>10</quantity>                <customer>Fred</customer>            </order>        </orders:submitOrder>";
+        
+        XPathExpressionEvaluator evaluator=new XPathExpressionEvaluator();
+        
+        evaluator.setExpression("/orders:submitOrder/order/customer");
+        
+        evaluator.getNamespaces().put("orders", "urn:switchyard-quickstart-demo:orders:1.0");
+        
+        try {
+            evaluator.init();
+        } catch(Exception e) {
+            fail("Failed to initialize: "+e);
+        }
+        
+        org.w3c.dom.Document doc=null;
+        
+        try {
+            javax.xml.parsers.DocumentBuilderFactory factory=
+                    javax.xml.parsers.DocumentBuilderFactory.newInstance();
             
             javax.xml.parsers.DocumentBuilder builder=
                     factory.newDocumentBuilder();
