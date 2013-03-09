@@ -67,51 +67,54 @@ public class DefaultActivityReporter implements ActivityReporter {
     }
 
     /**
-     * This method can be used to report general information.
-     * 
-     * @param info The information
+     * {@inheritDoc}
      */
     public void logInfo(String info) {
         LogMessage lm=new LogMessage();
         lm.setMessage(info);
         lm.setLevel(LogMessage.Level.Information);
         
-        report(lm);
+        try {
+        	report(lm);
+        } catch (Exception e) {
+        	LOG.log(Level.SEVERE, "Failed to report Info activity: "+info, e);
+        }
     }
     
     /**
-     * This method can be used to report warning information.
-     * 
-     * @param warning The warning description
+     * {@inheritDoc}
      */
     public void logWarning(String warning) {
         LogMessage lm=new LogMessage();
         lm.setMessage(warning);
         lm.setLevel(LogMessage.Level.Warning);
         
-        report(lm);
+        try {
+        	report(lm);
+        } catch (Exception e) {
+        	LOG.log(Level.SEVERE, "Failed to report Warning activity: "+warning, e);
+        }
     }
     
     /**
-     * This method can be used to report error information.
-     * 
-     * @param error The error description
+     * {@inheritDoc}
      */
     public void logError(String error) {
         LogMessage lm=new LogMessage();
         lm.setMessage(error);
         lm.setLevel(LogMessage.Level.Error);
         
-        report(lm);
+        try {
+        	report(lm);
+        } catch (Exception e) {
+        	LOG.log(Level.SEVERE, "Failed to report Error activity: "+error, e);
+        }
     }
     
     /**
-     * This method can be used to report activity information.
-     * 
-     * @param type The activity type
-     * @param props The properties
+     * {@inheritDoc}
      */
-    public void logActivity(String type, java.util.Map<String,String> props) {
+    public void report(String type, java.util.Map<String,String> props) throws Exception {
         CustomActivity ca=new CustomActivity();
         ca.setCustomType(type);        
         ca.setProperties(props);
@@ -120,12 +123,9 @@ public class DefaultActivityReporter implements ActivityReporter {
     }
     
     /**
-     * This method reports the activity event to the
-     * collector.
-     * 
-     * @param actType The activity type
+     * {@inheritDoc}
      */
-    public void report(ActivityType actType) {
+    public void report(ActivityType actType) throws Exception {
         if (!_initialized) {
             init();
         }

@@ -75,7 +75,8 @@ public interface ActivityCollector {
      * be recorded as a single event within an activity unit.
      * 
      * @param actType The activity type
+     * @throws Exception Failed to record activity
      */
-    public void record(ActivityType actType);
+    public void record(ActivityType actType) throws Exception;
     
 }

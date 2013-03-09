@@ -16,7 +16,8 @@
 	<modules>
 		<module>calltrace</module>
 		<module>custom_events</module>
-		<module>policy</module>
+		<module>policy_async</module>
+		<module>policy_sync</module>
 		<module>slamonitor</module>
 	</modules>
 

@@ -17,6 +17,9 @@
  */
 package org.overlord.rtgov.activity.processor;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
@@ -26,11 +29,15 @@ import org.overlord.rtgov.activity.model.ActivityType;
  *
  */
 public class InformationProcessor {
+	
+	private static final Logger LOG=Logger.getLogger(InformationProcessor.class.getName());
 
     private String _name=null;
     private String _version=null;
     private java.util.Map<String,TypeProcessor> _typeProcessors=
             new java.util.HashMap<String,TypeProcessor>();
+    
+    private boolean _initialized=false;
     
     /**
      * This method returns the name of the information processor.
@@ -84,9 +91,13 @@ public class InformationProcessor {
      */
     public void init() throws Exception {
         
-        for (TypeProcessor tp : _typeProcessors.values()) {
-            tp.init();
-        }
+    	if (!_initialized) {
+    		_initialized = true;
+
+	        for (TypeProcessor tp : _typeProcessors.values()) {
+	            tp.init();
+	        }
+    	}
     }
 
     /**
@@ -115,7 +126,13 @@ public class InformationProcessor {
     public String process(String type, Object info, ActivityType actType) {
         TypeProcessor processor=_typeProcessors.get(type);
         
-        if (processor != null) {
+    	if (LOG.isLoggable(Level.FINEST)) {
+    		LOG.finest("Process type="+type+" info="
+    				+info+" actType="+actType
+    				+" with processor="+processor);
+    	}
+
+    	if (processor != null) {
             // Process the context and property details
             return (processor.process(info, actType));
         }

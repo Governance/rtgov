@@ -77,6 +77,20 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
         String ret=null;
         
         try {
+        	if (information instanceof javax.xml.transform.dom.DOMSource) {
+        		java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+        		
+        		javax.xml.transform.stream.StreamResult result=
+        				new javax.xml.transform.stream.StreamResult(baos);
+        		
+        		javax.xml.transform.Transformer transformer=
+        				javax.xml.transform.TransformerFactory.newInstance().newTransformer();
+	        		
+        		transformer.transform((javax.xml.transform.dom.DOMSource)information, result);
+        		
+        		information = new String(baos.toByteArray());
+        	}
+
             if (information instanceof String) {
                 // Convert to DOM
                 javax.xml.parsers.DocumentBuilderFactory factory=
@@ -98,6 +112,27 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
                 
             } else if (information instanceof org.w3c.dom.Node) {
                 ret = _domXPath.stringValueOf(information);
+                
+            /*
+            } else if (information instanceof javax.xml.transform.dom.DOMSource) {
+            	org.w3c.dom.Node node=((javax.xml.transform.dom.DOMSource)information).getNode();
+            	
+            	if (LOG.isLoggable(Level.FINEST)) {
+            		LOG.finest("DOMSource node="+node);
+            		
+            		javax.xml.transform.stream.StreamResult result=
+            				new javax.xml.transform.stream.StreamResult(System.out);
+            		
+            		javax.xml.transform.Transformer transformer=
+            				javax.xml.transform.TransformerFactory.newInstance().newTransformer();
+            		
+            		System.out.println("\r\n\r\n>>>>>:");
+            		transformer.transform((javax.xml.transform.dom.DOMSource)information, result);
+            		System.out.println(":\r\n\r\n");
+            	}
+            	
+            	ret = _domXPath.stringValueOf(node);
+            */
             } else {
                 
                 ret = _beanXPath.stringValueOf(information);

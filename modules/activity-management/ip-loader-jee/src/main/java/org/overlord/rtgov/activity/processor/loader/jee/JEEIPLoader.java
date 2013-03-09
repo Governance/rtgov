@@ -87,6 +87,8 @@ public class JEEIPLoader {
                             "ip-loader-jee.Messages").getString("IP-LOADER-JEE-2"));
                 } else {
                     for (InformationProcessor ip : _informationProcessors) {
+                    	ip.init();
+                    	
                         _ipManager.register(ip);
                     }
                 }

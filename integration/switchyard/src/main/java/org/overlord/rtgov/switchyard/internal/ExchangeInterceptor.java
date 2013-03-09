@@ -228,7 +228,11 @@ public class ExchangeInterceptor implements Auditor {
                 at.setContent(getMessageContent(exchange));
             }
             
-            _activityCollector.record(at);
+            try {
+            	_activityCollector.record(at);
+            } catch (Exception e) {
+            	throw new RuntimeException(e);
+            }
         }
     }
 

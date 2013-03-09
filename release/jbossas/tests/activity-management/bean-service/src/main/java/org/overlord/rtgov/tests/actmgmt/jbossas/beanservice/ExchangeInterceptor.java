@@ -86,24 +86,28 @@ public class ExchangeInterceptor extends MessageTrace implements ExchangeHandler
         super.handleMessage(exchange);
         
         if (_activityCollector != null) {
-            if (exchange.getPhase() == ExchangePhase.IN) {
-                RequestSent sent=new RequestSent();
-                
-                _activityCollector.record(sent);
-                
-                RequestReceived recvd=new RequestReceived();
-                
-                _activityCollector.record(recvd);
-                
-            } else if (exchange.getPhase() == ExchangePhase.OUT) {
-                ResponseSent sent=new ResponseSent();
-                
-                _activityCollector.record(sent);
-                
-                ResponseReceived recvd=new ResponseReceived();
-                
-                _activityCollector.record(recvd);
-            }
+        	try {
+	            if (exchange.getPhase() == ExchangePhase.IN) {
+	                RequestSent sent=new RequestSent();
+	                
+	                _activityCollector.record(sent);
+	                
+	                RequestReceived recvd=new RequestReceived();
+	                
+	                _activityCollector.record(recvd);
+	                
+	            } else if (exchange.getPhase() == ExchangePhase.OUT) {
+	                ResponseSent sent=new ResponseSent();
+	                
+	                _activityCollector.record(sent);
+	                
+	                ResponseReceived recvd=new ResponseReceived();
+	                
+	                _activityCollector.record(recvd);
+	            }
+        	} catch (Exception e) {
+        		throw new HandlerException("Failed to record activity", e);
+        	}
         }
     }
 

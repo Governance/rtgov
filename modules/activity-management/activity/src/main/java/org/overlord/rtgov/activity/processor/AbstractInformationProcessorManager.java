@@ -112,6 +112,12 @@ public abstract class AbstractInformationProcessorManager implements Information
     public String process(String processor, String type,
                     Object info, ActivityType actType) {
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Process: processor="+processor
+                        +" type="+type+" info="+info
+                        +" actType="+actType);
+        }
+
         synchronized (_informationProcessorIndex) {
             
             if (processor != null) {
@@ -129,6 +135,10 @@ public abstract class AbstractInformationProcessorManager implements Information
             }
         }        
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Process: processor="+processor+" type="+type+" not supported");
+        }
+
         return (null);
     }
     

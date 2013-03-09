@@ -203,15 +203,28 @@ public class JBossASACMgrACSViolationsTest {
                 fail("Expecting 3 entries in context list: "+contextList.size());
             }
 
-            @SuppressWarnings("unchecked")
-            java.util.Map<String,String> contextEntry=(java.util.Map<String,String>)contextList.get(2);
+            boolean f_found=false;
             
-            if (!contextEntry.containsKey("value")) {
-                fail("'value' property not found in context entry");
+            for (int i=0; i < contextList.size(); i++) {
+	            @SuppressWarnings("unchecked")
+	            java.util.Map<String,String> contextEntry=(java.util.Map<String,String>)contextList.get(i);
+	            
+	            if (contextEntry.containsKey("type") && contextEntry.get("type").equalsIgnoreCase("conversation")) {
+	            	
+	                if (!contextEntry.containsKey("value")) {
+	                    fail("'value' property not found in context entry");
+	                }
+	                
+	                if (!contextEntry.get("value").equals(orderId)) {
+	                    fail("Value should be order id '"+orderId+"': "+contextEntry.get("value"));
+	                }
+	                
+	                f_found = true;
+	            }
             }
             
-            if (!contextEntry.get("value").equals(orderId)) {
-                fail("Value should be order id '"+orderId+"': "+contextEntry.get("value"));
+            if (!f_found) {
+            	fail("Conversation context not found");
             }
             
             // Check that the customer properties has been included

@@ -97,9 +97,9 @@ public class JEEApp {
         recvd.setMessageType("order");
         recvd.setMessageId("a"+id);
         
-        _activityCollector.record(recvd);
-        
         try {
+            _activityCollector.record(recvd);
+            
         	synchronized (this) {
         		wait(50);
         	}
@@ -115,9 +115,9 @@ public class JEEApp {
         sent.setMessageType("creditCheck");
         sent.setMessageId("b"+id);
         
-        _activityCollector.record(sent);
-        
         try {
+            _activityCollector.record(sent);
+            
         	synchronized (this) {
         		wait(5);
         	}
@@ -133,9 +133,9 @@ public class JEEApp {
         recvd2.setMessageType("creditCheck");
         recvd2.setMessageId("b"+id);
         
-        _activityCollector.record(recvd2);
-
         try {
+            _activityCollector.record(recvd2);
+
         	synchronized (this) {
         		wait(50);
         	}
@@ -152,9 +152,9 @@ public class JEEApp {
         sent2.setMessageId("c"+id);
         sent2.setReplyToId("b"+id);
         
-        _activityCollector.record(sent2);
-        
         try {
+            _activityCollector.record(sent2);
+            
         	synchronized (this) {
         		wait(5);
         	}
@@ -171,9 +171,9 @@ public class JEEApp {
         recvd3.setMessageId("c"+id);
         recvd3.setReplyToId("b"+id);
         
-        _activityCollector.record(recvd3);
-        
         try {
+            _activityCollector.record(recvd3);
+            
         	synchronized (this) {
         		wait(50);
         	}
@@ -190,7 +190,11 @@ public class JEEApp {
         sent3.setMessageId("d"+id);
         sent3.setReplyToId("a"+id);
         
-        _activityCollector.record(sent3);
+        try {
+            _activityCollector.record(sent3);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }
         
         _activityCollector.endScope();
         

@@ -2,15 +2,15 @@
 	"name":"OrderManagementIP",
 	"version":"1",
 	"typeProcessors":{
-		"{urn:switchyard-quickstart:bean-service:1.0}submitOrder":{
+		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrder":{
 			"contexts":[{
 				"type":"Conversation",
 				"evaluator":{
 					"type":"xpath",
 					"namespaces":{
-						"orders":"urn:switchyard-quickstart:bean-service:1.0"
+						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
 					},
-					"expression":"/orders:submitOrder/orders:order/orders:orderId"
+					"expression":"/orders:submitOrder/order/orderId"
 				}
 			}],
 			"properties":[{
@@ -18,9 +18,9 @@
 				"evaluator":{
 					"type":"xpath",
 					"namespaces":{
-						"orders":"urn:switchyard-quickstart:bean-service:1.0"
+						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
 					},
-					"expression":"/orders:submitOrder/orders:order/orders:customer"
+					"expression":"/orders:submitOrder/order/customer"
 				}
 			}]
 		},
@@ -52,7 +52,7 @@
 				"evaluator":{
 					"type":"xpath",
 					"namespaces":{
-						"orders":"urn:switchyard-quickstart:bean-service:1.0"
+						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
 					},
 					"expression":"/orders:makePayment/orders:payment/orders:customer"
 				}
@@ -61,7 +61,7 @@
 				"evaluator":{
 					"type":"xpath",
 					"namespaces":{
-						"orders":"urn:switchyard-quickstart:bean-service:1.0"
+						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
 					},
 					"expression":"/orders:makePayment/orders:payment/orders:amount"
 				}

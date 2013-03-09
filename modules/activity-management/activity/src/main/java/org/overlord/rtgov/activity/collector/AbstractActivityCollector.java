@@ -26,6 +26,7 @@ import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.overlord.rtgov.activity.interceptor.ActivityInterceptorManager;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Origin;
@@ -48,6 +49,9 @@ public class AbstractActivityCollector implements ActivityCollector {
     
     @Inject
     private InformationProcessorManager _infoProcessorManager=null;
+    
+    @Inject
+    private ActivityInterceptorManager _activityInterceptorManager=null;
     
     private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();
     
@@ -103,6 +107,24 @@ public class AbstractActivityCollector implements ActivityCollector {
      */
     public void setInformationProcessorManager(InformationProcessorManager ipm) {
         _infoProcessorManager = ipm;
+    }
+    
+    /**
+     * This method gets the activity interceptor manager.
+     * 
+     * @return The activity interceptor manager
+     */
+    public ActivityInterceptorManager getActivityInterceptorManager() {
+        return (_activityInterceptorManager);
+    }
+    
+    /**
+     * This method sets the activity interceptor manager.
+     * 
+     * @param aim The activity interceptor manager
+     */
+    public void setActivityInterceptorManager(ActivityInterceptorManager aim) {
+    	_activityInterceptorManager = aim;
     }
     
     /**
@@ -216,8 +238,13 @@ public class AbstractActivityCollector implements ActivityCollector {
     /**
      * {@inheritDoc}
      */
-    public void record(ActivityType actType) {
+    public void record(ActivityType actType) throws Exception {
         ActivityUnit au=_activityUnit.get();
+        
+        // Check if activity is of interest to interceptors
+        if (_activityInterceptorManager != null) {
+        	_activityInterceptorManager.process(actType);
+        }
         
         // Check if need to create a single event activity unit outside of transaction scope
         boolean transactional=true;

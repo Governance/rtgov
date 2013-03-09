@@ -52,7 +52,11 @@ public class AbstractActivityCollectorTest {
         
         RequestSent act=new RequestSent();
         
-        ac.record(act);
+        try {
+        	ac.record(act);
+        } catch (Exception e) {
+        	fail("Failed to record activity: "+e);
+        }
         
         if (al.getActivityUnits().size() != 1) {
             fail("Should be 1 activity unit: "+al.getActivityUnits().size());
@@ -105,7 +109,11 @@ public class AbstractActivityCollectorTest {
         
         RequestSent req=new RequestSent();
         
-        ac.record(req);
+        try {
+        	ac.record(req);
+        } catch (Exception e) {
+        	fail("Failed to record activity: "+e);
+        }
         
         if (al.getActivityUnits().size() != 0) {
             fail("Should be no activity unit: "+al.getActivityUnits().size());
@@ -113,7 +121,11 @@ public class AbstractActivityCollectorTest {
         
         RequestReceived resp=new RequestReceived();
         
-        ac.record(resp);
+        try {
+        	ac.record(resp);
+        } catch (Exception e) {
+        	fail("Failed to record activity: "+e);
+        }
         
         if (al.getActivityUnits().size() != 0) {
             fail("Should still be no activity unit: "+al.getActivityUnits().size());
@@ -148,7 +160,11 @@ public class AbstractActivityCollectorTest {
         
         RequestSent req=new RequestSent();
         
-        ac.record(req);
+        try {
+        	ac.record(req);
+        } catch (Exception e) {
+        	fail("Failed to record activity: "+e);
+        }
         
         if (al.getActivityUnits().size() != 0) {
             fail("Should be no activity unit: "+al.getActivityUnits().size());
@@ -156,7 +172,11 @@ public class AbstractActivityCollectorTest {
         
         RequestReceived resp=new RequestReceived();
         
-        ac.record(resp);
+        try {
+        	ac.record(resp);
+        } catch (Exception e) {
+        	fail("Failed to record activity: "+e);
+        }
         
         try {
             cc.getTransactionManager().commit();
@@ -197,7 +217,11 @@ public class AbstractActivityCollectorTest {
         
         req.setContext(cl1);
         
-        ac.record(req);
+        try {
+        	ac.record(req);
+        } catch (Exception e) {
+        	fail("Failed to record activity: "+e);
+        }
         
         if (al.getActivityUnits().size() != 0) {
             fail("Should be no activity unit: "+al.getActivityUnits().size());
@@ -211,7 +235,11 @@ public class AbstractActivityCollectorTest {
         
         resp.setContext(cl2);
         
-        ac.record(resp);
+        try {
+        	ac.record(resp);
+        } catch (Exception e) {
+        	fail("Failed to record activity: "+e);
+        }
         
         if (al.getActivityUnits().size() != 0) {
             fail("Should still be no activity unit: "+al.getActivityUnits().size());

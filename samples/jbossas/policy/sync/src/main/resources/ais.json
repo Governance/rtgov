@@ -1,0 +1,17 @@
+[{
+  "name" : "",
+  "version" : "1",
+  "predicate" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
+    "expression" : "event instanceof org.overlord.rtgov.activity.model.soa.RPCActivityType && event.serviceProvider && event.request && event.serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\""
+  },
+  "eventProcessor" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
+    "script" : "VerifyLastUsage.mvel",
+    "services" : {
+      "CacheManager" : {
+        "@class" : "org.overlord.rtgov.ep.service.infinispan.InfinispanCacheManager"
+      }
+    }
+  }
+}]

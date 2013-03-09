@@ -89,7 +89,7 @@ public class InformationProcessorUtilTest {
                 fail("null returned");
             }
             
-            java.io.InputStream is=ActivityUtilTest.class.getResourceAsStream("/json/ipList.json");
+            java.io.InputStream is=InformationProcessorUtilTest.class.getResourceAsStream("/json/ipList.json");
             byte[] inb2=new byte[is.available()];
             is.read(inb2);
             is.close();

@@ -52,15 +52,17 @@ public interface ActivityReporter {
      * 
      * @param type The activity type
      * @param props The properties
+     * @throws Exception Failed to report activity
      */
-    public void logActivity(String type, java.util.Map<String,String> props);
+    public void report(String type, java.util.Map<String,String> props) throws Exception;
 
     /**
      * This method reports the activity event to the
      * collector.
      * 
      * @param actType The activity type
+     * @throws Exception Failed to report activity
      */
-    public void report(ActivityType actType);
+    public void report(ActivityType actType) throws Exception;
 
 }

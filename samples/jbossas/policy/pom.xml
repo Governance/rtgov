@@ -14,7 +14,8 @@
 	</parent>
 
 	<modules>
-		<module>epn</module>
+		<module>async</module>
+		<module>sync</module>
 	</modules>
 
 </project>
