@@ -35,12 +35,4 @@ public abstract class EPService {
     public void init() throws Exception {
     }
     
-    /**
-     * This method closes the service.
-     * 
-     * @throws Exception Failed to close
-     */
-    public void close() throws Exception {
-    }
-
 }
