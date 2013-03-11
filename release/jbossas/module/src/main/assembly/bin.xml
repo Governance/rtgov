@@ -48,7 +48,7 @@
 				<include>org.overlord.rtgov.activity-management:activity:jar</include>
 				<include>org.overlord.rtgov.event-processor-network:epn-core:jar</include>
 				<include>org.overlord.rtgov.event-processor:ep-core:jar</include>
-				<include>org.overlord.rtgov.event-processor:ep-cep:jar</include>
+				<include>org.overlord.rtgov.event-processor:ep-drools:jar</include>
 				<include>org.overlord.rtgov.event-processor:ep-mvel:jar</include>
 				<include>org.overlord.rtgov.event-processor:ep-infinispan:jar</include>
 				<include>org.overlord.rtgov.active-queries:active-collection:jar</include>

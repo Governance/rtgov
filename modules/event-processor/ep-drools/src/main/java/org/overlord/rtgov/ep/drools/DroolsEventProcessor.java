@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.ep.cep;
+package org.overlord.rtgov.ep.drools;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
@@ -37,13 +37,13 @@ import org.overlord.rtgov.ep.EventProcessor;
 import org.overlord.rtgov.internal.ep.DefaultEPContext;
 
 /**
- * This class represents the CEP implementation of the Event
+ * This class represents the Drools implementation of the Event
  * Processor.
  *
  */
-public class CEPEventProcessor extends EventProcessor {
+public class DroolsEventProcessor extends EventProcessor {
 
-    private static final Logger LOG=Logger.getLogger(CEPEventProcessor.class.getName());
+    private static final Logger LOG=Logger.getLogger(DroolsEventProcessor.class.getName());
 
     private DefaultEPContext _context=null; //new DefaultEPNContext();
 
@@ -61,7 +61,7 @@ public class CEPEventProcessor extends EventProcessor {
         _session = createSession();
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("CEPEventProcessor init: ruleName="+_ruleName+" session="+_session);
+            LOG.finest("DroolsEventProcessor init: ruleName="+_ruleName+" session="+_session);
         }
     }
     
@@ -93,7 +93,7 @@ public class CEPEventProcessor extends EventProcessor {
     	synchronized(this) {
 	        if (LOG.isLoggable(Level.FINEST)) {
 	            LOG.finest("Process event '"+event+" from source '"+source
-	                    +"' on CEP Event Processor '"+getRuleName()
+	                    +"' on Drools Event Processor '"+getRuleName()
 	                    +"'");
 	        }
 	
@@ -106,7 +106,7 @@ public class CEPEventProcessor extends EventProcessor {
 	        if (entryPoint != null) {
 	            if (LOG.isLoggable(Level.FINEST)) {
 	                LOG.finest("Insert event '"+event+" from source '"+source
-	                        +"' on CEP Event Processor '"+getRuleName()
+	                        +"' on Drools Event Processor '"+getRuleName()
 	                        +"' into entry point "+entryPoint);
 	            }
 	            
@@ -119,7 +119,7 @@ public class CEPEventProcessor extends EventProcessor {
 	            
 	        } else if (LOG.isLoggable(Level.FINEST)) {
 	            LOG.finest("No entry point for source Event Processor '"+source
-	                    +"' on CEP Event Processor '"+getRuleName()+"'");
+	                    +"' on Drools Event Processor '"+getRuleName()+"'");
 	        }
 	        
 	        ret = (java.io.Serializable)_context.getResult();
@@ -130,7 +130,7 @@ public class CEPEventProcessor extends EventProcessor {
 
     /**
      * This method creates a stateful knowledge session per
-     * CEP event processor.
+     * Drools event processor.
      * 
      * @return The stateful knowledge session
      */
@@ -162,13 +162,13 @@ public class CEPEventProcessor extends EventProcessor {
     }
     
     /**
-     * This method loads the rule base associated with the CEP
+     * This method loads the rule base associated with the Drools
      * event processor.
      * 
      * @return The knowledge base
      */
     private KieBase loadRuleBase() {
-        String cepRuleBase=getRuleName()+".drl";
+        String droolsRuleBase=getRuleName()+".drl";
 
         try {
             KieServices ks = KieServices.Factory.get();
@@ -181,7 +181,7 @@ public class CEPEventProcessor extends EventProcessor {
             kbm.setDefault(true);
 
             KieFileSystem kfs = ks.newKieFileSystem();
-            kfs.write("src/main/resources/" + kbm.getName() + "/rule1.drl", ks.getResources().newClassPathResource(cepRuleBase));
+            kfs.write("src/main/resources/" + kbm.getName() + "/rule1.drl", ks.getResources().newClassPathResource(droolsRuleBase));
             kfs.writeKModuleXML(kmm.toXML());
 
             KieBuilder kb = ks.newKieBuilder(kfs);
@@ -196,8 +196,8 @@ public class CEPEventProcessor extends EventProcessor {
         } catch (Throwable e) {
             LOG.log(Level.SEVERE, MessageFormat.format(
                             java.util.PropertyResourceBundle.getBundle(
-                            "ep-cep.Messages").getString("EP-CEP-2"),
-                            cepRuleBase, getRuleName()), e);
+                            "ep-drools.Messages").getString("EP-DROOLS-2"),
+                            droolsRuleBase, getRuleName()), e);
         }
 
         return (null);

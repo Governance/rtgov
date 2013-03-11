@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.ep.cep;
+package org.overlord.rtgov.ep.drools;
 
 import static org.junit.Assert.*;
 
@@ -23,16 +23,16 @@ import org.junit.Test;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
-import org.overlord.rtgov.ep.cep.CEPEventProcessor;
+import org.overlord.rtgov.ep.drools.DroolsEventProcessor;
 
-public class CEPEventProcessorTest {
+public class DroolsEventProcessorTest {
 
     private static final int TIME_INTERVAL = 2000;
     private static final int GAP_INTERVAL = 3*60*1000;
 
     @Test
     public void testPurchasingResponseTime() {
-        CEPEventProcessor ep=new CEPEventProcessor();
+        DroolsEventProcessor ep=new DroolsEventProcessor();
         ep.setRuleName("PurchasingResponseTime");
         
         ActivityUnit e1=new ActivityUnit();
@@ -107,7 +107,7 @@ public class CEPEventProcessorTest {
 
     @Test
     public void testPurchasingResponseTimeOutOfOrder() {
-        CEPEventProcessor ep=new CEPEventProcessor();
+        DroolsEventProcessor ep=new DroolsEventProcessor();
         ep.setRuleName("PurchasingResponseTime");
         
         ActivityUnit e4=new ActivityUnit();
@@ -169,7 +169,7 @@ public class CEPEventProcessorTest {
     
     @Test
     public void testPurchasingResponseTimeWithException() {
-        CEPEventProcessor ep=new CEPEventProcessor();
+        DroolsEventProcessor ep=new DroolsEventProcessor();
         ep.setRuleName("PurchasingResponseTimeWithException");
         
         ActivityUnit e1=new ActivityUnit();

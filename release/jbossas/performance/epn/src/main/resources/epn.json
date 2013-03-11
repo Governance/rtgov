@@ -22,7 +22,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.rtgov.ep.cep.CEPEventProcessor",
+        "@class" : "org.overlord.rtgov.ep.drools.DroolsEventProcessor",
         "ruleName" : "ResponseTime"
       },
       "predicate" : null,
@@ -40,7 +40,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.rtgov.ep.cep.CEPEventProcessor",
+        "@class" : "org.overlord.rtgov.ep.drools.DroolsEventProcessor",
         "ruleName" : "SLAViolation"
       },
       "predicate" : null,

@@ -1,5 +1,6 @@
 {
-  "name" : "Overlord-BAM-EPN",
+  "name" : "Overlord-RTGov-EPN",
+  "version" : "1.0.0-SNAPSHOT",
   "subscriptions" : [ {
     "nodeName" : "SOAEvents",
     "subject" : "ActivityUnits"
@@ -49,6 +50,5 @@
       	"subject" : "ServiceResponseTimes"
       } ]
     }
-  ],
-  "version" : "1.0.0-SNAPSHOT"
+  ]
 }

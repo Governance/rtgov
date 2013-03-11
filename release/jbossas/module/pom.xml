@@ -41,7 +41,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
-			<artifactId>ep-cep</artifactId>
+			<artifactId>ep-drools</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
