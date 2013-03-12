@@ -271,9 +271,9 @@ public class JBossASCustomEventsResultsTest {
                 fail("No events returned");
             }
             
-            // Should be 10 processed events and 2 result
-            if (events.size() != 12) {
-                fail("12 events expected, but got: "+events.size());
+            // Should be 10 processed events and 1 result
+            if (events.size() != 11) {
+                fail("11 events expected, but got: "+events.size());
             }
             
             acsresults = getACSEvents();
@@ -282,8 +282,8 @@ public class JBossASCustomEventsResultsTest {
                 fail("No acsresults returned");
             }
             
-            if (acsresults.size() != acsSize+2) {
-                fail("Size of acs results should be 2 more: was "
+            if (acsresults.size() != acsSize+1) {
+                fail("Size of acs results should be 1 more: was "
                                 +acsSize+" now "+acsresults.size());
             }
             

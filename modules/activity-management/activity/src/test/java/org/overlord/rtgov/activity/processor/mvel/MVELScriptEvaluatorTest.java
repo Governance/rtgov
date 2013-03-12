@@ -15,13 +15,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.activity.processor;
+package org.overlord.rtgov.activity.processor.mvel;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
-import org.overlord.rtgov.activity.processor.MVELScriptEvaluator;
+import org.overlord.rtgov.activity.processor.mvel.MVELScriptEvaluator;
 
 public class MVELScriptEvaluatorTest {
     

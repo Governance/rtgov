@@ -22,6 +22,15 @@
 					},
 					"expression":"/orders:submitOrder/order/customer"
 				}
+			},{
+				"name":"item",
+				"evaluator":{
+					"type":"xpath",
+					"namespaces":{
+						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
+					},
+					"expression":"/orders:submitOrder/order/itemId"
+				}
 			}]
 		},
 		"java:org.switchyard.quickstarts.demos.orders.OrderAck":{

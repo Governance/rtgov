@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-13, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -15,18 +15,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.activity.processor;
+package org.overlord.rtgov.activity.processor.mvel;
 
 import org.mvel2.MVEL;
+import org.overlord.rtgov.activity.processor.InformationTransformer;
 
 /**
- * This class represents a MVEL based expression evaluator.
+ * This class represents a MVEL based information transformer.
  *
  */
-public class MVELExpressionEvaluator extends ExpressionEvaluator {
+public class MVELInformationTransformer extends InformationTransformer {
 
+    private String _expression=null;
+    
     private Object _compiledExpression=null;
     
+    /**
+     * This method returns the expression.
+     * 
+     * @return The expression
+     */
+    public String getExpression() {
+        return (_expression);
+    }
+    
+    /**
+     * This method sets the expression.
+     * 
+     * @param expr The expression
+     */
+    public void setExpression(String expr) {
+        _expression = expr;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -34,18 +55,21 @@ public class MVELExpressionEvaluator extends ExpressionEvaluator {
     public void init() throws Exception {
         super.init();
         
-        // Initialize the mvel expression
+        // Initialize the mvel script expression
         _compiledExpression = MVEL.compileExpression(getExpression());
     }
     
     /**
      * {@inheritDoc}
      */
-    public String evaluate(Object information) {
-        Object result=MVEL.executeExpression(_compiledExpression, information);
+    public String transform(Object information) {
+        java.util.Map<String,Object> vars=new java.util.HashMap<String, Object>();
+        vars.put("information", information);
         
-        if (result != null) {
-            return (result.toString());
+        Object result=MVEL.executeExpression(_compiledExpression, vars);  
+        
+        if (result instanceof String) {
+        	return ((String)result);
         }
         
         return (null);

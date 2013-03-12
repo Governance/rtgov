@@ -30,7 +30,6 @@ import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
-import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangePhase;
@@ -223,11 +222,6 @@ public class ExchangeInterceptor implements Auditor {
             at.setContent(_activityCollector.processInformation(null,
                           contentType, msg.getContent(), at));
             
-            // Check if content has been set
-            if (at.getContent() == null) {
-                at.setContent(getMessageContent(exchange));
-            }
-            
             try {
             	_activityCollector.record(at);
             } catch (Exception e) {
@@ -236,43 +230,4 @@ public class ExchangeInterceptor implements Auditor {
         }
     }
 
-    /**
-     * This method returns a string representation of the
-     * message content, or null if no available.
-     * 
-     * @param exchange The exchange
-     * @return The string representation, or null if not possible
-     */
-    protected String getMessageContent(Exchange exchange) {
-        String ret=null;
-        
-        // try to convert the payload to a string
-        Message msg = exchange.getMessage();
-
-        try {    
-            ret = msg.getContent(String.class);
-            
-            // check to see if we have to put content back into the message 
-            // after the conversion to string
-            if (java.io.InputStream.class.isAssignableFrom(msg.getContent().getClass())) {
-                msg.setContent(new java.io.ByteArrayInputStream(ret.getBytes()));
-            } else if (java.io.Reader.class.isAssignableFrom(msg.getContent().getClass())) {
-                msg.setContent(new java.io.StringReader(ret));
-            }
-
-        } catch (Exception ex) {
-            try {
-                // If contents cannot be represented as a string, then try a
-                // JSON serialized form
-                ret = ActivityUtil.objectToJSONString(msg.getContent());
-            } catch (Exception ex2) {
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("Failed to convert message content for '"+exchange
-                            +"' to string: ex="+ex+" ex2="+ex2);
-                }
-            }
-        }
-
-        return (ret);
-    }
 }

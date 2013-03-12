@@ -15,16 +15,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.activity.processor;
+package org.overlord.rtgov.activity.processor.mvel;
 
 import org.mvel2.MVEL;
-import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.processor.ExpressionEvaluator;
 
 /**
- * This class represents a MVEL based script evaluator.
+ * This class represents a MVEL based expression evaluator.
  *
  */
-public class MVELScriptEvaluator extends ScriptEvaluator {
+public class MVELExpressionEvaluator extends ExpressionEvaluator {
 
     private Object _compiledExpression=null;
     
@@ -35,19 +35,21 @@ public class MVELScriptEvaluator extends ScriptEvaluator {
     public void init() throws Exception {
         super.init();
         
-        // Initialize the mvel script expression
+        // Initialize the mvel expression
         _compiledExpression = MVEL.compileExpression(getExpression());
     }
     
     /**
      * {@inheritDoc}
      */
-    public void evaluate(Object information, ActivityType activityType) {
-        java.util.Map<String,Object> vars=new java.util.HashMap<String, Object>();
-        vars.put("information", information);
-        vars.put("activity", activityType);
+    public String evaluate(Object information) {
+        Object result=MVEL.executeExpression(_compiledExpression, information);
         
-        MVEL.executeExpression(_compiledExpression, vars);        
+        if (result != null) {
+            return (result.toString());
+        }
+        
+        return (null);
     }
     
 }

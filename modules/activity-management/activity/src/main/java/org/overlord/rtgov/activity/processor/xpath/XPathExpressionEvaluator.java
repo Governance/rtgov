@@ -15,13 +15,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.activity.processor;
+package org.overlord.rtgov.activity.processor.xpath;
 
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.jaxen.SimpleNamespaceContext;
+import org.overlord.rtgov.activity.processor.ExpressionEvaluator;
 
 /**
  * This class represents a XPath based expression evaluator.

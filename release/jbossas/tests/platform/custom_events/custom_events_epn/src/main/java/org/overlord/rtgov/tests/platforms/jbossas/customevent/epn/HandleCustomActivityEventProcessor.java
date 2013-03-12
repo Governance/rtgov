@@ -19,7 +19,7 @@ package org.overlord.rtgov.tests.platforms.jbossas.customevent.epn;
 
 import java.io.Serializable;
 
-import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
 
 /**
@@ -41,10 +41,11 @@ public class HandleCustomActivityEventProcessor extends org.overlord.rtgov.ep.Ev
             System.out.println(">>> CUSTOM ACTIVITY ASSOCIATED WITH: "
                     +((CustomActivityEvent)event).getActivityType());
             
-            if (((CustomActivityEvent)event).getActivityType() instanceof RequestSent) {
-                RequestSent rs=(RequestSent)((CustomActivityEvent)event).getActivityType();
+            if (((CustomActivityEvent)event).getActivityType() instanceof RequestReceived) {
+            	RequestReceived rr=(RequestReceived)((CustomActivityEvent)event).getActivityType();
                 
-                if (rs.getContent().indexOf("JAM") != -1) {
+                if (rr.getProperties().containsKey("item")
+                		&& rr.getProperties().get("item").equals("JAM")) {
                     ret = event;
                 }
             }

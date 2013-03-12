@@ -232,8 +232,10 @@ public class JBossASACMgrACSViolationsTest {
             java.util.Map<String,String> properties=
                     (java.util.Map<String,String>)results.get("properties");
             
-            if (properties.size() != 2) {
-                fail("Expecting 2 entries in property list: "+properties.size());
+        	System.err.println("PROPS="+properties);
+
+        	if (properties.size() != 3) {
+                fail("Expecting 3 entries in property list: "+properties.size());
             }
             
             if (!properties.containsKey("customer")) {

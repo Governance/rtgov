@@ -31,7 +31,7 @@ public class TypeProcessor {
     
     private static final Logger LOG=Logger.getLogger(TypeProcessor.class.getName());
 
-    private ExpressionEvaluator _representation=null;
+    private InformationTransformer _transformer=null;
     
     private java.util.List<ContextEvaluator> _contextEvaluators=
             new java.util.ArrayList<ContextEvaluator>();
@@ -47,8 +47,8 @@ public class TypeProcessor {
      * @throws Exception Failed to initialize
      */
     public void init() throws Exception {
-        if (_representation != null) {
-            _representation.init();
+        if (_transformer != null) {
+            _transformer.init();
         }
         
         for (ContextEvaluator ce : _contextEvaluators) {
@@ -65,23 +65,23 @@ public class TypeProcessor {
     }
     
     /**
-     * This method returns the expression evaluator used
+     * This method returns the information transformer used
      * to derived the public representation of the information.
      * 
-     * @return The public representation's expression evaluation
+     * @return The public representation's transformer
      */
-    public ExpressionEvaluator getRepresentation() {
-        return (_representation);    
+    public InformationTransformer getTransformer() {
+        return (_transformer);    
     }
     
     /**
-     * This method sets the expression evaluator used
+     * This method sets the information transformer used
      * to derived the public representation of the information.
      * 
-     * @param rep The public representation's expression evaluation
+     * @param transformer The public representation's transformer
      */
-    public void setRepresentation(ExpressionEvaluator rep) {
-        _representation = rep;    
+    public void setTransformer(InformationTransformer transformer) {
+        _transformer = transformer;    
     }
     
     /**
@@ -186,8 +186,8 @@ public class TypeProcessor {
             getScript().evaluate(information, actType);
         }
         
-        if (getRepresentation() != null) {
-            ret = getRepresentation().evaluate(information);
+        if (getTransformer() != null) {
+            ret = getTransformer().transform(information);
         }
         
         return (ret);
@@ -199,8 +199,8 @@ public class TypeProcessor {
      * @throws Exception Failed to close
      */
     public void close() throws Exception {
-        if (_representation != null) {
-            _representation.close();
+        if (_transformer != null) {
+            _transformer.close();
         }
         
         for (ContextEvaluator ce : _contextEvaluators) {

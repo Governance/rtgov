@@ -22,10 +22,10 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.rtgov.activity.model.Context.Type;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
-import org.overlord.rtgov.activity.processor.MVELExpressionEvaluator;
 import org.overlord.rtgov.activity.processor.TypeProcessor;
 import org.overlord.rtgov.activity.processor.TypeProcessor.ContextEvaluator;
 import org.overlord.rtgov.activity.processor.TypeProcessor.PropertyEvaluator;
+import org.overlord.rtgov.activity.processor.mvel.MVELExpressionEvaluator;
 
 public class TypeProcessorTest {
 
@@ -34,14 +34,12 @@ public class TypeProcessorTest {
     private static final String THE_REPRESENTATION = "The Representation";
 
     @Test
-    public void testProcessRepresentation() {
+    public void testInformationTransformer() {
         TypeProcessor processor=new TypeProcessor();
         
-        MVELExpressionEvaluator rep=new MVELExpressionEvaluator();
+        SerializeInformationTransformer rep=new SerializeInformationTransformer();
         
-        rep.setExpression("\""+THE_REPRESENTATION+"\"");
-        
-        processor.setRepresentation(rep);
+        processor.setTransformer(rep);
         
         try {
             processor.init();
@@ -49,7 +47,7 @@ public class TypeProcessorTest {
             fail("Failed to initialize: "+e);
         }
         
-        String result=processor.process(new TestObject(), new RequestReceived());
+        String result=processor.process(THE_REPRESENTATION, new RequestReceived());
      
         if (result == null) {
             fail("Result is null");

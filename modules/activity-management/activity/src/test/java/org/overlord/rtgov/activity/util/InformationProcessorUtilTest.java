@@ -22,9 +22,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.processor.InformationProcessor;
-import org.overlord.rtgov.activity.processor.MVELExpressionEvaluator;
 import org.overlord.rtgov.activity.processor.TypeProcessor;
-import org.overlord.rtgov.activity.processor.XPathExpressionEvaluator;
+import org.overlord.rtgov.activity.processor.mvel.MVELExpressionEvaluator;
+import org.overlord.rtgov.activity.processor.xpath.XPathExpressionEvaluator;
 import org.overlord.rtgov.activity.util.InformationProcessorUtil;
 
 public class InformationProcessorUtilTest {

@@ -20,6 +20,8 @@ package org.overlord.rtgov.activity.processor;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
+import org.overlord.rtgov.activity.processor.mvel.MVELExpressionEvaluator;
+import org.overlord.rtgov.activity.processor.xpath.XPathExpressionEvaluator;
 
 /**
  * This abstract class represents an expression evaluator.

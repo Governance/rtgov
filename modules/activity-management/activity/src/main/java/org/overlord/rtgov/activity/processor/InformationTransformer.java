@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source
- * Copyright 2008-12, Red Hat Middleware LLC, and others contributors as indicated
+ * Copyright 2008-13, Red Hat Middleware LLC, and others contributors as indicated
  * by the @authors tag. All rights reserved.
  * See the copyright.txt in the distribution for a
  * full listing of individual contributors.
@@ -20,39 +20,19 @@ package org.overlord.rtgov.activity.processor;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
-import org.overlord.rtgov.activity.model.ActivityType;
-import org.overlord.rtgov.activity.processor.mvel.MVELScriptEvaluator;
+import org.overlord.rtgov.activity.processor.mvel.MVELInformationTransformer;
 
 /**
- * This abstract class represents a script evaluator.
+ * This abstract class represents an information transformer.
  *
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
-@JsonSubTypes({@Type(value=MVELScriptEvaluator.class, name="mvel") })
-public abstract class ScriptEvaluator {
-    
-    private String _expression=null;
-    
-    /**
-     * This method returns the expression.
-     * 
-     * @return The expression
-     */
-    public String getExpression() {
-        return (_expression);
-    }
+@JsonSubTypes({@Type(value=SerializeInformationTransformer.class, name="serialize"),
+	@Type(value=MVELInformationTransformer.class, name="mvel") })
+public abstract class InformationTransformer {
     
     /**
-     * This method sets the expression.
-     * 
-     * @param expr The expression
-     */
-    public void setExpression(String expr) {
-        _expression = expr;
-    }
-
-    /**
-     * This method initializes the script evaluator.
+     * This method initializes the information transformer.
      * 
      * @throws Exception Failed to initialize
      */
@@ -60,16 +40,16 @@ public abstract class ScriptEvaluator {
     }
     
     /**
-     * This method evaluates the supplied information to
-     * initialize the supplied activity type.
+     * This method transforms the supplied information and
+     * returns the textual representation of the result.
      * 
      * @param information The information
-     * @param activityType The activity type
+     * @return The result, or null if unable to transform
      */
-    public abstract void evaluate(Object information, ActivityType activityType);
+    public abstract String transform(Object information);
     
     /**
-     * This method closes the expression evaluator.
+     * This method closes the information transformer.
      * 
      * @throws Exception Failed to close
      */
