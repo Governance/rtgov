@@ -123,6 +123,10 @@ public class DroolsEventProcessor extends EventProcessor {
 	        }
 	        
 	        ret = (java.io.Serializable)_context.getResult();
+	        
+            if (ret instanceof Exception) {
+            	throw (Exception)ret;
+            }
     	}
         
         return ret;
