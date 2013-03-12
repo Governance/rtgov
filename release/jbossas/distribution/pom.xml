@@ -47,18 +47,8 @@
 
 		<dependency>
 			<groupId>org.overlord.gadgets.server</groupId>
-			<artifactId>gadgets</artifactId>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.gadgets.server</groupId>
-			<artifactId>gadget-server</artifactId>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.gadgets.server</groupId>
-			<artifactId>gadget-web</artifactId>
-			<type>war</type>
+			<artifactId>distribution</artifactId>
+			<type>zip</type>
 		</dependency>
 	</dependencies> 
 

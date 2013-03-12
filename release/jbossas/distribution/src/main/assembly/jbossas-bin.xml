@@ -81,11 +81,15 @@
 				<include>org.overlord.rtgov.content:overlord-rtgov-epn:war</include>
 				<include>org.overlord.rtgov.content:overlord-rtgov-acs:war</include>
 				<include>org.overlord.rtgov.content.services:overlord-rtgov-services:war</include>
-				<include>org.overlord.gadgets.server:gadgets:war</include>
-				<include>org.overlord.gadgets.server:gadget-server:war</include>
-				<include>org.overlord.gadgets.server:gadget-web:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>/gadget-server</outputDirectory>
+			<unpack>true</unpack>
+			<includes>
+				<include>org.overlord.gadgets.server:distribution:zip</include>
+			</includes>
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>deployments/restc</outputDirectory>

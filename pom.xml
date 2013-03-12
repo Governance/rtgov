@@ -110,21 +110,9 @@
 
 			<dependency>
 				<groupId>org.overlord.gadgets.server</groupId>
-				<artifactId>gadgets</artifactId>
+				<artifactId>distribution</artifactId>
 				<version>${gadgets.version}</version>
-				<type>war</type>
-			</dependency>
-			<dependency>
-				<groupId>org.overlord.gadgets.server</groupId>
-				<artifactId>gadget-server</artifactId>
-				<version>${gadgets.version}</version>
-				<type>war</type>
-			</dependency>
-			<dependency>
-				<groupId>org.overlord.gadgets.server</groupId>
-				<artifactId>gadget-web</artifactId>
-				<version>${gadgets.version}</version>
-				<type>war</type>
+				<type>zip</type>
 			</dependency>
 
 			<dependency>

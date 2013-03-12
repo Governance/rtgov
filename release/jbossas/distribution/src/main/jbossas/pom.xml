@@ -52,6 +52,10 @@
 								<copy todir="${env.JBOSS_HOME}/standalone/configuration" >
 									<fileset dir="configuration/${type}" />
 								</copy>
+								<ant antfile="gadget-server/gadget-server/build.xml" target="deploy">
+									<property name="as7.home" value="${env.JBOSS_HOME}" />
+									<property name="basedir" value="gadget-server/gadget-server" />
+								</ant>
 							</target>
 						</configuration>
 						<goals>
@@ -67,6 +71,12 @@
 								<delete dir="${env.JBOSS_HOME}/modules/org/overlord/rtgov"/>
 								<delete dir="${env.JBOSS_HOME}/standalone/deployments/overlord-rtgov"/>
 								<delete file="${env.JBOSS_HOME}/standalone/configuration/overlord-rtgov.properties"/>
+								
+								<ant antfile="${basedir}/gadget-server/gadget-server/build.xml" target="undeploy">
+									<property name="as7.home" value="${env.JBOSS_HOME}" />
+									<property name="basedir" value="gadget-server/gadget-server" />
+								</ant>
+
 							</target>
 						</configuration>
 						<goals>
