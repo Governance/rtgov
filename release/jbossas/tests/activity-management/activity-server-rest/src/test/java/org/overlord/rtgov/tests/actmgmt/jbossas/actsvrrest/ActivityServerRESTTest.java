@@ -67,9 +67,13 @@ public class ActivityServerRESTTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.rtgov.activity-management:activity-server-impl:"+version,
+                    .artifacts("org.overlord.rtgov.activity-management:activity:"+version,
+                    		"org.overlord.rtgov.activity-management:activity-server-impl:"+version,
                             "org.overlord.rtgov.activity-management:activity-store-mem:"+version,
-                            "org.overlord.rtgov.activity-management:activity-server-rests:"+version)
+                            "org.overlord.rtgov.activity-management:activity-server-rests:"+version,
+                            "org.codehaus.jackson:jackson-core-asl:1.9.2",
+                            "org.codehaus.jackson:jackson-mapper-asl:1.9.2",
+                            "org.mvel:mvel2:2.1.3.Final")
                     .resolveAsFiles());
     }
     

@@ -17,19 +17,29 @@
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-infinispan</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-util</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-core</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
+			<scope>provided</scope>
 		</dependency>		
 		<dependency>
 			<groupId>org.jboss.spec</groupId>

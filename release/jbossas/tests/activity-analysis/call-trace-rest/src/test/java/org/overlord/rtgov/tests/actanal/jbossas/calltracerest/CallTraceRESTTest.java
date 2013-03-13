@@ -79,9 +79,12 @@ public class CallTraceRESTTest {
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
                     .artifacts("org.overlord.rtgov.activity-management:activity-server-impl:"+version,
+                    		"org.overlord.rtgov.activity-management:activity:"+version,
                             "org.overlord.rtgov.activity-management:activity-store-mem:"+version,
                             "org.overlord.rtgov.activity-analysis:call-trace:"+version,
-                            "org.overlord.rtgov.content.services:call-trace-rests:"+version)
+                            "org.overlord.rtgov.content.services:call-trace-rests:"+version,
+                            "org.codehaus.jackson:jackson-core-asl:1.9.2",
+                            "org.codehaus.jackson:jackson-mapper-asl:1.9.2")
                     .resolveAsFiles());
     }
     

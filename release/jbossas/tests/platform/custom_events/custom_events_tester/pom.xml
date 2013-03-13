@@ -27,6 +27,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
+			<artifactId>tests-jbossas-custom-events-data</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
 			<artifactId>tests-jbossas-custom-events-epn</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
@@ -45,6 +50,16 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
 			<version>${project.version}</version>
@@ -54,6 +69,7 @@
 		<dependency>
 			<groupId>org.jboss.as</groupId>
 			<artifactId>jboss-as-arquillian-container-managed</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 
 		<dependency>

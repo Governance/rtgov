@@ -17,11 +17,13 @@
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<!-- Add dependency on integration jee module, to make
@@ -30,6 +32,7 @@
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-jee</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -39,9 +42,9 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-api</artifactId>
-		    <scope>provided</scope>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

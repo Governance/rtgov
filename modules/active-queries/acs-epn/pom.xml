@@ -17,15 +17,18 @@
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

@@ -14,23 +14,11 @@
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>collector-jee</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>collector-activity-server</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- Activity Server modules -->
@@ -39,12 +27,6 @@
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-restc</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<!-- Active collection modules -->
@@ -53,12 +35,6 @@
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-jee</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.active-queries</groupId>
-					<artifactId>active-collection</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>		
 
 		<!-- JBossAS Specific -->
@@ -67,12 +43,6 @@
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-jbossas</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- Test dependencies -->

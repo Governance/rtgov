@@ -24,25 +24,31 @@
 			<artifactId>collector-activity-server</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.switchyard</groupId>
 			<artifactId>switchyard-api</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.switchyard</groupId>
 			<artifactId>switchyard-plugin</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.switchyard.components</groupId>
 			<artifactId>switchyard-component-bean</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.switchyard.components</groupId>
 			<artifactId>switchyard-component-soap</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.switchyard</groupId>
 			<artifactId>switchyard-test</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -63,6 +69,7 @@
 		<dependency>
 			<groupId>org.jboss.as</groupId>
 			<artifactId>jboss-as-arquillian-container-managed</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

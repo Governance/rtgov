@@ -40,6 +40,17 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
 			<version>${project.version}</version>

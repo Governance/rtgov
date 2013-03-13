@@ -17,6 +17,7 @@
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -34,6 +35,18 @@
 			<artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>javax.enterprise</groupId>
 			<artifactId>cdi-api</artifactId>

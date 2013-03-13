@@ -61,7 +61,10 @@ public class NetworkLoaderTest {
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
                     .artifacts("org.overlord.rtgov.event-processor-network:epn-core:"+version,
-                            "org.overlord.rtgov.event-processor-network:epn-container-jee:"+version)
+                    		"org.overlord.rtgov.event-processor:ep-core:"+version,
+                            "org.overlord.rtgov.event-processor-network:epn-container-jee:"+version,
+                            "org.codehaus.jackson:jackson-core-asl:1.9.2",
+                            "org.codehaus.jackson:jackson-mapper-asl:1.9.2")
                     .resolveAsFiles());
     }
 

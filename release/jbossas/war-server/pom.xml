@@ -14,23 +14,11 @@
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>collector-jee</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>collector-activity-server</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- Activity Server modules -->
@@ -39,51 +27,23 @@
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-impl</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-rests</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-epn</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.overlord.rtgov.event-processor-network</groupId>
-					<artifactId>epn-core</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-store-jpa</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<!-- Event Processor Network modules -->
@@ -92,12 +52,6 @@
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.event-processor-network</groupId>
-					<artifactId>epn-core</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>	
 		
 		<!-- Active collection modules -->
@@ -106,23 +60,11 @@
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-jee</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.active-queries</groupId>
-					<artifactId>active-collection</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>		
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-rests</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.active-queries</groupId>
-					<artifactId>active-collection</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>		
 		
 		<!-- Services -->
@@ -131,27 +73,26 @@
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>service-dependency-rests</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.active-queries</groupId>
-					<artifactId>active-collection</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-analysis</groupId>
-					<artifactId>analytics</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>service-dependency</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>service-dependency-svg</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>call-trace-rests</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>call-trace</artifactId>
+			<version>${project.version}</version>
 		</dependency>
 
 		<!-- JBossAS Specific -->
@@ -160,12 +101,6 @@
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-jbossas</artifactId>
 			<version>${project.version}</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.overlord.rtgov.activity-management</groupId>
-					<artifactId>activity</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		
 		<!-- Test dependencies -->

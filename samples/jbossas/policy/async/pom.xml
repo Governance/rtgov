@@ -20,6 +20,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-core</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-loader-jee</artifactId>
 			<version>${project.version}</version>
@@ -30,14 +36,21 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-infinispan</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-util</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- The following dependencies are only required for testing the EPN -->
 
-		<dependency>
-			<groupId>org.jboss.jbossts</groupId>
-			<artifactId>jbossjta</artifactId>
-			<scope>test</scope>
-		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-container-embedded</artifactId>
@@ -54,6 +67,21 @@
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-infinispan</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.jbossts</groupId>
+			<artifactId>jbossjta</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -81,6 +109,16 @@
 			<artifactId>jboss-marshalling-river</artifactId>
 			<scope>test</scope>
 		</dependency>		
+		<dependency>
+			<groupId>org.mvel</groupId>
+			<artifactId>mvel2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.enterprise</groupId>
+			<artifactId>cdi-api</artifactId>
+			<scope>test</scope>
+		</dependency>
 	
 		<dependency>
 			<groupId>junit</groupId>
