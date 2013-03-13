@@ -1,5 +1,5 @@
 [{
-  "name" : "",
+  "name" : "RestrictUsage",
   "version" : "1",
   "predicate" : {
     "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
