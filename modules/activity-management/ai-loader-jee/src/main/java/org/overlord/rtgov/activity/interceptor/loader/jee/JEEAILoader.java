@@ -47,7 +47,7 @@ public class JEEAILoader {
     
     private static final Logger LOG=Logger.getLogger(JEEAILoader.class.getName());
     
-    private static final String AIS_JSON = "ais.json";
+    private static final String AI_JSON = "ai.json";
     private static final String AIS_MANAGER = "java:global/overlord-rtgov/ActivityInterceptorManager";
     
     private ActivityInterceptorManager _aiManager=null;
@@ -70,7 +70,7 @@ public class JEEAILoader {
             
             _aiManager = (ActivityInterceptorManager)ctx.lookup(AIS_MANAGER);
 
-            java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(AIS_JSON);
+            java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(AI_JSON);
             
             if (is == null) {
                 LOG.severe(java.util.PropertyResourceBundle.getBundle(

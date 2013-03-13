@@ -225,7 +225,8 @@ public class ExchangeInterceptor implements Auditor {
             try {
             	_activityCollector.record(at);
             } catch (Exception e) {
-            	throw new RuntimeException(e);
+            	// Strip the exception and just return the message
+            	throw new org.switchyard.exception.SwitchYardException(e.getMessage());
             }
         }
     }

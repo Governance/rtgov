@@ -33,7 +33,7 @@ public class AISTest {
         ActivityInterceptor ai=null;
         
         try {
-            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("ais.json");
+            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("ai.json");
             
             byte[] b=new byte[is.available()];
             is.read(b);
@@ -96,7 +96,7 @@ public class AISTest {
         ActivityInterceptor ai=null;
         
         try {
-            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("ais.json");
+            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("ai.json");
             
             byte[] b=new byte[is.available()];
             is.read(b);
