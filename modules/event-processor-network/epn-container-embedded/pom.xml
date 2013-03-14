@@ -31,6 +31,18 @@
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 		    <groupId>javax.enterprise</groupId>
 		    <artifactId>cdi-api</artifactId>

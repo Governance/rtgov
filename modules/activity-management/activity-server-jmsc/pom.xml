@@ -19,6 +19,22 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.spec.javax.jms</groupId>
 			<artifactId>jboss-jms-api_1.1_spec</artifactId>
