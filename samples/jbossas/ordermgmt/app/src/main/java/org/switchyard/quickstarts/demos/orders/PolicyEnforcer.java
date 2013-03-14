@@ -20,8 +20,10 @@ package org.switchyard.quickstarts.demos.orders;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.overlord.rtgov.active.collection.ActiveMap;
-import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.jee.CollectionManager;
 import org.overlord.rtgov.jee.DefaultCollectionManager;
 import org.switchyard.Exchange;
@@ -43,6 +45,16 @@ public class PolicyEnforcer implements ExchangeHandler {
     
     private boolean _initialized=false;
     
+    private static final ObjectMapper MAPPER=new ObjectMapper();
+
+    static {
+        SerializationConfig config=MAPPER.getSerializationConfig()
+                .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
+                .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
+        
+        MAPPER.setSerializationConfig(config);
+    }
+
     protected void init() {
                 
         if (_collectionManager != null) {
@@ -165,7 +177,13 @@ public class PolicyEnforcer implements ExchangeHandler {
             try {
                 // If contents cannot be represented as a string, then try a
                 // JSON serialized form
-                ret = ActivityUtil.objectToJSONString(msg.getContent());
+                java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+                
+                MAPPER.writeValue(baos, msg.getContent());
+                
+                ret = new String(baos.toByteArray());
+                
+                baos.close();
             } catch (Exception ex2) {
                 if (LOG.isLoggable(Level.FINEST)) {
                     LOG.finest("Failed to convert message content for '"+exchange
