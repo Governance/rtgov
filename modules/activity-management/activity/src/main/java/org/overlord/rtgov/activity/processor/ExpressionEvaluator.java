@@ -34,6 +34,8 @@ public abstract class ExpressionEvaluator {
     
     private String _expression=null;
     
+    private boolean _optional=false;
+    
     /**
      * This method returns the expression.
      * 
@@ -50,6 +52,26 @@ public abstract class ExpressionEvaluator {
      */
     public void setExpression(String expr) {
         _expression = expr;
+    }
+    
+    /**
+     * This method gets whether the value being obtained
+     * is optional.
+     * 
+     * @return Whether the value associated with the expression is optional
+     */
+    public boolean getOptional() {
+    	return (_optional);
+    }
+    
+    /**
+     * This method sets whether the value being obtained
+     * is optional.
+     * 
+     * @param optional Whether the value associated with the expression is optional
+     */
+    public void setOptional(boolean optional) {
+    	_optional = optional;
     }
 
     /**

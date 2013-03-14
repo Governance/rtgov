@@ -17,6 +17,7 @@
  */
 package org.overlord.rtgov.activity.processor;
 
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -165,6 +166,13 @@ public class TypeProcessor {
             
             if (val != null) {
                 actType.getContext().add(new Context(ce.getType(), val));
+                
+            } else if (!ce.getEvaluator().getOptional()) {
+            	LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-7"),
+                        ce.getEvaluator().getExpression(),
+                        information));
             }
         }
         
@@ -179,6 +187,13 @@ public class TypeProcessor {
             
             if (val != null) {
                 actType.getProperties().put(pe.getName(), val);
+                
+            } else if (!pe.getEvaluator().getOptional()) {
+            	LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-8"),
+                        pe.getEvaluator().getExpression(),
+                        information));
             }
         }
         
