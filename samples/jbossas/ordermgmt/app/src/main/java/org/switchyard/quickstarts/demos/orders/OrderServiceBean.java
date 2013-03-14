@@ -38,7 +38,9 @@ public class OrderServiceBean implements OrderService {
     @Override
     public OrderAck submitOrder(Order order) {
         // Create an order ack
-        OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId());
+        OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId())
+        				.setCustomer(order.getCustomer());
+
         // Check the inventory
         try {
             Item orderItem = _inventory.lookupItem(order.getItemId());
@@ -54,8 +56,6 @@ public class OrderServiceBean implements OrderService {
             } else {
                 orderAck.setAccepted(false).setStatus("Insufficient Quantity");
             }
-            
-            orderAck.setCustomer(order.getCustomer());
             
         } catch (ItemNotFoundException infEx) {
             orderAck.setAccepted(false).setStatus("Item Not Available");

@@ -62,8 +62,9 @@ public class OrderAck {
         this._total = total;
     }
     
-    public void setCustomer(String customer) {
+    public OrderAck setCustomer(String customer) {
         this._customer = customer;
+        return this;
     }
     
     public String getCustomer() {
