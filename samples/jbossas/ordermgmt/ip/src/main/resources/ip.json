@@ -63,7 +63,7 @@
 					"namespaces":{
 						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
 					},
-					"expression":"/orders:makePayment/orders:payment/orders:customer"
+					"expression":"/orders:makePayment/payment/customer"
 				}
 			},{
 				"name":"amount",
@@ -72,7 +72,7 @@
 					"namespaces":{
 						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
 					},
-					"expression":"/orders:makePayment/orders:payment/orders:amount"
+					"expression":"/orders:makePayment/payment/amount"
 				}
 			}]
 		},
