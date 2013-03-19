@@ -58,13 +58,6 @@ public class JBossAS7CollectorContext implements CollectorContext {
     /**
      * {@inheritDoc}
      */
-    public String getPrincipal() {
-        return ("Unknown-Principal");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public String getHost() {
         return (System.getProperty("jboss.qualified.host.name","Unknown-Host"));
     }

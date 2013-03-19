@@ -28,14 +28,6 @@ import javax.transaction.TransactionManager;
 public interface CollectorContext {
 
     /**
-     * This method returns the caller principal associated with
-     * the current thread.
-     * 
-     * @return The principal
-     */
-    public String getPrincipal();
-
-    /**
      * This method returns the host name.
      * 
      * @return The host name

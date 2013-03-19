@@ -192,7 +192,6 @@ public class AbstractActivityCollector implements ActivityCollector {
         Origin origin=new Origin();
         origin.setHost(_collectorContext.getHost());
         origin.setNode(_collectorContext.getNode());
-        origin.setPrincipal(_collectorContext.getPrincipal());
         origin.setThread(Thread.currentThread().getName());
         
         ret.setOrigin(origin);
