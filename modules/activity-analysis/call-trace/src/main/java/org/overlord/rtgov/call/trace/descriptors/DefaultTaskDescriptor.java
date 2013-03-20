@@ -58,14 +58,20 @@ public class DefaultTaskDescriptor implements TaskDescriptor {
             for (PropertyDescriptor pd : bi.getPropertyDescriptors()) {
                 
                 if (CallTraceUtil.shouldIncludeProperty(pd)) {
-                    buf.append(" "+pd.getDisplayName());
                     
                     try {
                         Object value=pd.getReadMethod().invoke(at);
-                        buf.append("="+value);
+                        
+                        if (value != null) {
+	                        buf.append(" "+pd.getDisplayName());
+	                        buf.append("="+value);
+                        }
                         
                     } catch (Exception ex) {
-                        buf.append("=<unavailable>");
+                        LOG.log(Level.SEVERE, MessageFormat.format(
+                                java.util.PropertyResourceBundle.getBundle(
+                                "call-trace.Messages").getString("CALL-TRACE-3"),
+                                    at.getClass().getName(), pd.getName()), ex);
                     }
                 }
             }

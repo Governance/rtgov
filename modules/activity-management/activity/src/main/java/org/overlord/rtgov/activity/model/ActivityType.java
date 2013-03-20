@@ -81,6 +81,8 @@ public abstract class ActivityType implements java.io.Externalizable {
     
     private long _timestamp=0;
     
+    private String _principal=null;
+    
     private java.util.List<Context> _contexts=new java.util.Vector<Context>();
     private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
 
@@ -147,6 +149,26 @@ public abstract class ActivityType implements java.io.Externalizable {
     @Column(name="unitIndex")
     public int getUnitIndex() {
         return (_unitIndex);
+    }
+    
+    /**
+     * This method sets the principal associated with
+     * the activity event.
+     * 
+     * @param principal The principal
+     */
+    public void setPrincipal(String principal) {
+    	_principal = principal;
+    }
+    
+    /**
+     * This method gets the principal associated with
+     * the activity event.
+     * 
+     * @return The principal
+     */
+    public String getPrincipal() {
+    	return (_principal);
     }
     
     /**
@@ -220,6 +242,7 @@ public abstract class ActivityType implements java.io.Externalizable {
         out.writeObject(_unitId);
         out.writeInt(_unitIndex);
         out.writeLong(_timestamp);
+        out.writeObject(_principal);
         
         int len=_contexts.size();
         
@@ -242,6 +265,7 @@ public abstract class ActivityType implements java.io.Externalizable {
         _unitId = (String)in.readObject();
         _unitIndex = in.readInt();
         _timestamp = in.readLong();
+        _principal = (String)in.readObject();
         
         int len=in.readInt();
         

@@ -38,6 +38,7 @@ import org.switchyard.Property;
 import org.switchyard.bus.camel.audit.Audit;
 import org.switchyard.bus.camel.audit.Auditor;
 import org.switchyard.bus.camel.processors.Processors;
+import org.switchyard.security.credential.Credential;
 
 /**
  * This class observes exchanges and uses the information to create activity
@@ -221,6 +222,22 @@ public class ExchangeInterceptor implements Auditor {
             
             at.setContent(_activityCollector.processInformation(null,
                           contentType, msg.getContent(), at));
+            
+            // Check if principal has been defined
+            org.switchyard.security.SecurityContext sc=org.switchyard.security.SecurityContext.get(exchange);
+            
+            if (sc != null) {
+            	for (Credential cred : sc.getCredentials()) {
+            		if (cred instanceof org.switchyard.security.credential.NameCredential) {
+            			at.setPrincipal(((org.switchyard.security.credential.NameCredential)cred).getName());
+            			break;
+            		} else if (cred instanceof org.switchyard.security.credential.PrincipalCredential) {
+                		at.setPrincipal(((org.switchyard.security.credential.PrincipalCredential)cred)
+                							.getPrincipal().getName());
+                		break;
+            		}
+            	}
+            }
             
             try {
             	_activityCollector.record(at);

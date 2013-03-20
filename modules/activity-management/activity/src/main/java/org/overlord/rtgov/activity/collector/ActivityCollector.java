@@ -44,8 +44,8 @@ public interface ActivityCollector {
     /**
      * This method completes the scope. However this
      * method should only be called by the application if it
-     * previously called the 'startScope' method, and received
-     * a response that indicated that a scope had been started.
+     * had previously explicitly started a scope by calling
+     * the 'startScope' method.
      */
     public void endScope();
     
