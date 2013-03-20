@@ -255,15 +255,15 @@ public class CallTraceProcessor {
                     }
                     
                     if (cur instanceof RequestSent) {
+                    	instrumentCall(call, au, (RequestSent)cur);
+                    	
                         RPCActivityType rr=state.getSOAActivity(RequestReceived.class,
                                 ((RequestSent)cur).getServiceType(),
-                                ((RequestSent)cur).getOperation());
-                        
+                                ((RequestSent)cur).getOperation());                        
                         if (rr != null) {
                             call.setRequestLatency(rr.getTimestamp()-cur.getTimestamp());
                             
-                            ActivityUnit subAU=state.getActivityUnit(rr.getUnitId());
-                            
+                            ActivityUnit subAU=state.getActivityUnit(rr.getUnitId());                           
                             if (subAU != null) {
                                 processAU(state, subAU, topLevel);
                                 
@@ -272,6 +272,7 @@ public class CallTraceProcessor {
                             }
                         }
                     } else if (cur instanceof RequestReceived) {                    
+                    	instrumentCall(call, au, (RequestReceived)cur);
                         call.setRequest(((RequestReceived)cur).getContent());
                         
                     } else if (cur instanceof ResponseSent) {
@@ -451,6 +452,8 @@ public class CallTraceProcessor {
         call.setComponent(at.getServiceType());
         call.setOperation(at.getOperation());
         
+        call.setPrincipal(at.getPrincipal());
+        
         call.getProperties().putAll(at.getProperties());
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -458,6 +461,28 @@ public class CallTraceProcessor {
         }
 
         return (call);
+    }
+    
+    /**
+     * This method adds client or server specific information to the call,
+     * depending upon whether the activity is the client sending or server
+     * receiving the interaction.
+     * 
+     * @param call The call
+     * @param au The activity unit
+     * @param at The activity type
+     */
+    protected static void instrumentCall(Call call, ActivityUnit au, RPCActivityType at) {
+    	
+    	if (au != null && au.getOrigin() != null) {
+	        if (at instanceof RequestSent) {
+	        	call.getProperties().put("client-host", au.getOrigin().getHost());
+	        	call.getProperties().put("client-node", au.getOrigin().getNode());
+	        } else if (at instanceof RequestReceived) {
+	        	call.getProperties().put("server-host", au.getOrigin().getHost());
+	        	call.getProperties().put("server-node", au.getOrigin().getNode());
+	        }
+    	}
     }
     
     /**

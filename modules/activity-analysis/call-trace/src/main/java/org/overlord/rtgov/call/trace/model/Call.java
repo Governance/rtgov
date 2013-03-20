@@ -29,6 +29,7 @@ public class Call extends ParentNode {
     private String _fault=null;
     private String _request=null;
     private String _response=null;
+    private String _principal=null;
     private long _requestLatency=0;
     private long _responseLatency=0;
     
@@ -126,6 +127,24 @@ public class Call extends ParentNode {
      */
     public void setResponse(String response) {
         _response = response;
+    }
+    
+    /**
+     * This method returns the principal.
+     * 
+     * @return The principal
+     */
+    public String getPrincipal() {
+        return (_principal);
+    }
+    
+    /**
+     * This method sets the principal.
+     * 
+     * @param principal The principal
+     */
+    public void setPrincipal(String principal) {
+        _principal = principal;
     }
     
     /**

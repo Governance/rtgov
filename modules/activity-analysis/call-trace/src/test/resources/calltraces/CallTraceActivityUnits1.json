@@ -21,6 +21,12 @@
 				"duration":2,
 				"percentage":100
 			}],
+			"properties":{
+				"client-host":"<ignore>",
+				"server-node":"<ignore>",
+				"server-host":"<ignore>",
+				"client-node":"<ignore>"
+			},
 			"duration":12,
 			"percentage":60
 		},{
@@ -40,11 +46,19 @@
 				"duration":2,
 				"percentage":100
 			}],
+			"properties":{
+				"client-host":"<ignore>",
+				"server-node":"<ignore>",
+				"server-host":"<ignore>",
+				"client-node":"<ignore>"
+			},
 			"duration":8,
 			"percentage":40
 		}],
 		"properties":{
 			"total":"125.0",
+			"server-node":"<ignore>",
+			"server-host":"<ignore>",
 			"customer":"Fred"
 		},
 		"duration":46,
@@ -69,6 +83,12 @@
 				"duration":1,
 				"percentage":100
 			}],
+			"properties":{
+				"client-host":"<ignore>",
+				"server-node":"<ignore>",
+				"server-host":"<ignore>",
+				"client-node":"<ignore>"
+			},
 			"duration":6,
 			"percentage":54
 		},{
@@ -85,11 +105,19 @@
 					"message":"Delivering the goods"
 				}
 			}],
+			"properties":{
+				"client-host":"<ignore>",
+				"server-node":"<ignore>",
+				"server-host":"<ignore>",
+				"client-node":"<ignore>"
+			},
 			"duration":5,
 			"percentage":45
 		}],
 		"properties":{
 			"total":"125.0",
+			"server-node":"<ignore>",
+			"server-host":"<ignore>",
 			"customer":"Fred"
 		},
 		"duration":32,

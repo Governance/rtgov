@@ -24,11 +24,15 @@ import org.overlord.rtgov.activity.server.impl.ActivityServerImpl;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.call.trace.CallTraceProcessor;
+import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
+import org.overlord.rtgov.call.trace.model.TraceNode;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 import org.overlord.rtgov.call.trace.util.CallTraceUtilTest;
 
 public class CallTraceProcessorActivitiesTest {
+	
+	private static final String[] IGNORE_PROPERTIES={"client-host","client-node","server-host","server-node"};
 
     protected CallTraceProcessor getCallTraceProcessor() {
         CallTraceProcessor ctp=new CallTraceProcessor();
@@ -73,6 +77,10 @@ public class CallTraceProcessorActivitiesTest {
         try {
             CallTrace ct=ctp.createCallTrace(identifier);
             
+            for (TraceNode node : ct.getTasks()) {
+                preProcessProperties(node);            		
+            }
+            
             compare(ct, testName);
             
         } catch (Exception e) {
@@ -80,7 +88,20 @@ public class CallTraceProcessorActivitiesTest {
             fail("Failed to create call trace: "+e);
         }
     }
-
+    
+    protected void preProcessProperties(TraceNode node) {
+    	for (String prop : IGNORE_PROPERTIES) {
+    		if (node.getProperties().containsKey(prop)) {
+    			node.getProperties().put(prop, "<ignore>");
+    		}
+    	}
+    	
+    	if (node instanceof Call) {
+    		for (TraceNode tn : ((Call)node).getTasks()) {
+    			preProcessProperties(tn);
+    		}
+    	}
+    }
 
     protected void compare(CallTrace ct, String testname) {
         

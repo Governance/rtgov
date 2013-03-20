@@ -48,7 +48,9 @@ import org.overlord.rtgov.analytics.service.ServiceDefinition;
  */
 public final class ServiceDefinitionUtil {
     
-    private static final Logger LOG=Logger.getLogger(ServiceDefinitionUtil.class.getName());
+    private static final String PRINCIPAL = "principal";
+
+	private static final Logger LOG=Logger.getLogger(ServiceDefinitionUtil.class.getName());
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
@@ -158,7 +160,7 @@ public final class ServiceDefinitionUtil {
                             
                             // Process the activities related to this
                             // matched interaction
-                            MEPDefinition resp=processServiceInvoked(sdefs, rqr, rps);
+                            MEPDefinition resp=processServiceInvoked(sdefs, actUnit, rqr, rps);
                             
                             // Check if any invocations are performed in the
                             // scope of this req/resp
@@ -236,12 +238,13 @@ public final class ServiceDefinitionUtil {
      * This method processes the service invocation.
      * 
      * @param sdefs The service definitions
+     * @param actUnit The activity unit
      * @param rqr The request received event
      * @param rps The response sent event
      * @return The response definition associated with the req/resp
      */
     protected static MEPDefinition processServiceInvoked(java.util.Map<String,ServiceDefinition> sdefs,
-                    RequestReceived rqr, ResponseSent rps) {
+    			ActivityUnit actUnit, RequestReceived rqr, ResponseSent rps) {
         MEPDefinition ret=null;
         
         // Get service definition associated with the service type
@@ -274,11 +277,7 @@ public final class ServiceDefinitionUtil {
                 
                 // Set the request and response ids
                 nrd.setRequestId(ActivityTypeId.createId(rqr));
-                nrd.setResponseId(ActivityTypeId.createId(rps));
-                
-                // Copy the properties
-                nrd.getProperties().putAll(rqr.getProperties());
-                nrd.getProperties().putAll(rps.getProperties());
+                nrd.setResponseId(ActivityTypeId.createId(rps));                
             }
             
             metrics = nrd.getMetrics();
@@ -295,10 +294,6 @@ public final class ServiceDefinitionUtil {
                 frd.setRequestId(ActivityTypeId.createId(rqr));
                 frd.setResponseId(ActivityTypeId.createId(rps));
                 
-                // Copy the properties
-                frd.getProperties().putAll(rqr.getProperties());
-                frd.getProperties().putAll(rps.getProperties());
-
                 op.getRequestFaults().add(frd);
             }
             
@@ -307,6 +302,28 @@ public final class ServiceDefinitionUtil {
             ret = frd;
         }
         
+        // Copy the properties
+        if (ret != null) {
+        	ret.getProperties().putAll(rqr.getProperties());
+        	ret.getProperties().putAll(rps.getProperties());
+        	
+        	// Check if principal defined for either activity
+        	if (!ret.getProperties().containsKey(PRINCIPAL)) {
+	        	if (rqr.getPrincipal() != null) {
+	        		ret.getProperties().put(PRINCIPAL, rqr.getPrincipal());
+	        	} else if (rps.getPrincipal() != null) {
+	        		ret.getProperties().put(PRINCIPAL, rps.getPrincipal());
+	        	}
+        	}
+        	
+        	// Specify the origin information
+        	if (actUnit != null && actUnit.getOrigin() != null) {
+	        	ret.getProperties().put("host", actUnit.getOrigin().getHost());
+	        	ret.getProperties().put("node", actUnit.getOrigin().getNode());
+        	}
+        }
+
+        // Calculate stats
         long duration=rps.getTimestamp()-rqr.getTimestamp();
         
         metrics.setAverage(((metrics.getAverage() * metrics.getCount())+duration)

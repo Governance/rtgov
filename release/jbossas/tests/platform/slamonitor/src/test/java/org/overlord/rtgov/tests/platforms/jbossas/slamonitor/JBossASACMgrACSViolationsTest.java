@@ -234,8 +234,8 @@ public class JBossASACMgrACSViolationsTest {
             
         	System.err.println("PROPS="+properties);
 
-        	if (properties.size() != 3) {
-                fail("Expecting 3 entries in property list: "+properties.size());
+        	if (properties.size() != 5) {
+                fail("Expecting 5 entries in property list: "+properties.size());
             }
             
             if (!properties.containsKey("customer")) {
