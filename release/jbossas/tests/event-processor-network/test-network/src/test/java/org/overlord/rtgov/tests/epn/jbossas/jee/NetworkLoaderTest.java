@@ -45,7 +45,8 @@ public class NetworkLoaderTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        String version=System.getProperty("rtgov.version");
+        String rtgovversion=System.getProperty("rtgov.version");
+        String jacksonversion=System.getProperty("jackson.version");
 
         return ShrinkWrap.create(WebArchive.class)
             .addClass(org.overlord.rtgov.tests.epn.Child.class)
@@ -60,11 +61,11 @@ public class NetworkLoaderTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.rtgov.event-processor-network:epn-core:"+version,
-                    		"org.overlord.rtgov.event-processor:ep-core:"+version,
-                            "org.overlord.rtgov.event-processor-network:epn-container-jee:"+version,
-                            "org.codehaus.jackson:jackson-core-asl:1.9.2",
-                            "org.codehaus.jackson:jackson-mapper-asl:1.9.2")
+                    .artifacts("org.overlord.rtgov.event-processor-network:epn-core:"+rtgovversion,
+                    		"org.overlord.rtgov.event-processor:ep-core:"+rtgovversion,
+                            "org.overlord.rtgov.event-processor-network:epn-container-jee:"+rtgovversion,
+                            "org.codehaus.jackson:jackson-core-asl:"+jacksonversion,
+                            "org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion)
                     .resolveAsFiles());
     }
 

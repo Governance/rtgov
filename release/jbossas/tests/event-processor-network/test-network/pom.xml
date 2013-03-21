@@ -108,6 +108,10 @@
 									<name>rtgov.version</name>
 									<value>${project.version}</value>
 								</property>
+								<property>
+									<name>jackson.version</name>
+									<value>${jackson.version}</value>
+								</property>
 							</systemProperties>
 							<includes>
 								<include>**/jee/*TestCase.java</include>

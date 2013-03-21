@@ -59,7 +59,9 @@ public class ActivityServerRESTTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        String version=System.getProperty("rtgov.version");
+        String rtgovversion=System.getProperty("rtgov.version");
+        String jacksonversion=System.getProperty("jackson.version");
+        String mvelversion=System.getProperty("mvel.version");
         
         return ShrinkWrap.create(WebArchive.class, "overlord-rtgov.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -67,13 +69,13 @@ public class ActivityServerRESTTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.rtgov.activity-management:activity:"+version,
-                    		"org.overlord.rtgov.activity-management:activity-server-impl:"+version,
-                            "org.overlord.rtgov.activity-management:activity-store-mem:"+version,
-                            "org.overlord.rtgov.activity-management:activity-server-rests:"+version,
-                            "org.codehaus.jackson:jackson-core-asl:1.9.2",
-                            "org.codehaus.jackson:jackson-mapper-asl:1.9.2",
-                            "org.mvel:mvel2:2.1.3.Final")
+                    .artifacts("org.overlord.rtgov.activity-management:activity:"+rtgovversion,
+                    		"org.overlord.rtgov.activity-management:activity-server-impl:"+rtgovversion,
+                            "org.overlord.rtgov.activity-management:activity-store-mem:"+rtgovversion,
+                            "org.overlord.rtgov.activity-management:activity-server-rests:"+rtgovversion,
+                            "org.codehaus.jackson:jackson-core-asl:"+jacksonversion,
+                            "org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion,
+                            "org.mvel:mvel2:"+mvelversion)
                     .resolveAsFiles());
     }
     

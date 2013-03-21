@@ -100,6 +100,14 @@
 							<name>rtgov.version</name>
 							<value>${project.version}</value>
 						</property>
+						<property>
+							<name>jackson.version</name>
+							<value>${jackson.version}</value>
+						</property>
+						<property>
+							<name>mvel.version</name>
+							<value>${mvel.version}</value>
+						</property>
 					</systemProperties>
 					<includes>
 						<include>**/*TestCase.java</include>

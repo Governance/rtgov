@@ -63,6 +63,7 @@
 		<gadgets.version>1.0.0.20130320-M4</gadgets.version>
 		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
 		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
+		<jackson.version>1.9.2</jackson.version>			<!-- Passed into junit tests -->
 		<javaee-api.version>6.0</javaee-api.version>
 		<javassist.version>3.9.0.GA</javassist.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
@@ -71,7 +72,7 @@
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jta.version>1.0.0.Final</jta.version>
 		<kie.version>6.0.0.Alpha6</kie.version>
-		<mvel.version>2.1.3.Final</mvel.version>
+		<mvel.version>2.1.3.Final</mvel.version>			<!-- Passed into junit tests -->
 		<switchyard.version>0.8.0-SNAPSHOT</switchyard.version>
 	</properties>
 

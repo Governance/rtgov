@@ -70,7 +70,8 @@ public class CallTraceRESTTest {
 
     @Deployment
     public static WebArchive createDeployment() {
-        String version=System.getProperty("rtgov.version");
+        String rtgovversion=System.getProperty("rtgov.version");
+        String jacksonversion=System.getProperty("jackson.version");
         
         return ShrinkWrap.create(WebArchive.class, "overlord-rtgov.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -78,13 +79,13 @@ public class CallTraceRESTTest {
             .addAsLibraries(
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.rtgov.activity-management:activity-server-impl:"+version,
-                    		"org.overlord.rtgov.activity-management:activity:"+version,
-                            "org.overlord.rtgov.activity-management:activity-store-mem:"+version,
-                            "org.overlord.rtgov.activity-analysis:call-trace:"+version,
-                            "org.overlord.rtgov.content.services:call-trace-rests:"+version,
-                            "org.codehaus.jackson:jackson-core-asl:1.9.2",
-                            "org.codehaus.jackson:jackson-mapper-asl:1.9.2")
+                    .artifacts("org.overlord.rtgov.activity-management:activity-server-impl:"+rtgovversion,
+                    		"org.overlord.rtgov.activity-management:activity:"+rtgovversion,
+                            "org.overlord.rtgov.activity-management:activity-store-mem:"+rtgovversion,
+                            "org.overlord.rtgov.activity-analysis:call-trace:"+rtgovversion,
+                            "org.overlord.rtgov.content.services:call-trace-rests:"+rtgovversion,
+                            "org.codehaus.jackson:jackson-core-asl:"+jacksonversion,
+                            "org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion)
                     .resolveAsFiles());
     }
     
