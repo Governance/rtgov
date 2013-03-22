@@ -120,10 +120,23 @@
 								<phase>install</phase>
 								<configuration>
 									<target>
-										<echo message="Install sample at: ${env.JBOSS_HOME}"/>
+										<echo message="Install sample ${project.build.finalName} at: ${env.JBOSS_HOME}"/>
 										<copy todir="${env.JBOSS_HOME}/standalone/deployments" >
 											<fileset file="target/*.war" />
 										</copy>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>uninstall</id>
+								<phase>clean</phase>
+								<configuration>
+									<target>
+										<echo message="Uninstall sample ${project.build.finalName} from: ${env.JBOSS_HOME}"/>
+										<delete file="${env.JBOSS_HOME}/standalone/deployments/${project.build.finalName}.war" />
 									</target>
 								</configuration>
 								<goals>
