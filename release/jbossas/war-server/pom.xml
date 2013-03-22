@@ -4,7 +4,7 @@
 	<groupId>org.overlord.rtgov.release.jbossas</groupId>
 	<artifactId>overlord-rtgov</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0.20130322-M4</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>Overlord RTGov::Release::JBossAS::War-Server</name>
 
 	<dependencies>		

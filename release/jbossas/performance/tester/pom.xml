@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.overlord.rtgov.release.jbossas</groupId>
 		<artifactId>performance</artifactId>
-		<version>1.0.0.20130322-M4</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<dependencies>
