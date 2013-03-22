@@ -4,7 +4,7 @@
 	<groupId>org.overlord.rtgov.release.jbossas</groupId>
 	<artifactId>overlord-rtgov-client-rest</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0.20130322-M4</version>
 	<name>Overlord RTGov::Release::JBossAS::War-Client-REST</name>
 
 	<dependencies>		
