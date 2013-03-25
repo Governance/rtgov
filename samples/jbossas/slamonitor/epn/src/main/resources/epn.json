@@ -8,7 +8,7 @@
     {
       "name" : "SLAViolations",
       "sourceNodes" : [ ],
-      "destinationSubjects" : [ ],
+      "destinationSubjects" : [ "Situations" ],
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {

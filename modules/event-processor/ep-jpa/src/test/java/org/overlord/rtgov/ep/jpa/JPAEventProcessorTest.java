@@ -27,7 +27,7 @@ public class JPAEventProcessorTest {
     public void testPersistEvent() {
     	JPAEventProcessor ep=new JPAEventProcessor();
     	
-    	ep.setEntityManagerName("overlord-rtgov-ep-jpa");
+    	ep.setEntityManager("overlord-rtgov-ep-jpa");
     	
     	try {
     		ep.init();
@@ -42,6 +42,7 @@ public class JPAEventProcessorTest {
     	try {
 			ep.process(null, te1, 1);
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail("Failed to process test event 1 with JPA event processor: "+e);
 		}
     	   	
@@ -55,7 +56,7 @@ public class JPAEventProcessorTest {
 			fail("Failed to process test event 2 with JPA event processor: "+e);
 		}
     	
-    	TestEvent result=ep.getEntityManager().find(TestEvent.class, "1");
+    	TestEvent result=ep.getEntityMgr().find(TestEvent.class, "1");
     	
     	if (result == null) {
     		fail("Result is null");

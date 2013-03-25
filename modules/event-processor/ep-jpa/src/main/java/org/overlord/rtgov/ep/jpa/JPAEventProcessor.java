@@ -40,9 +40,9 @@ public class JPAEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(JPAEventProcessor.class.getName());
 
-    private EntityManager _entityManager=null;
+    private EntityManager _em=null;
     private EntityManagerFactory _emf=null;
-    private String _entityManagerName=null;
+    private String _entityManager=null;
     
     @Inject
     private RTGovPropertiesProvider _properties=null;
@@ -52,8 +52,8 @@ public class JPAEventProcessor extends EventProcessor {
      * 
      * @return The entity manager name
      */
-    public String getEntityManagerName() {
-        return (_entityManagerName);
+    public String getEntityManager() {
+        return (_entityManager);
     }
     
     /**
@@ -61,8 +61,8 @@ public class JPAEventProcessor extends EventProcessor {
      * 
      * @param name The entity manager name
      */
-    public void setEntityManagerName(String name) {
-        _entityManagerName = name;
+    public void setEntityManager(String name) {
+        _entityManager = name;
     }
     
     /**
@@ -70,15 +70,15 @@ public class JPAEventProcessor extends EventProcessor {
      * 
      * @return The entity manager
      */
-    protected EntityManager getEntityManager() {
-    	return (_entityManager);
+    protected EntityManager getEntityMgr() {
+    	return (_em);
     }
     
     /**
      * {@inheritDoc}
      * 
      */
-    public void init() {
+    public void init() throws Exception {
         
         if (_emf == null) {
             try {
@@ -97,13 +97,13 @@ public class JPAEventProcessor extends EventProcessor {
                                 LOG.fine("Properties passed to entity manager factory creation: "+props);                
                             }
                             
-                            _emf = Persistence.createEntityManagerFactory(getEntityManagerName(), props);
+                            _emf = Persistence.createEntityManagerFactory(getEntityManager(), props);
                     
                         } catch (Throwable e) {
                             LOG.log(Level.SEVERE, MessageFormat.format(
                                     java.util.PropertyResourceBundle.getBundle(
                                             "ep-jpa.Messages").getString("EP-JPA-1"),
-                                            getEntityManagerName()), e);
+                                            getEntityManager()), e);
                         }
                     }
                 }).get(5000, TimeUnit.MILLISECONDS);
@@ -111,23 +111,27 @@ public class JPAEventProcessor extends EventProcessor {
                 LOG.log(Level.SEVERE, MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
                                 "ep-jpa.Messages").getString("EP-JPA-2"),
-                                getEntityManagerName()), e);
+                                getEntityManager()), e);
             }
         }
             
-        if (_entityManager == null) {
+        if (_em == null) {
             try {
-                _entityManager = _emf.createEntityManager();
+            	_em = _emf.createEntityManager();
                 
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("EntityManager '"+getEntityManagerName()+"' created");                
+                    LOG.fine("EntityManager '"+getEntityManager()+"' created");                
                 }
             } catch (Throwable e) {
                 LOG.log(Level.SEVERE, MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
                                 "ep-jpa.Messages").getString("EP-JPA-3"),
-                                getEntityManagerName()), e);
+                                getEntityManager()), e);
             }
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("JPAEventProcessor init: entity manager="+_entityManager+" em="+_em);
         }
     }
     
@@ -140,11 +144,11 @@ public class JPAEventProcessor extends EventProcessor {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Process event '"+event+" from source '"+source
-                    +"' on JPA Event Processor '"+getEntityManagerName()
+                    +"' on JPA Event Processor '"+getEntityManager()
                     +"'");
         }
 
-        _entityManager.persist(event);
+        _em.persist(event);
 
         return (ret);
     }

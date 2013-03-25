@@ -52,7 +52,7 @@ public class JPAActivityStore implements ActivityStore {
     private static final String ENTITY_MANAGER_PROPERTY = "entity.manager";
     private static final String DEFAULT_TRANSACTION_MANAGER = "java:jboss/TransactionManager";
 
-    private static final String EMF_NAME = "overlord-rtgov-activity";
+    private static final String EMF_NAME = "overlord-rtgov";
 
     private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
     

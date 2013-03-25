@@ -10,6 +10,7 @@
 
 		<class>org.overlord.rtgov.activity.model.ActivityUnit</class>
 		<class>org.overlord.rtgov.activity.model.ActivityType</class>
+		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
 		<class>org.overlord.rtgov.activity.model.Context</class>
 		<class>org.overlord.rtgov.activity.model.app.CustomActivity</class>
 		<class>org.overlord.rtgov.activity.model.app.LogMessage</class>
@@ -34,6 +35,7 @@
 
 		<class>org.overlord.rtgov.activity.model.ActivityUnit</class>
 		<class>org.overlord.rtgov.activity.model.ActivityType</class>
+		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
 		<class>org.overlord.rtgov.activity.model.Context</class>
 		<class>org.overlord.rtgov.activity.model.app.CustomActivity</class>
 		<class>org.overlord.rtgov.activity.model.app.LogMessage</class>

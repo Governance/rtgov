@@ -8,6 +8,10 @@
   {
     "nodeName" : "ServiceDefinitions",
     "subject" : "ActivityUnits"
+  },
+  {
+    "nodeName" : "SituationsStore",
+    "subject" : "Situations"
   } ],
   "nodes" : [
     {
@@ -49,6 +53,14 @@
       	"type" : "Results",
       	"subject" : "ServiceResponseTimes"
       } ]
+    },{
+      "name" : "SituationsStore",
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.ep.jpa.JPAEventProcessor",
+        "entityManager" : "overlord-rtgov-epn-non-jta"
+      }
     }
   ]
 }
