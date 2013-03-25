@@ -1,24 +1,31 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.rtgov.activity-analysis</groupId>
-	<artifactId>analytics</artifactId> 
+	<groupId>org.overlord.rtgov.event-processor</groupId>
+	<artifactId>ep-jpa</artifactId> 
 	<packaging>jar</packaging>
-	<name>Overlord RTGov::Modules::Activity Analysis::Analytics</name>
+	<name>Overlord RTGov::Modules::Event Processor::EP JPA</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
-		<artifactId>activity-analysis</artifactId>
+		<artifactId>event-processor</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
-	<dependencies>
+ 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity</artifactId>
-           	<version>${project.version}</version>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-core</artifactId>
+			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-util</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
@@ -29,13 +36,6 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.hibernate.javax.persistence</groupId>
-			<artifactId>hibernate-jpa-2.0-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
-		
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -101,8 +101,8 @@
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<scope>test</scope>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

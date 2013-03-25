@@ -7,6 +7,7 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>org.overlord.rtgov.activity.model.ActivityUnit</class>
 		<class>org.overlord.rtgov.activity.model.ActivityType</class>
+		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
 		<class>org.overlord.rtgov.activity.model.Context</class>
 		<class>org.overlord.rtgov.activity.model.app.CustomActivity</class>
 		<class>org.overlord.rtgov.activity.model.app.LogMessage</class>
@@ -36,6 +37,7 @@
 		<provider>org.hibernate.ogm.jpa.HibernateOgmPersistence</provider>
 		<class>org.overlord.rtgov.activity.model.ActivityUnit</class>
 		<class>org.overlord.rtgov.activity.model.ActivityType</class>
+		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
 		<class>org.overlord.rtgov.activity.model.Context</class>
 		<class>org.overlord.rtgov.activity.model.app.CustomActivity</class>
 		<class>org.overlord.rtgov.activity.model.app.LogMessage</class>

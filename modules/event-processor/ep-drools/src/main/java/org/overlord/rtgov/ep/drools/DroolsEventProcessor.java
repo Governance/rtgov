@@ -200,7 +200,7 @@ public class DroolsEventProcessor extends EventProcessor {
         } catch (Throwable e) {
             LOG.log(Level.SEVERE, MessageFormat.format(
                             java.util.PropertyResourceBundle.getBundle(
-                            "ep-drools.Messages").getString("EP-DROOLS-2"),
+                            "ep-drools.Messages").getString("EP-DROOLS-1"),
                             droolsRuleBase, getRuleName()), e);
         }
 

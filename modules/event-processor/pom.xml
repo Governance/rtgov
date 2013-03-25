@@ -16,6 +16,7 @@
 	<modules>
 		<module>ep-core</module>
 		<module>ep-drools</module>
+		<module>ep-jpa</module>
 		<module>ep-mvel</module>
 		<module>ep-infinispan</module>
 	</modules>
