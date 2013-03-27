@@ -89,9 +89,24 @@ public class AbstractEPNManagerTest {
     }
 
     @Test
+    public void testRegisterInvalidNetwork() {
+        Network net=new Network();
+        
+        AbstractEPNManager mgr=getManager();
+        
+        try {
+            mgr.register(net);
+            
+            fail("Network registration should fail due to validation issues");
+        } catch(Exception e) {
+        }
+    }
+
+    @Test
     public void testNetworkListenerNotified() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
+        net.setVersion(VER1);
         
         Node n1=new Node();
         n1.setName(N1);
@@ -164,6 +179,7 @@ public class AbstractEPNManagerTest {
     public void testNetworkAndNodeLookup() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
+        net.setVersion(VER1);
         //net.setRootNodeName(N1);
         
         Node n1=new Node();
@@ -212,6 +228,7 @@ public class AbstractEPNManagerTest {
     public void testRegisterNotificationListenerNotifyProcessed() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
+        net.setVersion(VER1);
         
         TestEventProcessorA tep=new TestEventProcessorA();
         
@@ -289,6 +306,7 @@ public class AbstractEPNManagerTest {
     public void testRegisterNotificationListenerDontNotifyProcessed() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
+        net.setVersion(VER1);
         
         TestEventProcessorA tep=new TestEventProcessorA();
         

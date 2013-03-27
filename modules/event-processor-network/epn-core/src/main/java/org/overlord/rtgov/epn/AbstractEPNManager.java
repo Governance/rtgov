@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.overlord.rtgov.common.util.VersionUtil;
+import org.overlord.rtgov.epn.validation.EPNValidationListener;
+import org.overlord.rtgov.epn.validation.EPNValidator;
 
 /**
  * This class represents the abstract Event Process Network Manager
@@ -53,9 +55,21 @@ public abstract class AbstractEPNManager implements EPNManager {
      */
     public void register(Network network) throws Exception {
         
-        LOG.info("Registering EPN network '"+network.getName()+"' version["+network.getVersion()+"]");
+        LOG.info(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                "epn-core.Messages").getString("EPN-CORE-13"),
+                network.getName(), network.getVersion()));
         
         network.init(getContainer());
+        
+        // Validate network
+        if (!EPNValidator.validate(network, getValidationListener())) {
+        	// Close the network
+        	network.close(getContainer());
+        	
+        	throw new Exception(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                    "epn-core.Messages").getString("EPN-CORE-12"),
+                    network.getName(), network.getVersion()));
+        }
         
         synchronized (_networkMap) {
             NetworkList nl=_networkMap.get(network.getName());
@@ -85,11 +99,28 @@ public abstract class AbstractEPNManager implements EPNManager {
     }
     
     /**
+     * This method returns the validation listener.
+     * 
+     * @return The validation listener
+     */
+    protected EPNValidationListener getValidationListener() {
+    	return (new EPNValidationListener() {
+
+			public void error(Network epn, Object target, String issue) {
+				LOG.severe(issue);
+			}
+    		
+    	});
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void unregister(String networkName, String version) throws Exception {
         
-        LOG.info("Unregistering EPN network '"+networkName+"' version["+version+"]");
+        LOG.info(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                "epn-core.Messages").getString("EPN-CORE-14"),
+                networkName, version));
         
         Network network=null;
 

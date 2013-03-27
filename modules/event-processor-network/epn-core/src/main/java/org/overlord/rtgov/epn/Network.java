@@ -225,17 +225,26 @@ public class Network implements NetworkMBean {
     }
 
     /**
+     * This method initializes the name to node map.
+     * 
+     */
+    protected void initNameMap() {
+        // Initialize mapping from name to node
+        for (Node node : _nodes) {
+            _namedNodes.put(node.getName(), node);
+        }
+    }
+    
+    /**
      * This method initializes the network.
      * 
      * @param container The container
      * @throws Exception Failed to initialize the network
      */
     protected void init(EPNContainer container) throws Exception {
-        // Initialize mapping from name to node
-        for (Node node : _nodes) {
-            _namedNodes.put(node.getName(), node);
-        }
-            
+        
+    	initNameMap();
+    	
         for (Node node : _nodes) {
            // Initialize channels
             if (node.getSourceNodes() != null) {

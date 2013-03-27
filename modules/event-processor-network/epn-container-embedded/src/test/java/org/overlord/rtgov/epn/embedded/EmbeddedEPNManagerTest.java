@@ -45,7 +45,7 @@ public class EmbeddedEPNManagerTest {
     public void testEventTransformedForChild() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
-        net.setVersion(null);
+        net.setVersion(VER1);
         
         Subscription sub=new Subscription();
         sub.setSubject(TEST_SUBJECT);
@@ -106,7 +106,7 @@ public class EmbeddedEPNManagerTest {
     public void testEventRetries() {
         Network net=new Network();
         net.setName(TEST_NETWORK);
-        net.setVersion(null);
+        net.setVersion(VER1);
         
         Subscription sub=new Subscription();
         sub.setSubject(TEST_SUBJECT);
@@ -157,7 +157,7 @@ public class EmbeddedEPNManagerTest {
     public void testMultipleEntryPointsForSameSubject() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setVersion(null);
+        net1.setVersion(VER1);
         
         Subscription sub1=new Subscription();
         sub1.setSubject(TEST_SUBJECT);
@@ -172,7 +172,7 @@ public class EmbeddedEPNManagerTest {
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
-        net2.setVersion(null);
+        net2.setVersion(VER1);
         
         Subscription sub2=new Subscription();
         sub2.setSubject(TEST_SUBJECT);
@@ -216,7 +216,7 @@ public class EmbeddedEPNManagerTest {
     public void testEntryPointsForDifferentSubjects() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setVersion(null);
+        net1.setVersion(VER1);
         
         Subscription sub1=new Subscription();
         sub1.setSubject(TEST_SUBJECT);
@@ -231,7 +231,7 @@ public class EmbeddedEPNManagerTest {
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
-        net2.setVersion(null);
+        net2.setVersion(VER1);
         
         Subscription sub2=new Subscription();
         sub2.setSubject(TEST_SUBJECT2);
@@ -280,7 +280,7 @@ public class EmbeddedEPNManagerTest {
     public void testMultipleEntryPointsForSameSubjectRemoved() {
         Network net1=new Network();
         net1.setName(TEST_NETWORK);
-        net1.setVersion(null);
+        net1.setVersion(VER1);
         
         Subscription sub1=new Subscription();
         sub1.setSubject(TEST_SUBJECT);
@@ -295,7 +295,7 @@ public class EmbeddedEPNManagerTest {
         
         Network net2=new Network();
         net2.setName(TEST_NETWORK2);
-        net2.setVersion(null);
+        net2.setVersion(VER1);
         
         Subscription sub2=new Subscription();
         sub2.setSubject(TEST_SUBJECT);

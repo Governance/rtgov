@@ -199,7 +199,7 @@ public class Node {
      * 
      * @param notifications The list of notifications
      */
-    public void setNotificationEnabled(java.util.List<Notification> notifications) {
+    public void setNotifications(java.util.List<Notification> notifications) {
         _notifications = notifications;
     }
     
