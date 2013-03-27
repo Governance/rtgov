@@ -79,6 +79,11 @@
 				<version>${switchyard.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-extensions-wsdl</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.switchyard.components</groupId>
 				<artifactId>switchyard-component-bean</artifactId>
 				<version>${switchyard.version}</version>

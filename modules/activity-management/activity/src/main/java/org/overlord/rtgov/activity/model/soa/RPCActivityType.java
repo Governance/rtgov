@@ -38,6 +38,7 @@ public abstract class RPCActivityType extends MessageExchange implements java.io
     private static final int VERSION = 1;
 
     private String _serviceType=null;
+    private String _interface=null;
     private String _operation=null;
     private String _fault=null;
 
@@ -55,6 +56,7 @@ public abstract class RPCActivityType extends MessageExchange implements java.io
     public RPCActivityType(RPCActivityType rpc) {
         super(rpc);
         _serviceType = rpc._serviceType;
+        _interface = rpc._interface;
         _operation = rpc._operation;
         _fault = rpc._fault;
     }
@@ -78,21 +80,39 @@ public abstract class RPCActivityType extends MessageExchange implements java.io
     public abstract boolean isRequest();
     
     /**
-     * This method sets the service type.
+     * This method sets the optional service type.
      * 
-     * @param serviceType The service type
+     * @param serviceType The optional service type
      */
     public void setServiceType(String serviceType) {
         _serviceType = serviceType;
     }
     
     /**
-     * This method gets the service type.
+     * This method gets the optional service type.
      * 
-     * @return The service type
+     * @return The optional service type
      */
     public String getServiceType() {
         return (_serviceType);
+    }
+    
+    /**
+     * This method sets the interface.
+     * 
+     * @param intf The interface
+     */
+    public void setInterface(String intf) {
+    	_interface = intf;
+    }
+    
+    /**
+     * This method gets the interface.
+     * 
+     * @return The interface
+     */
+    public String getInterface() {
+        return (_interface);
     }
     
     /**
@@ -188,6 +208,7 @@ public abstract class RPCActivityType extends MessageExchange implements java.io
     public String toString() {
         return (getClass().getSimpleName()+":"
                 +" serviceType="+_serviceType
+                +" interface="+_interface
                 +" operation="+_operation
                 +" fault="+_fault
                 +" messageType="+getMessageType()
@@ -203,6 +224,7 @@ public abstract class RPCActivityType extends MessageExchange implements java.io
         out.writeInt(VERSION);
         
         out.writeObject(_serviceType);
+        out.writeObject(_interface);
         out.writeObject(_operation);
         out.writeObject(_fault);
     }
@@ -217,6 +239,7 @@ public abstract class RPCActivityType extends MessageExchange implements java.io
         in.readInt(); // Consume version, as not required for now
         
         _serviceType = (String)in.readObject();
+        _interface = (String)in.readObject();
         _operation = (String)in.readObject();
         _fault = (String)in.readObject();
     }

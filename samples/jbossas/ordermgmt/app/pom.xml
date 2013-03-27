@@ -42,6 +42,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-extensions-wsdl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.switchyard.components</groupId>
 			<artifactId>switchyard-component-bean</artifactId>
 			<scope>provided</scope>
@@ -111,7 +116,7 @@
                     </webResources>
                     <archive>
                         <manifestEntries>
-                            <Dependencies>deployment.overlord-rtgov.war</Dependencies>
+                            <Dependencies>deployment.overlord-rtgov.war, org.switchyard.api.extensions.wsdl</Dependencies>
                         </manifestEntries>
                     </archive>
                 </configuration>

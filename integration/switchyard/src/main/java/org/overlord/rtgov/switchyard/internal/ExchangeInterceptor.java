@@ -38,6 +38,9 @@ import org.switchyard.Property;
 import org.switchyard.bus.camel.audit.Audit;
 import org.switchyard.bus.camel.audit.Auditor;
 import org.switchyard.bus.camel.processors.Processors;
+import org.switchyard.extensions.wsdl.WSDLService;
+import org.switchyard.metadata.ServiceInterface;
+import org.switchyard.metadata.java.JavaService;
 import org.switchyard.security.credential.Credential;
 
 /**
@@ -156,7 +159,13 @@ public class ExchangeInterceptor implements Auditor {
                 
                     RequestSent sent=new RequestSent();
                     
-                    sent.setServiceType(serviceType.toString());   
+                    // Only report service type if provider is not a binding
+                    if (exchange.getProvider() == null
+                            || !exchange.getProvider().getProviderMetadata().isBinding()) {
+                    	sent.setServiceType(serviceType.toString()); 
+                    }
+                    
+                    sent.setInterface(getInterface(exchange));                
                     sent.setOperation(opName);
                     sent.setMessageId(messageId);
                     
@@ -168,6 +177,7 @@ public class ExchangeInterceptor implements Auditor {
                     RequestReceived recvd=new RequestReceived();
                     
                     recvd.setServiceType(serviceType.toString());                
+                    recvd.setInterface(getInterface(exchange));                
                     recvd.setOperation(opName);
                     recvd.setMessageId(messageId);
                     
@@ -179,7 +189,13 @@ public class ExchangeInterceptor implements Auditor {
                         || !exchange.getProvider().getProviderMetadata().isBinding()) {
                     ResponseSent sent=new ResponseSent();
                                     
-                    sent.setServiceType(serviceType.toString());                
+                    // Only report service type if provider is not a binding
+                    if (exchange.getProvider() == null
+                            || !exchange.getProvider().getProviderMetadata().isBinding()) {
+                    	sent.setServiceType(serviceType.toString()); 
+                    }
+
+                    sent.setInterface(getInterface(exchange));                
                     sent.setOperation(opName);
                     sent.setMessageId(messageId);
                     sent.setReplyToId(relatesTo);
@@ -195,6 +211,7 @@ public class ExchangeInterceptor implements Auditor {
                     ResponseReceived recvd=new ResponseReceived();
                     
                     recvd.setServiceType(serviceType.toString());                
+                    recvd.setInterface(getInterface(exchange));                
                     recvd.setOperation(opName);
                     recvd.setMessageId(messageId);
                     recvd.setReplyToId(relatesTo);
@@ -203,6 +220,36 @@ public class ExchangeInterceptor implements Auditor {
                 }
             }
         }
+    }
+    
+    /**
+     * This method extracts the interface from the exchange details.
+     * 
+     * @param exchange The exchange
+     * @return The interface
+     */
+    protected String getInterface(Exchange exchange) {
+    	String ret=null;
+    	ServiceInterface intf=null;
+    	
+    	if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
+    		intf = exchange.getConsumer().getInterface();
+    	} else {
+    		intf = exchange.getProvider().getInterface();
+    	}
+    	
+    	if (JavaService.TYPE.equals(intf.getType())) {
+    		ret = ((JavaService)intf).getJavaInterface().getName();
+    	} else if (WSDLService.TYPE.equals(intf.getType())) {
+    		// TODO: Can remove this guard once switchyard 1.0 is released
+    		try {
+    			ret = ((WSDLService)intf).getPortType().toString();
+    		} catch (Throwable t) {
+    			LOG.log(Level.SEVERE, "Older version of switchyard. Require 1.0 or older", t);
+    		}
+    	}
+    	
+    	return (ret);
     }
     
     /**
