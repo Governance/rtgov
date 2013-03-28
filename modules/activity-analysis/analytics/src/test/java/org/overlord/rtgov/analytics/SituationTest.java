@@ -139,4 +139,40 @@ public class SituationTest {
 		*/
 	}
 
+	@Test
+	public void testCreateSubject1() {
+		if (Situation.createSubject() != null) {
+			fail("Should be null subject");
+		}
+	}
+
+	@Test
+	public void testCreateSubject2() {
+		if (!Situation.createSubject("hello").equals("hello")) {
+			fail("Incorrect one subject part");
+		}
+	}
+
+	@Test
+	public void testCreateSubject3() {
+		if (!Situation.createSubject("hello", "world").equals("hello"+Situation.SUBJECT_SEPARATOR_CHAR+"world")) {
+			fail("Incorrect two subject part");
+		}
+	}
+
+	@Test
+	public void testCreateSubject4() {
+		if (!Situation.createSubject("hello", null, "world").equals("hello"+Situation.SUBJECT_SEPARATOR_CHAR
+				+Situation.SUBJECT_SEPARATOR_CHAR+"world")) {
+			fail("Incorrect missing middle subject part");
+		}
+	}
+
+	@Test
+	public void testCreateSubject5() {
+		if (!Situation.createSubject("hello", null, "world", null).equals("hello"+Situation.SUBJECT_SEPARATOR_CHAR
+				+Situation.SUBJECT_SEPARATOR_CHAR+"world")) {
+			fail("Incorrect missing middle with missing end subject part");
+		}
+	}
 }

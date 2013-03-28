@@ -18,7 +18,8 @@ then
 		Situation situation=new Situation();
 		
 		situation.setType("SLA Violation");
-		situation.setSubject($rt.getServiceType()+"/"+$rt.getOperation());
+		situation.setSubject(Situation.createSubject($rt.getInterface(), $rt.getOperation(),
+						$rt.getServiceType(), $rt.getFault()));
 		situation.setTimestamp(System.currentTimeMillis());
 		
 		situation.getProperties().putAll($rt.getProperties());

@@ -33,9 +33,10 @@ public class ResponseTime implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    private String _serviceType=null;
+    private String _interface=null;
     private String _operation=null;
     private String _fault=null;
+    private String _serviceType=null;
     private long _avg=0;
     private long _max=0;
     private long _min=0;
@@ -61,9 +62,10 @@ public class ResponseTime implements java.io.Externalizable {
      * @param rt The source to copy
      */
     public ResponseTime(ResponseTime rt) {
-        _serviceType = rt.getServiceType();
+        _interface = rt.getInterface();
         _operation = rt.getOperation();
         _fault = rt.getFault();
+        _serviceType = rt.getServiceType();
         _avg = rt.getAverage();
         _max = rt.getMax();
         _min = rt.getMin();
@@ -77,21 +79,21 @@ public class ResponseTime implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the service type.
+     * This method sets the interface.
      * 
-     * @param serviceType The service type
+     * @param intf The interface
      */
-    public void setServiceType(String serviceType) {
-        _serviceType = serviceType;
+    public void setInterface(String intf) {
+        _interface = intf;
     }
     
     /**
-     * This method gets the service type.
+     * This method gets the interface.
      * 
-     * @return The service type
+     * @return The interface
      */
-    public String getServiceType() {
-        return (_serviceType);
+    public String getInterface() {
+        return (_interface);
     }
     
     /**
@@ -128,6 +130,24 @@ public class ResponseTime implements java.io.Externalizable {
      */
     public String getFault() {
         return (_fault);
+    }
+    
+    /**
+     * This method sets the service type.
+     * 
+     * @param serviceType The service type
+     */
+    public void setServiceType(String serviceType) {
+        _serviceType = serviceType;
+    }
+    
+    /**
+     * This method gets the service type.
+     * 
+     * @return The service type
+     */
+    public String getServiceType() {
+        return (_serviceType);
     }
     
     /**
@@ -289,9 +309,10 @@ public class ResponseTime implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_serviceType);
+        out.writeObject(_interface);
         out.writeObject(_operation);
         out.writeObject(_fault);
+        out.writeObject(_serviceType);
         out.writeLong(_avg);
         out.writeLong(_max);
         out.writeLong(_min);
@@ -315,9 +336,10 @@ public class ResponseTime implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _serviceType = (String)in.readObject();
+        _interface = (String)in.readObject();
         _operation = (String)in.readObject();
         _fault = (String)in.readObject();
+        _serviceType = (String)in.readObject();
         _avg = in.readLong();
         _max = in.readLong();
         _min = in.readLong();

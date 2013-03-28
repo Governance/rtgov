@@ -155,6 +155,7 @@ public class RESTCallTraceServer {
         
         Call c0=new Call();
         c0.setComponent("TestService1");
+        c0.setInterface("intf1");
         c0.setOperation("op1");
         c0.setRequest("<op1/>");
         c0.setResponse("<op1/>");
@@ -180,6 +181,7 @@ public class RESTCallTraceServer {
         
         Call c3=new Call();
         c3.setComponent("TestService2");
+        c3.setInterface("intf2");
         c3.setOperation("op2");
         c3.setRequest("<op2/>");
         c3.setResponse("<op2/>");
@@ -192,6 +194,7 @@ public class RESTCallTraceServer {
         
         Call c4=new Call();
         c4.setComponent("TestService3");
+        c4.setInterface("intf3");
         c4.setOperation("op3");
         c4.setRequest("<op3/>");
         c4.setResponse("<op3/>");

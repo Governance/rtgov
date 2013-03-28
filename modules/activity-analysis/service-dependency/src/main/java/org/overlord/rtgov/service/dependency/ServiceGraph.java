@@ -74,7 +74,7 @@ public class ServiceGraph {
         ServiceNode ret=null;
         
         for (ServiceNode sn : _nodes) {
-            if (sn.getService().getServiceType().equals(serviceType)) {
+            if (sn.getService().getInterface().equals(serviceType)) {
                 ret = sn;
                 break;
             }

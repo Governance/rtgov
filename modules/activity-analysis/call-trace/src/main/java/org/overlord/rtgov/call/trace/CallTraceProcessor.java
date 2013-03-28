@@ -449,8 +449,9 @@ public class CallTraceProcessor {
     protected static Call createCall(RPCActivityType at) {
         Call call = new Call();
         
-        call.setComponent(at.getServiceType());
+        call.setInterface(at.getInterface());
         call.setOperation(at.getOperation());
+        call.setComponent(at.getServiceType());
         
         call.setPrincipal(at.getPrincipal());
         

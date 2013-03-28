@@ -30,7 +30,7 @@ public class InvocationDefinition implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    private String _serviceType=null;
+    private String _interface=null;
     private String _operation=null;
     private String _fault=null;
     private InvocationMetric _metrics=new InvocationMetric();
@@ -47,7 +47,7 @@ public class InvocationDefinition implements java.io.Externalizable {
      * @param id The invocation definition to copy
      */
     public InvocationDefinition(InvocationDefinition id) {
-        _serviceType = id.getServiceType();
+        _interface = id.getInterface();
         _operation = id.getOperation();
         _fault = id.getFault();
         
@@ -57,21 +57,21 @@ public class InvocationDefinition implements java.io.Externalizable {
     }
 
     /**
-     * This method sets the service type.
+     * This method sets the interface.
      * 
-     * @param serviceType The service type
+     * @param intf The interface
      */
-    public void setServiceType(String serviceType) {
-        _serviceType = serviceType;
+    public void setInterface(String intf) {
+        _interface = intf;
     }
     
     /**
-     * This method gets the service type.
+     * This method gets the interface.
      * 
-     * @return The service type
+     * @return The interface
      */
-    public String getServiceType() {
-        return (_serviceType);
+    public String getInterface() {
+        return (_interface);
     }
     
     /**
@@ -145,7 +145,7 @@ public class InvocationDefinition implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_serviceType);
+        out.writeObject(_interface);
         out.writeObject(_operation);
         out.writeObject(_fault);
         out.writeObject(_metrics);
@@ -158,7 +158,7 @@ public class InvocationDefinition implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _serviceType = (String)in.readObject();
+        _interface = (String)in.readObject();
         _operation = (String)in.readObject();
         _fault = (String)in.readObject();
         _metrics = (InvocationMetric)in.readObject();

@@ -32,6 +32,7 @@ import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 import org.overlord.rtgov.analytics.service.util.ServiceDefinitionUtil;
 
 public class ServiceDefinitionUtilTest {
@@ -39,19 +40,24 @@ public class ServiceDefinitionUtilTest {
     private static final String FAULT_1 = "fault1";
     private static final String OPERATION_1 = "op1";
     private static final String OPERATION_2 = "op2";
-    private static final String SERVICE_TYPE_1="ST1";
-    private static final String SERVICE_TYPE_2="ST2";
+    private static final String INTERFACE_1="intf1";
+    private static final String INTERFACE_2="intf2";
+    private static final String SERVICE_TYPE_1="st1";
+    private static final String SERVICE_TYPE_2="st2";
 
     @Test
     public void testSerializeServiceDefiniton() {
         
         ServiceDefinition st1=new ServiceDefinition();
-        st1.setServiceType("st1");
+        st1.setInterface(INTERFACE_1);
         
         OperationDefinition op1=new OperationDefinition();
         st1.getOperations().add(op1);
         
-        op1.setName("op1");
+        OperationImplDefinition stod1=new OperationImplDefinition();
+        op1.getImplementations().add(stod1);       
+        
+        op1.setName(OPERATION_1);
         
         RequestResponseDefinition nrd1=new RequestResponseDefinition();
         nrd1.getMetrics().setCount(10);
@@ -63,11 +69,11 @@ public class ServiceDefinitionUtilTest {
         nrd1.getMetrics().setMinChange(-5);
         nrd1.getMetrics().setMaxChange(+20);
         
-        op1.setRequestResponse(nrd1);
+        stod1.setRequestResponse(nrd1);
         
         InvocationDefinition id1=new InvocationDefinition();
-        id1.setServiceType("st2");
-        id1.setOperation("op2");
+        id1.setInterface(INTERFACE_2);
+        id1.setOperation(OPERATION_2);
         id1.getMetrics().setCount(10);
         id1.getMetrics().setAverage(500);
         id1.getMetrics().setMin(250);
@@ -87,7 +93,7 @@ public class ServiceDefinitionUtilTest {
         frd1.getMetrics().setMinChange(0);
         frd1.getMetrics().setMaxChange(+10);
         
-        op1.getRequestFaults().add(frd1);
+        stod1.getRequestFaults().add(frd1);
         
         try {
             byte[] b = ServiceDefinitionUtil.serializeServiceDefinition(st1);
@@ -103,13 +109,16 @@ public class ServiceDefinitionUtilTest {
     public void testDeserializeServiceDefiniton() {
         
         ServiceDefinition st1=new ServiceDefinition();
-        st1.setServiceType("st1");
+        st1.setInterface(INTERFACE_1);
         
         OperationDefinition op1=new OperationDefinition();
         st1.getOperations().add(op1);
         
-        op1.setName("op1");
+        op1.setName(OPERATION_1);
         
+        OperationImplDefinition stod1=new OperationImplDefinition();
+        op1.getImplementations().add(stod1);       
+
         RequestResponseDefinition nrd1=new RequestResponseDefinition();
         nrd1.getMetrics().setCount(10);
         nrd1.getMetrics().setAverage(1000);
@@ -120,7 +129,7 @@ public class ServiceDefinitionUtilTest {
         nrd1.getMetrics().setMinChange(-5);
         nrd1.getMetrics().setMaxChange(+20);
         
-        op1.setRequestResponse(nrd1);
+        stod1.setRequestResponse(nrd1);
         
         RequestFaultDefinition frd1=new RequestFaultDefinition();
         frd1.setFault("fault1");
@@ -134,7 +143,7 @@ public class ServiceDefinitionUtilTest {
         frd1.getMetrics().setMinChange(0);
         frd1.getMetrics().setMaxChange(+10);
         
-        op1.getRequestFaults().add(frd1);
+        stod1.getRequestFaults().add(frd1);
         
         byte[] b=null;
         
@@ -158,7 +167,7 @@ public class ServiceDefinitionUtilTest {
             fail("Failed to deserialize service definition");
         }
         
-        if (!result.getServiceType().equals(st1.getServiceType())) {
+        if (!result.getInterface().equals(st1.getInterface())) {
             fail("Service type mismatch");
         }
         
@@ -181,6 +190,7 @@ public class ServiceDefinitionUtilTest {
         
         RequestReceived rqr1=new RequestReceived();
         rqr1.setServiceType(SERVICE_TYPE_1);
+        rqr1.setInterface(INTERFACE_1);
         rqr1.setOperation(OPERATION_1);
         rqr1.setMessageId("1");
         rqr1.setTimestamp(10);
@@ -189,6 +199,7 @@ public class ServiceDefinitionUtilTest {
 
         ResponseSent rps1=new ResponseSent();
         rps1.setServiceType(SERVICE_TYPE_1);
+        rps1.setInterface(INTERFACE_1);
         rps1.setOperation(OPERATION_1);
         rps1.setMessageId("2");
         rps1.setReplyToId("1");
@@ -206,7 +217,7 @@ public class ServiceDefinitionUtilTest {
         
         ServiceDefinition sdef=sdefs.iterator().next();
         
-        if (!sdef.getServiceType().equals(SERVICE_TYPE_1)) {
+        if (!sdef.getInterface().equals(INTERFACE_1)) {
             fail("Service type incorrect");
         }
         
@@ -220,19 +231,25 @@ public class ServiceDefinitionUtilTest {
             fail("Failed to retrieve op");
         }
         
-        if (op.getRequestResponse() == null) {
+        OperationImplDefinition stod=op.getServiceTypeOperation(SERVICE_TYPE_1);
+        
+        if (stod == null) {
+        	fail("Failed to retrieve service type op");
+        }
+        
+        if (stod.getRequestResponse() == null) {
             fail("Request/response not found");
         }
         
-        if (op.getRequestFaults().size() > 0) {
+        if (stod.getRequestFaults().size() > 0) {
             fail("No faults should have occurred");
         }
         
-        if (op.getRequestResponse().getInvocations().size() > 0) {
+        if (stod.getRequestResponse().getInvocations().size() > 0) {
             fail("No external invocations expected");
         }
         
-        InvocationMetric metrics=op.getRequestResponse().getMetrics();
+        InvocationMetric metrics=stod.getRequestResponse().getMetrics();
         
         if (metrics.getAverage() != 10) {
             fail("Average not 10: "+metrics.getAverage());
@@ -261,6 +278,7 @@ public class ServiceDefinitionUtilTest {
         rqr1.setUnitId("unit1");
         rqr1.setUnitIndex(1);
         rqr1.setServiceType(SERVICE_TYPE_1);
+        rqr1.setInterface(INTERFACE_1);
         rqr1.setOperation(OPERATION_1);
         rqr1.setMessageId("1");
         rqr1.setTimestamp(10);
@@ -274,6 +292,7 @@ public class ServiceDefinitionUtilTest {
         rps1.setUnitId("unit1");
         rps1.setUnitIndex(2);
         rps1.setServiceType(SERVICE_TYPE_1);
+        rps1.setInterface(INTERFACE_1);
         rps1.setOperation(OPERATION_1);
         rps1.setMessageId("2");
         rps1.setReplyToId("1");
@@ -311,7 +330,9 @@ public class ServiceDefinitionUtilTest {
         
         OperationDefinition op=sdef.getOperation(OPERATION_1);
         
-        RequestResponseDefinition rrd=op.getRequestResponse();
+        OperationImplDefinition stod=op.getServiceTypeOperation(SERVICE_TYPE_1);
+        
+        RequestResponseDefinition rrd=stod.getRequestResponse();
         
         if (rrd.getRequestId() == null) {
             fail("Request id not set");
@@ -331,6 +352,7 @@ public class ServiceDefinitionUtilTest {
         RequestReceived rqr1=new RequestReceived();
         rqr1.setServiceType(SERVICE_TYPE_1);
         rqr1.setOperation(OPERATION_1);
+        rqr1.setInterface(INTERFACE_1);
         rqr1.setMessageId("1");
         rqr1.setTimestamp(10);
         
@@ -339,6 +361,7 @@ public class ServiceDefinitionUtilTest {
         ResponseSent rps1=new ResponseSent();
         rps1.setServiceType(SERVICE_TYPE_1);
         rps1.setOperation(OPERATION_1);
+        rps1.setInterface(INTERFACE_1);
         rps1.setMessageId("2");
         rps1.setReplyToId("1");
         rps1.setTimestamp(20);
@@ -348,6 +371,7 @@ public class ServiceDefinitionUtilTest {
         RequestReceived rqr2=new RequestReceived();
         rqr2.setServiceType(SERVICE_TYPE_1);
         rqr2.setOperation(OPERATION_1);
+        rqr2.setInterface(INTERFACE_1);
         rqr2.setMessageId("3");
         rqr2.setTimestamp(30);
         
@@ -356,6 +380,7 @@ public class ServiceDefinitionUtilTest {
         ResponseSent rps2=new ResponseSent();
         rps2.setServiceType(SERVICE_TYPE_1);
         rps2.setOperation(OPERATION_1);
+        rps2.setInterface(INTERFACE_1);
         rps2.setMessageId("4");
         rps2.setReplyToId("3");
         rps2.setTimestamp(50);
@@ -372,7 +397,7 @@ public class ServiceDefinitionUtilTest {
         
         ServiceDefinition sdef=sdefs.iterator().next();
         
-        if (!sdef.getServiceType().equals(SERVICE_TYPE_1)) {
+        if (!sdef.getInterface().equals(INTERFACE_1)) {
             fail("Service type incorrect");
         }
         
@@ -386,19 +411,25 @@ public class ServiceDefinitionUtilTest {
             fail("Failed to retrieve op");
         }
         
-        if (op.getRequestResponse() == null) {
+        OperationImplDefinition stod=op.getServiceTypeOperation(SERVICE_TYPE_1);
+        
+        if (stod == null) {
+        	fail("Failed to retrieve service type op");
+        }
+                
+        if (stod.getRequestResponse() == null) {
             fail("Request/response not found");
         }
         
-        if (op.getRequestFaults().size() > 0) {
+        if (stod.getRequestFaults().size() > 0) {
             fail("No faults should have occurred");
         }
         
-        if (op.getRequestResponse().getInvocations().size() > 0) {
+        if (stod.getRequestResponse().getInvocations().size() > 0) {
             fail("No external invocations expected");
         }
         
-        InvocationMetric metrics=op.getRequestResponse().getMetrics();
+        InvocationMetric metrics=stod.getRequestResponse().getMetrics();
         
         if (metrics.getAverage() != 15) {
             fail("Average not 15: "+metrics.getAverage());
@@ -426,6 +457,7 @@ public class ServiceDefinitionUtilTest {
         RequestReceived rqr1=new RequestReceived();
         rqr1.setServiceType(SERVICE_TYPE_1);
         rqr1.setOperation(OPERATION_1);
+        rqr1.setInterface(INTERFACE_1);
         rqr1.setFault(FAULT_1);
         rqr1.setMessageId("1");
         rqr1.setTimestamp(10);
@@ -435,6 +467,7 @@ public class ServiceDefinitionUtilTest {
         ResponseSent rps1=new ResponseSent();
         rps1.setServiceType(SERVICE_TYPE_1);
         rps1.setOperation(OPERATION_1);
+        rps1.setInterface(INTERFACE_1);
         rps1.setFault(FAULT_1);
         rps1.setMessageId("2");
         rps1.setReplyToId("1");
@@ -452,7 +485,7 @@ public class ServiceDefinitionUtilTest {
         
         ServiceDefinition sdef=sdefs.iterator().next();
         
-        if (!sdef.getServiceType().equals(SERVICE_TYPE_1)) {
+        if (!sdef.getInterface().equals(INTERFACE_1)) {
             fail("Service type incorrect");
         }
         
@@ -466,15 +499,21 @@ public class ServiceDefinitionUtilTest {
             fail("Failed to retrieve op");
         }
         
-        if (op.getRequestResponse() != null) {
+        OperationImplDefinition stod=op.getServiceTypeOperation(SERVICE_TYPE_1);
+        
+        if (stod == null) {
+        	fail("Failed to retrieve service type op");
+        }
+        
+        if (stod.getRequestResponse() != null) {
             fail("Request/response should be null");
         }
         
-        if (op.getRequestFaults().size() != 1) {
+        if (stod.getRequestFaults().size() != 1) {
             fail("One fault should have occurred");
         }
         
-        RequestFaultDefinition rfd=op.getRequestFault(FAULT_1);
+        RequestFaultDefinition rfd=stod.getRequestFault(FAULT_1);
         
         if (rfd == null) {
             fail("Failed to retrieve fault");
@@ -511,6 +550,7 @@ public class ServiceDefinitionUtilTest {
         
         RequestReceived rqr1=new RequestReceived();
         rqr1.setServiceType(SERVICE_TYPE_1);
+        rqr1.setInterface(INTERFACE_1);
         rqr1.setOperation(OPERATION_1);
         rqr1.setMessageId("1");
         rqr1.setTimestamp(10);
@@ -519,6 +559,7 @@ public class ServiceDefinitionUtilTest {
 
         RequestSent rqs2=new RequestSent();
         rqs2.setServiceType(SERVICE_TYPE_2);
+        rqs2.setInterface(INTERFACE_2);
         rqs2.setOperation(OPERATION_2);
         rqs2.setMessageId("2");
         rqs2.setTimestamp(15);
@@ -527,6 +568,7 @@ public class ServiceDefinitionUtilTest {
 
         ResponseReceived rpr2=new ResponseReceived();
         rpr2.setServiceType(SERVICE_TYPE_2);
+        rpr2.setInterface(INTERFACE_2);
         rpr2.setOperation(OPERATION_2);
         rpr2.setMessageId("3");
         rpr2.setReplyToId("2");
@@ -536,6 +578,7 @@ public class ServiceDefinitionUtilTest {
 
         RequestSent rqs3=new RequestSent();
         rqs3.setServiceType(SERVICE_TYPE_2);
+        rqs3.setInterface(INTERFACE_2);
         rqs3.setOperation(OPERATION_2);
         rqs3.setMessageId("4");
         rqs3.setTimestamp(24);
@@ -544,6 +587,7 @@ public class ServiceDefinitionUtilTest {
 
         ResponseReceived rpr3=new ResponseReceived();
         rpr3.setServiceType(SERVICE_TYPE_2);
+        rpr3.setInterface(INTERFACE_2);
         rpr3.setOperation(OPERATION_2);
         rpr3.setMessageId("5");
         rpr3.setReplyToId("4");
@@ -553,6 +597,7 @@ public class ServiceDefinitionUtilTest {
 
         ResponseSent rps1=new ResponseSent();
         rps1.setServiceType(SERVICE_TYPE_1);
+        rps1.setInterface(INTERFACE_1);
         rps1.setOperation(OPERATION_1);
         rps1.setMessageId("6");
         rps1.setReplyToId("1");
@@ -570,7 +615,7 @@ public class ServiceDefinitionUtilTest {
         
         ServiceDefinition sdef=sdefs.iterator().next();
         
-        if (!sdef.getServiceType().equals(SERVICE_TYPE_1)) {
+        if (!sdef.getInterface().equals(INTERFACE_1)) {
             fail("Service type incorrect");
         }
         
@@ -584,19 +629,25 @@ public class ServiceDefinitionUtilTest {
             fail("Failed to retrieve op");
         }
         
-        if (op.getRequestResponse() == null) {
+        OperationImplDefinition stod=op.getServiceTypeOperation(SERVICE_TYPE_1);
+        
+        if (stod == null) {
+        	fail("Failed to retrieve service type op");
+        }
+        
+        if (stod.getRequestResponse() == null) {
             fail("Request/response not found");
         }
         
-        if (op.getRequestFaults().size() > 0) {
+        if (stod.getRequestFaults().size() > 0) {
             fail("No faults should have occurred");
         }
         
-        if (op.getRequestResponse().getInvocations().size() != 1) {
+        if (stod.getRequestResponse().getInvocations().size() != 1) {
             fail("One external invocations expected");
         }
         
-        InvocationDefinition id=op.getRequestResponse().getInvocation(SERVICE_TYPE_2,
+        InvocationDefinition id=stod.getRequestResponse().getInvocation(INTERFACE_2,
                                 OPERATION_2, null);
         
         if (id == null) {
@@ -630,6 +681,7 @@ public class ServiceDefinitionUtilTest {
         
         RequestReceived rqr1=new RequestReceived();
         rqr1.setServiceType(SERVICE_TYPE_1);
+        rqr1.setInterface(INTERFACE_1);
         rqr1.setOperation(OPERATION_1);
         rqr1.setMessageId("1");
         rqr1.setTimestamp(10);
@@ -638,6 +690,7 @@ public class ServiceDefinitionUtilTest {
 
         RequestSent rqs2=new RequestSent();
         rqs2.setServiceType(SERVICE_TYPE_2);
+        rqs2.setInterface(INTERFACE_2);
         rqs2.setOperation(OPERATION_2);
         rqs2.setMessageId("2");
         rqs2.setTimestamp(15);
@@ -646,6 +699,7 @@ public class ServiceDefinitionUtilTest {
 
         RequestReceived rqr3=new RequestReceived();
         rqr3.setServiceType(SERVICE_TYPE_2);
+        rqr3.setInterface(INTERFACE_2);
         rqr3.setOperation(OPERATION_2);
         rqr3.setMessageId("3");
         rqr3.setTimestamp(21);
@@ -654,6 +708,7 @@ public class ServiceDefinitionUtilTest {
 
         ResponseSent rps3=new ResponseSent();
         rps3.setServiceType(SERVICE_TYPE_2);
+        rps3.setInterface(INTERFACE_2);
         rps3.setOperation(OPERATION_2);
         rps3.setMessageId("4");
         rps3.setReplyToId("3");
@@ -663,6 +718,7 @@ public class ServiceDefinitionUtilTest {
 
         ResponseReceived rpr2=new ResponseReceived();
         rpr2.setServiceType(SERVICE_TYPE_2);
+        rpr2.setInterface(INTERFACE_2);
         rpr2.setOperation(OPERATION_2);
         rpr2.setMessageId("5");
         rpr2.setReplyToId("2");
@@ -672,6 +728,7 @@ public class ServiceDefinitionUtilTest {
 
         ResponseSent rps1=new ResponseSent();
         rps1.setServiceType(SERVICE_TYPE_1);
+        rps1.setInterface(INTERFACE_1);
         rps1.setOperation(OPERATION_1);
         rps1.setMessageId("6");
         rps1.setReplyToId("1");
@@ -691,27 +748,27 @@ public class ServiceDefinitionUtilTest {
         ServiceDefinition sdef2=null;
         
         for (ServiceDefinition sd : sdefs) {
-            if (sd.getServiceType().equals(SERVICE_TYPE_1)) {
+            if (sd.getInterface().equals(INTERFACE_1)) {
                 sdef1 = sd;
-            } else if (sd.getServiceType().equals(SERVICE_TYPE_2)) {
+            } else if (sd.getInterface().equals(INTERFACE_2)) {
                 sdef2 = sd;
             }
         }
         
         if (sdef1 == null) {
-            fail("Service type 1 definition not found");
+            fail("Interface 1 definition not found");
         }
         
         if (sdef2 == null) {
-            fail("Service type 2 definition not found");
+            fail("Interface 2 definition not found");
         }
         
-        if (!sdef1.getServiceType().equals(SERVICE_TYPE_1)) {
-            fail("Service type 1 incorrect");
+        if (!sdef1.getInterface().equals(INTERFACE_1)) {
+            fail("Interface 1 incorrect");
         }
         
-        if (!sdef2.getServiceType().equals(SERVICE_TYPE_2)) {
-            fail("Service type 2 incorrect");
+        if (!sdef2.getInterface().equals(INTERFACE_2)) {
+            fail("Interface 2 incorrect");
         }
         
         if (sdef1.getOperations().size() != 1) {
@@ -728,19 +785,25 @@ public class ServiceDefinitionUtilTest {
             fail("Failed to retrieve op");
         }
         
-        if (op1.getRequestResponse() == null) {
+        OperationImplDefinition stod1=op1.getServiceTypeOperation(SERVICE_TYPE_1);
+        
+        if (stod1 == null) {
+        	fail("Failed to retrieve service type op 1");
+        }
+        
+        if (stod1.getRequestResponse() == null) {
             fail("Request/response not found");
         }
         
-        if (op1.getRequestFaults().size() > 0) {
+        if (stod1.getRequestFaults().size() > 0) {
             fail("No faults should have occurred");
         }
         
-        if (op1.getRequestResponse().getInvocations().size() != 1) {
+        if (stod1.getRequestResponse().getInvocations().size() != 1) {
             fail("One external invocations expected");
         }
         
-        InvocationDefinition id1=op1.getRequestResponse().getInvocation(SERVICE_TYPE_2,
+        InvocationDefinition id1=stod1.getRequestResponse().getInvocation(INTERFACE_2,
                                 OPERATION_2, null);
         
         if (id1 == null) {
@@ -772,19 +835,25 @@ public class ServiceDefinitionUtilTest {
             fail("Failed to retrieve op 2");
         }
         
-        if (op2.getRequestResponse() == null) {
+        OperationImplDefinition stod2=op2.getServiceTypeOperation(SERVICE_TYPE_2);
+        
+        if (stod2 == null) {
+        	fail("Failed to retrieve service type op 2");
+        }
+        
+        if (stod2.getRequestResponse() == null) {
             fail("Request/response not found");
         }
         
-        if (op2.getRequestFaults().size() > 0) {
+        if (stod2.getRequestFaults().size() > 0) {
             fail("No faults should have occurred");
         }
         
-        if (op2.getRequestResponse().getInvocations().size() != 0) {
+        if (stod2.getRequestResponse().getInvocations().size() != 0) {
             fail("No external invocations expected");
         }
         
-        InvocationMetric metrics2=op2.getRequestResponse().getMetrics();
+        InvocationMetric metrics2=stod2.getRequestResponse().getMetrics();
         
         if (metrics2.getAverage() != 3) {
             fail("Average not 3: "+metrics2.getAverage());
@@ -808,13 +877,16 @@ public class ServiceDefinitionUtilTest {
     public void testMergeSnapshots() {
         
         ServiceDefinition st1=new ServiceDefinition();
-        st1.setServiceType("st1");
+        st1.setInterface(INTERFACE_1);
         st1.getContext().add(new Context(Context.Type.Conversation, "c1"));
         
         OperationDefinition op1=new OperationDefinition();
         st1.getOperations().add(op1);
         
-        op1.setName("op1");
+        op1.setName(OPERATION_1);
+        
+        OperationImplDefinition stod1=new OperationImplDefinition();
+        op1.getImplementations().add(stod1);
         
         RequestResponseDefinition nrd1=new RequestResponseDefinition();
         nrd1.getMetrics().setCount(10);
@@ -826,7 +898,7 @@ public class ServiceDefinitionUtilTest {
         nrd1.getMetrics().setMinChange(-5);
         nrd1.getMetrics().setMaxChange(+20);
         
-        op1.setRequestResponse(nrd1);
+        stod1.setRequestResponse(nrd1);
         
         RequestFaultDefinition frd1=new RequestFaultDefinition();
         frd1.setFault("fault1");
@@ -840,16 +912,19 @@ public class ServiceDefinitionUtilTest {
         frd1.getMetrics().setMinChange(0);
         frd1.getMetrics().setMaxChange(+10);
         
-        op1.getRequestFaults().add(frd1);
+        stod1.getRequestFaults().add(frd1);
         
         ServiceDefinition st2=new ServiceDefinition();
-        st2.setServiceType("st2");
+        st2.setInterface(INTERFACE_2);
         st2.getContext().add(new Context(Context.Type.Conversation, "c2"));
         
         OperationDefinition op2=new OperationDefinition();
         st2.getOperations().add(op2);
         
-        op2.setName("op2");
+        op2.setName(OPERATION_2);
+        
+        OperationImplDefinition stod2=new OperationImplDefinition();
+        op2.getImplementations().add(stod2);
         
         RequestResponseDefinition nrd2=new RequestResponseDefinition();
         nrd2.getMetrics().setCount(10);
@@ -861,7 +936,7 @@ public class ServiceDefinitionUtilTest {
         nrd2.getMetrics().setMinChange(-5);
         nrd2.getMetrics().setMaxChange(+20);
         
-        op2.setRequestResponse(nrd1);
+        stod2.setRequestResponse(nrd1);
         
         RequestFaultDefinition frd2=new RequestFaultDefinition();
         frd2.setFault("fault2");
@@ -875,16 +950,19 @@ public class ServiceDefinitionUtilTest {
         frd2.getMetrics().setMinChange(0);
         frd2.getMetrics().setMaxChange(+10);
         
-        op2.getRequestFaults().add(frd2);
+        stod2.getRequestFaults().add(frd2);
         
         ServiceDefinition st3=new ServiceDefinition();
-        st3.setServiceType("st1");
+        st3.setInterface(INTERFACE_1);
         st3.getContext().add(new Context(Context.Type.Conversation, "c3"));
         
         OperationDefinition op3=new OperationDefinition();
         st3.getOperations().add(op3);
         
-        op3.setName("op1");
+        op3.setName(OPERATION_1);
+        
+        OperationImplDefinition stod3=new OperationImplDefinition();
+        op3.getImplementations().add(stod3);
         
         RequestResponseDefinition nrd3=new RequestResponseDefinition();
         nrd3.getMetrics().setCount(5);
@@ -896,7 +974,7 @@ public class ServiceDefinitionUtilTest {
         nrd3.getMetrics().setMinChange(-2);
         nrd3.getMetrics().setMaxChange(+10);
         
-        op3.setRequestResponse(nrd3);
+        stod3.setRequestResponse(nrd3);
         
         RequestFaultDefinition frd3=new RequestFaultDefinition();
         frd3.setFault("fault3");
@@ -910,15 +988,15 @@ public class ServiceDefinitionUtilTest {
         frd3.getMetrics().setMinChange(0);
         frd3.getMetrics().setMaxChange(+10);
         
-        op3.getRequestFaults().add(frd3);
+        stod3.getRequestFaults().add(frd3);
         
         
         java.util.Map<String,ServiceDefinition> sds1=new java.util.HashMap<String,ServiceDefinition>();
-        sds1.put(st1.getServiceType(), st1);
-        sds1.put(st2.getServiceType(), st2);
+        sds1.put(st1.getInterface(), st1);
+        sds1.put(st2.getInterface(), st2);
         
         java.util.Map<String,ServiceDefinition> sds2=new java.util.HashMap<String,ServiceDefinition>();
-        sds2.put(st3.getServiceType(), st3);
+        sds2.put(st3.getInterface(), st3);
         
         java.util.List<java.util.Map<String,ServiceDefinition>> list=
                 new java.util.ArrayList<java.util.Map<String,ServiceDefinition>>();
@@ -935,8 +1013,8 @@ public class ServiceDefinitionUtilTest {
             fail("Two service defintions expected");
         }
         
-        ServiceDefinition sd1=merged.get("st1");
-        ServiceDefinition sd2=merged.get("st2");
+        ServiceDefinition sd1=merged.get(INTERFACE_1);
+        ServiceDefinition sd2=merged.get(INTERFACE_2);
         
         if (sd1 == null) {
             fail("SD1 is null");
@@ -965,16 +1043,16 @@ public class ServiceDefinitionUtilTest {
         OperationDefinition opd1=sd1.getOperations().get(0);
         OperationDefinition opd2=sd2.getOperations().get(0);
         
-        if (opd1.getRequestFaults().size() != 2) {
-            fail("OP1 should have two faults: "+opd1.getRequestFaults().size());
+        if (opd1.getImplementations().get(0).getRequestFaults().size() != 2) {
+            fail("OP1 should have two faults: "+opd1.getImplementations().get(0).getRequestFaults().size());
         }
         
-        if (opd2.getRequestFaults().size() != 1) {
-            fail("OP2 should have 1 fault: "+opd2.getRequestFaults().size());
+        if (opd2.getImplementations().get(0).getRequestFaults().size() != 1) {
+            fail("OP2 should have 1 fault: "+opd2.getImplementations().get(0).getRequestFaults().size());
         }
         
-        if (opd1.getRequestResponse().getMetrics().getCount() != 15) {
-            fail("Expecting count 15: "+opd1.getRequestResponse().getMetrics().getCount());
+        if (opd1.getImplementations().get(0).getRequestResponse().getMetrics().getCount() != 15) {
+            fail("Expecting count 15: "+opd1.getImplementations().get(0).getRequestResponse().getMetrics().getCount());
         }
     }
     
@@ -982,13 +1060,16 @@ public class ServiceDefinitionUtilTest {
     public void testMergeSnapshotsWithContext() {
         
         ServiceDefinition st1=new ServiceDefinition();
-        st1.setServiceType("st");
+        st1.setInterface(INTERFACE_1);
         st1.getContext().add(new Context(Context.Type.Conversation, "c1"));
         
         OperationDefinition op1=new OperationDefinition();
         st1.getOperations().add(op1);
         
-        op1.setName("op1");
+        op1.setName(OPERATION_1);
+        
+        OperationImplDefinition stod1=new OperationImplDefinition();
+        op1.getImplementations().add(stod1);
         
         RequestResponseDefinition nrd1=new RequestResponseDefinition();
         nrd1.getMetrics().setCount(10);
@@ -1000,7 +1081,7 @@ public class ServiceDefinitionUtilTest {
         nrd1.getMetrics().setMinChange(-5);
         nrd1.getMetrics().setMaxChange(+20);
         
-        op1.setRequestResponse(nrd1);
+        stod1.setRequestResponse(nrd1);
         
         RequestFaultDefinition frd1=new RequestFaultDefinition();
         frd1.setFault("fault1");
@@ -1014,16 +1095,19 @@ public class ServiceDefinitionUtilTest {
         frd1.getMetrics().setMinChange(0);
         frd1.getMetrics().setMaxChange(+10);
         
-        op1.getRequestFaults().add(frd1);
+        stod1.getRequestFaults().add(frd1);
         
         ServiceDefinition st2=new ServiceDefinition();
-        st2.setServiceType("st");
+        st2.setInterface(INTERFACE_1);	// Use same interface to support merge
         st2.getContext().add(new Context(Context.Type.Conversation, "c2"));
         
         OperationDefinition op2=new OperationDefinition();
         st2.getOperations().add(op2);
         
-        op2.setName("op2");
+        op2.setName(OPERATION_2);
+        
+        OperationImplDefinition stod2=new OperationImplDefinition();
+        op2.getImplementations().add(stod2);
         
         RequestResponseDefinition nrd2=new RequestResponseDefinition();
         nrd2.getMetrics().setCount(10);
@@ -1035,7 +1119,7 @@ public class ServiceDefinitionUtilTest {
         nrd2.getMetrics().setMinChange(-5);
         nrd2.getMetrics().setMaxChange(+20);
         
-        op2.setRequestResponse(nrd1);
+        stod2.setRequestResponse(nrd1);
         
         RequestFaultDefinition frd2=new RequestFaultDefinition();
         frd2.setFault("fault2");
@@ -1049,16 +1133,19 @@ public class ServiceDefinitionUtilTest {
         frd2.getMetrics().setMinChange(0);
         frd2.getMetrics().setMaxChange(+10);
         
-        op2.getRequestFaults().add(frd2);
+        stod2.getRequestFaults().add(frd2);
         
         ServiceDefinition st3=new ServiceDefinition();
-        st3.setServiceType("st");
+        st3.setInterface(INTERFACE_1);	// Use same interface for merge
         st3.getContext().add(new Context(Context.Type.Conversation, "c3"));
         
         OperationDefinition op3=new OperationDefinition();
         st3.getOperations().add(op3);
         
-        op3.setName("op1");
+        op3.setName(OPERATION_1);
+        
+        OperationImplDefinition stod3=new OperationImplDefinition();
+        op3.getImplementations().add(stod3);
         
         RequestResponseDefinition nrd3=new RequestResponseDefinition();
         nrd3.getMetrics().setCount(5);
@@ -1070,7 +1157,7 @@ public class ServiceDefinitionUtilTest {
         nrd3.getMetrics().setMinChange(-2);
         nrd3.getMetrics().setMaxChange(+10);
         
-        op3.setRequestResponse(nrd3);
+        stod3.setRequestResponse(nrd3);
         
         RequestFaultDefinition frd3=new RequestFaultDefinition();
         frd3.setFault("fault3");
@@ -1084,17 +1171,17 @@ public class ServiceDefinitionUtilTest {
         frd3.getMetrics().setMinChange(0);
         frd3.getMetrics().setMaxChange(+10);
         
-        op3.getRequestFaults().add(frd3);
+        stod3.getRequestFaults().add(frd3);
         
         
         java.util.Map<String,ServiceDefinition> sds1=new java.util.HashMap<String,ServiceDefinition>();
-        sds1.put(st1.getServiceType(), st1);
+        sds1.put(st1.getInterface(), st1);
         
         java.util.Map<String,ServiceDefinition> sds2=new java.util.HashMap<String,ServiceDefinition>();
-        sds2.put(st2.getServiceType(), st2);
+        sds2.put(st2.getInterface(), st2);
         
         java.util.Map<String,ServiceDefinition> sds3=new java.util.HashMap<String,ServiceDefinition>();
-        sds3.put(st3.getServiceType(), st3);
+        sds3.put(st3.getInterface(), st3);
         
         java.util.List<java.util.Map<String,ServiceDefinition>> list=
                 new java.util.ArrayList<java.util.Map<String,ServiceDefinition>>();
@@ -1112,7 +1199,7 @@ public class ServiceDefinitionUtilTest {
             fail("One service defintion expected");
         }
         
-        ServiceDefinition sd=merged.get("st");
+        ServiceDefinition sd=merged.get(INTERFACE_1);
         
         if (sd == null) {
             fail("SD is null");

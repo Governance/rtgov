@@ -25,6 +25,7 @@ then
 	ResponseTime rt=new ResponseTime();
 	
 	rt.setServiceType($req.getServiceType());
+	rt.setInterface($req.getInterface());
 	rt.setOperation($req.getOperation());
 	rt.setFault($resp.getFault());
 	

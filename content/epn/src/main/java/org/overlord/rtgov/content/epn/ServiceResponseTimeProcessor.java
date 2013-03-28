@@ -24,6 +24,7 @@ import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.ResponseTime;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 
 /**
  * This class provides an implementation of the EventProcessor
@@ -71,13 +72,15 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
     protected void processOperation(java.util.List<ResponseTime> rts,
             ServiceDefinition sdef, OperationDefinition opdef) {
         
-        if (opdef.getRequestResponse() != null) {
-            processMEP(rts, sdef, opdef, opdef.getRequestResponse());
-        }
-        
-        for (int i=0; i < opdef.getRequestFaults().size(); i++) {
-            processMEP(rts, sdef, opdef, opdef.getRequestFaults().get(i));
-        }
+    	for (OperationImplDefinition stod : opdef.getImplementations()) {
+	        if (stod.getRequestResponse() != null) {
+	            processMEP(rts, sdef, opdef, stod, stod.getRequestResponse());
+	        }
+	        
+	        for (int i=0; i < stod.getRequestFaults().size(); i++) {
+	            processMEP(rts, sdef, opdef, stod, stod.getRequestFaults().get(i));
+	        }
+    	}
     }
     
     /**
@@ -87,15 +90,17 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
      * @param rts The response time list
      * @param sdef The service definition
      * @param opdef The operation definition
+     * @param stod The service type op definition
      * @param mep The MEP definition
      */
     protected void processMEP(java.util.List<ResponseTime> rts,
-            ServiceDefinition sdef, OperationDefinition opdef, MEPDefinition mep) {
+            ServiceDefinition sdef, OperationDefinition opdef, OperationImplDefinition stod, MEPDefinition mep) {
         
         ResponseTime rt=new ResponseTime();
         
-        rt.setServiceType(sdef.getServiceType());
+        rt.setInterface(sdef.getInterface());
         rt.setOperation(opdef.getName());
+        rt.setServiceType(stod.getServiceType());
         
         if (mep instanceof RequestFaultDefinition) {
             rt.setFault(((RequestFaultDefinition)mep).getFault());

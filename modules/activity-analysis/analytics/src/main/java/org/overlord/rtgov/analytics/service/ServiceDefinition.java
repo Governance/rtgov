@@ -37,7 +37,7 @@ public class ServiceDefinition implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    private String _serviceType=null;
+    private String _interface=null;
     private java.util.List<OperationDefinition> _operations=
                     new java.util.ArrayList<OperationDefinition>();
     private java.util.List<Context> _contexts=new java.util.Vector<Context>();
@@ -54,7 +54,7 @@ public class ServiceDefinition implements java.io.Externalizable {
      * @param sd The source to copy
      */
     public ServiceDefinition(ServiceDefinition sd) {
-        _serviceType = sd.getServiceType();
+        _interface = sd.getInterface();
         
         for (OperationDefinition op : sd.getOperations()) {
             _operations.add(new OperationDefinition(op));
@@ -67,21 +67,21 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
 
     /**
-     * This method sets the service type.
+     * This method sets the interface.
      * 
-     * @param serviceType The service type
+     * @param intf The interface
      */
-    public void setServiceType(String serviceType) {
-        _serviceType = serviceType;
+    public void setInterface(String intf) {
+        _interface = intf;
     }
     
     /**
-     * This method gets the service type.
+     * This method gets the interface.
      * 
-     * @return The service type
+     * @return The interface
      */
-    public String getServiceType() {
-        return (_serviceType);
+    public String getInterface() {
+        return (_interface);
     }
     
     /**
@@ -180,7 +180,7 @@ public class ServiceDefinition implements java.io.Externalizable {
      */
     public void merge(ServiceDefinition sd, boolean retainContexts) throws Exception {
             
-        if (sd == null || !sd.getServiceType().equals(getServiceType())) {
+        if (sd == null || !sd.getInterface().equals(getInterface())) {
             throw new IllegalArgumentException("Invalid service definition");
         }
         
@@ -219,7 +219,7 @@ public class ServiceDefinition implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public int hashCode() {
-        return (_serviceType.hashCode());
+        return (_interface.hashCode());
     }
     
     /**
@@ -228,7 +228,7 @@ public class ServiceDefinition implements java.io.Externalizable {
     public boolean equals(Object obj) {
         
         if (obj instanceof ServiceDefinition
-                  && ((ServiceDefinition)obj).getServiceType().equals(_serviceType)) {
+                  && ((ServiceDefinition)obj).getInterface().equals(_interface)) {
             return (true);
         }
         
@@ -256,7 +256,7 @@ public class ServiceDefinition implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_serviceType);
+        out.writeObject(_interface);
         
         out.writeInt(_operations.size());
         for (int i=0; i < _operations.size(); i++) {
@@ -276,7 +276,7 @@ public class ServiceDefinition implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _serviceType = (String)in.readObject();
+        _interface = (String)in.readObject();
         
         int len=in.readInt();
         for (int i=0; i < len; i++) {

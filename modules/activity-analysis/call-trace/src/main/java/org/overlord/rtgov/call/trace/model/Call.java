@@ -24,9 +24,10 @@ package org.overlord.rtgov.call.trace.model;
  */
 public class Call extends ParentNode {
 
-    private String _component=null;
+    private String _interface=null;
     private String _operation=null;
     private String _fault=null;
+    private String _component=null;
     private String _request=null;
     private String _response=null;
     private String _principal=null;
@@ -34,23 +35,23 @@ public class Call extends ParentNode {
     private long _responseLatency=0;
     
     /**
-     * This method returns the name of the component
-     * (or service) that is being called.
+     * This method returns the interface
+     * that is being called.
      * 
-     * @return The component
+     * @return The interface
      */
-    public String getComponent() {
-        return (_component);
+    public String getInterface() {
+        return (_interface);
     }
     
     /**
-     * This method sets the name of the component
-     * (or service) that is being called.
+     * This method sets the interface
+     * that is being called.
      * 
-     * @param component The component
+     * @param intf The interface
      */
-    public void setComponent(String component) {
-        _component = component;
+    public void setInterface(String intf) {
+        _interface = intf;
     }
     
     /**
@@ -91,6 +92,26 @@ public class Call extends ParentNode {
      */
     public void setFault(String fault) {
         _fault = fault;
+    }
+    
+    /**
+     * This method returns the name of the component
+     * (or service) that is being called.
+     * 
+     * @return The component
+     */
+    public String getComponent() {
+        return (_component);
+    }
+    
+    /**
+     * This method sets the name of the component
+     * (or service) that is being called.
+     * 
+     * @param component The component
+     */
+    public void setComponent(String component) {
+        _component = component;
     }
     
     /**

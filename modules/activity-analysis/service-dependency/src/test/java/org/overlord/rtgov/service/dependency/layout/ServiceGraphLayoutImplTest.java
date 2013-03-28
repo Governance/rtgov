@@ -25,6 +25,7 @@ import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.ServiceNode;
@@ -38,66 +39,72 @@ public class ServiceGraphLayoutImplTest {
     private static final String OP3 = "op3";
     private static final String OP2 = "op2";
     private static final String OP1 = "op1";
-    private static final String SERVICE_TYPE1 = "serviceType1";
-    private static final String SERVICE_TYPE2 = "serviceType2";
-    private static final String SERVICE_TYPE3 = "serviceType3";
-    private static final String SERVICE_TYPE4 = "serviceType4";
+    private static final String INTERFACE1 = "intf1";
+    private static final String INTERFACE2 = "intf2";
+    private static final String INTERFACE3 = "intf3";
+    private static final String INTERFACE4 = "intf4";
 
     @Test
     public void testLayoutGraph() {
         ServiceDefinition sd1=new ServiceDefinition();
-        sd1.setServiceType(SERVICE_TYPE1);
+        sd1.setInterface(INTERFACE1);
         
         OperationDefinition op1=new OperationDefinition();
         op1.setName(OP1);
         sd1.getOperations().add(op1);
         
+        OperationImplDefinition stod1=new OperationImplDefinition();
+        op1.getImplementations().add(stod1);
+        
         RequestResponseDefinition rrd1=new RequestResponseDefinition();
-        op1.setRequestResponse(rrd1);
+        stod1.setRequestResponse(rrd1);
         
         InvocationDefinition id1=new InvocationDefinition();
-        id1.setServiceType(SERVICE_TYPE2);
+        id1.setInterface(INTERFACE2);
         id1.setOperation(OP2);
         rrd1.getInvocations().add(id1);
         
         InvocationDefinition id1b=new InvocationDefinition();
-        id1b.setServiceType(SERVICE_TYPE4);
+        id1b.setInterface(INTERFACE4);
         id1b.setOperation(OP4);
         rrd1.getInvocations().add(id1b);
         
         ServiceDefinition sd2=new ServiceDefinition();
-        sd2.setServiceType(SERVICE_TYPE2);
+        sd2.setInterface(INTERFACE2);
         
         OperationDefinition op2=new OperationDefinition();
         op2.setName(OP2);
         sd2.getOperations().add(op2);
         
+        OperationImplDefinition stod2=new OperationImplDefinition();
+        op2.getImplementations().add(stod2);
+        
         RequestResponseDefinition rrd2=new RequestResponseDefinition();
-        op2.setRequestResponse(rrd2);
+        stod2.setRequestResponse(rrd2);
         
         InvocationDefinition id2c=new InvocationDefinition();
-        id2c.setServiceType(SERVICE_TYPE3);
+        id2c.setInterface(INTERFACE3);
         id2c.setOperation(OP3);
         rrd2.getInvocations().add(id2c);
         
         RequestFaultDefinition rfd2=new RequestFaultDefinition();
         rfd2.setFault(FAULT2);
-        op2.getRequestFaults().add(rfd2);
+        stod2.getRequestFaults().add(rfd2);
         
         InvocationDefinition id2b=new InvocationDefinition();
-        id2b.setServiceType(SERVICE_TYPE3);
+        id2b.setInterface(INTERFACE3);
         id2b.setOperation(OP3);
         rfd2.getInvocations().add(id2b);
         
         ServiceDefinition sd3=new ServiceDefinition();
-        sd3.setServiceType(SERVICE_TYPE3);
+        sd3.setInterface(INTERFACE3);
         
         OperationDefinition op3=new OperationDefinition();
         op3.setName(OP3);
         sd3.getOperations().add(op3);
         
         ServiceDefinition sd4=new ServiceDefinition();
-        sd4.setServiceType(SERVICE_TYPE4);
+        sd4.setInterface(INTERFACE4);
         
         OperationDefinition op4=new OperationDefinition();
         op4.setName(OP4);
@@ -122,10 +129,10 @@ public class ServiceGraphLayoutImplTest {
         layout.layout(graph);
         
         // Check some of the dimensions
-        ServiceNode sn1=graph.getServiceNode(sd1.getServiceType());
-        ServiceNode sn2=graph.getServiceNode(sd2.getServiceType());
-        ServiceNode sn3=graph.getServiceNode(sd3.getServiceType());
-        ServiceNode sn4=graph.getServiceNode(sd4.getServiceType());
+        ServiceNode sn1=graph.getServiceNode(sd1.getInterface());
+        ServiceNode sn2=graph.getServiceNode(sd2.getInterface());
+        ServiceNode sn3=graph.getServiceNode(sd3.getInterface());
+        ServiceNode sn4=graph.getServiceNode(sd4.getInterface());
         
         int sn1x=(Integer)sn1.getProperties().get(ServiceGraphLayout.X_POSITION);
         int sn1y=(Integer)sn1.getProperties().get(ServiceGraphLayout.Y_POSITION);

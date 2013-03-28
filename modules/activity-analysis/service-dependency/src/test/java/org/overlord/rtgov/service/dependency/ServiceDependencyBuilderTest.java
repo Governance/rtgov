@@ -26,6 +26,7 @@ import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 import org.overlord.rtgov.service.dependency.InvocationLink;
 import org.overlord.rtgov.service.dependency.OperationNode;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
@@ -38,41 +39,48 @@ public class ServiceDependencyBuilderTest {
     private static final String OP3 = "op3";
     private static final String OP2 = "op2";
     private static final String OP1 = "op1";
-    private static final String SERVICE_TYPE1 = "serviceType1";
+    private static final String INTERFACE1 = "intf1";
+    private static final String INTERFACE2 = "intf2";
+    private static final String INTERFACE3 = "intf3";
     private static final String SERVICE_TYPE2 = "serviceType2";
-    private static final String SERVICE_TYPE3 = "serviceType3";
     private static final String FAULT2 = "fault2";
 
     @Test
     public void testInitialServices() {
         ServiceDefinition sd1=new ServiceDefinition();
-        sd1.setServiceType(SERVICE_TYPE1);
+        sd1.setInterface(INTERFACE1);
         
         OperationDefinition op1=new OperationDefinition();
         sd1.getOperations().add(op1);
         
+        OperationImplDefinition stod1=new OperationImplDefinition();
+        op1.getImplementations().add(stod1);
+        
         RequestResponseDefinition rrd1=new RequestResponseDefinition();
-        op1.setRequestResponse(rrd1);
+        stod1.setRequestResponse(rrd1);
         
         InvocationDefinition id1=new InvocationDefinition();
-        id1.setServiceType(SERVICE_TYPE3);
+        id1.setInterface(INTERFACE3);
         rrd1.getInvocations().add(id1);
         
         ServiceDefinition sd2=new ServiceDefinition();
-        sd2.setServiceType(SERVICE_TYPE2);
+        sd2.setInterface(INTERFACE2);
         
         OperationDefinition op2=new OperationDefinition();
         sd2.getOperations().add(op2);
         
+        OperationImplDefinition stod2=new OperationImplDefinition();
+        op2.getImplementations().add(stod2);
+        
         RequestResponseDefinition rrd2=new RequestResponseDefinition();
-        op2.setRequestResponse(rrd2);
+        stod2.setRequestResponse(rrd2);
         
         InvocationDefinition id2=new InvocationDefinition();
-        id2.setServiceType(SERVICE_TYPE3);
+        id2.setInterface(INTERFACE3);
         rrd2.getInvocations().add(id2);
         
         ServiceDefinition sd3=new ServiceDefinition();
-        sd3.setServiceType(SERVICE_TYPE3);
+        sd3.setInterface(INTERFACE3);
         
         
         java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
@@ -103,33 +111,39 @@ public class ServiceDependencyBuilderTest {
     @Test
     public void testServiceClients() {
         ServiceDefinition sd1=new ServiceDefinition();
-        sd1.setServiceType(SERVICE_TYPE1);
+        sd1.setInterface(INTERFACE1);
         
         OperationDefinition op1=new OperationDefinition();
         sd1.getOperations().add(op1);
         
+        OperationImplDefinition stod1=new OperationImplDefinition();
+        op1.getImplementations().add(stod1);
+        
         RequestResponseDefinition rrd1=new RequestResponseDefinition();
-        op1.setRequestResponse(rrd1);
+        stod1.setRequestResponse(rrd1);
         
         InvocationDefinition id1=new InvocationDefinition();
-        id1.setServiceType(SERVICE_TYPE3);
+        id1.setInterface(INTERFACE3);
         rrd1.getInvocations().add(id1);
         
         ServiceDefinition sd2=new ServiceDefinition();
-        sd2.setServiceType(SERVICE_TYPE2);
+        sd2.setInterface(INTERFACE2);
         
         OperationDefinition op2=new OperationDefinition();
         sd2.getOperations().add(op2);
         
+        OperationImplDefinition stod2=new OperationImplDefinition();
+        op2.getImplementations().add(stod2);
+        
         RequestFaultDefinition rrd2=new RequestFaultDefinition();
-        op2.getRequestFaults().add(rrd2);
+        stod2.getRequestFaults().add(rrd2);
         
         InvocationDefinition id2=new InvocationDefinition();
-        id2.setServiceType(SERVICE_TYPE3);
+        id2.setInterface(INTERFACE3);
         rrd2.getInvocations().add(id2);
         
         ServiceDefinition sd3=new ServiceDefinition();
-        sd3.setServiceType(SERVICE_TYPE3);
+        sd3.setInterface(INTERFACE3);
         
         
         java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
@@ -138,7 +152,7 @@ public class ServiceDependencyBuilderTest {
         sds.add(sd3);
         
         java.util.Set<ServiceDefinition> results=
-                ServiceDependencyBuilder.getServiceClients(SERVICE_TYPE3, sds);
+                ServiceDependencyBuilder.getServiceClients(INTERFACE3, sds);
         
         if (results == null) {
             fail("Results null");
@@ -160,50 +174,56 @@ public class ServiceDependencyBuilderTest {
     @Test
     public void testBuildGraph() {
         ServiceDefinition sd1=new ServiceDefinition();
-        sd1.setServiceType(SERVICE_TYPE1);
+        sd1.setInterface(INTERFACE1);
         
         OperationDefinition op1=new OperationDefinition();
         op1.setName(OP1);
         sd1.getOperations().add(op1);
         
+        OperationImplDefinition stod1=new OperationImplDefinition();
+        op1.getImplementations().add(stod1);
+        
         RequestResponseDefinition rrd1=new RequestResponseDefinition();
-        op1.setRequestResponse(rrd1);
+        stod1.setRequestResponse(rrd1);
         
         InvocationDefinition id1=new InvocationDefinition();
-        id1.setServiceType(SERVICE_TYPE2);
+        id1.setInterface(INTERFACE2);
         id1.setOperation(OP2);
         rrd1.getInvocations().add(id1);
         
         ServiceDefinition sd2=new ServiceDefinition();
-        sd2.setServiceType(SERVICE_TYPE2);
+        sd2.setInterface(INTERFACE2);
         
         OperationDefinition op2=new OperationDefinition();
         op2.setName(OP2);
         sd2.getOperations().add(op2);
         
+        OperationImplDefinition stod2=new OperationImplDefinition();
+        op2.getImplementations().add(stod2);
+        
         RequestResponseDefinition rrd2=new RequestResponseDefinition();
-        op2.setRequestResponse(rrd2);
+        stod2.setRequestResponse(rrd2);
         
         InvocationDefinition id2a=new InvocationDefinition();
-        id2a.setServiceType(SERVICE_TYPE1);
+        id2a.setInterface(INTERFACE1);
         id2a.setOperation(OP1);
         rrd2.getInvocations().add(id2a);
         
         InvocationDefinition id2c=new InvocationDefinition();
-        id2c.setServiceType(SERVICE_TYPE3);
+        id2c.setInterface(INTERFACE3);
         id2c.setOperation(OP3);
         rrd2.getInvocations().add(id2c);
         
         RequestFaultDefinition rfd2=new RequestFaultDefinition();
-        op2.getRequestFaults().add(rfd2);
+        stod2.getRequestFaults().add(rfd2);
         
         InvocationDefinition id2b=new InvocationDefinition();
-        id2b.setServiceType(SERVICE_TYPE3);
+        id2b.setInterface(INTERFACE3);
         id2b.setOperation(OP3);
         rfd2.getInvocations().add(id2b);
         
         ServiceDefinition sd3=new ServiceDefinition();
-        sd3.setServiceType(SERVICE_TYPE3);
+        sd3.setInterface(INTERFACE3);
         
         OperationDefinition op3=new OperationDefinition();
         op3.setName(OP3);
@@ -219,21 +239,21 @@ public class ServiceDependencyBuilderTest {
         
         Situation sit1=new Situation();
         sit1.setSeverity(Situation.Severity.Critical);
-        sit1.setSubject(SERVICE_TYPE1);
+        sit1.setSubject(INTERFACE1);
         sit1.setType("SLA Violation");
         sit1.setDescription("Service exceeded SLA");
         sits.add(sit1);
         
         Situation sit2=new Situation();
         sit2.setSeverity(Situation.Severity.High);
-        sit2.setSubject(SERVICE_TYPE1);
+        sit2.setSubject(INTERFACE1);
         sit2.setType("SLA Warning");
         sit2.setDescription("Service close to violating SLA");
         sits.add(sit2);
         
         Situation sit3=new Situation();
         sit3.setSeverity(Situation.Severity.High);
-        sit3.setSubject(SERVICE_TYPE2+"/"+OP2+"/"+FAULT2);
+        sit3.setSubject(INTERFACE2+"/"+OP2+"/"+SERVICE_TYPE2+"/"+FAULT2);
         sit3.setType("SLA Violation");
         sit3.setDescription("Service exceeded SLA");
         sits.add(sit3);
@@ -261,11 +281,11 @@ public class ServiceDependencyBuilderTest {
             fail("Expecting 3 invocation links: "+result.getInvocationLinks().size());
         }
         
-        ServiceNode sn1=result.getServiceNode(SERVICE_TYPE1);
+        ServiceNode sn1=result.getServiceNode(INTERFACE1);
         OperationNode opn1=sn1.getOperation(OP1);
-        ServiceNode sn2=result.getServiceNode(SERVICE_TYPE2);
+        ServiceNode sn2=result.getServiceNode(INTERFACE2);
         OperationNode opn2=sn2.getOperation(OP2);
-        ServiceNode sn3=result.getServiceNode(SERVICE_TYPE3);
+        ServiceNode sn3=result.getServiceNode(INTERFACE3);
         OperationNode opn3=sn3.getOperation(OP3);
         
         if (!result.getUsageLinks().contains(new UsageLink(sn1, sn2))) {

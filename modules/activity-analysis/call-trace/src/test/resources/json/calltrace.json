@@ -3,6 +3,7 @@
 		{
 			"type":"Call",
 			"component":"TestComponent",
+			"interface":"TestInterface",
 			"operation":"TestOperation",
 			"fault":"TestFault",
 			"request":"<request/>",
@@ -17,6 +18,7 @@
 				},{
 					"type":"Call",
 					"component":"OtherComponent",
+					"interface":"OtherInterface",
 					"operation":"OtherOp",
 					"request":"<req2/>",
 					"tasks":[

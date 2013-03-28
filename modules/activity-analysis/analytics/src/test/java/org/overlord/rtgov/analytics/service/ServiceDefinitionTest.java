@@ -36,11 +36,11 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setServiceType(SERVICE_TYPE_1);
+        sd1.setInterface(SERVICE_TYPE_1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setServiceType(SERVICE_TYPE_2);
+        sd2.setInterface(SERVICE_TYPE_2);
         
         try {
             sd1.merge(sd2, false);
@@ -56,14 +56,14 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setServiceType(SERVICE_TYPE_1);
+        sd1.setInterface(SERVICE_TYPE_1);
         
         OperationDefinition op1=new OperationDefinition();
         op1.setName(OPERATION_1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setServiceType(SERVICE_TYPE_1);
+        sd2.setInterface(SERVICE_TYPE_1);
         
         OperationDefinition op2=new OperationDefinition();
         op2.setName(OPERATION_1);
@@ -101,14 +101,14 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setServiceType(SERVICE_TYPE_1);
+        sd1.setInterface(SERVICE_TYPE_1);
         
         OperationDefinition op1=new OperationDefinition();
         op1.setName(OPERATION_1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setServiceType(SERVICE_TYPE_1);
+        sd2.setInterface(SERVICE_TYPE_1);
         sd2.getContext().add(new Context(Context.Type.Conversation, "c2"));
         
         try {
@@ -127,11 +127,11 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setServiceType(SERVICE_TYPE_1);
+        sd1.setInterface(SERVICE_TYPE_1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setServiceType(SERVICE_TYPE_1);
+        sd2.setInterface(SERVICE_TYPE_1);
         sd2.getContext().add(new Context(Context.Type.Conversation, "c2"));
         
         try {

@@ -40,6 +40,7 @@ import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 
 /**
  * This class provides utility functions related to the service
@@ -248,13 +249,13 @@ public final class ServiceDefinitionUtil {
         MEPDefinition ret=null;
         
         // Get service definition associated with the service type
-        ServiceDefinition sd=sdefs.get(rqr.getServiceType());
+        ServiceDefinition sd=sdefs.get(rqr.getInterface());
         
         // If not found, then create
         if (sd == null) {
             sd = new ServiceDefinition();
-            sd.setServiceType(rqr.getServiceType());
-            sdefs.put(rqr.getServiceType(), sd);
+            sd.setInterface(rqr.getInterface());
+            sdefs.put(rqr.getInterface(), sd);
         }
         
         OperationDefinition op=sd.getOperation(rqr.getOperation());
@@ -265,15 +266,23 @@ public final class ServiceDefinitionUtil {
             sd.getOperations().add(op);
         }
         
+        OperationImplDefinition stod=op.getServiceTypeOperation(rqr.getServiceType());
+        
+        if (stod == null) {
+        	stod = new OperationImplDefinition();
+        	stod.setServiceType(rqr.getServiceType());
+        	op.getImplementations().add(stod);
+        }
+        
         // Check if normal or fault response
         InvocationMetric metrics=null;
         
         if (rps.getFault() == null || rps.getFault().trim().length() == 0) {
-            RequestResponseDefinition nrd=op.getRequestResponse();
+            RequestResponseDefinition nrd=stod.getRequestResponse();
             
             if (nrd == null) {
                 nrd = new RequestResponseDefinition();
-                op.setRequestResponse(nrd);
+                stod.setRequestResponse(nrd);
                 
                 // Set the request and response ids
                 nrd.setRequestId(ActivityTypeId.createId(rqr));
@@ -284,7 +293,7 @@ public final class ServiceDefinitionUtil {
             
             ret = nrd;
         } else {
-            RequestFaultDefinition frd=op.getRequestFault(rps.getFault());
+            RequestFaultDefinition frd=stod.getRequestFault(rps.getFault());
             
             if (frd == null) {
                 frd = new RequestFaultDefinition();
@@ -294,7 +303,7 @@ public final class ServiceDefinitionUtil {
                 frd.setRequestId(ActivityTypeId.createId(rqr));
                 frd.setResponseId(ActivityTypeId.createId(rps));
                 
-                op.getRequestFaults().add(frd);
+                stod.getRequestFaults().add(frd);
             }
             
             metrics = frd.getMetrics();
@@ -363,12 +372,12 @@ public final class ServiceDefinitionUtil {
     protected static void processExternalInvocation(java.util.Map<String,ServiceDefinition> sdefs,
                 MEPDefinition call, RequestSent rqs, ResponseReceived rpr) {
         
-        InvocationDefinition idef=call.getInvocation(rqs.getServiceType(),
+        InvocationDefinition idef=call.getInvocation(rqs.getInterface(),
                         rqs.getOperation(), rpr.getFault());
         
         if (idef == null) {
             idef = new InvocationDefinition();
-            idef.setServiceType(rqs.getServiceType());
+            idef.setInterface(rqs.getInterface());
             idef.setOperation(rqs.getOperation());
             idef.setFault(rpr.getFault());
             
@@ -430,7 +439,7 @@ public final class ServiceDefinitionUtil {
         
         for (String key : keys) {
             ServiceDefinition sd=new ServiceDefinition();
-            sd.setServiceType(key);
+            sd.setInterface(key);
             
             for (java.util.Map<String,ServiceDefinition> sds : snapshots) {
                 if (sds.containsKey(key)) {

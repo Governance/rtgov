@@ -5,6 +5,7 @@ int min=0, max=0;
 
 firstEvent = events.get(0);
 
+result.setInterface(firstEvent.getInterface());
 result.setServiceType(firstEvent.getServiceType());
 result.setOperation(firstEvent.getOperation());
 result.setFault(firstEvent.getFault());

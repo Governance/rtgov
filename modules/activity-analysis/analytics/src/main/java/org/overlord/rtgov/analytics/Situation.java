@@ -42,10 +42,15 @@ import org.overlord.rtgov.activity.model.Context;
 @Table(name="RTGOV_SITUATIONS")
 public class Situation implements java.io.Externalizable {
 
-    private static final int VERSION = 1;
+	private static final int VERSION = 1;
     
     private Long _id;
     
+    /**
+     * The separator character between parts of the subject.
+     */
+    public static final char SUBJECT_SEPARATOR_CHAR = '|';
+
     /**
      * This enumeration type represents the severity of
      * the situation.
@@ -121,6 +126,40 @@ public class Situation implements java.io.Externalizable {
      */
     public String getType() {
         return (_type);
+    }
+    
+    /**
+     * This method constructs a subject based on a variable
+     * number of string parts.
+     * 
+     * @param parts The parts
+     * @return The subject
+     */
+    public static String createSubject(String... parts) {
+    	String ret=null;
+    	
+    	for (String part : parts) {
+    		if (ret == null) {
+    			ret = (part == null ? "" : part);
+    		} else {
+    			ret += SUBJECT_SEPARATOR_CHAR + (part == null ? "" : part);
+    		}
+    	}
+    	
+    	// Check for trailing separators
+    	if (ret != null && ret.length() > 0) {
+	    	int i=ret.length()-1;
+	    	
+	    	while (i >= 0 && ret.charAt(i) == SUBJECT_SEPARATOR_CHAR) {
+	    		i--;
+	    	}
+	    	
+	    	if (i != ret.length()-1) {
+	    		ret = ret.substring(0, i+1);
+	    	}
+    	}
+    	
+    	return (ret);
     }
     
     /**

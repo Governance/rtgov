@@ -8,15 +8,15 @@ org.overlord.rtgov.active.collection.ActiveMap map=
 	(org.overlord.rtgov.active.collection.ActiveMap)acs.getActiveCollection();
 	
 org.overlord.rtgov.analytics.service.ServiceDefinition existingsd=
-	(org.overlord.rtgov.analytics.service.ServiceDefinition)map.get(newsd.getServiceType());
+	(org.overlord.rtgov.analytics.service.ServiceDefinition)map.get(newsd.getInterface());
 
 if (existingsd == null) {
-	acs.insert(newsd.getServiceType(),
+	acs.insert(newsd.getInterface(),
 			new org.overlord.rtgov.analytics.service.ServiceDefinition(newsd));
 } else {
 	existingsd.merge(newsd);
 	
-	acs.update(existingsd.getServiceType(), existingsd);
+	acs.update(existingsd.getInterface(), existingsd);
 }
 
 // Update the current snapshot
@@ -27,10 +27,10 @@ if (currentSnapshot == null) {
 	variables.put("currentSnapshot", currentSnapshot);
 }
 
-existingsd = currentSnapshot.get(newsd.getServiceType());
+existingsd = currentSnapshot.get(newsd.getInterface());
 
 if (existingsd == null) {
-	currentSnapshot.put(newsd.getServiceType(), newsd);
+	currentSnapshot.put(newsd.getInterface(), newsd);
 } else {
 	existingsd.merge(newsd);
 }

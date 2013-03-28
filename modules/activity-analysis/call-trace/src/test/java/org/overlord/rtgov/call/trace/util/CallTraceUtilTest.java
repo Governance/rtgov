@@ -32,6 +32,7 @@ public class CallTraceUtilTest {
         Call node=new Call();
         
         node.setComponent("TestComponent");
+        node.setInterface("TestInterface");
         node.setOperation("TestOperation");
         node.setFault("TestFault");
         node.setRequest("<request/>");
@@ -52,6 +53,7 @@ public class CallTraceUtilTest {
         Call c1=new Call();
         
         c1.setComponent("OtherComponent");
+        c1.setInterface("OtherInterface");
         c1.setOperation("OtherOp");
         c1.setDuration(100);
         c1.setPercentage(50);

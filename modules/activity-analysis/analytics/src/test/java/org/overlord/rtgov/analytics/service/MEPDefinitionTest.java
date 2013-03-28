@@ -27,9 +27,9 @@ import org.overlord.rtgov.analytics.service.MEPDefinition;
 public class MEPDefinitionTest {
 
     private static final String OPERATION_1 = "op1";
-    private static final String SERVICE_TYPE_1 = "st1";
+    private static final String INTERFACE_1 = "intf1";
     private static final String OPERATION_2 = "op2";
-    private static final String SERVICE_TYPE_2 = "st2";
+    private static final String INTERFACE_2 = "intf2";
 
     @Test
     public void testMergeNoReqResp() {
@@ -37,7 +37,7 @@ public class MEPDefinitionTest {
         MEPDefinition mep1=new MEPDefinition() {};
         
         InvocationDefinition id1=new InvocationDefinition();
-        id1.setServiceType(SERVICE_TYPE_1);
+        id1.setInterface(INTERFACE_1);
         id1.setOperation(OPERATION_1);
         
         mep1.getInvocations().add(id1);
@@ -45,13 +45,13 @@ public class MEPDefinitionTest {
         MEPDefinition mep2=new MEPDefinition() {};
         
         InvocationDefinition id2=new InvocationDefinition();
-        id2.setServiceType(SERVICE_TYPE_1);
+        id2.setInterface(INTERFACE_1);
         id2.setOperation(OPERATION_1);
         
         mep2.getInvocations().add(id2);
         
         InvocationDefinition id3=new InvocationDefinition();
-        id3.setServiceType(SERVICE_TYPE_2);
+        id3.setInterface(INTERFACE_2);
         id3.setOperation(OPERATION_2);
         
         mep2.getInvocations().add(id3);
@@ -62,11 +62,11 @@ public class MEPDefinitionTest {
             fail("Expecting 2 invocations: "+mep1.getInvocations().size());
         }
         
-        if (mep1.getInvocation(SERVICE_TYPE_1, OPERATION_1, null) == null) {
+        if (mep1.getInvocation(INTERFACE_1, OPERATION_1, null) == null) {
             fail("Failed to get st1/op1");
         }
         
-        if (mep1.getInvocation(SERVICE_TYPE_2, OPERATION_2, null) == null) {
+        if (mep1.getInvocation(INTERFACE_2, OPERATION_2, null) == null) {
             fail("Failed to get st2/op2");
         }
     }
