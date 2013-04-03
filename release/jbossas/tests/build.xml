@@ -13,7 +13,7 @@
 
 		<!-- Copy data source definitions -->
 		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
-			<fileset dir="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/deployments/server" />
+			<fileset dir="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/profiles/server/deployments" />
 		</copy>
 
 		<echo message="Setting up Overlord Runtime Governance configuration"/>
@@ -21,7 +21,7 @@
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties" />
 
 		<copy todir="${jboss.home}/standalone/configuration" >
-			<fileset file="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/configuration/server/overlord-rtgov.properties" />
+			<fileset file="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/profiles/server/configuration/overlord-rtgov.properties" />
 		</copy>
 	</target>
 

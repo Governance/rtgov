@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="RTGovRESTClient">
+
+	<target name="deploy" >
+		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
+			<fileset dir="deployments" />
+		</copy>
+		<copy todir="${jboss.home}/standalone/configuration" >
+			<fileset dir="configuration" />
+		</copy>
+	</target>
+
+	<target name="undeploy" >
+		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
+		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
+	</target>
+
+</project>
+ 

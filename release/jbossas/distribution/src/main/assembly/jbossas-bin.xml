@@ -50,19 +50,6 @@
 			</excludes>
 		</fileSet>
 
-		<!-- Copy war build module -->
-<!--
-		<fileSet>
-			<directory>../war</directory>
-			<outputDirectory>build</outputDirectory>
-			<excludes>
-				<exclude>**/.*</exclude>
-				<exclude>**/target/**</exclude>
-				<exclude>**/.settings/**</exclude>
-			</excludes>
-		</fileSet>
--->
-
 		<!-- Copy modules and deployments -->
 		<fileSet>
 			<directory>src/main/jbossas</directory>
@@ -74,7 +61,7 @@
 	<dependencySets>
 
 		<dependencySet>
-			<outputDirectory>deployments/server</outputDirectory>
+			<outputDirectory>profiles/server/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov:war</include>
@@ -85,14 +72,14 @@
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>/gadget-server</outputDirectory>
+			<outputDirectory>profiles/server</outputDirectory>
 			<unpack>true</unpack>
 			<includes>
 				<include>org.overlord.gadgets.server:distribution:zip</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>deployments/restc</outputDirectory>
+			<outputDirectory>profiles/restc/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov-client-rest:war</include>
