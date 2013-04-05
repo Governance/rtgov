@@ -144,14 +144,12 @@ public final class ServiceDependencyBuilder {
                 opn.setService(sd);
                 opn.setOperation(op);
                 
-                String subject=sn.getService().getInterface()
-                        +"/"+op.getName();
-                
                 if (sits != null) {
                     for (Situation s : sits) {
-                        if (s.getSubject() != null
-                        		&& (s.getSubject().equals(subject)
-                        		|| s.getSubject().startsWith(subject+"/"))) {
+                    	String[] parts=s.subjectAsParts();
+                        if (parts.length > 1 && parts[0].equals(
+                                    sn.getService().getInterface())
+                                    && parts[1].equals(op.getName())) {
                             opn.getSituations().add(s);
                         }
                     }
@@ -163,8 +161,10 @@ public final class ServiceDependencyBuilder {
             sn.getProperties().put(ServiceNode.INITIAL_NODE, initialNodes.contains(sd));
             
             if (sits != null) {
+            	// Associate situations specific to the interface just with the service node
                 for (Situation s : sits) {
-                    if (s.getSubject() != null && s.getSubject().equals(
+                	String[] parts=s.subjectAsParts();
+                    if (parts.length == 1 && parts[0].equals(
                                 sn.getService().getInterface())) {
                         sn.getSituations().add(s);
                     }

@@ -239,21 +239,22 @@ public class ServiceDependencyBuilderTest {
         
         Situation sit1=new Situation();
         sit1.setSeverity(Situation.Severity.Critical);
-        sit1.setSubject(INTERFACE1);
+        sit1.setSubject(Situation.createSubject(INTERFACE1));
         sit1.setType("SLA Violation");
         sit1.setDescription("Service exceeded SLA");
         sits.add(sit1);
         
         Situation sit2=new Situation();
         sit2.setSeverity(Situation.Severity.High);
-        sit2.setSubject(INTERFACE1);
+        sit2.setSubject(Situation.createSubject(INTERFACE1));
         sit2.setType("SLA Warning");
         sit2.setDescription("Service close to violating SLA");
         sits.add(sit2);
         
         Situation sit3=new Situation();
         sit3.setSeverity(Situation.Severity.High);
-        sit3.setSubject(INTERFACE2+"/"+OP2+"/"+SERVICE_TYPE2+"/"+FAULT2);
+        sit3.setSubject(Situation.createSubject(INTERFACE2, 
+        		OP2, SERVICE_TYPE2, FAULT2));
         sit3.setType("SLA Violation");
         sit3.setDescription("Service exceeded SLA");
         sits.add(sit3);
@@ -351,6 +352,10 @@ public class ServiceDependencyBuilderTest {
         
         if (!sn1.getSituations().contains(sit2)) {
             fail("sn1 situation does not include sit2");
+        }
+        
+        if (sn2.getSituations().size() != 0) {
+            fail("sn2 should not have any situations: "+sn2.getSituations().size());
         }
         
         if (opn2.getSituations().size() != 1) {

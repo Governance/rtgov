@@ -52,6 +52,11 @@ public class Situation implements java.io.Externalizable {
     public static final char SUBJECT_SEPARATOR_CHAR = '|';
 
     /**
+     * The regular expression to isolate the subject separator
+     */
+    private static final String SUBJECT_SEPARATOR_REGEX = "\\|";
+
+    /**
      * This enumeration type represents the severity of
      * the situation.
      *
@@ -160,6 +165,23 @@ public class Situation implements java.io.Externalizable {
     	}
     	
     	return (ret);
+    }
+    
+    /**
+     * This method returns the subject as its constituent parts.
+     * 
+     * @return The subject parts
+     */
+    public String[] subjectAsParts() {
+    	String[] ret=null;
+    	
+    	if (_subject != null) {
+    		ret = _subject.split(SUBJECT_SEPARATOR_REGEX);
+    	} else {
+    		ret = new String[0];
+    	}
+    	
+    	return(ret);
     }
     
     /**
