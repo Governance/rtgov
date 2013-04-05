@@ -95,13 +95,21 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
         		if (getExpression().charAt(0) == '/'
         					&& ((org.w3c.dom.Node)information).getParentNode()
         						!= ((org.w3c.dom.Node)information).getOwnerDocument()) {
-        			reparse = true;
         			
-            		if (LOG.isLoggable(Level.INFO)) {
-            			LOG.info("Will need to reparse the supplied DOM node '"+information
-            					+"' as not the top level element, but the xpath expression starts with '/': "
+            		if (LOG.isLoggable(Level.FINEST)) {
+            			LOG.finest("Need to import supplied DOM node '"+information
+            					+"' into new document, as not the top level element "
+            					+"and the xpath expression starts with '/': "
             					+getExpression());
             		}        			
+
+            		org.w3c.dom.Document doc=
+        					javax.xml.parsers.DocumentBuilderFactory.newInstance()
+        							.newDocumentBuilder().newDocument();
+        			
+        			information = doc.importNode((org.w3c.dom.Node)information, true);
+        			
+        			doc.appendChild((org.w3c.dom.Node)information);
         		}
         	}
 
