@@ -7,29 +7,20 @@
 				"type":"Conversation",
 				"evaluator":{
 					"type":"xpath",
-					"namespaces":{
-						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
-					},
-					"expression":"/orders:submitOrder/order/orderId"
+					"expression":"order/orderId"
 				}
 			}],
 			"properties":[{
 				"name":"customer",
 				"evaluator":{
 					"type":"xpath",
-					"namespaces":{
-						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
-					},
-					"expression":"/orders:submitOrder/order/customer"
+					"expression":"order/customer"
 				}
 			},{
 				"name":"item",
 				"evaluator":{
 					"type":"xpath",
-					"namespaces":{
-						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
-					},
-					"expression":"/orders:submitOrder/order/itemId"
+					"expression":"order/itemId"
 				}
 			}]
 		},
@@ -60,19 +51,13 @@
 				"name":"customer",
 				"evaluator":{
 					"type":"xpath",
-					"namespaces":{
-						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
-					},
-					"expression":"/orders:makePayment/payment/customer"
+					"expression":"payment/customer"
 				}
 			},{
 				"name":"amount",
 				"evaluator":{
 					"type":"xpath",
-					"namespaces":{
-						"orders":"urn:switchyard-quickstart-demo:orders:1.0"
-					},
-					"expression":"/orders:makePayment/payment/amount"
+					"expression":"payment/amount"
 				}
 			}]
 		},

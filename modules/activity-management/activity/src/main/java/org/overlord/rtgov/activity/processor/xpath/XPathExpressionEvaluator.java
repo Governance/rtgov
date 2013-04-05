@@ -88,7 +88,21 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
         		}
         		
         		// RTGOV-141 - workaround to overcome xpath evaluation issue
-        		reparse = true;
+        		// Issue is caused when xpath expression defined from root (i.e. starts
+        		// with /), but the context (info) is a lower level child node,
+        		// as in the case of a SOAP body. The evaluation of the expression
+        		// attempts to start at the top level document.
+        		if (getExpression().charAt(0) == '/'
+        					&& ((org.w3c.dom.Node)information).getParentNode()
+        						!= ((org.w3c.dom.Node)information).getOwnerDocument()) {
+        			reparse = true;
+        			
+            		if (LOG.isLoggable(Level.INFO)) {
+            			LOG.info("Will need to reparse the supplied DOM node '"+information
+            					+"' as not the top level element, but the xpath expression starts with '/': "
+            					+getExpression());
+            		}        			
+        		}
         	}
 
             if (information instanceof String) {

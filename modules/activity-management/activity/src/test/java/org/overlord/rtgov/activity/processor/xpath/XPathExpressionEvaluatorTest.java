@@ -19,6 +19,8 @@ package org.overlord.rtgov.activity.processor.xpath;
 
 import static org.junit.Assert.*;
 
+import javax.xml.soap.SOAPMessage;
+
 import org.junit.Test;
 import org.overlord.rtgov.activity.processor.xpath.XPathExpressionEvaluator;
 
@@ -341,6 +343,98 @@ public class XPathExpressionEvaluatorTest {
         }
         
         javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(doc.getDocumentElement());
+        
+        String result=evaluator.evaluate(source);
+        
+        if (result == null) {
+            fail("Failed to get result");
+        }
+        
+        if (!result.equals(value)) {
+            fail("Result not expected: "+result);
+        }
+    }
+    
+    @Test
+    public void testEvaluateDOMSourceSOAPMessage() {
+        String value="hello";
+        String xml="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body>" +
+        		"<ns1:mydoc xmlns:ns1=\"http://www.mynamespace\" ><ns1:field>"+value+"</ns1:field></ns1:mydoc>" +
+        		"</soap:Body></soap:Envelope>";
+        
+        XPathExpressionEvaluator evaluator=new XPathExpressionEvaluator();
+        
+        evaluator.setExpression("ns2:field");
+        
+        evaluator.getNamespaces().put("ns2", "http://www.mynamespace");
+        
+        try {
+            evaluator.init();
+        } catch(Exception e) {
+            fail("Failed to initialize: "+e);
+        }
+        
+        org.w3c.dom.Node node=null;
+        
+        try {
+        	java.io.InputStream is=new java.io.ByteArrayInputStream(xml.getBytes());
+        	
+        	SOAPMessage soapm=javax.xml.soap.MessageFactory.newInstance().createMessage(null, is);
+        	
+        	node = soapm.getSOAPBody().getFirstChild();
+         	
+            is.close();
+        } catch(Exception e) {
+            fail("Failed to parse xml: "+e);
+        }
+        
+        javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(node);
+        
+        String result=evaluator.evaluate(source);
+        
+        if (result == null) {
+            fail("Failed to get result");
+        }
+        
+        if (!result.equals(value)) {
+            fail("Result not expected: "+result);
+        }
+    }
+    
+    @Test
+    public void testEvaluateDOMSourceSOAPMessage2() {
+        String value="hello";
+        String xml="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body>" +
+        		"<ns1:mydoc xmlns:ns1=\"http://www.mynamespace\" ><ns1:field>"+value+"</ns1:field></ns1:mydoc>" +
+        		"</soap:Body></soap:Envelope>";
+        
+        XPathExpressionEvaluator evaluator=new XPathExpressionEvaluator();
+        
+        evaluator.setExpression("/ns2:mydoc/ns2:field");
+        
+        evaluator.getNamespaces().put("ns2", "http://www.mynamespace");
+        
+        try {
+            evaluator.init();
+        } catch(Exception e) {
+            fail("Failed to initialize: "+e);
+        }
+        
+        org.w3c.dom.Node node=null;
+        
+        try {
+        	java.io.InputStream is=new java.io.ByteArrayInputStream(xml.getBytes());
+        	
+        	SOAPMessage soapm=javax.xml.soap.MessageFactory.newInstance().createMessage(null, is);
+        	
+        	node = soapm.getSOAPBody().getFirstChild();
+         	
+            is.close();
+        } catch(Exception e) {
+            fail("Failed to parse xml: "+e);
+        }
+        
+        javax.xml.transform.dom.DOMSource source=new javax.xml.transform.dom.DOMSource(node);
         
         String result=evaluator.evaluate(source);
         
