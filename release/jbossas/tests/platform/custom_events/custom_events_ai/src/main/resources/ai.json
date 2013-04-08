@@ -1,0 +1,7 @@
+[{
+  "name" : "ReviewCustomEvent",
+  "version" : "1",
+  "eventProcessor" : {
+    "@class" : "org.overlord.rtgov.tests.platforms.jbossas.customevent.ai.ReviewCustomActivityEventProcessor"
+  }
+}]
