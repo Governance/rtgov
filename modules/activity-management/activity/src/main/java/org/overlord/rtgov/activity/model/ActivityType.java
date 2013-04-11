@@ -42,6 +42,7 @@ import org.overlord.rtgov.activity.model.app.CustomActivity;
 import org.overlord.rtgov.activity.model.app.LogMessage;
 import org.overlord.rtgov.activity.model.bpm.ProcessCompleted;
 import org.overlord.rtgov.activity.model.bpm.ProcessStarted;
+import org.overlord.rtgov.activity.model.bpm.ProcessVariableSet;
 import org.overlord.rtgov.activity.model.mom.MessageReceived;
 import org.overlord.rtgov.activity.model.mom.MessageSent;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
@@ -62,6 +63,7 @@ import org.overlord.rtgov.activity.model.soa.ResponseSent;
     @Type(value=ResponseSent.class),
     @Type(value=ProcessCompleted.class),
     @Type(value=ProcessStarted.class),
+    @Type(value=ProcessVariableSet.class),
     @Type(value=CustomActivity.class),
     @Type(value=LogMessage.class) })
 @Entity

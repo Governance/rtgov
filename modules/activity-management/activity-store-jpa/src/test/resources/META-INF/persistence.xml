@@ -14,6 +14,7 @@
 		<class>org.overlord.rtgov.activity.model.bpm.BPMActivityType</class>
 		<class>org.overlord.rtgov.activity.model.bpm.ProcessCompleted</class>
 		<class>org.overlord.rtgov.activity.model.bpm.ProcessStarted</class>
+		<class>org.overlord.rtgov.activity.model.bpm.ProcessVariableSet</class>
 		<class>org.overlord.rtgov.activity.model.common.MessageExchange</class>
 		<class>org.overlord.rtgov.activity.model.mom.MOMActivityType</class>
 		<class>org.overlord.rtgov.activity.model.mom.MessageReceived</class>
@@ -44,6 +45,7 @@
 		<class>org.overlord.rtgov.activity.model.bpm.BPMActivityType</class>
 		<class>org.overlord.rtgov.activity.model.bpm.ProcessCompleted</class>
 		<class>org.overlord.rtgov.activity.model.bpm.ProcessStarted</class>
+		<class>org.overlord.rtgov.activity.model.bpm.ProcessVariableSet</class>
 		<class>org.overlord.rtgov.activity.model.mom.MessageExchange</class>
 		<class>org.overlord.rtgov.activity.model.mom.MessageReceived</class>
 		<class>org.overlord.rtgov.activity.model.mom.MessageSent</class>
