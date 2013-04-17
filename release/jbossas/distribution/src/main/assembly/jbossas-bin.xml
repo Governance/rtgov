@@ -65,6 +65,7 @@
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov:war</include>
+				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov-switchyard:war</include>
 				<include>org.overlord.rtgov.content:overlord-rtgov-epn:war</include>
 				<include>org.overlord.rtgov.content:overlord-rtgov-acs:war</include>
 				<include>org.overlord.rtgov.content.services:overlord-rtgov-services:war</include>
@@ -85,6 +86,14 @@
 				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov-client-rest:war</include>
 			</includes>
 			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/restc/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov-switchyard:war</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>/</outputDirectory>
