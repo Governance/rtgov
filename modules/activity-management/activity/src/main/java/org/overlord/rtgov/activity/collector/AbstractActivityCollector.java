@@ -223,9 +223,9 @@ public class AbstractActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public String processInformation(String processor, String type, Object info,
-            ActivityType actType) {
+    		java.util.Map<String, Object> headers, ActivityType actType) {
         if (_infoProcessorManager != null) {
-            return (_infoProcessorManager.process(processor, type, info, actType));
+            return (_infoProcessorManager.process(processor, type, info, headers, actType));
         } else if (LOG.isLoggable(Level.WARNING)) {
             LOG.warning("Information processor manager not specified: "
                     +"unable to process type '"+type+"' info: "+info);

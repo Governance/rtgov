@@ -52,12 +52,13 @@ public interface InformationProcessorManager {
      * @param processor The optional information processor to use
      * @param type The information type
      * @param info The information to be processed
+     * @param headers The optional header information
      * @param actType The activity type to be annotated with
      *              details extracted from the information
      * @return The public representation of the information
      */
     public String process(String processor, String type,
-                    Object info, ActivityType actType);
+                    Object info, java.util.Map<String, Object> headers, ActivityType actType);
     
     /**
      * This method registers the information processor.

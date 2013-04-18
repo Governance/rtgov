@@ -119,11 +119,13 @@ public class InformationProcessor {
      * 
      * @param type The information type
      * @param info The information to be processed
+     * @param headers The optional header information
      * @param actType The activity type to be annotated with
      *              details extracted from the information
      * @return The public representation of the information
      */
-    public String process(String type, Object info, ActivityType actType) {
+    public String process(String type, Object info,
+    			java.util.Map<String, Object> headers, ActivityType actType) {
         TypeProcessor processor=_typeProcessors.get(type);
         
     	if (LOG.isLoggable(Level.FINEST)) {
@@ -134,7 +136,7 @@ public class InformationProcessor {
 
     	if (processor != null) {
             // Process the context and property details
-            return (processor.process(info, actType));
+            return (processor.process(info, headers, actType));
         }
         
         return null;

@@ -31,6 +31,7 @@ public class TypeProcessorTest {
 
     private static final String VALUE2 = "Value2";
     private static final String VALUE1 = "Value1";
+    private static final String HEADER1 = "Header1";
     private static final String THE_REPRESENTATION = "The Representation";
 
     @Test
@@ -47,7 +48,7 @@ public class TypeProcessorTest {
             fail("Failed to initialize: "+e);
         }
         
-        String result=processor.process(THE_REPRESENTATION, new RequestReceived());
+        String result=processor.process(THE_REPRESENTATION, null, new RequestReceived());
      
         if (result == null) {
             fail("Result is null");
@@ -96,7 +97,7 @@ public class TypeProcessorTest {
             fail("Expecting 0 context: "+rr.getContext().size());
         }
 
-        String result=processor.process(to, rr);
+        String result=processor.process(to, null, rr);
      
         if (result != null) {
             fail("Result should be null");
@@ -124,7 +125,7 @@ public class TypeProcessorTest {
     }
 
     @Test
-    public void testProcessProperties() {
+    public void testProcessPropertiesForInformation() {
         TypeProcessor processor=new TypeProcessor();
         
         MVELExpressionEvaluator eval1=new MVELExpressionEvaluator();        
@@ -161,7 +162,79 @@ public class TypeProcessorTest {
             fail("Expecting 0 properties: "+rr.getProperties().size());
         }
 
-        String result=processor.process(to, rr);
+        String result=processor.process(to, null, rr);
+     
+        if (result != null) {
+            fail("Result should be null");
+        }
+        
+        if (rr.getProperties().size() != 2) {
+            fail("Expecting 2 properties: "+rr.getProperties().size());
+        }
+        
+        if (!rr.getProperties().containsKey("name1")) {
+            fail("No 'name1' property");
+        }
+        
+        if (!rr.getProperties().get("name1").equals(VALUE1)) {
+            fail("Property 'name1' value incorrect: "+rr.getProperties().get("name1"));
+        }
+        
+        if (!rr.getProperties().containsKey("name2")) {
+            fail("No 'name2' property");
+        }
+        
+        if (!rr.getProperties().get("name2").equals(VALUE2)) {
+            fail("Property 'name2' value incorrect: "+rr.getProperties().get("name2"));
+        }
+        
+    }
+
+    @Test
+    public void testProcessPropertiesForHeader() {
+        TypeProcessor processor=new TypeProcessor();
+        
+        MVELExpressionEvaluator eval1=new MVELExpressionEvaluator();        
+        eval1.setExpression("value1");
+        
+        PropertyEvaluator pe1=new PropertyEvaluator();
+        pe1.setName("name1");
+        pe1.setEvaluator(eval1);
+        
+        processor.getProperties().add(pe1);
+        
+        MVELExpressionEvaluator eval2=new MVELExpressionEvaluator();        
+        eval2.setExpression("value2");
+        
+        PropertyEvaluator pe2=new PropertyEvaluator();
+        pe2.setName("name2");
+        pe2.setHeader(HEADER1);
+        pe2.setEvaluator(eval2);
+        
+        processor.getProperties().add(pe2);
+        
+        try {
+            processor.init();
+        } catch (Exception e) {
+            fail("Failed to initialize: "+e);
+        }
+        
+        TestObject to1=new TestObject();
+        to1.value1 = VALUE1;
+        
+        TestObject to2=new TestObject();
+        to2.value2 = VALUE2;
+        
+        RequestReceived rr=new RequestReceived();
+
+        if (rr.getProperties().size() != 0) {
+            fail("Expecting 0 properties: "+rr.getProperties().size());
+        }
+
+        java.util.Map<String,Object> headers=new java.util.HashMap<String, Object>();
+        headers.put(HEADER1, to2);
+        
+        String result=processor.process(to1, headers, rr);
      
         if (result != null) {
             fail("Result should be null");

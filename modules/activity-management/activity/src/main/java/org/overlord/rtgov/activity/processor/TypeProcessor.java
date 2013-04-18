@@ -145,10 +145,11 @@ public class TypeProcessor {
      * activity type.
      * 
      * @param information The information
+     * @param headers The optional header information
      * @param actType The activity type
      * @return The representation of the information to be made public
      */
-    public String process(Object information, ActivityType actType) {
+    public String process(Object information, java.util.Map<String, Object> headers, ActivityType actType) {
         String ret=null;
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -178,8 +179,25 @@ public class TypeProcessor {
         
         for (int i=0; i < _propertyEvaluators.size(); i++) {
             PropertyEvaluator pe=_propertyEvaluators.get(i);
+            
+            Object source=null;
+            
+            // Check if property evaluation relates to a header
+            if (pe.getHeader() != null) {
+            	
+            	if (headers != null && headers.containsKey(pe.getHeader())) {
+            		source = headers.get(pe.getHeader());
+            	} else {
+            		LOG.warning(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-10"),
+                        pe.getName(), pe.getHeader()));
+            	}
+            } else {
+            	source = information;
+            }
 
-            String val=pe.getEvaluator().evaluate(information);
+            String val=pe.getEvaluator().evaluate(source);
             
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Property evaluator '"+pe+"' = "+val);
@@ -189,11 +207,19 @@ public class TypeProcessor {
                 actType.getProperties().put(pe.getName(), val);
                 
             } else if (!pe.getEvaluator().getOptional()) {
-            	LOG.severe(MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "activity.Messages").getString("ACTIVITY-8"),
-                        pe.getEvaluator().getExpression(),
-                        information));
+            	
+            	if (pe.getHeader() == null) {
+	            	LOG.severe(MessageFormat.format(
+	                        java.util.PropertyResourceBundle.getBundle(
+	                        "activity.Messages").getString("ACTIVITY-8"),
+	                        pe.getEvaluator().getExpression(),
+	                        information));
+            	} else {
+            		LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "activity.Messages").getString("ACTIVITY-11"),
+                            pe.getName(), pe.getHeader()));
+            	}
             }
         }
         
@@ -238,6 +264,7 @@ public class TypeProcessor {
     public static class PropertyEvaluator {
         
         private String _name=null;
+        private String _header=null;
         private ExpressionEvaluator _evaluator=null;
         
         /**
@@ -265,6 +292,29 @@ public class TypeProcessor {
         }
         
         /**
+         * This method gets the header name. If not
+         * specified, then the property evaluator will
+         * use the main information content.
+         * 
+         * @return The optional header name
+         */
+        public String getHeader() {
+            return (_header);
+        }
+        
+        /**
+         * This method sets the header name. This implies
+         * that the property evaluator will be operating
+         * on a header value rather than the main information
+         * content.
+         * 
+         * @param header The optional header
+         */
+        public void setHeader(String header) {
+            _header = header;
+        }
+        
+        /**
          * This method gets the context value
          * expression evaluator.
          * 
@@ -288,7 +338,8 @@ public class TypeProcessor {
          * {@inheritDoc}
          */
         public String toString() {
-            return ("[ name="+_name+" expression="+_evaluator.getExpression()+" ]");
+            return ("[ name="+_name+" header="+_header
+            		+" expression="+_evaluator.getExpression()+" ]");
         }
     }
     

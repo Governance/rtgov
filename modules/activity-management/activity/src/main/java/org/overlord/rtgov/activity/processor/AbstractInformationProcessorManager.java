@@ -110,7 +110,7 @@ public abstract class AbstractInformationProcessorManager implements Information
      * {@inheritDoc}
      */
     public String process(String processor, String type,
-                    Object info, ActivityType actType) {
+                    Object info, java.util.Map<String, Object> headers, ActivityType actType) {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Process: processor="+processor
@@ -124,12 +124,12 @@ public abstract class AbstractInformationProcessorManager implements Information
                 InformationProcessor ip=_informationProcessorIndex.get(processor);
                 
                 if (ip.isSupported(type)) {
-                    return (ip.process(type, info, actType));
+                    return (ip.process(type, info, headers, actType));
                 }
             } else {
                 for (int i=0; i < _informationProcessors.size(); i++) {
                     if (_informationProcessors.get(i).isSupported(type)) {
-                        return (_informationProcessors.get(i).process(type, info, actType));
+                        return (_informationProcessors.get(i).process(type, info, headers, actType));
                     }
                 }
             }

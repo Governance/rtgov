@@ -60,12 +60,13 @@ public interface ActivityCollector {
      * @param processor The optional information processor to use
      * @param type The information type
      * @param info The information
+     * @param headers The optional header information
      * @param actType The activity type being initialized
      * @return The information representation to include with the
      *                  activity event
      */
     public String processInformation(String processor, String type,
-                    Object info, ActivityType actType);
+                    Object info, java.util.Map<String, Object> headers, ActivityType actType);
     
     /**
      * This method records the supplied activity type. If a

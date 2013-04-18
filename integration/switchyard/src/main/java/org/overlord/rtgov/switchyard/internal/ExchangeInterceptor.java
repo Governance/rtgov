@@ -268,7 +268,7 @@ public class ExchangeInterceptor implements Auditor {
             Message msg = exchange.getMessage();
             
             at.setContent(_activityCollector.processInformation(null,
-                          contentType, msg.getContent(), at));
+                          contentType, msg.getContent(), null, at));
             
             // Check if principal has been defined
             org.switchyard.security.SecurityContext sc=org.switchyard.security.SecurityContext.get(exchange);
