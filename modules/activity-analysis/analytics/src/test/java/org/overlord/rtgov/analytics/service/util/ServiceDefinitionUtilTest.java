@@ -85,6 +85,7 @@ public class ServiceDefinitionUtilTest {
         frd1.setFault("fault1");
         
         frd1.getMetrics().setCount(20);
+        frd1.getMetrics().setFaults(20);
         frd1.getMetrics().setAverage(2000);
         frd1.getMetrics().setMin(1500);
         frd1.getMetrics().setMax(2500);
@@ -121,6 +122,7 @@ public class ServiceDefinitionUtilTest {
 
         RequestResponseDefinition nrd1=new RequestResponseDefinition();
         nrd1.getMetrics().setCount(10);
+        nrd1.getMetrics().setFaults(0);
         nrd1.getMetrics().setAverage(1000);
         nrd1.getMetrics().setMin(500);
         nrd1.getMetrics().setMax(1500);
@@ -135,6 +137,7 @@ public class ServiceDefinitionUtilTest {
         frd1.setFault("fault1");
         
         frd1.getMetrics().setCount(20);
+        frd1.getMetrics().setFaults(20);
         frd1.getMetrics().setAverage(2000);
         frd1.getMetrics().setMin(1500);
         frd1.getMetrics().setMax(2500);
@@ -458,7 +461,6 @@ public class ServiceDefinitionUtilTest {
         rqr1.setServiceType(SERVICE_TYPE_1);
         rqr1.setOperation(OPERATION_1);
         rqr1.setInterface(INTERFACE_1);
-        rqr1.setFault(FAULT_1);
         rqr1.setMessageId("1");
         rqr1.setTimestamp(10);
         
@@ -539,6 +541,10 @@ public class ServiceDefinitionUtilTest {
         
         if (metrics.getCount() != 1) {
             fail("Count not 1: "+metrics.getCount());
+        }
+        
+        if (metrics.getFaults() != 1) {
+            fail("Faults not 1: "+metrics.getFaults());
         }
     }
 
@@ -670,6 +676,149 @@ public class ServiceDefinitionUtilTest {
         
         if (metrics.getCount() != 2) {
             fail("Count not 2: "+metrics.getCount());
+        }
+        
+        if (metrics.getFaults() != 0) {
+            fail("Faults not 0: "+metrics.getFaults());
+        }
+    }
+
+    @Test
+    public void testServiceInvokedWithExternalFaultInvocations() {
+        
+        // Create example activity events
+        ActivityUnit au=new ActivityUnit();
+        
+        RequestReceived rqr1=new RequestReceived();
+        rqr1.setServiceType(SERVICE_TYPE_1);
+        rqr1.setInterface(INTERFACE_1);
+        rqr1.setOperation(OPERATION_1);
+        rqr1.setMessageId("1");
+        rqr1.setTimestamp(10);
+        
+        au.getActivityTypes().add(rqr1);
+
+        RequestSent rqs2=new RequestSent();
+        rqs2.setServiceType(SERVICE_TYPE_2);
+        rqs2.setInterface(INTERFACE_2);
+        rqs2.setOperation(OPERATION_2);
+        rqs2.setFault(FAULT_1);
+        rqs2.setMessageId("2");
+        rqs2.setTimestamp(15);
+        
+        au.getActivityTypes().add(rqs2);
+
+        ResponseReceived rpr2=new ResponseReceived();
+        rpr2.setServiceType(SERVICE_TYPE_2);
+        rpr2.setInterface(INTERFACE_2);
+        rpr2.setOperation(OPERATION_2);
+        rpr2.setFault(FAULT_1);
+        rpr2.setMessageId("3");
+        rpr2.setReplyToId("2");
+        rpr2.setTimestamp(21);
+        
+        au.getActivityTypes().add(rpr2);
+
+        RequestSent rqs3=new RequestSent();
+        rqs3.setServiceType(SERVICE_TYPE_2);
+        rqs3.setInterface(INTERFACE_2);
+        rqs3.setOperation(OPERATION_2);
+        rqs3.setFault(FAULT_1);
+        rqs3.setMessageId("4");
+        rqs3.setTimestamp(24);
+        
+        au.getActivityTypes().add(rqs3);
+
+        ResponseReceived rpr3=new ResponseReceived();
+        rpr3.setServiceType(SERVICE_TYPE_2);
+        rpr3.setInterface(INTERFACE_2);
+        rpr3.setOperation(OPERATION_2);
+        rpr3.setFault(FAULT_1);
+        rpr3.setMessageId("5");
+        rpr3.setReplyToId("4");
+        rpr3.setTimestamp(36);
+        
+        au.getActivityTypes().add(rpr3);
+
+        ResponseSent rps1=new ResponseSent();
+        rps1.setServiceType(SERVICE_TYPE_1);
+        rps1.setInterface(INTERFACE_1);
+        rps1.setOperation(OPERATION_1);
+        rps1.setMessageId("6");
+        rps1.setReplyToId("1");
+        rps1.setTimestamp(40);
+        
+        au.getActivityTypes().add(rps1);
+        
+        // Create service definition
+        java.util.Collection<ServiceDefinition> sdefs=
+                ServiceDefinitionUtil.derive(au);
+        
+        if (sdefs.size() != 1) {
+            fail("One definition expected: "+sdefs.size());
+        }
+        
+        ServiceDefinition sdef=sdefs.iterator().next();
+        
+        if (!sdef.getInterface().equals(INTERFACE_1)) {
+            fail("Service type incorrect");
+        }
+        
+        if (sdef.getOperations().size() != 1) {
+            fail("Only 1 operation expected: "+sdef.getOperations().size());
+        }
+        
+        OperationDefinition op=sdef.getOperation(OPERATION_1);
+        
+        if (op == null) {
+            fail("Failed to retrieve op");
+        }
+        
+        OperationImplDefinition stod=op.getServiceTypeOperation(SERVICE_TYPE_1);
+        
+        if (stod == null) {
+        	fail("Failed to retrieve service type op");
+        }
+        
+        if (stod.getRequestResponse() == null) {
+            fail("Request/response not found");
+        }
+        
+        if (stod.getRequestFaults().size() > 0) {
+            fail("No faults should have occurred");
+        }
+        
+        if (stod.getRequestResponse().getInvocations().size() != 1) {
+            fail("One external invocations expected");
+        }
+        
+        InvocationDefinition id=stod.getRequestResponse().getInvocation(INTERFACE_2,
+                                OPERATION_2, FAULT_1);
+        
+        if (id == null) {
+            fail("Failed to get invocation definition");
+        }
+        
+        InvocationMetric metrics=id.getMetrics();
+        
+        if (metrics.getAverage() != 9) {
+            fail("Average not 9: "+metrics.getAverage());
+        }
+        
+        if (metrics.getMin() != 6) {
+            fail("Min not 6: "+metrics.getMin());
+        }
+        
+        if (metrics.getMax() != 12) {
+            fail("Max not 12: "+metrics.getMax());
+        }
+        
+        if (metrics.getCount() != 2) {
+            fail("Count not 2: "+metrics.getCount());
+        }
+        
+        if (metrics.getFaults() != 2) {
+            fail("Faults not 2: "+metrics.getFaults());
         }
     }
 
@@ -890,6 +1039,7 @@ public class ServiceDefinitionUtilTest {
         
         RequestResponseDefinition nrd1=new RequestResponseDefinition();
         nrd1.getMetrics().setCount(10);
+        nrd1.getMetrics().setFaults(0);
         nrd1.getMetrics().setAverage(1000);
         nrd1.getMetrics().setMin(500);
         nrd1.getMetrics().setMax(1500);
@@ -904,6 +1054,7 @@ public class ServiceDefinitionUtilTest {
         frd1.setFault("fault1");
         
         frd1.getMetrics().setCount(20);
+        frd1.getMetrics().setFaults(20);
         frd1.getMetrics().setAverage(2000);
         frd1.getMetrics().setMin(1500);
         frd1.getMetrics().setMax(2500);
@@ -928,6 +1079,7 @@ public class ServiceDefinitionUtilTest {
         
         RequestResponseDefinition nrd2=new RequestResponseDefinition();
         nrd2.getMetrics().setCount(10);
+        nrd2.getMetrics().setFaults(0);
         nrd2.getMetrics().setAverage(1000);
         nrd2.getMetrics().setMin(500);
         nrd2.getMetrics().setMax(1500);
@@ -942,6 +1094,7 @@ public class ServiceDefinitionUtilTest {
         frd2.setFault("fault2");
         
         frd2.getMetrics().setCount(20);
+        frd2.getMetrics().setFaults(20);
         frd2.getMetrics().setAverage(2000);
         frd2.getMetrics().setMin(1500);
         frd2.getMetrics().setMax(2500);
@@ -966,6 +1119,7 @@ public class ServiceDefinitionUtilTest {
         
         RequestResponseDefinition nrd3=new RequestResponseDefinition();
         nrd3.getMetrics().setCount(5);
+        nrd3.getMetrics().setFaults(0);
         nrd3.getMetrics().setAverage(500);
         nrd3.getMetrics().setMin(250);
         nrd3.getMetrics().setMax(750);
@@ -980,6 +1134,7 @@ public class ServiceDefinitionUtilTest {
         frd3.setFault("fault3");
         
         frd3.getMetrics().setCount(20);
+        frd3.getMetrics().setFaults(20);
         frd3.getMetrics().setAverage(2000);
         frd3.getMetrics().setMin(1500);
         frd3.getMetrics().setMax(2500);
@@ -989,6 +1144,21 @@ public class ServiceDefinitionUtilTest {
         frd3.getMetrics().setMaxChange(+10);
         
         stod3.getRequestFaults().add(frd3);
+        
+        RequestFaultDefinition frd4=new RequestFaultDefinition();
+        frd4.setFault("fault1");
+        
+        frd4.getMetrics().setCount(20);
+        frd4.getMetrics().setFaults(20);
+        frd4.getMetrics().setAverage(2000);
+        frd4.getMetrics().setMin(1500);
+        frd4.getMetrics().setMax(2500);
+        frd4.getMetrics().setCountChange(-10);
+        frd4.getMetrics().setAverageChange(+6);
+        frd4.getMetrics().setMinChange(0);
+        frd4.getMetrics().setMaxChange(+10);
+        
+        stod3.getRequestFaults().add(frd4);
         
         
         java.util.Map<String,ServiceDefinition> sds1=new java.util.HashMap<String,ServiceDefinition>();
@@ -1053,6 +1223,10 @@ public class ServiceDefinitionUtilTest {
         
         if (opd1.getImplementations().get(0).getRequestResponse().getMetrics().getCount() != 15) {
             fail("Expecting count 15: "+opd1.getImplementations().get(0).getRequestResponse().getMetrics().getCount());
+        }
+        
+        if (opd1.getImplementations().get(0).getRequestFaults().get(0).getMetrics().getFaults() != 40) {
+            fail("Expecting faults 40: "+opd1.getImplementations().get(0).getRequestFaults().get(0).getMetrics().getFaults());
         }
     }
     

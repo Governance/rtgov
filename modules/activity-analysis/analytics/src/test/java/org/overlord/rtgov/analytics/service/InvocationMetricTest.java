@@ -31,6 +31,7 @@ public class InvocationMetricTest {
         
         im1.setAverage(10);
         im1.setCount(1);
+        im1.setFaults(1);
         
         im1.setMin(10);
         im1.setMax(10);
@@ -39,6 +40,7 @@ public class InvocationMetricTest {
         
         im2.setAverage(50);
         im2.setCount(3);
+        im2.setFaults(1);
         im2.setMin(10);
         im2.setMax(70);
         
@@ -46,6 +48,10 @@ public class InvocationMetricTest {
         
         if (im1.getCount() != 4) {
             fail("Count should be 4: "+im1.getCount());
+        }
+        
+        if (im1.getFaults() != 2) {
+            fail("Faults should be 2: "+im1.getFaults());
         }
         
         if (im1.getAverage() != 40) {

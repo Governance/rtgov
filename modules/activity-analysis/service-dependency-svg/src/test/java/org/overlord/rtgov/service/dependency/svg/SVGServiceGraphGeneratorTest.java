@@ -78,6 +78,7 @@ public class SVGServiceGraphGeneratorTest {
         rrd1.getInvocations().add(id1);
         
         id1.getMetrics().setCount(5);
+        id1.getMetrics().setFaults(3);
         id1.getMetrics().setAverage(200);
         id1.getMetrics().setMax(220);
         id1.getMetrics().setMin(140);
@@ -88,6 +89,7 @@ public class SVGServiceGraphGeneratorTest {
         rrd1.getInvocations().add(id1b);
         
         id1b.getMetrics().setCount(8);
+        id1b.getMetrics().setFaults(2);
         id1b.getMetrics().setAverage(250);
         id1b.getMetrics().setMax(255);
         id1b.getMetrics().setMin(140);
@@ -126,6 +128,7 @@ public class SVGServiceGraphGeneratorTest {
         stod2.getRequestFaults().add(rfd2);
         
         rfd2.getMetrics().setCount(3);
+        rfd2.getMetrics().setFaults(3);
         rfd2.getMetrics().setAverage(80);
         rfd2.getMetrics().setMax(180);
         rfd2.getMetrics().setMin(50);

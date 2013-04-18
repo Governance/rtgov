@@ -574,6 +574,10 @@ public class SVGServiceGraphGenerator {
         String minValue="Min "+metrics.getMin();
         String maxValue="Max "+metrics.getMax();
         
+        if (metrics.getFaults() > 0) {
+        	countValue += " [faults "+metrics.getFaults()+"]";
+        }
+        
         if (metrics.getAverageChange() != 0 || metrics.getMaxChange() != 0
                 || metrics.getMinChange() != 0 || metrics.getCountChange() != 0) {
             countValue += " ("+metrics.getCountChange()+"%)";

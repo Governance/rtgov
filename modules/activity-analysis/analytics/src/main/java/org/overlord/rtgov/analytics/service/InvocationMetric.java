@@ -33,6 +33,7 @@ public class InvocationMetric implements java.io.Externalizable {
 
     private int _count=0;
     private int _countChange=0;
+    private int _faults=0;
     private long _avg=0;
     private int _avgChange=0;
     private long _max=0;
@@ -54,6 +55,7 @@ public class InvocationMetric implements java.io.Externalizable {
     public InvocationMetric(InvocationMetric im) {
         _count = im.getCount();
         _countChange = im.getCountChange();
+        _faults = im.getFaults();
         _avg = im.getAverage();
         _avgChange = im.getAverageChange();
         _min = im.getMin();
@@ -77,6 +79,8 @@ public class InvocationMetric implements java.io.Externalizable {
                     _count += m.getCount();
                     _countChange += (m.getCountChange() * m.getCount());
                     
+                    _faults += m.getFaults();
+
                     _avg += (m.getAverage() * m.getCount());
                     _avgChange += (m.getAverageChange() * m.getCount());
                     
@@ -120,6 +124,26 @@ public class InvocationMetric implements java.io.Externalizable {
      */
     public int getCount() {
         return (_count);
+    }
+    
+    /**
+     * This method sets the number of invocations
+     * that resulted in a fault.
+     * 
+     * @param faults The fault count
+     */
+    public void setFaults(int faults) {
+        _faults = faults;
+    }
+    
+    /**
+     * This method returns the number of invocations
+     * that resulted in a fault.
+     * 
+     * @return The fault count
+     */
+    public int getFaults() {
+        return (_faults);
     }
     
     /**
@@ -266,6 +290,8 @@ public class InvocationMetric implements java.io.Externalizable {
                     + (metric.getCountChange() * mergeCount))
                     / getCount());
             
+            setFaults(getFaults() + metric.getFaults());
+            
             setAverage(((getAverage() * myCount)
                         + (metric.getAverage() * mergeCount))
                         / getCount());
@@ -306,6 +332,7 @@ public class InvocationMetric implements java.io.Externalizable {
         
         out.writeInt(_count);
         out.writeInt(_countChange);
+        out.writeInt(_faults);
         out.writeLong(_avg);
         out.writeInt(_avgChange);
         out.writeLong(_max);
@@ -323,6 +350,7 @@ public class InvocationMetric implements java.io.Externalizable {
         
         _count = in.readInt();
         _countChange = in.readInt();
+        _faults = in.readInt();
         _avg = in.readLong();
         _avgChange = in.readInt();
         _max = in.readLong();

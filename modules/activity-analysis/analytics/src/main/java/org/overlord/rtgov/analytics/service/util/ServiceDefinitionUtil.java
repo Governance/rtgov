@@ -33,6 +33,7 @@ import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.MEPDefinition;
@@ -125,6 +126,18 @@ public final class ServiceDefinitionUtil {
                         new java.util.HashMap<String,ServiceDefinition>();
         
         checkForServiceInvoked(ret, actUnit, 0, actUnit.getActivityTypes().size());
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+        	String au=null;
+        	
+        	try {
+        		au = new String(ActivityUtil.serializeActivityUnit(actUnit));
+        	} catch (Exception e) {
+        		LOG.log(Level.FINEST, "Failed to deserialize activity unit: "+actUnit, e);
+        	}
+        	
+        	LOG.finest("Derive service definitions: ActivityUnit="+au+" ServiceDefinitions="+ret);
+        }
         
         return (ret.values());
     }
@@ -308,6 +321,8 @@ public final class ServiceDefinitionUtil {
             
             metrics = frd.getMetrics();
             
+            metrics.setFaults(metrics.getFaults()+1);
+            
             ret = frd;
         }
         
@@ -399,7 +414,11 @@ public final class ServiceDefinitionUtil {
             metrics.setMax(duration);
         }
 
-        metrics.setCount(metrics.getCount()+1);        
+        metrics.setCount(metrics.getCount()+1);
+        
+        if (idef.getFault() != null) {
+        	metrics.setFaults(metrics.getFaults()+1);
+        }
     }
     
     /**
