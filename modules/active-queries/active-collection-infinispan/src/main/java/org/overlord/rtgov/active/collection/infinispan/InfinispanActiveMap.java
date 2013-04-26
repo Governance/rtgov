@@ -21,8 +21,10 @@ import java.util.Map;
 
 import org.infinispan.Cache;
 import org.infinispan.notifications.Listener;
+import org.infinispan.notifications.cachelistener.annotation.CacheEntryCreated;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryModified;
 import org.infinispan.notifications.cachelistener.annotation.CacheEntryRemoved;
+import org.infinispan.notifications.cachelistener.event.CacheEntryCreatedEvent;
 import org.infinispan.notifications.cachelistener.event.CacheEntryModifiedEvent;
 import org.infinispan.notifications.cachelistener.event.CacheEntryRemovedEvent;
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
@@ -72,6 +74,13 @@ public class InfinispanActiveMap extends ActiveMap {
     @Listener
     public class InfinispanCacheListener {
         
+    	@CacheEntryCreated
+    	public void entryCreated(CacheEntryCreatedEvent<Object,Object> evt) {
+            if (!evt.isPre()) {
+            	inserted(evt.getKey(), evt.getCache().get(evt.getKey()));
+            }
+    	}
+    	
         /**
          * This method handles entry modified events.
          * 
@@ -80,11 +89,7 @@ public class InfinispanActiveMap extends ActiveMap {
         @CacheEntryModified
         public void entryModified(CacheEntryModifiedEvent<Object,Object> evt) {
             if (!evt.isPre()) {
-                if (getMap().containsKey(evt.getKey())) {
-                    updated(evt.getKey(), evt.getValue());
-                } else {
-                    inserted(evt.getKey(), evt.getValue());
-                }
+            	updated(evt.getKey(), evt.getValue());
             }
         }
         

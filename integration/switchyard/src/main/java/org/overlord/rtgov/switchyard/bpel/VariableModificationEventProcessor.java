@@ -64,7 +64,7 @@ public class VariableModificationEventProcessor extends AbstractEventProcessor {
         pvs.setVariableName(bpelEvent.getVarName());
         pvs.setVariableType(type);
         pvs.setVariableValue(getActivityCollector().processInformation(null, type,
-        		bpelEvent.getNewValue(), pvs));
+        		bpelEvent.getNewValue(), null, pvs));
         
         recordActivity(pvs);
 	}

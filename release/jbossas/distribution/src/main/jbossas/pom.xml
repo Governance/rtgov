@@ -44,10 +44,6 @@
 							<target>
 								<echo message="Install Overlord Runtime Governance at: ${env.JBOSS_HOME}"/>
 
-								<copy todir="${env.JBOSS_HOME}/modules" >
-									<fileset dir="modules" />
-								</copy>
-
 								<ant antfile="profiles/${type}/build.xml" target="deploy">
 									<property name="jboss.home" value="${env.JBOSS_HOME}" />
 									<property name="basedir" value="profiles/${type}" />
@@ -64,8 +60,6 @@
 						<configuration>
 							<target>
 								<echo message="Remove Overlord Runtime Governance from: ${env.JBOSS_HOME}"/>
-
-								<delete dir="${env.JBOSS_HOME}/modules/org/overlord/rtgov"/>
 
 								<ant antfile="profiles/${type}/build.xml" target="undeploy">
 									<property name="jboss.home" value="${env.JBOSS_HOME}" />

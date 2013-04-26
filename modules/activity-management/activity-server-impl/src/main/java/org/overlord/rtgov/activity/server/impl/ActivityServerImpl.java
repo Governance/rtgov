@@ -20,6 +20,8 @@ package org.overlord.rtgov.activity.server.impl;
 import java.util.List;
 import java.util.UUID;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -80,6 +82,7 @@ public class ActivityServerImpl implements ActivityServer {
      * @param activities The activity events
      * @throws Exception Failed to store the activities
      */
+    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public void store(java.util.List<ActivityUnit> activities) throws Exception {
         
         // Process activity units to establish consistent id info

@@ -54,6 +54,11 @@
 			<scope>provided</scope>
 		</dependency>		
 		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>staxmapper</artifactId>
+			<scope>provided</scope>
+		</dependency>		
+		<dependency>
 			<groupId>org.jboss.spec</groupId>
 			<artifactId>jboss-javaee-6.0</artifactId>
 			<type>pom</type>
