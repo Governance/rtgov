@@ -27,7 +27,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.common</groupId>
-			<artifactId>rtgov-util</artifactId>
+			<artifactId>rtgov-common</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>

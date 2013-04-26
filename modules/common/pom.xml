@@ -14,7 +14,7 @@
 	</parent>
 
 	<modules>
-		<module>rtgov-util</module>
+		<module>rtgov-common</module>
 		<module>rtgov-infinispan</module>
 	</modules>
 

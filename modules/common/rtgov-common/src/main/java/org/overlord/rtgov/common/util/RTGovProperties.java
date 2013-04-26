@@ -86,7 +86,7 @@ public final class RTGovProperties {
                 }
             } catch (Exception e) {                
                 LOG.warning(java.util.PropertyResourceBundle.getBundle(
-                        "rtgov-util.Messages").getString("RTGOV-UTIL-1"));
+                        "rtgov-common.Messages").getString("RTGOV-COMMON-1"));
             }
             
             _initialized = true;

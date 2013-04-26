@@ -17,25 +17,62 @@
  */
 package org.overlord.rtgov.activity.server.impl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.annotation.Resource;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 import javax.transaction.UserTransaction;
 
+/**
+ * This class provides the CDI interceptor around transactional beans.
+ *
+ */
 @Transactional @Interceptor
 public class TransactionalInterceptor {
+	
+	private static final Logger LOG=Logger.getLogger(TransactionalInterceptor.class.getName());
 
 	@Resource UserTransaction tx;
 	    
+	/**
+	 * This method manages the scope of the transaction around an invoked
+	 * bean.
+	 * 
+	 * @param context The invocation context
+	 * @return The result from the performed method
+	 * @throws Exception Failed to perform method
+	 */
 	@AroundInvoke
 	public Object manageTransaction(InvocationContext context) throws Exception {
 		tx.begin();
-		System.out.println("GPB Starting transaction: context="+context);
-		Object result = context.proceed();
-		tx.commit();
-		System.out.println("GPB Committing transaction: context="+context);
-	        
+		
+		if (LOG.isLoggable(Level.FINEST)) {
+			LOG.finest("Starting transaction: context="+context);
+		}
+		
+		Object result=null;
+		
+		try {
+			result = context.proceed();
+			
+			tx.commit();
+			
+			if (LOG.isLoggable(Level.FINEST)) {
+				LOG.finest("Committing transaction: context="+context);
+			}
+		} catch (Exception e) {
+			tx.rollback();
+			
+			if (LOG.isLoggable(Level.FINEST)) {
+				LOG.finest("Rolling back transaction: context="+context+" exception="+e);
+			}
+			
+			throw e;
+		}
+		
 		return result;
 	}
 }

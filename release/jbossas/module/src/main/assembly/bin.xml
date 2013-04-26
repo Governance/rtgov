@@ -43,7 +43,7 @@
 			<outputDirectory>org/overlord/rtgov/main</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
-				<include>org.overlord.rtgov.common:rtgov-util:jar</include>
+				<include>org.overlord.rtgov.common:rtgov-common:jar</include>
 				<include>org.overlord.rtgov.common:rtgov-infinispan:jar</include>
 				<include>org.overlord.rtgov.activity-management:activity:jar</include>
 				<include>org.overlord.rtgov.event-processor-network:epn-core:jar</include>
