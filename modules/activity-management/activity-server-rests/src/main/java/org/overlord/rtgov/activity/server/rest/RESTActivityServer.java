@@ -49,7 +49,7 @@ import javax.ws.rs.core.Response.Status;
  */
 @Path("/activity")
 @ApplicationScoped
-@TransactionManagement(value= TransactionManagementType.CONTAINER)
+//@TransactionManagement(value= TransactionManagementType.CONTAINER)
 public class RESTActivityServer {
 
     private static final Logger LOG=Logger.getLogger(RESTActivityServer.class.getName());
@@ -116,7 +116,7 @@ public class RESTActivityServer {
     @GET
     @Path("/unit")
     @Produces("application/json")
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
+//    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public String getActivityUnit(@QueryParam("id") String id) throws Exception {
         String ret="";
         
@@ -154,7 +154,7 @@ public class RESTActivityServer {
     @GET
     @Path("/events")
     @Produces("application/json")
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
+//    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public String getActivityTypes(@QueryParam("context") String context) throws Exception {
         String ret="";
         
@@ -191,7 +191,7 @@ public class RESTActivityServer {
     @POST
     @Path("/query")
     @Produces("application/json")
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
+//    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public String query(String qspec) throws Exception {
         String ret="";
         
@@ -229,7 +229,7 @@ public class RESTActivityServer {
      */
     @POST
     @Path("/store")
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
+//    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public Response store(String acts) throws Exception {
  
         if (LOG.isLoggable(Level.FINEST)) {

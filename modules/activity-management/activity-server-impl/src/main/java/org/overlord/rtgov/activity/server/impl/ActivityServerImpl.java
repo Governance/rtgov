@@ -37,6 +37,7 @@ import org.overlord.rtgov.activity.server.QuerySpec;
  *
  */
 @Singleton
+@Transactional
 public class ActivityServerImpl implements ActivityServer {
 
     @Inject
