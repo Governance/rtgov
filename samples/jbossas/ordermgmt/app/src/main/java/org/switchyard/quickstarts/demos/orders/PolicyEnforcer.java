@@ -80,7 +80,7 @@ public class PolicyEnforcer implements ExchangeHandler {
         
         if (_principals != null) {            
             Property p = exchange.getContext().getProperty("org.switchyard.contentType",
-                    org.switchyard.Scope.valueOf(exchange.getPhase().toString()));
+                    org.switchyard.Scope.MESSAGE);
             
             if (p != null && exchange.getPhase() == ExchangePhase.IN
                     && p.getValue().toString().equals(

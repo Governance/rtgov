@@ -24,6 +24,50 @@
 				}
 			}]
 		},
+		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse":{
+			"contexts":[{
+				"type":"Conversation",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"orderAck/orderId"
+				}
+			}],
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"orderAck/customer"
+				}
+			},{
+				"name":"total",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"orderAck/total"
+				}
+			}]
+		},
+		"java:org.switchyard.quickstarts.demos.orders.Order":{
+			"contexts":[{
+				"type":"Conversation",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"orderId"
+				}
+			}],
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"customer"
+				}
+			},{
+				"name":"itemId",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"itemId"
+				}
+			}]
+		},
 		"java:org.switchyard.quickstarts.demos.orders.OrderAck":{
 			"contexts":[{
 				"type":"Conversation",
@@ -58,6 +102,21 @@
 				"evaluator":{
 					"type":"xpath",
 					"expression":"payment/amount"
+				}
+			}]
+		},
+		"{urn:switchyard-quickstart-demo:orders:1.0}makePaymentResponse":{
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"receipt/customer"
+				}
+			},{
+				"name":"amount",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"receipt/amount"
 				}
 			}]
 		},

@@ -49,6 +49,8 @@ import org.overlord.rtgov.activity.collector.ActivityCollector;
 @ConcurrencyManagement(BEAN)
 public class EventProcessorManager {
 	
+	private static final String SWITCHAYRD_MANAGEMENT_LOCAL = "org.switchyard.admin:type=Management.Local";
+
 	private static final Logger LOG=Logger.getLogger(EventProcessorManager.class.getName());
 
     private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
@@ -81,7 +83,7 @@ public class EventProcessorManager {
         ObjectName objname=null;
         
         try {
-            objname = new ObjectName(org.switchyard.deploy.ServiceDomainManager.SWITCHYARD_OBJECTNAME_EVENT_MANAGER);
+            objname = new ObjectName(SWITCHAYRD_MANAGEMENT_LOCAL);
             
             for (EventProcessor ep : _eventProcessors) {
             	
@@ -123,7 +125,7 @@ public class EventProcessorManager {
         ObjectName objname=null;
         
         try {
-            objname = new ObjectName(org.switchyard.deploy.ServiceDomainManager.SWITCHYARD_OBJECTNAME_EVENT_MANAGER);
+            objname = new ObjectName(SWITCHAYRD_MANAGEMENT_LOCAL);
             
             for (EventProcessor ep : _eventProcessors) {
                 if (LOG.isLoggable(Level.FINE)) {

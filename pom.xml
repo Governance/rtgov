@@ -59,7 +59,7 @@
 		<arquillian.jbossas.version>7.2.0.Final</arquillian.jbossas.version>
 		<arquillian.version>1.0.0.Final</arquillian.version>
 		<cdi.version>1.0-SP4</cdi.version>
-		<drools.version>6.0.0.Alpha6</drools.version>
+		<drools.version>6.0.0.Alpha9</drools.version>
 		<gadgets.version>1.0.0.20130320-M4</gadgets.version>
 		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
 		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
@@ -71,7 +71,7 @@
 		<jbossts.version>4.16.4.Final</jbossts.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jta.version>1.0.0.Final</jta.version>
-		<kie.version>6.0.0.Alpha6</kie.version>
+		<kie.version>6.0.0.Alpha9</kie.version>
 		<mvel.version>2.1.3.Final</mvel.version>			<!-- Passed into junit tests -->
 		<riftsaw.ode.version>3.0.0-SNAPSHOT</riftsaw.ode.version>
 		<switchyard.version>1.0.0-SNAPSHOT</switchyard.version>
@@ -88,6 +88,7 @@
 
 	<dependencyManagement>
 		<dependencies>
+
 			<!-- Imported dependencies -->
 			<dependency>
 				<groupId>org.jboss.as</groupId>
@@ -252,7 +253,7 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<configuration>
 						<aggregate>true</aggregate>
-						<excludePackageNames>org.overlord.bam.tests.*:*.internal.*</excludePackageNames>
+						<excludePackageNames>org.overlord.rtgov.tests.*:*.internal.*</excludePackageNames>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -309,7 +310,7 @@
 				</configuration>
 				<dependencies>
 					<dependency>
-						<groupId>org.overlord.bam</groupId>
+						<groupId>org.overlord.rtgov</groupId>
 						<artifactId>build</artifactId>
 						<version>${project.version}</version>
 					</dependency>

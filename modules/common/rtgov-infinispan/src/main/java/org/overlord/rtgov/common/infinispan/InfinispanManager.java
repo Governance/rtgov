@@ -35,8 +35,6 @@ public final class InfinispanManager {
 
     private static final String INFINISPAN_CONTAINER = "infinispan.container";
 
-    private static final String INFINISPAN_CONFIG = "rtgov-infinispan.xml";
-    
     // Untyped to avoid classloading issues when CDI scans classes, if Infinispan
     // is not in class path
     private static Object _cacheContainer=null;
@@ -86,16 +84,16 @@ public final class InfinispanManager {
                 
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                        "rtgov-infinspan.Messages").getString("RTGOV-INFINISPAN-1"),
+                        "rtgov-infinispan.Messages").getString("RTGOV-INFINISPAN-1"),
                         container), e);
             }
         } else {
             if (_cacheContainer == null) {
                 try {
-                    _cacheContainer = new DefaultCacheManager(INFINISPAN_CONFIG);
+                    _cacheContainer = new DefaultCacheManager();
                 } catch (Exception e) {
                     LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                            "rtgov-infinspan.Messages").getString("RTGOV-INFINISPAN-2"),
+                            "rtgov-infinispan.Messages").getString("RTGOV-INFINISPAN-2"),
                             container), e);
                 }
             }

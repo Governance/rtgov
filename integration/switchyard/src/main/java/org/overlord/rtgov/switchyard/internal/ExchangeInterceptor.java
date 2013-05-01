@@ -31,16 +31,19 @@ import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.switchyard.Exchange;
 import org.switchyard.ExchangePhase;
 import org.switchyard.Message;
 import org.switchyard.Property;
+import org.switchyard.Service;
+import org.switchyard.ServiceReference;
 import org.switchyard.bus.camel.audit.Audit;
 import org.switchyard.bus.camel.audit.Auditor;
 import org.switchyard.bus.camel.processors.Processors;
 import org.switchyard.extensions.wsdl.WSDLService;
+import org.switchyard.metadata.BaseExchangeContract;
 import org.switchyard.metadata.ServiceInterface;
 import org.switchyard.metadata.java.JavaService;
+import org.switchyard.security.SecurityContext;
 import org.switchyard.security.credential.Credential;
 
 /**
@@ -49,7 +52,7 @@ import org.switchyard.security.credential.Credential;
  *
  */
 @Audit({Processors.TRANSFORMATION})
-@Named("BAMInterceptor")
+@Named("RTGovInterceptor")
 public class ExchangeInterceptor implements Auditor {
     
     private static final Logger LOG=Logger.getLogger(ExchangeInterceptor.class.getName());
@@ -87,6 +90,12 @@ public class ExchangeInterceptor implements Auditor {
      * {@inheritDoc}
      */
     public void afterCall(Processors processor, org.apache.camel.Exchange exch) {
+        
+        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
+
+        if (phase == ExchangePhase.OUT) {
+        	handleExchange(exch, phase);
+        }
     }
 
     /**
@@ -98,26 +107,40 @@ public class ExchangeInterceptor implements Auditor {
             init();
         }
         
-        // Obtain switchyard exchange
-        org.switchyard.Exchange exchange =
-                exch.getProperty(org.switchyard.bus.camel.ExchangeDispatcher.SY_EXCHANGE,
-                        org.switchyard.Exchange.class);
+        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
+
+        if (phase == ExchangePhase.IN) {
+        	handleExchange(exch, phase);
+        }
+    }
+    
+    /**
+     * This method handles the exchange.
+     * 
+     * @param exch The exchange
+     * @param phase The phase
+     */
+    protected void handleExchange(org.apache.camel.Exchange exch, ExchangePhase phase) {
+        org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
         
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("********* Exchange="+exchange);
+        if (mesg == null) {
+        	LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
+        	return;
         }
         
-        if (exchange == null) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Returning as not a switchyard exchange");
-            }
-            return;
-        }
+        org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
         
-        if (exchange.getProvider() == null
+        Service provider=exch.getProperty("org.switchyard.bus.camel.provider", Service.class);
+        ServiceReference consumer=exch.getProperty("org.switchyard.bus.camel.consumer", ServiceReference.class);
+        
+        SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
+
+        BaseExchangeContract contract=exch.getProperty("org.switchyard.bus.camel.contract", BaseExchangeContract.class);
+        
+        if (provider == null
                 && LOG.isLoggable(Level.FINEST)) {
             LOG.finest("No provider specified - probably an exception: "
-                        +exchange.getMessage().getContent());
+                        +mesg.getContent());
         }
         
         if (_activityCollector != null) {
@@ -129,8 +152,10 @@ public class ExchangeInterceptor implements Auditor {
             String relatesTo=null;
             String contentType=null;
             
-            for (Property p : exchange.getContext().getProperties(
-                    org.switchyard.Scope.valueOf(exchange.getPhase().toString()))) {
+            java.util.Set<Property> props=context.getProperties(
+                    org.switchyard.Scope.MESSAGE);
+            
+            for (Property p : props) {
                 
                 if (LOG.isLoggable(Level.FINEST)) {
                     LOG.finest("Switchyard property: name="+p.getName()+" value="+p.getValue());
@@ -147,11 +172,11 @@ public class ExchangeInterceptor implements Auditor {
             
             // Extract service type and operation from the consumer
             // (service reference), as provider is not always available
-            QName serviceType=exchange.getConsumer().getName();
-            String opName=exchange.getContract().getConsumerOperation().getName();
+            QName serviceType=consumer.getName();
+            String opName=contract.getConsumerOperation().getName();
             
-            if (exchange.getPhase() == ExchangePhase.IN) {
-                if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
+            if (phase == ExchangePhase.IN) {
+                if (consumer.getConsumerMetadata().isBinding()) {
                     _activityCollector.startScope();
                 } else {
                     // Only record the request being sent, if the
@@ -160,50 +185,59 @@ public class ExchangeInterceptor implements Auditor {
                     RequestSent sent=new RequestSent();
                     
                     // Only report service type if provider is not a binding
-                    if (exchange.getProvider() == null
-                            || !exchange.getProvider().getProviderMetadata().isBinding()) {
+                    if (provider == null
+                            || !provider.getProviderMetadata().isBinding()) {
                     	sent.setServiceType(serviceType.toString()); 
                     }
                     
-                    sent.setInterface(getInterface(exchange));                
+                    sent.setInterface(getInterface(consumer, provider));                
                     sent.setOperation(opName);
                     sent.setMessageId(messageId);
                     
-                    record(exchange, contentType, sent); 
+                    record(mesg, contentType, sent, securityContext); 
                 }
                 
-                if (exchange.getProvider() == null
-                        || !exchange.getProvider().getProviderMetadata().isBinding()) {
+                if (provider == null
+                        || !provider.getProviderMetadata().isBinding()) {
                     RequestReceived recvd=new RequestReceived();
                     
                     recvd.setServiceType(serviceType.toString());                
-                    recvd.setInterface(getInterface(exchange));                
+                    recvd.setInterface(getInterface(consumer, provider));                
                     recvd.setOperation(opName);
                     recvd.setMessageId(messageId);
                     
-                    record(exchange, contentType, recvd); 
+                    record(mesg, contentType, recvd, securityContext); 
                 }
                 
-            } else if (exchange.getPhase() == ExchangePhase.OUT) {
-                if (exchange.getProvider() == null
-                        || !exchange.getProvider().getProviderMetadata().isBinding()) {
+            } else if (phase == ExchangePhase.OUT) {
+            	
+            	if (contentType == null) {
+            		// Ignore as probably due to exception on handling the request
+            		if (LOG.isLoggable(Level.FINEST)) {
+            			LOG.finest("No content type - possibly due to exception on handling the request");
+            		}
+            		return;
+            	}
+            	
+                if (provider == null
+                        || !provider.getProviderMetadata().isBinding()) {
                     ResponseSent sent=new ResponseSent();
                                     
                     // Only report service type if provider is not a binding
-                    if (exchange.getProvider() == null
-                            || !exchange.getProvider().getProviderMetadata().isBinding()) {
+                    if (provider == null
+                            || !provider.getProviderMetadata().isBinding()) {
                     	sent.setServiceType(serviceType.toString()); 
                     }
 
-                    sent.setInterface(getInterface(exchange));                
+                    sent.setInterface(getInterface(consumer, provider));                
                     sent.setOperation(opName);
                     sent.setMessageId(messageId);
                     sent.setReplyToId(relatesTo);
                     
-                    record(exchange, contentType, sent); 
+                    record(mesg, contentType, sent, securityContext); 
                 }
                 
-                if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
+                if (consumer.getConsumerMetadata().isBinding()) {
                     _activityCollector.endScope();
                 } else {
                     // Only record the response being received, if the
@@ -211,12 +245,12 @@ public class ExchangeInterceptor implements Auditor {
                     ResponseReceived recvd=new ResponseReceived();
                     
                     recvd.setServiceType(serviceType.toString());                
-                    recvd.setInterface(getInterface(exchange));                
+                    recvd.setInterface(getInterface(consumer, provider));                
                     recvd.setOperation(opName);
                     recvd.setMessageId(messageId);
                     recvd.setReplyToId(relatesTo);
                     
-                    record(exchange, contentType, recvd); 
+                    record(mesg, contentType, recvd, securityContext); 
                 }
             }
         }
@@ -225,28 +259,24 @@ public class ExchangeInterceptor implements Auditor {
     /**
      * This method extracts the interface from the exchange details.
      * 
-     * @param exchange The exchange
+     * @param consumer The exchange consumer
+     * @param provider The exchange provider
      * @return The interface
      */
-    protected String getInterface(Exchange exchange) {
+    protected String getInterface(ServiceReference consumer, Service provider) {
     	String ret=null;
     	ServiceInterface intf=null;
     	
-    	if (exchange.getConsumer().getConsumerMetadata().isBinding()) {
-    		intf = exchange.getConsumer().getInterface();
+    	if (consumer.getConsumerMetadata().isBinding()) {
+    		intf = consumer.getInterface();
     	} else {
-    		intf = exchange.getProvider().getInterface();
+    		intf = provider.getInterface();
     	}
     	
     	if (JavaService.TYPE.equals(intf.getType())) {
     		ret = ((JavaService)intf).getJavaInterface().getName();
     	} else if (WSDLService.TYPE.equals(intf.getType())) {
-    		// TODO: Can remove this guard once switchyard 1.0 is released
-    		try {
-    			ret = ((WSDLService)intf).getPortType().toString();
-    		} catch (Throwable t) {
-    			LOG.log(Level.SEVERE, "Older version of switchyard. Require 1.0 or older", t);
-    		}
+    		ret = ((WSDLService)intf).getPortType().toString();
     	}
     	
     	return (ret);
@@ -259,20 +289,19 @@ public class ExchangeInterceptor implements Auditor {
      * @param exchange The exchange
      * @param contentType The message content type
      * @param at The activity type
+     * @param sc The optional security context
      */
-    protected void record(Exchange exchange, String contentType,
-                RPCActivityType at) {
+    protected void record(Message msg, String contentType,
+                RPCActivityType at, SecurityContext sc) {
         if (at != null) {
             at.setMessageType(contentType);
             
-            Message msg = exchange.getMessage();
+            Object content=msg.getContent();
             
             at.setContent(_activityCollector.processInformation(null,
-                          contentType, msg.getContent(), null, at));
+                          contentType, content, null, at));
             
             // Check if principal has been defined
-            org.switchyard.security.SecurityContext sc=org.switchyard.security.SecurityContext.get(exchange);
-            
             if (sc != null) {
             	for (Credential cred : sc.getCredentials()) {
             		if (cred instanceof org.switchyard.security.credential.NameCredential) {
