@@ -24,11 +24,11 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.naming.InitialContext;
 
 import org.overlord.rtgov.active.collection.AbstractACSLoader;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
@@ -51,7 +51,9 @@ public class JEEACSLoader extends AbstractACSLoader {
     private static final String ACS_JSON = "acs.json";
     private static final String ACT_COLL_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
+    @Resource(lookup=ACT_COLL_MANAGER)
     private ActiveCollectionManager _acmManager=null;
+    
     private java.util.List<ActiveCollectionSource> _activeCollectionSources=null;
     
     /**
@@ -67,10 +69,6 @@ public class JEEACSLoader extends AbstractACSLoader {
     public void init() {
         
         try {
-            InitialContext ctx=new InitialContext();
-            
-            _acmManager = (ActiveCollectionManager)ctx.lookup(ACT_COLL_MANAGER);
-
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(ACS_JSON);
             
             if (is == null) {

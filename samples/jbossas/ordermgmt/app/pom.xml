@@ -14,11 +14,13 @@
 	</parent>
 
 	<dependencies>
+	<!--
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-switchyard</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+	-->
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-jee</artifactId>

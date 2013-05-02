@@ -51,6 +51,7 @@ public class SLAMonitor {
     private static final String ACM_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
     private ActiveCollectionManager _acmManager=null;
+    
     private ActiveList _serviceResponseTime=null;
     private ActiveList _situations=null;
     

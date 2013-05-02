@@ -73,7 +73,12 @@ public abstract class AbstractEventProcessor implements EventObserver, EventProc
 	 * 
 	 * @param at The activity type
 	 */
-	protected void recordActivity(ActivityType at) {
+	protected void recordActivity(Object event, ActivityType at) {
+		
+		if (LOG.isLoggable(Level.FINEST)) {
+			LOG.finest("Record event '"+event+"' as activity type: "+at);
+		}
+		
         try {
         	getActivityCollector().record(at);
         } catch (Exception e) {

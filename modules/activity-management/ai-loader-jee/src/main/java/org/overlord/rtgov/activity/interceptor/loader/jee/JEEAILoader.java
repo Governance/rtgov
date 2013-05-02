@@ -24,11 +24,11 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.naming.InitialContext;
 
 import org.overlord.rtgov.activity.interceptor.ActivityInterceptor;
 import org.overlord.rtgov.activity.interceptor.ActivityInterceptorManager;
@@ -50,7 +50,9 @@ public class JEEAILoader {
     private static final String AI_JSON = "ai.json";
     private static final String AIS_MANAGER = "java:global/overlord-rtgov/ActivityInterceptorManager";
     
+    @Resource(lookup=AIS_MANAGER)
     private ActivityInterceptorManager _aiManager=null;
+
     private java.util.List<ActivityInterceptor> _activityInterceptors=null;
     
     /**
@@ -66,10 +68,6 @@ public class JEEAILoader {
     public void init() {
         
         try {
-            InitialContext ctx=new InitialContext();
-            
-            _aiManager = (ActivityInterceptorManager)ctx.lookup(AIS_MANAGER);
-
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(AI_JSON);
             
             if (is == null) {

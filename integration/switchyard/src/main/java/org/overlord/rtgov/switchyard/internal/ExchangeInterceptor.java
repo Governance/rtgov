@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
@@ -59,6 +60,7 @@ public class ExchangeInterceptor implements Auditor {
     
     private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
 
+    @Resource(lookup=ACTIVITY_COLLECTOR)
     private ActivityCollector _activityCollector=null;
     
     private boolean _initialized=false;

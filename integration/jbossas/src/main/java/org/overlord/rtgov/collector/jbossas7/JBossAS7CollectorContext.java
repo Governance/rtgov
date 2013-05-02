@@ -37,6 +37,7 @@ public class JBossAS7CollectorContext implements CollectorContext {
 
     private static final Logger LOG=Logger.getLogger(JBossAS7CollectorContext.class.getName());
 
+    //@Resource(lookup=TRANSACTION_MANAGER)
     private TransactionManager _transactionManager=null;
 
     /**

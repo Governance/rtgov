@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.naming.InitialContext;
 
 import org.overlord.rtgov.activity.collector.ActivityCollector;
@@ -39,6 +40,7 @@ public class DefaultActivityReporter implements ActivityReporter {
     
     private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
 
+    @Resource(lookup=ACTIVITY_COLLECTOR)
     private ActivityCollector _activityCollector=null;
     
     private boolean _initialized=false;

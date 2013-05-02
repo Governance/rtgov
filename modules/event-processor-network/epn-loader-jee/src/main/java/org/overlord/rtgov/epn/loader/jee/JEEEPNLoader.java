@@ -24,11 +24,11 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.naming.InitialContext;
 
 import org.overlord.rtgov.epn.AbstractEPNLoader;
 import org.overlord.rtgov.epn.EPNManager;
@@ -50,7 +50,9 @@ public class JEEEPNLoader extends AbstractEPNLoader {
     
     private static final String EPN_JSON = "epn.json";
 
+    @Resource(lookup=EPNManager.URI)
     private EPNManager _epnManager=null;
+ 
     private Network _network=null;
     
     /**
@@ -66,10 +68,6 @@ public class JEEEPNLoader extends AbstractEPNLoader {
     public void init() {
         
         try {
-            InitialContext ctx=new InitialContext();
-            
-            _epnManager = (EPNManager)ctx.lookup(EPNManager.URI);
-
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(EPN_JSON);
             
             if (is == null) {

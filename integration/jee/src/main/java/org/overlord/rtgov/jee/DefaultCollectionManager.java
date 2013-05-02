@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.naming.InitialContext;
 
 import org.overlord.rtgov.active.collection.ActiveCollection;
@@ -38,6 +39,7 @@ public class DefaultCollectionManager implements CollectionManager {
     
     private static final String ACTIVE_COLLECTION_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
+    @Resource(lookup=ACTIVE_COLLECTION_MANAGER)
     private ActiveCollectionManager _activeCollectionManager=null;
     
     private boolean _initialized=false;

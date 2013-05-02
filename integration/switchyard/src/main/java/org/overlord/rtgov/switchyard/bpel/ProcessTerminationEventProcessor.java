@@ -47,7 +47,7 @@ public class ProcessTerminationEventProcessor extends AbstractEventProcessor {
         
         pc.setInstanceId(((ProcessTerminationEvent)bpelEvent).getProcessInstanceId().toString());
         
-        recordActivity(pc);
+        recordActivity(event, pc);
 	}
 
 }

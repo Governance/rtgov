@@ -48,7 +48,7 @@ public class NewProcessInstanceEventProcessor extends AbstractEventProcessor {
         ps.setProcessType(((NewProcessInstanceEvent)bpelEvent).getProcessName().toString());
         ps.setInstanceId(((NewProcessInstanceEvent)bpelEvent).getProcessInstanceId().toString());
         
-        recordActivity(ps);
+        recordActivity(event, ps);
 	}
 
 }

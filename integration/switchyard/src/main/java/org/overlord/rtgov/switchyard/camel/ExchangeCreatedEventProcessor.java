@@ -15,39 +15,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.switchyard.bpel;
-
-import java.util.EventObject;
-
-import org.apache.ode.bpel.evt.ProcessCompletionEvent;
-import org.overlord.rtgov.switchyard.AbstractEventProcessor;
+package org.overlord.rtgov.switchyard.camel;
 
 /**
- * This class provides the BPEL component implementation of the
+ * This class provides the ExchangeCreatedEvent implementation of the
  * event processor.
  *
  */
-public class ProcessCompletionEventProcessor extends AbstractEventProcessor {
-
+public class ExchangeCreatedEventProcessor extends AbstractExchangeEventProcessor {
+	
 	/**
 	 * This is the default constructor.
 	 */
-	public ProcessCompletionEventProcessor() {
-		super(ProcessCompletionEvent.class);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void notify(EventObject event) {
-		ProcessCompletionEvent bpelEvent=(ProcessCompletionEvent)event;
-		
-        org.overlord.rtgov.activity.model.bpm.ProcessCompleted pc=
-                new org.overlord.rtgov.activity.model.bpm.ProcessCompleted();
-        
-        pc.setInstanceId(((ProcessCompletionEvent)bpelEvent).getProcessInstanceId().toString());
-        
-        recordActivity(event, pc);
+	public ExchangeCreatedEventProcessor() {
+		super(org.apache.camel.management.event.ExchangeCreatedEvent.class);		
 	}
 
 }

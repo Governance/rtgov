@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -55,6 +56,7 @@ public class EventProcessorManager {
 
     private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
 
+    @Resource(lookup=ACTIVITY_COLLECTOR)
     private ActivityCollector _activityCollector=null;
 
     @Inject @Any
