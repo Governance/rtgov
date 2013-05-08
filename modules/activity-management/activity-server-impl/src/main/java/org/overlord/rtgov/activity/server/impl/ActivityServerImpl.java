@@ -139,6 +139,7 @@ public class ActivityServerImpl implements ActivityServer {
     /**
      * {@inheritDoc}
      */
+    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public ActivityUnit getActivityUnit(String id) throws Exception {
         
         if (_store == null) {
@@ -151,6 +152,7 @@ public class ActivityServerImpl implements ActivityServer {
     /**
      * {@inheritDoc}
      */
+    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public java.util.List<ActivityType> query(QuerySpec query) throws Exception {
         
         if (_store == null) {
@@ -163,6 +165,7 @@ public class ActivityServerImpl implements ActivityServer {
     /**
      * {@inheritDoc}
      */
+    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public List<ActivityType> getActivityTypes(String context) throws Exception {
         
         if (_store == null) {

@@ -31,7 +31,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.overlord.rtgov.activity.server.ActivityServer;
-import org.overlord.rtgov.call.trace.CallTraceProcessor;
+import org.overlord.rtgov.call.trace.CallTraceService;
 import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.Task;
@@ -48,9 +48,8 @@ public class RESTCallTraceServer {
 
     private static final Logger LOG=Logger.getLogger(RESTCallTraceServer.class.getName());
     
-    private CallTraceProcessor _processor=new CallTraceProcessor();
+    private CallTraceService _callTraceService=null;
     
-    //@javax.inject.Inject
     private ActivityServer _activityServer=null;
 
     /**
@@ -58,17 +57,24 @@ public class RESTCallTraceServer {
      */
     @SuppressWarnings("unchecked")
     public RESTCallTraceServer() {
-        
+    	BeanManager bm=null;
+    	
+    	try {
+    		bm = InitialContext.doLookup("java:comp/BeanManager");
+    	} catch (Exception e) {
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-1"), e);    		
+    	}
+    	
         try {
             // Need to obtain activity server directly, as inject does not
             // work for REST service, and RESTeasy/CDI integration did not
             // appear to work in AS7. Directly accessing the bean manager
             // should be portable.
-            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
             
-            java.util.Set<Bean<?>> beans=bm.getBeans(ActivityServer.class);
+            java.util.Set<Bean<?>> asbeans=bm.getBeans(ActivityServer.class);
             
-            for (Bean<?> b : beans) {                
+            for (Bean<?> b : asbeans) {                
                 CreationalContext<Object> cc=new CreationalContext<Object>() {
                     public void push(Object arg0) {
                     }
@@ -88,10 +94,36 @@ public class RESTCallTraceServer {
             }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-1"), e);
+                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-2"), e);
+        }
+
+        try {
+            java.util.Set<Bean<?>> ctsbeans=bm.getBeans(CallTraceService.class);
+            
+            for (Bean<?> b : ctsbeans) {                
+                CreationalContext<Object> cc=new CreationalContext<Object>() {
+                    public void push(Object arg0) {
+                    }
+                    public void release() {
+                    }                   
+                };
+                
+                _callTraceService = (CallTraceService)((Bean<Object>)b).create(cc);
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Call Trace Service="+_callTraceService+" for bean="+b);
+                }
+                
+                if (_callTraceService != null) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-3"), e);
         }
         
-        _processor.setActivityServer(_activityServer);
+        _callTraceService.setActivityServer(_activityServer);
     }
     
     /**
@@ -138,7 +170,7 @@ public class RESTCallTraceServer {
         if (correlation.equals("test")) {
             ret = createTestCallTrace();
         } else {
-            ret = _processor.createCallTrace(correlation);
+            ret = _callTraceService.createCallTrace(correlation);
         }
         
         return (ret);

@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.overlord.rtgov.activity.server.impl.ActivityServerImpl;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.activity.util.ActivityUtil;
-import org.overlord.rtgov.call.trace.CallTraceProcessor;
+import org.overlord.rtgov.call.trace.CallTraceServiceImpl;
 import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.TraceNode;
@@ -34,8 +34,8 @@ public class CallTraceProcessorActivitiesTest {
 	
 	private static final String[] IGNORE_PROPERTIES={"client-host","client-node","server-host","server-node"};
 
-    protected CallTraceProcessor getCallTraceProcessor() {
-        CallTraceProcessor ctp=new CallTraceProcessor();
+    protected CallTraceServiceImpl getCallTraceProcessor() {
+        CallTraceServiceImpl ctp=new CallTraceServiceImpl();
         
         MemActivityStore memas=new MemActivityStore();
         ActivityServerImpl as=new ActivityServerImpl();
@@ -58,7 +58,7 @@ public class CallTraceProcessorActivitiesTest {
     }
     
     protected void testCallTrace(String testName, String identifier) {
-        CallTraceProcessor ctp=getCallTraceProcessor();
+        CallTraceServiceImpl ctp=getCallTraceProcessor();
         
         try {
             java.io.InputStream is=

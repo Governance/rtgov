@@ -26,6 +26,10 @@ import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Singleton;
+
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
@@ -49,9 +53,11 @@ import org.overlord.rtgov.call.trace.util.CallTraceUtil;
  * activity information.
  *
  */
-public class CallTraceProcessor {
+@Singleton
+@Transactional
+public class CallTraceServiceImpl implements CallTraceService {
     
-    private static final Logger LOG=Logger.getLogger(CallTraceProcessor.class.getName());
+    private static final Logger LOG=Logger.getLogger(CallTraceServiceImpl.class.getName());
 
     private ActivityServer _activityServer=null;
     
@@ -81,6 +87,7 @@ public class CallTraceProcessor {
      * @return The call trace, or null if not found
      * @throws Exception Failed to create call trace
      */
+    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public CallTrace createCallTrace(String correlation) 
                             throws Exception {
         CTState state=new CTState();

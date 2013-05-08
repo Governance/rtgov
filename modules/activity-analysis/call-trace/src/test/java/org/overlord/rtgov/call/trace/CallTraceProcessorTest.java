@@ -31,16 +31,16 @@ import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.server.impl.ActivityServerImpl;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
-import org.overlord.rtgov.call.trace.CallTraceProcessor;
-import org.overlord.rtgov.call.trace.CallTraceProcessor.CTState;
+import org.overlord.rtgov.call.trace.CallTraceServiceImpl;
+import org.overlord.rtgov.call.trace.CallTraceServiceImpl.CTState;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 import org.overlord.rtgov.call.trace.util.CallTraceUtilTest;
 
 public class CallTraceProcessorTest {
 
-    protected CallTraceProcessor getCallTraceProcessor() {
-        CallTraceProcessor ctp=new CallTraceProcessor();
+    protected CallTraceServiceImpl getCallTraceProcessor() {
+        CallTraceServiceImpl ctp=new CallTraceServiceImpl();
         
         MemActivityStore memas=new MemActivityStore();
         ActivityServerImpl as=new ActivityServerImpl();
@@ -54,7 +54,7 @@ public class CallTraceProcessorTest {
         
     @Test
     public void testIncludeRelatedAUByContext() {
-        CallTraceProcessor ctp=getCallTraceProcessor();
+        CallTraceServiceImpl ctp=getCallTraceProcessor();
         
         CTState state=new CTState();
         
@@ -102,7 +102,7 @@ public class CallTraceProcessorTest {
 
     @Test
     public void testIncludeRelatedAUByIndirectContext() {
-        CallTraceProcessor ctp=getCallTraceProcessor();
+        CallTraceServiceImpl ctp=getCallTraceProcessor();
         
         CTState state=new CTState();
         
@@ -154,7 +154,7 @@ public class CallTraceProcessorTest {
 
     @Test
     public void testDoNotLoadExistingCorrelation() {
-        CallTraceProcessor ctp=getCallTraceProcessor();
+        CallTraceServiceImpl ctp=getCallTraceProcessor();
         
         CTState state=new CTState();
         
@@ -273,8 +273,8 @@ public class CallTraceProcessorTest {
         au1.getActivityTypes().add(rs1);
         au1.getActivityTypes().add(rr2);
         
-        CallTraceProcessor.ActivityUnitCursor cursor=
-                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        CallTraceServiceImpl.ActivityUnitCursor cursor=
+                    new CallTraceServiceImpl.ActivityUnitCursor(au1);
         
         if (cursor.getActivityTypes().size() != 2) {
             fail("Expecting 2 events: "+cursor.getActivityTypes().size());
@@ -291,8 +291,8 @@ public class CallTraceProcessorTest {
         au1.getActivityTypes().add(rs1);
         au1.getActivityTypes().add(rr2);
         
-        CallTraceProcessor.ActivityUnitCursor cursor=
-                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        CallTraceServiceImpl.ActivityUnitCursor cursor=
+                    new CallTraceServiceImpl.ActivityUnitCursor(au1);
         
         cursor.next();
         
@@ -311,8 +311,8 @@ public class CallTraceProcessorTest {
         au1.getActivityTypes().add(rs1);
         au1.getActivityTypes().add(rr2);
         
-        CallTraceProcessor.ActivityUnitCursor cursor=
-                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        CallTraceServiceImpl.ActivityUnitCursor cursor=
+                    new CallTraceServiceImpl.ActivityUnitCursor(au1);
         
         if (cursor.peek() != rs1) {
             fail("Peek should return rs1");
@@ -329,8 +329,8 @@ public class CallTraceProcessorTest {
         au1.getActivityTypes().add(rs1);
         au1.getActivityTypes().add(rr2);
         
-        CallTraceProcessor.ActivityUnitCursor cursor=
-                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        CallTraceServiceImpl.ActivityUnitCursor cursor=
+                    new CallTraceServiceImpl.ActivityUnitCursor(au1);
         
         if (cursor.next() != rs1) {
             fail("Next should return rs1");
@@ -351,8 +351,8 @@ public class CallTraceProcessorTest {
         au1.getActivityTypes().add(rs1);
         au1.getActivityTypes().add(rr2);
         
-        CallTraceProcessor.ActivityUnitCursor cursor=
-                    new CallTraceProcessor.ActivityUnitCursor(au1);
+        CallTraceServiceImpl.ActivityUnitCursor cursor=
+                    new CallTraceServiceImpl.ActivityUnitCursor(au1);
         
         if (cursor.next() != rs1) {
             fail("Next should return rs1");
@@ -389,7 +389,7 @@ public class CallTraceProcessorTest {
         state.add(au1);
         state.add(au2);
         
-        java.util.List<ActivityUnit> tl=CallTraceProcessor.getTopLevelAUs(state);
+        java.util.List<ActivityUnit> tl=CallTraceServiceImpl.getTopLevelAUs(state);
         
         if (tl.size() != 2) {
             fail("Should be two top level aus: "+tl.size());
@@ -427,7 +427,7 @@ public class CallTraceProcessorTest {
         state.add(au2);
         state.add(au3);
         
-        java.util.List<ActivityUnit> tl=CallTraceProcessor.getTopLevelAUs(state);
+        java.util.List<ActivityUnit> tl=CallTraceServiceImpl.getTopLevelAUs(state);
         
         if (tl.size() != 1) {
             fail("Should be 1 top level aus: "+tl.size());
@@ -520,7 +520,7 @@ public class CallTraceProcessorTest {
         au1.init();
         state.add(au1);
         
-        CallTrace ct=CallTraceProcessor.processAUs(state);
+        CallTrace ct=CallTraceServiceImpl.processAUs(state);
         
         compare(ct, "SingleUnit2Service", "CallTrace1");
     }    
@@ -612,7 +612,7 @@ public class CallTraceProcessorTest {
         au2.init();
         state.add(au2);
         
-        CallTrace ct=CallTraceProcessor.processAUs(state);
+        CallTrace ct=CallTraceServiceImpl.processAUs(state);
         
         compare(ct, "SeparateUnits2Service", "CallTrace1");
     }
@@ -709,7 +709,7 @@ public class CallTraceProcessorTest {
         au3.init();
         state.add(au3);
         
-        CallTrace ct=CallTraceProcessor.processAUs(state);
+        CallTrace ct=CallTraceServiceImpl.processAUs(state);
         
         compare(ct, "SeparateUnits2Service2", "CallTrace1");
     }
@@ -798,7 +798,7 @@ public class CallTraceProcessorTest {
         au1.init();
         state.add(au1);
         
-        CallTrace ct=CallTraceProcessor.processAUs(state);
+        CallTrace ct=CallTraceServiceImpl.processAUs(state);
         
         compare(ct, "SingleUnit2ServiceFault", "CallTrace2");
     }    
@@ -890,7 +890,7 @@ public class CallTraceProcessorTest {
         au3.init();
         state.add(au3);
         
-        CallTrace ct=CallTraceProcessor.processAUs(state);
+        CallTrace ct=CallTraceServiceImpl.processAUs(state);
         
         compare(ct, "testProcessAUSeparateUnits2ServiceOneWayWithSentResp", "CallTrace3");
     }
@@ -976,7 +976,7 @@ public class CallTraceProcessorTest {
         au3.init();
         state.add(au3);
         
-        CallTrace ct=CallTraceProcessor.processAUs(state);
+        CallTrace ct=CallTraceServiceImpl.processAUs(state);
         
         compare(ct, "testProcessAUSeparateUnits2ServiceOneWayNoResp", "CallTrace3");
     }

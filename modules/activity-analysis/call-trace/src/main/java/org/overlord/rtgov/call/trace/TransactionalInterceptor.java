@@ -15,7 +15,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.activity.server.impl;
+package org.overlord.rtgov.call.trace;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +47,7 @@ public class TransactionalInterceptor {
 	 * @throws Exception Failed to perform method
 	 */
 	@AroundInvoke
-	public Object manageTransaction(InvocationContext context) throws Exception {		
+	public Object manageTransaction(InvocationContext context) throws Exception {
 		Object result=null;
 		
 		if (tx.getStatus() == Status.STATUS_NO_TRANSACTION) {
