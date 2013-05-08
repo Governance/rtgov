@@ -57,15 +57,15 @@ public class RESTCallTraceServer {
      */
     @SuppressWarnings("unchecked")
     public RESTCallTraceServer() {
-    	BeanManager bm=null;
-    	
-    	try {
-    		bm = InitialContext.doLookup("java:comp/BeanManager");
-    	} catch (Exception e) {
+        BeanManager bm=null;
+
+        try {
+            bm = InitialContext.doLookup("java:comp/BeanManager");
+        } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-1"), e);    		
-    	}
-    	
+                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-1"), e);
+        }
+
         try {
             // Need to obtain activity server directly, as inject does not
             // work for REST service, and RESTeasy/CDI integration did not

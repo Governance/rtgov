@@ -77,9 +77,9 @@ public class DefaultActivityReporter implements ActivityReporter {
         lm.setLevel(LogMessage.Level.Information);
         
         try {
-        	report(lm);
+            report(lm);
         } catch (Exception e) {
-        	LOG.log(Level.SEVERE, "Failed to report Info activity: "+info, e);
+            LOG.log(Level.SEVERE, "Failed to report Info activity: "+info, e);
         }
     }
     
@@ -92,9 +92,9 @@ public class DefaultActivityReporter implements ActivityReporter {
         lm.setLevel(LogMessage.Level.Warning);
         
         try {
-        	report(lm);
+            report(lm);
         } catch (Exception e) {
-        	LOG.log(Level.SEVERE, "Failed to report Warning activity: "+warning, e);
+            LOG.log(Level.SEVERE, "Failed to report Warning activity: "+warning, e);
         }
     }
     
@@ -107,9 +107,9 @@ public class DefaultActivityReporter implements ActivityReporter {
         lm.setLevel(LogMessage.Level.Error);
         
         try {
-        	report(lm);
+            report(lm);
         } catch (Exception e) {
-        	LOG.log(Level.SEVERE, "Failed to report Error activity: "+error, e);
+            LOG.log(Level.SEVERE, "Failed to report Error activity: "+error, e);
         }
     }
     

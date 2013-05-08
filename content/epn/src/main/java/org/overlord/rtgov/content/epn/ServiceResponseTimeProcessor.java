@@ -72,15 +72,15 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
     protected void processOperation(java.util.List<ResponseTime> rts,
             ServiceDefinition sdef, OperationDefinition opdef) {
         
-    	for (OperationImplDefinition stod : opdef.getImplementations()) {
-	        if (stod.getRequestResponse() != null) {
-	            processMEP(rts, sdef, opdef, stod, stod.getRequestResponse());
-	        }
-	        
-	        for (int i=0; i < stod.getRequestFaults().size(); i++) {
-	            processMEP(rts, sdef, opdef, stod, stod.getRequestFaults().get(i));
-	        }
-    	}
+        for (OperationImplDefinition stod : opdef.getImplementations()) {
+            if (stod.getRequestResponse() != null) {
+                processMEP(rts, sdef, opdef, stod, stod.getRequestResponse());
+            }
+
+            for (int i=0; i < stod.getRequestFaults().size(); i++) {
+                processMEP(rts, sdef, opdef, stod, stod.getRequestFaults().get(i));
+            }
+        }
     }
     
     /**

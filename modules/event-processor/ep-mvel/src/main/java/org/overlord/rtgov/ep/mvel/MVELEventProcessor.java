@@ -106,16 +106,16 @@ public class MVELEventProcessor extends EventProcessor {
             vars.put("retriesLeft", retriesLeft);
             vars.put("epc", _context);
             
-            synchronized(this) {
-            	_context.handle(null);
-            	
-	            MVEL.executeExpression(_scriptExpression, vars);
-	            
-	            ret = (java.io.Serializable)_context.getResult();
+            synchronized (this) {
+                _context.handle(null);
+
+                MVEL.executeExpression(_scriptExpression, vars);
+
+                ret = (java.io.Serializable)_context.getResult();
             }
-            
+
             if (ret instanceof Exception) {
-            	throw (Exception)ret;
+                throw (Exception)ret;
             }
         }
 

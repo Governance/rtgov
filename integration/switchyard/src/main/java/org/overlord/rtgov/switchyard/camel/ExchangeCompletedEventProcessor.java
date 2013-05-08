@@ -23,12 +23,12 @@ package org.overlord.rtgov.switchyard.camel;
  *
  */
 public class ExchangeCompletedEventProcessor extends AbstractExchangeEventProcessor {
-	
-	/**
-	 * This is the default constructor.
-	 */
-	public ExchangeCompletedEventProcessor() {
-		super(org.apache.camel.management.event.ExchangeCompletedEvent.class);
-	}
+    
+    /**
+     * This is the default constructor.
+     */
+    public ExchangeCompletedEventProcessor() {
+        super(org.apache.camel.management.event.ExchangeCompletedEvent.class);
+    }
 
 }

@@ -47,25 +47,25 @@ import org.switchyard.security.credential.Credential;
  *
  */
 public abstract class AbstractExchangeEventProcessor extends AbstractEventProcessor {
-	
-	private static final Logger LOG=Logger.getLogger(AbstractExchangeEventProcessor.class.getName());
+    
+    private static final Logger LOG=Logger.getLogger(AbstractExchangeEventProcessor.class.getName());
 
-	/**
-	 * This is the constructor.
-	 * 
-	 * @param eventType The event type associated with the processor
-	 */
-	public AbstractExchangeEventProcessor(Class<? extends EventObject> eventType) {
-		super(eventType);		
-	}
+    /**
+     * This is the constructor.
+     * 
+     * @param eventType The event type associated with the processor
+     */
+    public AbstractExchangeEventProcessor(Class<? extends EventObject> eventType) {
+        super(eventType);       
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void notify(EventObject event) {
-		org.apache.camel.Exchange exch=
-				((org.apache.camel.management.event.AbstractExchangeEvent)event).getExchange();
-		
+    /**
+     * {@inheritDoc}
+     */
+    public void notify(EventObject event) {
+        org.apache.camel.Exchange exch=
+                ((org.apache.camel.management.event.AbstractExchangeEvent)event).getExchange();
+        
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("********* Exchange="+exch);
         }
@@ -74,13 +74,13 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
 
         if (phase == null) {
-        	LOG.severe("Could not obtain phase from exchange: "+exch);
-        	return;
+            LOG.severe("Could not obtain phase from exchange: "+exch);
+            return;
         }
 
         if (mesg == null) {
-        	LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
-        	return;
+            LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
+            return;
         }
         
         org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
@@ -140,7 +140,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 // Only report service type if provider is not a binding
                 if (provider == null
                         || !provider.getProviderMetadata().isBinding()) {
-                	sent.setServiceType(serviceType.toString()); 
+                    sent.setServiceType(serviceType.toString()); 
                 }
                 
                 sent.setInterface(getInterface(consumer, provider));                
@@ -163,15 +163,15 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             }
             
         } else if (phase == ExchangePhase.OUT) {
-        	
-        	if (contentType == null) {
-        		// Ignore as probably due to exception on handling the request
-        		if (LOG.isLoggable(Level.FINEST)) {
-        			LOG.finest("No content type - possibly due to exception on handling the request");
-        		}
-        		return;
-        	}
-        	
+            
+            if (contentType == null) {
+                // Ignore as probably due to exception on handling the request
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("No content type - possibly due to exception on handling the request");
+                }
+                return;
+            }
+            
             if (provider == null
                     || !provider.getProviderMetadata().isBinding()) {
                 ResponseSent sent=new ResponseSent();
@@ -179,7 +179,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 // Only report service type if provider is not a binding
                 if (provider == null
                         || !provider.getProviderMetadata().isBinding()) {
-                	sent.setServiceType(serviceType.toString()); 
+                    sent.setServiceType(serviceType.toString()); 
                 }
 
                 sent.setInterface(getInterface(consumer, provider));                
@@ -216,23 +216,23 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
      * @return The interface
      */
     protected String getInterface(ServiceReference consumer, Service provider) {
-    	String ret=null;
-    	ServiceInterface intf=null;
-    	
-    	// RTGOV-179 - need to investigate how to obtain provider from ExchangeCreatedEvent
-    	if (provider == null || consumer.getConsumerMetadata().isBinding()) {
-    		intf = consumer.getInterface();
-    	} else {
-    		intf = provider.getInterface();
-    	}
-    	
-    	if (JavaService.TYPE.equals(intf.getType())) {
-    		ret = ((JavaService)intf).getJavaInterface().getName();
-    	} else if (WSDLService.TYPE.equals(intf.getType())) {
-    		ret = ((WSDLService)intf).getPortType().toString();
-    	}
-    	
-    	return (ret);
+        String ret=null;
+        ServiceInterface intf=null;
+        
+        // RTGOV-179 - need to investigate how to obtain provider from ExchangeCreatedEvent
+        if (provider == null || consumer.getConsumerMetadata().isBinding()) {
+            intf = consumer.getInterface();
+        } else {
+            intf = provider.getInterface();
+        }
+        
+        if (JavaService.TYPE.equals(intf.getType())) {
+            ret = ((JavaService)intf).getJavaInterface().getName();
+        } else if (WSDLService.TYPE.equals(intf.getType())) {
+            ret = ((WSDLService)intf).getPortType().toString();
+        }
+        
+        return (ret);
     }
     
     /**
@@ -257,25 +257,26 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             // Check if principal has been defined
             if (sc != null) {
-            	for (Credential cred : sc.getCredentials()) {
-            		if (cred instanceof org.switchyard.security.credential.NameCredential) {
-            			at.setPrincipal(((org.switchyard.security.credential.NameCredential)cred).getName());
-            			break;
-            		} else if (cred instanceof org.switchyard.security.credential.PrincipalCredential) {
-                		at.setPrincipal(((org.switchyard.security.credential.PrincipalCredential)cred)
-                							.getPrincipal().getName());
-                		break;
-            		}
-            	}
+                for (Credential cred : sc.getCredentials()) {
+                    if (cred instanceof org.switchyard.security.credential.NameCredential) {
+                        at.setPrincipal(((org.switchyard.security.credential.NameCredential)cred).getName());
+                        break;
+                    } else if (cred instanceof org.switchyard.security.credential.PrincipalCredential) {
+                        at.setPrincipal(((org.switchyard.security.credential.PrincipalCredential)cred)
+                                            .getPrincipal().getName());
+                        break;
+                    }
+                }
             }
             
             try {
-            	recordActivity(event, at);
+                recordActivity(event, at);
             } catch (Exception e) {
-            	// Strip the exception and just return the message
-            	throw new org.switchyard.exception.SwitchYardException(e.getMessage());
+                // Strip the exception and just return the message
+                throw new org.switchyard.exception.SwitchYardException(e.getMessage());
             }
         }
     }
 
 }
+

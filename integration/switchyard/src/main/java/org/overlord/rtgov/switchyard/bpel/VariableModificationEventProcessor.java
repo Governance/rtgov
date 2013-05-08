@@ -29,19 +29,19 @@ import org.overlord.rtgov.switchyard.AbstractEventProcessor;
  */
 public class VariableModificationEventProcessor extends AbstractEventProcessor {
 
-	/**
-	 * This is the default constructor.
-	 */
-	public VariableModificationEventProcessor() {
-		super(VariableModificationEvent.class);
-	}
+    /**
+     * This is the default constructor.
+     */
+    public VariableModificationEventProcessor() {
+        super(VariableModificationEvent.class);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void notify(EventObject event) {
-		VariableModificationEvent bpelEvent=(VariableModificationEvent)event;
-		
+    /**
+     * {@inheritDoc}
+     */
+    public void notify(EventObject event) {
+        VariableModificationEvent bpelEvent=(VariableModificationEvent)event;
+        
         org.overlord.rtgov.activity.model.bpm.ProcessVariableSet pvs=
                 new org.overlord.rtgov.activity.model.bpm.ProcessVariableSet();
         
@@ -64,9 +64,9 @@ public class VariableModificationEventProcessor extends AbstractEventProcessor {
         pvs.setVariableName(bpelEvent.getVarName());
         pvs.setVariableType(type);
         pvs.setVariableValue(getActivityCollector().processInformation(null, type,
-        		bpelEvent.getNewValue(), null, pvs));
+                bpelEvent.getNewValue(), null, pvs));
         
         recordActivity(event, pvs);
-	}
+    }
 
 }

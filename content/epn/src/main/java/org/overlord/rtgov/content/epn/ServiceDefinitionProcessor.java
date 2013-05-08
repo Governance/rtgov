@@ -66,15 +66,15 @@ public class ServiceDefinitionProcessor extends org.overlord.rtgov.ep.EventProce
                 LOG.finest("Transforming activity unit: "+new String(aub));
 
                 if (list != null) {
-	                LOG.finest("Service definition list size="+list.size());
-	                
-	                for (int i=0; i < list.size(); i++) {
-	                    byte[] sdb=ServiceDefinitionUtil.serializeServiceDefinition(list.get(i));
-	
-	                    LOG.finest("Service definition("+i+"): "+new String(sdb));
-	                }
+                    LOG.finest("Service definition list size="+list.size());
+                    
+                    for (int i=0; i < list.size(); i++) {
+                        byte[] sdb=ServiceDefinitionUtil.serializeServiceDefinition(list.get(i));
+                        
+                        LOG.finest("Service definition("+i+"): "+new String(sdb));
+                    }
                 } else {
-                	LOG.finest("Service definition list is null");
+                    LOG.finest("Service definition list is null");
                 }
             }
             

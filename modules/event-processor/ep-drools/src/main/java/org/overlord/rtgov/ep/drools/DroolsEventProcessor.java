@@ -88,46 +88,46 @@ public class DroolsEventProcessor extends EventProcessor {
      */
     public java.io.Serializable process(String source,
                 java.io.Serializable event, int retriesLeft) throws Exception {
-    	java.io.Serializable ret=null;
+        java.io.Serializable ret=null;
 
-    	synchronized(this) {
-	        if (LOG.isLoggable(Level.FINEST)) {
-	            LOG.finest("Process event '"+event+" from source '"+source
-	                    +"' on Drools Event Processor '"+getRuleName()
-	                    +"'");
-	        }
-	
-	        _context.handle(null);
-	        
-	        // Get entry point
-	        // TODO: If not simple lookup, then may want to cache this
-	        SessionEntryPoint entryPoint=_session.getEntryPoint(source);
-	        
-	        if (entryPoint != null) {
-	            if (LOG.isLoggable(Level.FINEST)) {
-	                LOG.finest("Insert event '"+event+" from source '"+source
-	                        +"' on Drools Event Processor '"+getRuleName()
-	                        +"' into entry point "+entryPoint);
-	            }
-	            
-	            entryPoint.insert(event);
-	            
-	            // TODO: Not sure if possible to delay evaluation, until after
-	            // all events in batch have been processed/inserted - but then
-	            // how to trace the individual results??
-	            _session.fireAllRules();
-	            
-	        } else if (LOG.isLoggable(Level.FINEST)) {
-	            LOG.finest("No entry point for source Event Processor '"+source
-	                    +"' on Drools Event Processor '"+getRuleName()+"'");
-	        }
-	        
-	        ret = (java.io.Serializable)_context.getResult();
-	        
-            if (ret instanceof Exception) {
-            	throw (Exception)ret;
+        synchronized (this) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Process event '"+event+" from source '"+source
+                        +"' on Drools Event Processor '"+getRuleName()
+                        +"'");
             }
-    	}
+
+            _context.handle(null);
+
+            // Get entry point
+            // TODO: If not simple lookup, then may want to cache this
+            SessionEntryPoint entryPoint=_session.getEntryPoint(source);
+
+            if (entryPoint != null) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Insert event '"+event+" from source '"+source
+                            +"' on Drools Event Processor '"+getRuleName()
+                            +"' into entry point "+entryPoint);
+                }
+
+                entryPoint.insert(event);
+
+                // TODO: Not sure if possible to delay evaluation, until after
+                // all events in batch have been processed/inserted - but then
+                // how to trace the individual results??
+                _session.fireAllRules();
+
+            } else if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("No entry point for source Event Processor '"+source
+                        +"' on Drools Event Processor '"+getRuleName()+"'");
+            }
+
+            ret = (java.io.Serializable)_context.getResult();
+
+            if (ret instanceof Exception) {
+                throw (Exception)ret;
+            }
+        }
         
         return ret;
     }

@@ -29,25 +29,25 @@ import org.overlord.rtgov.switchyard.AbstractEventProcessor;
  */
 public class ProcessCompletionEventProcessor extends AbstractEventProcessor {
 
-	/**
-	 * This is the default constructor.
-	 */
-	public ProcessCompletionEventProcessor() {
-		super(ProcessCompletionEvent.class);
-	}
+    /**
+     * This is the default constructor.
+     */
+    public ProcessCompletionEventProcessor() {
+        super(ProcessCompletionEvent.class);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void notify(EventObject event) {
-		ProcessCompletionEvent bpelEvent=(ProcessCompletionEvent)event;
-		
+    /**
+     * {@inheritDoc}
+     */
+    public void notify(EventObject event) {
+        ProcessCompletionEvent bpelEvent=(ProcessCompletionEvent)event;
+        
         org.overlord.rtgov.activity.model.bpm.ProcessCompleted pc=
                 new org.overlord.rtgov.activity.model.bpm.ProcessCompleted();
         
         pc.setInstanceId(((ProcessCompletionEvent)bpelEvent).getProcessInstanceId().toString());
         
         recordActivity(event, pc);
-	}
+    }
 
 }

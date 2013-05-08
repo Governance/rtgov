@@ -74,13 +74,18 @@ public class InfinispanActiveMap extends ActiveMap {
     @Listener
     public class InfinispanCacheListener {
         
-    	@CacheEntryCreated
-    	public void entryCreated(CacheEntryCreatedEvent<Object,Object> evt) {
+        /**
+         * This method handles entry created events.
+         * 
+         * @param evt The event
+         */
+        @CacheEntryCreated
+        public void entryCreated(CacheEntryCreatedEvent<Object,Object> evt) {
             if (!evt.isPre()) {
-            	inserted(evt.getKey(), evt.getCache().get(evt.getKey()));
+                inserted(evt.getKey(), evt.getCache().get(evt.getKey()));
             }
-    	}
-    	
+        }
+
         /**
          * This method handles entry modified events.
          * 
@@ -89,7 +94,7 @@ public class InfinispanActiveMap extends ActiveMap {
         @CacheEntryModified
         public void entryModified(CacheEntryModifiedEvent<Object,Object> evt) {
             if (!evt.isPre()) {
-            	updated(evt.getKey(), evt.getValue());
+                updated(evt.getKey(), evt.getValue());
             }
         }
         

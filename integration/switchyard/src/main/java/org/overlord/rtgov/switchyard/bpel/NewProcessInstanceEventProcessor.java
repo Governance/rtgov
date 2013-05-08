@@ -29,19 +29,19 @@ import org.overlord.rtgov.switchyard.AbstractEventProcessor;
  */
 public class NewProcessInstanceEventProcessor extends AbstractEventProcessor {
 
-	/**
-	 * This is the default constructor.
-	 */
-	public NewProcessInstanceEventProcessor() {
-		super(NewProcessInstanceEvent.class);
-	}
+    /**
+     * This is the default constructor.
+     */
+    public NewProcessInstanceEventProcessor() {
+        super(NewProcessInstanceEvent.class);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void notify(EventObject event) {
-		NewProcessInstanceEvent bpelEvent=(NewProcessInstanceEvent)event;
-		
+    /**
+     * {@inheritDoc}
+     */
+    public void notify(EventObject event) {
+        NewProcessInstanceEvent bpelEvent=(NewProcessInstanceEvent)event;
+        
         org.overlord.rtgov.activity.model.bpm.ProcessStarted ps=
                 new org.overlord.rtgov.activity.model.bpm.ProcessStarted();
         
@@ -49,6 +49,6 @@ public class NewProcessInstanceEventProcessor extends AbstractEventProcessor {
         ps.setInstanceId(((NewProcessInstanceEvent)bpelEvent).getProcessInstanceId().toString());
         
         recordActivity(event, ps);
-	}
+    }
 
 }

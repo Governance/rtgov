@@ -29,60 +29,60 @@ import org.switchyard.event.EventObserver;
  *
  */
 public abstract class AbstractEventProcessor implements EventObserver, EventProcessor {
-	
-	private static final Logger LOG=Logger.getLogger(AbstractEventProcessor.class.getName());
+    
+    private static final Logger LOG=Logger.getLogger(AbstractEventProcessor.class.getName());
 
-	private Class<?> _class=null;
-	
-	private ActivityCollector _collector=null;
-	
-	/**
-	 * This is the constructor for the abstract event processor.
-	 *  
-	 * @param cls The class associated with the processor
-	 */
-	public AbstractEventProcessor(Class<?> cls) {
-		_class = cls;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void init(ActivityCollector collector) {
-		_collector = collector;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<?> getEventType() {
-		return (_class);
-	}
-	
-	/**
-	 * This method returns the activity collector.
-	 * 
-	 * @return The activity collector
-	 */
-	protected ActivityCollector getActivityCollector() {
-		return (_collector);
-	}
-	
-	/**
-	 * This method records the activity type.
-	 * 
-	 * @param at The activity type
-	 */
-	protected void recordActivity(Object event, ActivityType at) {
-		
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("Record event '"+event+"' as activity type: "+at);
-		}
-		
+    private Class<?> _class=null;
+    
+    private ActivityCollector _collector=null;
+    
+    /**
+     * This is the constructor for the abstract event processor.
+     *  
+     * @param cls The class associated with the processor
+     */
+    public AbstractEventProcessor(Class<?> cls) {
+        _class = cls;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void init(ActivityCollector collector) {
+        _collector = collector;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public Class<?> getEventType() {
+        return (_class);
+    }
+    
+    /**
+     * This method returns the activity collector.
+     * 
+     * @return The activity collector
+     */
+    protected ActivityCollector getActivityCollector() {
+        return (_collector);
+    }
+    
+    /**
+     * This method records the activity type.
+     * 
+     * @param at The activity type
+     */
+    protected void recordActivity(Object event, ActivityType at) {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Record event '"+event+"' as activity type: "+at);
+        }
+        
         try {
-        	getActivityCollector().record(at);
+            getActivityCollector().record(at);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "Failed to report activity event", e);
         }
-	}
+    }
 }

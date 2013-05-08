@@ -265,6 +265,9 @@ public class JBossASPolicyAsyncTest {
                 fail("Order was not accepted following unsuspension: "+resp4);
             }
         
+            // Wait for events to propagate
+            Thread.sleep(4000);
+    
         } catch (Exception e) {
             fail("Failed to invoke service: "+e);
         }

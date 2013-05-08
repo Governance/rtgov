@@ -26,20 +26,20 @@ import org.overlord.rtgov.activity.collector.ActivityCollector;
  */
 public interface EventProcessor {
 
-	/**
-	 * This method initializes the event processor, supplying
-	 * the activity collector to use for reporting activities.
-	 * 
-	 * @param collector The activity collector
-	 */
-	public void init(ActivityCollector collector);
-	
-	/**
-	 * This method returns the event type that can be handled
-	 * by this event processor.
-	 * 
-	 * @return The event type associated with the processor
-	 */
-	public Class<?> getEventType();
-	
+    /**
+     * This method initializes the event processor, supplying
+     * the activity collector to use for reporting activities.
+     * 
+     * @param collector The activity collector
+     */
+    public void init(ActivityCollector collector);
+    
+    /**
+     * This method returns the event type that can be handled
+     * by this event processor.
+     * 
+     * @return The event type associated with the processor
+     */
+    public Class<?> getEventType();
+    
 }

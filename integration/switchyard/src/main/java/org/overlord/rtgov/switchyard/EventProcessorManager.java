@@ -40,7 +40,7 @@ import org.overlord.rtgov.activity.collector.ActivityCollector;
 
 /**
  * This class is responsible for registering the configured set of
- * event processor implementations against 
+ * event processor implementations against the switchyard Event Manager.
  *
  */
 @ApplicationScoped
@@ -48,10 +48,10 @@ import org.overlord.rtgov.activity.collector.ActivityCollector;
 @Startup
 @ConcurrencyManagement(BEAN)
 public class EventProcessorManager {
-	
-	private static final String SWITCHAYRD_MANAGEMENT_LOCAL = "org.switchyard.admin:type=Management.Local";
+    
+    private static final String SWITCHAYRD_MANAGEMENT_LOCAL = "org.switchyard.admin:type=Management.Local";
 
-	private static final Logger LOG=Logger.getLogger(EventProcessorManager.class.getName());
+    private static final Logger LOG=Logger.getLogger(EventProcessorManager.class.getName());
 
     private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
 
@@ -59,13 +59,13 @@ public class EventProcessorManager {
     private ActivityCollector _activityCollector=null;
 
     @Inject @Any
-	private Instance<EventProcessor> _eventProcessors=null;
-	
-	/**
-	 * Initialize the event processors.
-	 */
-	@PostConstruct
-	public void init() {
+    private Instance<EventProcessor> _eventProcessors=null;
+    
+    /**
+     * Initialize the event processors.
+     */
+    @PostConstruct
+    public void init() {
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("SwitchYard EventProcessorManager Initialized with collector="+_activityCollector);
@@ -78,41 +78,41 @@ public class EventProcessorManager {
             objname = new ObjectName(SWITCHAYRD_MANAGEMENT_LOCAL);
             
             for (EventProcessor ep : _eventProcessors) {
-            	
+                
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("SwitchYard EventProcessorManager register event processor="+ep);
                 }
 
                 // Initialize with the activity collector
-            	ep.init(_activityCollector);
-            	
-	            java.util.List<Class<?>> eventTypes=new java.util.ArrayList<Class<?>>();
-	            eventTypes.add(ep.getEventType());               
-	            
-	            Object[] params={ep, eventTypes};
-	            
-	            String[] types={org.switchyard.event.EventObserver.class.getName(),
-	            		java.util.List.class.getName()};
-	            
-	            mbs.invoke(objname, "addObserver", params, types);
+                ep.init(_activityCollector);
+                
+                java.util.List<Class<?>> eventTypes=new java.util.ArrayList<Class<?>>();
+                eventTypes.add(ep.getEventType());               
+                
+                Object[] params={ep, eventTypes};
+                
+                String[] types={org.switchyard.event.EventObserver.class.getName(),
+                        java.util.List.class.getName()};
+                
+                mbs.invoke(objname, "addObserver", params, types);
             }
             
         } catch (Exception e) {
-        	if (LOG.isLoggable(Level.FINE)) {
-        		LOG.log(Level.FINE, "Failed to register SwitchYard event observer via MBean", e);
-        	}
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Failed to register SwitchYard event observer via MBean", e);
+            }
         }
 
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("SwitchYard EventProcessorManager Initialization Completed");
         }
-	}
-	
-	/**
-	 * Close the event processors.
-	 */
-	@PreDestroy
-	public void close() {
+    }
+    
+    /**
+     * Close the event processors.
+     */
+    @PreDestroy
+    public void close() {
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
         ObjectName objname=null;
         
@@ -125,20 +125,20 @@ public class EventProcessorManager {
                 }
 
                 Object[] params={ep};
-	            
-	            String[] types={org.switchyard.event.EventObserver.class.getName()};
-	            
-	            mbs.invoke(objname, "removeObserver", params, types);
+                
+                String[] types={org.switchyard.event.EventObserver.class.getName()};
+                
+                mbs.invoke(objname, "removeObserver", params, types);
            }
             
         } catch (Exception e) {
-        	if (LOG.isLoggable(Level.FINE)) {
-        		LOG.log(Level.FINE, "Failed to unregister SwitchYard event observer via MBean", e);
-        	}
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "Failed to unregister SwitchYard event observer via MBean", e);
+            }
         }
 
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("SwitchYard EventProcessorManager Close Completed");
         }
-	}
+    }
 }

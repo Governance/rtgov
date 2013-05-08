@@ -71,7 +71,7 @@ public class JPAEventProcessor extends EventProcessor {
      * @return The entity manager
      */
     protected EntityManager getEntityMgr() {
-    	return (_em);
+        return (_em);
     }
     
     /**
@@ -117,7 +117,7 @@ public class JPAEventProcessor extends EventProcessor {
             
         if (_em == null) {
             try {
-            	_em = _emf.createEntityManager();
+                _em = _emf.createEntityManager();
                 
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("EntityManager '"+getEntityManager()+"' created");                
