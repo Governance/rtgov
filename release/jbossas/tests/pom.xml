@@ -20,6 +20,30 @@
 			<type>zip</type>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.release.jbossas</groupId>
+			<artifactId>overlord-rtgov</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.release.jbossas</groupId>
+			<artifactId>overlord-rtgov-switchyard</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.content</groupId>
+			<artifactId>overlord-rtgov-epn</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.content</groupId>
+			<artifactId>overlord-rtgov-acs</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 
 	<modules>

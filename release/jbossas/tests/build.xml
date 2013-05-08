@@ -25,6 +25,17 @@
 		</copy>
 	</target>
 
+	<target name="setupFull" depends="setup" >
+		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov.war"
+			file="${org.overlord.rtgov.release.jbossas:overlord-rtgov:war}" />
+		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-switchyard.war"
+			file="${org.overlord.rtgov.release.jbossas:overlord-rtgov-switchyard:war}" />
+		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-epn.war"
+			file="${org.overlord.rtgov.content:overlord-rtgov-epn:war}" />
+		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-acs.war"
+			file="${org.overlord.rtgov.content:overlord-rtgov-acs:war}" />
+	</target>
+
 	<target name="clean">
 		<echo message="Cleaning up Overlord Runtime Governance modules"/>
 		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />

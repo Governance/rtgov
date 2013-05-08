@@ -29,6 +29,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -51,8 +52,19 @@ public class JBossASPolicySyncTest {
                 TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov.war"));
     }
     
-    @Deployment(name="overlord-rtgov-acs", order=2)
+    @Deployment(name="overlord-rtgov-switchyard", order=2)
     public static WebArchive createDeployment2() {
+        String version=System.getProperty("rtgov.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.rtgov.release.jbossas:overlord-rtgov-switchyard:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+    }
+    
+    @Deployment(name="overlord-rtgov-acs", order=3)
+    public static WebArchive createDeployment3() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -63,8 +75,8 @@ public class JBossASPolicySyncTest {
                 TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov-acs.war"));
     }
     
-    @Deployment(name="overlord-rtgov-epn", order=3)
-    public static WebArchive createDeployment3() {
+    @Deployment(name="overlord-rtgov-epn", order=4)
+    public static WebArchive createDeployment4() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -75,8 +87,8 @@ public class JBossASPolicySyncTest {
                 TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov-epn.war"));
     }
     
-    @Deployment(name="orders-app", order=4)
-    public static WebArchive createDeployment4() {
+    @Deployment(name="orders-app", order=5)
+    public static WebArchive createDeployment5() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -86,8 +98,8 @@ public class JBossASPolicySyncTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="orders-ip", order=5)
-    public static WebArchive createDeployment5() {
+    @Deployment(name="orders-ip", order=6)
+    public static WebArchive createDeployment6() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -97,8 +109,8 @@ public class JBossASPolicySyncTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="policy-sync", order=6)
-    public static WebArchive createDeployment6() {
+    @Deployment(name="policy-sync", order=7)
+    public static WebArchive createDeployment7() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -109,6 +121,7 @@ public class JBossASPolicySyncTest {
     }
     
     @Test @OperateOnDeployment("overlord-rtgov")
+    @Ignore
     public void testEnforcePolicy() {
         
         try {

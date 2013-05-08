@@ -35,7 +35,6 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import javax.naming.InitialContext;
 
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 
@@ -68,15 +67,6 @@ public class EventProcessorManager {
 	@PostConstruct
 	public void init() {
         
-        try {
-            InitialContext ctx=new InitialContext();
-            
-            _activityCollector = (ActivityCollector)ctx.lookup(ACTIVITY_COLLECTOR);
-            
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to initialize activity collector", e);
-        }
-
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("SwitchYard EventProcessorManager Initialized with collector="+_activityCollector);
         }

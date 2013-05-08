@@ -57,8 +57,19 @@ public class JBossASCustomEventsResultsTest {
                 copyToTmpFile(archiveFiles[0],"overlord-rtgov.war"));
     }
     
-    @Deployment(name="orders-app", order=2)
+    @Deployment(name="overlord-rtgov-switchyard", order=2)
     public static WebArchive createDeployment2() {
+        String version=System.getProperty("rtgov.version");
+
+        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
+                .artifacts("org.overlord.rtgov.release.jbossas:overlord-rtgov-switchyard:war:"+version)
+                .resolveAsFiles();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+    }
+    
+    @Deployment(name="orders-app", order=3)
+    public static WebArchive createDeployment3() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -68,8 +79,8 @@ public class JBossASCustomEventsResultsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="orders-ip", order=3)
-    public static WebArchive createDeployment3() {
+    @Deployment(name="orders-ip", order=4)
+    public static WebArchive createDeployment4() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -79,8 +90,8 @@ public class JBossASCustomEventsResultsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="epn", order=4)
-    public static WebArchive createDeployment4() {
+    @Deployment(name="epn", order=5)
+    public static WebArchive createDeployment5() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -90,8 +101,8 @@ public class JBossASCustomEventsResultsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="acs", order=5)
-    public static WebArchive createDeployment5() {
+    @Deployment(name="acs", order=6)
+    public static WebArchive createDeployment6() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -102,8 +113,8 @@ public class JBossASCustomEventsResultsTest {
                 copyToTmpFile(archiveFiles[0],"tests-jbossas-custom-events-acs.war"));
     }
     
-    @Deployment(name="ai", order=6)
-    public static WebArchive createDeployment6() {
+    @Deployment(name="ai", order=7)
+    public static WebArchive createDeployment7() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -113,8 +124,8 @@ public class JBossASCustomEventsResultsTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="monitor", order=7)
-    public static WebArchive createDeployment7() {
+    @Deployment(name="monitor", order=8)
+    public static WebArchive createDeployment8() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -125,8 +136,8 @@ public class JBossASCustomEventsResultsTest {
                         copyToTmpFile(archiveFiles[0],"custom-events-monitor.war"));
     }
     
-    @Deployment(name="overlord-rtgov-epn", order=8)
-    public static WebArchive createDeployment8() {
+    @Deployment(name="overlord-rtgov-epn", order=9)
+    public static WebArchive createDeployment9() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
