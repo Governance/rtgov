@@ -160,7 +160,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * @param principal The principal
      */
     public void setPrincipal(String principal) {
-    	_principal = principal;
+        _principal = principal;
     }
     
     /**
@@ -170,7 +170,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * @return The principal
      */
     public String getPrincipal() {
-    	return (_principal);
+        return (_principal);
     }
     
     /**

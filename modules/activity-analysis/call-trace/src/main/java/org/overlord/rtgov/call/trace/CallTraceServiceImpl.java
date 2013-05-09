@@ -208,8 +208,7 @@ public class CallTraceServiceImpl implements CallTraceService {
         
         // Process a sequence of activity units, starting with the one supplied,
         // but skipping any that are listed in the top level collection.
-        // Break out of the sequence when a response sent is detected.
-        
+        // Break out of the sequence when a response sent is detected.        
         for (int i=aupos; !f_end && i < aus.size(); i++) {
             ActivityUnit au=aus.get(i);
             
@@ -262,8 +261,8 @@ public class CallTraceServiceImpl implements CallTraceService {
                     }
                     
                     if (cur instanceof RequestSent) {
-                    	instrumentCall(call, au, (RequestSent)cur);
-                    	
+                        instrumentCall(call, au, (RequestSent)cur);
+                        
                         RPCActivityType rr=state.getSOAActivity(RequestReceived.class,
                                 ((RequestSent)cur).getServiceType(),
                                 ((RequestSent)cur).getOperation());                        
@@ -279,7 +278,7 @@ public class CallTraceServiceImpl implements CallTraceService {
                             }
                         }
                     } else if (cur instanceof RequestReceived) {                    
-                    	instrumentCall(call, au, (RequestReceived)cur);
+                        instrumentCall(call, au, (RequestReceived)cur);
                         call.setRequest(((RequestReceived)cur).getContent());
                         
                     } else if (cur instanceof ResponseSent) {
@@ -304,16 +303,14 @@ public class CallTraceServiceImpl implements CallTraceService {
                             // Break out of processing the cursor, and also the method
                             f_end = true;
                             break;
-                        }
-                        
+                        }                        
                     } else if (cur instanceof ResponseReceived) {
                         initializeResponseReceived(state, (ResponseReceived)cur);
 
                         // Set end flag, to break out of this method once
                         // this cursor has finished
                         f_end = true;
-                    }
-                    
+                    }                    
                 } else {
                     Task task=createTask(cur);
                     
@@ -481,16 +478,16 @@ public class CallTraceServiceImpl implements CallTraceService {
      * @param at The activity type
      */
     protected static void instrumentCall(Call call, ActivityUnit au, RPCActivityType at) {
-    	
-    	if (au != null && au.getOrigin() != null) {
-	        if (at instanceof RequestSent) {
-	        	call.getProperties().put("client-host", au.getOrigin().getHost());
-	        	call.getProperties().put("client-node", au.getOrigin().getNode());
-	        } else if (at instanceof RequestReceived) {
-	        	call.getProperties().put("server-host", au.getOrigin().getHost());
-	        	call.getProperties().put("server-node", au.getOrigin().getNode());
-	        }
-    	}
+        
+        if (au != null && au.getOrigin() != null) {
+            if (at instanceof RequestSent) {
+                call.getProperties().put("client-host", au.getOrigin().getHost());
+                call.getProperties().put("client-node", au.getOrigin().getNode());
+            } else if (at instanceof RequestReceived) {
+                call.getProperties().put("server-host", au.getOrigin().getHost());
+                call.getProperties().put("server-node", au.getOrigin().getNode());
+            }
+        }
     }
     
     /**

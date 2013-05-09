@@ -78,40 +78,40 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
         String ret=null;
         
         try {
-        	boolean reparse=false;
-        	
-        	if (information instanceof javax.xml.transform.dom.DOMSource) {
-        		information = ((javax.xml.transform.dom.DOMSource)information).getNode();
-        		
-        		if (LOG.isLoggable(Level.FINEST)) {
-        			LOG.finest("Extracted node from DOMSource: "+information);
-        		}
-        		
-        		// RTGOV-141 - workaround to overcome xpath evaluation issue
-        		// Issue is caused when xpath expression defined from root (i.e. starts
-        		// with /), but the context (info) is a lower level child node,
-        		// as in the case of a SOAP body. The evaluation of the expression
-        		// attempts to start at the top level document.
-        		if (getExpression().charAt(0) == '/'
-        					&& ((org.w3c.dom.Node)information).getParentNode()
-        						!= ((org.w3c.dom.Node)information).getOwnerDocument()) {
-        			
-            		if (LOG.isLoggable(Level.FINEST)) {
-            			LOG.finest("Need to import supplied DOM node '"+information
-            					+"' into new document, as not the top level element "
-            					+"and the xpath expression starts with '/': "
-            					+getExpression());
-            		}        			
+            boolean reparse=false;
+            
+            if (information instanceof javax.xml.transform.dom.DOMSource) {
+                information = ((javax.xml.transform.dom.DOMSource)information).getNode();
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Extracted node from DOMSource: "+information);
+                }
+                
+                // RTGOV-141 - workaround to overcome xpath evaluation issue
+                // Issue is caused when xpath expression defined from root (i.e. starts
+                // with /), but the context (info) is a lower level child node,
+                // as in the case of a SOAP body. The evaluation of the expression
+                // attempts to start at the top level document.
+                if (getExpression().charAt(0) == '/'
+                            && ((org.w3c.dom.Node)information).getParentNode()
+                                != ((org.w3c.dom.Node)information).getOwnerDocument()) {
+                    
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Need to import supplied DOM node '"+information
+                                +"' into new document, as not the top level element "
+                                +"and the xpath expression starts with '/': "
+                                +getExpression());
+                    }                   
 
-            		org.w3c.dom.Document doc=
-        					javax.xml.parsers.DocumentBuilderFactory.newInstance()
-        							.newDocumentBuilder().newDocument();
-        			
-        			information = doc.importNode((org.w3c.dom.Node)information, true);
-        			
-        			doc.appendChild((org.w3c.dom.Node)information);
-        		}
-        	}
+                    org.w3c.dom.Document doc=
+                            javax.xml.parsers.DocumentBuilderFactory.newInstance()
+                                    .newDocumentBuilder().newDocument();
+                    
+                    information = doc.importNode((org.w3c.dom.Node)information, true);
+                    
+                    doc.appendChild((org.w3c.dom.Node)information);
+                }
+            }
 
             if (information instanceof String) {
                 // Convert to DOM
@@ -133,27 +133,27 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
                 ret = _domXPath.stringValueOf(doc.getDocumentElement());
                 
             } else if (information instanceof org.w3c.dom.Node) {
-            	org.w3c.dom.Node node=(org.w3c.dom.Node)information;
-            	
-            	// Check if namespace aware
-            	if (reparse || !isNamespaceAware(node)) {
-            		
-            		if (LOG.isLoggable(Level.FINEST)) {
-            			LOG.finest("Converting non-namespace-aware node: "+node);
-            		}
-            		
-            		java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-            		
-            		javax.xml.transform.dom.DOMSource source=
-            				new javax.xml.transform.dom.DOMSource(node);
-            		javax.xml.transform.stream.StreamResult result=
-            				new javax.xml.transform.stream.StreamResult(baos);
-            		
-            		javax.xml.transform.Transformer transformer=
-            				javax.xml.transform.TransformerFactory.newInstance().newTransformer();
-    	        		
-            		transformer.transform(source, result);
-            		
+                org.w3c.dom.Node node=(org.w3c.dom.Node)information;
+                
+                // Check if namespace aware
+                if (reparse || !isNamespaceAware(node)) {
+                    
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Converting non-namespace-aware node: "+node);
+                    }
+                    
+                    java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+                    
+                    javax.xml.transform.dom.DOMSource source=
+                            new javax.xml.transform.dom.DOMSource(node);
+                    javax.xml.transform.stream.StreamResult result=
+                            new javax.xml.transform.stream.StreamResult(baos);
+                    
+                    javax.xml.transform.Transformer transformer=
+                            javax.xml.transform.TransformerFactory.newInstance().newTransformer();
+                        
+                    transformer.transform(source, result);
+                    
                     javax.xml.parsers.DocumentBuilderFactory factory=
                             javax.xml.parsers.DocumentBuilderFactory.newInstance();
                     
@@ -171,11 +171,11 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
                     
                     information = doc.getDocumentElement();
 
-            		if (LOG.isLoggable(Level.FINEST)) {
-            			LOG.finest("Converted node: "+information);
-            		}            		
-            	}
-            	
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Converted node: "+information);
+                    }                   
+                }
+                
                 ret = _domXPath.stringValueOf(information);
                 
             } else {
@@ -204,15 +204,15 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
      * @return Whether the node is namespace aware
      */
     protected static boolean isNamespaceAware(org.w3c.dom.Node node) {
-    	boolean ret=(node.getLocalName() != null);
-    	
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("Is node "+node+" namespace aware? "+ret);
-			LOG.finest("nodeName="+node.getNodeName());
-			LOG.finest("localName="+node.getLocalName());
-			LOG.finest("namespace="+node.getNamespaceURI());
-		}  
-		
-    	return (ret);
+        boolean ret=(node.getLocalName() != null);
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Is node "+node+" namespace aware? "+ret);
+            LOG.finest("nodeName="+node.getNodeName());
+            LOG.finest("localName="+node.getLocalName());
+            LOG.finest("namespace="+node.getNamespaceURI());
+        }  
+        
+        return (ret);
     }
 }

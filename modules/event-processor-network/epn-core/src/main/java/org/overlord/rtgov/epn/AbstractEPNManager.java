@@ -63,10 +63,10 @@ public abstract class AbstractEPNManager implements EPNManager {
         
         // Validate network
         if (!EPNValidator.validate(network, getValidationListener())) {
-        	// Close the network
-        	network.close(getContainer());
-        	
-        	throw new Exception(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+            // Close the network
+            network.close(getContainer());
+            
+            throw new Exception(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
                     "epn-core.Messages").getString("EPN-CORE-12"),
                     network.getName(), network.getVersion()));
         }
@@ -104,13 +104,13 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @return The validation listener
      */
     protected EPNValidationListener getValidationListener() {
-    	return (new EPNValidationListener() {
+        return (new EPNValidationListener() {
 
-			public void error(Network epn, Object target, String issue) {
-				LOG.severe(issue);
-			}
-    		
-    	});
+            public void error(Network epn, Object target, String issue) {
+                LOG.severe(issue);
+            }
+            
+        });
     }
     
     /**

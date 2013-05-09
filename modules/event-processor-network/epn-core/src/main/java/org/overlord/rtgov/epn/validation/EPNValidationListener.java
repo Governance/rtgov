@@ -26,14 +26,14 @@ import org.overlord.rtgov.epn.Network;
  */
 public interface EPNValidationListener {
 
-	/**
-	 * This method identifies an issue with a part of
-	 * an Event Processor Network.
-	 * 
-	 * @param epn The network
-	 * @param target The object resulting in the error
-	 * @param issue The description of the issue
-	 */
-	public void error(Network epn, Object target, String issue);
-	
+    /**
+     * This method identifies an issue with a part of
+     * an Event Processor Network.
+     * 
+     * @param epn The network
+     * @param target The object resulting in the error
+     * @param issue The description of the issue
+     */
+    public void error(Network epn, Object target, String issue);
+    
 }

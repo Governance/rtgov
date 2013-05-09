@@ -28,22 +28,22 @@ import org.overlord.rtgov.ep.Predicate;
  */
 public class ActivityInterceptor {
 
-	private static final String ACTIVITY_SOURCE = "collector";
-	
+    private static final String ACTIVITY_SOURCE = "collector";
+    
     private String _name=null;
     private String _version=null;
 
-	private Predicate _predicate=null;
-	private EventProcessor _eventProcessor=null;
-	
-	private boolean _initialized=false;
-	
-	/**
-	 * Default constructor.
-	 */
-	public ActivityInterceptor() {
-	}
-	
+    private Predicate _predicate=null;
+    private EventProcessor _eventProcessor=null;
+    
+    private boolean _initialized=false;
+    
+    /**
+     * Default constructor.
+     */
+    public ActivityInterceptor() {
+    }
+    
     /**
      * This method returns the name of the activity interceptor.
      * 
@@ -80,81 +80,81 @@ public class ActivityInterceptor {
         _version = version;
     }
     
-	/**
-	 * This method sets the optional predicate that can be
-	 * used to assess whether a supplied activity is
-	 * applicable to the interceptor.
-	 * 
-	 * @param predicate The predicate
-	 */
-	public void setPredicate(Predicate predicate) {
-		_predicate = predicate;
-	}
-	
-	/**
-	 * This method gets the optional predicate that can be
-	 * used to assess whether a supplied activity is
-	 * applicable to the interceptor.
-	 * 
-	 * @return The predicate, or null if not relevant
-	 */
-	public Predicate getPredicate() {
-		return (_predicate);
-	}
-	
-	/**
-	 * This method sets the event processor used to
-	 * intercept and analyse the activity event.
-	 * 
-	 * @param ep The event processor
-	 */
-	public void setEventProcessor(EventProcessor ep) {
-		_eventProcessor = ep;
-	}
-	
-	/**
-	 * This method gets the event processor used to
-	 * intercept and analyse the activity event.
-	 * 
-	 * @return The event processor
-	 */
-	public EventProcessor getEventProcessor() {
-		return (_eventProcessor);
-	}
-	
+    /**
+     * This method sets the optional predicate that can be
+     * used to assess whether a supplied activity is
+     * applicable to the interceptor.
+     * 
+     * @param predicate The predicate
+     */
+    public void setPredicate(Predicate predicate) {
+        _predicate = predicate;
+    }
+    
+    /**
+     * This method gets the optional predicate that can be
+     * used to assess whether a supplied activity is
+     * applicable to the interceptor.
+     * 
+     * @return The predicate, or null if not relevant
+     */
+    public Predicate getPredicate() {
+        return (_predicate);
+    }
+    
+    /**
+     * This method sets the event processor used to
+     * intercept and analyse the activity event.
+     * 
+     * @param ep The event processor
+     */
+    public void setEventProcessor(EventProcessor ep) {
+        _eventProcessor = ep;
+    }
+    
+    /**
+     * This method gets the event processor used to
+     * intercept and analyse the activity event.
+     * 
+     * @return The event processor
+     */
+    public EventProcessor getEventProcessor() {
+        return (_eventProcessor);
+    }
+    
     /**
      * Initialize the activity interceptor.
      * 
      * @throws Exception Failed to initialize
      */
     public void init() throws Exception {
-    	
-    	if (!_initialized) {
-    		_initialized = true;
-    		
-	    	if (_predicate != null) {
-	    		_predicate.init();
-	    	}
-	    	if (_eventProcessor != null) {
-	    		_eventProcessor.init();
-	    	}
-    	}
+        
+        if (!_initialized) {
+            _initialized = true;
+            
+            if (_predicate != null) {
+                _predicate.init();
+            }
+            if (_eventProcessor != null) {
+                _eventProcessor.init();
+            }
+        }
     }
 
-	/**
-	 * This method processes the intercepted activity event.
-	 * 
-	 * @param actType The activity type
-	 * @throws Exception Failed to process activity
-	 */
-	public void process(ActivityType actType) throws Exception {
-		
-		// Check if predicate defined and if so, the event is applicable
-		if (_predicate == null || _predicate.evaluate(actType)) {
-			
-			// Process the event
-			_eventProcessor.process(ACTIVITY_SOURCE, actType, 0);
-		}
-	}
-	
+    /**
+     * This method processes the intercepted activity event.
+     * 
+     * @param actType The activity type
+     * @throws Exception Failed to process activity
+     */
+    public void process(ActivityType actType) throws Exception {
+        
+        // Check if predicate defined and if so, the event is applicable
+        if (_predicate == null || _predicate.evaluate(actType)) {
+            
+            // Process the event
+            _eventProcessor.process(ACTIVITY_SOURCE, actType, 0);
+        }
+    }
+    
 }

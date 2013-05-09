@@ -30,51 +30,51 @@ import org.overlord.rtgov.activity.util.ActivityUtil;
  */
 public class SerializeInformationTransformer extends InformationTransformer {
 
-	private static final Logger LOG=Logger.getLogger(SerializeInformationTransformer.class.getName());
-	
+    private static final Logger LOG=Logger.getLogger(SerializeInformationTransformer.class.getName());
+    
     /**
      * {@inheritDoc}
      */
     public String transform(Object information) {
-    	
-    	if (information instanceof String) {
-    		return ((String)information);
-    		
-    	} else {
-    		if (information instanceof DOMSource) {
-    			information = ((DOMSource)information).getNode();
-    		}
-    		
-    		if (information instanceof org.w3c.dom.Node) {
-	    		try {
-					java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-					
-					javax.xml.transform.dom.DOMSource source=
-							new javax.xml.transform.dom.DOMSource((org.w3c.dom.Node)information);
-					javax.xml.transform.stream.StreamResult result=
-							new javax.xml.transform.stream.StreamResult(baos);
-					
-					javax.xml.transform.Transformer transformer=
-							javax.xml.transform.TransformerFactory.newInstance().newTransformer();
-			    		
-					transformer.transform(source, result);
-					
-					return (baos.toString());
-					
-	    		} catch (Exception e) {
-	    			LOG.log(Level.SEVERE, "Failed to transformer DOM information '"+information+"'", e);
-	    		}    		
-	
-	    	} else {
-	    		try {
-	    			return (ActivityUtil.objectToJSONString(information));
-	    		} catch (Exception e) {
-	    			LOG.log(Level.SEVERE, "Failed to transformer information '"+information+"' to JSON", e);
-	    		}
-	    	}
-    	}
-    	
-    	return null;
+        
+        if (information instanceof String) {
+            return ((String)information);
+            
+        } else {
+            if (information instanceof DOMSource) {
+                information = ((DOMSource)information).getNode();
+            }
+            
+            if (information instanceof org.w3c.dom.Node) {
+                try {
+                    java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+                    
+                    javax.xml.transform.dom.DOMSource source=
+                            new javax.xml.transform.dom.DOMSource((org.w3c.dom.Node)information);
+                    javax.xml.transform.stream.StreamResult result=
+                            new javax.xml.transform.stream.StreamResult(baos);
+                    
+                    javax.xml.transform.Transformer transformer=
+                            javax.xml.transform.TransformerFactory.newInstance().newTransformer();
+                        
+                    transformer.transform(source, result);
+                    
+                    return (baos.toString());
+                    
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, "Failed to transformer DOM information '"+information+"'", e);
+                }           
+    
+            } else {
+                try {
+                    return (ActivityUtil.objectToJSONString(information));
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, "Failed to transformer information '"+information+"' to JSON", e);
+                }
+            }
+        }
+        
+        return null;
     }
     
 }

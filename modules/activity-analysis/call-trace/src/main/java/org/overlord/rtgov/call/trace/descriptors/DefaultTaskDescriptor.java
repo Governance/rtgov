@@ -63,8 +63,8 @@ public class DefaultTaskDescriptor implements TaskDescriptor {
                         Object value=pd.getReadMethod().invoke(at);
                         
                         if (value != null) {
-	                        buf.append(" "+pd.getDisplayName());
-	                        buf.append("="+value);
+                            buf.append(" "+pd.getDisplayName());
+                            buf.append("="+value);
                         }
                         
                     } catch (Exception ex) {

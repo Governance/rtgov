@@ -69,7 +69,7 @@ public class MVELInformationTransformer extends InformationTransformer {
         Object result=MVEL.executeExpression(_compiledExpression, vars);  
         
         if (result instanceof String) {
-        	return ((String)result);
+            return ((String)result);
         }
         
         return (null);

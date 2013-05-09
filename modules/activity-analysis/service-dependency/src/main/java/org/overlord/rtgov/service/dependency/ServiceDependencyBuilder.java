@@ -83,32 +83,32 @@ public final class ServiceDependencyBuilder {
                 
                 for (OperationDefinition opDef : sd.getOperations()) {
                     
-                	for (OperationImplDefinition stod : opDef.getImplementations()) {
-                		
-	                    if (stod.getRequestResponse() != null) {
-	                        for (InvocationDefinition invDef
-	                                    : stod.getRequestResponse().getInvocations()) {
-	                            if (invDef.getInterface().equals(intf)) {
-	                                
-	                                if (!ret.contains(sd)) {
-	                                    ret.add(sd);
-	                                }
-	                            }
-	                        }
-	                    }
-	                    
-	                    for (RequestFaultDefinition rfd : stod.getRequestFaults()) {
-	                        for (InvocationDefinition invDef
-	                                    : rfd.getInvocations()) {
-	                            if (invDef.getInterface().equals(intf)) {
-	                                
-	                                if (!ret.contains(sd)) {
-	                                    ret.add(sd);
-	                                }
-	                            }
-	                        }
-	                    }
-                	}
+                    for (OperationImplDefinition stod : opDef.getImplementations()) {
+                        
+                        if (stod.getRequestResponse() != null) {
+                            for (InvocationDefinition invDef
+                                        : stod.getRequestResponse().getInvocations()) {
+                                if (invDef.getInterface().equals(intf)) {
+                                    
+                                    if (!ret.contains(sd)) {
+                                        ret.add(sd);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        for (RequestFaultDefinition rfd : stod.getRequestFaults()) {
+                            for (InvocationDefinition invDef
+                                        : rfd.getInvocations()) {
+                                if (invDef.getInterface().equals(intf)) {
+                                    
+                                    if (!ret.contains(sd)) {
+                                        ret.add(sd);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -146,7 +146,7 @@ public final class ServiceDependencyBuilder {
                 
                 if (sits != null) {
                     for (Situation s : sits) {
-                    	String[] parts=s.subjectAsParts();
+                        String[] parts=s.subjectAsParts();
                         if (parts.length > 1 && parts[0].equals(
                                     sn.getService().getInterface())
                                     && parts[1].equals(op.getName())) {
@@ -161,9 +161,9 @@ public final class ServiceDependencyBuilder {
             sn.getProperties().put(ServiceNode.INITIAL_NODE, initialNodes.contains(sd));
             
             if (sits != null) {
-            	// Associate situations specific to the interface just with the service node
+                // Associate situations specific to the interface just with the service node
                 for (Situation s : sits) {
-                	String[] parts=s.subjectAsParts();
+                    String[] parts=s.subjectAsParts();
                     if (parts.length == 1 && parts[0].equals(
                                 sn.getService().getInterface())) {
                         sn.getSituations().add(s);
@@ -182,15 +182,15 @@ public final class ServiceDependencyBuilder {
                 OperationNode opn=sn.getOperation(op.getName());
                 
                 for (OperationImplDefinition stod : op.getImplementations()) {
-	                if (stod.getRequestResponse() != null) {
-	                    linkOperationNodes(ret, sn, opn,
-	                    		stod.getRequestResponse().getInvocations());
-	                }
-	                
-	                for (RequestFaultDefinition rfd : stod.getRequestFaults()) {
-	                    linkOperationNodes(ret, sn, opn,
-	                            rfd.getInvocations());
-	                }
+                    if (stod.getRequestResponse() != null) {
+                        linkOperationNodes(ret, sn, opn,
+                                stod.getRequestResponse().getInvocations());
+                    }
+                    
+                    for (RequestFaultDefinition rfd : stod.getRequestFaults()) {
+                        linkOperationNodes(ret, sn, opn,
+                                rfd.getInvocations());
+                    }
                 }
             }
         }

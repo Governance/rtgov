@@ -85,8 +85,8 @@ public class JEEAILoader {
                             "ai-loader-jee.Messages").getString("AI-LOADER-JEE-2"));
                 } else {
                     for (ActivityInterceptor ai : _activityInterceptors) {
-                    	ai.init();
-                    	
+                        ai.init();
+
                         _aiManager.register(ai);
                     }
                 }

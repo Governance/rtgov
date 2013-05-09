@@ -29,8 +29,8 @@ import org.overlord.rtgov.activity.model.ActivityType;
  *
  */
 public class InformationProcessor {
-	
-	private static final Logger LOG=Logger.getLogger(InformationProcessor.class.getName());
+    
+    private static final Logger LOG=Logger.getLogger(InformationProcessor.class.getName());
 
     private String _name=null;
     private String _version=null;
@@ -91,13 +91,13 @@ public class InformationProcessor {
      */
     public void init() throws Exception {
         
-    	if (!_initialized) {
-    		_initialized = true;
+        if (!_initialized) {
+            _initialized = true;
 
-	        for (TypeProcessor tp : _typeProcessors.values()) {
-	            tp.init();
-	        }
-    	}
+            for (TypeProcessor tp : _typeProcessors.values()) {
+                tp.init();
+            }
+        }
     }
 
     /**
@@ -125,16 +125,16 @@ public class InformationProcessor {
      * @return The public representation of the information
      */
     public String process(String type, Object info,
-    			java.util.Map<String, Object> headers, ActivityType actType) {
+                java.util.Map<String, Object> headers, ActivityType actType) {
         TypeProcessor processor=_typeProcessors.get(type);
         
-    	if (LOG.isLoggable(Level.FINEST)) {
-    		LOG.finest("Process type="+type+" info="
-    				+info+" actType="+actType
-    				+" with processor="+processor);
-    	}
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Process type="+type+" info="
+                    +info+" actType="+actType
+                    +" with processor="+processor);
+        }
 
-    	if (processor != null) {
+        if (processor != null) {
             // Process the context and property details
             return (processor.process(info, headers, actType));
         }

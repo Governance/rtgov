@@ -33,54 +33,55 @@ import javax.transaction.UserTransaction;
  */
 @Transactional @Interceptor
 public class TransactionalInterceptor {
-	
-	private static final Logger LOG=Logger.getLogger(TransactionalInterceptor.class.getName());
+    
+    private static final Logger LOG=Logger.getLogger(TransactionalInterceptor.class.getName());
 
-	@Resource UserTransaction tx;
-	    
-	/**
-	 * This method manages the scope of the transaction around an invoked
-	 * bean.
-	 * 
-	 * @param context The invocation context
-	 * @return The result from the performed method
-	 * @throws Exception Failed to perform method
-	 */
-	@AroundInvoke
-	public Object manageTransaction(InvocationContext context) throws Exception {		
-		Object result=null;
-		
-		if (tx.getStatus() == Status.STATUS_NO_TRANSACTION) {
-			tx.begin();
-		
-			if (LOG.isLoggable(Level.FINEST)) {
-				LOG.finest("Starting transaction: context="+context+" op="+context.getMethod());
-			}
-			
-			try {
-				result = context.proceed();
-				
-				tx.commit();
-				
-				if (LOG.isLoggable(Level.FINEST)) {
-					LOG.finest("Committing transaction: context="+context);
-				}
-			} catch (Exception e) {
-				tx.rollback();
-				
-				if (LOG.isLoggable(Level.FINEST)) {
-					LOG.finest("Rolling back transaction: context="+context+" exception="+e);
-				}
-				
-				throw e;
-			}
-		} else {
-			if (LOG.isLoggable(Level.FINEST)) {
-				LOG.finest("Transaction already active: context="+context+" op="+context.getMethod());
-			}
-			result = context.proceed();
-		}
-		
-		return result;
-	}
+    @Resource
+    private UserTransaction _tx;
+        
+    /**
+     * This method manages the scope of the transaction around an invoked
+     * bean.
+     * 
+     * @param context The invocation context
+     * @return The result from the performed method
+     * @throws Exception Failed to perform method
+     */
+    @AroundInvoke
+    public Object manageTransaction(InvocationContext context) throws Exception {       
+        Object result=null;
+        
+        if (_tx.getStatus() == Status.STATUS_NO_TRANSACTION) {
+            _tx.begin();
+        
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Starting transaction: context="+context+" op="+context.getMethod());
+            }
+            
+            try {
+                result = context.proceed();
+                
+                _tx.commit();
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Committing transaction: context="+context);
+                }
+            } catch (Exception e) {
+                _tx.rollback();
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Rolling back transaction: context="+context+" exception="+e);
+                }
+                
+                throw e;
+            }
+        } else {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Transaction already active: context="+context+" op="+context.getMethod());
+            }
+            result = context.proceed();
+        }
+        
+        return result;
+    }
 }

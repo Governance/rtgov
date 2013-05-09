@@ -77,7 +77,7 @@ public final class ActivityInterceptorUtil {
     /**
      * This method deserializes an ActivityInterceptor list from a JSON representation.
      * 
-     * @param ips The JSON representation of the ActivityInterceptor list
+     * @param ais The JSON representation of the ActivityInterceptor list
      * @return The ActivityInterceptor list
      * @throws Exception Failed to deserialize
      */

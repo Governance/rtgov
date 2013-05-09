@@ -48,7 +48,7 @@ public class OperationDefinition implements java.io.Externalizable {
         _name = od.getName();
         
         for (OperationImplDefinition sto : od.getImplementations()) {
-        	_implementations.add(new OperationImplDefinition(sto));
+            _implementations.add(new OperationImplDefinition(sto));
         }
     }
 
@@ -77,7 +77,7 @@ public class OperationDefinition implements java.io.Externalizable {
      * @param impls The operation implementations
      */
     public void setImplementations(java.util.List<OperationImplDefinition> impls) {
-    	_implementations = impls;
+        _implementations = impls;
     }
     
     /**
@@ -100,13 +100,13 @@ public class OperationDefinition implements java.io.Externalizable {
      * @return The service type's operation definition, or null if not found
      */
     public OperationImplDefinition getServiceTypeOperation(String serviceType) {
-    	OperationImplDefinition ret=null;
+        OperationImplDefinition ret=null;
         
         for (int i=0; i < _implementations.size(); i++) {
             if ((_implementations.get(i).getServiceType() == null
-            		&& serviceType == null)
-            		|| (_implementations.get(i).getServiceType() != null
-            		&& _implementations.get(i).getServiceType().equals(serviceType))) {
+                    && serviceType == null)
+                    || (_implementations.get(i).getServiceType() != null
+                    && _implementations.get(i).getServiceType().equals(serviceType))) {
                 ret = _implementations.get(i);
                 break;
             }
@@ -198,7 +198,7 @@ public class OperationDefinition implements java.io.Externalizable {
         
         int len=in.readInt();
         for (int i=0; i < len; i++) {
-        	_implementations.add((OperationImplDefinition)in.readObject());
+            _implementations.add((OperationImplDefinition)in.readObject());
         }
     }
 }

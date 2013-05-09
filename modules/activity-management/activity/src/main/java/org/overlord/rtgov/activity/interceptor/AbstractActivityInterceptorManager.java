@@ -91,8 +91,8 @@ public abstract class AbstractActivityInterceptorManager implements ActivityInte
             }
             
             if (f_add) {
-            	_activityInterceptorIndex.put(ai.getName(), ai);
-            	_activityInterceptors.add(ai);
+                _activityInterceptorIndex.put(ai.getName(), ai);
+                _activityInterceptors.add(ai);
             }
         }
     }
@@ -112,7 +112,7 @@ public abstract class AbstractActivityInterceptorManager implements ActivityInte
     public void process(ActivityType actType) throws Exception {        
         synchronized (_activityInterceptorIndex) {            
             for (int i=0; i < _activityInterceptors.size(); i++) {
-            	_activityInterceptors.get(i).process(actType);
+                _activityInterceptors.get(i).process(actType);
             }
         }        
     }
@@ -131,7 +131,7 @@ public abstract class AbstractActivityInterceptorManager implements ActivityInte
             
             if (_activityInterceptors.contains(ai)) {
                 ActivityInterceptor removed=
-                		_activityInterceptorIndex.remove(ai.getName());
+                        _activityInterceptorIndex.remove(ai.getName());
                 _activityInterceptors.remove(removed);
                 
             } else if (_activityInterceptorIndex.containsKey(ai.getName())) {

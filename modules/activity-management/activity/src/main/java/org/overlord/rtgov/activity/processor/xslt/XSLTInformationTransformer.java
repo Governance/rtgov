@@ -68,22 +68,22 @@ public class XSLTInformationTransformer extends InformationTransformer {
         super.init();
         
         if (_transformer == null) {
-	        // Initialize the XSLT style sheet
-	        TransformerFactory factory = TransformerFactory.newInstance();
-	        
-	        java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_styleSheet);
-	        
-	        if (is == null) {
-	            LOG.severe(MessageFormat.format(
-	                    java.util.PropertyResourceBundle.getBundle(
-	                    "activity.Messages").getString("ACTIVITY-9"),_styleSheet));
-	        } else {
-	        	Source xslt = new StreamSource(is);
-	        	
-	        	_transformer = factory.newTransformer(xslt);
-	        	
-	        	is.close();
-	        }
+            // Initialize the XSLT style sheet
+            TransformerFactory factory = TransformerFactory.newInstance();
+            
+            java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(_styleSheet);
+            
+            if (is == null) {
+                LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-9"),_styleSheet));
+            } else {
+                Source xslt = new StreamSource(is);
+                
+                _transformer = factory.newTransformer(xslt);
+                
+                is.close();
+            }
         }
     }
     
@@ -91,37 +91,37 @@ public class XSLTInformationTransformer extends InformationTransformer {
      * {@inheritDoc}
      */
     public String transform(Object information) {   
-    	
-    	if (_transformer == null) {
-    		if (LOG.isLoggable(Level.FINEST)) {
-    			LOG.finest("Transformer does not exist for information: "+information);
-    		}
-    		return (null);
-    	}
-    	
-    	Source source=null;
-    	
-    	if (information instanceof String) {
-    		source = new StreamSource(new java.io.ByteArrayInputStream(((String)information).getBytes()));
-    	} else if (information instanceof org.w3c.dom.Node) {
-    		source = new DOMSource((org.w3c.dom.Node)information);
-    	}
-    	
-    	java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-    	StreamResult target=new StreamResult(baos);
-    	
-    	try {
-    		_transformer.transform(source, target);
-    		
-    		baos.flush();
-    		baos.close();
-    		
-    		return (baos.toString());
-    		
-    	} catch (Exception e) {
-    		LOG.log(Level.SEVERE, "Transformation failed", e);
-    	}
-    	        
+        
+        if (_transformer == null) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Transformer does not exist for information: "+information);
+            }
+            return (null);
+        }
+        
+        Source source=null;
+        
+        if (information instanceof String) {
+            source = new StreamSource(new java.io.ByteArrayInputStream(((String)information).getBytes()));
+        } else if (information instanceof org.w3c.dom.Node) {
+            source = new DOMSource((org.w3c.dom.Node)information);
+        }
+        
+        java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+        StreamResult target=new StreamResult(baos);
+        
+        try {
+            _transformer.transform(source, target);
+            
+            baos.flush();
+            baos.close();
+            
+            return (baos.toString());
+            
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Transformation failed", e);
+        }
+                
         return (null);
     }
     

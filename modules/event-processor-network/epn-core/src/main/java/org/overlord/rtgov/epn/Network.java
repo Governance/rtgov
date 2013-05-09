@@ -243,8 +243,8 @@ public class Network implements NetworkMBean {
      */
     protected void init(EPNContainer container) throws Exception {
         
-    	initNameMap();
-    	
+        initNameMap();
+
         for (Node node : _nodes) {
            // Initialize channels
             if (node.getSourceNodes() != null) {

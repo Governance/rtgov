@@ -47,7 +47,7 @@ public class OperationImplDefinition implements java.io.Externalizable {
      * @param od The source to copy
      */
     public OperationImplDefinition(OperationImplDefinition od) {
-    	_serviceType = od.getServiceType();
+        _serviceType = od.getServiceType();
         
         if (od.getRequestResponse() != null) {
             _requestResponse = new RequestResponseDefinition(od.getRequestResponse());
@@ -64,7 +64,7 @@ public class OperationImplDefinition implements java.io.Externalizable {
      * @param serviceType The optional service type
      */
     public void setServiceType(String serviceType) {
-    	_serviceType = serviceType;
+        _serviceType = serviceType;
     }
     
     /**
@@ -182,6 +182,13 @@ public class OperationImplDefinition implements java.io.Externalizable {
                 getRequestFaults().add(new RequestFaultDefinition(rfd));
             }
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return (_serviceType.hashCode());
     }
     
     /**

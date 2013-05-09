@@ -42,7 +42,7 @@ import org.overlord.rtgov.activity.model.Context;
 @Table(name="RTGOV_SITUATIONS")
 public class Situation implements java.io.Externalizable {
 
-	private static final int VERSION = 1;
+    private static final int VERSION = 1;
     
     private Long _id;
     
@@ -103,7 +103,7 @@ public class Situation implements java.io.Externalizable {
     @Id
     @GeneratedValue 
     protected Long getId() {
-    	return (_id);
+        return (_id);
     }
     
     /**
@@ -112,7 +112,7 @@ public class Situation implements java.io.Externalizable {
      * @param id The id
      */
     protected void setId(Long id) {
-    	_id = id;
+        _id = id;
     }
     
     /**
@@ -141,30 +141,30 @@ public class Situation implements java.io.Externalizable {
      * @return The subject
      */
     public static String createSubject(String... parts) {
-    	String ret=null;
-    	
-    	for (String part : parts) {
-    		if (ret == null) {
-    			ret = (part == null ? "" : part);
-    		} else {
-    			ret += SUBJECT_SEPARATOR_CHAR + (part == null ? "" : part);
-    		}
-    	}
-    	
-    	// Check for trailing separators
-    	if (ret != null && ret.length() > 0) {
-	    	int i=ret.length()-1;
-	    	
-	    	while (i >= 0 && ret.charAt(i) == SUBJECT_SEPARATOR_CHAR) {
-	    		i--;
-	    	}
-	    	
-	    	if (i != ret.length()-1) {
-	    		ret = ret.substring(0, i+1);
-	    	}
-    	}
-    	
-    	return (ret);
+        String ret=null;
+        
+        for (String part : parts) {
+            if (ret == null) {
+                ret = (part == null ? "" : part);
+            } else {
+                ret += SUBJECT_SEPARATOR_CHAR + (part == null ? "" : part);
+            }
+        }
+        
+        // Check for trailing separators
+        if (ret != null && ret.length() > 0) {
+            int i=ret.length()-1;
+            
+            while (i >= 0 && ret.charAt(i) == SUBJECT_SEPARATOR_CHAR) {
+                i--;
+            }
+            
+            if (i != ret.length()-1) {
+                ret = ret.substring(0, i+1);
+            }
+        }
+        
+        return (ret);
     }
     
     /**
@@ -173,15 +173,15 @@ public class Situation implements java.io.Externalizable {
      * @return The subject parts
      */
     public String[] subjectAsParts() {
-    	String[] ret=null;
-    	
-    	if (_subject != null) {
-    		ret = _subject.split(SUBJECT_SEPARATOR_REGEX);
-    	} else {
-    		ret = new String[0];
-    	}
-    	
-    	return(ret);
+        String[] ret=null;
+        
+        if (_subject != null) {
+            ret = _subject.split(SUBJECT_SEPARATOR_REGEX);
+        } else {
+            ret = new String[0];
+        }
+        
+        return (ret);
     }
     
     /**

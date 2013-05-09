@@ -28,7 +28,7 @@ import org.overlord.rtgov.activity.processor.mvel.MVELInformationTransformer;
  */
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
 @JsonSubTypes({@Type(value=SerializeInformationTransformer.class, name="serialize"),
-	@Type(value=MVELInformationTransformer.class, name="mvel") })
+        @Type(value=MVELInformationTransformer.class, name="mvel") })
 public abstract class InformationTransformer {
     
     /**

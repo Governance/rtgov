@@ -103,7 +103,7 @@ public abstract class RPCActivityType extends MessageExchange implements java.io
      * @param intf The interface
      */
     public void setInterface(String intf) {
-    	_interface = intf;
+        _interface = intf;
     }
     
     /**

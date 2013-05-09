@@ -60,7 +60,7 @@ public class ProcessVariableSet extends BPMActivityType implements java.io.Exter
      * @param name The name
      */
     public void setVariableName(String name) {
-    	_variableName = name;
+        _variableName = name;
     }
     
     /**
@@ -78,7 +78,7 @@ public class ProcessVariableSet extends BPMActivityType implements java.io.Exter
      * @param type The type
      */
     public void setVariableType(String type) {
-    	_variableType = type;
+        _variableType = type;
     }
     
     /**

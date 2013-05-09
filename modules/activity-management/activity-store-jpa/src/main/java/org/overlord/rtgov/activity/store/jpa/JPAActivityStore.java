@@ -39,80 +39,80 @@ import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
  */
 @Singleton
 public class JPAActivityStore implements ActivityStore {
-	
-	@Inject
-	private RTGovPropertiesProvider _properties;
-	
-	@PersistenceContext(unitName="overlord-rtgov-activity")
-	private EntityManager _entityManager;
-		
-	private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void store(List<ActivityUnit> activities) throws Exception {
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("Store="+new String(ActivityUtil.serializeActivityUnitList(activities)));
-		}
-		for (ActivityUnit au : activities) {
-			_entityManager.persist(au);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ActivityUnit getActivityUnit(String id) throws Exception {
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("Get Activity Unit="+id);
-		}
-
-		ActivityUnit ret=(ActivityUnit)
-				_entityManager.createQuery("SELECT au FROM ActivityUnit au "
-							+"WHERE au.id = '"+id+"'")
-							.getSingleResult();
+    
+    @Inject
+    private RTGovPropertiesProvider _properties;
+    
+    @PersistenceContext(unitName="overlord-rtgov-activity")
+    private EntityManager _entityManager;
         
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("ActivityUnit id="+id+" Result="
-					+new String(ActivityUtil.serializeActivityUnit(ret)));
-		}
+    private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void store(List<ActivityUnit> activities) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Store="+new String(ActivityUtil.serializeActivityUnitList(activities)));
+        }
+        for (ActivityUnit au : activities) {
+            _entityManager.persist(au);
+        }
+    }
 
-		return (ret);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public ActivityUnit getActivityUnit(String id) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Get Activity Unit="+id);
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<ActivityType> getActivityTypes(String context) throws Exception {
-		
-		@SuppressWarnings("unchecked")
-		List<ActivityType> ret=(List<ActivityType>)
-			_entityManager.createQuery("SELECT at from ActivityType at "
-					+"JOIN at.context ctx "
-					+"WHERE ctx.value = '"+context+"'")
-					.getResultList();
+        ActivityUnit ret=(ActivityUnit)
+                _entityManager.createQuery("SELECT au FROM ActivityUnit au "
+                            +"WHERE au.id = '"+id+"'")
+                            .getSingleResult();
         
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("ActivityTypes context '"+context+"' Result="
-					+new String(ActivityUtil.serializeActivityTypeList(ret)));
-		}
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("ActivityUnit id="+id+" Result="
+                    +new String(ActivityUtil.serializeActivityUnit(ret)));
+        }
 
-		return (ret);
-	}
+        return (ret);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<ActivityType> query(QuerySpec query) throws Exception {
-		
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("Query="+query);
-		}
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> getActivityTypes(String context) throws Exception {
+        
+        @SuppressWarnings("unchecked")
+        List<ActivityType> ret=(List<ActivityType>)
+            _entityManager.createQuery("SELECT at from ActivityType at "
+                    +"JOIN at.context ctx "
+                    +"WHERE ctx.value = '"+context+"'")
+                    .getResultList();
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("ActivityTypes context '"+context+"' Result="
+                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
+        }
 
-		return (query(query.getExpression()));
-	}
-	
+        return (ret);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> query(QuerySpec query) throws Exception {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Query="+query);
+        }
+
+        return (query(query.getExpression()));
+    }
+    
     /**
      * This method performs the query associated with the supplied
      * query expression, returning the results as a list of activity
@@ -122,38 +122,38 @@ public class JPAActivityStore implements ActivityStore {
      * @return The list of activity types
      * @throws Exception Failed to perform query
      */
-	public List<ActivityType> query(String query) throws Exception {
+    public List<ActivityType> query(String query) throws Exception {
 
-		@SuppressWarnings("unchecked")
-		List<ActivityType> ret=(List<ActivityType>)
-			_entityManager.createQuery(query)
-				.getResultList();
+        @SuppressWarnings("unchecked")
+        List<ActivityType> ret=(List<ActivityType>)
+            _entityManager.createQuery(query)
+                .getResultList();
         
-		if (LOG.isLoggable(Level.FINEST)) {
-			LOG.finest("Query="+query+" Result="
-					+new String(ActivityUtil.serializeActivityTypeList(ret)));
-		}
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Query="+query+" Result="
+                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
+        }
 
-		return (ret);
-	}
-	
-	/**
-	 * This method removes the supplied activity unit.
-	 * 
-	 * @param au The activity unit
-	 * @throws Exception Failed to remove activity unit
-	 */
-	public void remove(ActivityUnit au) throws Exception {
-		_entityManager.remove(au);
-	}
+        return (ret);
+    }
     
-	/**
-	 * This method sets the entity manager.
-	 * 
-	 * @param entityManager The entity manager
-	 */
-	public void setEntityManager(EntityManager entityManager) {
-		_entityManager = entityManager;
-	}
+    /**
+     * This method removes the supplied activity unit.
+     * 
+     * @param au The activity unit
+     * @throws Exception Failed to remove activity unit
+     */
+    public void remove(ActivityUnit au) throws Exception {
+        _entityManager.remove(au);
+    }
+    
+    /**
+     * This method sets the entity manager.
+     * 
+     * @param entityManager The entity manager
+     */
+    public void setEntityManager(EntityManager entityManager) {
+        _entityManager = entityManager;
+    }
    
 }

@@ -124,7 +124,7 @@ public class AbstractActivityCollector implements ActivityCollector {
      * @param aim The activity interceptor manager
      */
     public void setActivityInterceptorManager(ActivityInterceptorManager aim) {
-    	_activityInterceptorManager = aim;
+        _activityInterceptorManager = aim;
     }
     
     /**
@@ -223,7 +223,7 @@ public class AbstractActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public String processInformation(String processor, String type, Object info,
-    		java.util.Map<String, Object> headers, ActivityType actType) {
+                java.util.Map<String, Object> headers, ActivityType actType) {
         if (_infoProcessorManager != null) {
             return (_infoProcessorManager.process(processor, type, info, headers, actType));
         } else if (LOG.isLoggable(Level.WARNING)) {
@@ -242,7 +242,7 @@ public class AbstractActivityCollector implements ActivityCollector {
         
         // Check if activity is of interest to interceptors
         if (_activityInterceptorManager != null) {
-        	_activityInterceptorManager.process(actType);
+            _activityInterceptorManager.process(actType);
         }
         
         // Check if need to create a single event activity unit outside of transaction scope

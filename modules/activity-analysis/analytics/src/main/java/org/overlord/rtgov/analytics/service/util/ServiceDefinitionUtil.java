@@ -52,7 +52,7 @@ public final class ServiceDefinitionUtil {
     
     private static final String PRINCIPAL = "principal";
 
-	private static final Logger LOG=Logger.getLogger(ServiceDefinitionUtil.class.getName());
+    private static final Logger LOG=Logger.getLogger(ServiceDefinitionUtil.class.getName());
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
@@ -128,15 +128,15 @@ public final class ServiceDefinitionUtil {
         checkForServiceInvoked(ret, actUnit, 0, actUnit.getActivityTypes().size());
         
         if (LOG.isLoggable(Level.FINEST)) {
-        	String au=null;
-        	
-        	try {
-        		au = new String(ActivityUtil.serializeActivityUnit(actUnit));
-        	} catch (Exception e) {
-        		LOG.log(Level.FINEST, "Failed to deserialize activity unit: "+actUnit, e);
-        	}
-        	
-        	LOG.finest("Derive service definitions: ActivityUnit="+au+" ServiceDefinitions="+ret);
+            String au=null;
+            
+            try {
+                au = new String(ActivityUtil.serializeActivityUnit(actUnit));
+            } catch (Exception e) {
+                LOG.log(Level.FINEST, "Failed to deserialize activity unit: "+actUnit, e);
+            }
+            
+            LOG.finest("Derive service definitions: ActivityUnit="+au+" ServiceDefinitions="+ret);
         }
         
         return (ret.values());
@@ -258,7 +258,7 @@ public final class ServiceDefinitionUtil {
      * @return The response definition associated with the req/resp
      */
     protected static MEPDefinition processServiceInvoked(java.util.Map<String,ServiceDefinition> sdefs,
-    			ActivityUnit actUnit, RequestReceived rqr, ResponseSent rps) {
+                ActivityUnit actUnit, RequestReceived rqr, ResponseSent rps) {
         MEPDefinition ret=null;
         
         // Get service definition associated with the service type
@@ -282,9 +282,9 @@ public final class ServiceDefinitionUtil {
         OperationImplDefinition stod=op.getServiceTypeOperation(rqr.getServiceType());
         
         if (stod == null) {
-        	stod = new OperationImplDefinition();
-        	stod.setServiceType(rqr.getServiceType());
-        	op.getImplementations().add(stod);
+            stod = new OperationImplDefinition();
+            stod.setServiceType(rqr.getServiceType());
+            op.getImplementations().add(stod);
         }
         
         // Check if normal or fault response
@@ -328,23 +328,23 @@ public final class ServiceDefinitionUtil {
         
         // Copy the properties
         if (ret != null) {
-        	ret.getProperties().putAll(rqr.getProperties());
-        	ret.getProperties().putAll(rps.getProperties());
-        	
-        	// Check if principal defined for either activity
-        	if (!ret.getProperties().containsKey(PRINCIPAL)) {
-	        	if (rqr.getPrincipal() != null) {
-	        		ret.getProperties().put(PRINCIPAL, rqr.getPrincipal());
-	        	} else if (rps.getPrincipal() != null) {
-	        		ret.getProperties().put(PRINCIPAL, rps.getPrincipal());
-	        	}
-        	}
-        	
-        	// Specify the origin information
-        	if (actUnit != null && actUnit.getOrigin() != null) {
-	        	ret.getProperties().put("host", actUnit.getOrigin().getHost());
-	        	ret.getProperties().put("node", actUnit.getOrigin().getNode());
-        	}
+            ret.getProperties().putAll(rqr.getProperties());
+            ret.getProperties().putAll(rps.getProperties());
+            
+            // Check if principal defined for either activity
+            if (!ret.getProperties().containsKey(PRINCIPAL)) {
+                if (rqr.getPrincipal() != null) {
+                    ret.getProperties().put(PRINCIPAL, rqr.getPrincipal());
+                } else if (rps.getPrincipal() != null) {
+                    ret.getProperties().put(PRINCIPAL, rps.getPrincipal());
+                }
+            }
+            
+            // Specify the origin information
+            if (actUnit != null && actUnit.getOrigin() != null) {
+                ret.getProperties().put("host", actUnit.getOrigin().getHost());
+                ret.getProperties().put("node", actUnit.getOrigin().getNode());
+            }
         }
 
         // Calculate stats
@@ -417,7 +417,7 @@ public final class ServiceDefinitionUtil {
         metrics.setCount(metrics.getCount()+1);
         
         if (idef.getFault() != null) {
-        	metrics.setFaults(metrics.getFaults()+1);
+            metrics.setFaults(metrics.getFaults()+1);
         }
     }
     

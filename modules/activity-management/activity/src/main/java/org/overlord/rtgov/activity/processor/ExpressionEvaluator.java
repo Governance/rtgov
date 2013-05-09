@@ -61,7 +61,7 @@ public abstract class ExpressionEvaluator {
      * @return Whether the value associated with the expression is optional
      */
     public boolean getOptional() {
-    	return (_optional);
+        return (_optional);
     }
     
     /**
@@ -71,7 +71,7 @@ public abstract class ExpressionEvaluator {
      * @param optional Whether the value associated with the expression is optional
      */
     public void setOptional(boolean optional) {
-    	_optional = optional;
+        _optional = optional;
     }
 
     /**

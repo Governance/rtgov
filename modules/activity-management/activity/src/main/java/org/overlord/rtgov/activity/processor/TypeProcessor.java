@@ -169,7 +169,7 @@ public class TypeProcessor {
                 actType.getContext().add(new Context(ce.getType(), val));
                 
             } else if (!ce.getEvaluator().getOptional()) {
-            	LOG.severe(MessageFormat.format(
+                LOG.severe(MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
                         "activity.Messages").getString("ACTIVITY-7"),
                         ce.getEvaluator().getExpression(),
@@ -184,17 +184,17 @@ public class TypeProcessor {
             
             // Check if property evaluation relates to a header
             if (pe.getHeader() != null) {
-            	
-            	if (headers != null && headers.containsKey(pe.getHeader())) {
-            		source = headers.get(pe.getHeader());
-            	} else {
-            		LOG.warning(MessageFormat.format(
+                
+                if (headers != null && headers.containsKey(pe.getHeader())) {
+                    source = headers.get(pe.getHeader());
+                } else {
+                    LOG.warning(MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
                         "activity.Messages").getString("ACTIVITY-10"),
                         pe.getName(), pe.getHeader()));
-            	}
+                }
             } else {
-            	source = information;
+                source = information;
             }
 
             String val=pe.getEvaluator().evaluate(source);
@@ -207,19 +207,19 @@ public class TypeProcessor {
                 actType.getProperties().put(pe.getName(), val);
                 
             } else if (!pe.getEvaluator().getOptional()) {
-            	
-            	if (pe.getHeader() == null) {
-	            	LOG.severe(MessageFormat.format(
-	                        java.util.PropertyResourceBundle.getBundle(
-	                        "activity.Messages").getString("ACTIVITY-8"),
-	                        pe.getEvaluator().getExpression(),
-	                        information));
-            	} else {
-            		LOG.severe(MessageFormat.format(
+                
+                if (pe.getHeader() == null) {
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "activity.Messages").getString("ACTIVITY-8"),
+                            pe.getEvaluator().getExpression(),
+                            information));
+                } else {
+                    LOG.severe(MessageFormat.format(
                             java.util.PropertyResourceBundle.getBundle(
                             "activity.Messages").getString("ACTIVITY-11"),
                             pe.getName(), pe.getHeader()));
-            	}
+                }
             }
         }
         
@@ -339,7 +339,7 @@ public class TypeProcessor {
          */
         public String toString() {
             return ("[ name="+_name+" header="+_header
-            		+" expression="+_evaluator.getExpression()+" ]");
+                    +" expression="+_evaluator.getExpression()+" ]");
         }
     }
     
