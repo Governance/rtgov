@@ -17,6 +17,9 @@
  */
 package org.overlord.rtgov.service.dependency.layout;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import org.overlord.rtgov.service.dependency.OperationNode;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.ServiceNode;
@@ -79,12 +82,26 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
     public void layout(ServiceGraph sg) {
         
         // Find initial service nodes
+        java.util.List<ServiceNode> initialNodes=new java.util.ArrayList<ServiceNode>();
+        
         for (ServiceNode sn : sg.getServiceNodes()) {
             if (sn.getProperties().get(ServiceNode.INITIAL_NODE) == Boolean.TRUE) {
-                
-                layoutService(sg, sn, SERVICE_INITIAL_HORIZONTAL_PADDING,
-                            _height+SERVICE_VERTICAL_PADDING);
+                initialNodes.add(sn);
             }
+        }
+        
+        // Sort initial node list
+        Collections.sort(initialNodes, new Comparator<ServiceNode>() {
+            public int compare(ServiceNode o1, ServiceNode o2) {
+                // TODO: May need to sort based on interface's localpart, if a fully qualified name
+                return (o1.getService().getInterface().compareTo(o2.getService().getInterface()));
+            }
+        });
+        
+        // Layout service nodes
+        for (ServiceNode sn : initialNodes) {
+            layoutService(sg, sn, SERVICE_INITIAL_HORIZONTAL_PADDING,
+                    _height+SERVICE_VERTICAL_PADDING);
         }
         
         // Record the overall height and width
@@ -128,7 +145,18 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
             int opX=x+SERVICE_BORDER_PADDING;
             int opY=y+SERVICE_HEADER_PADDING;
             
-            for (OperationNode opn : sn.getOperations()) {
+            // Build list of operations
+            java.util.List<OperationNode> oplist=new java.util.ArrayList<OperationNode>(sn.getOperations());
+            
+            // Sort list of operations
+            Collections.sort(oplist, new Comparator<OperationNode>() {
+                public int compare(OperationNode o1, OperationNode o2) {
+                    return (o1.getOperation().getName().compareTo(o2.getOperation().getName()));
+                }
+            });
+
+            // Layout the operations
+            for (OperationNode opn : oplist) {
                 opn.getProperties().put(ServiceGraphLayout.X_POSITION, opX);
                 opn.getProperties().put(ServiceGraphLayout.Y_POSITION, opY);
                 opn.getProperties().put(ServiceGraphLayout.WIDTH, OPERATION_WIDTH);
@@ -156,14 +184,31 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
             int newX=maxX + SERVICE_HORIZONTAL_PADDING;
             int newY=y;
 
+            // Identify links to be laid out
+            java.util.List<UsageLink> links=new java.util.ArrayList<UsageLink>();
+            
             for (UsageLink ul : sg.getUsageLinks()) {
                 
                 if (ul.getSource() == sn && requiresLayout(ul.getTarget())) {
-                    layoutService(sg, ul.getTarget(), newX, newY);
-                    
-                    newY += (Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT)
-                            +SERVICE_VERTICAL_PADDING;
+                    links.add(ul);
                 }
+            }
+            
+            // Sort links
+            Collections.sort(links, new Comparator<UsageLink>() {
+                public int compare(UsageLink o1, UsageLink o2) {
+                    // TODO: May need to sort based on interface's localpart, if a fully qualified name
+                    return (o1.getTarget().getService().getInterface().compareTo(
+                            o2.getTarget().getService().getInterface()));
+                }
+            });
+            
+            // Layout sorted links
+            for (UsageLink ul : links) {
+                layoutService(sg, ul.getTarget(), newX, newY);
+                
+                newY += (Integer)ul.getTarget().getProperties().get(ServiceGraphLayout.HEIGHT)
+                        +SERVICE_VERTICAL_PADDING;
             }
         }
     }

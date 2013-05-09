@@ -159,14 +159,11 @@ public class ServiceGraphLayoutImplTest {
                 +ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING
                 +ServiceGraphLayoutImpl.SERVICE_WIDTH);
         
-         if (sn2x != val) {
+        if (sn2x != val) {
             fail("sn2x incorrect");
         }
-        
-        val = (2*ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING
-                 +sn4h);
-         
-        if (sn2y != val) {
+                
+        if (sn2y != ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING) {
             fail("sn2y incorrect");
         }
 
@@ -178,12 +175,9 @@ public class ServiceGraphLayoutImplTest {
             fail("sn3x incorrect");
         }
         
-        val = (2*ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING
-                +sn4h);
-        
-       if (sn3y != val) {
-           fail("sn3y incorrect");
-       }
+        if (sn3y != ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING) {
+            fail("sn3y incorrect");
+        }
 
         val = (ServiceGraphLayoutImpl.SERVICE_INITIAL_HORIZONTAL_PADDING
                 +ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING
@@ -193,8 +187,11 @@ public class ServiceGraphLayoutImplTest {
             fail("sn4x incorrect");
         }
         
-        if (sn4y != ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING) {
+        val = (2*ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING
+                +sn4h);
+        
+        if (sn4y != val) {
             fail("sn4y incorrect");
         }
-     }
+    }
 }

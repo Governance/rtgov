@@ -352,11 +352,11 @@ public class SVGServiceGraphGenerator {
             text.setAttribute("font-size", "10");
             text.setAttribute("fill", "#00008F");
         
-            QName qname=QName.valueOf(sn.getService().getInterface());
+            String localname=getLocalName(sn.getService().getInterface());
             
             org.w3c.dom.Text value=
                     container.getOwnerDocument().createTextNode(
-                            qname.getLocalPart());
+                            localname);
             text.appendChild(value);
             
             container.insertBefore(text, insertPoint);    
@@ -371,6 +371,32 @@ public class SVGServiceGraphGenerator {
         for (OperationNode opn : sn.getOperations()) {
             generateOperation(opn, ratio, container, insertPoint);
         }
+    }
+    
+    /**
+     * This method returns the local name associated with the supplied
+     * fully qualified name.
+     * 
+     * @param qname The fully qualified name
+     * @return The local name
+     */
+    protected String getLocalName(String qname) {
+        String ret=qname;
+        
+        if (qname.length() > 0) {
+            
+            if (qname.charAt(0) == '{') {
+                ret = QName.valueOf(qname).getLocalPart();
+            } else {
+                int pos=qname.lastIndexOf('.');
+                
+                if (pos != -1) {
+                    ret = qname.substring(pos+1);
+                }
+            }
+        }
+        
+        return (ret);
     }
     
     /**
