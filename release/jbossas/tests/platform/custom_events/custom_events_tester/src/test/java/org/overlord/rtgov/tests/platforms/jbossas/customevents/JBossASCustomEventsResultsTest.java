@@ -90,12 +90,12 @@ public class JBossASCustomEventsResultsTest {
                 copyToTmpFile(archiveFiles[0],"tests-jbossas-custom-events-acs.war"));
     }
     
-    @Deployment(name="ai", order=5)
+    @Deployment(name="av", order=5)
     public static WebArchive createDeployment5() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.release.jbossas.tests.platform.custom_events:tests-jbossas-custom-events-ai:war:"+version)
+                .artifacts("org.overlord.rtgov.release.jbossas.tests.platform.custom_events:tests-jbossas-custom-events-av:war:"+version)
                 .resolveAsFiles();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);

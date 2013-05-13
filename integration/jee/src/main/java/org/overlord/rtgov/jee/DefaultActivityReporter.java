@@ -31,7 +31,7 @@ import org.overlord.rtgov.activity.model.app.LogMessage;
 
 /**
  * This interface represents the capability for recording
- * activity information from a switchyard application.
+ * activity information from a JEE application.
  *
  */
 public class DefaultActivityReporter implements ActivityReporter {
@@ -116,7 +116,7 @@ public class DefaultActivityReporter implements ActivityReporter {
     /**
      * {@inheritDoc}
      */
-    public void report(String type, java.util.Map<String,String> props) throws Exception {
+    public void report(String type, java.util.Map<String,String> props) {
         CustomActivity ca=new CustomActivity();
         ca.setCustomType(type);        
         ca.setProperties(props);
@@ -127,7 +127,7 @@ public class DefaultActivityReporter implements ActivityReporter {
     /**
      * {@inheritDoc}
      */
-    public void report(ActivityType actType) throws Exception {
+    public void report(ActivityType actType) {
         if (!_initialized) {
             init();
         }

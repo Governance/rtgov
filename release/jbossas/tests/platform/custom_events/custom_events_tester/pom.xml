@@ -38,6 +38,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
+			<artifactId>tests-jbossas-custom-events-av</artifactId>
+			<type>war</type>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
 			<artifactId>tests-jbossas-custom-events-monitor</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>

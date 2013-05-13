@@ -21,37 +21,37 @@ import static org.junit.Assert.*;
 
 import org.infinispan.manager.CacheContainer;
 import org.junit.Test;
-import org.overlord.rtgov.activity.interceptor.ActivityInterceptor;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
-import org.overlord.rtgov.activity.util.ActivityInterceptorUtil;
+import org.overlord.rtgov.activity.util.ActivityValidatorUtil;
+import org.overlord.rtgov.activity.validator.ActivityValidator;
 import org.overlord.rtgov.common.infinispan.InfinispanManager;
 
 public class AISTest {
 
     @Test
     public void testAcceptSpacedOutRequests() {
-        ActivityInterceptor ai=null;
+        ActivityValidator av=null;
         
         try {
-            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("ai.json");
+            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("av.json");
             
             byte[] b=new byte[is.available()];
             is.read(b);
             
             is.close();
             
-            java.util.List<ActivityInterceptor> ais=ActivityInterceptorUtil.deserializeActivityInterceptorList(b);
+            java.util.List<ActivityValidator> avs=ActivityValidatorUtil.deserializeActivityValidatorList(b);
             
-            if (ais.size() != 1) {
-            	fail("Expecting 1 activity interceptor, but got: "+ais.size());
+            if (avs.size() != 1) {
+            	fail("Expecting 1 activity validator, but got: "+avs.size());
             }
             
-            ai = ais.get(0);
+            av = avs.get(0);
             
-            ai.init();
+            av.init();
             
         } catch (Exception e) {
-            fail("Failed to load activity interceptor: "+e);
+            fail("Failed to load activity validator: "+e);
         }
         
         // Obtain Principals cache
@@ -75,46 +75,47 @@ public class AISTest {
         rq1.getProperties().put("customer", "Fred");
         
         try {
-        	ai.process(rq1);
+        	av.validate(rq1);
             
             synchronized (this) {
                 wait(3000);
             }
         } catch (Exception e) {
-            fail("Failed to process 1st event: "+e);
+            fail("Failed to validate 1st event: "+e);
         }
         
         try {
-        	ai.process(rq1);
+        	av.validate(rq1);
         } catch (Exception e) {       	
-            fail("Failed to process 2nd event: "+e);
+            fail("Failed to validate 2nd event: "+e);
         }
     }
     
     @Test
     public void testRejectRushedSecondRequest() {
-        ActivityInterceptor ai=null;
+        ActivityValidator av=null;
         
         try {
-            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("ai.json");
+            java.io.InputStream is=ClassLoader.getSystemResourceAsStream("av.json");
             
             byte[] b=new byte[is.available()];
             is.read(b);
             
             is.close();
             
-            java.util.List<ActivityInterceptor> ais=ActivityInterceptorUtil.deserializeActivityInterceptorList(b);
+            java.util.List<ActivityValidator> avs=ActivityValidatorUtil.deserializeActivityValidatorList(b);
             
-            if (ais.size() != 1) {
-            	fail("Expecting 1 activity interceptor, but got: "+ais.size());
+            if (avs.size() != 1) {
+            	fail("Expecting 1 activity validator, but got: "+avs.size());
             }
             
-            ai = ais.get(0);
+            av = avs.get(0);
             
-            ai.init();
+            av.init();
             
         } catch (Exception e) {
-            fail("Failed to load activity interceptor: "+e);
+            e.printStackTrace();
+            fail("Failed to load activity validator: "+e);
         }
         
         // Obtain Principals cache
@@ -138,17 +139,17 @@ public class AISTest {
         rq1.getProperties().put("customer", "Fred");
         
         try {
-        	ai.process(rq1);
+        	av.validate(rq1);
             
             synchronized (this) {
                 wait(500);
             }
         } catch (Exception e) {
-            fail("Failed to process event: "+e);
+            fail("Failed to validate event: "+e);
         }
         
         try {
-        	ai.process(rq1);
+        	av.validate(rq1);
         	
         	fail("Should have failed");
         } catch (Exception e) {

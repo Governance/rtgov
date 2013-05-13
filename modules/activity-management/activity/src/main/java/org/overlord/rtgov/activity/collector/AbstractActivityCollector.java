@@ -26,11 +26,11 @@ import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.overlord.rtgov.activity.interceptor.ActivityInterceptorManager;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
+import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
 
 /**
  * This class provides an abstract implementation of the activity
@@ -51,7 +51,7 @@ public class AbstractActivityCollector implements ActivityCollector {
     private InformationProcessorManager _infoProcessorManager=null;
     
     @Inject
-    private ActivityInterceptorManager _activityInterceptorManager=null;
+    private ActivityValidatorManager _activityValidatorManager=null;
     
     private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();
     
@@ -110,21 +110,21 @@ public class AbstractActivityCollector implements ActivityCollector {
     }
     
     /**
-     * This method gets the activity interceptor manager.
+     * This method gets the activity validator manager.
      * 
-     * @return The activity interceptor manager
+     * @return The activity validator manager
      */
-    public ActivityInterceptorManager getActivityInterceptorManager() {
-        return (_activityInterceptorManager);
+    public ActivityValidatorManager getActivityValidatorManager() {
+        return (_activityValidatorManager);
     }
     
     /**
-     * This method sets the activity interceptor manager.
+     * This method sets the activity validator manager.
      * 
-     * @param aim The activity interceptor manager
+     * @param aim The activity validator manager
      */
-    public void setActivityInterceptorManager(ActivityInterceptorManager aim) {
-        _activityInterceptorManager = aim;
+    public void setActivityValidatorManager(ActivityValidatorManager aim) {
+        _activityValidatorManager = aim;
     }
     
     /**
@@ -237,13 +237,19 @@ public class AbstractActivityCollector implements ActivityCollector {
     /**
      * {@inheritDoc}
      */
-    public void record(ActivityType actType) throws Exception {
-        ActivityUnit au=_activityUnit.get();
+    public void validate(ActivityType actType) throws Exception {
         
-        // Check if activity is of interest to interceptors
-        if (_activityInterceptorManager != null) {
-            _activityInterceptorManager.process(actType);
+        // Check if activity is of interest to validators
+        if (_activityValidatorManager != null) {
+            _activityValidatorManager.validate(actType);
         }
+    }
+    
+     /**
+     * {@inheritDoc}
+     */
+    public void record(ActivityType actType) {
+        ActivityUnit au=_activityUnit.get();
         
         // Check if need to create a single event activity unit outside of transaction scope
         boolean transactional=true;

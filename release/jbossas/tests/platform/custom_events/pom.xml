@@ -15,7 +15,7 @@
 
 	<modules>
 		<module>custom_events_acs</module>
-		<module>custom_events_ai</module>
+		<module>custom_events_av</module>
 		<module>custom_events_data</module>
 		<module>custom_events_epn</module>
 		<module>custom_events_monitor</module>

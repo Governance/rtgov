@@ -17,50 +17,28 @@
  */
 package org.overlord.rtgov.jee;
 
+import javax.annotation.Resource;
+
+import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
- * This interface represents the capability for recording
+ * This interface represents the capability for validating
  * activity information from a JEE application.
  *
  */
-public interface ActivityReporter {
+public class DefaultActivityValidator implements ActivityValidator {
 
-    /**
-     * This method can be used to report general information.
-     * 
-     * @param info The information
-     */
-    public void logInfo(String info);
+    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
+
+    @Resource(lookup=ACTIVITY_COLLECTOR)
+    private ActivityCollector _activityCollector=null;
     
     /**
-     * This method can be used to report warning information.
-     * 
-     * @param warning The warning description
+     * {@inheritDoc}
      */
-    public void logWarning(String warning);
+    public void validate(ActivityType actType) throws Exception {
+         _activityCollector.validate(actType);
+    }
     
-    /**
-     * This method can be used to report error information.
-     * 
-     * @param error The error description
-     */
-    public void logError(String error);
-    
-    /**
-     * This method can be used to report activity information.
-     * 
-     * @param type The activity type
-     * @param props The properties
-     */
-    public void report(String type, java.util.Map<String,String> props);
-
-    /**
-     * This method reports the activity event to the
-     * collector.
-     * 
-     * @param actType The activity type
-     */
-    public void report(ActivityType actType);
-
 }

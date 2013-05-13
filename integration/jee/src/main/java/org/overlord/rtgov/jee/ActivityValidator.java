@@ -20,47 +20,18 @@ package org.overlord.rtgov.jee;
 import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
- * This interface represents the capability for recording
+ * This interface represents the capability for validating
  * activity information from a JEE application.
  *
  */
-public interface ActivityReporter {
+public interface ActivityValidator {
 
     /**
-     * This method can be used to report general information.
-     * 
-     * @param info The information
-     */
-    public void logInfo(String info);
-    
-    /**
-     * This method can be used to report warning information.
-     * 
-     * @param warning The warning description
-     */
-    public void logWarning(String warning);
-    
-    /**
-     * This method can be used to report error information.
-     * 
-     * @param error The error description
-     */
-    public void logError(String error);
-    
-    /**
-     * This method can be used to report activity information.
-     * 
-     * @param type The activity type
-     * @param props The properties
-     */
-    public void report(String type, java.util.Map<String,String> props);
-
-    /**
-     * This method reports the activity event to the
-     * collector.
+     * This method validates the activity event.
      * 
      * @param actType The activity type
+     * @throws Exception Failed to validate activity
      */
-    public void report(ActivityType actType);
+    public void validate(ActivityType actType) throws Exception;
 
 }

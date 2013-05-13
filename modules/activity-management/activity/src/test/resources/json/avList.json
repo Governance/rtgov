@@ -1,0 +1,21 @@
+[{
+	"name" : "av1",
+	"version" : "1",
+    "predicate" : {
+      "@class" : "org.overlord.rtgov.activity.validator.TestPredicate1"
+    },
+    "eventProcessor" : {
+      "@class" : "org.overlord.rtgov.activity.validator.TestEventProcessor1",
+      "services" : {
+        "testCache" : {
+          "@class" : "org.overlord.rtgov.ep.service.InMemoryCacheManager"
+        }
+      }
+    }
+},{
+	"name" : "av2",
+	"version" : "2",
+    "eventProcessor" : {
+      "@class" : "org.overlord.rtgov.activity.validator.TestEventProcessor2"
+    }
+}]

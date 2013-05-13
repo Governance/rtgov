@@ -69,6 +69,14 @@ public interface ActivityCollector {
                     Object info, java.util.Map<String, Object> headers, ActivityType actType);
     
     /**
+     * This method validates the supplied activity type.
+     * 
+     * @param actType The activity type
+     * @throws Exception Failed to validate activity
+     */
+    public void validate(ActivityType actType) throws Exception;
+    
+    /**
      * This method records the supplied activity type. If a
      * scope has not been explicitly started, using the 'startScope'
      * then calling this method may result in a scope
@@ -76,8 +84,7 @@ public interface ActivityCollector {
      * be recorded as a single event within an activity unit.
      * 
      * @param actType The activity type
-     * @throws Exception Failed to record activity
      */
-    public void record(ActivityType actType) throws Exception;
+    public void record(ActivityType actType);
     
 }

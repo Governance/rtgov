@@ -15,7 +15,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>ai-loader-jee</artifactId>
+			<artifactId>av-loader-jee</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
