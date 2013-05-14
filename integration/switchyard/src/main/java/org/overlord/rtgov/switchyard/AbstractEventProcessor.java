@@ -79,10 +79,6 @@ public abstract class AbstractEventProcessor implements EventObserver, EventProc
             LOG.finest("Record event '"+event+"' as activity type: "+at);
         }
         
-        try {
-            getActivityCollector().record(at);
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to report activity event", e);
-        }
+        getActivityCollector().record(at);
     }
 }

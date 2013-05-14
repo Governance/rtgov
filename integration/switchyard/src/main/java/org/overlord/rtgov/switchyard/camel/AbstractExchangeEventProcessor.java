@@ -269,12 +269,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 }
             }
             
-            try {
-                recordActivity(event, at);
-            } catch (Exception e) {
-                // Strip the exception and just return the message
-                throw new org.switchyard.exception.SwitchYardException(e.getMessage());
-            }
+            recordActivity(event, at);
         }
     }
 
