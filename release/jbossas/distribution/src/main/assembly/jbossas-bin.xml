@@ -77,8 +77,15 @@
 			<unpack>true</unpack>
 			<includes>
 				<include>org.overlord.gadgets.server:distribution:zip</include>
+			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/server/gadget-server</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
 				<include>org.overlord.rtgov:gadgets:war</include>
 			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>profiles/restc/deployments</outputDirectory>

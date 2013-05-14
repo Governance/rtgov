@@ -3,7 +3,7 @@
 
 	<property name="rtgov-layer" value="soa" />
 
-	<target name="deploy" >
+	<target name="deploy" depends="update-gadget-web" >
 		<copy todir="${jboss.home}/modules/system/layers/${rtgov-layer}" >
 			<fileset dir="../../modules" />
 		</copy>
@@ -18,10 +18,20 @@
 				<include name="gadgets.war" />
 			</fileset>
 		</copy>
+
 		<ant antfile="gadget-server/build.xml" target="deploy">
 			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
 			<property name="basedir" value="${basedir}/gadget-server" />
 		</ant>
+	</target>
+	
+	<!-- replace the import.sql to import_rtgov.sql in the gadget-web.war -->
+	<target name="update-gadget-web">
+		<unzip src="gadget-server/modules/gadget-web.war" dest="gadget-server/modules/tmp" />
+		<copy file="import_rtgov.sql" tofile="gadget-server/modules/tmp/WEB-INF/classes/import.sql"/>
+		<delete file="gadget-server/modules/gadget-web.war" />
+		<zip destfile="gadget-server/modules/gadget-web.war" basedir="gadget-server/modules/tmp" />
+		<delete dir="gadget-server/modules/tmp" />
 	</target>
 
 	<target name="undeploy" >
