@@ -13,6 +13,11 @@
 		<copy todir="${jboss.home}/standalone/configuration" >
 			<fileset dir="configuration" />
 		</copy>
+		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov">
+			<fileset dir="gadget-server">
+				<include name="gadgets.war" />
+			</fileset>
+		</copy>
 		<ant antfile="gadget-server/build.xml" target="deploy">
 			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
 			<property name="basedir" value="${basedir}/gadget-server" />
@@ -23,7 +28,7 @@
 		<delete dir="${jboss.home}/modules/system/layers/${rtgov-layer}/org/overlord/rtgov" />
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
-		
+
 		<ant antfile="gadget-server/build.xml" target="undeploy">
 			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
 			<property name="basedir" value="${basedir}/gadget-server" />

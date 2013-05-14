@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<link href="d3.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+	#rtchart {
+	margin: 0;
+	   padding: 0;
+	   overflow: none;
+	}
+</style>
+
+
+<body>
+
+<div id="rtchart">
+  <svg></svg>
+</div>
+
+<script src="d3.v2.js"></script>
+<script src="jquery-1.7.2.min.js"></script>
+<script src="nvtooltip.js"></script>
+<script src="d3legend.js"></script> 
+<script src="d3line.js"></script> 
+<script src="d3linewithlegend.js"></script> 
+<script type="text/javascript" src="gs-common.js"></script>
+
+<script>
+
+function updateUI(response) {
+	  var margin = {top: 30, right: 10, bottom: 50, left: 60},
+	      chart = d3LineWithLegend()
+	                .xAxis.label('Number')
+	                .width(width(margin))
+	                .height(height(margin))
+	                .yAxis.label('Response Time (sec)');
+
+
+	  var svg = d3.select('#rtchart svg')
+	      .datum(getData(response));
+
+	  svg.transition().duration(500)
+	      .attr('width', width(margin))
+	      .attr('height', height(margin))
+	      .call(chart);
+
+
+	  chart.dispatch.on('showTooltip', function(e) {
+	  var offset = $('#rtchart').offset(), // { left: 0, top: 0 }
+	        left = e.pos[0] + offset.left,
+	        top = e.pos[1] + offset.top;
+
+	    var content = '<p>serviceType:<b>' + e.point[2] + '</b></p>'
+						  + '<p>operation:<b>' + e.point[3] + '</b></p>'
+						  + '<p>' + e.series.label + ':<b>' + e.point[1] + '</b></p>'
+						  + '<p>time:<b>' + e.point[4] + '</b></p>';
+
+
+	    nvtooltip.show([left, top], content);
+	  });
+
+	  chart.dispatch.on('hideTooltip', function(e) {
+	    nvtooltip.cleanup();
+	  });
+
+
+	  $(window).resize(function() {
+	    var margin = chart.margin();
+
+	    chart
+	      .width(width(margin))
+	      .height(height(margin));
+
+	    d3.select('#rtchart svg')
+	      .attr('width', width(margin))
+	      .attr('height', height(margin))
+	      .call(chart);
+
+	    });
+
+	  	function width(margin) {
+	      var w = $(window).width() - 20;
+	      return ( (w - margin.left - margin.right - 20) < 0 ) ? margin.left + margin.right + 2 : w;
+	    }
+
+	    function height(margin) {
+	      var h = $(window).height() - 20;
+	      return ( h - margin.top - margin.bottom - 20 < 0 ) ? margin.top + margin.bottom + 2 : h;
+	    }
+
+	  	function getDateTime(theDate) {
+			return theDate.getMinutes() + ":" + theDate.getSeconds();
+		} 
+
+ }
+
+function getData(response) {
+	  var min = [], max = [], duration = [];
+	  var jsondata, rtResult, i, ts;
+	  jsondata = response;
+	  if (jsondata != undefined) {
+		  for (i = 0; i < jsondata.length; i++) {
+			rtResult = jsondata[i];
+			ts = getDateTime(new Date(rtResult.timestamp));
+			min.push([i, rtResult.min, rtResult.serviceType, rtResult.operation, ts]);
+			max.push([i, rtResult.max, rtResult.serviceType, rtResult.operation, ts]);
+			duration.push([i, rtResult.average, rtResult.serviceType, rtResult.operation, ts]);
+		  }
+	  }
+	  
+	  return [{data:min, label:"Min"},
+			  {data:max, label:"Max"},
+			  {data:duration, label:"Average"}];
+	  	
+}
+
+ 
+function loadData() {
+	$.ajax({
+		type: "GET",
+		url: "sampledata.json",
+		error: function(err) {
+			alert(err.toString());
+		},
+		success: updateUI
+	});
+}
+
+function testData(response) {
+	window.alert(response);
+}
+ 
+$(document).ready(loadData);
+
+
+</script>

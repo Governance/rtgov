@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="Situation" description="Situation gadget"
+	 author="Jeff Yu" author_email="jeff.yuchang@gmail.com" />
+  <UserPref name="refreshCycle" display_name="Refresh Interval(sec):" default_value="30" datatype="enum">
+		<EnumValue value="30" />
+		<EnumValue value="60" />
+		<EnumValue value="120" />
+		<EnumValue value="180" />
+		<EnumValue value="300" />
+  </UserPref>
+  <Content type="html"><![CDATA[
+  <style type="text/css">
+	#sla-table {font-size:9pt;border-collapse:collapse;text-align:left;}
+	#updatedTime {font-size:9pt;}
+	#sla-body tr{background-color:#FFFFFF;}
+	.tb-header {background:#A7C942;color: #FFFFFF; font-weight:bold;border:1px solid #98BF21;}
+	.tb-header td {}
+	.table-row {border:1px solid #98BF21;}
+	.violation-text {color: red;}
+	.clickable {cursor: pointer;}
+	 div.arrows {background:transparent url(arrows.png) no-repeat scroll 0px -16px; width:16px; height:16px; display:block;} 
+	 div.up {background-position:0px 0px;} 
+   </style>
+   <script type="text/javascript" src="jquery.min.js"></script>
+   <script type="text/javascript" src="gs-common.js"></script>
+   
+   <script type="text/javascript">
+	
+	function makeJSONRequest() {
+		var prefs, params, restUrl, postdata, host;
+		
+		prefs = new gadgets.Prefs();
+		postdata = "{\"collection\":\"Situations\"}";
+		
+		params = {};
+		params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+		params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = parseInt(getUserPreferenceValue("refreshCycle"));
+		params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST;
+   		params[gadgets.io.RequestParameters.POST_DATA]= postdata;
+		
+		host = parent.window.location.host;
+		restUrl = "http://" + host + "/overlord-rtgov/acm/query";
+		
+		gadgets.io.makeRequest(restUrl, updateResponse, params);
+	}
+	
+	function updateResponse(result) {
+	    var jsondata, slaResult, i, rowData, theUpdatedTime;
+	    if (result.data == undefined) {
+	    	return;
+	    }
+	    theUpdatedTime = new Date();
+	    document.getElementById("updatedTime").innerHTML = "Updated Time : " + getDateTime(theUpdatedTime);
+		deleteRows();
+		jsondata = result.data;
+		jsondata.sort(function(a,b){
+			return (b.timestamp - a.timestamp);
+		});
+		for (i = 0; i < jsondata.length; i++) {
+			slaResult = jsondata[i];
+			rowData = [slaResult.type, slaResult.severity, slaResult.description, getDateTime(new Date(slaResult.timestamp))];
+			insertRow(rowData, i, slaResult);
+		}
+
+		$("tr.detail").hide();
+			$("td.clickable").click(function(){
+				$(this).parent().find(".arrows").toggleClass("up");
+				var parentId = $(this).parent().prop("id");
+				$(".child-" + parentId).toggle();
+			});
+	}
+	
+	function getDateTime(theDate) {
+		return theDate.getFullYear() + "-" + (theDate.getMonth() +1) + "-" + theDate.getDate() + " " + theDate.getHours()
+				+ ":" + theDate.getMinutes() + ":" + theDate.getSeconds();
+	}
+	
+	function insertRow(data, rowId, rawData) {
+		var theBody, theRow, theCell, i;
+		theBody = document.getElementById("sla-body");
+		theRow = document.createElement("TR");
+		theRow.setAttribute("class", "table-row");
+		theRow.setAttribute("id", rowId);
+		theBody.appendChild(theRow);
+		for (i = 0; i < data.length; i++) {
+			theCell = document.createElement("TD");
+			theCell.innerHTML = data[i];
+			theCell.setAttribute("class", "clickable");
+			if (i == 2) {
+				theCell.setAttribute("class", "clickable violation-text");
+			}
+			theRow.appendChild(theCell);
+		}
+
+		theCell = document.createElement("TD");
+		theCell.setAttribute("class", "clickable");
+		theCell.innerHTML="<div class='arrows'></div>";
+		theRow.appendChild(theCell);
+
+		appendContextHeader(theBody, rowId);
+		appendContext(rawData.context, rowId, theBody);
+		appendProperties(rawData.properties, rowId, theBody);
+	}
+
+	function appendContextHeader(theBody, rowId){
+		var theRow, cell;
+		theRow = document.createElement("TR");
+		theRow.setAttribute("class", "table-row detail child-" + rowId);
+		theBody.appendChild(theRow);
+
+		cell = document.createElement("TD");
+		theRow.appendChild(cell);
+
+		cell = document.createElement("TD");
+		cell.innerHTML="Type";
+		theRow.appendChild(cell);
+
+		cell = document.createElement("TD");
+		cell.setAttribute("colspan", "3");
+		cell.innerHTML="Value";
+		theRow.appendChild(cell);
+	}
+
+	function appendContext(data, rowId, theBody) {
+		var i, contextRow, cell;
+		if (data.length > 0) {
+			for (i = 0; i < data.length; i++) {
+				contextRow = document.createElement("TR");
+				contextRow.setAttribute("class", "table-row detail child-" + rowId);
+				theBody.appendChild(contextRow);
+				cell = document.createElement("TD");
+				if (i == 0) {
+					cell.innerHTML="<b>Context</b>";
+				}
+				contextRow.appendChild(cell);
+
+				cell = document.createElement("TD");
+				cell.innerHTML=data[i].type;
+				contextRow.appendChild(cell);
+
+				cell = document.createElement("TD");
+				cell.setAttribute("colspan", "3");
+				cell.innerHTML=data[i].value;
+				contextRow.appendChild(cell);
+			}
+		}	
+	}
+	
+	function appendProperties(data, rowId, theBody) {
+			var i, contextRow, cell, property;
+			i = 0;
+			for (property in data) {
+				contextRow = document.createElement("TR");
+				contextRow.setAttribute("class", "table-row detail child-" + rowId);
+				theBody.appendChild(contextRow);
+				cell = document.createElement("TD");
+				if (i == 0) {
+					cell.innerHTML="<b>Properties</b>";
+				}
+				contextRow.appendChild(cell);
+				
+				cell = document.createElement("TD");
+				cell.innerHTML=property;
+				contextRow.appendChild(cell);
+				
+				cell = document.createElement("TD");
+				cell.setAttribute("colspan", "3");
+				cell.innerHTML=data[property];
+				contextRow.appendChild(cell);
+				
+				i++;
+			}
+				
+		}
+	
+	function deleteRows() {
+		var theBody, theSize, i;
+		theBody = document.getElementById("sla-body");
+		theSize = theBody.rows.length;
+		for (i = 0; i < theSize; i++) {
+			theBody.deleteRow(theBody.rows[i]);
+		}
+	}
+	
+	function loadData() {
+		var prefs, refreshInterval;
+		prefs = new gadgets.Prefs();
+		refreshInterval = parseInt(getUserPreferenceValue("refreshCycle"));
+		makeJSONRequest();
+		setInterval(makeJSONRequest, refreshInterval * 1000);
+	}
+	
+	gadgets.util.registerOnLoadHandler(loadData);	
+   </script>
+   <div style="float:right;">
+		<span id="updatedTime"></span>
+   </div>
+   <table style="width:100%" id="sla-table" border="0" cellspacing="3" cellpadding="5">
+		<thead>
+			<tr class="tb-header">
+				<td>Type</td><td>Severity</td><td>Description</td><td>Time</td><td>Details</td>
+			</tr>			
+		</thead>
+		<tbody id="sla-body">
+
+		</tbody>
+   </table>
+]]> 
+  </Content>
+</Module>

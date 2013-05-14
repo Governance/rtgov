@@ -1,0 +1,60 @@
+<html>
+ <head>
+ 	<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+ </head>
+ <body>
+ 	test
+ 	<select name="services" id="services">
+ 		<option value="1">Service Type1</option>
+ 	</select>
+
+ 	<select name="operations" id="operations">
+ 		<option value="2">Operation Type1 </option>
+ 	</select>
+ 	<script type="text/javascript">
+ 	function getDateTime(theDate) {
+		return theDate.getFullYear() + "-" + (theDate.getMonth() +1) + "-" + theDate.getDate() + " " + theDate.getHours()
+				+ ":" + theDate.getMinutes() + ":" + theDate.getSeconds();
+	}
+
+	function receiveOnChange(data){
+		window.alert($("#services").val());
+	}
+	
+	function run() {
+	 	var data = [{"serviceType": "service type 1", "operations":"this is the operation 1"}, {"serviceType":"service type 2", "operations": "This is the operation 2"}];
+
+	 	var thesvc = $("#services");
+	 	thesvc.empty();
+	 	$.each(data, function(key, value){
+			thesvc.append($("<option></option>").attr("value", data[key].serviceType).text(data[key].serviceType));
+	 	});
+	 	thesvc.on('change', function(){
+	 		receiveOnChange(data);
+	 	});
+ 	}
+
+ 	function containsValue(selectId, selectValue) {
+ 		var exists = false;
+ 		$("#" + selectId + " option").each(function(){
+ 			if (this.value == selectValue) {
+ 				exists = true;
+ 			}
+ 		});
+ 		return exists;
+ 	}
+
+ 	function setDefaultValue(selectId, selectValue) {
+ 		if (!containsValue(selectId, selectValue)) {
+ 			$("#" + selectId).append($("<option></option>").attr("value", selectValue).text(selectValue));
+ 		}
+ 		$("#" + selectId).val(selectValue);
+ 	}
+ 	
+ 	run();
+ 	
+ 	setDefaultValue("services", "service type");
+
+ 	</script>
+ </body>
+</html>

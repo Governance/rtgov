@@ -77,6 +77,7 @@
 			<unpack>true</unpack>
 			<includes>
 				<include>org.overlord.gadgets.server:distribution:zip</include>
+				<include>org.overlord.rtgov:gadgets:war</include>
 			</includes>
 		</dependencySet>
 		<dependencySet>

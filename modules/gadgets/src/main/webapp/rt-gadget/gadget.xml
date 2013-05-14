@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="Response Time" description="Response Time gadget"
+	 author="Jeff Yu" author_email="jeff.yuchang@gmail.com">
+	 <Require feature="setprefs" />
+  </ModulePrefs>
+  <UserPref name="interface" display_name="Interface:" default_value="all" datatype="list"></UserPref>
+  <UserPref name="operations" display_name="Operations:" default_value="all" datatype="list"></UserPref>
+  <UserPref name="refreshCycle" display_name="Refresh Interval(sec):" default_value="30" datatype="enum">
+		<EnumValue value="30" />
+		<EnumValue value="60" />
+		<EnumValue value="120" />
+		<EnumValue value="180" />
+		<EnumValue value="300" />
+  </UserPref>
+
+  <Content type="html"><![CDATA[
+  <link href="d3.css" rel="stylesheet" type="text/css">
+   <style type="text/css">
+	#rtchart {
+	margin: 0;
+    padding: 0;
+    overflow: none;
+	}
+   </style>
+
+   <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+   <script type="text/javascript" src="d3.v2.js"></script>
+   <script type="text/javascript" src="d3line.js"></script>
+   <script type="text/javascript" src="d3legend.js"></script>
+   <script type="text/javascript" src="d3linewithlegend.js"></script>
+   <script type="text/javascript" src="nvtooltip.js"></script>
+   <script type="text/javascript" src="gs-common.js"></script>
+   
+   <script type="text/javascript">
+	
+	function makeJSONRequest() {
+		var params, restUrl, postdata, svcDef, host, service, operation;
+	
+		service = getUserPreferenceValue("interface");
+		operation = getUserPreferenceValue("operations");
+				
+		if (!isNotEmpty(service) && !isNotEmpty(operation)) {
+			postdata = "{\"collection\":\"ServiceResponseTimes\"}";		
+		} else {
+			postdata = "{\"parent\":\"ServiceResponseTimes\",\"predicate\":{\"type\":\"MVEL\",\"expression\":";
+			if (isNotEmpty(service) && isNotEmpty(operation)) {
+				postdata = postdata + "\"interface==\\\"" + service + "\\\" && operation == \\\"" + operation + "\\\"\"},  \"collection\":\"interface_" + service + "_" + operation+ "\" "; 
+			} else if (isNotEmpty(service)) {
+				postdata = postdata + "\"interface==\\\"" + service + "\\\"\"},  \"collection\":\"interface_" + service + "\"";
+			} else if (isNotEmpty(operation)) {
+				postdata = postdata + "\"operation == \\\"" + operation + "\\\"\",  \"collection\":\"operation_" + operation + "\" ";
+			}
+			postdata = postdata + "}";
+		}
+		
+		console.log("the post data is: " + postdata);
+		
+		params = {};
+		params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
+		params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = parseInt(getUserPreferenceValue("refreshCycle"));
+		params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST;
+   		params[gadgets.io.RequestParameters.POST_DATA]= postdata;
+   		
+   		host = parent.window.location.host;
+		restUrl = "http://" + host + "/overlord-rtgov/acm/query";
+		
+		gadgets.io.makeRequest(restUrl, updateUI, params);
+		
+		svcDef = "{\"collection\":\"ServiceDefinitions\"}";
+		params[gadgets.io.RequestParameters.POST_DATA]= svcDef;
+		
+		gadgets.io.makeRequest(restUrl, updateServiceDefinition, params);	
+	}
+	
+	function isNotEmpty(value) {
+		return (value != undefined && value != " " && value!= "" && value != "all" );
+	}
+	
+	function getDateTime(theDate) {
+		return theDate.getFullYear() + "-" + (theDate.getMonth() +1) + "-" + theDate.getDate() + " " + theDate.getHours()
+				+ ":" + theDate.getMinutes() + ":" + theDate.getSeconds();
+	}
+	
+	function updateServiceDefinition(response) {
+		var i, theobj, serviceDefs, exists;
+		var thesvcValue = getUserPreferenceValue("interface");
+		var theopValue = getUserPreferenceValue("operations");
+		var thesvc = parent.$("#interface");
+		var theop = parent.$("#operations");
+		exists = false;
+		thesvc.empty();
+		thesvc.append($("<option></option>").attr("value","all").text("all"));
+		theop.empty();
+		theop.append($("<option></option>").attr("value","all").text("all"));
+		if (response.data != undefined){
+			serviceDefs = new Array(response.data.length);
+			for (i = 0; i < serviceDefs.length; i++) {
+				theobj = new Object();
+				theobj.interface = response.data[i].value.interface;
+				theobj.operations = response.data[i].value.operations;
+				serviceDefs[i] = theobj;
+				if (thesvcValue == theobj.interface) {
+					exists = true;
+				}
+			}
+			$.each(serviceDefs, function(index, value){
+				thesvc.append($("<option></option>").attr("value",serviceDefs[index].interface).text(serviceDefs[index].interface));
+			});
+			
+			if (thesvcValue != "all" && !exists) {
+				thesvc.append($("<option></option>").attr("value",thesvcValue).text(thesvcValue));
+			}
+			thesvc.val(thesvcValue);
+			
+			refreshOperationsOptions(serviceDefs, theopValue);
+			
+			thesvc.on('change', function(){
+				refreshOperationsOptions(serviceDefs);
+			});
+			
+		}
+	
+	}
+	
+	function refreshOperationsOptions(serviceDefs, defaultValue) {
+		var opdata, i, selectedValue, theop, exists;
+		var thesvcValue = getUserPreferenceValue("interface");
+		var theopValue = getUserPreferenceValue("operations");
+		
+		exists = false;
+		selectedValue = parent.$("#interface").val();
+		theop = parent.$("#operations");
+		
+		//console.log("the op is: " + theop + " and the selected value is: " + selectedValue);
+		
+		theop.empty();
+		theop.append($("<option></option>").attr("value","all").text("all"));
+		if (selectedValue != " " && serviceDefs != undefined) {
+			for (i = 0; i < serviceDefs.length; i++) {
+				if (selectedValue == serviceDefs[i].interface) {
+					opdata = serviceDefs[i].operations;
+					$.each(opdata, function(index,value){
+						if (opdata[index].name == theopValue) {
+							exists = true;
+						}
+						theop.append($("<option></option>").attr("value",opdata[index].name).text(opdata[index].name));
+					});
+				}
+			}
+			
+			if (selectedValue == thesvcValue && theopValue != "all" && !exists) {
+				theop.append($("<option></option>").attr("value",theopValue).text(theopValue));
+			}
+			if (defaultValue != "undefined" && defaultValue != undefined) {
+				theop.val(defaultValue);
+			} else {
+				theop.val("all");
+			}
+		}
+				
+	}
+	
+	function updateUI(response) {
+		if (response.data == undefined) {
+			return;
+		}
+				
+		var margin = {top: 30, right: 10, bottom: 50, left: 60};
+	    var chart = d3LineWithLegend()
+	                .xAxis.label('Number')
+	                .width(width(margin))
+	                .height(height(margin))
+	                .yAxis.label('Response Time (sec)');
+	
+	  var svg = d3.select('#rtchart svg')
+	      .datum(getData(response));
+	  	
+	  svg.transition().duration(500)
+	      .attr('width', width(margin))
+	      .attr('height', height(margin))
+	      .call(chart);
+	  
+ 	  chart.dispatch.on('showTooltip', function(e) {
+		  var offset = $('#rtchart').offset(), // { left: 0, top: 0 }
+		      left = e.pos[0] + offset.left,
+		      top = e.pos[1] + offset.top;
+
+		   	var content = '<p>interface:<b>' + e.point[5] + '</b></p>'
+						  + '<p>operation:<b>' + e.point[3] + '</b></p>'
+						  + '<p>' + e.series.label + ':<b>' + e.point[1] + '</b></p>'
+						  + '<p>time:<b>' + e.point[4] + '</b></p>';
+						  
+			if (e.point[2] != undefined && e.point[2] != "undefined" ) {
+				content = '<p>serviceType:<b>' + e.point[2] + '</b></p>' + content;
+			}
+
+		   nvtooltip.show([left, top], content);
+		  });
+
+	  chart.dispatch.on('hideTooltip', function(e) {
+	    	nvtooltip.cleanup();
+	  });
+		
+	}
+	
+	function width(margin) {
+      var w = $(window).width() - 20;
+      return ( (w - margin.left - margin.right - 20) < 0 ) ? margin.left + margin.right + 2 : w;
+    }
+
+    function height(margin) {
+      var h = $(window).height() - 20;
+      return ( h - margin.top - margin.bottom - 20 < 0 ) ? margin.top + margin.bottom + 2 : h;
+    }
+
+    function getData(response) {
+	  var min = [], max = [], duration = [];
+	  var jsondata, rtResult, i, ts;
+	  jsondata = response.data;
+	  
+	  console.log("respone data ->: " + JSON.stringify(jsondata));
+	  
+	  if (jsondata != undefined) {
+		  for (i = 0; i < jsondata.length; i++) {
+			rtResult = jsondata[i];
+			ts = getDateTime(new Date(rtResult.timestamp));
+			min.push([i, rtResult.min, rtResult.serviceType, rtResult.operation, ts, rtResult.interface]);
+			max.push([i, rtResult.max, rtResult.serviceType, rtResult.operation, ts, rtResult.interface]);
+			duration.push([i, rtResult.average, rtResult.serviceType, rtResult.operation, ts, rtResult.interface]);
+			
+		  }
+	  }
+	  
+	  return [{data:duration, label:"Average"},
+	  		  {data:min, label:"Min"},
+	  		  {data:max, label:"Max"}];
+	  	
+	}
+	
+	function loadData() {
+         var refreshInterval = parseInt(getUserPreferenceValue("refreshCycle"));
+         makeJSONRequest();
+         setInterval(makeJSONRequest, refreshInterval * 1000);
+    }
+
+    gadgets.util.registerOnLoadHandler(loadData);
+
+   </script>
+	
+	<div id="rtchart">
+	  <svg></svg>
+	</div>
+    
+    
+]]> 
+  </Content>
+</Module>
