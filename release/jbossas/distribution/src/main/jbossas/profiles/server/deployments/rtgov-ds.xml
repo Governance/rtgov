@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>  
+<?xml version="1.0" encoding="UTF-8"?>
 <datasources>
 	<datasource jndi-name="java:jboss/datasource/OverlordRTGov" pool-name="OverlordRTGov" enabled="true" use-java-context="true">
-		<connection-url>jdbc:h2:mem:rtgov;DB_CLOSE_DELAY=-1</connection-url>
+		<connection-url>jdbc:h2:${jboss.server.data.dir}${/}h2${/}rtgov</connection-url>
 		<driver>h2</driver>
 		<security>
 			<user-name>sa</user-name>
-			<password>sa</password>
+			<password></password>
 		</security>
 	</datasource>
 </datasources>

@@ -45,56 +45,8 @@ public class JBossASCallTraceServiceTest {
 
     private static final String ORDER_SERVICE_URL = "http://127.0.0.1:8080/demo-orders/OrderService";
     
-    @Deployment(name="overlord-rtgov", order=1)
+    @Deployment(name="orders-app", order=1)
     public static WebArchive createDeployment1() {
-        String version=System.getProperty("rtgov.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.release.jbossas:overlord-rtgov:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class,
-                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov.war"));
-    }
-    
-    @Deployment(name="overlord-rtgov-switchyard", order=2)
-    public static WebArchive createDeployment2() {
-        String version=System.getProperty("rtgov.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.release.jbossas:overlord-rtgov-switchyard:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class,
-                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov-switchyard.war"));
-    }
-    
-    @Deployment(name="overlord-rtgov-acs", order=3)
-    public static WebArchive createDeployment3() {
-        String version=System.getProperty("rtgov.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.content:overlord-rtgov-acs:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class,
-                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov-acs.war"));
-    }
-    
-    @Deployment(name="overlord-rtgov-epn", order=4)
-    public static WebArchive createDeployment4() {
-        String version=System.getProperty("rtgov.version");
-
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.content:overlord-rtgov-epn:war:"+version)
-                .resolveAsFiles();
-        
-        return ShrinkWrap.createFromZipFile(WebArchive.class,
-                TestUtils.copyToTmpFile(archiveFiles[0],"overlord-rtgov-epn.war"));
-    }
-    
-    @Deployment(name="orders-app", order=5)
-    public static WebArchive createDeployment5() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -104,8 +56,8 @@ public class JBossASCallTraceServiceTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Deployment(name="orders-ip", order=6)
-    public static WebArchive createDeployment6() {
+    @Deployment(name="orders-ip", order=2)
+    public static WebArchive createDeployment2() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
@@ -115,7 +67,7 @@ public class JBossASCallTraceServiceTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
     
-    @Test @OperateOnDeployment("overlord-rtgov")
+    @Test @OperateOnDeployment("orders-app")
     public void testCallTrace() {
         
         try {
