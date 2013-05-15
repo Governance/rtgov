@@ -28,7 +28,7 @@
 	<!-- replace the import.sql to import_rtgov.sql in the gadget-web.war -->
 	<target name="update-gadget-web">
 		<unzip src="gadget-server/modules/gadget-web.war" dest="gadget-server/modules/tmp" />
-		<copy file="import_rtgov.sql" tofile="gadget-server/modules/tmp/WEB-INF/classes/import.sql"/>
+		<copy file="import_rtgov.sql" tofile="gadget-server/modules/tmp/WEB-INF/classes/import.sql" overwrite="true"/>
 		<delete file="gadget-server/modules/gadget-web.war" />
 		<zip destfile="gadget-server/modules/gadget-web.war" basedir="gadget-server/modules/tmp" />
 		<delete dir="gadget-server/modules/tmp" />
