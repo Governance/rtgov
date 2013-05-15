@@ -150,11 +150,13 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             
             mbs.unregisterMBean(getObjectName(network)); 
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, MessageFormat.format(
+        } catch (Throwable t) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
                     "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-4"),
-                    network.getName(), network.getVersion()), e);
+                    network.getName(), network.getVersion()), t);
+            }
         }
         
         _numOfNetworks--;

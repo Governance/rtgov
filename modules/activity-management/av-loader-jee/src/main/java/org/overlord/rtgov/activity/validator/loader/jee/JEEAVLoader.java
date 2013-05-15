@@ -108,9 +108,11 @@ public class JEEAVLoader {
                 for (ActivityValidator ai : _activityValidators) {
                     _avManager.unregister(ai);
                 }
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                        "av-loader-jee.Messages").getString("AV-LOADER-JEE-4"), e);
+            } catch (Throwable t) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
+                        "av-loader-jee.Messages").getString("AV-LOADER-JEE-4"), t);
+                }
             }
         }
     }       

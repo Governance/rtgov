@@ -167,11 +167,13 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
                 }
             }
             
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, MessageFormat.format(
+        } catch (Throwable t) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
                     "active-collection.Messages").getString("ACTIVE-COLLECTION-JEE-5"),
-                    ac.getName()), e);
+                    ac.getName()), t);
+            }
         }
     }
 

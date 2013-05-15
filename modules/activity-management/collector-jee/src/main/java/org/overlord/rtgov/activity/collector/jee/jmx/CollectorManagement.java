@@ -96,9 +96,11 @@ public class CollectorManagement {
             ObjectName objname=new ObjectName(OBJECT_NAME_LOGGER);
             
             mbs.unregisterMBean(objname); 
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "collector-jee.Messages").getString("COLLECTOR-JEE-2"), e);
+        } catch (Throwable t) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
+                    "collector-jee.Messages").getString("COLLECTOR-JEE-2"), t);
+            }
         }
     }
 

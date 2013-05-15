@@ -104,9 +104,11 @@ public class JEEEPNLoader extends AbstractEPNLoader {
         if (_epnManager != null && _network != null) {
             try {
                 _epnManager.unregister(_network.getName(), _network.getVersion());
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                        "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-3"), e);
+            } catch (Throwable t) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
+                        "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-3"), t);
+                }
             }
         }
     }       

@@ -114,9 +114,11 @@ public class JEEACSLoader extends AbstractACSLoader {
                 for (ActiveCollectionSource acs : _activeCollectionSources) {
                     _acmManager.unregister(acs);
                 }
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                        "acs-loader-jee.Messages").getString("ACS-LOADER-JEE-4"), e);
+            } catch (Throwable t) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
+                        "acs-loader-jee.Messages").getString("ACS-LOADER-JEE-4"), t);
+                }
             }
         }
     }       
