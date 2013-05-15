@@ -92,12 +92,6 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
 
         BaseExchangeContract contract=exch.getProperty("org.switchyard.bus.camel.contract", BaseExchangeContract.class);
         
-        if (provider == null
-                && LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("No provider specified - probably an exception: "
-                        +mesg.getContent());
-        }
-        
         // TODO: If message is transformed, then should the contentType
         // be updated to reflect the transformed type?
         
@@ -129,6 +123,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         String opName=contract.getConsumerOperation().getName();
         
         if (phase == ExchangePhase.IN) {
+            String intf=getInterface(consumer, provider);
+            
             if (consumer.getConsumerMetadata().isBinding()) {
                 getActivityCollector().startScope();
             } else {
@@ -143,11 +139,16 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                     sent.setServiceType(serviceType.toString()); 
                 }
                 
-                sent.setInterface(getInterface(consumer, provider));                
+                sent.setInterface(intf);                
                 sent.setOperation(opName);
                 sent.setMessageId(messageId);
                 
-                record(mesg, contentType, sent, securityContext, event); 
+                record(mesg, contentType, sent, securityContext, exch); 
+                
+                if (intf == null) {
+                    // Save activity event in exchange
+                    exch.setProperty("rtgov.request.sent", sent);
+                }
             }
             
             if (provider == null
@@ -155,11 +156,16 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 RequestReceived recvd=new RequestReceived();
                 
                 recvd.setServiceType(serviceType.toString());                
-                recvd.setInterface(getInterface(consumer, provider));                
+                recvd.setInterface(intf);                
                 recvd.setOperation(opName);
                 recvd.setMessageId(messageId);
                 
-                record(mesg, contentType, recvd, securityContext, event); 
+                record(mesg, contentType, recvd, securityContext, exch); 
+                
+                if (intf == null) {
+                    // Save activity event in exchange
+                    exch.setProperty("rtgov.request.received", recvd);
+                }               
             }
             
         } else if (phase == ExchangePhase.OUT) {
@@ -172,6 +178,21 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 return;
             }
             
+            // Check if interface on associated request needs to be set
+            String intf=getInterface(consumer, provider);
+            RequestReceived rr=(RequestReceived)exch.getProperty("rtgov.request.received");
+            RequestSent rs=(RequestSent)exch.getProperty("rtgov.request.sent");
+            
+            if (intf != null) {
+                if (rr != null) {
+                    rr.setInterface(intf);
+                }
+                if (rs != null) {
+                    rs.setInterface(intf);
+                }
+            }
+
+            // Record the response
             if (provider == null
                     || !provider.getProviderMetadata().isBinding()) {
                 ResponseSent sent=new ResponseSent();
@@ -182,12 +203,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                     sent.setServiceType(serviceType.toString()); 
                 }
 
-                sent.setInterface(getInterface(consumer, provider));                
+                sent.setInterface(intf);                
                 sent.setOperation(opName);
                 sent.setMessageId(messageId);
                 sent.setReplyToId(relatesTo);
                 
-                record(mesg, contentType, sent, securityContext, event); 
+                record(mesg, contentType, sent, securityContext, exch); 
             }
             
             if (consumer.getConsumerMetadata().isBinding()) {
@@ -198,12 +219,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 ResponseReceived recvd=new ResponseReceived();
                 
                 recvd.setServiceType(serviceType.toString());                
-                recvd.setInterface(getInterface(consumer, provider));                
+                recvd.setInterface(intf);                
                 recvd.setOperation(opName);
                 recvd.setMessageId(messageId);
                 recvd.setReplyToId(relatesTo);
                 
-                record(mesg, contentType, recvd, securityContext, event); 
+                record(mesg, contentType, recvd, securityContext, exch); 
             }
         }
     }
@@ -219,17 +240,18 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         String ret=null;
         ServiceInterface intf=null;
         
-        // RTGOV-179 - need to investigate how to obtain provider from ExchangeCreatedEvent
-        if (provider == null || consumer.getConsumerMetadata().isBinding()) {
+        if (consumer.getConsumerMetadata().isBinding()) {
             intf = consumer.getInterface();
-        } else {
+        } else if (provider != null) {
             intf = provider.getInterface();
         }
         
-        if (JavaService.TYPE.equals(intf.getType())) {
-            ret = ((JavaService)intf).getJavaInterface().getName();
-        } else if (WSDLService.TYPE.equals(intf.getType())) {
-            ret = ((WSDLService)intf).getPortType().toString();
+        if (intf != null) {
+            if (JavaService.TYPE.equals(intf.getType())) {
+                ret = ((JavaService)intf).getJavaInterface().getName();
+            } else if (WSDLService.TYPE.equals(intf.getType())) {
+                ret = ((WSDLService)intf).getPortType().toString();
+            }
         }
         
         return (ret);
@@ -243,10 +265,10 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
      * @param contentType The message content type
      * @param at The activity type
      * @param sc The optional security context
-     * @param event The original event
+     * @param exch The original exchange event
      */
     protected void record(Message msg, String contentType,
-                RPCActivityType at, SecurityContext sc, EventObject event) {
+                RPCActivityType at, SecurityContext sc, org.apache.camel.Exchange exch) {
         if (at != null) {
             at.setMessageType(contentType);
             
@@ -269,7 +291,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 }
             }
             
-            recordActivity(event, at);
+            recordActivity(exch, at);
         }
     }
 
