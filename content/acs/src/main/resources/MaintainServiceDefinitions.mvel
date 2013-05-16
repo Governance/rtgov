@@ -4,6 +4,11 @@
 org.overlord.rtgov.analytics.service.ServiceDefinition newsd=
 	(org.overlord.rtgov.analytics.service.ServiceDefinition)value;
 	
+// Check interface has been defined, otherwise can't process the definition
+if (newsd.getInterface() == null || newsd.getInterface().trim().length() == 0) {
+	return;
+}
+	
 org.overlord.rtgov.active.collection.ActiveMap map=
 	(org.overlord.rtgov.active.collection.ActiveMap)acs.getActiveCollection();
 	

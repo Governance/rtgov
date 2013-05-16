@@ -466,7 +466,7 @@ public final class ServiceDefinitionUtil {
                         sd.merge(sds.get(key), retainContexts);
                     } catch (Exception e) {
                         LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                                "activity-server-jmsc.Messages").getString("ANALTICS-1"), e);
+                                "analytics.Messages").getString("ANALYTICS-1"), e);
                     }
                 }
             }
