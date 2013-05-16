@@ -34,6 +34,7 @@
 
 	<properties>
 		<javaee-api.version>6.0</javaee-api.version>
+		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.1.1.Final</jbossas.version>
 		<jbossts.version>4.16.4.Final</jbossts.version>
 		<mvel.version>2.1.3.Final</mvel.version>
@@ -103,6 +104,14 @@
 				<artifactId>mvel2</artifactId>
 				<version>${mvel.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss-javaee.version}</version>
+				<type>pom</type>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
