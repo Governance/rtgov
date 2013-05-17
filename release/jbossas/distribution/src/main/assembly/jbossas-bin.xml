@@ -60,6 +60,8 @@
     
 	<dependencySets>
 
+		<!-- server profile -->
+
 		<dependencySet>
 			<outputDirectory>profiles/server/deployments</outputDirectory>
 			<unpack>false</unpack>
@@ -69,6 +71,14 @@
 				<include>org.overlord.rtgov.content:overlord-rtgov-epn:war</include>
 				<include>org.overlord.rtgov.content:overlord-rtgov-acs:war</include>
 				<include>org.overlord.rtgov.content.services:overlord-rtgov-services:war</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/server/jdbc/drivers</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>com.h2database:h2</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
@@ -87,6 +97,9 @@
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
+
+		<!-- restc profile -->
+
 		<dependencySet>
 			<outputDirectory>profiles/restc/deployments</outputDirectory>
 			<unpack>false</unpack>
@@ -103,6 +116,9 @@
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
+
+		<!-- Modules -->
+
 		<dependencySet>
 			<outputDirectory>/</outputDirectory>
 			<unpack>true</unpack>

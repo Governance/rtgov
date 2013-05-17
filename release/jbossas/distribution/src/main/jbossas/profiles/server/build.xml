@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RTGovServer">
 
+	<property name="database" value="h2" />
+	<property file="jdbc/${database}.properties" />
+
 	<property name="rtgov-layer" value="soa" />
 
-	<target name="deploy" depends="update-gadget-web" >
+	<target name="deploy" depends="update-gadget-web,create.rtgov.schema" >
 		<copy todir="${jboss.home}/modules/system/layers/${rtgov-layer}" >
 			<fileset dir="../../modules" />
 		</copy>
@@ -34,7 +37,7 @@
 		<delete dir="gadget-server/modules/tmp" />
 	</target>
 
-	<target name="undeploy" >
+	<target name="undeploy" depends="drop.rtgov.schema" >
 		<delete dir="${jboss.home}/modules/system/layers/${rtgov-layer}/org/overlord/rtgov" />
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
@@ -43,6 +46,50 @@
 			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
 			<property name="basedir" value="${basedir}/gadget-server" />
 		</ant>
+	</target>
+
+	<!-- ### LOG PROPERTIES ################################################# -->
+	<target name="log.properties">
+		<echo message="database....... ${database}" />
+		<echo message="jdbc driver.... ${driver}" />
+		<echo message="connection url....... ${connection.url}" />
+		<echo message="username.. ${username}" />  	
+	</target>
+
+	<!-- ### CREATE SCHEMA ############################################# -->
+	<target name="create.rtgov.schema"
+			depends="log.properties"
+			description="creates the riftsaw tables in the database">
+		<sql driver="${driver}"
+				url="${connection.url}"
+				userid="${username}"
+				password="${password}"
+				onerror="continue"
+				src="sql/${database}.sql">
+			<classpath>
+				<fileset dir="jdbc/drivers">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</sql>
+	</target>
+
+	<!-- ### DROP SCHEMA ############################################### -->
+	<target name="drop.rtgov.schema"
+			depends="log.properties"
+			description="drops the rtgov tables from the database">
+		<sql driver="${driver}"
+				url="${connection.url}"
+				userid="${username}"
+				password="${password}"
+				onerror="continue"
+				src="sql/${database}.drop.sql">
+			<classpath>
+				<fileset dir="jdbc/drivers">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</sql>
 	</target>
 
 </project>
