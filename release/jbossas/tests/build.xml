@@ -1,4 +1,8 @@
 <project default="setup" name="rtgovtests" >
+
+	<property name="database" value="h2" />
+	<property file="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/profiles/server/jdbc/${database}.properties" />
+
 	<target name="setup">
 		<echo message="Setting up Overlord Runtime Governance modules"/>
 	
@@ -34,6 +38,19 @@
 			file="${org.overlord.rtgov.content:overlord-rtgov-epn:war}" />
 		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-acs.war"
 			file="${org.overlord.rtgov.content:overlord-rtgov-acs:war}" />
+
+		<!-- Create database -->
+		<sql driver="${driver}"
+				url="${connection.rtgov.url}"
+				userid="${username}"
+				password="${password}"
+				onerror="continue"
+				src="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/profiles/server/sql/${database}.sql">
+			<classpath>
+				<pathelement location="${com.h2database:h2:jar}"/>
+			</classpath>
+		</sql>
+		
 	</target>
 
 	<target name="clean">
@@ -45,6 +62,9 @@
 
 		<echo message="Cleaning up Overlord Runtime Governance configuration"/>
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties" />
+
+		<echo message="Cleaning up Overlord Runtime Governance database"/>
+		<delete file="${jboss.home}/standalone/data/${database}/rtgov.*" />
 	</target>
 
 </project>
