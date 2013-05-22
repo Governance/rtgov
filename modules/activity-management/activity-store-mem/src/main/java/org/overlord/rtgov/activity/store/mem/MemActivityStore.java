@@ -95,7 +95,7 @@ public class MemActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityType> getActivityTypes(String context) throws Exception {
+    public List<ActivityType> getActivityTypes(Context context) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("getActivityTypes[context="+context+"] ("+this+")");
         }
@@ -105,7 +105,7 @@ public class MemActivityStore implements ActivityStore {
         for (ActivityUnit unit : _activities) {
             for (ActivityType activity : unit.getActivityTypes()) {
                 for (Context c : activity.getContext()) {
-                    if (c.getValue().equals(context)) {
+                    if (c.equals(context)) {
                         ret.add(activity);
                     }
                 }

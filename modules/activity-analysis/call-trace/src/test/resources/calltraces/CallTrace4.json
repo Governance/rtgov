@@ -1,0 +1,43 @@
+{
+	"tasks":[{
+		"type":"Call",
+		"operation":"op1",
+		"component":"st1",
+		"tasks":[{
+			"type":"Task",
+			"description":"ProcessStarted instanceId=456 processType=proc1 version=1",
+			"properties":{"processType":"proc1","instanceId":"456","version":"1"},
+			"duration":10,
+			"percentage":15
+		},{
+			"type":"Call",
+			"operation":"op2",
+			"requestLatency":7,
+			"responseLatency":8,
+			"component":"st2",
+			"tasks":[{
+				"type":"Task",
+				"description":"ProcessStarted instanceId=123 processType=proc2 version=2",
+				"properties":{"processType":"proc2","instanceId":"123","version":"2"},
+				"duration":11,
+				"percentage":55
+			},{
+				"type":"Task",
+				"description":"ProcessCompleted instanceId=123",
+				"properties":{"instanceId":"123"},
+				"duration":9,
+				"percentage":45
+			}],
+			"duration":37,
+			"percentage":58
+		},{
+			"type":"Task",
+			"description":"ProcessCompleted instanceId=456",
+			"properties":{"instanceId":"456"},
+			"duration":16,
+			"percentage":25
+		}],
+		"duration":88,
+		"percentage":100
+	}
+]}

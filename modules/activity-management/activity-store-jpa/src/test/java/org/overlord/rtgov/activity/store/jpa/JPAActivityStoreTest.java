@@ -175,7 +175,10 @@ public class JPAActivityStoreTest {
         }
         
         try {
-            results = activityStore.getActivityTypes(CONV_ID_1);
+            Context query=new Context();
+            query.setValue(CONV_ID_1);
+            
+            results = activityStore.getActivityTypes(query);
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {

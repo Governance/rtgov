@@ -159,68 +159,13 @@ public class TypeProcessor {
         for (int i=0; i < _contextEvaluators.size(); i++) {
             ContextEvaluator ce=_contextEvaluators.get(i);
 
-            String val=ce.getEvaluator().evaluate(information);
-            
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Context evaluator '"+ce+"' = "+val);
-            }
-            
-            if (val != null) {
-                actType.getContext().add(new Context(ce.getType(), val));
-                
-            } else if (!ce.getEvaluator().getOptional()) {
-                LOG.severe(MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "activity.Messages").getString("ACTIVITY-7"),
-                        ce.getEvaluator().getExpression(),
-                        information));
-            }
+            ce.process(information, headers, actType);
         }
         
         for (int i=0; i < _propertyEvaluators.size(); i++) {
             PropertyEvaluator pe=_propertyEvaluators.get(i);
             
-            Object source=null;
-            
-            // Check if property evaluation relates to a header
-            if (pe.getHeader() != null) {
-                
-                if (headers != null && headers.containsKey(pe.getHeader())) {
-                    source = headers.get(pe.getHeader());
-                } else {
-                    LOG.warning(MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "activity.Messages").getString("ACTIVITY-10"),
-                        pe.getName(), pe.getHeader()));
-                }
-            } else {
-                source = information;
-            }
-
-            String val=pe.getEvaluator().evaluate(source);
-            
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Property evaluator '"+pe+"' = "+val);
-            }
-            
-            if (val != null) {
-                actType.getProperties().put(pe.getName(), val);
-                
-            } else if (!pe.getEvaluator().getOptional()) {
-                
-                if (pe.getHeader() == null) {
-                    LOG.severe(MessageFormat.format(
-                            java.util.PropertyResourceBundle.getBundle(
-                            "activity.Messages").getString("ACTIVITY-8"),
-                            pe.getEvaluator().getExpression(),
-                            information));
-                } else {
-                    LOG.severe(MessageFormat.format(
-                            java.util.PropertyResourceBundle.getBundle(
-                            "activity.Messages").getString("ACTIVITY-11"),
-                            pe.getName(), pe.getHeader()));
-                }
-            }
+            pe.process(information, headers, actType);
         }
         
         if (getScript() != null) {
@@ -335,6 +280,59 @@ public class TypeProcessor {
         }
         
         /**
+         * This method processes the supplied information to extract the
+         * property details for association with the supplied
+         * activity type.
+         * 
+         * @param information The information
+         * @param headers The optional header information
+         * @param actType The activity type
+         */
+        public void process(Object information, java.util.Map<String, Object> headers, ActivityType actType) {
+            Object source=null;
+            
+            // Check if property evaluation relates to a header
+            if (getHeader() != null) {
+                
+                if (headers != null && headers.containsKey(getHeader())) {
+                    source = headers.get(getHeader());
+                } else {
+                    LOG.warning(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-10"),
+                        getName(), getHeader()));
+                }
+            } else {
+                source = information;
+            }
+
+            String val=getEvaluator().evaluate(source);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Property evaluator '"+this+"' = "+val);
+            }
+            
+            if (val != null) {
+                actType.getProperties().put(getName(), val);
+                
+            } else if (!getEvaluator().getOptional()) {
+                
+                if (getHeader() == null) {
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "activity.Messages").getString("ACTIVITY-8"),
+                            getEvaluator().getExpression(),
+                            information));
+                } else {
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "activity.Messages").getString("ACTIVITY-11"),
+                            getName(), getHeader()));
+                }
+            }
+        }
+        
+        /**
          * {@inheritDoc}
          */
         public String toString() {
@@ -350,6 +348,7 @@ public class TypeProcessor {
     public static class ContextEvaluator {
         
         private Context.Type _type=null;
+        private String _header=null;
         private ExpressionEvaluator _evaluator=null;
         
         /**
@@ -377,6 +376,29 @@ public class TypeProcessor {
         }
         
         /**
+         * This method gets the header name. If not
+         * specified, then the context evaluator will
+         * use the main information content.
+         * 
+         * @return The optional header name
+         */
+        public String getHeader() {
+            return (_header);
+        }
+        
+        /**
+         * This method sets the header name. This implies
+         * that the context evaluator will be operating
+         * on a header value rather than the main information
+         * content.
+         * 
+         * @param header The optional header
+         */
+        public void setHeader(String header) {
+            _header = header;
+        }
+        
+        /**
          * This method gets the context value
          * expression evaluator.
          * 
@@ -396,6 +418,59 @@ public class TypeProcessor {
             _evaluator = evaluator;
         }
         
+        /**
+         * This method processes the supplied information to extract the
+         * context details for association with the supplied
+         * activity type.
+         * 
+         * @param information The information
+         * @param headers The optional header information
+         * @param actType The activity type
+         */
+        public void process(Object information, java.util.Map<String, Object> headers, ActivityType actType) {
+            Object source=null;
+            
+            // Check if property evaluation relates to a header
+            if (getHeader() != null) {
+                
+                if (headers != null && headers.containsKey(getHeader())) {
+                    source = headers.get(getHeader());
+                } else {
+                    LOG.warning(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-12"),
+                        getType(), getHeader()));
+                }
+            } else {
+                source = information;
+            }
+
+            String val=getEvaluator().evaluate(source);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Context evaluator '"+this+"' = "+val);
+            }
+            
+            if (val != null) {
+                actType.getContext().add(new Context(getType(), val));
+                
+            } else if (!getEvaluator().getOptional()) {
+                
+                if (getHeader() == null) {
+                    LOG.severe(MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-7"),
+                        getEvaluator().getExpression(),
+                        information));
+                } else {
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "activity.Messages").getString("ACTIVITY-13"),
+                            getType(), getHeader()));
+                }
+            }
+        }
+
         /**
          * {@inheritDoc}
          */

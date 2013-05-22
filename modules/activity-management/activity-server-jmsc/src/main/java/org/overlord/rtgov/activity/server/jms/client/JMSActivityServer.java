@@ -35,6 +35,7 @@ import org.hornetq.api.jms.JMSFactoryType;
 import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.QuerySpec;
 
@@ -98,7 +99,7 @@ public class JMSActivityServer implements ActivityServer {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityType> getActivityTypes(String context) throws Exception {
+    public List<ActivityType> getActivityTypes(Context context) throws Exception {
         throw new java.lang.UnsupportedOperationException();
     }
     

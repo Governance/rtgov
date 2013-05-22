@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
@@ -159,7 +160,10 @@ public class RESTActivityServer {
             throw new Exception("Activity Server is not available");
         }
         
-        java.util.List<ActivityType> list=_activityServer.getActivityTypes(context);
+        Context query=new Context();
+        query.setValue(context);
+        
+        java.util.List<ActivityType> list=_activityServer.getActivityTypes(query);
         
         if (list != null) {
             byte[] b=ActivityUtil.serializeActivityTypeList(list);

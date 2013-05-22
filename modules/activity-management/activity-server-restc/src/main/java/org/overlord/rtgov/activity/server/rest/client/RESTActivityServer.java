@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
@@ -153,10 +154,10 @@ public class RESTActivityServer implements ActivityServer {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityType> getActivityTypes(String context) throws Exception {
+    public List<ActivityType> getActivityTypes(Context context) throws Exception {
         List<ActivityType> ret=null;
         
-        URL queryUrl = new URL(_serverURL+EVENTS+"?context="+context);
+        URL queryUrl = new URL(_serverURL+EVENTS+"?context="+context.getValue());
         
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("RESTActivityServer["+queryUrl+"] getActivityTypes: "+context);

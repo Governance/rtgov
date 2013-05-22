@@ -30,6 +30,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.call.trace.CallTraceService;
 import org.overlord.rtgov.call.trace.model.Call;
@@ -170,7 +171,10 @@ public class RESTCallTraceServer {
         if (correlation.equals("test")) {
             ret = createTestCallTrace();
         } else {
-            ret = _callTraceService.createCallTrace(correlation);
+            Context query=new Context();
+            query.setValue(correlation);
+            
+            ret = _callTraceService.createCallTrace(query);
         }
         
         return (ret);

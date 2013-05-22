@@ -83,18 +83,18 @@ public class CallTraceServiceImpl implements CallTraceService {
      * This method creates a call trace associated with the
      * supplied correlation value.
      * 
-     * @param correlation The correlation value
+     * @param context The context value
      * @return The call trace, or null if not found
      * @throws Exception Failed to create call trace
      */
     @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
-    public CallTrace createCallTrace(String correlation) 
+    public CallTrace createCallTrace(Context context) 
                             throws Exception {
         CTState state=new CTState();
         
         // Recursively load activity units that are directly or
-        // indirectly associated with the correlation key
-        loadActivityUnits(state, correlation);
+        // indirectly associated with the context
+        loadActivityUnits(state, context);
         
         return (processAUs(state));
     }
@@ -104,16 +104,16 @@ public class CallTraceServiceImpl implements CallTraceService {
      * correlation key.
      * 
      * @param state The state
-     * @param correlation The correlation key
+     * @param context The context
      */
-    protected void loadActivityUnits(CTState state, String correlation) {
+    protected void loadActivityUnits(CTState state, Context context) {
         
-        if (!state.isCorrelationInitialized(correlation)) {
+        if (!state.isContextInitialized(context)) {
             
             // Retrieve activity types associated with correlation
             try {
                 java.util.List<ActivityType> ats=
-                        _activityServer.getActivityTypes(correlation);
+                        _activityServer.getActivityTypes(context);
                 
                 // Check each activity type's unit id to see whether
                 // it needs to be retrieved
@@ -131,15 +131,15 @@ public class CallTraceServiceImpl implements CallTraceService {
                     }
                 }
                 
-                // Mark this correlation value as initialized
-                state.initialized(correlation);
+                // Mark this context as initialized
+                state.initialized(context);
 
                 // For each new activity unit, scan for unknown correlation
                 // fields, and recursively load their associated units
                 for (ActivityUnit au : aus) {                    
                     for (ActivityType at : au.getActivityTypes()) {
                         for (Context c : at.getContext()) {                            
-                            loadActivityUnits(state, c.getValue());
+                            loadActivityUnits(state, c);
                         }
                     }
                 }
@@ -148,7 +148,7 @@ public class CallTraceServiceImpl implements CallTraceService {
                 LOG.log(Level.SEVERE, MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
                         "call-trace.Messages").getString("CALL-TRACE-1"),
-                            correlation), e);
+                            context), e);
             }
         }
     }
@@ -215,6 +215,26 @@ public class CallTraceServiceImpl implements CallTraceService {
             if (i != aupos && topLevel.contains(au)) {
                 // Skip top level units
                 continue;
+            }
+            
+            // Only process additional AUs if they don't contain context
+            // types Conversation, Message and Link - as these should be
+            // explicitly found
+            if (i != aupos && !processSubsequentAU(startau, au)) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("AU="+au+" has non-Endpoint context values, "
+                            +"so should only be processed when linked by those contexts");
+                }
+                
+                // So we don't finalize the scope, as want to return to
+                // state that has an interaction to conclude the scope
+                // NOTE: Currently a heuristic, that if attempting to process
+                // a AU with non-Endpoint contexts, then this is not an end of
+                // scope AU, so pop the stacks back to the originating
+                // AU (assumes navigated here from a link - but other test cases
+                // may show otherwise).
+                f_scopeFinalized = true;
+                break;
             }
             
             if (LOG.isLoggable(Level.FINEST)) {
@@ -321,6 +341,24 @@ public class CallTraceServiceImpl implements CallTraceService {
                     }
                 }
                 
+                // Check for linked activity units
+                for (Context con : cur.getContext()) {
+                    if (con.getType() == Context.Type.Link
+                            && !state.isLinkProcessed(con)) {
+                        state.linkProcessed(con);
+                        
+                        for (ActivityUnit other : state.getActivityUnits(con)) {
+                            if (other != au) {
+                                if (LOG.isLoggable(Level.FINEST)) {
+                                    LOG.finest("Process linked AU="+other);
+                                }
+
+                                processAU(state, other, topLevel);
+                            }
+                        }
+                    }
+                }
+                
                 prev = cur;
             }
         }
@@ -332,6 +370,37 @@ public class CallTraceServiceImpl implements CallTraceService {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Finished Process Initial AU="+startau);
         }
+    }
+    
+    /**
+     * This method determines whether the subsequent activity unit should be processed
+     * following the previous activity unit.
+     * 
+     * @param previous The previously processed activity unit
+     * @param subsequent The subsequent activity unit to assess
+     * @return Whether to process the subsequent activity unit
+     */
+    protected static boolean processSubsequentAU(ActivityUnit previous, ActivityUnit subsequent) {
+        boolean ret=true;
+        
+        // Check if subsequent activity unit is triggered by a receive
+        if (subsequent.getActivityTypes().size() > 0
+                && (subsequent.getActivityTypes().get(0) instanceof RequestReceived
+                        || subsequent.getActivityTypes().get(0) instanceof ResponseReceived)) {
+            ret = false;
+        } else {
+            // Check if link target
+            for (Context con : subsequent.contexts()) {
+                // Timeframe of 0 indicates link target
+                if (con.getType() == Context.Type.Link
+                        && con.isLinkTarget()) {
+                    ret = false;
+                    break;
+                }
+            }
+        }
+        
+        return (ret);
     }
     
     /**
@@ -663,7 +732,8 @@ public class CallTraceServiceImpl implements CallTraceService {
      */
     public static class CTState {
         
-        private java.util.List<String> _correlations=new java.util.ArrayList<String>();
+        private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
+        private java.util.List<Context> _linksProcessed=new java.util.ArrayList<Context>();
         private java.util.List<ActivityUnit> _units=new java.util.ArrayList<ActivityUnit>();
         private java.util.Map<String,ActivityUnit> _unitIndex=new java.util.HashMap<String,ActivityUnit>();
         private java.util.Map<String,ActivityUnitCursor> _cursors=
@@ -675,26 +745,46 @@ public class CallTraceServiceImpl implements CallTraceService {
                 new java.util.HashMap<Call,RPCActivityType>();
         
         /**
-         * This method determines whether the supplied correlation
-         * key is already initialized.
+         * This method determines whether the supplied context
+         * is already initialized.
          * 
-         * @param correlation The correlation to check
-         * @return Whether the correlation key is already initialized
+         * @param context The context to check
+         * @return Whether the context is already initialized
          */
-        public boolean isCorrelationInitialized(String correlation) {
-            return (_correlations.contains(correlation));
+        public boolean isContextInitialized(Context context) {
+            return (_contexts.contains(context));
         }
         
         /**
-         * This method indicates that the supplied correlation
-         * key has now been initialized.
+         * This method indicates that the supplied context
+         * has now been initialized.
          * 
-         * @param correlation The correlation key
+         * @param context The context
          */
-        public void initialized(String correlation) {
-            if (!_correlations.contains(correlation)) {
-                _correlations.add(correlation);
+        public void initialized(Context context) {
+            if (!_contexts.contains(context)) {
+                _contexts.add(context);
             }
+        }
+        
+        /**
+         * This method determines if the supplied link
+         * context has been processed.
+         * 
+         * @param context The link context
+         * @return Whether it has been processed
+         */
+        public boolean isLinkProcessed(Context context) {
+            return (_linksProcessed.contains(context));
+        }
+        
+        /**
+         * This method records the fact that the link has been processed.
+         * 
+         * @param context The link context
+         */
+        public void linkProcessed(Context context) {
+            _linksProcessed.add(context);
         }
         
         /**
@@ -727,6 +817,25 @@ public class CallTraceServiceImpl implements CallTraceService {
          */
         public java.util.List<ActivityUnit> getActivityUnits() {
             return (_units);
+        }
+        
+        /**
+         * This method returns the list of activity units containing
+         * the specified context.
+         * 
+         * @param context The context
+         * @return The activity units for this context
+         */
+        public java.util.List<ActivityUnit> getActivityUnits(Context context) {
+            java.util.List<ActivityUnit> ret=new java.util.ArrayList<ActivityUnit>();
+            
+            for (ActivityUnit au : _units) {
+                if (au.contexts().contains(context)) {
+                    ret.add(au);
+                }
+            }
+            
+            return (ret);
         }
         
         /**

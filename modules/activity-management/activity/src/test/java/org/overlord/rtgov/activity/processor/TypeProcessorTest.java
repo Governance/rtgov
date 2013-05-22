@@ -60,7 +60,7 @@ public class TypeProcessorTest {
     }
 
     @Test
-    public void testProcessContext() {
+    public void testProcessContextFromInformation() {
         TypeProcessor processor=new TypeProcessor();
         
         MVELExpressionEvaluator eval1=new MVELExpressionEvaluator();        
@@ -125,7 +125,78 @@ public class TypeProcessorTest {
     }
 
     @Test
-    public void testProcessPropertiesForInformation() {
+    public void testProcessContextFromHeader() {
+        TypeProcessor processor=new TypeProcessor();
+        
+        MVELExpressionEvaluator eval1=new MVELExpressionEvaluator();        
+        eval1.setExpression("value1");
+        
+        ContextEvaluator ce1=new ContextEvaluator();
+        ce1.setType(Type.Message);
+        ce1.setEvaluator(eval1);
+        
+        processor.getContexts().add(ce1);
+        
+        MVELExpressionEvaluator eval2=new MVELExpressionEvaluator();        
+        eval2.setExpression("value2");
+        
+        ContextEvaluator ce2=new ContextEvaluator();
+        ce2.setType(Type.Endpoint);
+        ce2.setHeader(HEADER1);
+        ce2.setEvaluator(eval2);
+        
+        processor.getContexts().add(ce2);
+        
+        try {
+            processor.init();
+        } catch (Exception e) {
+            fail("Failed to initialize: "+e);
+        }
+        
+        TestObject to1=new TestObject();
+        to1.value1 = VALUE1;
+        
+        TestObject to2=new TestObject();
+        to2.value2 = VALUE2;
+        
+        RequestReceived rr=new RequestReceived();
+
+        if (rr.getContext().size() != 0) {
+            fail("Expecting 0 context: "+rr.getContext().size());
+        }
+
+        java.util.Map<String,Object> headers=new java.util.HashMap<String, Object>();
+        headers.put(HEADER1, to2);
+        
+        String result=processor.process(to1, headers, rr);
+     
+        if (result != null) {
+            fail("Result should be null");
+        }
+        
+        if (rr.getContext().size() != 2) {
+            fail("Expecting 2 context: "+rr.getContext().size());
+        }
+        
+        if (rr.getContext().get(0).getType() != Type.Message) {
+            fail("First context type should be message: "+rr.getContext().get(0).getType());
+        }
+        
+        if (!rr.getContext().get(0).getValue().equals(VALUE1)) {
+            fail("First context value incorrect: "+rr.getContext().get(0).getValue());
+        }
+        
+        if (rr.getContext().get(1).getType() != Type.Endpoint) {
+            fail("Second context type should be endpoint: "+rr.getContext().get(1).getType());
+        }
+        
+        if (!rr.getContext().get(1).getValue().equals(VALUE2)) {
+            fail("Second context value incorrect: "+rr.getContext().get(1).getValue());
+        }
+    }
+
+    @Test
+    public void testProcessPropertiesFromInformation() {
         TypeProcessor processor=new TypeProcessor();
         
         MVELExpressionEvaluator eval1=new MVELExpressionEvaluator();        
@@ -191,7 +262,7 @@ public class TypeProcessorTest {
     }
 
     @Test
-    public void testProcessPropertiesForHeader() {
+    public void testProcessPropertiesFromHeader() {
         TypeProcessor processor=new TypeProcessor();
         
         MVELExpressionEvaluator eval1=new MVELExpressionEvaluator();        

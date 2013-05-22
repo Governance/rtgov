@@ -28,6 +28,7 @@ import javax.persistence.PersistenceContext;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
@@ -84,13 +85,14 @@ public class JPAActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityType> getActivityTypes(String context) throws Exception {
+    public List<ActivityType> getActivityTypes(Context context) throws Exception {
         
         @SuppressWarnings("unchecked")
         List<ActivityType> ret=(List<ActivityType>)
             _entityManager.createQuery("SELECT at from ActivityType at "
                     +"JOIN at.context ctx "
-                    +"WHERE ctx.value = '"+context+"'")
+                    +"WHERE ctx.value = '"+context.getValue()+"' "
+                    +"AND ctx.type = '"+context.getType().name()+"'")
                     .getResultList();
         
         if (LOG.isLoggable(Level.FINEST)) {

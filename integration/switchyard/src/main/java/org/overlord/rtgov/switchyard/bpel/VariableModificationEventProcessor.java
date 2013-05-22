@@ -55,16 +55,16 @@ public class VariableModificationEventProcessor extends AbstractEventProcessor {
             value = value.getFirstChild();   
         }
         
-        String type=((VariableModificationEvent)bpelEvent).getNewValue().getLocalName();
+        String type=value.getLocalName();
         
-        if (bpelEvent.getNewValue().getNamespaceURI() != null) {
-            type = "{"+bpelEvent.getNewValue().getNamespaceURI()+"}"+type;
+        if (value.getNamespaceURI() != null) {
+            type = "{"+value.getNamespaceURI()+"}"+type;
         }
         
         pvs.setVariableName(bpelEvent.getVarName());
         pvs.setVariableType(type);
         pvs.setVariableValue(getActivityCollector().processInformation(null, type,
-                bpelEvent.getNewValue(), null, pvs));
+                value, null, pvs));
         
         recordActivity(event, pvs);
     }

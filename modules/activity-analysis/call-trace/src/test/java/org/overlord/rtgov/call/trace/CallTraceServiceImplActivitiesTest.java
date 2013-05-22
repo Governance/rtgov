@@ -20,6 +20,7 @@ package org.overlord.rtgov.call.trace;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.impl.ActivityServerImpl;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.activity.util.ActivityUtil;
@@ -30,11 +31,11 @@ import org.overlord.rtgov.call.trace.model.TraceNode;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 import org.overlord.rtgov.call.trace.util.CallTraceUtilTest;
 
-public class CallTraceProcessorActivitiesTest {
+public class CallTraceServiceImplActivitiesTest {
 	
 	private static final String[] IGNORE_PROPERTIES={"client-host","client-node","server-host","server-node"};
 
-    protected CallTraceServiceImpl getCallTraceProcessor() {
+    protected CallTraceServiceImpl getCallTraceService() {
         CallTraceServiceImpl ctp=new CallTraceServiceImpl();
         
         MemActivityStore memas=new MemActivityStore();
@@ -49,16 +50,32 @@ public class CallTraceProcessorActivitiesTest {
         
     @Test
     public void testActivityUnits1() {        
-        testCallTrace("ActivityUnits1", "1");        
+        Context query=new Context();
+        query.setValue("1");
+        
+        testCallTrace("ActivityUnits1", query);        
     }
     
     @Test
     public void testActivityUnits2() {        
-        testCallTrace("ActivityUnits2", "1");        
+        Context query=new Context();
+        query.setValue("1");
+        
+        testCallTrace("ActivityUnits2", query);        
     }
     
-    protected void testCallTrace(String testName, String identifier) {
-        CallTraceServiceImpl ctp=getCallTraceProcessor();
+    @Test
+    public void testActivityUnits3() {        
+        Context query=new Context();
+        query.setType(Context.Type.Message);
+        query.setValue("ID-gbrown-redhat-47657-1369065371888-0-1");
+        
+        // Initial identifier is the message id
+        testCallTrace("ActivityUnits3", query);        
+    }
+    
+    protected void testCallTrace(String testName, Context query) {
+        CallTraceServiceImpl ctp=getCallTraceService();
         
         try {
             java.io.InputStream is=
@@ -75,7 +92,7 @@ public class CallTraceProcessorActivitiesTest {
         }
         
         try {
-            CallTrace ct=ctp.createCallTrace(identifier);
+            CallTrace ct=ctp.createCallTrace(query);
             
             for (TraceNode node : ct.getTasks()) {
                 preProcessProperties(node);            		

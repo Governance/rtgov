@@ -25,6 +25,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Transient;
 
 /**
  * This class represents context information that can be used to
@@ -39,6 +40,7 @@ public class Context implements java.io.Externalizable {
     
     private Type _type=Type.Conversation;
     private String _value=null;
+    private long _timeframe=0;
 
     /**
      * The default constructor.
@@ -107,6 +109,40 @@ public class Context implements java.io.Externalizable {
     }
     
     /**
+     * This method indicates whether the context represents a link target.
+     * 
+     * @return Whether a link target
+     */
+    @Transient
+    public boolean isLinkTarget() {
+        return (_type == Type.Link && _timeframe == 0);
+    }
+    
+    /**
+     * This method returns the timeframe.
+     * 
+     * @return The timeframe
+     */
+    @Column(name="timeframe")
+    public long getTimeframe() {
+        return (_timeframe);
+    }
+    
+    /**
+     * This method sets the timeframe. This property
+     * is used in conjunction with the 'Link' context type.
+     * If this value is 0, then it means the activity
+     * associated with this context is the link target. The
+     * link source must identify the timeframe appropriate
+     * for the link.
+     * 
+     * @param timeframe The timeframe
+     */
+    public void setTimeframe(long timeframe) {
+        _timeframe = timeframe;
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public int hashCode() {
@@ -145,6 +181,7 @@ public class Context implements java.io.Externalizable {
         
         out.writeObject(_type);
         out.writeObject(_value);
+        out.writeLong(_timeframe);
     }
 
     /**
@@ -156,6 +193,7 @@ public class Context implements java.io.Externalizable {
         
         _type = (Type)in.readObject();
         _value = (String)in.readObject();
+        _timeframe = in.readLong();
     }
 
     /**
@@ -184,7 +222,13 @@ public class Context implements java.io.Externalizable {
          * This context type represents an id associated with a particular message
          * being exchanged between distributed participants.
          */
-        Message
+        Message,
+        
+        /**
+         * This context type represents an association between two or more activities
+         * that will usually be constrained to a specified timeframe.
+         */
+        Link
         
     }
 }

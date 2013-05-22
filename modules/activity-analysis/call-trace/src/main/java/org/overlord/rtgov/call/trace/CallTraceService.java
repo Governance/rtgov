@@ -17,6 +17,7 @@
  */
 package org.overlord.rtgov.call.trace;
 
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 
@@ -43,13 +44,13 @@ public interface CallTraceService {
     
     /**
      * This method creates a call trace associated with the
-     * supplied correlation value.
+     * supplied context.
      * 
-     * @param correlation The correlation value
+     * @param context The context
      * @return The call trace, or null if not found
      * @throws Exception Failed to create call trace
      */
-    public CallTrace createCallTrace(String correlation) 
+    public CallTrace createCallTrace(Context context) 
                             throws Exception;
 
 }

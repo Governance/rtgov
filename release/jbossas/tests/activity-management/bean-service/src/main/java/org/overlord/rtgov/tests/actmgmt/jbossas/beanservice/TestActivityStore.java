@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.server.QuerySpec;
 
@@ -72,7 +73,7 @@ public class TestActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
-    public List<ActivityType> getActivityTypes(String context) throws Exception {
+    public List<ActivityType> getActivityTypes(Context context) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }

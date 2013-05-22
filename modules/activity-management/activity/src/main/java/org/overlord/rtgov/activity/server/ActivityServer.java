@@ -19,6 +19,7 @@ package org.overlord.rtgov.activity.server;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
 
 /**
  * This interface represents an activity server.
@@ -52,7 +53,7 @@ public interface ActivityServer {
      * @return The list of activities
      * @throws Exception Failed to retrieve the activities
      */
-    public java.util.List<ActivityType> getActivityTypes(String context) throws Exception;
+    public java.util.List<ActivityType> getActivityTypes(Context context) throws Exception;
     
     /**
      * This method retrieves a set of activity events associated

@@ -29,6 +29,7 @@ import javax.inject.Singleton;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityNotifier;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.ActivityStore;
@@ -166,7 +167,7 @@ public class ActivityServerImpl implements ActivityServer {
      * {@inheritDoc}
      */
     @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
-    public List<ActivityType> getActivityTypes(String context) throws Exception {
+    public List<ActivityType> getActivityTypes(Context context) throws Exception {
         
         if (_store == null) {
             throw new Exception("Activity Store is unavailable");
