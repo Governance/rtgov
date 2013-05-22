@@ -16,15 +16,16 @@
    <script type="text/javascript">
 	
 	function makeJSONRequest() {
-		var prefs, params, restUrl, postdata, host;
+		var prefs, params, restUrl, postdata, protocol, host;
 		
 		prefs = new gadgets.Prefs();
 		
 		params = {};
 		params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = parseInt(getUserPreferenceValue("refreshCycle"));
 		
+        protocol = parent.window.location.protocol;
 		host = parent.window.location.host;
-		restUrl = "http://" + host + "/overlord-rtgov/service/dependency/overview";
+		restUrl = protocol + "//" + host + "/overlord-rtgov/service/dependency/overview";
 
 		if (getViewName() == "default") {
 			restUrl = restUrl + "?width=300";

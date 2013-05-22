@@ -42,6 +42,7 @@
 	function makeJSONRequest(){
 		var prefs = new gadgets.Prefs();
 		//hack for now.
+        var protocol = parent.window.location.protocol;
 	    var host = parent.window.location.host;
 	    var ident = getUserPreferenceValue("value");
 	    
@@ -52,7 +53,7 @@
 	    	$("#promptDiv").hide();
 	    }
 	    
-	    var restUrl = "http://" + host + "/overlord-rtgov/call/trace/instance?value=" + ident;
+	    var restUrl = protocol + "//" + host + "/overlord-rtgov/call/trace/instance?value=" + ident;
 	    
 		var params = {};
 		params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
