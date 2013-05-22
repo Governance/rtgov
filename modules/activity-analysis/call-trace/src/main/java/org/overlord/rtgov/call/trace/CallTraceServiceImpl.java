@@ -212,29 +212,18 @@ public class CallTraceServiceImpl implements CallTraceService {
         for (int i=aupos; !f_end && i < aus.size(); i++) {
             ActivityUnit au=aus.get(i);
             
-            if (i != aupos && topLevel.contains(au)) {
-                // Skip top level units
-                continue;
-            }
-            
-            // Only process additional AUs if they don't contain context
-            // types Conversation, Message and Link - as these should be
-            // explicitly found
-            if (i != aupos && !processSubsequentAU(startau, au)) {
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("AU="+au+" has non-Endpoint context values, "
-                            +"so should only be processed when linked by those contexts");
+            if (i != aupos) {
+                if (topLevel.contains(au)) {
+                    // Skip top level units
+                    continue;
+                } else if (!processSubsequentAU(startau, au)) {
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("AU="+au+" has non-Endpoint context values, "
+                                +"so should only be processed when linked by those contexts");
+                    }
+                    f_scopeFinalized = true;
+                    break;
                 }
-                
-                // So we don't finalize the scope, as want to return to
-                // state that has an interaction to conclude the scope
-                // NOTE: Currently a heuristic, that if attempting to process
-                // a AU with non-Endpoint contexts, then this is not an end of
-                // scope AU, so pop the stacks back to the originating
-                // AU (assumes navigated here from a link - but other test cases
-                // may show otherwise).
-                f_scopeFinalized = true;
-                break;
             }
             
             if (LOG.isLoggable(Level.FINEST)) {
@@ -252,10 +241,8 @@ public class CallTraceServiceImpl implements CallTraceService {
                     break;
                 }
                 
-                if (cur instanceof RPCActivityType) {
-                    
-                    if (cur instanceof RequestSent
-                            || (cur instanceof RequestReceived && call == null)) {
+                if (cur instanceof RPCActivityType) {                    
+                    if (cur instanceof RequestSent || (cur instanceof RequestReceived && call == null)) {
                         
                         // Create call, and search for activity unit
                         // containing scoped tasks
@@ -266,7 +253,6 @@ public class CallTraceServiceImpl implements CallTraceService {
                         } else if (LOG.isLoggable(Level.FINE)) {
                             LOG.fine("Attempt to add call node to 'null' tasks list");
                         }
-
                         tasks = call.getTasks();
 
                         if (LOG.isLoggable(Level.FINEST)) {
@@ -275,8 +261,7 @@ public class CallTraceServiceImpl implements CallTraceService {
                         }
 
                         state.getCallStack().push(call);
-                        state.getTasksStack().push(tasks);
-                        
+                        state.getTasksStack().push(tasks);                        
                         state.getTriggerActivities().put(call, (RPCActivityType)cur);
                     }
                     
@@ -291,8 +276,7 @@ public class CallTraceServiceImpl implements CallTraceService {
                             
                             ActivityUnit subAU=state.getActivityUnit(rr.getUnitId());                           
                             if (subAU != null) {
-                                processAU(state, subAU, topLevel);
-                                
+                                processAU(state, subAU, topLevel);                                
                                 call = (state.getCallStack().size() > 0 ? state.getCallStack().peek() : null);
                                 tasks = (state.getTasksStack().size() > 0 ? state.getTasksStack().peek() : null);
                             }
@@ -305,8 +289,7 @@ public class CallTraceServiceImpl implements CallTraceService {
                         initializeResponseSent(state, (ResponseSent)cur, call);
                         
                         // Finalise the tasks in the scope, and pop the stack
-                        state.finalizeScope();
-                        
+                        state.finalizeScope();                        
                         f_scopeFinalized = true;
 
                         // Get new values
@@ -318,8 +301,7 @@ public class CallTraceServiceImpl implements CallTraceService {
                         if (state.getCallStack().size() > 0) {
                             if (LOG.isLoggable(Level.FINEST)) {
                                 LOG.finest("Break on response sent");  
-                            }
-                            
+                            }                            
                             // Break out of processing the cursor, and also the method
                             f_end = true;
                             break;
@@ -332,8 +314,7 @@ public class CallTraceServiceImpl implements CallTraceService {
                         f_end = true;
                     }                    
                 } else {
-                    Task task=createTask(cur);
-                    
+                    Task task=createTask(cur);                   
                     tasks.add(task);
                     
                     if (prev != null) {
@@ -341,24 +322,7 @@ public class CallTraceServiceImpl implements CallTraceService {
                     }
                 }
                 
-                // Check for linked activity units
-                for (Context con : cur.getContext()) {
-                    if (con.getType() == Context.Type.Link
-                            && !state.isLinkProcessed(con)) {
-                        state.linkProcessed(con);
-                        
-                        for (ActivityUnit other : state.getActivityUnits(con)) {
-                            if (other != au) {
-                                if (LOG.isLoggable(Level.FINEST)) {
-                                    LOG.finest("Process linked AU="+other);
-                                }
-
-                                processAU(state, other, topLevel);
-                            }
-                        }
-                    }
-                }
-                
+                checkForLinkedAU(cur, state, au, topLevel);
                 prev = cur;
             }
         }
@@ -369,6 +333,36 @@ public class CallTraceServiceImpl implements CallTraceService {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Finished Process Initial AU="+startau);
+        }
+    }
+    
+    /**
+     * This method checks whether there is a linked context.
+     * 
+     * @param cur The current activity type
+     * @param state The state
+     * @param au The activity unit
+     * @param topLevel The list of top level activity units
+     */
+    protected static void checkForLinkedAU(ActivityType cur, CTState state, ActivityUnit au,
+                            java.util.List<ActivityUnit> topLevel) {
+
+        // Check for linked activity units
+        for (Context con : cur.getContext()) {
+            if (con.getType() == Context.Type.Link
+                    && !state.isLinkProcessed(con)) {
+                state.linkProcessed(con);
+                
+                for (ActivityUnit other : state.getActivityUnits(con)) {
+                    if (other != au) {
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Process linked AU="+other);
+                        }
+
+                        processAU(state, other, topLevel);
+                    }
+                }
+            }
         }
     }
     
