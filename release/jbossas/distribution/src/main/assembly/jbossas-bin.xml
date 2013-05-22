@@ -90,6 +90,14 @@
 			</includes>
 		</dependencySet>
 		<dependencySet>
+			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
+			<unpack>true</unpack>
+			<includes>
+				<include>org.overlord:overlord-commons-installer:jar</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
 			<outputDirectory>profiles/server/gadget-server</outputDirectory>
 			<unpack>false</unpack>
 			<includes>

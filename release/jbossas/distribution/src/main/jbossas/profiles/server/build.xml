@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="RTGovServer">
+<project name="RTGovServer" basedir="." >
 
 	<property name="database" value="h2" />
 	<property file="jdbc/${database}.properties" />
@@ -21,6 +21,17 @@
 				<include name="gadgets.war" />
 			</fileset>
 		</copy>
+
+		<!-- Temporary workaround -->
+		<mkdir dir="${basedir}/overlord-commons/target" />
+
+		<ant antfile="overlord-commons/build.xml" target="install-overlord-commons">
+			<property name="dist.dir" value="${jboss.home}" />
+			<property name="basedir" value="${basedir}/overlord-commons" />
+
+			<!-- Temporary workaround - version needs to be correct in the called ant script -->
+			<property name="overlord-commons.version" value="1.0.7" />
+		</ant>
 
 		<ant antfile="gadget-server/build.xml" target="deploy">
 			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />

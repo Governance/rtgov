@@ -64,6 +64,11 @@
 			<type>zip</type>
 		</dependency>
 
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-installer</artifactId>
+		</dependency>
+
 		<!-- Database drivers -->
 
 		<dependency>
