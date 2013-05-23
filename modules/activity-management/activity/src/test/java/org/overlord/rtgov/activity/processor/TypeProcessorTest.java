@@ -196,6 +196,56 @@ public class TypeProcessorTest {
     }
 
     @Test
+    public void testProcessContextLinkWithTimeframe() {
+        TypeProcessor processor=new TypeProcessor();
+        
+        MVELExpressionEvaluator eval1=new MVELExpressionEvaluator();        
+        eval1.setExpression("value1");
+        
+        ContextEvaluator ce1=new ContextEvaluator();
+        ce1.setType(Type.Link);
+        ce1.setTimeframe(100);
+        ce1.setEvaluator(eval1);
+        
+        processor.getContexts().add(ce1);
+        
+        try {
+            processor.init();
+        } catch (Exception e) {
+            fail("Failed to initialize: "+e);
+        }
+        
+        TestObject to=new TestObject();
+        to.value1 = VALUE1;
+        to.value2 = VALUE2;
+        
+        RequestReceived rr=new RequestReceived();
+
+        if (rr.getContext().size() != 0) {
+            fail("Expecting 0 context: "+rr.getContext().size());
+        }
+
+        String result=processor.process(to, null, rr);
+     
+        if (result != null) {
+            fail("Result should be null");
+        }
+        
+        if (rr.getContext().size() != 1) {
+            fail("Expecting 1 context: "+rr.getContext().size());
+        }
+        
+        if (rr.getContext().get(0).getType() != Type.Link) {
+            fail("First context type should be link: "+rr.getContext().get(0).getType());
+        }
+        
+        if (rr.getContext().get(0).getTimeframe() != 100) {
+            fail("First context type should have timeframe 100: "+rr.getContext().get(0).getTimeframe());
+        }
+        
+    }
+
+    @Test
     public void testProcessPropertiesFromInformation() {
         TypeProcessor processor=new TypeProcessor();
         

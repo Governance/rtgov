@@ -348,6 +348,7 @@ public class TypeProcessor {
     public static class ContextEvaluator {
         
         private Context.Type _type=null;
+        private long _timeframe=0;
         private String _header=null;
         private ExpressionEvaluator _evaluator=null;
         
@@ -373,6 +374,26 @@ public class TypeProcessor {
          */
         public void setType(Context.Type type) {
             _type = type;
+        }
+        
+        /**
+         * This method returns the timeframe (in milliseconds)
+         * associated with a "Link" context type.
+         * 
+         * @return The timeframe, or 0 if not set
+         */
+        public long getTimeframe() {
+            return (_timeframe);
+        }
+        
+        /**
+         * This method sets the timeframe (in milliseconds)
+         * associated with a "Link" context type.
+         * 
+         * @param timeframe The timeframe, or 0 if not set
+         */
+        public void setTimeframe(long timeframe) {
+            _timeframe = timeframe;
         }
         
         /**
@@ -452,7 +473,10 @@ public class TypeProcessor {
             }
             
             if (val != null) {
-                actType.getContext().add(new Context(getType(), val));
+                Context context=new Context(getType(), val);
+                context.setTimeframe(_timeframe);
+                
+                actType.getContext().add(context);
                 
             } else if (!getEvaluator().getOptional()) {
                 

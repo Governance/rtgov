@@ -87,6 +87,7 @@ public class JEEEPNLoader extends AbstractEPNLoader {
                 // with the network deployment.
                 preInit(_network);
                 
+                // TODO: Do we need to halt the deployment due to failures? (RTGOV-199)
                 _epnManager.register(_network);
             }
         } catch (Exception e) {

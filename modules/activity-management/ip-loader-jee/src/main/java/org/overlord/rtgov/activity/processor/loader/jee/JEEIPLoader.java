@@ -32,6 +32,8 @@ import javax.naming.InitialContext;
 
 import org.overlord.rtgov.activity.processor.InformationProcessor;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
+import org.overlord.rtgov.activity.processor.validation.IPValidationListener;
+import org.overlord.rtgov.activity.processor.validation.IPValidator;
 import org.overlord.rtgov.activity.util.InformationProcessorUtil;
 
 /**
@@ -88,8 +90,14 @@ public class JEEIPLoader {
                 } else {
                     for (InformationProcessor ip : _informationProcessors) {
                         ip.init();
-
-                        _ipManager.register(ip);
+                        
+                        if (IPValidator.validate(ip, getValidationListener())) {
+                            _ipManager.register(ip);
+                        } else {
+                            ip.close();
+                            
+                            // TODO: Do we need to halt the deployment due to failures? (RTGOV-199)
+                        }
                     }
                 }
             }
@@ -97,6 +105,21 @@ public class JEEIPLoader {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                     "ip-loader-jee.Messages").getString("IP-LOADER-JEE-3"), e);
         }
+    }
+    
+    /**
+     * This method returns the validation listener.
+     * 
+     * @return The validation listener
+     */
+    protected IPValidationListener getValidationListener() {
+        return (new IPValidationListener() {
+
+            public void error(InformationProcessor ip, Object target, String issue) {
+                LOG.severe(issue);
+            }
+            
+        });
     }
     
     /**
