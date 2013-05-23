@@ -1,0 +1,77 @@
+{
+	"tasks":[{
+		"type":"Call",
+		"operation":"hello",
+		"interface":"{http://www.jboss.org/bpel/examples/simple_correlation/}HelloGoodbyePortType",
+		"component":"{urn:switchyard-quickstart:bpel-simple-correlation:0.1.0}simpleCorrelationService",
+		"tasks":[{
+			"type":"Task",
+			"description":"ProcessStarted instanceId=1 processType={http://www.jboss.org/bpel/examples/simple_correlation/}HelloGoodbye",
+			"properties":{"processType":"{http://www.jboss.org/bpel/examples/simple_correlation/}HelloGoodbye","instanceId":"1"}
+		},{
+			"type":"Task",
+			"description":"ProcessVariableSet variableName=myHelloVar variableType={http://www.jboss.org/bpel/examples/simple_correlation/}helloMessage",
+			"properties":{"variableType":"{http://www.jboss.org/bpel/examples/simple_correlation/}helloMessage","variableName":"myHelloVar"},
+			"duration":104,
+			"percentage":60
+		},{
+			"type":"Task",
+			"description":"ProcessVariableSet variableName=helloResponse variableType={http://www.jboss.org/bpel/examples/simple_correlation/}helloMessage",
+			"properties":{"variableType":"{http://www.jboss.org/bpel/examples/simple_correlation/}helloMessage","variableName":"helloResponse"},
+			"duration":50,
+			"percentage":29
+		},{
+			"type":"Task",
+			"description":"ProcessVariableSet variableName=helloResponse variableType={http://www.jboss.org/bpel/examples/simple_correlation/}helloMessage",
+			"properties":{"variableType":"{http://www.jboss.org/bpel/examples/simple_correlation/}helloMessage","variableName":"helloResponse"},
+			"duration":8,
+			"percentage":4
+		},{
+			"type":"Task",
+			"description":"ProcessVariableSet variableName=helloResponse variableType={http://www.jboss.org/bpel/examples/simple_correlation/}helloMessage",
+			"properties":{"variableType":"{http://www.jboss.org/bpel/examples/simple_correlation/}helloMessage","variableName":"helloResponse"},
+			"duration":10,
+			"percentage":5
+		}],
+		"properties":{"server-node":"<ignore>","server-host":"<ignore>"},
+		"duration":528,
+		"percentage":64
+	},{
+		"type":"Call",
+		"operation":"goodbye",
+		"interface":"{http://www.jboss.org/bpel/examples/simple_correlation/}HelloGoodbyePortType",
+		"component":"{urn:switchyard-quickstart:bpel-simple-correlation:0.1.0}simpleCorrelationService",
+		"tasks":[{
+			"type":"Task",
+			"description":"ProcessVariableSet variableName=myGoodbyeVar variableType={http://www.jboss.org/bpel/examples/simple_correlation/}goodbyeMessage",
+			"properties":{"variableType":"{http://www.jboss.org/bpel/examples/simple_correlation/}goodbyeMessage","variableName":"myGoodbyeVar"}
+		},{
+			"type":"Task",
+			"description":"ProcessVariableSet variableName=goodbyeResponse variableType={http://www.jboss.org/bpel/examples/simple_correlation/}goodbyeMessage",
+			"properties":{"variableType":"{http://www.jboss.org/bpel/examples/simple_correlation/}goodbyeMessage","variableName":"goodbyeResponse"},
+			"duration":39,
+			"percentage":29
+		},{
+			"type":"Task",
+			"description":"ProcessVariableSet variableName=goodbyeResponse variableType={http://www.jboss.org/bpel/examples/simple_correlation/}goodbyeMessage",
+			"properties":{"variableType":"{http://www.jboss.org/bpel/examples/simple_correlation/}goodbyeMessage","variableName":"goodbyeResponse"},
+			"duration":12,
+			"percentage":9
+		},{
+			"type":"Task",
+			"description":"ProcessVariableSet variableName=goodbyeResponse variableType={http://www.jboss.org/bpel/examples/simple_correlation/}goodbyeMessage",
+			"properties":{"variableType":"{http://www.jboss.org/bpel/examples/simple_correlation/}goodbyeMessage","variableName":"goodbyeResponse"},
+			"duration":16,
+			"percentage":12
+		},{
+			"type":"Task",
+			"description":"ProcessCompleted instanceId=1",
+			"properties":{"instanceId":"1"},
+			"duration":66,
+			"percentage":49
+		}],
+		"properties":{"server-node":"<ignore>","server-host":"<ignore>"},
+		"duration":294,
+		"percentage":35
+	}
+]}

@@ -53,7 +53,7 @@ public class CallTraceServiceImplActivitiesTest {
         Context query=new Context();
         query.setValue("1");
         
-        testCallTrace("ActivityUnits1", query);        
+        testCallTrace("ActivityUnits1", query, null);        
     }
     
     @Test
@@ -61,20 +61,30 @@ public class CallTraceServiceImplActivitiesTest {
         Context query=new Context();
         query.setValue("1");
         
-        testCallTrace("ActivityUnits2", query);        
+        testCallTrace("ActivityUnits2", query, null);        
     }
     
     @Test
-    public void testActivityUnits3() {        
+    public void testActivityUnits3Message() {        
         Context query=new Context();
         query.setType(Context.Type.Message);
         query.setValue("ID-gbrown-redhat-47657-1369065371888-0-1");
         
         // Initial identifier is the message id
-        testCallTrace("ActivityUnits3", query);        
+        testCallTrace("ActivityUnits3", query, "Message");        
     }
     
-    protected void testCallTrace(String testName, Context query) {
+    @Test
+    public void testActivityUnits3Endpoint() {        
+        Context query=new Context();
+        query.setType(Context.Type.Endpoint);
+        query.setValue("1");
+        
+        // Initial identifier is the message id
+        testCallTrace("ActivityUnits3", query, "Endpoint");        
+    }
+    
+    protected void testCallTrace(String testName, Context query, String suffix) {
         CallTraceServiceImpl ctp=getCallTraceService();
         
         try {
@@ -98,7 +108,7 @@ public class CallTraceServiceImplActivitiesTest {
                 preProcessProperties(node);            		
             }
             
-            compare(ct, testName);
+            compare(ct, testName, (suffix == null ? "" : suffix));
             
         } catch (Exception e) {
             e.printStackTrace();
@@ -120,7 +130,7 @@ public class CallTraceServiceImplActivitiesTest {
     	}
     }
 
-    protected void compare(CallTrace ct, String testname) {
+    protected void compare(CallTrace ct, String testname, String suffix) {
         
         try {
             byte[] b=CallTraceUtil.serializeCallTrace(ct);
@@ -129,11 +139,11 @@ public class CallTraceServiceImplActivitiesTest {
                 fail("null returned");
             }
             
-            System.out.println(testname+": "+new String(b));
+            System.out.println(testname+suffix+": "+new String(b));
             
             java.io.InputStream is=
                     CallTraceUtilTest.class.getResourceAsStream(
-                            "/calltraces/CallTrace"+testname+".json");
+                            "/calltraces/CallTrace"+testname+suffix+".json");
             byte[] inb2=new byte[is.available()];
             is.read(inb2);
             is.close();

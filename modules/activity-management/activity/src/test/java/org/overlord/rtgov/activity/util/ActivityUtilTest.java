@@ -52,10 +52,16 @@ public class ActivityUtilTest {
         me1.getProperties().put("customer", "Fred");
         me1.getProperties().put("trader", "Joe");
         
-        Context c1=new Context();
-        c1.setType(Context.Type.Conversation);
-        c1.setValue("12345");
-        me1.getContext().add(c1);
+        Context c1a=new Context();
+        c1a.setType(Context.Type.Conversation);
+        c1a.setValue("12345");
+        me1.getContext().add(c1a);
+        
+        Context c1b=new Context();
+        c1b.setType(Context.Type.Link);
+        c1b.setValue("54321");
+        c1b.setTimeframe(5000);
+        me1.getContext().add(c1b);
         
         act.getActivityTypes().add(me1);
         

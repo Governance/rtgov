@@ -89,7 +89,7 @@ public class CallTraceServiceImplTest {
         Context query=new Context();
         query.setValue("1");
         
-        ctp.loadActivityUnits(state, query);
+        ctp.loadActivityUnits(state, query, null);
         
         if (state.getActivityUnits().size() != 2) {
             fail("Expecting 2 activity units: "+state.getActivityUnits().size());
@@ -144,7 +144,7 @@ public class CallTraceServiceImplTest {
         Context query=new Context();
         query.setValue("1");
         
-        ctp.loadActivityUnits(state, query);
+        ctp.loadActivityUnits(state, query, null);
         
         if (state.getActivityUnits().size() != 2) {
             fail("Expecting 2 activity units: "+state.getActivityUnits().size());
@@ -205,7 +205,7 @@ public class CallTraceServiceImplTest {
         Context query=new Context();
         query.setValue("1");
         
-        ctp.loadActivityUnits(state, query);
+        ctp.loadActivityUnits(state, query, null);
         
         if (state.getActivityUnits().size() != 1) {
             fail("Expecting 1 activity unit: "+state.getActivityUnits().size());

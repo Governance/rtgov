@@ -25,7 +25,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Transient;
 
 /**
  * This class represents context information that can be used to
@@ -109,12 +108,20 @@ public class Context implements java.io.Externalizable {
     }
     
     /**
+     * This method indicates whether the context represents a link source.
+     * 
+     * @return Whether a link source
+     */
+    public boolean linkSource() {
+        return (_type == Type.Link && _timeframe != 0);
+    }
+    
+    /**
      * This method indicates whether the context represents a link target.
      * 
      * @return Whether a link target
      */
-    @Transient
-    public boolean isLinkTarget() {
+    public boolean linkTarget() {
         return (_type == Type.Link && _timeframe == 0);
     }
     
@@ -170,7 +177,7 @@ public class Context implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public String toString() {
-        return ("Context["+_type+":"+_value+"]");
+        return ("Context["+_type+":"+_value+":"+_timeframe+"]");
     }
     
     /**

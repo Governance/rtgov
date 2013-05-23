@@ -85,20 +85,31 @@ public class JPAActivityStore implements ActivityStore {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public java.util.List<ActivityType> getActivityTypes(Context context,
                     long from, long to) throws Exception {
-        @SuppressWarnings("unchecked")
-        List<ActivityType> ret=(List<ActivityType>)
-            _entityManager.createQuery("SELECT at from ActivityType at "
+        List<ActivityType> ret=null;
+        
+        if (from == 0 && to == 0) {
+            ret = (List<ActivityType>)
+                _entityManager.createQuery("SELECT at from ActivityType at "
+                        +"JOIN at.context ctx "
+                        +"WHERE ctx.value = '"+context.getValue()+"' "
+                        +"AND ctx.type = '"+context.getType().name()+"'")
+                        .getResultList();
+            
+        } else {            
+            ret = (List<ActivityType>)_entityManager.createQuery("SELECT at from ActivityType at "
                     +"JOIN at.context ctx "
                     +"WHERE ctx.value = '"+context.getValue()+"' "
                     +"AND ctx.type = '"+context.getType().name()+"' "
                     +"AND at.timestamp >= "+from+" "
                     +"AND at.timestamp <= "+to)
                     .getResultList();
+        }
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("ActivityTypes context '"+context+"' Result="
+            LOG.finest("ActivityTypes context '"+context+"' from="+from+" to="+to+" Result="
                     +new String(ActivityUtil.serializeActivityTypeList(ret)));
         }
 
@@ -109,21 +120,7 @@ public class JPAActivityStore implements ActivityStore {
      * {@inheritDoc}
      */
     public List<ActivityType> getActivityTypes(Context context) throws Exception {
-        
-        @SuppressWarnings("unchecked")
-        List<ActivityType> ret=(List<ActivityType>)
-            _entityManager.createQuery("SELECT at from ActivityType at "
-                    +"JOIN at.context ctx "
-                    +"WHERE ctx.value = '"+context.getValue()+"' "
-                    +"AND ctx.type = '"+context.getType().name()+"'")
-                    .getResultList();
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("ActivityTypes context '"+context+"' Result="
-                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
-        }
-
-        return (ret);
+        return (getActivityTypes(context, 0, 0));
     }
 
     /**

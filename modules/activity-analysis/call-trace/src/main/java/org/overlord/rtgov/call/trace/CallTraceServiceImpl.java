@@ -58,6 +58,8 @@ import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 public class CallTraceServiceImpl implements CallTraceService {
     
     private static final Logger LOG=Logger.getLogger(CallTraceServiceImpl.class.getName());
+    
+    private static final long DEFAULT_TIMEFRAME=10000;  // 10 seconds
 
     private ActivityServer _activityServer=null;
     
@@ -94,7 +96,7 @@ public class CallTraceServiceImpl implements CallTraceService {
         
         // Recursively load activity units that are directly or
         // indirectly associated with the context
-        loadActivityUnits(state, context);
+        loadActivityUnits(state, context, null);
         
         return (processAUs(state));
     }
@@ -105,15 +107,42 @@ public class CallTraceServiceImpl implements CallTraceService {
      * 
      * @param state The state
      * @param context The context
+     * @param actType The activity type
      */
-    protected void loadActivityUnits(CTState state, Context context) {
+    protected void loadActivityUnits(CTState state, Context context, ActivityType actType) {
         
         if (!state.isContextInitialized(context)) {
             
             // Retrieve activity types associated with correlation
             try {
+                long fromTimestamp=0;
+                long toTimestamp=0;
+                
+                if (actType != null) {
+                    if (context.linkSource()) {
+                        fromTimestamp = actType.getTimestamp()-(context.getTimeframe()/2);
+                        toTimestamp = actType.getTimestamp()+(context.getTimeframe()/2);
+                        
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Linked context: base timestamp="+actType.getTimestamp()
+                                    +" timeframe="+context.getTimeframe()
+                                    +" from="+fromTimestamp
+                                    +" to="+toTimestamp);
+                        }
+                    } else if (context.linkTarget()) {
+                        // Find a default from/to range
+                        fromTimestamp = actType.getTimestamp()-(DEFAULT_TIMEFRAME/2);
+                        toTimestamp = actType.getTimestamp()+(DEFAULT_TIMEFRAME/2);
+                    }
+                }
+
                 java.util.List<ActivityType> ats=
-                        _activityServer.getActivityTypes(context);
+                        _activityServer.getActivityTypes(context, fromTimestamp, toTimestamp);
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Retrieved activity types for context="+context
+                            +" from="+fromTimestamp+" to="+toTimestamp+": "+ats);
+                }
                 
                 // Check each activity type's unit id to see whether
                 // it needs to be retrieved
@@ -124,11 +153,39 @@ public class CallTraceServiceImpl implements CallTraceService {
                     if (!state.isActivityUnitLoaded(at.getUnitId())) {
                         ActivityUnit au=_activityServer.getActivityUnit(at.getUnitId());
                         
-                        aus.add(au);
-                        
-                        // Add to state
-                        state.add(au);
+                        // Check if link target
+                        if (context.linkTarget()) {
+                            // Ensure that AUs are only included if they contain the
+                            // link source, and that the timeframe of that link source
+                            // is valid for this target
+                            for (Context c : at.getContext()) {
+                                if (c.linkSource() && c.equals(context)) {
+                                    
+                                    // Check that the activity is in the right timeframe
+                                    long timediff=Math.abs(at.getTimestamp()-actType.getTimestamp());
+                                    
+                                    if (timediff <= (c.getTimeframe()/2)) {
+                                        aus.add(au);
+                                        
+                                        // Add to state
+                                        state.add(au);
+                                        
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                        } else {
+                            aus.add(au);
+                            
+                            // Add to state
+                            state.add(au);
+                        }
                     }
+                }
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Retrieved activity units: "+aus);   
                 }
                 
                 // Mark this context as initialized
@@ -136,10 +193,20 @@ public class CallTraceServiceImpl implements CallTraceService {
 
                 // For each new activity unit, scan for unknown correlation
                 // fields, and recursively load their associated units
-                for (ActivityUnit au : aus) {                    
+                for (ActivityUnit au : aus) {   
+
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.log(Level.FINEST, "Scanning Activity Unit="+au);
+                    }
+                    
                     for (ActivityType at : au.getActivityTypes()) {
-                        for (Context c : at.getContext()) {                            
-                            loadActivityUnits(state, c);
+
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.log(Level.FINEST, "Scanning Activity Type="+at);
+                        }
+
+                        for (Context c : at.getContext()) {
+                            loadActivityUnits(state, c, at);
                         }
                     }
                 }
@@ -387,7 +454,7 @@ public class CallTraceServiceImpl implements CallTraceService {
             for (Context con : subsequent.contexts()) {
                 // Timeframe of 0 indicates link target
                 if (con.getType() == Context.Type.Link
-                        && con.isLinkTarget()) {
+                        && con.linkTarget()) {
                     ret = false;
                     break;
                 }
