@@ -106,6 +106,14 @@ public class JMSActivityServer implements ActivityServer {
     /**
      * {@inheritDoc}
      */
+    public List<ActivityType> getActivityTypes(Context context,
+                            long from, long to) throws Exception {
+        throw new java.lang.UnsupportedOperationException();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public List<ActivityType> query(QuerySpec query) throws Exception {
         throw new java.lang.UnsupportedOperationException();
     }

@@ -154,14 +154,46 @@ public class RESTActivityServer implements ActivityServer {
     /**
      * {@inheritDoc}
      */
+    public List<ActivityType> getActivityTypes(Context context,
+                            long from, long to) throws Exception {        
+        URL queryUrl = new URL(_serverURL+EVENTS+"?type="+context.getType()
+                +"&value="+context.getValue()
+                +"&from="+from
+                +"&to="+to);
+
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("RESTActivityServer["+queryUrl+"] getActivityTypes: "+context
+                    +" from="+from+" to="+to);
+        }
+        
+        return (getActivityTypes(queryUrl));
+    }
+        
+    /**
+     * {@inheritDoc}
+     */
     public List<ActivityType> getActivityTypes(Context context) throws Exception {
-        List<ActivityType> ret=null;
         
-        URL queryUrl = new URL(_serverURL+EVENTS+"?context="+context.getValue());
-        
+        URL queryUrl = new URL(_serverURL+EVENTS+"?type="+context.getType()
+                +"&value="+context.getValue());
+
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("RESTActivityServer["+queryUrl+"] getActivityTypes: "+context);
         }
+        
+        return (getActivityTypes(queryUrl));
+    }
+    
+    /**
+     * This method retrieves the activity types associated with the supplied
+     * query URL.
+     * 
+     * @param queryUrl The query URL
+     * @return The list of activity types
+     * @throws Exception Failed to get activity types
+     */
+    protected List<ActivityType> getActivityTypes(URL queryUrl) throws Exception {
+        List<ActivityType> ret=null;
         
         HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
         connection.setRequestMethod("GET");

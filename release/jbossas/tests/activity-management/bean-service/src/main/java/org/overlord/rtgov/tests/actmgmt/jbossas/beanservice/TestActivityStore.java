@@ -77,6 +77,15 @@ public class TestActivityStore implements ActivityStore {
         // TODO Auto-generated method stub
         return null;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> getActivityTypes(Context context, long from,
+            long to) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     /**
      * {@inheritDoc}

@@ -57,6 +57,19 @@ public interface ActivityServer {
     
     /**
      * This method retrieves a set of activity events associated
+     * with the supplied context value and time range.
+     * 
+     * @param context The context value
+     * @param from The 'from' timestamp
+     * @param to The 'to' timestamp
+     * @return The list of activities
+     * @throws Exception Failed to retrieve the activities
+     */
+    public java.util.List<ActivityType> getActivityTypes(Context context,
+                        long from, long to) throws Exception;
+    
+    /**
+     * This method retrieves a set of activity events associated
      * with the supplied query.
      * 
      * @param query The query

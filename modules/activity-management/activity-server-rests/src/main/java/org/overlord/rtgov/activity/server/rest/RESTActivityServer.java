@@ -32,6 +32,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -142,15 +143,27 @@ public class RESTActivityServer {
      * This method returns activity types (events) associated with
      * the supplied context value.
      * 
-     * @param context The context
+     * @param type The type
+     * @param value The value
      * @return The list of activity types
      * @throws Exception Failed to obtain activity types
      */
     @GET
     @Path("/events")
     @Produces("application/json")
-    public String getActivityTypes(@QueryParam("context") String context) throws Exception {
+    public String getActivityTypes(@QueryParam("type") String type,
+            @QueryParam("value") String value,
+            @DefaultValue("0") @QueryParam("from") long from,
+            @DefaultValue("0") @QueryParam("to") long to) throws Exception {
         String ret="";
+        
+        Context context=new Context();
+        
+        if (type != null) {
+            context.setType(Context.Type.valueOf(type));
+        }
+        
+        context.setValue(value);
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Activity Server: Get Activity Types for Context="+context);        
@@ -160,10 +173,13 @@ public class RESTActivityServer {
             throw new Exception("Activity Server is not available");
         }
         
-        Context query=new Context();
-        query.setValue(context);
+        java.util.List<ActivityType> list=null;
         
-        java.util.List<ActivityType> list=_activityServer.getActivityTypes(query);
+        if (from > 0 || to > 0) {
+            list = _activityServer.getActivityTypes(context, from, to);
+        } else {
+            list = _activityServer.getActivityTypes(context);
+        }
         
         if (list != null) {
             byte[] b=ActivityUtil.serializeActivityTypeList(list);

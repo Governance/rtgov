@@ -96,8 +96,16 @@ public class MemActivityStore implements ActivityStore {
      * {@inheritDoc}
      */
     public List<ActivityType> getActivityTypes(Context context) throws Exception {
+        return (getActivityTypes(context, 0, 0));
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public List<ActivityType> getActivityTypes(Context context, long from,
+            long to) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("getActivityTypes[context="+context+"] ("+this+")");
+            LOG.finest("getActivityTypes[context="+context+"] ("+this+",from="+from+",to="+to+")");
         }
 
         List<ActivityType> ret=new java.util.ArrayList<ActivityType>();
@@ -105,7 +113,9 @@ public class MemActivityStore implements ActivityStore {
         for (ActivityUnit unit : _activities) {
             for (ActivityType activity : unit.getActivityTypes()) {
                 for (Context c : activity.getContext()) {
-                    if (c.equals(context)) {
+                    if (c.equals(context) && (from == 0
+                            || activity.getTimestamp() >= from)
+                            && (to == 0 || activity.getTimestamp() <= to)) {
                         ret.add(activity);
                     }
                 }

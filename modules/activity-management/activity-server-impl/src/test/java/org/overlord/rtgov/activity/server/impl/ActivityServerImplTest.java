@@ -353,6 +353,12 @@ public class ActivityServerImplTest {
             return null;
         }
 
+        public List<ActivityType> getActivityTypes(Context context, long from,
+                long to) throws Exception {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
         public List<ActivityType> query(QuerySpec query) throws Exception {
             // TODO Auto-generated method stub
             return null;

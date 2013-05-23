@@ -176,4 +176,17 @@ public class ActivityServerImpl implements ActivityServer {
         return (_store.getActivityTypes(context));
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
+    public List<ActivityType> getActivityTypes(Context context, long from, long to) throws Exception {
+        
+        if (_store == null) {
+            throw new Exception("Activity Store is unavailable");
+        }
+        
+        return (_store.getActivityTypes(context, from, to));
+    }
+    
 }
