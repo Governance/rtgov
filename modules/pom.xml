@@ -14,7 +14,7 @@
 	</parent>
 
 	<modules>
-	    <module>gadgets</module>
+		<module>gadgets</module>
 		<module>common</module>
 		<module>activity-management</module>
 		<module>activity-analysis</module>

@@ -149,7 +149,7 @@ public class JBossASCallTraceServiceTest {
     }
 
     public static String getCallTrace(String id) throws Exception {
-        URL getUrl = new URL("http://localhost:8080/overlord-rtgov/call/trace/instance?identifier="+id);
+        URL getUrl = new URL("http://localhost:8080/overlord-rtgov/call/trace/instance?value="+id);
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("GET");
 

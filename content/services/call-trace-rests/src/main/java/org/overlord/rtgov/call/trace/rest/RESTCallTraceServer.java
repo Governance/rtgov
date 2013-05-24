@@ -128,19 +128,21 @@ public class RESTCallTraceServer {
     }
     
     /**
-     * This method returns the call trace for the specified identifier.
+     * This method returns the call trace for the specified context.
      * 
-     * @param identifier The identifier
-     * @return The call trace for the identifier
+     * @param type The context type
+     * @param value The context value
+     * @return The call trace for the context
      * @throws Exception Failed to obtain call trace
      */
     @GET
     @Path("/instance")
     @Produces("image/svg+xml")
-    public String instance(@QueryParam("identifier") String identifier) throws Exception {
+    public String instance(@QueryParam("type") String type,
+                    @QueryParam("value") String value) throws Exception {
         String ret="";
         
-        CallTrace ct=getCallTrace(identifier);
+        CallTrace ct=getCallTrace(type, value);
         
         if (ct != null) {
             byte[] b=CallTraceUtil.serializeCallTrace(ct);
@@ -159,20 +161,26 @@ public class RESTCallTraceServer {
 
     /**
      * This method returns the call trace associated with the supplied
-     * correlation.
+     * context.
      * 
-     * @param correlation The correlation value
+     * @param type The context type
+     * @param value The context value
      * @return The call trace, or null if not found
      * @throws Exception Failed to get call trace
      */
-    protected CallTrace getCallTrace(String correlation) throws Exception {
+    protected CallTrace getCallTrace(String type, String value) throws Exception {
         CallTrace ret=null;
         
-        if (correlation.equals("test")) {
+        if (value.equals("test")) {
             ret = createTestCallTrace();
         } else {
             Context query=new Context();
-            query.setValue(correlation);
+            
+            if (type != null) {
+                query.setType(Context.Type.valueOf(type));
+            }
+            
+            query.setValue(value);
             
             ret = _callTraceService.createCallTrace(query);
         }

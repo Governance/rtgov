@@ -6,7 +6,7 @@
 		<Require feature="setprefs"/>
 		<Require feature="dynamic-height" />
 	</ModulePrefs>
-	<UserPref name="identifier" display_name="Identifier:" default_value="" />
+	<UserPref name="value" display_name="Value:" default_value="" />
 	<UserPref name="refreshCycle" display_name="Refresh Interval(sec):"
 		default_value="30" datatype="enum">
 		<EnumValue value="30" />
@@ -43,7 +43,7 @@
 		var prefs = new gadgets.Prefs();
 		//hack for now.
 	    var host = parent.window.location.host;
-	    var ident = getUserPreferenceValue("identifier");
+	    var ident = getUserPreferenceValue("value");
 	    
 	    if (ident == "" || ident == " ") {
 	    	$("#promptDiv").show();
@@ -52,7 +52,7 @@
 	    	$("#promptDiv").hide();
 	    }
 	    
-	    var restUrl = "http://" + host + "/overlord-rtgov/call/trace/instance?identifier=" + ident;
+	    var restUrl = "http://" + host + "/overlord-rtgov/call/trace/instance?value=" + ident;
 	    
 		var params = {};
 		params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
