@@ -28,7 +28,7 @@
    <script type="text/javascript">
 	
 	function makeJSONRequest() {
-		var prefs, params, restUrl, postdata, host;
+		var prefs, params, restUrl, postdata, protocol, host;
 		
 		prefs = new gadgets.Prefs();
 		postdata = "{\"collection\":\"Situations\"}";
@@ -39,8 +39,9 @@
 		params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST;
    		params[gadgets.io.RequestParameters.POST_DATA]= postdata;
 		
+        protocol = parent.window.location.protocol;
 		host = parent.window.location.host;
-		restUrl = "http://" + host + "/overlord-rtgov/acm/query";
+		restUrl = protocol + "//" + host + "/overlord-rtgov/acm/query";
 		
 		gadgets.io.makeRequest(restUrl, updateResponse, params);
 	}
