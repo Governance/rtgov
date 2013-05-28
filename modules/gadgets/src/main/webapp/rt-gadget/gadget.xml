@@ -35,7 +35,7 @@
    <script type="text/javascript">
 	
 	function makeJSONRequest() {
-		var params, restUrl, postdata, svcDef, host, service, operation;
+		var params, restUrl, postdata, svcDef, protocol, host, service, operation;
 	
 		service = getUserPreferenceValue("interface");
 		operation = getUserPreferenceValue("operations");
@@ -62,8 +62,9 @@
 		params[gadgets.io.RequestParameters.METHOD] = gadgets.io.MethodType.POST;
    		params[gadgets.io.RequestParameters.POST_DATA]= postdata;
    		
+        protocol = parent.window.location.protocol;
    		host = parent.window.location.host;
-		restUrl = "http://" + host + "/overlord-rtgov/acm/query";
+		restUrl = protocol + "//" + host + "/overlord-rtgov/acm/query";
 		
 		gadgets.io.makeRequest(restUrl, updateUI, params);
 		
