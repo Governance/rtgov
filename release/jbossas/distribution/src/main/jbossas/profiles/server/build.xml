@@ -34,6 +34,7 @@
 		</ant>
 
 		<ant antfile="gadget-server/build.xml" target="deploy">
+			<property name="as7.home" value="${jboss.home}" />
 			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
 			<property name="basedir" value="${basedir}/gadget-server" />
 		</ant>
@@ -45,6 +46,7 @@
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
 
 		<ant antfile="gadget-server/build.xml" target="undeploy">
+			<property name="as7.home" value="${jboss.home}" />
 			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
 			<property name="basedir" value="${basedir}/gadget-server" />
 		</ant>
