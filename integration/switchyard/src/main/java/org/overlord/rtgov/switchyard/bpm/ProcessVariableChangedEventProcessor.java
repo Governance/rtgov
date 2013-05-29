@@ -15,59 +15,50 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.switchyard.bpel;
+package org.overlord.rtgov.switchyard.bpm;
 
 import java.util.EventObject;
 
-import org.apache.ode.bpel.evt.VariableModificationEvent;
+import org.drools.event.ProcessVariableChangedEventImpl;
+import org.kie.event.process.ProcessVariableChangedEvent;
 import org.overlord.rtgov.switchyard.AbstractEventProcessor;
 
 /**
- * This class provides the BPEL component implementation of the
+ * This class provides the BPM component implementation of the
  * event processor.
  *
  */
-public class VariableModificationEventProcessor extends AbstractEventProcessor {
+public class ProcessVariableChangedEventProcessor extends AbstractEventProcessor {
 
     /**
      * This is the default constructor.
      */
-    public VariableModificationEventProcessor() {
-        super(VariableModificationEvent.class);
+    public ProcessVariableChangedEventProcessor() {
+        super(ProcessVariableChangedEventImpl.class);
     }
 
     /**
      * {@inheritDoc}
      */
     public void notify(EventObject event) {
-        VariableModificationEvent bpelEvent=(VariableModificationEvent)event;
+        ProcessVariableChangedEvent bpmEvent=(ProcessVariableChangedEvent)event;
         
         org.overlord.rtgov.activity.model.bpm.ProcessVariableSet pvs=
                 new org.overlord.rtgov.activity.model.bpm.ProcessVariableSet();
         
-        org.w3c.dom.Node value=bpelEvent.getNewValue();
+        pvs.setVariableName(bpmEvent.getVariableId());
         
-        // Unwrap if single part message
-        if (value.getLocalName().equals("message") && value.getChildNodes().getLength() == 1) {
-            // Unwrap message and single part
-            value = value.getFirstChild().getFirstChild();
-        } else if (value.getLocalName().equals("temporary-simple-type-wrapper")) {
-            value = value.getFirstChild();   
+        String type=null;
+        
+        if (bpmEvent.getNewValue() != null) {
+            type = bpmEvent.getNewValue().getClass().getName();
         }
         
-        String type=value.getLocalName();
-        
-        if (value.getNamespaceURI() != null) {
-            type = "{"+value.getNamespaceURI()+"}"+type;
-        }
-        
-        pvs.setVariableName(bpelEvent.getVarName());
-        pvs.setVariableType(type);
         pvs.setVariableValue(getActivityCollector().processInformation(null, type,
-                value, null, pvs));
+                bpmEvent.getNewValue(), null, pvs));
         
-        pvs.setProcessType(bpelEvent.getProcessName().toString());
-        pvs.setInstanceId(bpelEvent.getProcessInstanceId().toString());
+        pvs.setProcessType(bpmEvent.getProcessInstance().getProcessName());
+        pvs.setInstanceId(Long.toString(bpmEvent.getProcessInstance().getId()));
         
         recordActivity(event, pvs);
     }

@@ -45,7 +45,8 @@ public class ProcessTerminationEventProcessor extends AbstractEventProcessor {
         org.overlord.rtgov.activity.model.bpm.ProcessCompleted pc=
                 new org.overlord.rtgov.activity.model.bpm.ProcessCompleted();
         
-        pc.setInstanceId(((ProcessTerminationEvent)bpelEvent).getProcessInstanceId().toString());
+        pc.setProcessType(bpelEvent.getProcessName().toString());
+        pc.setInstanceId(bpelEvent.getProcessInstanceId().toString());
         
         recordActivity(event, pc);
     }

@@ -40,7 +40,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>deployment.overlord-rtgov.war, org.switchyard.bus.camel, org.switchyard.api, org.apache.camel.core, org.switchyard.api.extensions.wsdl, org.switchyard.security, org.switchyard.runtime, org.switchyard.component.bpel</Dependencies>
+							<Dependencies>deployment.overlord-rtgov.war, org.switchyard.bus.camel, org.switchyard.api, org.apache.camel.core, org.switchyard.api.extensions.wsdl, org.switchyard.security, org.switchyard.runtime, org.switchyard.component.bpel, org.drools</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

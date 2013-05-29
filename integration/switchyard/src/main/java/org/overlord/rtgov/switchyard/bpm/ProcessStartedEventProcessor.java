@@ -15,40 +15,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.switchyard.bpel;
+package org.overlord.rtgov.switchyard.bpm;
 
 import java.util.EventObject;
 
-import org.apache.ode.bpel.evt.ProcessCompletionEvent;
+import org.drools.event.ProcessStartedEventImpl;
+import org.kie.event.process.ProcessStartedEvent;
 import org.overlord.rtgov.switchyard.AbstractEventProcessor;
 
 /**
- * This class provides the BPEL component implementation of the
+ * This class provides the BPM component implementation of the
  * event processor.
  *
  */
-public class ProcessCompletionEventProcessor extends AbstractEventProcessor {
+public class ProcessStartedEventProcessor extends AbstractEventProcessor {
 
     /**
      * This is the default constructor.
      */
-    public ProcessCompletionEventProcessor() {
-        super(ProcessCompletionEvent.class);
+    public ProcessStartedEventProcessor() {
+        super(ProcessStartedEventImpl.class);
     }
 
     /**
      * {@inheritDoc}
      */
     public void notify(EventObject event) {
-        ProcessCompletionEvent bpelEvent=(ProcessCompletionEvent)event;
+        ProcessStartedEvent bpmEvent=(ProcessStartedEvent)event;
         
-        org.overlord.rtgov.activity.model.bpm.ProcessCompleted pc=
-                new org.overlord.rtgov.activity.model.bpm.ProcessCompleted();
+        org.overlord.rtgov.activity.model.bpm.ProcessStarted ps=
+                new org.overlord.rtgov.activity.model.bpm.ProcessStarted();
         
-        pc.setProcessType(bpelEvent.getProcessName().toString());
-        pc.setInstanceId(bpelEvent.getProcessInstanceId().toString());
+        ps.setProcessType(bpmEvent.getProcessInstance().getProcessName());
+        ps.setInstanceId(Long.toString(bpmEvent.getProcessInstance().getId()));
         
-        recordActivity(event, pc);
+        recordActivity(event, ps);
     }
 
 }

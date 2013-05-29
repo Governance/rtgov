@@ -293,6 +293,7 @@ public class ActivityServerImplTest {
         
         ProcessCompleted pc=new ProcessCompleted();
         pc.setInstanceId(INST_ID);
+        pc.setProcessType(PROC_TYPE);
         au.getActivityTypes().add(pc);
         
         ResponseSent rps=new ResponseSent();
@@ -321,8 +322,8 @@ public class ActivityServerImplTest {
             fail("Expecting context Message="+RESP_ID);
         }
         
-        if (!ctxs.contains(new Context(Context.Type.Endpoint,INST_ID))) {
-            fail("Expecting context Endpoint="+INST_ID);
+        if (!ctxs.contains(new Context(Context.Type.Endpoint,PROC_TYPE+":"+INST_ID))) {
+            fail("Expecting context Endpoint="+PROC_TYPE+":"+INST_ID);
         }
     }
     

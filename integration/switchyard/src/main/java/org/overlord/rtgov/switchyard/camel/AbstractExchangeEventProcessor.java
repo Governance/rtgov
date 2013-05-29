@@ -66,8 +66,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         org.apache.camel.Exchange exch=
                 ((org.apache.camel.management.event.AbstractExchangeEvent)event).getExchange();
         
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("********* Exchange="+exch);
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("********* Exchange="+exch);
         }
         
         org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();

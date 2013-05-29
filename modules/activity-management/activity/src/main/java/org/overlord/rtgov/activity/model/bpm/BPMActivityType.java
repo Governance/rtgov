@@ -22,9 +22,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import javax.persistence.Entity;
-import javax.persistence.Transient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.Context;
 
@@ -36,6 +34,9 @@ import org.overlord.rtgov.activity.model.Context;
 public abstract class BPMActivityType extends ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
+
+    private String _processType=null;
+    private String _instanceId=null;
 
     /**
      * The default constructor.
@@ -50,25 +51,30 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      */
     public BPMActivityType(BPMActivityType ba) {
         super(ba);
+        _processType = ba._processType;
+        _instanceId = ba._instanceId;
     }
     
     /**
-     * This method gets the instance id.
+     * This method sets the process type.
      * 
-     * @return The instance id
+     * @param processType The process type
      */
-    @Transient
-    @JsonIgnore
-    public String getInstanceId() {
-        for (Context context : getContext()) {
-            if (context.getType() == Context.Type.Endpoint) {
-                return (context.getValue());
-            }
-        }
+    public void setProcessType(String processType) {
+        _processType = processType;
         
-        return (null);
+        updateEndpointContext();
     }
     
+    /**
+     * This method gets the process type.
+     * 
+     * @return The process type
+     */
+    public String getProcessType() {
+        return (_processType);
+    }
+   
     /**
      * This method sets the instance id. The information is
      * actually stored as a context entry for the Endpoint type.
@@ -76,6 +82,26 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * @param instanceId The instance id
      */
     public void setInstanceId(String instanceId) {
+        _instanceId = instanceId;
+        
+        updateEndpointContext();
+    }
+    
+    /**
+     * This method gets the instance id.
+     * 
+     * @return The instance id
+     */
+    public String getInstanceId() {
+        return (_instanceId);
+    }
+
+    /**
+     * This method updates the endpoint context value
+     * when the process type and/or instance id are
+     * changed.
+     */
+    protected void updateEndpointContext() {
         Context current=null;
         
         for (Context context : getContext()) {
@@ -91,7 +117,21 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
             getContext().add(current);
         }
         
-        current.setValue(instanceId);
+        String endpoint="";
+        
+        if (_processType != null) {
+            endpoint = _processType;
+            
+            if (_instanceId != null) {
+                endpoint += ":";
+            }
+        }
+        
+        if (_instanceId != null) {
+            endpoint += _instanceId;
+        }
+        
+        current.setValue(endpoint);
     }
     
     /**
@@ -102,6 +142,8 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
         
         out.writeInt(VERSION);
         
+        out.writeObject(_processType);
+        out.writeObject(_instanceId);
     }
 
     /**
@@ -113,5 +155,7 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
         
         in.readInt(); // Consume version, as not required for now
         
+        _processType = (String)in.readObject();
+        _instanceId = (String)in.readObject();
     }
 }
