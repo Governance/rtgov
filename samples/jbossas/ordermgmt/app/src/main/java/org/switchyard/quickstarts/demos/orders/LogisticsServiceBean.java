@@ -19,16 +19,14 @@
 
 package org.switchyard.quickstarts.demos.orders;
 
-import javax.inject.Inject;
-
 import org.overlord.rtgov.jee.ActivityReporter;
+import org.overlord.rtgov.jee.DefaultActivityReporter;
 import org.switchyard.component.bean.Service;
 
 @Service(LogisticsService.class)
 public class LogisticsServiceBean implements LogisticsService {
 
-    @Inject
-    private ActivityReporter _reporter=null;
+    private ActivityReporter _reporter=new DefaultActivityReporter();
     
     public LogisticsServiceBean() {
     }

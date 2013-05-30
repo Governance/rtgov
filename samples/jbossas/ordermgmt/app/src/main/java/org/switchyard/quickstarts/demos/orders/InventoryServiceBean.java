@@ -22,9 +22,8 @@ package org.switchyard.quickstarts.demos.orders;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 import org.overlord.rtgov.jee.ActivityReporter;
+import org.overlord.rtgov.jee.DefaultActivityReporter;
 import org.switchyard.component.bean.Service;
 
 @Service(InventoryService.class)
@@ -32,8 +31,7 @@ public class InventoryServiceBean implements InventoryService {
 
     private final Map<String, Item> _inventory = new HashMap<String, Item>();
     
-    @Inject
-    private ActivityReporter _reporter=null;
+    private ActivityReporter _reporter=new DefaultActivityReporter();
     
     public InventoryServiceBean() {
         Item butter = new Item()

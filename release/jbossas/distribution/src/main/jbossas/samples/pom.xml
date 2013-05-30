@@ -132,10 +132,11 @@
 								<id>install</id>
 								<phase>install</phase>
 								<configuration>
-									<target>
+									<skip>true</skip>
+									<target unless="${maven.antrun.skip}" >
 										<echo message="Install sample ${project.build.finalName} at: ${env.JBOSS_HOME}"/>
 										<copy todir="${env.JBOSS_HOME}/standalone/deployments" >
-											<fileset file="target/*.war" />
+											<fileset file="target/${project.build.finalName}.${project.packaging}" />
 										</copy>
 									</target>
 								</configuration>
@@ -147,9 +148,10 @@
 								<id>uninstall</id>
 								<phase>clean</phase>
 								<configuration>
-									<target>
+									<skip>true</skip>
+									<target unless="${maven.antrun.skip}" >
 										<echo message="Uninstall sample ${project.build.finalName} from: ${env.JBOSS_HOME}"/>
-										<delete file="${env.JBOSS_HOME}/standalone/deployments/${project.build.finalName}.war" />
+										<delete file="${env.JBOSS_HOME}/standalone/deployments/${project.build.finalName}.${project.packaging}" />
 									</target>
 								</configuration>
 								<goals>

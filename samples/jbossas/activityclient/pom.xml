@@ -12,6 +12,10 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
+	<properties>
+		<maven.antrun.skip>true</maven.antrun.skip>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>

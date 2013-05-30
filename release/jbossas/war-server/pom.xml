@@ -113,6 +113,14 @@
 			<artifactId>overlord-commons-auth</artifactId>
 		</dependency>
 
+		<!-- JEE Specific -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-jee</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		<!-- JBossAS Specific -->
 		
 		<dependency>
