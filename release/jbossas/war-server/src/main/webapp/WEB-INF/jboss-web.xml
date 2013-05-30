@@ -1,0 +1,4 @@
+<jboss-web>
+	<security-domain>overlord-jaxrs</security-domain>
+	<context-root>overlord-rtgov</context-root>
+</jboss-web>

@@ -16,7 +16,7 @@
 
 		<configuration>
 			<property name="javaVmArguments">-Xms64m -Xmx512m -XX:MaxPermSize=256m</property>
-			<property name="serverConfig">standalone-full.xml</property>
+			<property name="serverConfig">overlord-standalone-full.xml</property>
 		</configuration>
 	</container>
  

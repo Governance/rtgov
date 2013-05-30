@@ -128,6 +128,11 @@
 				<artifactId>overlord-commons-installer</artifactId>
 				<version>${overlord-commons.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-auth</artifactId>
+				<version>${overlord-commons.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.kie</groupId>

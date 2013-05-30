@@ -18,7 +18,9 @@
 package org.overlord.rtgov.tests.platforms.jbossas.slamonitor;
 
 import java.io.Serializable;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import javax.annotation.Resource;
@@ -675,6 +677,8 @@ public class JBossASSLAMonitorTest {
     }
     
     public static java.util.List<?> performACMQuery(QuerySpec qs) throws Exception {
+        Authenticator.setDefault(new DefaultAuthenticator());
+        
         URL getUrl = new URL("http://localhost:8080/overlord-rtgov/acm/query");
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("POST");
@@ -722,6 +726,8 @@ public class JBossASSLAMonitorTest {
         
         String urlStr="http://localhost:8080/slamonitor/monitor/situations";
         
+        Authenticator.setDefault(new DefaultAuthenticator());
+        
         URL getUrl = new URL(urlStr);
         
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
@@ -753,6 +759,8 @@ public class JBossASSLAMonitorTest {
         if (query != null) {
             urlStr += "?"+query;
         }
+        
+        Authenticator.setDefault(new DefaultAuthenticator());
         
         URL getUrl = new URL(urlStr);
         
@@ -788,6 +796,13 @@ public class JBossASSLAMonitorTest {
         
         public java.util.List<Serializable> getEvents(String subject) {
             return (_events.get(subject));
+        }
+    }
+    
+    static class DefaultAuthenticator extends Authenticator {
+
+        public PasswordAuthentication getPasswordAuthentication () {
+            return new PasswordAuthentication ("admin", "overlord".toCharArray());
         }
     }
 }

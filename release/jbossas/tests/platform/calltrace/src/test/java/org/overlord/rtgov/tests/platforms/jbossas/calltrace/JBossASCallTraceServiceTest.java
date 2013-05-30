@@ -17,7 +17,9 @@
  */
 package org.overlord.rtgov.tests.platforms.jbossas.calltrace;
 
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import javax.xml.soap.MessageFactory;
@@ -149,6 +151,9 @@ public class JBossASCallTraceServiceTest {
     }
 
     public static String getCallTrace(String id) throws Exception {
+        
+        Authenticator.setDefault(new DefaultAuthenticator());
+        
         URL getUrl = new URL("http://localhost:8080/overlord-rtgov/call/trace/instance?value="+id);
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("GET");
@@ -170,5 +175,12 @@ public class JBossASCallTraceServiceTest {
         is.close();
         
         return (result);
+    }
+    
+    static class DefaultAuthenticator extends Authenticator {
+
+        public PasswordAuthentication getPasswordAuthentication () {
+            return new PasswordAuthentication ("admin", "overlord".toCharArray());
+        }
     }
 }

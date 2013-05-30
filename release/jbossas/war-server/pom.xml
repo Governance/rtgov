@@ -105,6 +105,13 @@
 			<artifactId>call-trace</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		
+		<!-- Overlord commons -->
+		
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth</artifactId>
+		</dependency>
 
 		<!-- JBossAS Specific -->
 		
@@ -134,7 +141,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.rtgov export services</Dependencies>
+							<Dependencies>org.overlord.rtgov export services, org.picketbox, org.picketlink, org.jboss.as.web</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

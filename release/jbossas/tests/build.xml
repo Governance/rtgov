@@ -27,6 +27,13 @@
 		<copy todir="${jboss.home}/standalone/configuration" >
 			<fileset file="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/profiles/server/configuration/overlord-rtgov.properties" />
 		</copy>
+
+		<!-- Security related configuration -->
+
+		<copy todir="${jboss.home}/standalone/configuration" >
+			<fileset file="${ant.file.rtgovtests}/../configuration/overlord-*.properties" />
+			<fileset file="${ant.file.rtgovtests}/../configuration/overlord-*.xml" />
+		</copy>
 	</target>
 
 	<target name="setupFull" depends="setup" >
