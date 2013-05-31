@@ -16,11 +16,11 @@ org.overlord.rtgov.analytics.service.ServiceDefinition existingsd=
 	(org.overlord.rtgov.analytics.service.ServiceDefinition)map.get(newsd.getInterface());
 
 if (existingsd == null) {
-	acs.insert(newsd.getInterface(),
-			new org.overlord.rtgov.analytics.service.ServiceDefinition(newsd));
+	org.overlord.rtgov.analytics.service.ServiceDefinition sd=newsd.shallowCopy();
+	sd.merge(newsd);
+	acs.insert(newsd.getInterface(), sd);
 } else {
-	existingsd.merge(newsd);
-	
+	existingsd.merge(newsd);	
 	acs.update(existingsd.getInterface(), existingsd);
 }
 
@@ -35,7 +35,9 @@ if (currentSnapshot == null) {
 existingsd = currentSnapshot.get(newsd.getInterface());
 
 if (existingsd == null) {
-	currentSnapshot.put(newsd.getInterface(), newsd);
+	org.overlord.rtgov.analytics.service.ServiceDefinition sd=newsd.shallowCopy();
+	sd.merge(newsd);
+	currentSnapshot.put(newsd.getInterface(), sd);
 } else {
 	existingsd.merge(newsd);
 }

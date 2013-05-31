@@ -39,16 +39,20 @@ public class RequestFaultDefinition extends MEPDefinition implements java.io.Ext
     }
 
     /**
-     * Copy constructor.
+     * This method creates a shallow copy.
      * 
-     * @param rfd The source to copy
+     * @return The shallow copy
      */
-    public RequestFaultDefinition(RequestFaultDefinition rfd) {
-        super(rfd);
+    protected RequestFaultDefinition shallowCopy() {
+        RequestFaultDefinition ret=new RequestFaultDefinition();
         
-        _fault = rfd.getFault();
-    }
-
+        initCopy(ret);
+        
+        ret.setFault(_fault);
+        
+        return (ret);
+    }   
+    
     /**
      * This method sets the optional fault.
      * 

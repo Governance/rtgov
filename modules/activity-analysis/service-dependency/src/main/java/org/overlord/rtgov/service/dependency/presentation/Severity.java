@@ -15,26 +15,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.service.dependency.svg;
-
-import org.overlord.rtgov.analytics.service.InvocationMetric;
+package org.overlord.rtgov.service.dependency.presentation;
 
 /**
- * This interface represents a color selector algorithm used to
- * determine the color for a component on the service dependency
- * graph.
+ * This enumerated type represents the severity levels.
  *
  */
-public interface ColorSelector {
-
-    /**
-     * This method returns the color relevant for the supplied
-     * metric.
-     * 
-     * @param component The source component
-     * @param metric The metric
-     * @return The color code
-     */
-    public String getColor(Object component, InvocationMetric metric);
-
+public enum Severity {
+    Normal,
+    Minor,
+    Warning,
+    Error,
+    Serious,
+    Critical
 }

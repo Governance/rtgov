@@ -37,14 +37,18 @@ public class RequestResponseDefinition extends MEPDefinition implements java.io.
     }
 
     /**
-     * Copy constructor.
+     * This method creates a shallow copy.
      * 
-     * @param rrd The source to copy
+     * @return The shallow copy
      */
-    public RequestResponseDefinition(RequestResponseDefinition rrd) {
-        super(rrd);
-    }
-
+    protected RequestResponseDefinition shallowCopy() {
+        RequestResponseDefinition ret=new RequestResponseDefinition();
+        
+        initCopy(ret);
+        
+        return (ret);
+    }   
+    
     /**
      * {@inheritDoc}
      */

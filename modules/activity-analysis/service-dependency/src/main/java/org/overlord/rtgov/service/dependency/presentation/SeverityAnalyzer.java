@@ -15,42 +15,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA  02110-1301, USA.
  */
-package org.overlord.rtgov.service.dependency.svg;
+package org.overlord.rtgov.service.dependency.presentation;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
-import org.overlord.rtgov.service.dependency.svg.MVELColorSelector;
 
-public class MVELColorSelectorTest {
+/**
+ * This interface represents a severity analyzer algorithm used to
+ * determine the severity for a component based on supplied invocation
+ * metric information.
+ *
+ */
+public interface SeverityAnalyzer {
 
-    @Test
-    public void test() {
-        MVELColorSelector selector=new MVELColorSelector();
-        
-        selector.setScriptLocation("ColorSelector.mvel");
-        
-        try {
-            selector.init();
-        } catch (Exception e) {
-            fail("Failed to initialize selector: "+e);
-        }
-        
-        InvocationMetric metric=new InvocationMetric();
-        metric.setMax(1000);
-        metric.setMin(500);
-        metric.setAverage(900);
-        
-        String color=selector.getColor(null, metric);
-        
-        if (color == null) {
-            fail("Failed to get color");
-        }
-        
-        if (!color.equals("#FF9479")) {
-            fail("Didn't get expected color");
-        }
-    }
-
+    /**
+     * This method returns the severity relevant for the supplied
+     * metric information.
+     * 
+     * @param component The source component
+     * @param summary The accumulated results from the history of invocation metrics
+     * @param history The history of invocation metrics
+     * @return The severity
+     */
+    public Severity getSeverity(Object component, InvocationMetric summary, 
+                    java.util.List<InvocationMetric> history);
+    
 }

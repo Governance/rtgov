@@ -20,6 +20,7 @@ package org.overlord.rtgov.analytics.service;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
 
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 
@@ -37,6 +38,8 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     
     private java.util.List<InvocationDefinition> _invocations=
                 new java.util.ArrayList<InvocationDefinition>();
+    private java.util.List<MEPDefinition> _merged=
+            new java.util.ArrayList<MEPDefinition>();
     
     private InvocationMetric _metrics=new InvocationMetric();
 
@@ -47,23 +50,14 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     }
 
     /**
-     * Copy constructor.
+     * This method initializes a supplied MEP definition.
      * 
-     * @param md The source to copy
+     * @param md The MEP definition to initialize
      */
-    public MEPDefinition(MEPDefinition md) {
-         
-        _requestId = md.getRequestId();
-        _responseId = md.getResponseId();
-        _properties.putAll(md.getProperties());
-
-        for (InvocationDefinition id : md.getInvocations()) {
-            _invocations.add(new InvocationDefinition(id));
-        }
-        
-        if (md.getMetrics() != null) {
-            _metrics = new InvocationMetric(md.getMetrics());
-        }
+    public void initCopy(MEPDefinition md) {
+        md.setRequestId(_requestId);
+        md.setResponseId(_responseId);
+        md.getProperties().putAll(_properties);
     }
     
     /**
@@ -222,12 +216,24 @@ public abstract class MEPDefinition implements java.io.Externalizable {
             InvocationDefinition cur=getInvocation(id.getInterface(),
                             id.getOperation(), id.getFault());
             
-            if (cur != null) {
-                cur.merge(id);
-            } else {
-                getInvocations().add(new InvocationDefinition(id));
+            if (cur == null) {
+                cur = id.shallowCopy();
+                getInvocations().add(cur);
             }
+
+            cur.merge(id);
         }
+        
+        _merged.add(mep);
+    }
+    
+    /**
+     * This method returns the list of merged MEP definitions.
+     * 
+     * @return The merged list
+     */
+    public java.util.List<MEPDefinition> getMerged() {
+        return (Collections.unmodifiableList(_merged));
     }
     
     /**
@@ -245,6 +251,11 @@ public abstract class MEPDefinition implements java.io.Externalizable {
         out.writeInt(_invocations.size());
         for (int i=0; i < _invocations.size(); i++) {
             out.writeObject(_invocations.get(i));
+        }
+        
+        out.writeInt(_merged.size());
+        for (int i=0; i < _merged.size(); i++) {
+            out.writeObject(_merged.get(i));
         }
     }
 
@@ -265,6 +276,11 @@ public abstract class MEPDefinition implements java.io.Externalizable {
         int len=in.readInt();
         for (int i=0; i < len; i++) {
             _invocations.add((InvocationDefinition)in.readObject());
+        }
+        
+        len = in.readInt();
+        for (int i=0; i < len; i++) {
+            _merged.add((MEPDefinition)in.readObject());
         }
     }
 }

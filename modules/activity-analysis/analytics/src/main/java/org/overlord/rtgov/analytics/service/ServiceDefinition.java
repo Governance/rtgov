@@ -20,6 +20,7 @@ package org.overlord.rtgov.analytics.service;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +41,8 @@ public class ServiceDefinition implements java.io.Externalizable {
     private String _interface=null;
     private java.util.List<OperationDefinition> _operations=
                     new java.util.ArrayList<OperationDefinition>();
-    private java.util.List<Context> _contexts=new java.util.Vector<Context>();
+    private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
+    private java.util.List<ServiceDefinition> _merged=new java.util.ArrayList<ServiceDefinition>();
     
     /**
      * Default constructor.
@@ -49,21 +51,21 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
 
     /**
-     * Copy constructor.
+     * This method creates a shallow copy.
      * 
-     * @param sd The source to copy
+     * @return The shallow copy
      */
-    public ServiceDefinition(ServiceDefinition sd) {
-        _interface = sd.getInterface();
+    public ServiceDefinition shallowCopy() {
+        ServiceDefinition ret=new ServiceDefinition();
         
-        for (OperationDefinition op : sd.getOperations()) {
-            _operations.add(new OperationDefinition(op));
-        }
+        ret.setInterface(_interface);
         
         // Copy contexts
-        for (Context c : sd.getContext()) {
-            _contexts.add(new Context(c));
+        for (Context c : _contexts) {
+            ret.getContext().add(new Context(c));
         }
+        
+        return (ret);
     }
 
     /**
@@ -160,6 +162,15 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method returns the list of merged service definitions.
+     * 
+     * @return The merged list
+     */
+    public java.util.List<ServiceDefinition> getMerged() {
+        return (Collections.unmodifiableList(_merged));
+    }
+    
+    /**
      * This method merges the supplied definition with this
      * service definition.
      * 
@@ -195,11 +206,12 @@ public class ServiceDefinition implements java.io.Externalizable {
             
             OperationDefinition cur=getOperation(opdef.getName());
             
-            if (cur != null) {
-                cur.merge(opdef);
-            } else {
-                getOperations().add(new OperationDefinition(opdef));
+            if (cur == null) {
+                cur = opdef.shallowCopy();
+                getOperations().add(cur);
             }
+
+            cur.merge(opdef);
         }
         
         if (retainContexts) {
@@ -209,6 +221,8 @@ public class ServiceDefinition implements java.io.Externalizable {
                 }
             }
         }
+        
+        _merged.add(sd);
 
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Post-merge this=["+this+"]");
@@ -267,6 +281,11 @@ public class ServiceDefinition implements java.io.Externalizable {
         for (int i=0; i < _contexts.size(); i++) {
             out.writeObject(_contexts.get(i));
         }
+        
+        out.writeInt(_merged.size());
+        for (int i=0; i < _merged.size(); i++) {
+            out.writeObject(_merged.get(i));
+        }
     }
 
     /**
@@ -286,6 +305,11 @@ public class ServiceDefinition implements java.io.Externalizable {
         len = in.readInt();
         for (int i=0; i < len; i++) {
             _contexts.add((Context)in.readObject());
+        }
+        
+        len = in.readInt();
+        for (int i=0; i < len; i++) {
+            _merged.add((ServiceDefinition)in.readObject());
         }
     }
 }

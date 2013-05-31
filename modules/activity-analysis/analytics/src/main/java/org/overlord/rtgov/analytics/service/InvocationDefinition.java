@@ -20,6 +20,7 @@ package org.overlord.rtgov.analytics.service;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
 
 /**
  * This class represents the invocation details associated
@@ -34,6 +35,8 @@ public class InvocationDefinition implements java.io.Externalizable {
     private String _operation=null;
     private String _fault=null;
     private InvocationMetric _metrics=new InvocationMetric();
+    private java.util.List<InvocationDefinition> _merged=
+            new java.util.ArrayList<InvocationDefinition>();
 
     /**
      * Default constructor.
@@ -42,18 +45,18 @@ public class InvocationDefinition implements java.io.Externalizable {
     }
 
     /**
-     * Copy constructor.
+     * This method creates a shallow copy.
      * 
-     * @param id The invocation definition to copy
+     * @return The shallow copy
      */
-    public InvocationDefinition(InvocationDefinition id) {
-        _interface = id.getInterface();
-        _operation = id.getOperation();
-        _fault = id.getFault();
+    protected InvocationDefinition shallowCopy() {
+        InvocationDefinition ret=new InvocationDefinition();
         
-        if (id.getMetrics() != null) {
-            _metrics = new InvocationMetric(id.getMetrics());
-        }
+        ret.setInterface(_interface);
+        ret.setOperation(_operation);
+        ret.setFault(_fault);
+        
+        return (ret);
     }
 
     /**
@@ -137,6 +140,17 @@ public class InvocationDefinition implements java.io.Externalizable {
     public void merge(InvocationDefinition id) {
         
         getMetrics().merge(id.getMetrics());
+        
+        _merged.add(id);
+    }
+    
+    /**
+     * This method returns the list of merged invocation definitions.
+     * 
+     * @return The merged list
+     */
+    public java.util.List<InvocationDefinition> getMerged() {
+        return (Collections.unmodifiableList(_merged));
     }
     
     /**
@@ -149,6 +163,11 @@ public class InvocationDefinition implements java.io.Externalizable {
         out.writeObject(_operation);
         out.writeObject(_fault);
         out.writeObject(_metrics);
+        
+        out.writeInt(_merged.size());
+        for (int i=0; i < _merged.size(); i++) {
+            out.writeObject(_merged.get(i));
+        }
     }
 
     /**
@@ -162,5 +181,10 @@ public class InvocationDefinition implements java.io.Externalizable {
         _operation = (String)in.readObject();
         _fault = (String)in.readObject();
         _metrics = (InvocationMetric)in.readObject();
+        
+        int len = in.readInt();
+        for (int i=0; i < len; i++) {
+            _merged.add((InvocationDefinition)in.readObject());
+        }
     }
 }

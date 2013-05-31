@@ -20,6 +20,7 @@ package org.overlord.rtgov.analytics.service;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
 
 /**
  * This class represents an operation within a service interface.
@@ -32,6 +33,8 @@ public class OperationDefinition implements java.io.Externalizable {
     private String _name=null;
     private java.util.List<OperationImplDefinition> _implementations=
             new java.util.ArrayList<OperationImplDefinition>();
+    private java.util.List<OperationDefinition> _merged=
+            new java.util.ArrayList<OperationDefinition>();
 
     /**
      * Default constructor.
@@ -40,16 +43,16 @@ public class OperationDefinition implements java.io.Externalizable {
     }
 
     /**
-     * Copy constructor.
+     * This method creates a shallow copy.
      * 
-     * @param od The source to copy
+     * @return The shallow copy
      */
-    public OperationDefinition(OperationDefinition od) {
-        _name = od.getName();
+    protected OperationDefinition shallowCopy() {
+        OperationDefinition ret=new OperationDefinition();
         
-        for (OperationImplDefinition sto : od.getImplementations()) {
-            _implementations.add(new OperationImplDefinition(sto));
-        }
+        ret.setName(_name);
+        
+        return (ret);
     }
 
     /**
@@ -145,12 +148,24 @@ public class OperationDefinition implements java.io.Externalizable {
             
             OperationImplDefinition cur=getServiceTypeOperation(stod.getServiceType());
              
-            if (cur != null) {
-                cur.merge(stod);
-            } else {
-                getImplementations().add(new OperationImplDefinition(stod));
+            if (cur == null) {
+                cur = stod.shallowCopy();
+                getImplementations().add(cur);
             }
-        }
+
+            cur.merge(stod);
+       }
+        
+       _merged.add(opdef);
+    }
+    
+    /**
+     * This method returns the list of merged operation definitions.
+     * 
+     * @return The merged list
+     */
+    public java.util.List<OperationDefinition> getMerged() {
+        return (Collections.unmodifiableList(_merged));
     }
     
     /**
@@ -185,6 +200,11 @@ public class OperationDefinition implements java.io.Externalizable {
         for (int i=0; i < _implementations.size(); i++) {
             out.writeObject(_implementations.get(i));
         }
+        
+        out.writeInt(_merged.size());
+        for (int i=0; i < _merged.size(); i++) {
+            out.writeObject(_merged.get(i));
+        }
     }
 
     /**
@@ -199,6 +219,11 @@ public class OperationDefinition implements java.io.Externalizable {
         int len=in.readInt();
         for (int i=0; i < len; i++) {
             _implementations.add((OperationImplDefinition)in.readObject());
+        }
+        
+        len = in.readInt();
+        for (int i=0; i < len; i++) {
+            _merged.add((OperationDefinition)in.readObject());
         }
     }
 }

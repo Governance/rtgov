@@ -30,6 +30,7 @@ import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;
+import org.overlord.rtgov.service.dependency.presentation.Severity;
 import org.overlord.rtgov.service.dependency.svg.SVGServiceGraphGenerator;
 
 public class SVGServiceGraphGeneratorTest {
@@ -230,6 +231,7 @@ public class SVGServiceGraphGeneratorTest {
         try {
             generator.generate(graph, 0, os);
         } catch (Exception e) {
+            e.printStackTrace();
             fail("Failed to generate: "+e);
         }
         
@@ -291,6 +293,19 @@ public class SVGServiceGraphGeneratorTest {
         }
         
         System.out.println(svg);
-     }
+    }
 
+    @Test
+    public void testAverageSeverity() {
+        Severity[] severities={ Severity.Normal, Severity.Critical };
+        Severity avg=SVGServiceGraphGenerator.getAverageSeverity(severities);
+        
+        if (avg == null) {
+            fail("Average is null");
+        }
+        
+        if (avg != Severity.Warning) {
+            fail("Average should be Warning: "+avg);
+        }
+    }
 }

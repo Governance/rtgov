@@ -20,6 +20,7 @@ package org.overlord.rtgov.analytics.service;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
 
 /**
  * This class represents an operation implemented by a
@@ -34,6 +35,8 @@ public class OperationImplDefinition implements java.io.Externalizable {
     private RequestResponseDefinition _requestResponse=null;
     private java.util.List<RequestFaultDefinition> _requestFaults=
             new java.util.ArrayList<RequestFaultDefinition>();
+    private java.util.List<OperationImplDefinition> _merged=
+            new java.util.ArrayList<OperationImplDefinition>();
 
     /**
      * Default constructor.
@@ -42,20 +45,16 @@ public class OperationImplDefinition implements java.io.Externalizable {
     }
 
     /**
-     * Copy constructor.
+     * This method creates a shallow copy.
      * 
-     * @param od The source to copy
+     * @return The shallow copy
      */
-    public OperationImplDefinition(OperationImplDefinition od) {
-        _serviceType = od.getServiceType();
+    protected OperationImplDefinition shallowCopy() {
+        OperationImplDefinition ret=new OperationImplDefinition();
         
-        if (od.getRequestResponse() != null) {
-            _requestResponse = new RequestResponseDefinition(od.getRequestResponse());
-        }
+        ret.setServiceType(_serviceType);
         
-        for (RequestFaultDefinition rfd : od.getRequestFaults()) {
-            _requestFaults.add(new RequestFaultDefinition(rfd));
-        }
+        return (ret);
     }
 
     /**
@@ -164,11 +163,11 @@ public class OperationImplDefinition implements java.io.Externalizable {
     public void merge(OperationImplDefinition opdef) {
         
         if (opdef.getRequestResponse() != null) {
-            if (getRequestResponse() != null) {
-                getRequestResponse().merge(opdef.getRequestResponse());
-            } else {
-                setRequestResponse(new RequestResponseDefinition(opdef.getRequestResponse()));
+            if (getRequestResponse() == null) {
+                setRequestResponse(opdef.getRequestResponse().shallowCopy());
             }
+                
+            getRequestResponse().merge(opdef.getRequestResponse());
         }
         
         for (int i=0; i < opdef.getRequestFaults().size(); i++) {
@@ -176,12 +175,24 @@ public class OperationImplDefinition implements java.io.Externalizable {
             
             RequestFaultDefinition cur=getRequestFault(rfd.getFault());
             
-            if (cur != null) {
-                cur.merge(rfd);
-            } else {
-                getRequestFaults().add(new RequestFaultDefinition(rfd));
+            if (cur == null) {
+                cur = rfd.shallowCopy();
+                getRequestFaults().add(cur);
             }
+
+            cur.merge(rfd);
         }
+        
+        _merged.add(opdef);
+    }
+    
+    /**
+     * This method returns the list of merged operation definitions.
+     * 
+     * @return The merged list
+     */
+    public java.util.List<OperationImplDefinition> getMerged() {
+        return (Collections.unmodifiableList(_merged));
     }
     
     /**
@@ -217,6 +228,11 @@ public class OperationImplDefinition implements java.io.Externalizable {
         for (int i=0; i < _requestFaults.size(); i++) {
             out.writeObject(_requestFaults.get(i));
         }
+        
+        out.writeInt(_merged.size());
+        for (int i=0; i < _merged.size(); i++) {
+            out.writeObject(_merged.get(i));
+        }
     }
 
     /**
@@ -232,6 +248,11 @@ public class OperationImplDefinition implements java.io.Externalizable {
         int len=in.readInt();
         for (int i=0; i < len; i++) {
             _requestFaults.add((RequestFaultDefinition)in.readObject());
+        }
+        
+        len = in.readInt();
+        for (int i=0; i < len; i++) {
+            _merged.add((OperationImplDefinition)in.readObject());
         }
     }
 }

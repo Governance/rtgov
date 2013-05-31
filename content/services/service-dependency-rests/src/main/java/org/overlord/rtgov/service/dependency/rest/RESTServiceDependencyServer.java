@@ -28,10 +28,13 @@ import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;
-import org.overlord.rtgov.service.dependency.svg.MVELColorSelector;
+import org.overlord.rtgov.service.dependency.presentation.SeverityAnalyzer;
 import org.overlord.rtgov.service.dependency.svg.SVGServiceGraphGenerator;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.spi.CreationalContext;
+import javax.enterprise.inject.spi.Bean;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -55,10 +58,13 @@ public class RESTServiceDependencyServer {
     
     private ActiveCollection _servDefns=null;
     private ActiveCollection _situations=null;
+    
+    private SeverityAnalyzer _severityAnalyzer=null;
 
     /**
      * This is the default constructor.
      */
+    @SuppressWarnings("unchecked")
     public RESTServiceDependencyServer() {
         
         try {
@@ -69,6 +75,38 @@ public class RESTServiceDependencyServer {
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                     "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-1"), e);
+        }
+
+        try {
+            // Need to obtain active collection manager directly, as inject does not
+            // work for REST service, and RESTeasy/CDI integration did not
+            // appear to work in AS7. Directly accessing the bean manager
+            // should be portable.
+            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
+            
+            java.util.Set<Bean<?>> beans=bm.getBeans(SeverityAnalyzer.class);
+            
+            for (Bean<?> b : beans) {                
+                CreationalContext<Object> cc=new CreationalContext<Object>() {
+                    public void push(Object arg0) {
+                    }
+                    public void release() {
+                    }                   
+                };
+                
+                _severityAnalyzer = (SeverityAnalyzer)((Bean<Object>)b).create(cc);
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Severity analyzer="+_severityAnalyzer+" for bean="+b);
+                }
+                
+                if (_severityAnalyzer != null) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-2"), e);
         }
     }
     
@@ -143,19 +181,8 @@ public class RESTServiceDependencyServer {
         layout.layout(graph);
         
         // Check some of the dimensions
-        SVGServiceGraphGenerator generator=new SVGServiceGraphGenerator();
-        
-        MVELColorSelector selector=new MVELColorSelector();
-        
-        selector.setScriptLocation("ColorSelector.mvel");
-        
-        try {
-            selector.init();
-            generator.setColorSelector(selector);
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-2"), e);
-        }     
+        SVGServiceGraphGenerator generator=new SVGServiceGraphGenerator();        
+        generator.setSeverityAnalyzer(_severityAnalyzer);
         
         java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
         

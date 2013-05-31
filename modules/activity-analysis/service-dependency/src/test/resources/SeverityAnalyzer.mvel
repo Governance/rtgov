@@ -1,0 +1,22 @@
+Severity severity=Severity.Normal;
+
+if (summary != null && latest != null && summary.getAverage() > 0) {
+	double change=latest.getAverage()/summary.getAverage();
+	
+	if (change > 0) {
+
+	    if (change > 3.0) {
+	        severity = Severity.Critical;
+	    } else if (change > 2.2) {
+	        severity = Severity.Serious;
+	    } else if (change > 1.8) {
+	        severity = Severity.Error;
+	    } else if (change > 1.4) {
+	        severity = Severity.Warning;
+	    } else if (change > 1.2) {
+	        severity = Severity.Minor;
+	    }
+	}
+}
+
+return (severity);

@@ -80,8 +80,6 @@ public class RESTActivityServer implements ActivityServer {
             LOG.finer("RESTActivityServer["+storeUrl+"] store: "+activities);
         }
         
-        LOG.info("STORE to "+storeUrl);
-
         HttpURLConnection connection = (HttpURLConnection) storeUrl.openConnection();
         connection.setRequestMethod("POST");
         

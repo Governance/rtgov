@@ -28,12 +28,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
+import org.overlord.rtgov.analytics.service.OperationDefinition;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.service.dependency.InvocationLink;
 import org.overlord.rtgov.service.dependency.OperationNode;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.ServiceNode;
 import org.overlord.rtgov.service.dependency.UsageLink;
 import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayout;
+import org.overlord.rtgov.service.dependency.presentation.Severity;
+import org.overlord.rtgov.service.dependency.presentation.SeverityAnalyzer;
 
 /**
  * This class generates a SVG representation of a
@@ -44,7 +48,16 @@ public class SVGServiceGraphGenerator {
     
     private static final Logger LOG=Logger.getLogger(SVGServiceGraphGenerator.class.getName());
 
-    private ColorSelector _colorSelector=null;
+    private SeverityAnalyzer _severityAnalyzer=null;
+    
+    private static String[] _colorCodes={
+        "#00FF00",      // Normal
+        "#FF9900",      // Minor Warning
+        "#FF6A45",      // Requires Investigation
+        "#FF5930",      // Error
+        "#FF3300",      // Serious
+        "#FF0000"       // Critical
+    };
     
     /**
      * The default constructor.
@@ -57,17 +70,17 @@ public class SVGServiceGraphGenerator {
      * 
      * @return The color selector
      */
-    public ColorSelector getColorSelector() {
-        return (_colorSelector);
+    public SeverityAnalyzer getSeverityAnalyzer() {
+        return (_severityAnalyzer);
     }
     
     /**
-     * This method sets the color selector.
+     * This method sets the severity analyzer.
      * 
-     * @param selector The color selector
+     * @param analyzer The severity analyzer
      */
-    public void setColorSelector(ColorSelector selector) {
-        _colorSelector = selector;
+    public void setSeverityAnalyzer(SeverityAnalyzer analyzer) {
+        _severityAnalyzer = analyzer;
     }
     
     /**
@@ -192,8 +205,8 @@ public class SVGServiceGraphGenerator {
         polygon.setAttribute("points", x1+","+y1+" "+x2+","+y2+" "
                 +x3+","+y3+" "+x4+","+y4);
 
-        InvocationMetric im=getMetrics(ul.getInvocations());
-        String color=getColor(ul, im);
+        Severity severity=getInvocationSeverity(ul.getInvocations());
+        String color=getColor(severity);
         
         polygon.setAttribute("style", "fill:"+color+";fill-opacity:0.2");
         
@@ -201,8 +214,21 @@ public class SVGServiceGraphGenerator {
         
         if (ratio >= 1.0) {
             // Generate tooltip
-            generateMetrics(polygon, getDescription(ul), im);
+            generateMetrics(polygon, getDescription(ul), getMergedMetrics(ul.getInvocations()));
         }
+    }
+    
+    /**
+     * This method returns a merged invocation metric value associated with the supplied
+     * invocation definitions.
+     * 
+     * @param invocations The invocation details
+     * @return The merged metrics
+     */
+    protected static InvocationMetric getMergedMetrics(java.util.List<InvocationDefinition> invocations) {
+        InvocationMetric ret=new InvocationMetric();
+        
+        return (ret);
     }
     
     /**
@@ -218,21 +244,16 @@ public class SVGServiceGraphGenerator {
     }
     
     /**
-     * This method returns the color relevant for the supplied
-     * metric.
+     * This method returns the colour code associated with the severity.
      * 
-     * @param component The source component
-     * @param metric The metric
-     * @return The color
+     * @param severity The severity
+     * @return The colour code
      */
-    protected String getColor(Object component, InvocationMetric metric) {
-        String ret="#00FF00";
-        
-        if (_colorSelector != null) {
-            ret = _colorSelector.getColor(component, metric);
+    protected String getColor(Severity severity) {
+        if (severity == null) {
+            return (_colorCodes[0]);
         }
-        
-        return (ret);
+        return (_colorCodes[severity.ordinal()]);
     }
     
     /**
@@ -264,9 +285,8 @@ public class SVGServiceGraphGenerator {
         line.setAttribute("x2", ""+x2);
         line.setAttribute("y2", ""+y2);
         
-        InvocationMetric im=getMetrics(il.getInvocations());
-        
-        String color=getColor(il, im);
+        Severity severity=getInvocationSeverity(il.getInvocations());
+        String color=getColor(severity);
         
         line.setAttribute("style", "stroke:"+color+";stroke-width:3");
         
@@ -274,7 +294,7 @@ public class SVGServiceGraphGenerator {
         
         if (ratio >= 1.0) {
             // Generate tooltip
-            generateMetrics(line, getDescription(il), im);
+            generateMetrics(line, getDescription(il), getMergedMetrics(il.getInvocations()));
         }
     }
     
@@ -318,7 +338,19 @@ public class SVGServiceGraphGenerator {
         
         rect.setAttribute("fill", "#B8DBFF");
         
-        String color=getColor(sn, sn.getService().getMetrics());
+        // Get metrics from merged definitions
+        java.util.List<InvocationMetric> history=new java.util.ArrayList<InvocationMetric>();
+        for (ServiceDefinition sd : sn.getService().getMerged()) {
+            history.add(sd.getMetrics());
+        }
+        
+        // Derive the color
+        Severity severity=null;        
+        if (getSeverityAnalyzer() != null) {
+            severity = getSeverityAnalyzer().getSeverity(sn, sn.getService().getMetrics(), history);
+        }
+        
+        String color=getColor(severity);
         rect.setAttribute("stroke", color);
 
         rect.setAttribute("stroke-width", "2");
@@ -447,7 +479,7 @@ public class SVGServiceGraphGenerator {
         Situation.Severity severity=Situation.getHighestSeverity(situations);
 
         if (severity != null) {
-            String color=getSeverityColor(severity);
+            String color=getSituationSeverityColor(severity);
     
             circle.setAttribute("fill", color);
         }
@@ -539,12 +571,12 @@ public class SVGServiceGraphGenerator {
     
     /**
      * This method returns the color associated with the supplied
-     * severity.
+     * situation severity.
      * 
-     * @param severity The severity
+     * @param severity The situation severity
      * @return The color
      */
-    protected String getSeverityColor(Situation.Severity severity) {
+    protected String getSituationSeverityColor(Situation.Severity severity) {
         String ret=null;
         
         if (severity == Situation.Severity.Critical) {
@@ -565,16 +597,52 @@ public class SVGServiceGraphGenerator {
      * supplied invocation definitions.
      * 
      * @param invocations The invocation definitions
-     * @return The metrics
+     * @return The severity
      */
-    protected InvocationMetric getMetrics(java.util.List<InvocationDefinition> invocations) {
-        InvocationMetric im=new InvocationMetric();
+    protected Severity getInvocationSeverity(java.util.List<InvocationDefinition> invocations) {
         
-        for (InvocationDefinition id : invocations) {
-            im.merge(id.getMetrics());
+        if (getSeverityAnalyzer() == null) {
+            return (Severity.Normal);
         }
         
-        return (im);
+        Severity[] severities=new Severity[invocations.size()];
+        
+        for (int i=0; i < invocations.size(); i++) {
+            InvocationDefinition id=invocations.get(i);
+            
+            // Get metrics from merged definitions
+            java.util.List<InvocationMetric> history=new java.util.ArrayList<InvocationMetric>();
+            for (InvocationDefinition mid : id.getMerged()) {
+                history.add(mid.getMetrics());
+            }
+
+            severities[i] = getSeverityAnalyzer().getSeverity(id, id.getMetrics(), history);
+        }
+
+        return (getAverageSeverity(severities));
+    }
+    
+    /**
+     * Determine the average severity based on the supplied array.
+     * 
+     * @param severities The severities
+     * @return The average
+     */
+    protected static Severity getAverageSeverity(Severity[] severities) {
+        Severity ret=Severity.Normal;
+        
+        int sum=0;
+        for (Severity s : severities) {
+            sum = s.ordinal();
+        }
+        
+        if (sum > 0) {
+            float result=sum / severities.length;
+            
+            ret = Severity.values()[Math.round(result)];
+        }
+        
+        return (ret);
     }
 
     /**
@@ -674,7 +742,18 @@ public class SVGServiceGraphGenerator {
         
         rect.setAttribute("fill", "#85D6FF");
 
-        String color=getColor(opn, opn.getOperation().getMetrics());
+        // Get metrics from merged definitions
+        java.util.List<InvocationMetric> history=new java.util.ArrayList<InvocationMetric>();
+        for (OperationDefinition od : opn.getOperation().getMerged()) {
+            history.add(od.getMetrics());
+        }
+
+        // Derive the colour
+        Severity severity=null;
+        if (getSeverityAnalyzer() != null) {
+            severity = getSeverityAnalyzer().getSeverity(opn, opn.getOperation().getMetrics(), history);
+        }
+        String color=getColor(severity);
         
         rect.setAttribute("stroke", color);
         rect.setAttribute("stroke-width", "1");
