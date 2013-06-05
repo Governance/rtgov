@@ -32,6 +32,7 @@ import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.service.dependency.InvocationLink;
 import org.overlord.rtgov.service.dependency.OperationNode;
+import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.ServiceNode;
 import org.overlord.rtgov.service.dependency.UsageLink;
@@ -214,21 +215,9 @@ public class SVGServiceGraphGenerator {
         
         if (ratio >= 1.0) {
             // Generate tooltip
-            generateMetrics(polygon, getDescription(ul), getMergedMetrics(ul.getInvocations()));
+            generateMetrics(polygon, getDescription(ul),
+                    ServiceDependencyBuilder.getMergedMetrics(ul.getInvocations()));
         }
-    }
-    
-    /**
-     * This method returns a merged invocation metric value associated with the supplied
-     * invocation definitions.
-     * 
-     * @param invocations The invocation details
-     * @return The merged metrics
-     */
-    protected static InvocationMetric getMergedMetrics(java.util.List<InvocationDefinition> invocations) {
-        InvocationMetric ret=new InvocationMetric();
-        
-        return (ret);
     }
     
     /**
@@ -294,7 +283,8 @@ public class SVGServiceGraphGenerator {
         
         if (ratio >= 1.0) {
             // Generate tooltip
-            generateMetrics(line, getDescription(il), getMergedMetrics(il.getInvocations()));
+            generateMetrics(line, getDescription(il), 
+                    ServiceDependencyBuilder.getMergedMetrics(il.getInvocations()));
         }
     }
     

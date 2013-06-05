@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
+import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
@@ -267,4 +268,22 @@ public final class ServiceDependencyBuilder {
             }
         }
     }
+
+    /**
+     * This method returns a merged invocation metric value associated with the supplied
+     * invocation definitions.
+     * 
+     * @param invocations The invocation details
+     * @return The merged metrics
+     */
+    public static InvocationMetric getMergedMetrics(java.util.List<InvocationDefinition> invocations) {
+        InvocationMetric ret=new InvocationMetric();
+        
+        for (InvocationDefinition id : invocations) {
+            ret.merge(id.getMetrics());
+        }
+        
+        return (ret);
+    }
+    
 }

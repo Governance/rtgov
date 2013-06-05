@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
+import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
@@ -364,6 +365,32 @@ public class ServiceDependencyBuilderTest {
         
         if (opn2.getSituations().get(0) != sit3) {
             fail("Opn2 situation not sit3");
+        }
+    }
+    
+    @Test
+    public void testMergedMetrics() {
+        InvocationDefinition id1=new InvocationDefinition();
+        InvocationDefinition id2=new InvocationDefinition();
+        
+        InvocationMetric im1=id1.getMetrics();
+        im1.setCount(1);
+        
+        InvocationMetric im2=id2.getMetrics();
+        im2.setCount(2);
+        
+        java.util.List<InvocationDefinition> ids=new java.util.ArrayList<InvocationDefinition>();
+        ids.add(id1);
+        ids.add(id2);
+        
+        InvocationMetric imresult=ServiceDependencyBuilder.getMergedMetrics(ids);
+        
+        if (imresult == null) {
+            fail("No merged metric returned");
+        }
+        
+        if (imresult.getCount() != 3) {
+            fail("Expecting count of 3: "+imresult.getCount());
         }
     }
 }
