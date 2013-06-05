@@ -41,7 +41,7 @@ public class JBossAS7RTGovConfig implements RTGovPropertiesProvider {
     
     /**
      * This method provides configuration information for injection
-     * points identified by the BAMConfig annotation.
+     * points identified by the RTGovConfig annotation.
      * 
      * @param p The injection point
      * @return The configuration value, or null if not known
@@ -64,11 +64,36 @@ public class JBossAS7RTGovConfig implements RTGovPropertiesProvider {
             // Check if general property has been specified
             ret = getProperties().getProperty(memberName);
             
-            if (ret == null && LOG.isLoggable(Level.FINER)) {
-                LOG.finer("Unknown Runtime Governance property '"+propName+"'");
-            }
+             if (LOG.isLoggable(Level.FINEST)) {
+                 LOG.finest("Runtime Governance member '"+memberName+"' = "+ret);
+             }
+        } else if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Runtime Governance property '"+propName+"' = "+ret);
         }
         
+        return (ret);
+    }
+    
+    /**
+     * This method provides configuration information for injection
+     * points identified by the RTGovConfig annotation.
+     * 
+     * @param p The injection point
+     * @return The configuration value, or null if not known
+     */
+    public @Produces @RTGovConfig Boolean getConfigurationAsBoolean(InjectionPoint p) {
+        Boolean ret=null;
+        
+        String prop=getConfiguration(p);
+        
+        if (prop != null) {
+            ret = Boolean.valueOf(prop);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Runtime Governance boolean value = "+ret);
+            }
+        }
+
         return (ret);
     }
     

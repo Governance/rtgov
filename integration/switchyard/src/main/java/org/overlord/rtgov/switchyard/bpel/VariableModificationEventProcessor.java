@@ -39,7 +39,7 @@ public class VariableModificationEventProcessor extends AbstractEventProcessor {
     /**
      * {@inheritDoc}
      */
-    public void notify(EventObject event) {
+    public void handleEvent(EventObject event) {
         VariableModificationEvent bpelEvent=(VariableModificationEvent)event;
         
         org.overlord.rtgov.activity.model.bpm.ProcessVariableSet pvs=

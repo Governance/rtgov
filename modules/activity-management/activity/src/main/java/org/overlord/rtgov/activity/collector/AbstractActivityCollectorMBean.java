@@ -17,39 +17,27 @@
  */
 package org.overlord.rtgov.activity.collector;
 
-import javax.transaction.TransactionManager;
-
 /**
- * This interface is responsible for providing the initial
- * system wide and user related information associated with the activity
- * event collector.
+ * This interface defines the managed attributes and operations
+ * for a derived AbstractActivityCollector implementation.
  *
  */
-public interface CollectorContext {
+public interface AbstractActivityCollectorMBean {
+
+    /**
+     * This method identifies whether the collection process should be
+     * enabled.
+     * 
+     * @return Whether enabled
+     */
+    public boolean getCollectionEnabled();
     
     /**
-     * This method returns the host name.
+     * This method sets whether the collection process should be
+     * enabled.
      * 
-     * @return The host name
+     * @param enabled Whether enabled
      */
-    public String getHost();
-    
-    /**
-     * This method returns the name of the node.
-     * If running in a clustered environment, this
-     * name will uniquely identify the environment
-     * within the cluster.
-     * 
-     * @return The node name
-     */
-    public String getNode();
-    
-    /**
-     * This method returns the transaction manager,
-     * if available.
-     * 
-     * @return The transaction manager, or null if not available
-     */
-    public TransactionManager getTransactionManager();
+    public void setCollectionEnabled(boolean enabled);
     
 }

@@ -82,6 +82,7 @@ public class BeanServiceTest {
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
                     .artifacts("org.overlord.rtgov.activity-management:activity:"+version,
+                            "org.overlord.rtgov.common:rtgov-common:"+version,
                     		"org.overlord.rtgov.activity-management:collector-jee:"+version,
                             "org.overlord.rtgov.integration:rtgov-jbossas:"+version,
                             "org.overlord.rtgov.activity-management:activity-server-impl:"+version,

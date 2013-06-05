@@ -62,7 +62,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
     /**
      * {@inheritDoc}
      */
-    public void notify(EventObject event) {
+    public void handleEvent(EventObject event) {
         org.apache.camel.Exchange exch=
                 ((org.apache.camel.management.event.AbstractExchangeEvent)event).getExchange();
         

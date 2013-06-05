@@ -26,6 +26,14 @@ import org.overlord.rtgov.activity.model.ActivityType;
 public interface ActivityCollector {
 
     /**
+     * This method indicates whether activity collection is
+     * currently enabled.
+     * 
+     * @return Whether collection is enabled
+     */
+    public boolean isCollectionEnabled();
+    
+    /**
      * This method can be used to create an application controlled
      * scope. Within this scope, all activity types will
      * be recorded in a single activity unit. If a client starts

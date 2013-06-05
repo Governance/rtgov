@@ -31,15 +31,21 @@ import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
+import org.overlord.rtgov.common.util.RTGovConfig;
 
 /**
  * This class provides an abstract implementation of the activity
  * collector interface.
  *
  */
-public class AbstractActivityCollector implements ActivityCollector {
+public class AbstractActivityCollector implements ActivityCollector, AbstractActivityCollectorMBean {
 
     private static final Logger LOG=Logger.getLogger(AbstractActivityCollector.class.getName());
+    
+    private static final boolean DEFAULT_COLLECTION_ENABLED=true;
+    
+    @Inject @RTGovConfig
+    private Boolean _collectionEnabled=DEFAULT_COLLECTION_ENABLED;
     
     @Inject
     private CollectorContext _collectorContext=null;
@@ -71,6 +77,36 @@ public class AbstractActivityCollector implements ActivityCollector {
      */
     public CollectorContext getCollectorContext() {
         return (_collectorContext);
+    }
+    
+    /**
+     * This method indicates whether activity collection is
+     * currently enabled.
+     * 
+     * @return Whether collection is enabled
+     */
+    public boolean isCollectionEnabled() {
+        return (_collectionEnabled == null ? DEFAULT_COLLECTION_ENABLED : _collectionEnabled);
+    }
+    
+    /**
+     * This method identifies whether the collection process should be
+     * enabled.
+     * 
+     * @return Whether enabled
+     */
+    public boolean getCollectionEnabled() {
+        return (isCollectionEnabled());
+    }
+    
+    /**
+     * This method sets whether the collection process should be
+     * enabled.
+     * 
+     * @param enabled Whether enabled
+     */
+    public void setCollectionEnabled(boolean enabled) {
+        _collectionEnabled = enabled;
     }
     
     /**
@@ -149,6 +185,10 @@ public class AbstractActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public void startScope() {
+        if (!isCollectionEnabled()) {
+            return;
+        }
+        
         ActivityUnit au=_activityUnit.get();
         
         // Currently only starts a scope if none exists. However
@@ -203,6 +243,10 @@ public class AbstractActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public void endScope() {
+        if (!isCollectionEnabled()) {
+            return;
+        }
+        
         ActivityUnit au=_activityUnit.get();
 
         if (LOG.isLoggable(Level.FINEST)) {
@@ -224,6 +268,7 @@ public class AbstractActivityCollector implements ActivityCollector {
      */
     public String processInformation(String processor, String type, Object info,
                 java.util.Map<String, Object> headers, ActivityType actType) {
+        
         if (_infoProcessorManager != null) {
             return (_infoProcessorManager.process(processor, type, info, headers, actType));
         } else if (LOG.isLoggable(Level.WARNING)) {
@@ -249,6 +294,10 @@ public class AbstractActivityCollector implements ActivityCollector {
      * {@inheritDoc}
      */
     public void record(ActivityType actType) {
+        if (!isCollectionEnabled()) {
+            return;
+        }
+
         ActivityUnit au=_activityUnit.get();
         
         // Check if need to create a single event activity unit outside of transaction scope

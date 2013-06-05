@@ -39,7 +39,7 @@ public class NewProcessInstanceEventProcessor extends AbstractEventProcessor {
     /**
      * {@inheritDoc}
      */
-    public void notify(EventObject event) {
+    public void handleEvent(EventObject event) {
         NewProcessInstanceEvent bpelEvent=(NewProcessInstanceEvent)event;
         
         org.overlord.rtgov.activity.model.bpm.ProcessStarted ps=

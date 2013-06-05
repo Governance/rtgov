@@ -40,7 +40,7 @@ public class ProcessVariableChangedEventProcessor extends AbstractEventProcessor
     /**
      * {@inheritDoc}
      */
-    public void notify(EventObject event) {
+    public void handleEvent(EventObject event) {
         ProcessVariableChangedEvent bpmEvent=(ProcessVariableChangedEvent)event;
         
         org.overlord.rtgov.activity.model.bpm.ProcessVariableSet pvs=

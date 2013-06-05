@@ -17,6 +17,7 @@
  */
 package org.overlord.rtgov.switchyard;
 
+import java.util.EventObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
@@ -66,6 +67,31 @@ public abstract class AbstractEventProcessor implements EventObserver, EventProc
      */
     protected ActivityCollector getActivityCollector() {
         return (_collector);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public final void notify(EventObject event) {
+        if (isCollectionEnabled()) {
+            handleEvent(event);
+        }
+    }
+    
+    /**
+     * This method handles the event from switchyard.
+     * 
+     * @param event The event
+     */
+    protected abstract void handleEvent(EventObject event);
+    
+    /**
+     * This method determines whether collection has been enabled.
+     * 
+     * @return Whether collection is enabled
+     */
+    protected boolean isCollectionEnabled() {
+        return (_collector == null ? false : _collector.isCollectionEnabled());
     }
     
     /**

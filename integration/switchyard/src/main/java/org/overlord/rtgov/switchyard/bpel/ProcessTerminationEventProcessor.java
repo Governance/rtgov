@@ -39,7 +39,7 @@ public class ProcessTerminationEventProcessor extends AbstractEventProcessor {
     /**
      * {@inheritDoc}
      */
-    public void notify(EventObject event) {
+    public void handleEvent(EventObject event) {
         ProcessTerminationEvent bpelEvent=(ProcessTerminationEvent)event;
         
         org.overlord.rtgov.activity.model.bpm.ProcessCompleted pc=

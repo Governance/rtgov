@@ -40,7 +40,7 @@ public class ProcessStartedEventProcessor extends AbstractEventProcessor {
     /**
      * {@inheritDoc}
      */
-    public void notify(EventObject event) {
+    public void handleEvent(EventObject event) {
         ProcessStartedEvent bpmEvent=(ProcessStartedEvent)event;
         
         org.overlord.rtgov.activity.model.bpm.ProcessStarted ps=
