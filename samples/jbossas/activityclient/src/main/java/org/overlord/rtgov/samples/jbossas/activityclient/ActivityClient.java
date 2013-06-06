@@ -42,6 +42,8 @@ import org.overlord.rtgov.activity.server.rest.client.RESTActivityServer;
 public class ActivityClient {
     
     private String _activityServerURL=null;
+    private String _activityServerUsername=null;
+    private String _activityServerPassword=null;
     private ActivityCollector _collector=null;
     private Random _random=new Random();
     
@@ -66,20 +68,20 @@ public class ActivityClient {
      */
     public static void main(String[] args) {
         
-        if (args.length != 3) {
-            System.err.println("Usage: ActivityClient <url> <filename> <numOfTxns>\r\n"
+        if (args.length != 5) {
+            System.err.println("Usage: ActivityClient <url> <username> <password> <filename> <numOfTxns>\r\n"
                     +"Set numOfTxns to -1 for continous");
             System.exit(1);
         }
         
-        ActivityClient ac=new ActivityClient(args[0]);
+        ActivityClient ac=new ActivityClient(args[0], args[1], args[2]);
         
         ac.init();
         
-        ac.loadTransactions(args[1]);
+        ac.loadTransactions(args[3]);
         
         try {
-            ac.scheduleTxns(Integer.parseInt(args[2]));
+            ac.scheduleTxns(Integer.parseInt(args[4]));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,12 +90,16 @@ public class ActivityClient {
     }
     
     /**
-     * The constructor initializing the server URL.
+     * The constructor initializing the server URL, username and password.
      * 
      * @param url The server URL
+     * @param username The username
+     * @param password The password
      */
-    public ActivityClient(String url) {
+    public ActivityClient(String url, String username, String password) {
         _activityServerURL = url;
+        _activityServerUsername = username;
+        _activityServerPassword = password;
     }
     
     /**
@@ -105,6 +111,8 @@ public class ActivityClient {
         
         RESTActivityServer restc=new RESTActivityServer();
         restc.setServerURL(_activityServerURL);
+        restc.setServerUsername(_activityServerUsername);
+        restc.setServerPassword(_activityServerPassword);
         
         ActivityServerLogger activityUnitLogger=new ActivityServerLogger();        
         activityUnitLogger.setActivityServer(restc);

@@ -52,6 +52,12 @@ public class RESTActivityServer implements ActivityServer {
     @Inject @RTGovConfig
     private String _serverURL="http://localhost:8080";
             
+    @Inject @RTGovConfig
+    private String _serverUsername="admin";
+            
+    @Inject @RTGovConfig
+    private String _serverPassword="overlord";
+            
     /**
      * This method sets the URL of the Activity Server.
      * 
@@ -71,6 +77,42 @@ public class RESTActivityServer implements ActivityServer {
     }
 
     /**
+     * This method sets the username for the Activity Server.
+     * 
+     * @param username The username
+     */
+    public void setServerUsername(String username) {
+        _serverUsername = username;
+    }
+
+    /**
+     * This method gets the username for the Activity Server.
+     * 
+     * @return The username
+     */
+    public String getServerUsername() {
+        return (_serverUsername);
+    }
+
+    /**
+     * This method sets the password for the Activity Server.
+     * 
+     * @param password The password
+     */
+    public void setServerPassword(String password) {
+        _serverPassword = password;
+    }
+
+    /**
+     * This method gets the password for the Activity Server.
+     * 
+     * @return The password
+     */
+    public String getServerPassword() {
+        return (_serverPassword);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public void store(List<ActivityUnit> activities) throws Exception {
@@ -81,6 +123,12 @@ public class RESTActivityServer implements ActivityServer {
         }
         
         HttpURLConnection connection = (HttpURLConnection) storeUrl.openConnection();
+        
+        String userPassword = _serverUsername + ":" + _serverPassword;
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        connection.setRequestProperty("Authorization", "Basic " + encoding);
+
         connection.setRequestMethod("POST");
         
         connection.setDoOutput(true);

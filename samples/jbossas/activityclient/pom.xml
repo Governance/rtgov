@@ -47,6 +47,10 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.jboss.spec</groupId>
 			<artifactId>jboss-javaee-6.0</artifactId>
 			<type>pom</type>
@@ -84,6 +88,8 @@
 									<mainClass>org.overlord.rtgov.samples.jbossas.activityclient.ActivityClient</mainClass>
 									<arguments>
 										<argument>http://localhost:8080</argument>
+										<argument>admin</argument>
+										<argument>overlord</argument>
 										<argument>${project.build.directory}/classes/txns/Transactions.properties</argument>
 										<argument>${count}</argument>
 									</arguments>
