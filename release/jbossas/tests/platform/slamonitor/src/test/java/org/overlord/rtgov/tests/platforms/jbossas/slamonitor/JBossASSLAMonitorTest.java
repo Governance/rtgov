@@ -34,6 +34,7 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
@@ -66,14 +67,14 @@ public class JBossASSLAMonitorTest {
     org.overlord.rtgov.epn.EPNManager _epnManager;
     
     @Deployment(name="orders-app", order=1)
-    public static WebArchive createDeployment1() {
+    public static JavaArchive createDeployment1() {
         String version=System.getProperty("rtgov.version");
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-app:war:"+version)
+                .artifacts("org.overlord.rtgov.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-app:"+version)
                 .resolveAsFiles();
         
-        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+        return ShrinkWrap.createFromZipFile(JavaArchive.class, archiveFiles[0]);
     }
     
     @Deployment(name="orders-ip", order=2)

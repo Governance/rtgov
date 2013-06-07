@@ -16,7 +16,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			<artifactId>samples-jbossas-ordermgmt-app</artifactId>
-			<type>war</type>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
