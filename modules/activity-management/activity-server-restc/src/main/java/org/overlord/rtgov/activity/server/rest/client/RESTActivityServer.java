@@ -171,6 +171,12 @@ public class RESTActivityServer implements ActivityServer {
         }
         
         HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
+        
+        String userPassword = _serverUsername + ":" + _serverPassword;
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        connection.setRequestProperty("Authorization", "Basic " + encoding);
+
         connection.setRequestMethod("GET");
 
         connection.setDoOutput(true);
@@ -242,6 +248,12 @@ public class RESTActivityServer implements ActivityServer {
         List<ActivityType> ret=null;
         
         HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
+        
+        String userPassword = _serverUsername + ":" + _serverPassword;
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        connection.setRequestProperty("Authorization", "Basic " + encoding);
+
         connection.setRequestMethod("GET");
 
         connection.setDoOutput(true);
@@ -280,6 +292,12 @@ public class RESTActivityServer implements ActivityServer {
         }
         
         HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
+        
+        String userPassword = _serverUsername + ":" + _serverPassword;
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        connection.setRequestProperty("Authorization", "Basic " + encoding);
+
         connection.setRequestMethod("POST");
 
         connection.setDoOutput(true);
