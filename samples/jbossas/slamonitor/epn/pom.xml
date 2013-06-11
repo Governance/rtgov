@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.overlord.rtgov.samples.jbossas</groupId>
 		<artifactId>slamonitor</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0.20130611-M5</version>
 	</parent>
 
 	<dependencies>

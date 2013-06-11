@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0.20130611-M5</version>
 	<packaging>pom</packaging>
 	<name>Overlord RTGov</name>
 	<url>http://www.jboss.org/overlord</url>
@@ -77,10 +77,10 @@
 		<maven-aether.version>3.0.1</maven-aether.version>
 		<mvel.version>2.1.3.Final</mvel.version>			<!-- Passed into junit tests -->
 		<overlord-commons.version>1.0.7</overlord-commons.version>
-		<riftsaw.ode.version>3.0.0-SNAPSHOT</riftsaw.ode.version>
+		<riftsaw.ode.version>3.0.0.20130607-M6</riftsaw.ode.version>
 		<shrinkwrap.version>1.0.0</shrinkwrap.version>
 		<shrinkwrap-resolver.version>1.0.0-beta-6</shrinkwrap-resolver.version>
-		<switchyard.version>1.0.0-SNAPSHOT</switchyard.version>
+		<switchyard.version>1.0.0.Alpha1</switchyard.version>
 	</properties>
 
 	<modules>
