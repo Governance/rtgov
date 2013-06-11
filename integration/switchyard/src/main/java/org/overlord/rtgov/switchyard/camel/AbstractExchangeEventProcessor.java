@@ -88,10 +88,6 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         Service provider=exch.getProperty("org.switchyard.bus.camel.provider", Service.class);
         ServiceReference consumer=exch.getProperty("org.switchyard.bus.camel.consumer", ServiceReference.class);
         
-        SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
-
-        BaseExchangeContract contract=exch.getProperty("org.switchyard.bus.camel.contract", BaseExchangeContract.class);
-        
         // TODO: If message is transformed, then should the contentType
         // be updated to reflect the transformed type?
         
@@ -117,56 +113,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             }
         }
         
-        // Extract service type and operation from the consumer
-        // (service reference), as provider is not always available
-        QName serviceType=consumer.getName();
-        String opName=contract.getConsumerOperation().getName();
-        
         if (phase == ExchangePhase.IN) {
-            String intf=getInterface(consumer, provider);
-            
-            if (consumer.getConsumerMetadata().isBinding()) {
-                getActivityCollector().startScope();
-            } else {
-                // Only record the request being sent, if the
-                // source is a component, not a binding
-            
-                RequestSent sent=new RequestSent();
-                
-                // Only report service type if provider is not a binding
-                if (provider == null
-                        || !provider.getProviderMetadata().isBinding()) {
-                    sent.setServiceType(serviceType.toString()); 
-                }
-                
-                sent.setInterface(intf);                
-                sent.setOperation(opName);
-                sent.setMessageId(messageId);
-                
-                record(mesg, contentType, sent, securityContext, exch); 
-                
-                if (intf == null) {
-                    // Save activity event in exchange
-                    exch.setProperty("rtgov.request.sent", sent);
-                }
-            }
-            
-            if (provider == null
-                    || !provider.getProviderMetadata().isBinding()) {
-                RequestReceived recvd=new RequestReceived();
-                
-                recvd.setServiceType(serviceType.toString());                
-                recvd.setInterface(intf);                
-                recvd.setOperation(opName);
-                recvd.setMessageId(messageId);
-                
-                record(mesg, contentType, recvd, securityContext, exch); 
-                
-                if (intf == null) {
-                    // Save activity event in exchange
-                    exch.setProperty("rtgov.request.received", recvd);
-                }               
-            }
+            handleInExchange(exch, provider, consumer, messageId, contentType, mesg);
             
         } else if (phase == ExchangePhase.OUT) {
             
@@ -178,54 +126,150 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 return;
             }
             
-            // Check if interface on associated request needs to be set
-            String intf=getInterface(consumer, provider);
-            RequestReceived rr=(RequestReceived)exch.getProperty("rtgov.request.received");
-            RequestSent rs=(RequestSent)exch.getProperty("rtgov.request.sent");
-            
-            if (intf != null) {
-                if (rr != null) {
-                    rr.setInterface(intf);
-                }
-                if (rs != null) {
-                    rs.setInterface(intf);
-                }
-            }
+            handleOutExchange(exch, provider, consumer, messageId, relatesTo, contentType, mesg);
+        }
+    }
+    
+    /**
+     * This method handles the 'in' exchange.
+     * 
+     * @param exch The exchange
+     * @param provider The provider
+     * @param consumer The consumer
+     * @param messageId The message id
+     * @param contentType The content type
+     * @param mesg The message
+     */
+    protected void handleInExchange(org.apache.camel.Exchange exch,
+            Service provider, ServiceReference consumer, String messageId,
+            String contentType, org.switchyard.bus.camel.CamelMessage mesg) {
+        String intf=getInterface(consumer, provider);
+        
+        SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
 
-            // Record the response
+        BaseExchangeContract contract=exch.getProperty("org.switchyard.bus.camel.contract", BaseExchangeContract.class);
+        
+        // Extract service type and operation from the consumer
+        // (service reference), as provider is not always available
+        QName serviceType=consumer.getName();
+        String opName=contract.getConsumerOperation().getName();
+        
+        if (consumer.getConsumerMetadata().isBinding()) {
+            getActivityCollector().startScope();
+        } else {
+            // Only record the request being sent, if the
+            // source is a component, not a binding
+        
+            RequestSent sent=new RequestSent();
+            
+            // Only report service type if provider is not a binding
             if (provider == null
                     || !provider.getProviderMetadata().isBinding()) {
-                ResponseSent sent=new ResponseSent();
-                                
-                // Only report service type if provider is not a binding
-                if (provider == null
-                        || !provider.getProviderMetadata().isBinding()) {
-                    sent.setServiceType(serviceType.toString()); 
-                }
-
-                sent.setInterface(intf);                
-                sent.setOperation(opName);
-                sent.setMessageId(messageId);
-                sent.setReplyToId(relatesTo);
-                
-                record(mesg, contentType, sent, securityContext, exch); 
+                sent.setServiceType(serviceType.toString()); 
             }
             
-            if (consumer.getConsumerMetadata().isBinding()) {
-                getActivityCollector().endScope();
-            } else {
-                // Only record the response being received, if the
-                // target is a component, not a binding
-                ResponseReceived recvd=new ResponseReceived();
-                
-                recvd.setServiceType(serviceType.toString());                
-                recvd.setInterface(intf);                
-                recvd.setOperation(opName);
-                recvd.setMessageId(messageId);
-                recvd.setReplyToId(relatesTo);
-                
-                record(mesg, contentType, recvd, securityContext, exch); 
+            sent.setInterface(intf);                
+            sent.setOperation(opName);
+            sent.setMessageId(messageId);
+            
+            record(mesg, contentType, sent, securityContext, exch); 
+            
+            if (intf == null) {
+                // Save activity event in exchange
+                exch.setProperty("rtgov.request.sent", sent);
             }
+        }
+        
+        if (provider == null
+                || !provider.getProviderMetadata().isBinding()) {
+            RequestReceived recvd=new RequestReceived();
+            
+            recvd.setServiceType(serviceType.toString());                
+            recvd.setInterface(intf);                
+            recvd.setOperation(opName);
+            recvd.setMessageId(messageId);
+            
+            record(mesg, contentType, recvd, securityContext, exch); 
+            
+            if (intf == null) {
+                // Save activity event in exchange
+                exch.setProperty("rtgov.request.received", recvd);
+            }               
+        }
+    }
+    
+    /**
+     * This method handles the 'in' exchange.
+     * 
+     * @param exch The exchange
+     * @param provider The provider
+     * @param consumer The consumer
+     * @param messageId The message id
+     * @param relatesTo The relates-to id
+     * @param contentType The content type
+     * @param mesg The message
+     */
+    protected void handleOutExchange(org.apache.camel.Exchange exch,
+            Service provider, ServiceReference consumer, String messageId, String relatesTo,
+            String contentType, org.switchyard.bus.camel.CamelMessage mesg) {
+
+        // Check if interface on associated request needs to be set
+        String intf=getInterface(consumer, provider);
+        
+        SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
+
+        BaseExchangeContract contract=exch.getProperty("org.switchyard.bus.camel.contract", BaseExchangeContract.class);
+        
+        // Extract service type and operation from the consumer
+        // (service reference), as provider is not always available
+        QName serviceType=consumer.getName();
+        String opName=contract.getConsumerOperation().getName();
+        
+        RequestReceived rr=(RequestReceived)exch.getProperty("rtgov.request.received");
+        RequestSent rs=(RequestSent)exch.getProperty("rtgov.request.sent");
+        
+        if (intf != null) {
+            if (rr != null) {
+                rr.setInterface(intf);
+            }
+            if (rs != null) {
+                rs.setInterface(intf);
+            }
+        }
+
+        // Record the response
+        if (provider == null
+                || !provider.getProviderMetadata().isBinding()) {
+            ResponseSent sent=new ResponseSent();
+                            
+            // Only report service type if provider is not a binding
+            if (provider == null
+                    || !provider.getProviderMetadata().isBinding()) {
+                sent.setServiceType(serviceType.toString()); 
+            }
+
+            sent.setInterface(intf);                
+            sent.setOperation(opName);
+            sent.setMessageId(messageId);
+            sent.setReplyToId(relatesTo);
+            
+            record(mesg, contentType, sent, securityContext, exch); 
+        }
+        
+        if (consumer.getConsumerMetadata().isBinding()) {
+            getActivityCollector().endScope();
+        } else {
+            // Only record the response being received, if the
+            // target is a component, not a binding
+            ResponseReceived recvd=new ResponseReceived();
+            
+            recvd.setServiceType(serviceType.toString());                
+            recvd.setInterface(intf);                
+            recvd.setOperation(opName);
+            recvd.setMessageId(messageId);
+            recvd.setReplyToId(relatesTo);
+            
+            record(mesg, contentType, recvd, securityContext, exch); 
         }
     }
     

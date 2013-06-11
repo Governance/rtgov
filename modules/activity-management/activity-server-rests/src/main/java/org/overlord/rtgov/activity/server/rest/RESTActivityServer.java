@@ -145,6 +145,8 @@ public class RESTActivityServer {
      * 
      * @param type The type
      * @param value The value
+     * @param from The optional 'from' timestamp
+     * @param to The optional 'to' timestamp
      * @return The list of activity types
      * @throws Exception Failed to obtain activity types
      */

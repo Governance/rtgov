@@ -22,10 +22,34 @@ package org.overlord.rtgov.service.dependency.presentation;
  *
  */
 public enum Severity {
+    
+    /**
+     * No problems.
+     */
     Normal,
+    
+    /**
+     *  Minor issue.
+     */
     Minor,
+    
+    /** 
+     * Warning, a situation appears to be emerging.
+     */
     Warning,
+    
+    /**
+     * An issue has occurred that needs attention.
+     */
     Error,
+    
+    /**
+     * Needs immediate attention.
+     */
     Serious,
+    
+    /**
+     * Critical issue has occurred that needs highest priority attention.
+     */
     Critical
 }
