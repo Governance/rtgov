@@ -58,12 +58,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor</groupId>
-			<artifactId>ep-infinispan</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
 			<scope>test</scope>

@@ -70,12 +70,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor</groupId>
-			<artifactId>ep-infinispan</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
 			<scope>test</scope>

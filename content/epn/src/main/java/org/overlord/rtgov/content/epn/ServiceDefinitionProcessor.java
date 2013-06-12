@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
-import org.overlord.rtgov.analytics.service.util.ServiceDefinitionUtil;
+import org.overlord.rtgov.analytics.util.ServiceDefinitionUtil;
 
 /**
  * This class provides an implementation of the EventProcessor

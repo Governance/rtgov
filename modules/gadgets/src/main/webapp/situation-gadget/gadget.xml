@@ -31,7 +31,7 @@
 		var prefs, params, restUrl, postdata, protocol, host;
 		
 		prefs = new gadgets.Prefs();
-		postdata = "{\"collection\":\"Situations\"}";
+		postdata = "{\"collection\":\"FilteredSituations\"}";
 		
 		params = {};
 		params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.JSON;
@@ -99,27 +99,46 @@
 		theCell.innerHTML="<div class='arrows'></div>";
 		theRow.appendChild(theCell);
 
+		appendSubject(rawData, rowId, theBody);
 		appendContextHeader(theBody, rowId);
 		appendContext(rawData.context, rowId, theBody);
 		appendProperties(rawData.properties, rowId, theBody);
+	}
+	
+	function appendSubject(data, rowId, theBody) {
+		var theRow, cell;
+		theRow = document.createElement("TR");
+		theRow.setAttribute("class", "table-row detail child-" + rowId);
+		theRow.setAttribute("style", "background: #eeeeee");
+		theBody.appendChild(theRow);
+
+		cell = document.createElement("TD");
+		cell.innerHTML="<b>Subject</b>";
+		theRow.appendChild(cell);
+
+		cell = document.createElement("TD");
+		cell.setAttribute("colspan", "3");
+		cell.innerHTML=data.subject;
+		theRow.appendChild(cell);
 	}
 
 	function appendContextHeader(theBody, rowId){
 		var theRow, cell;
 		theRow = document.createElement("TR");
 		theRow.setAttribute("class", "table-row detail child-" + rowId);
+		theRow.setAttribute("style", "background: #dddddd");
 		theBody.appendChild(theRow);
 
 		cell = document.createElement("TD");
 		theRow.appendChild(cell);
 
 		cell = document.createElement("TD");
-		cell.innerHTML="Type";
+		cell.innerHTML="<i>Type</i>";
 		theRow.appendChild(cell);
 
 		cell = document.createElement("TD");
-		cell.setAttribute("colspan", "3");
-		cell.innerHTML="Value";
+		cell.setAttribute("colspan", "2");
+		cell.innerHTML="<i>Value</i>";
 		theRow.appendChild(cell);
 	}
 
@@ -129,6 +148,7 @@
 			for (i = 0; i < data.length; i++) {
 				contextRow = document.createElement("TR");
 				contextRow.setAttribute("class", "table-row detail child-" + rowId);
+				contextRow.setAttribute("style", "background: #eeeeee");
 				theBody.appendChild(contextRow);
 				cell = document.createElement("TD");
 				if (i == 0) {
@@ -141,7 +161,7 @@
 				contextRow.appendChild(cell);
 
 				cell = document.createElement("TD");
-				cell.setAttribute("colspan", "3");
+				cell.setAttribute("colspan", "2");
 				cell.innerHTML=data[i].value;
 				contextRow.appendChild(cell);
 			}
@@ -154,6 +174,7 @@
 			for (property in data) {
 				contextRow = document.createElement("TR");
 				contextRow.setAttribute("class", "table-row detail child-" + rowId);
+				contextRow.setAttribute("style", "background: #eeeeee");
 				theBody.appendChild(contextRow);
 				cell = document.createElement("TD");
 				if (i == 0) {
@@ -166,7 +187,7 @@
 				contextRow.appendChild(cell);
 				
 				cell = document.createElement("TD");
-				cell.setAttribute("colspan", "3");
+				cell.setAttribute("colspan", "2");
 				cell.innerHTML=data[property];
 				contextRow.appendChild(cell);
 				

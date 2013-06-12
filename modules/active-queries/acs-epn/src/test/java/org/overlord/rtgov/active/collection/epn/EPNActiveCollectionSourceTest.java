@@ -57,7 +57,7 @@ public class EPNActiveCollectionSourceTest {
         acs.setEPNManager(mgr);
         
         try {
-            acs.init();
+            acs.init(null);
         } catch(Exception e) {
             fail("Failed to initialize active collection source: "+e);
         }

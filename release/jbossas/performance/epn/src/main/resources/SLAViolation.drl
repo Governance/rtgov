@@ -1,5 +1,5 @@
 import org.overlord.rtgov.analytics.service.ResponseTime
-import org.overlord.rtgov.analytics.Situation
+import org.overlord.rtgov.analytics.situation.Situation
 
 global org.overlord.rtgov.ep.EPContext epc
 
@@ -18,8 +18,8 @@ then
 		Situation situation=new Situation();
 		
 		situation.setType("SLA Violation");
-		situation.setSubject(Situation.createSubject($rt.getInterface(), $rt.getOperation(),
-						$rt.getServiceType(), $rt.getFault()));
+		situation.setSubject(Situation.createSubject($rt.getServiceType(), $rt.getOperation(),
+						$rt.getFault()));
 		situation.setTimestamp(System.currentTimeMillis());
 		
 		if ($rt.getAverage() > 400) {

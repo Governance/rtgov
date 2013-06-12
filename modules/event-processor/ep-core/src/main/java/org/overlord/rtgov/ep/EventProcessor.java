@@ -18,7 +18,7 @@
 package org.overlord.rtgov.ep;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.overlord.rtgov.ep.service.EPService;
+import org.overlord.rtgov.common.service.Service;
 
 /**
  * This interface defines an event processor responsible
@@ -29,15 +29,15 @@ import org.overlord.rtgov.ep.service.EPService;
 @JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
 public abstract class EventProcessor {
     
-    private java.util.Map<String,EPService> _services=
-                            new java.util.HashMap<String,EPService>();
+    private java.util.Map<String,Service> _services=
+                            new java.util.HashMap<String,Service>();
     
     /**
      * This method returns the map of names to services.
      * 
      * @return The services
      */
-    public java.util.Map<String,EPService> getServices() {
+    public java.util.Map<String,Service> getServices() {
         return (_services);
     }
     
@@ -46,7 +46,7 @@ public abstract class EventProcessor {
      * 
      * @param services The services
      */
-    public void setServices(java.util.Map<String,EPService> services) {
+    public void setServices(java.util.Map<String,Service> services) {
         _services = services;
     }
     
@@ -58,7 +58,7 @@ public abstract class EventProcessor {
     public void init() throws Exception {
         
         // Iterate through the services initializing them
-        for (EPService service : _services.values()) {
+        for (Service service : _services.values()) {
             service.init();
         }
     }

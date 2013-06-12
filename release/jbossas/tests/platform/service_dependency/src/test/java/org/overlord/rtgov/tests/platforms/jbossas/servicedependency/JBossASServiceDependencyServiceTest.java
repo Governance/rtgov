@@ -68,7 +68,7 @@ public class JBossASServiceDependencyServiceTest {
     }
     
     @Test @OperateOnDeployment("orders-app")
-    public void testCallTrace() {
+    public void testServiceDependency() {
         
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();

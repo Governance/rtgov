@@ -77,6 +77,11 @@
 			<artifactId>active-collection-rests</artifactId>
 			<version>${project.version}</version>
 		</dependency>		
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-infinispan</artifactId>
+			<version>${project.version}</version>
+		</dependency>		
 		
 		<!-- Services -->
 		
@@ -105,6 +110,16 @@
 			<artifactId>call-trace</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.content.services</groupId>
+			<artifactId>situation-manager-rests</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-manager</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		
 		<!-- Overlord commons -->
 		
@@ -126,6 +141,11 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-jbossas</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-infinispan</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		

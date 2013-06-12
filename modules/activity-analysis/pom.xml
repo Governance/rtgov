@@ -18,6 +18,7 @@
 		<module>call-trace</module>
 		<module>service-dependency</module>
 		<module>service-dependency-svg</module>
+		<module>situation-manager</module>
 	</modules>
 
 </project>

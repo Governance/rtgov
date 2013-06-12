@@ -18,7 +18,9 @@
 			<artifactId>rtgov-common</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
-		</dependency>		
+		</dependency>
+		
+		<!--	
 		<dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
@@ -30,6 +32,61 @@
 			<type>pom</type>
 			<scope>provided</scope>
 		</dependency>
+		-->
+		
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mvel</groupId>
+			<artifactId>mvel2</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
+			<scope>provided</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>staxmapper</artifactId>
+			<scope>provided</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-6.0</artifactId>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.logging</groupId>
+			<artifactId>jboss-logging</artifactId>
+			<scope>test</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.jgroups</groupId>
+			<artifactId>jgroups</artifactId>
+			<scope>test</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.jboss.marshalling</groupId>
+			<artifactId>jboss-marshalling</artifactId>
+			<scope>test</scope>
+		</dependency>		
+		<dependency>
+			<groupId>org.jboss.marshalling</groupId>
+			<artifactId>jboss-marshalling-river</artifactId>
+			<scope>test</scope>
+		</dependency>		
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

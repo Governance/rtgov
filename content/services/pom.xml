@@ -16,6 +16,7 @@
 	<modules>
 		<module>call-trace-rests</module>
 		<module>service-dependency-rests</module>
+		<module>situation-manager-rests</module>
 	</modules>
 
 </project>

@@ -23,6 +23,7 @@ import org.junit.Test;
 import org.overlord.rtgov.active.collection.ActiveChangeListener;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.active.collection.QuerySpec;
+import org.overlord.rtgov.active.collection.predicate.MVEL;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
 
 public class ActiveMapTest {
@@ -174,16 +175,16 @@ public class ActiveMapTest {
         
         Predicate predicate=new Predicate() {
 
-			public boolean evaluate(Object item) {
-				return (((TestObject)item).getNumber() % 2 == 0);
-			}
-        	
+            public boolean evaluate(ActiveCollectionContext context, Object item) {
+                return (((TestObject)item).getNumber() % 2 == 0);
+            }
+            
         };
         
-        ActiveMap derived=new ActiveMap(TEST_DERIVED_ACTIVE_COLLECTION, map, predicate);
+        ActiveMap derived=new ActiveMap(TEST_DERIVED_ACTIVE_COLLECTION, map, null, predicate, null);
         
         if (derived.getSize() != 5) {
-        	fail("Should be 5 entries in derived: "+derived.getSize());
+            fail("Should be 5 entries in derived: "+derived.getSize());
         }
     }
     
@@ -199,13 +200,13 @@ public class ActiveMapTest {
         
         Predicate predicate=new Predicate() {
 
-			public boolean evaluate(Object item) {
+			public boolean evaluate(ActiveCollectionContext context, Object item) {
 				return (((TestObject)item).getNumber() % 2 == 0);
 			}
         	
         };
         
-        ActiveMap derived=new ActiveMap(TEST_DERIVED_ACTIVE_COLLECTION, map, predicate);
+        ActiveMap derived=new ActiveMap(TEST_DERIVED_ACTIVE_COLLECTION, map, null, predicate, null);
         
         TestActiveChangeListener l=new TestActiveChangeListener();
         
@@ -267,6 +268,84 @@ public class ActiveMapTest {
         }
     }
 
+    @Test
+    public void testDerivedMapInactive() {
+        
+        ActiveMap map=new ActiveMap(TEST_ACTIVE_COLLECTION);
+        
+        // Create initial list entries
+        for (int i=0; i < 10; i++) {
+            map.insert(""+i, new TestObject(i));
+        }
+        
+        MVEL predicate=new MVEL();
+        predicate.setExpression("number % 2 == 0");
+        
+        java.util.Map<String,Object> props=new java.util.HashMap<String, Object>();
+        props.put("active", false);
+        
+        ActiveMap derived=new ActiveMap(TEST_DERIVED_ACTIVE_COLLECTION, map, null, predicate, props);
+        
+        if (derived.getSize() != 5) {
+            fail("Should be 5 entries in derived: "+derived.getSize());
+        }
+        
+        if (!derived.containsKey("4")) {
+            fail("Should have key '4'");
+        }
+        
+        if (!derived.containsValue(new TestObject(4))) {
+            fail("Should have value 4");
+        }
+        
+        // Change predicate
+        predicate.setExpression("number < 3");
+        
+        if (derived.getSize() != 3) {
+            fail("NOW Should be 3 entries in derived: "+derived.getSize());
+        }
+        
+        if (!derived.containsKey("0")) {
+            fail("Should have key '0'");
+        }
+        
+        if (!derived.containsKey("1")) {
+            fail("Should have key '1'");
+        }
+        
+        if (!derived.containsKey("2")) {
+            fail("Should have key '2'");
+        }
+        
+        if (derived.containsKey("3")) {
+            fail("Should NOT have key '3'");
+        }
+        
+        if (derived.containsKey("4")) {
+            fail("Should NOT have key '4'");
+        }
+        
+        if (!derived.containsValue(new TestObject(0))) {
+            fail("Should have value 0");
+        }
+        
+        if (!derived.containsValue(new TestObject(1))) {
+            fail("Should have value 1");
+        }
+        
+        if (!derived.containsValue(new TestObject(2))) {
+            fail("Should have value 2");
+        }
+        
+        if (derived.containsValue(new TestObject(3))) {
+            fail("Should NOT have value 3");
+        }
+        
+        if (derived.containsValue(new TestObject(4))) {
+            fail("Should NOT have value 4");
+        }
+    }
+    
     public static class TestObject {
         
         private int _number=0;

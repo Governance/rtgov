@@ -21,7 +21,7 @@
         "script" : "AssessCredit.mvel",
         "services" : {
           "CacheManager" : {
-            "@class" : "org.overlord.rtgov.ep.service.infinispan.InfinispanCacheManager"
+            "@class" : "org.overlord.rtgov.common.infinispan.service.InfinispanCacheManager"
           }
         }
       }

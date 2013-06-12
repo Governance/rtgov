@@ -17,9 +17,9 @@
  */
 package org.overlord.rtgov.service.dependency;
 
-import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.situation.Situation;
 
 /**
  * This class represents a node in the graph/tree

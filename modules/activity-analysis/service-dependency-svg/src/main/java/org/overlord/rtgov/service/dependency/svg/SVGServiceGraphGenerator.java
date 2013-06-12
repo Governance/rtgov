@@ -25,11 +25,11 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.service.dependency.InvocationLink;
 import org.overlord.rtgov.service.dependency.OperationNode;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;

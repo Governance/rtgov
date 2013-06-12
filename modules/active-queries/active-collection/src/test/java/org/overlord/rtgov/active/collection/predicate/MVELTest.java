@@ -35,7 +35,7 @@ public class MVELTest {
         to.setServiceType("OrderService");
         to.setOperation("buy");
         
-        if (!predicate.evaluate(to)) {
+        if (!predicate.evaluate(null, to)) {
             fail("Evaluation should be true");
         }
     }
@@ -51,7 +51,7 @@ public class MVELTest {
         to.setServiceType("InventoryService");
         to.setOperation("lookup");
         
-        if (predicate.evaluate(to)) {
+        if (predicate.evaluate(null, to)) {
             fail("Evaluation should be false");
         }
     }
@@ -66,7 +66,7 @@ public class MVELTest {
         
         to.setServiceType("OrderService");
         
-        if (predicate.evaluate(to)) {
+        if (predicate.evaluate(null, to)) {
             fail("Evaluation should be false");
         }
     }
@@ -81,7 +81,7 @@ public class MVELTest {
         
         to.setOperation("buy");
         
-        if (!predicate.evaluate(to)) {
+        if (!predicate.evaluate(null, to)) {
             fail("Evaluation should be true");
         }
     }

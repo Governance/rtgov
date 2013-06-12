@@ -62,7 +62,7 @@
 		<cdi.version>1.0-SP4</cdi.version>
 		<commons-codec.version>1.5</commons-codec.version>
 		<drools.version>6.0.0.Alpha9</drools.version>
-		<gadgets.version>1.0.0.20130607-M5</gadgets.version>
+		<gadgets.version>1.0.0-SNAPSHOT</gadgets.version>
 		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
 		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
 		<jackson.version>1.9.2</jackson.version>			<!-- Passed into junit tests -->

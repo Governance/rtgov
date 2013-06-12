@@ -90,17 +90,44 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      * 
      * @param name The name
      * @param parent The parent collection
+     * @param context The context
      * @param predicate The predicate
+     * @param properties The optional properties
      */
-    protected ActiveList(String name, ActiveCollection parent, Predicate predicate) {
-        super(name, parent, predicate);
+    protected ActiveList(String name, ActiveCollection parent, ActiveCollectionContext context,
+                            Predicate predicate, java.util.Map<String,Object> properties) {
+        super(name, parent, context, predicate, properties);
         
-        // Filter the parent list items, to determine which pass the predicate
-        for (Object value : (ActiveList)parent) {
-            if (predicate.evaluate(value)) {
-                insert(null, value);
+        if (isActive()) {
+            // Filter the parent list items, to determine which pass the predicate
+            for (Object value : (ActiveList)parent) {
+                if (predicate.evaluate(context, value)) {
+                    insert(null, value);
+                }
             }
         }
+    }
+    
+    /**
+     * This method derives the content.
+     * 
+     * @return The derived content
+     */
+    protected java.util.List<Object> deriveContent() {
+        java.util.List<Object> ret=new java.util.ArrayList<Object>();
+        ActiveCollection parent=getParent();
+        Predicate pred=getPredicate();
+        ActiveCollectionContext context=getContext();
+        
+        if (parent != null && pred != null) {
+            for (Object value : (ActiveList)parent) {
+                if (pred.evaluate(context, value)) {
+                    ret.add(value);
+                }
+            }
+        }
+        
+        return (ret);
     }
     
     /**
@@ -116,8 +143,13 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      * {@inheritDoc}
      */
     public int getSize() {
-        synchronized (_list) {
-            return (_list.size());
+        if (!isDerived() || isActive()) {
+            synchronized (_list) {
+                return (_list.size());
+            }
+        } else {
+            java.util.List<Object> derived=deriveContent();
+            return (derived.size());
         }
     }
     
@@ -127,30 +159,34 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
     @Override
     protected void insert(Object key, Object value) {
         
-        synchronized (_list) {
-            if (key == null) {
-                _list.add(value);
-                
-                if (getItemExpiration() > 0) {
-                    _listTimestamps.add(System.currentTimeMillis());
+        // If top level active collection, or a derive collection that is being actively
+        // maintained, then apply the insertion
+        if (!isDerived() || isActive()) {
+            synchronized (_list) {
+                if (key == null) {
+                    _list.add(value);
+                    
+                    if (getItemExpiration() > 0) {
+                        _listTimestamps.add(System.currentTimeMillis());
+                    }
+                } else if (key instanceof Integer) {
+                    _list.add((Integer)key, value);
+                    
+                    if (getItemExpiration() > 0) {
+                        _listTimestamps.add((Integer)key, System.currentTimeMillis());
+                    }
+                } else {
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-7"),
+                            key));
                 }
-            } else if (key instanceof Integer) {
-                _list.add((Integer)key, value);
                 
-                if (getItemExpiration() > 0) {
-                    _listTimestamps.add((Integer)key, System.currentTimeMillis());
-                }
-            } else {
-                LOG.severe(MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "active-collection.Messages").getString("ACTIVE-COLLECTION-7"),
-                        key));
+                _readCopy = null;
             }
             
-            _readCopy = null;
+            inserted(key, value);
         }
-        
-        inserted(key, value);
     }
 
     /**
@@ -158,44 +194,49 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      */
     @Override
     protected void update(Object key, Object value) {
-        synchronized (_list) {
-            if (key != null) {
-                if (key instanceof Integer) {
-                    _list.set((Integer)key, value);
-                    
-                    if (getItemExpiration() > 0) {
-                        _listTimestamps.set((Integer)key, System.currentTimeMillis());
+        
+        // If top level active collection, or a derive collection that is being actively
+        // maintained, then apply the update
+        if (!isDerived() || isActive()) {
+            synchronized (_list) {
+                if (key != null) {
+                    if (key instanceof Integer) {
+                        _list.set((Integer)key, value);
+                        
+                        if (getItemExpiration() > 0) {
+                            _listTimestamps.set((Integer)key, System.currentTimeMillis());
+                        }
+                        
+                        updated(key, value);
+                    } else {
+                        LOG.severe(MessageFormat.format(
+                                java.util.PropertyResourceBundle.getBundle(
+                                "active-collection.Messages").getString("ACTIVE-COLLECTION-8"),
+                                key));
                     }
-                    
-                    updated(key, value);
                 } else {
-                    LOG.severe(MessageFormat.format(
-                            java.util.PropertyResourceBundle.getBundle(
-                            "active-collection.Messages").getString("ACTIVE-COLLECTION-8"),
-                            key));
+                    // Can only assume that value maintains its own identity
+                    int index=_list.indexOf(value);
+                    
+                    if (index == -1) {
+                        // Can't find updated entry, so log error
+                        LOG.severe(MessageFormat.format(
+                                java.util.PropertyResourceBundle.getBundle(
+                                "active-collection.Messages").getString("ACTIVE-COLLECTION-9"),
+                                getName(), value));
+                    } else {
+                        _list.set(index, value);
+                        
+                        if (getItemExpiration() > 0) {
+                            _listTimestamps.set(index, System.currentTimeMillis());
+                        }
+                        
+                        updated(index, value);
+                    }
                 }
-            } else {
-                // Can only assume that value maintains its own identity
-                int index=_list.indexOf(value);
                 
-                if (index == -1) {
-                    // Can't find updated entry, so log error
-                    LOG.severe(MessageFormat.format(
-                            java.util.PropertyResourceBundle.getBundle(
-                            "active-collection.Messages").getString("ACTIVE-COLLECTION-9"),
-                            getName(), value));
-                } else {
-                    _list.set(index, value);
-                    
-                    if (getItemExpiration() > 0) {
-                        _listTimestamps.set(index, System.currentTimeMillis());
-                    }
-                    
-                    updated(index, value);
-                }
+                _readCopy = null;
             }
-            
-            _readCopy = null;
         }
     }
 
@@ -204,32 +245,37 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      */
     @Override
     protected void remove(Object key, Object value) {
-        int pos=-1;
-        
-        synchronized (_list) {
-            if (key instanceof Integer) {
-                pos = (Integer)key;
-            } else {
-                pos = _list.indexOf(value);
+
+        // If top level active collection, or a derive collection that is being actively
+        // maintained, then apply the deletion
+        if (!isDerived() || isActive()) {
+            int pos=-1;
+            
+            synchronized (_list) {
+                if (key instanceof Integer) {
+                    pos = (Integer)key;
+                } else {
+                    pos = _list.indexOf(value);
+                }
+                
+                if (pos != -1) {
+                    _list.remove(pos);
+                    
+                    if (getItemExpiration() > 0) {
+                        _listTimestamps.remove(pos);
+                    }
+                } else {
+                    LOG.severe(MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "active-collection.Messages").getString("ACTIVE-COLLECTION-10"),
+                            getName(), value));
+                }
+                _readCopy = null;
             }
             
             if (pos != -1) {
-                _list.remove(pos);
-                
-                if (getItemExpiration() > 0) {
-                    _listTimestamps.remove(pos);
-                }
-            } else {
-                LOG.severe(MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "active-collection.Messages").getString("ACTIVE-COLLECTION-10"),
-                        getName(), value));
+                removed(pos, value);
             }
-            _readCopy = null;
-        }
-        
-        if (pos != -1) {
-            removed(pos, value);
         }
     }
 
@@ -237,26 +283,32 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      * {@inheritDoc}
      */
     public Iterator<Object> iterator() {
-        synchronized (_list) {
-            if (_readCopy != null) {
-                return (_readCopy.iterator());
-            }
-            
-            if (_copyOnRead) {
-                _readCopy = new java.util.ArrayList<Object>(_list);
+        if (!isDerived() || isActive()) {
+            synchronized (_list) {
+                if (_readCopy != null) {
+                    return (_readCopy.iterator());
+                }
                 
-                return (_readCopy.iterator());
-            } else {
-                return (_list.iterator());
+                if (_copyOnRead) {
+                    _readCopy = new java.util.ArrayList<Object>(_list);
+                    
+                    return (_readCopy.iterator());
+                } else {
+                    return (_list.iterator());
+                }
             }
+        } else {
+            java.util.List<Object> derived=deriveContent();
+            return (derived.iterator());
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    protected ActiveCollection derive(String name, Predicate predicate) {
-        return (new ActiveList(name, this, predicate));
+    protected ActiveCollection derive(String name, ActiveCollectionContext context,
+                        Predicate predicate, java.util.Map<String,Object> properties) {
+        return (new ActiveList(name, this, context, predicate, properties));
     }
     
     /**
@@ -264,22 +316,27 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      */
     public java.util.List<Object> query(QuerySpec qs) {
         java.util.List<Object> ret=null;
+        java.util.List<Object> list=_list;
         
-        synchronized (_list) {
+        if (isDerived() && !isActive()) {
+            list = deriveContent();
+        }
+        
+        synchronized (list) {
             // If no max items set, or list size is smaller than the max
             // size, and the style is normal, then just copy
-            if ((qs.getMaxItems() == 0 || qs.getMaxItems() >= _list.size())
+            if ((qs.getMaxItems() == 0 || qs.getMaxItems() >= list.size())
                                && qs.getStyle() == Style.Normal) {
-                ret = new java.util.ArrayList<Object>(_list);
+                ret = new java.util.ArrayList<Object>(list);
             } else {
                 int start=0;
-                int end=_list.size();
+                int end=list.size();
                 
-                if (qs.getMaxItems() > 0 && qs.getMaxItems() <= _list.size()) {
+                if (qs.getMaxItems() > 0 && qs.getMaxItems() <= list.size()) {
                     if (qs.getTruncate() == Truncate.End) {
                         end = qs.getMaxItems();
                     } else {
-                        start = _list.size()-qs.getMaxItems();
+                        start = list.size()-qs.getMaxItems();
                     }
                 }
                 
@@ -287,11 +344,11 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                 
                 if (qs.getStyle() == Style.Reversed) {
                     for (int i=end-1; i >= start; i--) {
-                        ret.add(_list.get(i));
+                        ret.add(list.get(i));
                     }
                 } else {
                     for (int i=start; i < end; i++) {
-                        ret.add(_list.get(i));
+                        ret.add(list.get(i));
                     }
                 }
             }
@@ -305,35 +362,37 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      */
     protected void cleanup() {
         
-        // TODO: Provide some separate cleanup policy class to enable
-        // different policies to be used. For now just have a simple
-        // directly implemented mechanism.
-        
-        if (getMaxItems() > 0) {
+        if (!isDerived() || isActive()) {
+            // TODO: Provide some separate cleanup policy class to enable
+            // different policies to be used. For now just have a simple
+            // directly implemented mechanism.
             
-            synchronized (_list) {
-                int num=getSize()-getMaxItems();
+            if (getMaxItems() > 0) {
                 
-                while (num > 0) {
-                    remove(0, null);
-                    num--;
+                synchronized (_list) {
+                    int num=getSize()-getMaxItems();
+                    
+                    while (num > 0) {
+                        remove(0, null);
+                        num--;
+                    }
                 }
             }
-        }
-        
-        if (getItemExpiration() > 0) {
             
-            synchronized (_list) {
-                // Calculate expiration time
-                long expiration = System.currentTimeMillis()-getItemExpiration();
+            if (getItemExpiration() > 0) {
                 
-                // Work through list backwards to determine if the entry
-                // has expired
-                for (int i=getSize()-1; i >= 0; i--) {
-                    if (_listTimestamps.get(i) < expiration) {
-                        // TODO: Could do bulk remove and then
-                        // send notifications all at once???
-                        remove(i, null);
+                synchronized (_list) {
+                    // Calculate expiration time
+                    long expiration = System.currentTimeMillis()-getItemExpiration();
+                    
+                    // Work through list backwards to determine if the entry
+                    // has expired
+                    for (int i=getSize()-1; i >= 0; i--) {
+                        if (_listTimestamps.get(i) < expiration) {
+                            // TODO: Could do bulk remove and then
+                            // send notifications all at once???
+                            remove(i, null);
+                        }
                     }
                 }
             }
@@ -344,14 +403,24 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      * {@inheritDoc}
      */
     public boolean isEmpty() {
-        return (_list.isEmpty());
+        if (!isDerived() || isActive()) {
+            return (_list.isEmpty());
+        } else {
+            java.util.List<Object> derived=deriveContent();
+            return (derived.isEmpty());
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public boolean contains(Object o) {
-        return (_list.contains(o));
+        if (!isDerived() || isActive()) {
+            return (_list.contains(o));
+        } else {
+            java.util.List<Object> derived=deriveContent();
+            return (derived.contains(o));
+        }
     }
 
     /**

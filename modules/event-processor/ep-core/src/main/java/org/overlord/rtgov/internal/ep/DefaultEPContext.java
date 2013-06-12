@@ -20,8 +20,8 @@ package org.overlord.rtgov.internal.ep;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.rtgov.common.service.Service;
 import org.overlord.rtgov.ep.EPContext;
-import org.overlord.rtgov.ep.service.EPService;
 
 /**
  * This class provides services to the EventProcessor
@@ -34,7 +34,7 @@ public class DefaultEPContext implements EPContext {
 
     private static final ThreadLocal<Object> RESULT=new ThreadLocal<Object>();
     
-    private java.util.Map<String,EPService> _services=null;
+    private java.util.Map<String,Service> _services=null;
     
     /**
      * The default constructor.
@@ -47,7 +47,7 @@ public class DefaultEPContext implements EPContext {
      * 
      * @param services The map of services available
      */
-    public DefaultEPContext(java.util.Map<String,EPService> services) {
+    public DefaultEPContext(java.util.Map<String,Service> services) {
         _services = services;
     }
     
@@ -56,7 +56,7 @@ public class DefaultEPContext implements EPContext {
      * 
      * @param services The services
      */
-    public void setServices(java.util.Map<String,EPService> services) {
+    public void setServices(java.util.Map<String,Service> services) {
         _services = services;
     }
     
@@ -113,8 +113,8 @@ public class DefaultEPContext implements EPContext {
     /**
      * {@inheritDoc}
      */
-    public EPService getService(String name) {
-        EPService ret=null;
+    public Service getService(String name) {
+        Service ret=null;
         
         if (_services != null) {
             ret = _services.get(name);

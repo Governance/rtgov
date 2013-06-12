@@ -37,6 +37,7 @@ public class QuerySpec {
     private int _maxItems=0;
     private Truncate _truncate=Truncate.Start;
     private Style _style=Style.Normal;
+    private java.util.Map<String,Object> _properties=new java.util.HashMap<String, Object>();
     
     /**
      * The default constructor.
@@ -164,6 +165,24 @@ public class QuerySpec {
      */
     public void setStyle(Style style) {
         _style = style;
+    }
+    
+    /**
+     * This method returns the additional properties.
+     * 
+     * @return The properties
+     */
+    public java.util.Map<String,Object> getProperties() {
+        return (_properties);
+    }
+    
+    /**
+     * This method sets the additional properties.
+     * 
+     * @param props The properties
+     */
+    public void setProperties(java.util.Map<String,Object> props) {
+        _properties = props;
     }
     
     /**

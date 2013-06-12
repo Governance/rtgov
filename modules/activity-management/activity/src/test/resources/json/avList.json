@@ -8,7 +8,7 @@
       "@class" : "org.overlord.rtgov.activity.validator.TestEventProcessor1",
       "services" : {
         "testCache" : {
-          "@class" : "org.overlord.rtgov.ep.service.InMemoryCacheManager"
+          "@class" : "org.overlord.rtgov.activity.validator.TestCacheManager"
         }
       }
     }

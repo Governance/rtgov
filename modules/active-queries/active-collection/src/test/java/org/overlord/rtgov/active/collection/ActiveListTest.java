@@ -25,6 +25,7 @@ import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.QuerySpec;
 import org.overlord.rtgov.active.collection.QuerySpec.Style;
 import org.overlord.rtgov.active.collection.QuerySpec.Truncate;
+import org.overlord.rtgov.active.collection.predicate.MVEL;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
 
 public class ActiveListTest {
@@ -245,13 +246,13 @@ public class ActiveListTest {
         
         Predicate predicate=new Predicate() {
 
-			public boolean evaluate(Object item) {
+			public boolean evaluate(ActiveCollectionContext context, Object item) {
 				return (((TestObject)item).getNumber() % 2 == 0);
 			}
         	
         };
         
-        ActiveList derived=new ActiveList(TEST_DERIVED_ACTIVE_COLLECTION, list, predicate);
+        ActiveList derived=new ActiveList(TEST_DERIVED_ACTIVE_COLLECTION, list, null, predicate, null);
         
         if (derived.getSize() != 5) {
         	fail("Should be 5 entries in derived: "+derived.getSize());
@@ -271,13 +272,13 @@ public class ActiveListTest {
         
         Predicate predicate=new Predicate() {
 
-			public boolean evaluate(Object item) {
+			public boolean evaluate(ActiveCollectionContext context, Object item) {
 				return (((TestObject)item).getNumber() % 2 == 0);
 			}
         	
         };
         
-        ActiveList derived=new ActiveList(TEST_DERIVED_ACTIVE_COLLECTION, list, predicate);
+        ActiveList derived=new ActiveList(TEST_DERIVED_ACTIVE_COLLECTION, list, null, predicate, null);
         
         TestActiveChangeListener l=new TestActiveChangeListener();
         
@@ -631,6 +632,55 @@ public class ActiveListTest {
         }
     }
 
+    @Test
+    public void testDerivedListInactive() {
+        
+        ActiveList list=new ActiveList(TEST_ACTIVE_COLLECTION);
+        list.setCopyOnRead(true);
+        
+        // Create initial list entries
+        for (int i=0; i < 10; i++) {
+            list.insert(null, new TestObject(i));
+        }
+        
+        MVEL predicate=new MVEL();
+        predicate.setExpression("number % 2 == 0");
+        
+        java.util.Map<String,Object> props=new java.util.HashMap<String, Object>();
+        props.put("active", false);
+        
+        ActiveList derived=new ActiveList(TEST_DERIVED_ACTIVE_COLLECTION, list, null, predicate, props);
+        
+        if (derived.getSize() != 5) {
+            fail("Should be 5 entries in derived: "+derived.getSize());
+        }
+        
+        // Change predicate
+        predicate.setExpression("number < 3");
+        
+        if (derived.getSize() != 3) {
+            fail("NOW Should be 3 entries in derived: "+derived.getSize());
+        }
+        
+        java.util.Iterator<Object> iter=derived.iterator();
+        
+        TestObject to1=(TestObject)iter.next();
+        TestObject to2=(TestObject)iter.next();
+        TestObject to3=(TestObject)iter.next();
+        
+        if (to1.getNumber() != 0) {
+            fail("First is not 0: "+to1.getNumber());
+        }
+        
+        if (to2.getNumber() != 1) {
+            fail("Second is not 1: "+to2.getNumber());
+        }
+        
+        if (to3.getNumber() != 2) {
+            fail("Third is not 2: "+to3.getNumber());
+        }
+    }
+    
     public static class TestObject {
         
         private int _number=0;

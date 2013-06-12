@@ -44,6 +44,18 @@
 		</dependency>
 		
 		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-infinispan</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor-network</groupId>
+			<artifactId>epn-core</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
 			<scope>test</scope>

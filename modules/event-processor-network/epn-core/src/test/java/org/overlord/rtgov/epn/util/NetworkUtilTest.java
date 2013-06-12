@@ -20,10 +20,11 @@ package org.overlord.rtgov.epn.util;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.rtgov.common.service.CacheManager;
 import org.overlord.rtgov.epn.Network;
 import org.overlord.rtgov.epn.Node;
 import org.overlord.rtgov.epn.Subscription;
-import org.overlord.rtgov.ep.service.InMemoryCacheManager;
+import org.overlord.rtgov.epn.testdata.TestCacheManager;
 import org.overlord.rtgov.epn.testdata.TestEventProcessor1;
 import org.overlord.rtgov.epn.testdata.TestEventProcessor2;
 import org.overlord.rtgov.epn.testdata.TestEventProcessor3;
@@ -60,7 +61,7 @@ public class NetworkUtilTest {
         n0.setPredicate(new TestPredicate1());   
         
         n0.getEventProcessor().getServices().put("testCache",
-                            new InMemoryCacheManager());
+                            new TestCacheManager());
         
         // Node 1
         Node n1=new Node();
@@ -129,7 +130,7 @@ public class NetworkUtilTest {
             }
             
             TestEventProcessor1 tep1=(TestEventProcessor1)n1.getEventProcessor();
-            if (!(tep1.getServices().get("testCache") instanceof InMemoryCacheManager)) {
+            if (!(tep1.getServices().get("testCache") instanceof CacheManager)) {
                 fail("Failed to find test cache");
             }
             

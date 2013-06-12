@@ -12,7 +12,7 @@
 		<class>org.overlord.rtgov.activity.model.ActivityType</class>
 		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
 
-		<class>org.overlord.rtgov.analytics.Situation</class>
+		<class>org.overlord.rtgov.analytics.situation.Situation</class>
 
 	</persistence-unit>
 	<persistence-unit name="overlord-rtgov-epn-non-jta">
@@ -24,7 +24,7 @@
 		<class>org.overlord.rtgov.activity.model.ActivityType</class>
 		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
 
-		<class>org.overlord.rtgov.analytics.Situation</class>
+		<class>org.overlord.rtgov.analytics.situation.Situation</class>
 
 	</persistence-unit>
 </persistence>

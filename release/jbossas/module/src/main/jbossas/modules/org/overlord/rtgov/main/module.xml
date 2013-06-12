@@ -27,14 +27,11 @@
     <resources>
         <resource-root path="acs-epn-${project.version}.jar"/>
         <resource-root path="active-collection-${project.version}.jar"/>
-        <resource-root path="active-collection-infinispan-${project.version}.jar"/>
         <resource-root path="activity-${project.version}.jar"/>
         <resource-root path="analytics-${project.version}.jar"/>
         <resource-root path="rtgov-common-${project.version}.jar"/>
-        <resource-root path="rtgov-infinispan-${project.version}.jar"/>
         <resource-root path="ep-core-${project.version}.jar"/>
         <resource-root path="ep-drools-${project.version}.jar"/>
-        <resource-root path="ep-infinispan-${project.version}.jar"/>
         <resource-root path="ep-mvel-${project.version}.jar"/>
         <resource-root path="epn-core-${project.version}.jar"/>
     </resources>

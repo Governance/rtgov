@@ -20,6 +20,7 @@ package org.overlord.rtgov.active.collection.predicate;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
+import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 
 /**
  * This interface is used to determine whether a changed item
@@ -34,9 +35,10 @@ public abstract class Predicate {
      * This method evaluates the supplied item against
      * the predicate.
      * 
+     * @param context The context
      * @param item The item
      * @return Whether the predicate is true or false for this item
      */
-    public abstract boolean evaluate(Object item);
+    public abstract boolean evaluate(ActiveCollectionContext context, Object item);
     
 }

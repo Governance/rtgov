@@ -20,13 +20,13 @@ package org.overlord.rtgov.service.dependency.svg;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.service.OperationImplDefinition;
+import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;

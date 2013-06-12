@@ -21,6 +21,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.rtgov.activity.validator.ActivityValidator;
+import org.overlord.rtgov.activity.validator.TestCacheManager;
 import org.overlord.rtgov.activity.validator.TestEventProcessor1;
 import org.overlord.rtgov.activity.validator.TestEventProcessor2;
 import org.overlord.rtgov.activity.validator.TestPredicate1;
@@ -34,8 +35,7 @@ public class ActivityValidatorUtilTest {
         ai1.setVersion("1");
         ai1.setPredicate(new TestPredicate1());
         ai1.setEventProcessor(new TestEventProcessor1());
-        ai1.getEventProcessor().getServices().put("testCache",
-        		new org.overlord.rtgov.ep.service.InMemoryCacheManager());
+        ai1.getEventProcessor().getServices().put("testCache", new TestCacheManager());
         
         ActivityValidator ai2=new ActivityValidator();
         ai2.setName("av2");

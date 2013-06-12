@@ -130,6 +130,37 @@ public class AbstractActiveCollectionManagerTest {
     }
 
     @Test
+    public void testRegisterACSWithDerived() {
+        ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
+        
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        acs.setName(TEST_AC);
+        
+        ActiveCollectionSource.DerivedDefinition dd=new ActiveCollectionSource.DerivedDefinition();
+        dd.setName(DERIVED_AC);
+        acs.getDerived().add(dd);
+        
+        try {
+            mgr.register(acs);
+        } catch (Exception e) {
+            fail("Failed to register active collection source: "+e);
+        }
+        
+        // Check that the active collection for this source has been created
+        if (acs.getActiveCollection() == null) {
+            fail("Active collection on source has not been set");
+        }
+        
+        if (mgr.getActiveCollection(TEST_AC) == null) {
+            fail("Unable to obtain active collection from manager");
+        }
+        
+        if (mgr.getActiveCollection(DERIVED_AC) == null) {
+            fail("Unable to obtain derived active collection from manager");
+        }
+    }
+
+    @Test
     public void testUnregisterACS() {
         ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
         
@@ -142,6 +173,10 @@ public class AbstractActiveCollectionManagerTest {
             fail("Failed to register active collection source: "+e);
         }
         
+        if (mgr.getActiveCollection(TEST_AC) == null) {
+            fail("Unable to obtain active collection from manager");
+        }
+
         try {
             mgr.unregister(acs);
         } catch (Exception e) {
@@ -150,6 +185,46 @@ public class AbstractActiveCollectionManagerTest {
         
         if (mgr.getActiveCollection(TEST_AC) != null) {
             fail("Should not be able to obtain active collection from manager");
+        }
+    }
+    
+    @Test
+    public void testUnregisterACSWithDerived() {
+        ActiveCollectionManager mgr=new AbstractActiveCollectionManager() {};
+        
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        acs.setName(TEST_AC);
+        
+        ActiveCollectionSource.DerivedDefinition dd=new ActiveCollectionSource.DerivedDefinition();
+        dd.setName(DERIVED_AC);
+        acs.getDerived().add(dd);
+        
+        try {
+            mgr.register(acs);
+        } catch (Exception e) {
+            fail("Failed to register active collection source: "+e);
+        }
+        
+        if (mgr.getActiveCollection(TEST_AC) == null) {
+            fail("Unable to obtain active collection from manager");
+        }
+
+        if (mgr.getActiveCollection(DERIVED_AC) == null) {
+            fail("Unable to obtain derived active collection from manager");
+        }
+
+        try {
+            mgr.unregister(acs);
+        } catch (Exception e) {
+            fail("Failed to unregister active collection source: "+e);
+        }
+        
+        if (mgr.getActiveCollection(TEST_AC) != null) {
+            fail("Should not be able to obtain active collection from manager");
+        }
+        
+        if (mgr.getActiveCollection(DERIVED_AC) != null) {
+            fail("Should not be able to obtain derived active collection from manager");
         }
     }
     
@@ -200,12 +275,12 @@ public class AbstractActiveCollectionManagerTest {
         }
         
         Predicate predicate=new Predicate() {
-			public boolean evaluate(Object item) {
+			public boolean evaluate(ActiveCollectionContext context, Object item) {
 				return true;
 			}
         };
         
-        mgr.create(DERIVED_AC, parent, predicate);
+        mgr.create(DERIVED_AC, parent, predicate, null);
         
         if (mgr.getActiveCollection(DERIVED_AC) == null) {
         	fail("Failed to retrieve derived ac");

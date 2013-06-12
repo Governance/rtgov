@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.overlord.rtgov.activity.model.Context;
-import org.overlord.rtgov.analytics.service.util.ServiceDefinitionUtil;
+import org.overlord.rtgov.analytics.util.ServiceDefinitionUtil;
 
 /**
  * This class represents the service contract details associated

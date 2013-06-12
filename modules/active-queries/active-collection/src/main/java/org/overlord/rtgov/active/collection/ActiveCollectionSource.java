@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.mvel2.MVEL;
+import org.overlord.rtgov.active.collection.predicate.Predicate;
 
 /**
  * This class defines an Active Collection Source that is
@@ -49,7 +50,13 @@ public class ActiveCollectionSource {
     private long _itemExpiration=0;
     private int _maxItems=0;
     private int _highWaterMark=0;
+    
+    private java.util.List<DerivedDefinition> _derived=
+                    new java.util.ArrayList<DerivedDefinition>();
+    
     private ActiveCollection _activeCollection=null;
+    private java.util.List<ActiveCollection> _derivedActiveCollections=
+                    new java.util.ArrayList<ActiveCollection>();
     private java.util.List<AbstractActiveChangeListener> _listeners=
                     new java.util.ArrayList<AbstractActiveChangeListener>();
 
@@ -78,6 +85,8 @@ public class ActiveCollectionSource {
     private Aggregator _aggregator=null;
 
     private boolean _preinitialized=false;
+    
+    private ActiveCollectionContext _context=null;
 
     /**
      * The default constructor.
@@ -280,6 +289,26 @@ public class ActiveCollectionSource {
     }
     
     /**
+     * This method returns the list of derived active collection
+     * definitions.
+     * 
+     * @return The derived active collection definitions
+     */
+    public java.util.List<DerivedDefinition> getDerived() {
+        return (_derived);
+    }
+    
+    /**
+     * This method sets the list of derived active collection
+     * definitions.
+     * 
+     * @param derived The derived active collection definitions
+     */
+    public void setDerived(java.util.List<DerivedDefinition> derived) {
+        _derived = derived;
+    }
+    
+    /**
      * This method determines whether the source has an associated
      * active collection.
      * 
@@ -304,7 +333,7 @@ public class ActiveCollectionSource {
                     ? ActiveCollectionFactory.DEFAULT_FACTORY : _factory);
             
             _activeCollection = factory.createActiveCollection(this);
-
+            
             // If active change listeners defined, then 
             // add them to the active collection
             if (_activeCollection != null && _listeners.size() > 0) {
@@ -332,6 +361,32 @@ public class ActiveCollectionSource {
      */
     public void setActiveCollection(ActiveCollection ac) {
         _activeCollection = ac;
+    }
+
+    /**
+     * This method returns the derived Active Collections associated with the
+     * source.
+     * 
+     * @return The derived active collections
+     */
+    @JsonIgnore
+    public synchronized java.util.List<ActiveCollection> getDerivedActiveCollections() {
+        
+        // Create the derived active collections, if not already defined
+        if (_activeCollection != null && _derived.size() > 0 &&
+                            _derivedActiveCollections.size() == 0) {
+            
+            // Create derived active collections
+            for (DerivedDefinition dd : getDerived()) {
+                ActiveCollection derived=_activeCollection.derive(dd.getName(),
+                                _context, dd.getPredicate(), dd.getProperties());
+                
+                _derivedActiveCollections.add(derived);
+            }
+
+        }
+
+        return (_derivedActiveCollections);
     }
 
     /**
@@ -595,7 +650,8 @@ public class ActiveCollectionSource {
      * 
      * @throws Exception Failed to initialize source
      */
-    public void init() throws Exception {
+    public void init(ActiveCollectionContext context) throws Exception {
+        _context = context;
         
         preInit();
 
@@ -861,6 +917,79 @@ public class ActiveCollectionSource {
         
         if (_scheduledTimer != null) {
             _scheduledTimer.cancel();
+        }
+    }
+    
+    /**
+     * This class provides the definition of a derived
+     * active collection that will be associated with
+     * the main collection from this source.
+     *
+     */
+    public static class DerivedDefinition {
+        
+        private String _name=null;
+        private Predicate _predicate=null;
+        private java.util.Map<String,Object> _properties=new java.util.HashMap<String, Object>();
+        
+        /**
+         * The default constructor.
+         */
+        public DerivedDefinition() {
+        }
+        
+        /**
+         * This method sets the name of the derived collection.
+         * 
+         * @param name The name
+         */
+        public void setName(String name) {
+            _name = name;
+        }
+        
+        /**
+         * This method gets the name of the derived collection.
+         * 
+         * @return The name
+         */
+        public String getName() {
+            return (_name);
+        }
+        
+        /**
+         * This method sets the predicate for the derived collection.
+         * 
+         * @param predicate The predicate
+         */
+        public void setPredicate(Predicate predicate) {
+            _predicate = predicate;
+        }
+        
+        /**
+         * This method gets the predicate for the derived collection.
+         * 
+         * @return The predicate
+         */
+        public Predicate getPredicate() {
+            return (_predicate);
+        }
+        
+        /**
+         * This method returns the properties.
+         * 
+         * @return The properties
+         */
+        public java.util.Map<String,Object> getProperties() {
+            return (_properties);
+        }
+        
+        /**
+         * This method sets the properties.
+         * 
+         * @param props The properties
+         */
+        public void setProperties(java.util.Map<String,Object> props) {
+            _properties = props;
         }
     }
     

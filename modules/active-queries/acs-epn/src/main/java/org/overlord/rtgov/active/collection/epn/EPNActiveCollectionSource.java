@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
+import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 import org.overlord.rtgov.epn.ContextualNotificationListener;
 import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.EventList;
@@ -75,8 +76,8 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
      * {@inheritDoc}
      */
     @Override
-    public void init() throws Exception {
-        super.init();
+    public void init(ActiveCollectionContext context) throws Exception {
+        super.init(context);
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Initializing EPN Active Collection Source");

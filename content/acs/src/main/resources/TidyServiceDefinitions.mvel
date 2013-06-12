@@ -24,7 +24,7 @@ while (snapshots.size() > maxSnapshots) {
 }
 
 // Merge snapshots
-merged = org.overlord.rtgov.analytics.service.util.ServiceDefinitionUtil.mergeSnapshots(snapshots);
+merged = org.overlord.rtgov.analytics.util.ServiceDefinitionUtil.mergeSnapshots(snapshots);
 
 // Update existing, and remove definitions no longer relevant
 foreach (entry : acs.activeCollection) {

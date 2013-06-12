@@ -17,7 +17,7 @@
  */
 package org.overlord.rtgov.ep;
 
-import org.overlord.rtgov.ep.service.EPService;
+import org.overlord.rtgov.common.service.Service;
 
 /**
  * This interface provides services to the EventProcessor
@@ -62,6 +62,6 @@ public interface EPContext {
      * @param name The service name
      * @return The service, or null if not found
      */
-    public EPService getService(String name);
+    public Service getService(String name);
     
 }

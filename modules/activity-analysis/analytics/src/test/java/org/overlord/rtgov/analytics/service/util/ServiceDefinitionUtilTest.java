@@ -33,7 +33,7 @@ import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.service.OperationImplDefinition;
-import org.overlord.rtgov.analytics.service.util.ServiceDefinitionUtil;
+import org.overlord.rtgov.analytics.util.ServiceDefinitionUtil;
 
 public class ServiceDefinitionUtilTest {
 

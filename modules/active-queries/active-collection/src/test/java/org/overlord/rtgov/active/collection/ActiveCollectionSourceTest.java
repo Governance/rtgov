@@ -28,6 +28,8 @@ import org.overlord.rtgov.active.collection.ActiveCollectionFactory;
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.ActiveCollectionType;
 import org.overlord.rtgov.active.collection.ActiveList;
+import org.overlord.rtgov.active.collection.predicate.MVEL;
+import org.overlord.rtgov.active.collection.predicate.Predicate;
 
 public class ActiveCollectionSourceTest {
 
@@ -35,6 +37,7 @@ public class ActiveCollectionSourceTest {
     private static final String T_OBJ2 = "TObj2";
     private static final String T_OBJ1 = "TObj1";
     private static final String TEST_ACTIVE_LIST = "TestActiveList";
+    private static final String TEST_OTHER_LIST = "TestOtherList";
 
     @Test
     public void testActiveChangeListenerFailConfig() {
@@ -51,7 +54,7 @@ public class ActiveCollectionSourceTest {
         });
         
         try {
-            acs.init();
+            acs.init(null);
             
         } catch (Exception e) {
             fail("Should not have failed init: "+e);
@@ -80,7 +83,7 @@ public class ActiveCollectionSourceTest {
         }
 
         try {
-            acs.init();       
+            acs.init(null);       
         } catch (Exception e) {
             fail("Failed to initialize the active collection source: "+e);
         }
@@ -113,7 +116,7 @@ public class ActiveCollectionSourceTest {
         acs.setGroupBy("name");
         
         try {
-            acs.init();
+            acs.init(null);
         } catch(Exception e) {
             fail("Failed to initialize active collection source: "+e);
         }
@@ -193,7 +196,7 @@ public class ActiveCollectionSourceTest {
         acs.setAggregationScript("scripts/Aggregate.mvel");
         
         try {
-            acs.init();
+            acs.init(null);
         } catch(Exception e) {
             fail("Failed to initialize active collection source: "+e);
         }
@@ -246,7 +249,7 @@ public class ActiveCollectionSourceTest {
         acs.setMaintenanceScript("scripts/Maintain.mvel");
         
         try {
-            acs.init();
+            acs.init(null);
         } catch(Exception e) {
             fail("Failed to initialize active collection source: "+e);
         }
@@ -292,7 +295,7 @@ public class ActiveCollectionSourceTest {
         acs.setMaintenanceScript("scripts/Maintain.mvel");
         
         try {
-            acs.init();
+            acs.init(null);
         } catch(Exception e) {
             fail("Failed to initialize active collection source: "+e);
         }
@@ -344,7 +347,7 @@ public class ActiveCollectionSourceTest {
         acs.setMaintenanceScript("scripts/Maintain.mvel");
         
         try {
-            acs.init();
+            acs.init(null);
         } catch(Exception e) {
             fail("Failed to initialize active collection source: "+e);
         }
@@ -384,7 +387,7 @@ public class ActiveCollectionSourceTest {
         acs.getVariables().put("counter", 0);
         
         try {
-            acs.init();
+            acs.init(null);
         } catch(Exception e) {
             fail("Failed to initialize active collection source: "+e);
         }
@@ -400,6 +403,132 @@ public class ActiveCollectionSourceTest {
         if (((Integer)acs.getVariables().get("counter")).intValue() != 2) {
             fail("Counter should be 2: "+((Integer)
                     acs.getVariables().get("counter")).intValue());
+        }
+        
+        try {
+            acs.close();
+        } catch(Exception e) {
+            fail("Failed to close: "+e);
+        }
+    }
+    
+    @Test
+    public void testDerived() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
+        acs.setName(TEST_ACTIVE_LIST);
+        acs.setType(ActiveCollectionType.List);
+        
+        ActiveCollectionSource.DerivedDefinition dd=new ActiveCollectionSource.DerivedDefinition();
+        dd.setName("Derived");
+        dd.setPredicate(new Predicate() {
+            public boolean evaluate(ActiveCollectionContext context, Object item) {
+                return (item == T_OBJ2);
+            }           
+        });
+        acs.getDerived().add(dd);
+        
+        try {
+            acs.init(null);
+        } catch(Exception e) {
+            fail("Failed to initialize active collection source: "+e);
+        }
+
+        if (acs.getDerivedActiveCollections().size() != 1) {
+            fail("Expecting a single derived collection: "+acs.getDerivedActiveCollections().size());
+        }
+        
+        ActiveCollection ddac=acs.getDerivedActiveCollections().get(0);
+        
+        acs.insert(null, T_OBJ1);
+        acs.insert(null, T_OBJ2);
+        
+        if (ddac.getSize() != 1) {
+            fail("Derived collection should only have 1 item: "+ddac.getSize());
+        }
+        
+        Object item=ddac.iterator().next();
+        
+        if (item != T_OBJ2) {
+            fail("Item should be '"+T_OBJ2+"': "+item);
+        }
+        
+        try {
+            acs.close();
+        } catch(Exception e) {
+            fail("Failed to close: "+e);
+        }
+    }
+    
+    @Test
+    public void testDerivedUsingContextList() {
+        ActiveCollectionSource acs=new ActiveCollectionSource();
+        
+        acs.setActiveCollection(new ActiveList(TEST_ACTIVE_LIST));
+        acs.setName(TEST_ACTIVE_LIST);
+        acs.setType(ActiveCollectionType.List);
+        
+        MVEL pred=new MVEL();
+        pred.setExpression("list = context.getList(\""+TEST_OTHER_LIST+"\"); if (list == null) { return false; } return !list.contains(name);");
+        
+        ActiveCollectionSource.DerivedDefinition dd=new ActiveCollectionSource.DerivedDefinition();
+        dd.setName("Derived");
+        dd.setPredicate(pred);
+        acs.getDerived().add(dd);
+        
+        final ActiveList testOtherList=new ActiveList(TEST_OTHER_LIST);
+        testOtherList.insert(null, T_OBJ2);
+        
+        final ActiveCollectionContext context=new ActiveCollectionContext() {
+
+            public ActiveList getList(String name) {
+                ActiveList ret=TEST_OTHER_LIST.equals(name) ? testOtherList : null;
+                return (ret);
+            }
+
+            public ActiveMap getMap(String name) {
+                return null;
+            }
+            
+        };
+        
+        try {
+            acs.init(context);
+        } catch(Exception e) {
+            fail("Failed to initialize active collection source: "+e);
+        }
+
+        if (acs.getDerivedActiveCollections().size() != 1) {
+            fail("Expecting a single derived collection: "+acs.getDerivedActiveCollections().size());
+        }
+        
+        ActiveCollection ddac=acs.getDerivedActiveCollections().get(0);
+        
+        TestObject to1=new TestObject(T_OBJ1, 1);
+        TestObject to2=new TestObject(T_OBJ2, 2);
+        TestObject to3=new TestObject(T_OBJ3, 3);
+        
+        acs.insert(null, to1);
+        acs.insert(null, to2);
+        acs.insert(null, to3);
+        
+        if (ddac.getSize() != 2) {
+            fail("Derived collection should only have 2 items: "+ddac.getSize());
+        }
+        
+        java.util.Iterator<Object> iter=ddac.iterator();
+        
+        Object item1=iter.next();
+        
+        if (item1 != to1) {
+            fail("Item1 should be '"+to1.getName()+"': "+item1);
+        }
+        
+        Object item2=iter.next();
+        
+        if (item2 != to3) {
+            fail("Item2 should be '"+to3.getName()+"': "+item2);
         }
         
         try {

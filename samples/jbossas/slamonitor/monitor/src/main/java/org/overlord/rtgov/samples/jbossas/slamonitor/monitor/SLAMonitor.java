@@ -31,8 +31,8 @@ import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.predicate.MVEL;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
-import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.ResponseTime;
+import org.overlord.rtgov.analytics.situation.Situation;
 
 /**
  * This is the custom event monitor that receives node notifications
@@ -139,7 +139,8 @@ public class SLAMonitor {
                             +operation+" fault="+fault);
                 }
                 
-        		ret = (ActiveList)_acmManager.create(alname, _serviceResponseTime, predicate);
+        		ret = (ActiveList)_acmManager.create(alname, _serviceResponseTime,
+        		                    predicate, null);
         	}
     	}
     	

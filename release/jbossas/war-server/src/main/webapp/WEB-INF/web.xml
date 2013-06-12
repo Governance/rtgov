@@ -71,6 +71,25 @@
         <url-pattern>/call/trace/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SituationManager</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.situation.manager.rest.RESTSituationManagerServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SituationManager</servlet-name>
+        <url-pattern>/situation/manager/*</url-pattern>
+    </servlet-mapping>
+
+
+    <!-- Security -->
+    
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>RTGOV</web-resource-name>

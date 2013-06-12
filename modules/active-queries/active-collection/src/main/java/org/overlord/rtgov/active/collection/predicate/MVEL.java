@@ -20,6 +20,8 @@ package org.overlord.rtgov.active.collection.predicate;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
 
+import org.overlord.rtgov.active.collection.ActiveCollectionContext;
+
 /**
  * This class provides an MVEL implementation of the
  * predicate interface.
@@ -74,7 +76,7 @@ public class MVEL extends Predicate {
     /**
      * {@inheritDoc}
      */
-    public boolean evaluate(Object item) {
+    public boolean evaluate(ActiveCollectionContext context, Object item) {
         boolean ret=false;
         
         if (!_initialized) {
@@ -88,7 +90,10 @@ public class MVEL extends Predicate {
         }
         
         if (_expressionCompiled != null) {
-            Object result=org.mvel2.MVEL.executeExpression(_expressionCompiled, item);
+            java.util.Map<String,Object> vars=new java.util.HashMap<String,Object>();
+            vars.put("context", context);
+            
+            Object result=org.mvel2.MVEL.executeExpression(_expressionCompiled, item, vars);
             
             if (result instanceof Boolean) {
                 ret = ((Boolean)result).booleanValue();

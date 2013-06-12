@@ -17,7 +17,7 @@
       "@class" : "org.overlord.rtgov.epn.testdata.TestEventProcessor1",
       "services" : {
         "testCache" : {
-          "@class" : "org.overlord.rtgov.ep.service.InMemoryCacheManager"
+          "@class" : "org.overlord.rtgov.epn.testdata.TestCacheManager"
         }
       }
     },

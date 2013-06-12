@@ -52,6 +52,7 @@ public class EPMailTest {
                     .use(MavenDependencyResolver.class)
                     .artifacts("org.overlord.rtgov.event-processor:ep-core:"+rtgovversion,
                             "org.overlord.rtgov.event-processor:ep-mail:"+rtgovversion,
+                            "org.overlord.rtgov.common:rtgov-common:"+rtgovversion,
                             "org.mvel:mvel2:"+mvelversion,
                             "org.codehaus.jackson:jackson-core-asl:"+jacksonversion,
                             "org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion)

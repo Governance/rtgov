@@ -38,11 +38,14 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     private java.util.Map<String, ActiveCollectionSource> _activeCollectionSources=
             new java.util.HashMap<String, ActiveCollectionSource>();
     private java.util.Map<String, java.lang.ref.SoftReference<ActiveCollection>> _derivedActiveCollections=
-                new java.util.HashMap<String, java.lang.ref.SoftReference<ActiveCollection>>();
+            new java.util.HashMap<String, java.lang.ref.SoftReference<ActiveCollection>>();
+    private java.util.Map<String, ActiveCollection> _derivedActiveCollectionsRetain=
+            new java.util.HashMap<String, ActiveCollection>();
     private java.util.List<ActiveCollectionListener> _activeCollectionListeners=
                 new java.util.ArrayList<ActiveCollectionListener>();
     private long _houseKeepingInterval=10000;
     private HouseKeeper _houseKeeper=null;
+    private ActiveCollectionContext _context=new DefaultActiveCollectionContext(this);
     
     /**
      * This method initializes the Active Collection Manager.
@@ -92,7 +95,7 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
             }
             
             // Initialize the active collection source
-            acs.init();
+            acs.init(_context);
             
             _activeCollectionSources.put(acs.getName(), acs);
             
@@ -105,6 +108,11 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
                 ac = acs.getActiveCollection();
 
                 _activeCollections.put(acs.getName(), ac);
+                
+                // Check for derived collections
+                for (ActiveCollection dac : acs.getDerivedActiveCollections()) {
+                    _derivedActiveCollectionsRetain.put(dac.getName(), dac);
+                }
 
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("Registered active collection '"+acs.getName()+"' immediately");
@@ -155,6 +163,11 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
             
             _activeCollectionSources.remove(acs.getName());
             
+            // Remove derived collections
+            for (ActiveCollection dac : acs.getDerivedActiveCollections()) {
+                _derivedActiveCollectionsRetain.remove(dac.getName());
+            }
+
             LOG.info("Unregistered active collection for source '"+acs.getName()+"'");
         }
     }
@@ -180,7 +193,12 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
                         if (ret != null) {
                             _activeCollections.put(acs.getName(), ret);
                             
-                            // Register listeners
+                            // Check for derived collections
+                            for (ActiveCollection dac : acs.getDerivedActiveCollections()) {
+                                _derivedActiveCollectionsRetain.put(dac.getName(), dac);
+                            }
+
+                           // Register listeners
                             synchronized (_activeCollectionListeners) {
                                 for (int i=0; i < _activeCollectionListeners.size(); i++) {
                                     _activeCollectionListeners.get(i).registered(ret);
@@ -189,12 +207,18 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
                         }
                     }
                 }
-            } else {       
-                // Check if a derived active collection
-                java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
+            } else {
                 
-                if (ref != null) {
-                    ret = ref.get();
+                // Check if a retained derived active collection
+                ret = _derivedActiveCollectionsRetain.get(name);
+                
+                if (ret == null) {
+                    // Check if a derived active collection
+                    java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
+                    
+                    if (ref != null) {
+                        ret = ref.get();
+                    }
                 }
             }
         }
@@ -212,8 +236,8 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     /**
      * {@inheritDoc}
      */
-    public ActiveCollection create(String name, ActiveCollection parent,
-                    Predicate predicate) {
+    public ActiveCollection create(String name, ActiveCollection parent, Predicate predicate,
+                            java.util.Map<String,Object> properties) {
         ActiveCollection ret=null;
         
         synchronized (_derivedActiveCollections) {
@@ -233,7 +257,7 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
             }
             
             if (ret == null) {
-                ret = parent.derive(name, predicate);
+                ret = parent.derive(name, _context, predicate, properties);
                 
                 _derivedActiveCollections.put(name, new java.lang.ref.SoftReference<ActiveCollection>(ret));
                 
@@ -278,10 +302,10 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
                     try {
                         ac.cleanup();
                     } catch (Exception e) {
-                        LOG.severe(MessageFormat.format(
+                        LOG.log(Level.SEVERE, MessageFormat.format(
                                 java.util.PropertyResourceBundle.getBundle(
                                 "active-collection.Messages").getString("ACTIVE-COLLECTION-3"),
-                                ac.getName()));
+                                ac.getName()), e);
                     }
                     
                     // Check whether the high water mark has been breached

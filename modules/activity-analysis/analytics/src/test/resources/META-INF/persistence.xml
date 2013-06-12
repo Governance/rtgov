@@ -5,7 +5,7 @@
             version="1.0">
 	<persistence-unit name="overlord-rtgov-situations" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<class>org.overlord.rtgov.analytics.Situation</class>
+		<class>org.overlord.rtgov.analytics.situation.Situation</class>
 		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
 		<class>org.overlord.rtgov.activity.model.Context</class>
 		<properties>

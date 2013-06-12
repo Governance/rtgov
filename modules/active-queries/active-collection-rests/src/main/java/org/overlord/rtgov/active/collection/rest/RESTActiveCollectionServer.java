@@ -50,7 +50,7 @@ public class RESTActiveCollectionServer {
 
     //@javax.inject.Inject
     private ActiveCollectionManager _acmManager=null;
-
+    
     /**
      * This is the default constructor.
      */
@@ -141,7 +141,7 @@ public class RESTActiveCollectionServer {
             
             if (parent != null) {
                 actColl = _acmManager.create(qs.getCollection(),
-                                parent, qs.getPredicate());
+                                parent, qs.getPredicate(), qs.getProperties());
             } else {
                 throw new Exception("Unknown parent collection '"+qs.getParent()+"'");
             }

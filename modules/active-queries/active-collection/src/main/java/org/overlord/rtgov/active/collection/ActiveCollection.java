@@ -35,6 +35,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
     private int _maxItems=0;
     private int _highWaterMark=0;
     private boolean _highWaterMarkWarningIssued=false;
+    private java.util.Map<String,Object> _properties=null;
     
     /**
      * This constructor initializes the active collection.
@@ -56,6 +57,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
         _itemExpiration = acs.getItemExpiration();
         _maxItems = acs.getMaxItems();
         _highWaterMark = acs.getHighWaterMark();
+        _properties = acs.getProperties();
     }
     
     /**
@@ -64,16 +66,21 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
      * 
      * @param name The name
      * @param parent The parent collection
+     * @param context The context
      * @param predicate The predicate
+     * @param properties The optional properties
      */
-    protected ActiveCollection(String name, ActiveCollection parent, Predicate predicate) {
+    protected ActiveCollection(String name, ActiveCollection parent, ActiveCollectionContext context,
+                                Predicate predicate, java.util.Map<String,Object> properties) {
         this(name);
         
-        _adapter = new ActiveCollectionAdapter(parent, predicate);
+        _adapter = new ActiveCollectionAdapter(parent, context, predicate);
         
         _visibility = parent.getVisibility();
+        
+        _properties = properties;
     }
-
+    
     /**
      * This method returns the name of the active collection.
      * 
@@ -81,6 +88,33 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
      */
     public String getName() {
         return (_name);
+    }
+
+    /**
+     * This method returns the parent active collection.
+     * 
+     * @return The parent active collection, if defined.
+     */
+    protected ActiveCollection getParent() {
+        return (_adapter == null ? null : _adapter.getParent());
+    }
+
+    /**
+     * This method returns the predicate.
+     * 
+     * @return The predicate, if defined.
+     */
+    protected Predicate getPredicate() {
+        return (_adapter == null ? null : _adapter.getPredicate());
+    }
+
+    /**
+     * This method returns the context.
+     * 
+     * @return The context, if defined.
+     */
+    protected ActiveCollectionContext getContext() {
+        return (_adapter == null ? null : _adapter.getContext());
     }
 
     /**
@@ -181,6 +215,43 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
      */
     protected void setHighWaterMarkWarningIssued(boolean issued) {
         _highWaterMarkWarningIssued = issued;
+    }
+    
+    /**
+     * This method returns the value of a name property.
+     * 
+     * @param name The name
+     * @param def The optional default value, if the property is not defined
+     * @return The property, or null if not found
+     */
+    protected Object getProperty(String name, Object def) {
+        Object ret=_properties == null ? null : _properties.get(name);
+        
+        if (ret == null) {
+            ret = def;
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method determines whether this is a derived active collection.
+     * 
+     * @return Whether the collection is derived
+     */
+    protected boolean isDerived() {
+        return (_adapter != null);
+    }
+    
+    /**
+     * This property identifies whether the collection is active. If not,
+     * then no notifications will be generated, and the content for derived
+     * collections will be generated on demand.
+     * 
+     * @return Whether the derived collection is created "on demand"
+     */
+    protected boolean isActive() {
+        return ((Boolean)getProperty("active", true));
     }
     
     /**
@@ -335,10 +406,13 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
      * with the specified name, and filtered using the supplied predicate.
      * 
      * @param name The derived collection name
+     * @param context The context
      * @param predicate The predicate
+     * @param properties The optional properties
      * @return The derived collection
      */
-    protected abstract ActiveCollection derive(String name, Predicate predicate);
+    protected abstract ActiveCollection derive(String name, ActiveCollectionContext context,
+                                Predicate predicate, java.util.Map<String,Object> properties);
     
     /**
      * This method queries the active collection, using the supplied spec.
@@ -357,18 +431,21 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
         
         private ActiveCollection _parent=null; // Strong ref to ensure not garbage collected
                                                 // while child still needs it
+        private ActiveCollectionContext _context=null;
         private Predicate _predicate=null;
         
         /**
          * This constructor initializes the fields within the adapter.
          * 
          * @param parent The parent active collection
+         * @param context The context
          * @param predicate The predicate used to filter changes applied to the
          *                          active collection
          */
         public ActiveCollectionAdapter(ActiveCollection parent,
-                            Predicate predicate) {
+                    ActiveCollectionContext context, Predicate predicate) {
             _parent = parent;
+            _context = context;
             _predicate = predicate;
             
             // Register to receive change notifications from parent
@@ -377,10 +454,37 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
         }
         
         /**
+         * The parent active collection.
+         * 
+         * @return The parent
+         */
+        protected ActiveCollection getParent() {
+            return (_parent);
+        }
+        
+        /**
+         * The predicate.
+         * 
+         * @return The predicate
+         */
+        protected Predicate getPredicate() {
+            return (_predicate);
+        }
+        
+        /**
+         * The context.
+         * 
+         * @return The context
+         */
+        protected ActiveCollectionContext getContext() {
+            return (_context);
+        }
+        
+        /**
          * {@inheritDoc}
          */
         public void inserted(Object key, Object value) { 
-            if (_predicate.evaluate(value)) {
+            if (_predicate.evaluate(_context, value)) {
                 insert(key, value);
             }
         }
@@ -389,7 +493,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
          * {@inheritDoc}
          */
         public void updated(Object key, Object value) {
-            if (_predicate.evaluate(value)) {
+            if (_predicate.evaluate(_context, value)) {
                 update(key, value);
             }
         }
@@ -398,7 +502,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
          * {@inheritDoc}
          */
         public void removed(Object key, Object value) {
-            if (_predicate.evaluate(value)) {
+            if (_predicate.evaluate(_context, value)) {
                 remove(key, value);
             }
         }

@@ -19,13 +19,13 @@ package org.overlord.rtgov.service.dependency;
 
 import java.util.logging.Logger;
 
-import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.service.OperationImplDefinition;
+import org.overlord.rtgov.analytics.situation.Situation;
 
 /**
  * This class builds a service view representing the

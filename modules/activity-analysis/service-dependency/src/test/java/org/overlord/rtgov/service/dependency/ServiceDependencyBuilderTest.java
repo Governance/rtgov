@@ -20,7 +20,6 @@ package org.overlord.rtgov.service.dependency;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-import org.overlord.rtgov.analytics.Situation;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
@@ -28,6 +27,7 @@ import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.service.OperationImplDefinition;
+import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.service.dependency.InvocationLink;
 import org.overlord.rtgov.service.dependency.OperationNode;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;

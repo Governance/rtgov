@@ -98,10 +98,11 @@ public interface ActiveCollectionManager {
      * @param parent The parent active collection
      * @param predicate The predicate used to filter results from the parent
      *                  before they are applied to the child
+     * @param properties The optional properties
      * @return The newly created active collection
      */
     public ActiveCollection create(String name, ActiveCollection parent,
-                    Predicate predicate);
+                    Predicate predicate, java.util.Map<String,Object> properties);
     
     /**
      * This method explicitly removes the named derived active collection
