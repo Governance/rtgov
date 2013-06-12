@@ -25,7 +25,8 @@
 		
         protocol = parent.window.location.protocol;
 		host = parent.window.location.host;
-		restUrl = protocol + "//" + host + "/overlord-rtgov/service/dependency/overview";
+		//restUrl = protocol + "//" + host + "/overlord-rtgov/service/dependency/overview";
+        restUrl = protocol + "//" + host + "/gadget-web/service/dependency/overview";
 
 		if (getViewName() == "default") {
 			restUrl = restUrl + "?width=300";
