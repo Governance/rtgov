@@ -31,7 +31,7 @@
     "subject" : "Situations",
     "activeChangeListeners" : [ {
         "@class" : "org.overlord.rtgov.active.collection.jmx.JMXNotifier",
-    	"objectName" : "overlord.rtgov:name=Situations",
+    	"objectName" : "overlord.rtgov.services:name=Situations",
     	"descriptionScript" : "SituationDescription.mvel",
     	"insertTypeScript" : "SituationType.mvel"
 	} ],

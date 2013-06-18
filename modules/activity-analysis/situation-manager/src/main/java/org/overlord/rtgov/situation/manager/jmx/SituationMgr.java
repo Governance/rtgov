@@ -45,8 +45,7 @@ import org.overlord.rtgov.situation.manager.SituationManager;
 @ApplicationScoped
 @Startup
 @ConcurrencyManagement(BEAN)
-public class SituationMgr extends javax.management.NotificationBroadcasterSupport
-                                implements SituationMgrMBean {
+public class SituationMgr implements SituationMgrMBean {
 
     private static final String OBJECT_NAME_DOMAIN = "overlord.rtgov.services";    
     private static final String OBJECT_NAME_MANAGER = ":name=SituationManager";
