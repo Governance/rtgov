@@ -83,6 +83,24 @@
 			<version>${project.version}</version>
 		</dependency>		
 		
+		<!-- Report modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-jee</artifactId>
+			<version>${project.version}</version>
+		</dependency>		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-rests</artifactId>
+			<version>${project.version}</version>
+		</dependency>		
+		
 		<!-- Services -->
 		
 		<dependency>

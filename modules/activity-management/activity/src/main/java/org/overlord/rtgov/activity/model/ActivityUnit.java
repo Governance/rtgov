@@ -194,7 +194,7 @@ public class ActivityUnit implements java.io.Externalizable {
      * 
      * @return The activity types
      */
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
     @JoinColumn(name="unitId")
     public java.util.List<ActivityType> getActivityTypes() {
         return (_activityTypes);

@@ -87,6 +87,22 @@
         <url-pattern>/situation/manager/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ReportServer</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.reports.rest.RESTReportServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReportServer</servlet-name>
+        <url-pattern>/report/*</url-pattern>
+    </servlet-mapping>
+
 
     <!-- Security -->
     

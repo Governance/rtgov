@@ -20,7 +20,8 @@
 		<module>policy_sync</module>
 		<module>service_dependency</module>
 		<module>situation_manager</module>
-		<module>slamonitor</module>
+		<module>sla_monitor</module>
+		<module>sla_report</module>
 	</modules>
 
 </project>

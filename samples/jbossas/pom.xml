@@ -34,10 +34,11 @@
 
 	<properties>
 		<javaee-api.version>6.0</javaee-api.version>
+		<javassist.version>3.9.0.GA</javassist.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.2.0.Final</jbossas.version>
 		<jbossts.version>4.16.4.Final</jbossts.version>
-		<mvel.version>2.1.3.Final</mvel.version>
+		<mvel.version>2.1.4.Final</mvel.version>
 		<switchyard.version>1.0.0.Alpha1</switchyard.version>
 	</properties>
 
@@ -45,7 +46,7 @@
 		<module>activityclient</module>
 		<module>ordermgmt</module>
 		<module>policy</module>
-		<module>slamonitor</module>
+		<module>sla</module>
 	</modules>
 
 	<dependencyManagement>
@@ -103,6 +104,13 @@
 				<groupId>org.mvel</groupId>
 				<artifactId>mvel2</artifactId>
 				<version>${mvel.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javassist</groupId>
+				<artifactId>javassist</artifactId>
+				<version>${javassist.version}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<dependency>
