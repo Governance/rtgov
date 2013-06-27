@@ -24,7 +24,7 @@ package org.overlord.rtgov.reports.model;
 public class Report {
     
     private String _title=null;
-    private java.util.Date _created=new java.util.Date();
+    private String _created=null;
     
     private java.util.List<Section> _sections=new java.util.ArrayList<Section>();
 
@@ -54,7 +54,7 @@ public class Report {
      * 
      * @return The creation date/time
      */
-    public java.util.Date getCreated() {
+    public String getCreated() {
         return (_created);
     }
     
@@ -64,7 +64,7 @@ public class Report {
      * @param created The created date/time
      * @return The report
      */
-    public Report setCreated(java.util.Date created) {
+    public Report setCreated(String created) {
         _created = created;
         return (this);
     }

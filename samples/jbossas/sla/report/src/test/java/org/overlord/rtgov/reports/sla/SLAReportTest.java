@@ -411,6 +411,7 @@ public class SLAReportTest {
             properties.put("averagedDuration", "450");
             properties.put("start", TEST4[0].getStartTime());
             properties.put("end", TEST4[TEST4.length-1].getStartTime()+500);
+            properties.put("timezone", "EST");
             
             Report report=gen.generate(context, properties);
             

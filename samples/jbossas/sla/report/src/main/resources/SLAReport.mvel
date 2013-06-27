@@ -50,20 +50,24 @@ def calcResponseTime(request, pos, activities) {
 
 // MAIN SCRIPT
 
-// Initialize the report
-section = new Tabular();
-report = new Report().setTitle("SLA Report");
-report.sections.add(section);
-
-section.header = new Header();
-section.header.columnNames.add("Date/Time");
-section.header.columnNames.add("Response Time(ms)");
-
 // Get the relevant properties
 start = properties.get("start");
 end = properties.get("end");
 long maxResponseTime = Long.parseLong(properties.get("maxResponseTime"));
 long averagedDuration = properties.containsKey("averagedDuration") ? Long.parseLong(properties.get("averagedDuration")) : 0;
+
+// Create date formatter based on optionally specified timezone
+java.text.DateFormat formatter=java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.FULL);
+
+java.util.TimeZone tz=null;
+if (properties.containsKey("timezone")) {
+	tz = java.util.TimeZone.getTimeZone(properties.get("timezone"));
+}
+if (tz == null) {
+	tz = java.util.TimeZone.getDefault();
+}
+
+formatter.setTimeZone(tz);
 
 // Obtain the activity store
 activityStore = context.getService(ActivityStore);
@@ -80,10 +84,20 @@ calendar = context.getCalendar(properties.get("calendar"), properties.get("timez
 QuerySpec qs=new QuerySpec();
 qs.setExpression("SELECT at FROM ActivityType at WHERE at.timestamp >= "+start+" AND at.timestamp <= "+end+" ORDER BY at.timestamp");
 
-System.out.println("Query="+qs);
-
 activities=activityStore.query(qs);
 
+// Initialize the report
+report = new Report().setTitle("SLA Report")
+		.setCreated(formatter.format(new java.util.Date(System.currentTimeMillis())));
+
+section = new Tabular();
+report.sections.add(section);
+
+section.header = new Header();
+section.header.columnNames.add("Date/Time");
+section.header.columnNames.add("Response Time(ms)");
+
+// Generate the report contents
 long ignoreUntil=0;
 long totalViolation=0;
 
@@ -137,7 +151,8 @@ for (int i=0; i < activities.size(); i++) {
 						context.logWarning("SLA violation detected, response time="+respTime);
 						
 						row = new Row();
-						row.values.add(activity.timestamp);
+						
+						row.values.add(formatter.format(new java.util.Date(activity.timestamp)));
 						row.values.add(respTime);
 						
 						section.rows.add(row);
