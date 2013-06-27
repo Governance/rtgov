@@ -17,6 +17,8 @@
  */
 package org.overlord.rtgov.activity.collector.activity.server;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,6 +42,10 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger {
 
     private static final Logger LOG=Logger.getLogger(ActivityServerLogger.class.getName());
     
+    private static final int MAX_THREADS = 10;
+
+    private ExecutorService _executor=Executors.newFixedThreadPool(MAX_THREADS);
+
     @Inject
     private ActivityServer _activityServer=null;
     
@@ -89,10 +95,20 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger {
      */
     protected void sendMessage() throws Exception {
         if (_activities != null) {
-            _activityServer.store(_activities);
+        	final java.util.List<ActivityUnit> list=_activities;
+        	
+        	_executor.execute(new Runnable() {
+        		public void run() {
+        			try {
+        				_activityServer.store(list);    
+        			} catch (Exception e) {
+        				LOG.log(Level.SEVERE, "Failed to store list of activity units", e);
+        			}
+        		}
+        	});
             
             // Clear the list
-            _activities.clear();
+            _activities = new java.util.ArrayList<ActivityUnit>();
         }
     }
 
