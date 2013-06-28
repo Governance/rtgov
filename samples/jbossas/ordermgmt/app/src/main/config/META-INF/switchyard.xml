@@ -10,9 +10,4 @@
             </binding.soap>
         </service>
     </composite>
-    <domain name="TestDomain">
-        <handlers>
-            <handler class="org.switchyard.quickstarts.demos.orders.PolicyEnforcer" name="PolicyEnforcer"/>
-        </handlers>
-    </domain>
 </switchyard>

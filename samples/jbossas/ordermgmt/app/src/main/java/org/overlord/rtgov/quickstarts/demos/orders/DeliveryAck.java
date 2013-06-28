@@ -14,9 +14,23 @@
  * limitations under the License.
  */
 
-package org.switchyard.quickstarts.demos.orders;
+package org.overlord.rtgov.quickstarts.demos.orders;
 
-public interface LogisticsService {
+public class DeliveryAck {
+    
+    private String _orderId;
+    
+    public String getOrderId() {
+        return _orderId;
+    }
+    
+    public DeliveryAck setOrderId(String orderId) {
+        _orderId = orderId;
+        return this;
+    }
 
-    DeliveryAck deliver(Order order);
+    @Override
+    public String toString() {
+        return "Delivery " + _orderId + " acknowledged";
+    }
 }

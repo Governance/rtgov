@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package org.switchyard.quickstarts.demos.orders;
+package org.overlord.rtgov.quickstarts.demos.orders;
 
-public class DeliveryAck {
+public class Receipt {
     
-    private String _orderId;
-    
-    public String getOrderId() {
-        return _orderId;
+    private String customer;
+    private double amount=0;
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
     }
     
-    public DeliveryAck setOrderId(String orderId) {
-        _orderId = orderId;
-        return this;
+    public String getCustomer() {
+        return customer;
     }
 
-    @Override
-    public String toString() {
-        return "Delivery " + _orderId + " acknowledged";
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 }

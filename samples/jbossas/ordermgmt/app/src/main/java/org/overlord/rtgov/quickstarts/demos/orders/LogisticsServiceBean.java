@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package org.switchyard.quickstarts.demos.orders;
+package org.overlord.rtgov.quickstarts.demos.orders;
 
-public class Payment {
+import org.overlord.rtgov.jee.ActivityReporter;
+import org.overlord.rtgov.jee.DefaultActivityReporter;
+import org.switchyard.component.bean.Service;
 
-    private String customer;
-    private double amount=0;
+@Service(LogisticsService.class)
+public class LogisticsServiceBean implements LogisticsService {
 
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
+    private ActivityReporter _reporter=new DefaultActivityReporter();
     
-    public String getCustomer() {
-        return customer;
+    public LogisticsServiceBean() {
     }
 
-    public double getAmount() {
-        return amount;
+    @Override
+    public DeliveryAck deliver(Order order) {
+        if (_reporter != null) {
+            _reporter.logInfo("Delivering the goods");
+        }
+        return (new DeliveryAck().setOrderId(order.getOrderId()));
     }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-    
 }

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.switchyard.quickstarts.demos.orders;
+package org.overlord.rtgov.quickstarts.demos.orders;
 
-public interface OrderService {
-    
-    OrderAck submitOrder(Order order);
-    
-    Receipt makePayment(Payment payment);
-    
+public class ItemNotFoundException extends Exception {
+
+    private static final long serialVersionUID = -5606765308041390300L;
+
+    public ItemNotFoundException(String msg) {
+        super(msg);
+    }
 }

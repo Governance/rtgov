@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package org.switchyard.quickstarts.demos.orders;
+package org.overlord.rtgov.quickstarts.demos.orders;
 
-public class ItemNotFoundException extends Exception {
+public interface LogisticsService {
 
-    private static final long serialVersionUID = -5606765308041390300L;
-
-    public ItemNotFoundException(String msg) {
-        super(msg);
-    }
+    DeliveryAck deliver(Order order);
 }

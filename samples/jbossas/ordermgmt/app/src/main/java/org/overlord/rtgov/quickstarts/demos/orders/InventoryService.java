@@ -14,26 +14,9 @@
  * limitations under the License.
  */
 
-package org.switchyard.quickstarts.demos.orders;
+package org.overlord.rtgov.quickstarts.demos.orders;
 
-public class Receipt {
-    
-    private String customer;
-    private double amount=0;
+public interface InventoryService {
 
-    public void setCustomer(String customer) {
-        this.customer = customer;
-    }
-    
-    public String getCustomer() {
-        return customer;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
+    Item lookupItem(String itemId) throws ItemNotFoundException;
 }

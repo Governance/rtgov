@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.switchyard.quickstarts.demos.orders;
+package org.overlord.rtgov.quickstarts.demos.orders.auditors;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Named;
+import javax.xml.transform.dom.DOMSource;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -24,14 +27,18 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.jee.CollectionManager;
 import org.overlord.rtgov.jee.DefaultCollectionManager;
-import org.switchyard.Exchange;
-import org.switchyard.ExchangeHandler;
 import org.switchyard.ExchangePhase;
-import org.switchyard.HandlerException;
 import org.switchyard.Message;
 import org.switchyard.Property;
+import org.switchyard.bus.camel.audit.Audit;
+import org.switchyard.bus.camel.audit.Auditor;
+import org.switchyard.bus.camel.processors.Processors;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
-public class PolicyEnforcer implements ExchangeHandler {
+@Audit({Processors.TRANSFORMATION})
+@Named("PolicyEnforcer")
+public class PolicyEnforcer implements Auditor {
     
     private static final String PRINCIPALS = "Principals";
 
@@ -67,24 +74,57 @@ public class PolicyEnforcer implements ExchangeHandler {
         _initialized = true;
     }
 
-    public void handleMessage(Exchange exchange) throws HandlerException {
+    /**
+     * {@inheritDoc}
+     */
+    public void afterCall(Processors processor, org.apache.camel.Exchange exch) {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void beforeCall(Processors processor, org.apache.camel.Exchange exch) {
+
+        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
+
+        if (phase != ExchangePhase.IN) {
+            return;
+        }
+
         if (!_initialized) {
             init();
         }
         
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("********* Exchange="+exchange);
+            LOG.fine("********* Exchange="+exch);
         }
         
         if (_principals != null) {            
-            Property p = exchange.getContext().getProperty("org.switchyard.contentType",
-                    org.switchyard.Scope.MESSAGE);
+            org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
             
-            if (p != null && exchange.getPhase() == ExchangePhase.IN
-                    && p.getValue().toString().equals(
+            if (mesg == null) {
+                LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
+                return;
+            }
+
+            org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
+            
+            java.util.Set<Property> contextProps=context.getProperties(
+                    org.switchyard.Scope.MESSAGE);
+
+            Property p=null;
+            
+            for (Property prop : contextProps) {
+                if (prop.getName().equals("org.switchyard.contentType")) {
+                    p = prop;
+                    break;
+                }
+            }
+            
+            if (p != null && p.getValue().toString().equals(
                             "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder")) {
 
-                String customer=getCustomer(exchange);
+                String customer=getCustomer(mesg);
                        
                 if (customer != null) {
                     if (_principals.containsKey(customer)) {
@@ -97,8 +137,8 @@ public class PolicyEnforcer implements ExchangeHandler {
                         // Check if customer is suspended
                         if (props.containsKey("suspended")
                                 && props.get("suspended").equals(Boolean.TRUE)) {                            
-                            throw new HandlerException("Customer '"+customer
-                                    +"' has been suspended");
+                            throw new org.switchyard.exception.SwitchYardException("Customer '"+customer
+                                            +"' has been suspended");
                         }
                     }
                     
@@ -107,18 +147,10 @@ public class PolicyEnforcer implements ExchangeHandler {
                                 +customer+"' has not been suspended");
                         LOG.fine("*********** Principal: "+_principals.get(customer));
                     }
+                } else {
+                    LOG.warning("Unable to find customer name");
                 }
             }
-        }
-    }
-
-    public void handleFault(Exchange exchange) {
-        if (!_initialized) {
-            init();
-        }
-        
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("********* Fault="+exchange);
         }
     }
 
@@ -126,70 +158,45 @@ public class PolicyEnforcer implements ExchangeHandler {
      * This method returns the customer associated with the
      * exchange.
      * 
-     * @param exchange The exchange
+     * @param msg The message
      * @return The customer
      */
-    protected String getCustomer(Exchange exchange) {
+    protected String getCustomer(Message msg) {
         String customer=null;
 
-        String content=getMessageContent(exchange);
-
-        int start=content.indexOf("<customer>");
+        Object content=msg.getContent();
         
-        if (start != -1) {
-            int end=content.indexOf("</", start);
+        if (content instanceof String) {
+            String text=(String)content;
             
-            if (end != -1) {
-                customer = content.substring(start+10, end);
+            int start=text.indexOf("<customer>");
+            
+            if (start != -1) {
+                int end=text.indexOf("</", start);
+                
+                if (end != -1) {
+                    customer=text.substring(start+10, end);
+                }
             }
+        } else if (content instanceof DOMSource) {
+            Node n=((DOMSource)content).getNode();
+            
+            if (n instanceof Element) {
+                org.w3c.dom.NodeList nl=((Element)n).getElementsByTagName("customer");
+                
+                if (nl.getLength() == 1) {
+                    customer = nl.item(0).getFirstChild().getNodeValue();
+                } else {
+                    LOG.warning("Customer nodes found: "+nl.getLength());
+                }
+            } else {
+                LOG.warning("Not an element");
+            }
+        } else {
+            LOG.warning("Message content type '"+content.getClass()+"' cannot be handled");
         }
         
         return (customer);
     }
     
-    /**
-     * This method returns a string representation of the
-     * message content, or null if no available.
-     * 
-     * @param exchange The exchange
-     * @return The string representation, or null if not possible
-     */
-    protected String getMessageContent(Exchange exchange) {
-        String ret=null;
-        
-        // try to convert the payload to a string
-        Message msg = exchange.getMessage();
-
-        try {    
-            ret = msg.getContent(String.class);
-            
-            // check to see if we have to put content back into the message 
-            // after the conversion to string
-            if (java.io.InputStream.class.isAssignableFrom(msg.getContent().getClass())) {
-                msg.setContent(new java.io.ByteArrayInputStream(ret.getBytes()));
-            } else if (java.io.Reader.class.isAssignableFrom(msg.getContent().getClass())) {
-                msg.setContent(new java.io.StringReader(ret));
-            }
-
-        } catch (Exception ex) {
-            try {
-                // If contents cannot be represented as a string, then try a
-                // JSON serialized form
-                java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-                
-                MAPPER.writeValue(baos, msg.getContent());
-                
-                ret = new String(baos.toByteArray());
-                
-                baos.close();
-            } catch (Exception ex2) {
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("Failed to convert message content for '"+exchange
-                            +"' to string: ex="+ex+" ex2="+ex2);
-                }
-            }
-        }
-
-        return(ret);
-    }
 }

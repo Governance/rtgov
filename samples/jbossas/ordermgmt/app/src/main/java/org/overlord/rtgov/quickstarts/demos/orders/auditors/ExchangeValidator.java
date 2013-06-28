@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.switchyard.quickstarts.demos.orders.auditors;
+package org.overlord.rtgov.quickstarts.demos.orders.auditors;
 
 import javax.inject.Named;
 
@@ -24,8 +24,7 @@ import org.switchyard.bus.camel.audit.Auditor;
 import org.switchyard.bus.camel.processors.Processors;
 
 /**
- * This class observes exchanges and uses the information to create activity
- * events.
+ * This class observes exchanges and validates them against validation policies.
  *
  */
 @Audit({Processors.TRANSFORMATION})
