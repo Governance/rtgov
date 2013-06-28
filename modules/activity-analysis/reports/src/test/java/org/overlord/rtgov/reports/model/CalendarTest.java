@@ -197,7 +197,9 @@ public class CalendarTest {
         to1.set(java.util.Calendar.HOUR_OF_DAY, 10);
         to1.set(java.util.Calendar.MINUTE, 0);
         
-        if (cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()) != 2.5*60*60*1000) {            
+        double val=Math.abs(cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()) - 2.5*60*60*1000);
+        
+        if (val > 10) {            
             fail("Should be 2.5 hours: "+cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()));          
         }
     }
