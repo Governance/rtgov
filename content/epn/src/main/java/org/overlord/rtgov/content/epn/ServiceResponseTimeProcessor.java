@@ -17,12 +17,12 @@ package org.overlord.rtgov.content.epn;
 
 import java.io.Serializable;
 
+import org.overlord.rtgov.analytics.service.InterfaceDefinition;
 import org.overlord.rtgov.analytics.service.MEPDefinition;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.ResponseTime;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
-import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 
 /**
  * This class provides an implementation of the EventProcessor
@@ -46,9 +46,11 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
 
             ServiceDefinition sd=(ServiceDefinition)event;
             
-            for (int j=0; j < sd.getOperations().size(); j++) {
-                processOperation((java.util.LinkedList<ResponseTime>)ret,
-                             sd, sd.getOperations().get(j));
+            for (InterfaceDefinition idef : sd.getInterfaces()) {
+                for (OperationDefinition opdef : idef.getOperations()) {
+                    processOperation((java.util.LinkedList<ResponseTime>)ret,
+                                 sd, idef, opdef);
+                }
             }
             
             if (((java.util.LinkedList<Serializable>)ret).size() == 0) {
@@ -65,19 +67,18 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
      * 
      * @param rts The response time list
      * @param sdef The service definition
+     * @param idef The interface definition
      * @param opdef The operation definition
      */
     protected void processOperation(java.util.List<ResponseTime> rts,
-            ServiceDefinition sdef, OperationDefinition opdef) {
+            ServiceDefinition sdef, InterfaceDefinition idef, OperationDefinition opdef) {
         
-        for (OperationImplDefinition stod : opdef.getImplementations()) {
-            if (stod.getRequestResponse() != null) {
-                processMEP(rts, sdef, opdef, stod, stod.getRequestResponse());
-            }
+        if (opdef.getRequestResponse() != null) {
+            processMEP(rts, sdef, idef, opdef, opdef.getRequestResponse());
+        }
 
-            for (int i=0; i < stod.getRequestFaults().size(); i++) {
-                processMEP(rts, sdef, opdef, stod, stod.getRequestFaults().get(i));
-            }
+        for (int i=0; i < opdef.getRequestFaults().size(); i++) {
+            processMEP(rts, sdef, idef, opdef, opdef.getRequestFaults().get(i));
         }
     }
     
@@ -87,18 +88,18 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
      * 
      * @param rts The response time list
      * @param sdef The service definition
+     * @param idef The interface definition
      * @param opdef The operation definition
-     * @param stod The service type op definition
      * @param mep The MEP definition
      */
     protected void processMEP(java.util.List<ResponseTime> rts,
-            ServiceDefinition sdef, OperationDefinition opdef, OperationImplDefinition stod, MEPDefinition mep) {
+            ServiceDefinition sdef, InterfaceDefinition idef, OperationDefinition opdef, MEPDefinition mep) {
         
         ResponseTime rt=new ResponseTime();
         
-        rt.setInterface(sdef.getInterface());
+        rt.setServiceType(sdef.getServiceType());
+        rt.setInterface(idef.getInterface());
         rt.setOperation(opdef.getName());
-        rt.setServiceType(stod.getServiceType());
         
         if (mep instanceof RequestFaultDefinition) {
             rt.setFault(((RequestFaultDefinition)mep).getFault());

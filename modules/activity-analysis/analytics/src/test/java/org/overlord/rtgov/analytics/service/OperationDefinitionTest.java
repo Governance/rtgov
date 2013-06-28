@@ -31,19 +31,15 @@ public class OperationDefinitionTest {
     public void testMergeNoReqResp() {
         
         OperationDefinition od1=new OperationDefinition();
-        OperationImplDefinition stod1=new OperationImplDefinition();
-        od1.getImplementations().add(stod1);
         
         OperationDefinition od2=new OperationDefinition();
-        OperationImplDefinition stod2=new OperationImplDefinition();
-        od2.getImplementations().add(stod2);
         
         RequestResponseDefinition rr1=new RequestResponseDefinition();
-        stod2.setRequestResponse(rr1);
+        od2.setRequestResponse(rr1);
         
         od1.merge(od2);  
         
-        if (stod1.getRequestResponse() == null) {
+        if (od1.getRequestResponse() == null) {
             fail("Failed to req/resp");
         }
     }
@@ -52,39 +48,35 @@ public class OperationDefinitionTest {
     public void testMergeMissingReqFault() {
         
         OperationDefinition od1=new OperationDefinition();
-        OperationImplDefinition stod1=new OperationImplDefinition();
-        od1.getImplementations().add(stod1);
         
         RequestResponseDefinition rr1=new RequestResponseDefinition();
-        stod1.setRequestResponse(rr1);
+        od1.setRequestResponse(rr1);
 
         RequestFaultDefinition rf1=new RequestFaultDefinition();
         rf1.setFault(FAULT_1);
-        stod1.getRequestFaults().add(rf1);
+        od1.getRequestFaults().add(rf1);
 
         OperationDefinition od2=new OperationDefinition();
-        OperationImplDefinition stod2=new OperationImplDefinition();
-        od2.getImplementations().add(stod2);
         
         RequestFaultDefinition rf2=new RequestFaultDefinition();
         rf2.setFault(FAULT_2);
-        stod2.getRequestFaults().add(rf2);
+        od2.getRequestFaults().add(rf2);
         
         od1.merge(od2);  
         
-        if (stod1.getRequestResponse() == null) {
+        if (od1.getRequestResponse() == null) {
             fail("Failed to req/resp");
         }
         
-        if (stod1.getRequestFaults().size() != 2) {
-            fail("Expecting 2 faults: "+od1.getImplementations().size());
+        if (od1.getRequestFaults().size() != 2) {
+            fail("Expecting 2 faults: "+od1.getRequestFaults().size());
         }
         
-        if (stod1.getRequestFault(FAULT_1) == null) {
+        if (od1.getRequestFault(FAULT_1) == null) {
             fail("Failed to get fault 1");
         }
         
-        if (stod1.getRequestFault(FAULT_2) == null) {
+        if (od1.getRequestFault(FAULT_2) == null) {
             fail("Failed to get fault 2");
         }
     }

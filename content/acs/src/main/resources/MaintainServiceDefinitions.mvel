@@ -4,8 +4,8 @@
 org.overlord.rtgov.analytics.service.ServiceDefinition newsd=
 	(org.overlord.rtgov.analytics.service.ServiceDefinition)value;
 	
-// Check interface has been defined, otherwise can't process the definition
-if (newsd.getInterface() == null || newsd.getInterface().trim().length() == 0) {
+// Check service type has been defined, otherwise can't process the definition
+if (newsd.getServiceType() == null || newsd.getServiceType().trim().length() == 0) {
 	return;
 }
 	
@@ -13,15 +13,15 @@ org.overlord.rtgov.active.collection.ActiveMap map=
 	(org.overlord.rtgov.active.collection.ActiveMap)acs.getActiveCollection();
 	
 org.overlord.rtgov.analytics.service.ServiceDefinition existingsd=
-	(org.overlord.rtgov.analytics.service.ServiceDefinition)map.get(newsd.getInterface());
+	(org.overlord.rtgov.analytics.service.ServiceDefinition)map.get(newsd.getServiceType());
 
 if (existingsd == null) {
 	org.overlord.rtgov.analytics.service.ServiceDefinition sd=newsd.shallowCopy();
 	sd.merge(newsd);
-	acs.insert(newsd.getInterface(), sd);
+	acs.insert(newsd.getServiceType(), sd);
 } else {
 	existingsd.merge(newsd);	
-	acs.update(existingsd.getInterface(), existingsd);
+	acs.update(existingsd.getServiceType(), existingsd);
 }
 
 // Update the current snapshot
@@ -32,12 +32,12 @@ if (currentSnapshot == null) {
 	variables.put("currentSnapshot", currentSnapshot);
 }
 
-existingsd = currentSnapshot.get(newsd.getInterface());
+existingsd = currentSnapshot.get(newsd.getServiceType());
 
 if (existingsd == null) {
 	org.overlord.rtgov.analytics.service.ServiceDefinition sd=newsd.shallowCopy();
 	sd.merge(newsd);
-	currentSnapshot.put(newsd.getInterface(), sd);
+	currentSnapshot.put(newsd.getServiceType(), sd);
 } else {
 	existingsd.merge(newsd);
 }

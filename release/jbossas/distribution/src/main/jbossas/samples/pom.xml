@@ -47,7 +47,7 @@
 		<module>activityclient</module>
 		<module>ordermgmt</module>
 		<module>policy</module>
-		<module>slamonitor</module>
+		<module>sla</module>
 	</modules>
 
 	<dependencyManagement>

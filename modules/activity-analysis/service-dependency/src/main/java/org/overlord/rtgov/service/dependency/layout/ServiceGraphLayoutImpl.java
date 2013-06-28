@@ -92,7 +92,7 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
         Collections.sort(initialNodes, new Comparator<ServiceNode>() {
             public int compare(ServiceNode o1, ServiceNode o2) {
                 // TODO: May need to sort based on interface's localpart, if a fully qualified name
-                return (o1.getService().getInterface().compareTo(o2.getService().getInterface()));
+                return (o1.getService().getServiceType().compareTo(o2.getService().getServiceType()));
             }
         });
         
@@ -196,8 +196,8 @@ public class ServiceGraphLayoutImpl implements ServiceGraphLayout {
             Collections.sort(links, new Comparator<UsageLink>() {
                 public int compare(UsageLink o1, UsageLink o2) {
                     // TODO: May need to sort based on interface's localpart, if a fully qualified name
-                    return (o1.getTarget().getService().getInterface().compareTo(
-                            o2.getTarget().getService().getInterface()));
+                    return (o1.getTarget().getService().getServiceType().compareTo(
+                            o2.getTarget().getService().getServiceType()));
                 }
             });
             

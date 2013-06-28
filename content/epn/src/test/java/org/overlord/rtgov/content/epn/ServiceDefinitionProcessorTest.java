@@ -23,11 +23,11 @@ import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.analytics.service.InterfaceDefinition;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
-import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 import org.overlord.rtgov.content.epn.ServiceDefinitionProcessor;
 
 public class ServiceDefinitionProcessorTest {
@@ -132,62 +132,68 @@ public class ServiceDefinitionProcessorTest {
         ServiceDefinition sdef2=null;
         
         for (ServiceDefinition sd : sdefs) {
-            if (sd.getInterface().equals(INTERFACE_1)) {
+            if (sd.getServiceType().equals(SERVICE_TYPE_1)) {
                 sdef1 = sd;
-            } else if (sd.getInterface().equals(INTERFACE_2)) {
+            } else if (sd.getServiceType().equals(SERVICE_TYPE_2)) {
                 sdef2 = sd;
             }
         }
         
         if (sdef1 == null) {
-            fail("Service interface 1 definition not found");
+            fail("Service type 1 definition not found");
         }
         
         if (sdef2 == null) {
-            fail("Service interface 2 definition not found");
+            fail("Service type 2 definition not found");
         }
         
-        if (!sdef1.getInterface().equals(INTERFACE_1)) {
-            fail("Service type 1 incorrect");
+        if (sdef1.getInterfaces().size() != 1) {
+            fail("Only 1 interface expected for def 1: "+sdef1.getInterfaces().size());
         }
         
-        if (!sdef2.getInterface().equals(INTERFACE_2)) {
-            fail("Service type 2 incorrect");
+        if (sdef2.getInterfaces().size() != 1) {
+            fail("Only 1 interface expected for def 2: "+sdef2.getInterfaces().size());
         }
         
-        if (sdef1.getOperations().size() != 1) {
-            fail("Only 1 operation expected for def 1: "+sdef1.getOperations().size());
+        InterfaceDefinition idef1=sdef1.getInterfaces().get(0);
+        InterfaceDefinition idef2=sdef2.getInterfaces().get(0);
+        
+        if (!idef1.getInterface().equals(INTERFACE_1)) {
+            fail("Service interface 1 incorrect");
         }
         
-        if (sdef2.getOperations().size() != 1) {
-            fail("Only 1 operation expected for def 2: "+sdef2.getOperations().size());
+        if (!idef2.getInterface().equals(INTERFACE_2)) {
+            fail("Service interface 2 incorrect");
         }
         
-        OperationDefinition op1=sdef1.getOperation(OPERATION_1);
+        if (idef1.getOperations().size() != 1) {
+            fail("Only 1 operation expected for def 1: "+idef1.getOperations().size());
+        }
+        
+        if (idef2.getOperations().size() != 1) {
+            fail("Only 1 operation expected for def 2: "+idef2.getOperations().size());
+        }
+        
+        
+        OperationDefinition op1=idef1.getOperation(OPERATION_1);
         
         if (op1 == null) {
             fail("Failed to retrieve op");
         }
         
-        OperationImplDefinition stod1=op1.getServiceTypeOperation(SERVICE_TYPE_1);
-        
-        if (stod1 == null) {
-        	fail("Failed to retrieve service type op 1");
-        }
-        
-        if (stod1.getRequestResponse() == null) {
+        if (op1.getRequestResponse() == null) {
             fail("Request/response not found");
         }
         
-        if (stod1.getRequestFaults().size() > 0) {
+        if (op1.getRequestFaults().size() > 0) {
             fail("No faults should have occurred");
         }
         
-        if (stod1.getRequestResponse().getInvocations().size() != 1) {
+        if (op1.getRequestResponse().getInvocations().size() != 1) {
             fail("One external invocations expected");
         }
         
-        InvocationDefinition id1=stod1.getRequestResponse().getInvocation(INTERFACE_2,
+        InvocationDefinition id1=op1.getRequestResponse().getInvocation(INTERFACE_2,
                                 OPERATION_2, null);
         
         if (id1 == null) {
@@ -213,31 +219,25 @@ public class ServiceDefinitionProcessorTest {
         }
         
         // Check external invoked operation details
-        OperationDefinition op2=sdef2.getOperation(OPERATION_2);
+        OperationDefinition op2=idef2.getOperation(OPERATION_2);
         
         if (op2 == null) {
             fail("Failed to retrieve op 2");
         }
         
-        OperationImplDefinition stod2=op2.getServiceTypeOperation(SERVICE_TYPE_2);
-        
-        if (stod2 == null) {
-        	fail("Failed to retrieve service type op 2");
-        }
-        
-        if (stod2.getRequestResponse() == null) {
+        if (op2.getRequestResponse() == null) {
             fail("Request/response not found");
         }
         
-        if (stod2.getRequestFaults().size() > 0) {
+        if (op2.getRequestFaults().size() > 0) {
             fail("No faults should have occurred");
         }
         
-        if (stod2.getRequestResponse().getInvocations().size() != 0) {
+        if (op2.getRequestResponse().getInvocations().size() != 0) {
             fail("No external invocations expected");
         }
         
-        InvocationMetric metrics2=stod2.getRequestResponse().getMetrics();
+        InvocationMetric metrics2=op2.getRequestResponse().getMetrics();
         
         if (metrics2.getAverage() != 3) {
             fail("Average not 3: "+metrics2.getAverage());

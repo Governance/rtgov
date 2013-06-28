@@ -63,16 +63,36 @@ public class ServiceGraph {
     
     /**
      * This method returns the service node associated with
-     * the supplied service type.
+     * the supplied service interface.
      * 
-     * @param serviceType The service type
+     * @param intf The interface
      * @return The service node, or null if not found
      */
     public ServiceNode getServiceNode(String serviceType) {
         ServiceNode ret=null;
         
         for (ServiceNode sn : _nodes) {
-            if (sn.getService().getInterface().equals(serviceType)) {
+            if (sn.getService().getServiceType().equals(serviceType)) {
+                ret = sn;
+                break;
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method returns the service node associated with
+     * the supplied service interface.
+     * 
+     * @param intf The interface
+     * @return The service node, or null if not found
+     */
+    public ServiceNode getServiceNodeForInterface(String intf) {
+        ServiceNode ret=null;
+        
+        for (ServiceNode sn : _nodes) {
+            if (sn.getService().getInterface(intf) != null) {
                 ret = sn;
                 break;
             }

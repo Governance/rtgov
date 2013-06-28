@@ -66,12 +66,12 @@ public class TidyServiceDefinitionsMvelTest {
         
         // Add some service definitions
         ServiceDefinition sd1=new ServiceDefinition();
-        sd1.setInterface("sd1");
-        acs.insert(sd1.getInterface(), sd1);
+        sd1.setServiceType("sd1");
+        acs.insert(sd1.getServiceType(), sd1);
         
         ServiceDefinition sd2=new ServiceDefinition();
-        sd2.setInterface("sd2");
-        acs.insert(sd2.getInterface(), sd2);
+        sd2.setServiceType("sd2");
+        acs.insert(sd2.getServiceType(), sd2);
 
         vars.put("acs", acs);
         vars.put("variables", internalVariables);

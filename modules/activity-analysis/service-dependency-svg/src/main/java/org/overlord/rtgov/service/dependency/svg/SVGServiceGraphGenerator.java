@@ -226,8 +226,8 @@ public class SVGServiceGraphGenerator {
      * @return The description
      */
     protected String getDescription(UsageLink ul) {
-        return (ul.getSource().getService().getInterface()
-                +" -> "+ul.getTarget().getService().getInterface());
+        return (ul.getSource().getService().getServiceType()
+                +" -> "+ul.getTarget().getService().getServiceType());
     }
     
     /**
@@ -294,7 +294,7 @@ public class SVGServiceGraphGenerator {
      * @return The description
      */
     protected String getDescription(InvocationLink il) {
-        return (il.getTarget().getService().getInterface()
+        return (il.getTarget().getService().getServiceType()
                 +" -> "+il.getTarget().getOperation().getName());
     }
     
@@ -356,7 +356,7 @@ public class SVGServiceGraphGenerator {
         
         if (isGenerateToolTips(ratio)) {
             // Generate tooltip
-            generateMetrics(rect, sn.getService().getInterface(),
+            generateMetrics(rect, sn.getService().getServiceType(),
                     sn.getService().getMetrics());
         }
         
@@ -372,7 +372,7 @@ public class SVGServiceGraphGenerator {
             text.setAttribute("font-size", "10");
             text.setAttribute("fill", "#00008F");
         
-            String localname=getLocalName(sn.getService().getInterface());
+            String localname=getLocalName(sn.getService().getServiceType());
             
             org.w3c.dom.Text value=
                     container.getOwnerDocument().createTextNode(

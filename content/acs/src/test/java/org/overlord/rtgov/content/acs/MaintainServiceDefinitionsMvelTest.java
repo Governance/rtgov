@@ -64,8 +64,8 @@ public class MaintainServiceDefinitionsMvelTest {
         
         // Add some service definitions
         ServiceDefinition sd1=new ServiceDefinition();
-        sd1.setInterface("sd1");
-        acs.insert(sd1.getInterface(), sd1);
+        sd1.setServiceType("sd1");
+        acs.insert(sd1.getServiceType(), sd1);
         
         vars.put("value", sd1);
         vars.put("acs", acs);

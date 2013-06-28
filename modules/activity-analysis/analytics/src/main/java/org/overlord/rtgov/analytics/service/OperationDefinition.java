@@ -29,8 +29,9 @@ public class OperationDefinition implements java.io.Externalizable {
     private static final int VERSION = 1;
 
     private String _name=null;
-    private java.util.List<OperationImplDefinition> _implementations=
-            new java.util.ArrayList<OperationImplDefinition>();
+    private RequestResponseDefinition _requestResponse=null;
+    private java.util.List<RequestFaultDefinition> _requestFaults=
+            new java.util.ArrayList<RequestFaultDefinition>();
     private java.util.List<OperationDefinition> _merged=
             new java.util.ArrayList<OperationDefinition>();
 
@@ -72,43 +73,56 @@ public class OperationDefinition implements java.io.Externalizable {
     }
     
     /**
-     * This method sets the list of implementations associated
-     * with the operation.
+     * This method sets the normal response details.
      * 
-     * @param impls The operation implementations
+     * @param response The normal response
      */
-    public void setImplementations(java.util.List<OperationImplDefinition> impls) {
-        _implementations = impls;
+    public void setRequestResponse(RequestResponseDefinition response) {
+        _requestResponse = response;
     }
     
     /**
-     * This method returns the list of implementations associated
-     * with the operation.
+     * This method gets the normal response details.
      * 
-     * @return The operation implementations
+     * @return The normal response
      */
-    public java.util.List<OperationImplDefinition> getImplementations() {
-        return (_implementations);
+    public RequestResponseDefinition getRequestResponse() {
+        return (_requestResponse);
     }
     
     /**
-     * This method returns the specific operation information associated with the supplied
-     * service type, if defined within the operation definition. If the supplied
-     * service type is null, it can only be matched against an existing service type
-     * op definition with a null service type (i.e. unknown service type).
+     * This method sets the list of faults associated
+     * with the operation.
      * 
-     * @param serviceType The service type
-     * @return The service type's operation definition, or null if not found
+     * @param faults The faults
      */
-    public OperationImplDefinition getServiceTypeOperation(String serviceType) {
-        OperationImplDefinition ret=null;
+    public void setRequestFaults(java.util.List<RequestFaultDefinition> faults) {
+        _requestFaults = faults;
+    }
+    
+    /**
+     * This method returns the list of faults associated
+     * with the operation.
+     * 
+     * @return The faults
+     */
+    public java.util.List<RequestFaultDefinition> getRequestFaults() {
+        return (_requestFaults);
+    }
+    
+    /**
+     * This method returns the fault associated with the supplied
+     * name, if defined within the operation definition.
+     * 
+     * @param name The fault name
+     * @return The fault, or null if not found
+     */
+    public RequestFaultDefinition getRequestFault(String name) {
+        RequestFaultDefinition ret=null;
         
-        for (int i=0; i < _implementations.size(); i++) {
-            if ((_implementations.get(i).getServiceType() == null
-                    && serviceType == null)
-                    || (_implementations.get(i).getServiceType() != null
-                    && _implementations.get(i).getServiceType().equals(serviceType))) {
-                ret = _implementations.get(i);
+        for (int i=0; i < _requestFaults.size(); i++) {
+            if (_requestFaults.get(i).getFault().equals(name)) {
+                ret = _requestFaults.get(i);
                 break;
             }
         }
@@ -118,7 +132,7 @@ public class OperationDefinition implements java.io.Externalizable {
     
     /**
      * This method returns the aggregated invocation metric information
-     * from the service type specific operation definitions.
+     * from the normal and fault responses.
      * 
      * @return The invocation metric
      */
@@ -126,8 +140,12 @@ public class OperationDefinition implements java.io.Externalizable {
         java.util.List<InvocationMetric> metrics=
                 new java.util.ArrayList<InvocationMetric>();
         
-        for (OperationImplDefinition stod : getImplementations()) {
-            metrics.add(stod.getMetrics());
+        if (getRequestResponse() != null) {
+            metrics.add(getRequestResponse().getMetrics());            
+        }
+
+        for (RequestFaultDefinition fault : getRequestFaults()) {
+            metrics.add(fault.getMetrics());
         }
 
         return (new InvocationMetric(metrics));
@@ -141,20 +159,28 @@ public class OperationDefinition implements java.io.Externalizable {
      */
     public void merge(OperationDefinition opdef) {
         
-        for (int i=0; i < opdef.getImplementations().size(); i++) {
-            OperationImplDefinition stod=opdef.getImplementations().get(i);
+        if (opdef.getRequestResponse() != null) {
+            if (getRequestResponse() == null) {
+                setRequestResponse(opdef.getRequestResponse().shallowCopy());
+            }
+                
+            getRequestResponse().merge(opdef.getRequestResponse());
+        }
+        
+        for (int i=0; i < opdef.getRequestFaults().size(); i++) {
+            RequestFaultDefinition rfd=opdef.getRequestFaults().get(i);
             
-            OperationImplDefinition cur=getServiceTypeOperation(stod.getServiceType());
-             
+            RequestFaultDefinition cur=getRequestFault(rfd.getFault());
+            
             if (cur == null) {
-                cur = stod.shallowCopy();
-                getImplementations().add(cur);
+                cur = rfd.shallowCopy();
+                getRequestFaults().add(cur);
             }
 
-            cur.merge(stod);
-       }
+            cur.merge(rfd);
+        }
         
-       _merged.add(opdef);
+        _merged.add(opdef);
     }
     
     /**
@@ -194,9 +220,11 @@ public class OperationDefinition implements java.io.Externalizable {
         
         out.writeObject(_name);
         
-        out.writeInt(_implementations.size());
-        for (int i=0; i < _implementations.size(); i++) {
-            out.writeObject(_implementations.get(i));
+        out.writeObject(_requestResponse);
+        
+        out.writeInt(_requestFaults.size());
+        for (int i=0; i < _requestFaults.size(); i++) {
+            out.writeObject(_requestFaults.get(i));
         }
         
         out.writeInt(_merged.size());
@@ -214,9 +242,11 @@ public class OperationDefinition implements java.io.Externalizable {
         
         _name = (String)in.readObject();
         
+        _requestResponse = (RequestResponseDefinition)in.readObject();
+        
         int len=in.readInt();
         for (int i=0; i < len; i++) {
-            _implementations.add((OperationImplDefinition)in.readObject());
+            _requestFaults.add((RequestFaultDefinition)in.readObject());
         }
         
         len = in.readInt();

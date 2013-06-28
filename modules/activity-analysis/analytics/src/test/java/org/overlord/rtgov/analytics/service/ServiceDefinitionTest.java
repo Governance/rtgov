@@ -24,6 +24,7 @@ import org.overlord.rtgov.analytics.service.ServiceDefinition;
 
 public class ServiceDefinitionTest {
 
+    private static final String INTERFACE_1 = "Interface1";
     private static final String OPERATION_3 = "op3";
     private static final String OPERATION_1 = "op1";
     private static final String SERVICE_TYPE_1 = "st1";
@@ -34,11 +35,11 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setInterface(SERVICE_TYPE_1);
+        sd1.setServiceType(SERVICE_TYPE_1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setInterface(SERVICE_TYPE_2);
+        sd2.setServiceType(SERVICE_TYPE_2);
         
         try {
             sd1.merge(sd2, false);
@@ -54,23 +55,31 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setInterface(SERVICE_TYPE_1);
+        sd1.setServiceType(SERVICE_TYPE_1);
+        
+        InterfaceDefinition idef1=new InterfaceDefinition();
+        sd1.getInterfaces().add(idef1);
+        idef1.setInterface(INTERFACE_1);
         
         OperationDefinition op1=new OperationDefinition();
         op1.setName(OPERATION_1);
-        sd1.getOperations().add(op1);
+        idef1.getOperations().add(op1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setInterface(SERVICE_TYPE_1);
+        sd2.setServiceType(SERVICE_TYPE_1);
+        
+        InterfaceDefinition idef2=new InterfaceDefinition();
+        sd2.getInterfaces().add(idef2);
+        idef2.setInterface(INTERFACE_1);
         
         OperationDefinition op2=new OperationDefinition();
         op2.setName(OPERATION_1);
-        sd2.getOperations().add(op2);
+        idef2.getOperations().add(op2);
         
         OperationDefinition op3=new OperationDefinition();
         op3.setName(OPERATION_3);
-        sd2.getOperations().add(op3);
+        idef2.getOperations().add(op3);
        
         
         ServiceDefinition sd=sd1.shallowCopy();
@@ -86,15 +95,21 @@ public class ServiceDefinitionTest {
             fail("Should be 0 context: "+sd1.getContext().size());
         }
         
-        if (sd.getOperations().size() != 2) {
-            fail("Should be two ops: "+sd1.getOperations().size());
+        if (sd.getInterfaces().size() != 1) {
+            fail("Expecting 1 interface: "+sd.getInterfaces().size());
         }
         
-        if (sd.getOperation(OPERATION_1) == null) {
+        InterfaceDefinition id=sd.getInterfaces().get(0);
+        
+        if (id.getOperations().size() != 2) {
+            fail("Should be two ops: "+id.getOperations().size());
+        }
+        
+        if (id.getOperation(OPERATION_1) == null) {
             fail("Failed to get op1");
         }
         
-        if (sd.getOperation(OPERATION_3) == null) {
+        if (id.getOperation(OPERATION_3) == null) {
             fail("Failed to get op3");
         }
         
@@ -116,15 +131,19 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setInterface(SERVICE_TYPE_1);
+        sd1.setServiceType(SERVICE_TYPE_1);
+        
+        InterfaceDefinition idef1=new InterfaceDefinition();
+        sd1.getInterfaces().add(idef1);
+        idef1.setInterface(INTERFACE_1);
         
         OperationDefinition op1=new OperationDefinition();
         op1.setName(OPERATION_1);
-        sd1.getOperations().add(op1);
+        idef1.getOperations().add(op1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setInterface(SERVICE_TYPE_1);
+        sd2.setServiceType(SERVICE_TYPE_1);
         sd2.getContext().add(new Context(Context.Type.Conversation, "c2"));
         
         try {
@@ -143,11 +162,11 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setInterface(SERVICE_TYPE_1);
+        sd1.setServiceType(SERVICE_TYPE_1);
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setInterface(SERVICE_TYPE_1);
+        sd2.setServiceType(SERVICE_TYPE_1);
         sd2.getContext().add(new Context(Context.Type.Conversation, "c2"));
         
         try {
@@ -166,45 +185,44 @@ public class ServiceDefinitionTest {
         
         ServiceDefinition sd1=new ServiceDefinition();
         
-        sd1.setInterface(SERVICE_TYPE_1);
+        sd1.setServiceType(SERVICE_TYPE_1);
+        
+        InterfaceDefinition idef1=new InterfaceDefinition();
+        sd1.getInterfaces().add(idef1);
+        idef1.setInterface(INTERFACE_1);
         
         OperationDefinition op1=new OperationDefinition();
         op1.setName(OPERATION_1);
-        sd1.getOperations().add(op1);
-        
-        OperationImplDefinition opid1=new OperationImplDefinition();
-        op1.getImplementations().add(opid1);
+        idef1.getOperations().add(op1);
         
         RequestResponseDefinition rrd1=new RequestResponseDefinition();
-        opid1.setRequestResponse(rrd1);
+        op1.setRequestResponse(rrd1);
         rrd1.getMetrics().setCount(1);
         rrd1.getMetrics().setAverage(1250);        
         
         ServiceDefinition sd2=new ServiceDefinition();
         
-        sd2.setInterface(SERVICE_TYPE_1);
+        sd2.setServiceType(SERVICE_TYPE_1);
+        
+        InterfaceDefinition idef2=new InterfaceDefinition();
+        sd2.getInterfaces().add(idef2);
+        idef2.setInterface(INTERFACE_1);
         
         OperationDefinition op2=new OperationDefinition();
         op2.setName(OPERATION_1);
-        sd2.getOperations().add(op2);
-        
-        OperationImplDefinition opid2=new OperationImplDefinition();
-        op2.getImplementations().add(opid2);
+        idef2.getOperations().add(op2);
         
         RequestResponseDefinition rrd2=new RequestResponseDefinition();
-        opid2.setRequestResponse(rrd2);
+        op2.setRequestResponse(rrd2);
         rrd2.getMetrics().setCount(1);
         rrd2.getMetrics().setAverage(400);        
         
         OperationDefinition op3=new OperationDefinition();
         op3.setName(OPERATION_3);
-        sd2.getOperations().add(op3);
-        
-        OperationImplDefinition opid3=new OperationImplDefinition();
-        op3.getImplementations().add(opid3);
+        idef2.getOperations().add(op3);
         
         RequestResponseDefinition rrd3=new RequestResponseDefinition();
-        opid3.setRequestResponse(rrd3);
+        op3.setRequestResponse(rrd3);
         rrd3.getMetrics().setCount(1);
         rrd3.getMetrics().setAverage(700);        
        
@@ -218,35 +236,31 @@ public class ServiceDefinitionTest {
             fail("Failed to merge: "+e);
         }
         
-        if (sd.getOperations().size() != 2) {
-            fail("Should be two ops: "+sd1.getOperations().size());
+        if (sd.getInterfaces().size() != 1) {
+            fail("Expecting 1 interface: "+sd.getInterfaces().size());
         }
         
-        if (sd.getOperation(OPERATION_1) == null) {
+        InterfaceDefinition idefres=sd.getInterfaces().get(0);
+        
+        if (idefres.getOperations().size() != 2) {
+            fail("Should be two ops: "+idefres.getOperations().size());
+        }
+        
+        if (idefres.getOperation(OPERATION_1) == null) {
             fail("Failed to get op1");
         }
         
-        if (sd.getOperation(OPERATION_3) == null) {
+        if (idefres.getOperation(OPERATION_3) == null) {
             fail("Failed to get op3");
         }
         
-        OperationDefinition od=sd.getOperation(OPERATION_1);
+        OperationDefinition od=idefres.getOperation(OPERATION_1);
         
         if (od.getMerged().size() != 2) {
             fail("Should be two merged ops");
         }
         
-        if (od.getImplementations().size() != 1) {
-            fail("Should only be 1 op impl defn");
-        }
-        
-        OperationImplDefinition oid=od.getImplementations().get(0);
-        
-        if (oid.getMerged().size() != 2) {
-            fail("Op impl defn should have two merged entries: "+oid.getMerged().size());
-        }
-        
-        RequestResponseDefinition rrd=oid.getRequestResponse();
+        RequestResponseDefinition rrd=od.getRequestResponse();
         
         if (rrd == null) {
             fail("Request/response defn is null");

@@ -17,12 +17,12 @@ package org.overlord.rtgov.service.dependency;
 
 import java.util.logging.Logger;
 
+import org.overlord.rtgov.analytics.service.InterfaceDefinition;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
-import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
 
 /**
@@ -53,7 +53,7 @@ public final class ServiceDependencyBuilder {
         
         for (ServiceDefinition sd : sds) {
             java.util.Set<ServiceDefinition> clients=
-                        getServiceClients(sd.getInterface(), sds);
+                        getServiceClients(sd, sds);
             
             if (clients.size() == 0) {
                 ret.add(sd);
@@ -67,27 +67,27 @@ public final class ServiceDependencyBuilder {
      * This method returns the set of services that are clients to the
      * supplied service interface.
      * 
-     * @param intf The interface
-     * @param sds The service definitions
+     * @param mainsd The service definition
+     * @param sds The other service definitions to check
      * @return The set of service definitions that are clients of
-     *                  the service type
+     *                  the service definition
      */
-    public static java.util.Set<ServiceDefinition> getServiceClients(String intf,
+    public static java.util.Set<ServiceDefinition> getServiceClients(ServiceDefinition mainsd,
                         java.util.Collection<ServiceDefinition> sds) {
         java.util.Set<ServiceDefinition> ret=
                 new java.util.HashSet<ServiceDefinition>();
         
         for (ServiceDefinition sd : sds) {
-            if (!sd.getInterface().equals(intf)) {
+            if (!sd.getServiceType().equals(mainsd.getServiceType())) {
                 
-                for (OperationDefinition opDef : sd.getOperations()) {
+                for (InterfaceDefinition iDef : sd.getInterfaces()) {
+                
+                    for (OperationDefinition opDef : iDef.getOperations()) {
                     
-                    for (OperationImplDefinition stod : opDef.getImplementations()) {
-                        
-                        if (stod.getRequestResponse() != null) {
+                        if (opDef.getRequestResponse() != null) {
                             for (InvocationDefinition invDef
-                                        : stod.getRequestResponse().getInvocations()) {
-                                if (invDef.getInterface().equals(intf)) {
+                                        : opDef.getRequestResponse().getInvocations()) {
+                                if (mainsd.getInterface(invDef.getInterface()) != null) {
                                     
                                     if (!ret.contains(sd)) {
                                         ret.add(sd);
@@ -96,10 +96,10 @@ public final class ServiceDependencyBuilder {
                             }
                         }
                         
-                        for (RequestFaultDefinition rfd : stod.getRequestFaults()) {
+                        for (RequestFaultDefinition rfd : opDef.getRequestFaults()) {
                             for (InvocationDefinition invDef
                                         : rfd.getInvocations()) {
-                                if (invDef.getInterface().equals(intf)) {
+                                if (mainsd.getInterface(invDef.getInterface()) != null) {
                                     
                                     if (!ret.contains(sd)) {
                                         ret.add(sd);
@@ -137,24 +137,26 @@ public final class ServiceDependencyBuilder {
             
             sn.setService(sd);
             
-            for (OperationDefinition op : sd.getOperations()) {
-                OperationNode opn=new OperationNode();
-                
-                opn.setService(sd);
-                opn.setOperation(op);
-                
-                if (sits != null) {
-                    for (Situation s : sits) {
-                        String[] parts=s.subjectAsParts();
-                        if (parts.length > 1 && parts[0].equals(
-                                    sn.getService().getInterface())
-                                    && parts[1].equals(op.getName())) {
-                            opn.getSituations().add(s);
+            for (InterfaceDefinition idef : sd.getInterfaces()) {
+                for (OperationDefinition op : idef.getOperations()) {
+                    OperationNode opn=new OperationNode();
+                    
+                    opn.setService(sd);
+                    opn.setOperation(op);
+                    
+                    if (sits != null) {
+                        for (Situation s : sits) {
+                            String[] parts=s.subjectAsParts();
+                            if (parts.length > 1 && parts[0].equals(
+                                        sn.getService().getServiceType())
+                                        && parts[1].equals(op.getName())) {
+                                opn.getSituations().add(s);
+                            }
                         }
                     }
+                    
+                    sn.getOperations().add(opn);
                 }
-                
-                sn.getOperations().add(opn);
             }
             
             sn.getProperties().put(ServiceNode.INITIAL_NODE, initialNodes.contains(sd));
@@ -164,7 +166,7 @@ public final class ServiceDependencyBuilder {
                 for (Situation s : sits) {
                     String[] parts=s.subjectAsParts();
                     if (parts.length == 1 && parts[0].equals(
-                                sn.getService().getInterface())) {
+                                sn.getService().getServiceType())) {
                         sn.getSituations().add(s);
                     }
                 }
@@ -174,19 +176,19 @@ public final class ServiceDependencyBuilder {
         }
         
         // Initialize invocation links between operations
-        for (ServiceDefinition sd : sds) {
+        for (ServiceDefinition sd : sds) {            
+            ServiceNode sn=ret.getServiceNode(sd.getServiceType());
             
-            for (OperationDefinition op : sd.getOperations()) {
-                ServiceNode sn=ret.getServiceNode(sd.getInterface());
-                OperationNode opn=sn.getOperation(op.getName());
+            for (InterfaceDefinition idef : sd.getInterfaces()) {
+                for (OperationDefinition op : idef.getOperations()) {
+                    OperationNode opn=sn.getOperation(op.getName());
                 
-                for (OperationImplDefinition stod : op.getImplementations()) {
-                    if (stod.getRequestResponse() != null) {
+                    if (op.getRequestResponse() != null) {
                         linkOperationNodes(ret, sn, opn,
-                                stod.getRequestResponse().getInvocations());
+                                op.getRequestResponse().getInvocations());
                     }
                     
-                    for (RequestFaultDefinition rfd : stod.getRequestFaults()) {
+                    for (RequestFaultDefinition rfd : op.getRequestFaults()) {
                         linkOperationNodes(ret, sn, opn,
                                 rfd.getInvocations());
                     }
@@ -210,7 +212,7 @@ public final class ServiceDependencyBuilder {
             OperationNode opn, java.util.List<InvocationDefinition> ids) {
         
         for (InvocationDefinition id : ids) {
-            ServiceNode tsn=sg.getServiceNode(id.getInterface());
+            ServiceNode tsn=sg.getServiceNodeForInterface(id.getInterface());
             
             if (tsn != null) {
                 UsageLink ul=new UsageLink();

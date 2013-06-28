@@ -7,20 +7,6 @@
 	<property name="rtgov-layer" value="soa" />
 
 	<target name="deploy" depends="create.schema" >
-		<copy todir="${jboss.home}/modules/system/layers/${rtgov-layer}" >
-			<fileset dir="../../modules" />
-		</copy>
-		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
-			<fileset dir="deployments" />
-		</copy>
-		<copy todir="${jboss.home}/standalone/configuration" >
-			<fileset dir="configuration" />
-		</copy>
-		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov">
-			<fileset dir="gadget-server">
-				<include name="gadgets.war" />
-			</fileset>
-		</copy>
 
 		<!-- Temporary workaround -->
 		<mkdir dir="${basedir}/overlord-commons/target" />
@@ -38,6 +24,25 @@
 			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
 			<property name="basedir" value="${basedir}/gadget-server" />
 		</ant>
+
+		<!-- Install Runtime Governance -->
+
+		<copy todir="${jboss.home}/modules/system/layers/${rtgov-layer}" >
+			<fileset dir="../../modules" />
+		</copy>
+		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
+			<fileset dir="deployments" />
+		</copy>
+		<delete file="${jboss.home}/standalone/configuration/overlord-apps/gadget-server-overlordapp.properties"/>
+		<copy todir="${jboss.home}/standalone/configuration" >
+			<fileset dir="configuration" />
+		</copy>
+		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov">
+			<fileset dir="gadget-server">
+				<include name="gadgets.war" />
+			</fileset>
+		</copy>
+
 	</target>
 	
 	<target name="undeploy" depends="drop.schema" >

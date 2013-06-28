@@ -32,6 +32,7 @@ import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.util.ActivityUtil;
+import org.overlord.rtgov.analytics.service.InterfaceDefinition;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
 import org.overlord.rtgov.analytics.service.MEPDefinition;
@@ -39,7 +40,6 @@ import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
-import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 
 /**
  * This class provides utility functions related to the service
@@ -260,40 +260,40 @@ public final class ServiceDefinitionUtil {
         MEPDefinition ret=null;
         
         // Get service definition associated with the service type
-        ServiceDefinition sd=sdefs.get(rqr.getInterface());
+        ServiceDefinition sd=sdefs.get(rqr.getServiceType());
         
         // If not found, then create
         if (sd == null) {
             sd = new ServiceDefinition();
-            sd.setInterface(rqr.getInterface());
-            sdefs.put(rqr.getInterface(), sd);
+            sd.setServiceType(rqr.getServiceType());
+            sdefs.put(rqr.getServiceType(), sd);
         }
         
-        OperationDefinition op=sd.getOperation(rqr.getOperation());
+        InterfaceDefinition id=sd.getInterface(rqr.getInterface());
+        
+        if (id == null) {
+            id = new InterfaceDefinition();
+            id.setInterface(rqr.getInterface());
+            sd.getInterfaces().add(id);
+        }
+        
+        OperationDefinition op=id.getOperation(rqr.getOperation());
         
         if (op == null) {
             op = new OperationDefinition();
             op.setName(rqr.getOperation());
-            sd.getOperations().add(op);
-        }
-        
-        OperationImplDefinition stod=op.getServiceTypeOperation(rqr.getServiceType());
-        
-        if (stod == null) {
-            stod = new OperationImplDefinition();
-            stod.setServiceType(rqr.getServiceType());
-            op.getImplementations().add(stod);
+            id.getOperations().add(op);
         }
         
         // Check if normal or fault response
         InvocationMetric metrics=null;
         
         if (rps.getFault() == null || rps.getFault().trim().length() == 0) {
-            RequestResponseDefinition nrd=stod.getRequestResponse();
+            RequestResponseDefinition nrd=op.getRequestResponse();
             
             if (nrd == null) {
                 nrd = new RequestResponseDefinition();
-                stod.setRequestResponse(nrd);
+                op.setRequestResponse(nrd);
                 
                 // Set the request and response ids
                 nrd.setRequestId(ActivityTypeId.createId(rqr));
@@ -304,7 +304,7 @@ public final class ServiceDefinitionUtil {
             
             ret = nrd;
         } else {
-            RequestFaultDefinition frd=stod.getRequestFault(rps.getFault());
+            RequestFaultDefinition frd=op.getRequestFault(rps.getFault());
             
             if (frd == null) {
                 frd = new RequestFaultDefinition();
@@ -314,7 +314,7 @@ public final class ServiceDefinitionUtil {
                 frd.setRequestId(ActivityTypeId.createId(rqr));
                 frd.setResponseId(ActivityTypeId.createId(rps));
                 
-                stod.getRequestFaults().add(frd);
+                op.getRequestFaults().add(frd);
             }
             
             metrics = frd.getMetrics();
@@ -456,7 +456,7 @@ public final class ServiceDefinitionUtil {
         
         for (String key : keys) {
             ServiceDefinition sd=new ServiceDefinition();
-            sd.setInterface(key);
+            sd.setServiceType(key);
             
             for (java.util.Map<String,ServiceDefinition> sds : snapshots) {
                 if (sds.containsKey(key)) {

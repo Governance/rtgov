@@ -18,12 +18,12 @@ package org.overlord.rtgov.service.dependency.svg;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.rtgov.analytics.service.InterfaceDefinition;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
-import org.overlord.rtgov.analytics.service.OperationImplDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
@@ -45,7 +45,7 @@ public class SVGServiceGraphGeneratorTest {
     private static final String INTERFACE4 = "intf4";
     private static final String SERVICE_TYPE1 = "serviceType1";
     private static final String SERVICE_TYPE2 = "serviceType2";
-    //private static final String SERVICE_TYPE3 = "serviceType3";
+    private static final String SERVICE_TYPE3 = "serviceType3";
     private static final String SERVICE_TYPE4 = "serviceType4";
 
     //@Test
@@ -58,18 +58,18 @@ public class SVGServiceGraphGeneratorTest {
     @Test
     public void testLayoutGraph() {
         ServiceDefinition sd1=new ServiceDefinition();
-        sd1.setInterface(INTERFACE1);
+        sd1.setServiceType(SERVICE_TYPE1);
+        
+        InterfaceDefinition idef1=new InterfaceDefinition();
+        idef1.setInterface(INTERFACE1);
+        sd1.getInterfaces().add(idef1);
         
         OperationDefinition op1=new OperationDefinition();
         op1.setName(OP1);
-        sd1.getOperations().add(op1);
-        
-        OperationImplDefinition stod1=new OperationImplDefinition();
-        stod1.setServiceType(SERVICE_TYPE1);
-        op1.getImplementations().add(stod1);
+        idef1.getOperations().add(op1);
         
         RequestResponseDefinition rrd1=new RequestResponseDefinition();
-        stod1.setRequestResponse(rrd1);
+        op1.setRequestResponse(rrd1);
         
         InvocationDefinition id1=new InvocationDefinition();
         id1.setInterface(INTERFACE2);
@@ -94,18 +94,18 @@ public class SVGServiceGraphGeneratorTest {
         id1b.getMetrics().setMin(140);
         
         ServiceDefinition sd2=new ServiceDefinition();
-        sd2.setInterface(INTERFACE2);
+        sd2.setServiceType(SERVICE_TYPE2);
+        
+        InterfaceDefinition idef2=new InterfaceDefinition();
+        idef2.setInterface(INTERFACE2);
+        sd2.getInterfaces().add(idef2);
         
         OperationDefinition op2=new OperationDefinition();
         op2.setName(OP2);
-        sd2.getOperations().add(op2);
-        
-        OperationImplDefinition stod2=new OperationImplDefinition();
-        stod2.setServiceType(SERVICE_TYPE2);
-        op2.getImplementations().add(stod2);
+        idef2.getOperations().add(op2);
         
         RequestResponseDefinition rrd2=new RequestResponseDefinition();
-        stod2.setRequestResponse(rrd2);
+        op2.setRequestResponse(rrd2);
         
         rrd2.getMetrics().setCount(2);
         rrd2.getMetrics().setAverage(100);
@@ -124,7 +124,7 @@ public class SVGServiceGraphGeneratorTest {
         
         RequestFaultDefinition rfd2=new RequestFaultDefinition();
         rfd2.setFault(FAULT2);
-        stod2.getRequestFaults().add(rfd2);
+        op2.getRequestFaults().add(rfd2);
         
         rfd2.getMetrics().setCount(3);
         rfd2.getMetrics().setFaults(3);
@@ -143,11 +143,15 @@ public class SVGServiceGraphGeneratorTest {
         id2b.getMetrics().setMin(90);
         
         ServiceDefinition sd3=new ServiceDefinition();
-        sd3.setInterface(INTERFACE3);
+        sd3.setServiceType(SERVICE_TYPE3);
+        
+        InterfaceDefinition idef3=new InterfaceDefinition();
+        idef3.setInterface(INTERFACE3);
+        sd3.getInterfaces().add(idef3);
         
         OperationDefinition op3=new OperationDefinition();
         op3.setName(OP3);
-        sd3.getOperations().add(op3);
+        idef3.getOperations().add(op3);
         
         op3.getMetrics().setCount(3);
         op3.getMetrics().setAverage(80);
@@ -155,15 +159,19 @@ public class SVGServiceGraphGeneratorTest {
         op3.getMetrics().setMin(50);
                 
         ServiceDefinition sd4=new ServiceDefinition();
-        sd4.setInterface(INTERFACE4);
+        sd4.setServiceType(SERVICE_TYPE4);
 
+        InterfaceDefinition idef4=new InterfaceDefinition();
+        idef4.setInterface(INTERFACE4);
+        sd4.getInterfaces().add(idef4);
+        
         OperationDefinition op4=new OperationDefinition();
         op4.setName(OP4);
-        sd4.getOperations().add(op4);
+        idef4.getOperations().add(op4);
         
         OperationDefinition op5=new OperationDefinition();
         op5.setName(OP5);
-        sd4.getOperations().add(op5);
+        idef4.getOperations().add(op5);
                 
         java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
         sds.add(sd1);

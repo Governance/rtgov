@@ -36,9 +36,9 @@ public class ServiceDefinition implements java.io.Externalizable {
 
     private static final int VERSION = 1;
 
-    private String _interface=null;
-    private java.util.List<OperationDefinition> _operations=
-                    new java.util.ArrayList<OperationDefinition>();
+    private String _serviceType=null;
+    private java.util.List<InterfaceDefinition> _interfaces=
+                    new java.util.ArrayList<InterfaceDefinition>();
     private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
     private java.util.List<ServiceDefinition> _merged=new java.util.ArrayList<ServiceDefinition>();
     
@@ -56,7 +56,7 @@ public class ServiceDefinition implements java.io.Externalizable {
     public ServiceDefinition shallowCopy() {
         ServiceDefinition ret=new ServiceDefinition();
         
-        ret.setInterface(_interface);
+        ret.setServiceType(_serviceType);
         
         // Copy contexts
         for (Context c : _contexts) {
@@ -67,56 +67,56 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
 
     /**
-     * This method sets the interface.
+     * This method sets the service type.
      * 
-     * @param intf The interface
+     * @param st The service type
      */
-    public void setInterface(String intf) {
-        _interface = intf;
+    public void setServiceType(String st) {
+        _serviceType = st;
     }
     
     /**
-     * This method gets the interface.
+     * This method gets the service type.
      * 
-     * @return The interface
+     * @return The service type
      */
-    public String getInterface() {
-        return (_interface);
+    public String getServiceType() {
+        return (_serviceType);
     }
     
     /**
-     * This method sets the list of operations associated
+     * This method sets the list of interfaces associated
      * with the service.
      * 
-     * @param operations The operations
+     * @param interfaces The interfaces
      */
-    public void setOperations(java.util.List<OperationDefinition> operations) {
-        _operations = operations;
+    public void setInterfaces(java.util.List<InterfaceDefinition> interfaces) {
+        _interfaces = interfaces;
     }
     
     /**
-     * This method returns the list of operations associated
+     * This method returns the list of interfaces associated
      * with the service.
      * 
-     * @return The operations
+     * @return The interfaces
      */
-    public java.util.List<OperationDefinition> getOperations() {
-        return (_operations);
+    public java.util.List<InterfaceDefinition> getInterfaces() {
+        return (_interfaces);
     }
     
     /**
-     * This method returns the operation associated with the supplied
+     * This method returns the interface associated with the supplied
      * name, if defined within the service definition.
      * 
-     * @param name The operation name
-     * @return The operation, or null if not found
+     * @param name The interface name
+     * @return The interface, or null if not found
      */
-    public OperationDefinition getOperation(String name) {
-        OperationDefinition ret=null;
+    public InterfaceDefinition getInterface(String name) {
+        InterfaceDefinition ret=null;
         
-        for (int i=0; i < _operations.size(); i++) {
-            if (_operations.get(i).getName().equals(name)) {
-                ret = _operations.get(i);
+        for (int i=0; i < _interfaces.size(); i++) {
+            if (_interfaces.get(i).getInterface().equals(name)) {
+                ret = _interfaces.get(i);
                 break;
             }
         }
@@ -144,7 +144,7 @@ public class ServiceDefinition implements java.io.Externalizable {
 
     /**
      * This method returns the aggregated invocation metric information
-     * from the operations.
+     * from the interfaces.
      * 
      * @return The invocation metric
      */
@@ -152,8 +152,8 @@ public class ServiceDefinition implements java.io.Externalizable {
         java.util.List<InvocationMetric> metrics=
                         new java.util.ArrayList<InvocationMetric>();
         
-        for (OperationDefinition op : getOperations()) {
-            metrics.add(op.getMetrics());
+        for (InterfaceDefinition id : getInterfaces()) {
+            metrics.add(id.getMetrics());
         }
         
         return (new InvocationMetric(metrics));
@@ -189,7 +189,7 @@ public class ServiceDefinition implements java.io.Externalizable {
      */
     public void merge(ServiceDefinition sd, boolean retainContexts) throws Exception {
             
-        if (sd == null || !sd.getInterface().equals(getInterface())) {
+        if (sd == null || !sd.getServiceType().equals(getServiceType())) {
             throw new IllegalArgumentException("Invalid service definition");
         }
         
@@ -199,17 +199,17 @@ public class ServiceDefinition implements java.io.Externalizable {
 
         // Examine operation definitions - merge existing and
         // transfer undefined
-        for (int i=0; i < sd.getOperations().size(); i++) {
-            OperationDefinition opdef=sd.getOperations().get(i);
+        for (int i=0; i < sd.getInterfaces().size(); i++) {
+            InterfaceDefinition idef=sd.getInterfaces().get(i);
             
-            OperationDefinition cur=getOperation(opdef.getName());
+            InterfaceDefinition cur=getInterface(idef.getInterface());
             
             if (cur == null) {
-                cur = opdef.shallowCopy();
-                getOperations().add(cur);
+                cur = idef.shallowCopy();
+                getInterfaces().add(cur);
             }
 
-            cur.merge(opdef);
+            cur.merge(idef);
         }
         
         if (retainContexts) {
@@ -231,7 +231,7 @@ public class ServiceDefinition implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public int hashCode() {
-        return (_interface.hashCode());
+        return (_serviceType.hashCode());
     }
     
     /**
@@ -240,7 +240,7 @@ public class ServiceDefinition implements java.io.Externalizable {
     public boolean equals(Object obj) {
         
         if (obj instanceof ServiceDefinition
-                  && ((ServiceDefinition)obj).getInterface().equals(_interface)) {
+                  && ((ServiceDefinition)obj).getServiceType().equals(_serviceType)) {
             return (true);
         }
         
@@ -268,11 +268,11 @@ public class ServiceDefinition implements java.io.Externalizable {
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
-        out.writeObject(_interface);
+        out.writeObject(_serviceType);
         
-        out.writeInt(_operations.size());
-        for (int i=0; i < _operations.size(); i++) {
-            out.writeObject(_operations.get(i));
+        out.writeInt(_interfaces.size());
+        for (int i=0; i < _interfaces.size(); i++) {
+            out.writeObject(_interfaces.get(i));
         }
         
         out.writeInt(_contexts.size());
@@ -293,11 +293,11 @@ public class ServiceDefinition implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _interface = (String)in.readObject();
+        _serviceType = (String)in.readObject();
         
         int len=in.readInt();
         for (int i=0; i < len; i++) {
-            _operations.add((OperationDefinition)in.readObject());
+            _interfaces.add((InterfaceDefinition)in.readObject());
         }
         
         len = in.readInt();
