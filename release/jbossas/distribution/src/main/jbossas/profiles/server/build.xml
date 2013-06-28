@@ -4,19 +4,19 @@
 	<property name="database" value="h2" />
 	<property file="jdbc/${database}.properties" />
 
+	<property name="appserver.id" value="jboss-eap-6.1" />
+
 	<property name="rtgov-layer" value="soa" />
 
 	<target name="deploy" depends="create.schema" >
 
-		<!-- Temporary workaround -->
-		<mkdir dir="${basedir}/overlord-commons/target" />
-
-		<ant antfile="overlord-commons/build.xml" target="install-overlord-commons">
-			<property name="dist.dir" value="${jboss.home}" />
-			<property name="basedir" value="${basedir}/overlord-commons" />
+		<ant antfile="build.xml" target="install"
+				dir="overlord-commons" >
+			<property name="overlord-commons.appserver.dir" value="${jboss.home}" />
+			<property name="overlord-commons.install.dir" value="${basedir}/overlord-commons" />
 
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
-			<property name="overlord-commons.version" value="1.0.7" />
+			<property name="overlord-commons.version" value="1.0.9" />
 		</ant>
 
 		<ant antfile="gadget-server/build.xml" target="deploy">
