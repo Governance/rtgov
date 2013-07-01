@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -31,6 +30,7 @@ import javax.enterprise.context.ApplicationScoped;
 import org.overlord.rtgov.activity.util.ActivityValidatorUtil;
 import org.overlord.rtgov.activity.validator.ActivityValidator;
 import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
+import org.overlord.rtgov.activity.validator.ActivityValidatorManagerAccessor;
 
 /**
  * This class provides the capability to load Activity Validators from a
@@ -46,9 +46,7 @@ public class JEEAVLoader {
     private static final Logger LOG=Logger.getLogger(JEEAVLoader.class.getName());
     
     private static final String AV_JSON = "av.json";
-    private static final String AVS_MANAGER = "java:global/overlord-rtgov/ActivityValidatorManager";
     
-    @Resource(lookup=AVS_MANAGER)
     private ActivityValidatorManager _avManager=null;
 
     private java.util.List<ActivityValidator> _activityValidators=null;
@@ -64,6 +62,13 @@ public class JEEAVLoader {
      */
     @PostConstruct
     public void init() {
+        
+        _avManager = ActivityValidatorManagerAccessor.getActivityValidatorManager();
+        
+        if (_avManager == null) {
+            LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                "av-loader-jee.Messages").getString("AV-LOADER-JEE-5"));
+        }
         
         try {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(AV_JSON);

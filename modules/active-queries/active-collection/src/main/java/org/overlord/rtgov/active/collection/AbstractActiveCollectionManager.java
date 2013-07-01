@@ -46,6 +46,13 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     private ActiveCollectionContext _context=new DefaultActiveCollectionContext(this);
     
     /**
+     * The default constructor.
+     */
+    public AbstractActiveCollectionManager() {
+        ActiveCollectionManagerAccessor.setActiveCollectionManager(this);
+    }
+    
+    /**
      * This method initializes the Active Collection Manager.
      */
     public void init() {

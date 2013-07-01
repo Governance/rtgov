@@ -33,8 +33,8 @@ public class InvocationDefinition implements java.io.Externalizable {
     private String _operation=null;
     private String _fault=null;
     private InvocationMetric _metrics=new InvocationMetric();
-    private java.util.List<InvocationDefinition> _merged=
-            new java.util.ArrayList<InvocationDefinition>();
+    private java.util.List<InvocationMetric> _history=
+            new java.util.ArrayList<InvocationMetric>();
 
     /**
      * Default constructor.
@@ -112,9 +112,10 @@ public class InvocationDefinition implements java.io.Externalizable {
     }
     
     /**
-     * This method returns the invocation metric information.
+     * This method returns the metrics for the invocation
+     * definition.
      * 
-     * @return The invocation metric
+     * @return The invocation definition metrics
      */
     public InvocationMetric getMetrics() {
         return (_metrics);
@@ -139,16 +140,17 @@ public class InvocationDefinition implements java.io.Externalizable {
         
         getMetrics().merge(id.getMetrics());
         
-        _merged.add(id);
+        _history.add(id.getMetrics());
     }
     
     /**
-     * This method returns the list of merged invocation definitions.
+     * This method returns the historic list of invocation
+     * metrics merged into the current invocation definition.
      * 
-     * @return The merged list
+     * @return The invocation metrics history
      */
-    public java.util.List<InvocationDefinition> getMerged() {
-        return (Collections.unmodifiableList(_merged));
+    public java.util.List<InvocationMetric> getHistory() {
+        return (Collections.unmodifiableList(_history));
     }
     
     /**
@@ -162,9 +164,9 @@ public class InvocationDefinition implements java.io.Externalizable {
         out.writeObject(_fault);
         out.writeObject(_metrics);
         
-        out.writeInt(_merged.size());
-        for (int i=0; i < _merged.size(); i++) {
-            out.writeObject(_merged.get(i));
+        out.writeInt(_history.size());
+        for (int i=0; i < _history.size(); i++) {
+            out.writeObject(_history.get(i));
         }
     }
 
@@ -182,7 +184,7 @@ public class InvocationDefinition implements java.io.Externalizable {
         
         int len = in.readInt();
         for (int i=0; i < len; i++) {
-            _merged.add((InvocationDefinition)in.readObject());
+            _history.add((InvocationMetric)in.readObject());
         }
     }
 }

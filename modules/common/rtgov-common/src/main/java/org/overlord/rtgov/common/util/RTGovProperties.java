@@ -85,6 +85,9 @@ public final class RTGovProperties {
             } catch (Exception e) {                
                 LOG.warning(java.util.PropertyResourceBundle.getBundle(
                         "rtgov-common.Messages").getString("RTGOV-COMMON-1"));
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Failed to get runtime governance properties", e);
+                }
             }
             
             _initialized = true;

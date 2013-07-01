@@ -34,8 +34,9 @@ import org.switchyard.Service;
 import org.switchyard.ServiceReference;
 import org.switchyard.extensions.wsdl.WSDLService;
 import org.switchyard.metadata.BaseExchangeContract;
+import org.switchyard.metadata.Registrant;
 import org.switchyard.metadata.ServiceInterface;
-import org.switchyard.metadata.java.JavaService;
+import org.switchyard.extensions.java.JavaService;
 import org.switchyard.security.SecurityContext;
 import org.switchyard.security.credential.Credential;
 
@@ -90,25 +91,15 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         // be updated to reflect the transformed type?
         
         String messageId=null;
-        String relatesTo=null;
+        Property mip=context.getProperty("org.switchyard.messageId", org.switchyard.Scope.MESSAGE);
+        if (mip != null) {
+            messageId = (String)mip.getValue();
+        }
+        
         String contentType=null;
-        
-        java.util.Set<Property> props=context.getProperties(
-                org.switchyard.Scope.MESSAGE);
-        
-        for (Property p : props) {
-            
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Switchyard property: name="+p.getName()+" value="+p.getValue());
-            }
-            
-            if (p.getName().equals("org.switchyard.messageId")) {
-                messageId = (String)p.getValue();
-            } else if (p.getName().equals("org.switchyard.relatesTo")) {
-                relatesTo = (String)p.getValue();
-            } else if (p.getName().equals("org.switchyard.contentType")) {
-                contentType = ((QName)p.getValue()).toString();
-            }
+        Property ctp=context.getProperty("org.switchyard.contentType", org.switchyard.Scope.MESSAGE);
+        if (ctp != null) {
+            contentType = ((QName)ctp.getValue()).toString();
         }
         
         if (phase == ExchangePhase.IN) {
@@ -122,6 +113,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                     LOG.finest("No content type - possibly due to exception on handling the request");
                 }
                 return;
+            }
+            
+            String relatesTo=null;
+            Property rtp=context.getProperty("org.switchyard.relatesTo", org.switchyard.Scope.MESSAGE);
+            if (rtp != null) {
+                relatesTo = (String)rtp.getValue();
             }
             
             handleOutExchange(exch, provider, consumer, messageId, relatesTo, contentType, mesg);
@@ -141,7 +138,10 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
     protected void handleInExchange(org.apache.camel.Exchange exch,
             Service provider, ServiceReference consumer, String messageId,
             String contentType, org.switchyard.bus.camel.CamelMessage mesg) {
-        String intf=getInterface(consumer, provider);
+        Registrant consumerReg=consumer.getServiceMetadata().getRegistrant();
+        Registrant providerReg=(provider == null ? null : provider.getServiceMetadata().getRegistrant());
+
+        String intf=getInterface(consumer, provider, consumerReg);
         
         SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
 
@@ -152,7 +152,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         QName serviceType=consumer.getName();
         String opName=contract.getConsumerOperation().getName();
         
-        if (consumer.getServiceMetadata().getRegistrant().isBinding()) {
+        if (consumerReg.isBinding()) {
             getActivityCollector().startScope();
         } else {
             // Only record the request being sent, if the
@@ -162,7 +162,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             // Only report service type if provider is not a binding
             if (provider == null
-                    || !provider.getServiceMetadata().getRegistrant().isBinding()) {
+                    || !providerReg.isBinding()) {
                 sent.setServiceType(serviceType.toString()); 
             }
             
@@ -179,7 +179,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         }
         
         if (provider == null
-                || !provider.getServiceMetadata().getRegistrant().isBinding()) {
+                || !providerReg.isBinding()) {
             RequestReceived recvd=new RequestReceived();
             
             recvd.setServiceType(serviceType.toString());                
@@ -211,8 +211,11 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             Service provider, ServiceReference consumer, String messageId, String relatesTo,
             String contentType, org.switchyard.bus.camel.CamelMessage mesg) {
 
+        Registrant consumerReg=consumer.getServiceMetadata().getRegistrant();
+        Registrant providerReg=(provider == null ? null : provider.getServiceMetadata().getRegistrant());
+
         // Check if interface on associated request needs to be set
-        String intf=getInterface(consumer, provider);
+        String intf=getInterface(consumer, provider, consumerReg);
         
         SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
 
@@ -234,15 +237,15 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 rs.setInterface(intf);
             }
         }
-
+        
         // Record the response
         if (provider == null
-                || !provider.getServiceMetadata().getRegistrant().isBinding()) {
+                || !providerReg.isBinding()) {
             ResponseSent sent=new ResponseSent();
                             
             // Only report service type if provider is not a binding
             if (provider == null
-                    || !provider.getServiceMetadata().getRegistrant().isBinding()) {
+                    || !providerReg.isBinding()) {
                 sent.setServiceType(serviceType.toString()); 
             }
 
@@ -254,7 +257,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             record(mesg, contentType, sent, securityContext, exch); 
         }
         
-        if (consumer.getServiceMetadata().getRegistrant().isBinding()) {
+        if (consumerReg.isBinding()) {
             getActivityCollector().endScope();
         } else {
             // Only record the response being received, if the
@@ -276,13 +279,14 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
      * 
      * @param consumer The exchange consumer
      * @param provider The exchange provider
+     * @param consumerReg The consumer registrant
      * @return The interface
      */
-    protected String getInterface(ServiceReference consumer, Service provider) {
+    protected String getInterface(ServiceReference consumer, Service provider, Registrant consumerReg) {
         String ret=null;
         ServiceInterface intf=null;
         
-        if (consumer.getServiceMetadata().getRegistrant().isBinding()) {
+        if (consumerReg.isBinding()) {
             intf = consumer.getInterface();
         } else if (provider != null) {
             intf = provider.getInterface();
@@ -320,7 +324,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                           contentType, content, null, at));
             
             // Check if principal has been defined
-            if (sc != null) {
+            if (sc != null && sc.getCredentials().size() > 0) {
                 for (Credential cred : sc.getCredentials()) {
                     if (cred instanceof org.switchyard.security.credential.NameCredential) {
                         at.setPrincipal(((org.switchyard.security.credential.NameCredential)cred).getName());

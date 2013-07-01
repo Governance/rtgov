@@ -147,6 +147,20 @@ public class EventList implements java.io.Serializable, java.lang.Iterable<java.
     }
     
     /**
+     * This method returns the event at the specified index.
+     * 
+     * @param index The index
+     * @return The event
+     * @throws IndexOutOfBoundsException Index is out of bounds
+     */
+    public Serializable get(int index) throws IndexOutOfBoundsException {
+        if (_list != null) {
+            return (_list.get(index));
+        }
+        return (null);
+    }
+    
+    /**
      * This method returns the number of events.
      * 
      * @return The number of events

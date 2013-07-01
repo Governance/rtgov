@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.naming.InitialContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -31,6 +30,7 @@ import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 
 /**
  * REST app for creating activity events related to a virtual
@@ -43,8 +43,6 @@ public class JEEApp {
 
     private static final Logger LOG=Logger.getLogger(JEEApp.class.getName());
     
-    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
-
     private ActivityCollector _activityCollector=null;
     
     private long _firstTxn=0;
@@ -55,15 +53,11 @@ public class JEEApp {
      */
     public JEEApp() {
         
-        try {
-            InitialContext ctx=new InitialContext();
+        _activityCollector = ActivityCollectorAccessor.getActivityCollector();
             
-            _activityCollector = (ActivityCollector)ctx.lookup(ACTIVITY_COLLECTOR);
-            
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Failed to initialize activity collector", e);
+        if (_activityCollector == null) {
+            LOG.severe("Failed to initialize activity collector");
         }
-
     }
     
     /**

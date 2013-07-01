@@ -21,7 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 
-import javax.annotation.Resource;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
@@ -42,6 +41,7 @@ import org.junit.runner.RunWith;
 import org.overlord.rtgov.active.collection.QuerySpec;
 import org.overlord.rtgov.active.collection.predicate.MVEL;
 import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.EPNManagerAccessor;
 import org.overlord.rtgov.epn.EventList;
 import org.overlord.rtgov.epn.NotificationListener;
 
@@ -57,12 +57,6 @@ public class JBossASSLAMonitorTest {
     private static final String SERVICE_RESPONSE_TIMES = "ServiceResponseTimes";
     private static final String SITUATIONS = "Situations";
     private static final String SITUATIONS_PROCESSED = "SituationsProcessed";
-    
-    // NOTE: Had to use resource, as injection didn't seem to work when there
-    // was multiple deployments, even though the method defined the
-    // 'overlord-rtgov' as the deployment it should operate on.
-    @Resource(mappedName=EPNManager.URI)
-    org.overlord.rtgov.epn.EPNManager _epnManager;
     
     @Deployment(name="orders-app", order=1)
     public static JavaArchive createDeployment1() {
@@ -558,9 +552,11 @@ public class JBossASSLAMonitorTest {
     @Test @OperateOnDeployment("orders-app")
     public void testActivityEventsProcessed() {
         
+        EPNManager epnManager=EPNManagerAccessor.getEPNManager();
+        
         TestListener tl=new TestListener();
         
-        _epnManager.addNotificationListener(SITUATIONS_PROCESSED, tl);
+        epnManager.addNotificationListener(SITUATIONS_PROCESSED, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -616,16 +612,18 @@ public class JBossASSLAMonitorTest {
             e.printStackTrace();
             fail("Failed to invoke service via SOAP: "+e);
         } finally {
-        	_epnManager.removeNotificationListener(SITUATIONS_PROCESSED, tl);
+        	epnManager.removeNotificationListener(SITUATIONS_PROCESSED, tl);
         }
     }   
 
     @Test @OperateOnDeployment("orders-app")
     public void testActivityEventsResults() {
         
+        EPNManager epnManager=EPNManagerAccessor.getEPNManager();
+
         TestListener tl=new TestListener();
         
-        _epnManager.addNotificationListener(SITUATIONS, tl);
+        epnManager.addNotificationListener(SITUATIONS, tl);
 
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
@@ -682,7 +680,7 @@ public class JBossASSLAMonitorTest {
             e.printStackTrace();
             fail("Failed to invoke service via SOAP: "+e);
         } finally {
-        	_epnManager.removeNotificationListener(SITUATIONS, tl);
+        	epnManager.removeNotificationListener(SITUATIONS, tl);
         }
     }
     

@@ -18,7 +18,7 @@
 		
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>collector-jee</artifactId>
+			<artifactId>activity-jee</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -167,6 +167,14 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+		<!-- Switchyard Specific -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-switchyard</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
 		<!-- Test dependencies -->
 		
 		<dependency>
@@ -187,7 +195,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.rtgov export services, org.picketbox, org.picketlink, org.jboss.as.web</Dependencies>
+							<Dependencies>org.overlord.rtgov export services, org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel, org.switchyard.api, org.apache.camel.core, org.switchyard.api.extensions.java, org.switchyard.api.extensions.wsdl, org.switchyard.security, org.switchyard.runtime, org.switchyard.component.bpel, org.drools</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

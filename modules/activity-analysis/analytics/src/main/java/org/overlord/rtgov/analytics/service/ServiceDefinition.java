@@ -40,7 +40,7 @@ public class ServiceDefinition implements java.io.Externalizable {
     private java.util.List<InterfaceDefinition> _interfaces=
                     new java.util.ArrayList<InterfaceDefinition>();
     private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
-    private java.util.List<ServiceDefinition> _merged=new java.util.ArrayList<ServiceDefinition>();
+    private java.util.List<InvocationMetric> _history=new java.util.ArrayList<InvocationMetric>();
     
     /**
      * Default constructor.
@@ -160,12 +160,13 @@ public class ServiceDefinition implements java.io.Externalizable {
     }
     
     /**
-     * This method returns the list of merged service definitions.
+     * This method returns the historic list of invocation
+     * metrics merged into the current service definition.
      * 
-     * @return The merged list
+     * @return The invocation metrics history
      */
-    public java.util.List<ServiceDefinition> getMerged() {
-        return (Collections.unmodifiableList(_merged));
+    public java.util.List<InvocationMetric> getHistory() {
+        return (Collections.unmodifiableList(_history));
     }
     
     /**
@@ -220,7 +221,7 @@ public class ServiceDefinition implements java.io.Externalizable {
             }
         }
         
-        _merged.add(sd);
+        _history.add(sd.getMetrics());
 
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Post-merge this=["+this+"]");
@@ -280,9 +281,9 @@ public class ServiceDefinition implements java.io.Externalizable {
             out.writeObject(_contexts.get(i));
         }
         
-        out.writeInt(_merged.size());
-        for (int i=0; i < _merged.size(); i++) {
-            out.writeObject(_merged.get(i));
+        out.writeInt(_history.size());
+        for (int i=0; i < _history.size(); i++) {
+            out.writeObject(_history.get(i));
         }
     }
 
@@ -307,7 +308,7 @@ public class ServiceDefinition implements java.io.Externalizable {
         
         len = in.readInt();
         for (int i=0; i < len; i++) {
-            _merged.add((ServiceDefinition)in.readObject());
+            _history.add((InvocationMetric)in.readObject());
         }
     }
 }

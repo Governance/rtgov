@@ -23,11 +23,12 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
+//import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -51,12 +52,10 @@ public class EventProcessorManager {
 
     private static final Logger LOG=Logger.getLogger(EventProcessorManager.class.getName());
 
-    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
-
-    @Resource(lookup=ACTIVITY_COLLECTOR)
+    @Inject @Dependent
     private ActivityCollector _activityCollector=null;
 
-    @Inject @Any
+    @Inject @Any @Dependent
     private Instance<EventProcessor> _eventProcessors=null;
     
     /**

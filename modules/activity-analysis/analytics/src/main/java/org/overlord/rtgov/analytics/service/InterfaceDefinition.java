@@ -18,7 +18,6 @@ package org.overlord.rtgov.analytics.service;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,7 +35,6 @@ public class InterfaceDefinition implements java.io.Externalizable {
     private String _interface=null;
     private java.util.List<OperationDefinition> _operations=
                     new java.util.ArrayList<OperationDefinition>();
-    private java.util.List<InterfaceDefinition> _merged=new java.util.ArrayList<InterfaceDefinition>();
     
     /**
      * Default constructor.
@@ -133,15 +131,6 @@ public class InterfaceDefinition implements java.io.Externalizable {
     }
     
     /**
-     * This method returns the list of merged interface definitions.
-     * 
-     * @return The merged list
-     */
-    public java.util.List<InterfaceDefinition> getMerged() {
-        return (Collections.unmodifiableList(_merged));
-    }
-    
-    /**
      * This method merges the supplied definition with this
      * interface definition.
      * 
@@ -173,8 +162,6 @@ public class InterfaceDefinition implements java.io.Externalizable {
             cur.merge(opdef);
         }
         
-        _merged.add(id);
-
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Post-merge this=["+this+"]");
         }
@@ -212,11 +199,6 @@ public class InterfaceDefinition implements java.io.Externalizable {
         for (int i=0; i < _operations.size(); i++) {
             out.writeObject(_operations.get(i));
         }
-        
-        out.writeInt(_merged.size());
-        for (int i=0; i < _merged.size(); i++) {
-            out.writeObject(_merged.get(i));
-        }
     }
 
     /**
@@ -231,11 +213,6 @@ public class InterfaceDefinition implements java.io.Externalizable {
         int len=in.readInt();
         for (int i=0; i < len; i++) {
             _operations.add((OperationDefinition)in.readObject());
-        }
-        
-        len = in.readInt();
-        for (int i=0; i < len; i++) {
-            _merged.add((InterfaceDefinition)in.readObject());
         }
     }
 }

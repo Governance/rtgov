@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -30,6 +29,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.overlord.rtgov.reports.AbstractReportsLoader;
 import org.overlord.rtgov.reports.ReportDefinition;
+import org.overlord.rtgov.reports.ReportManagerAccessor;
 import org.overlord.rtgov.reports.util.ReportsUtil;
 
 /**
@@ -46,9 +46,7 @@ public class JEEReportsLoader extends AbstractReportsLoader {
     private static final Logger LOG=Logger.getLogger(JEEReportsLoader.class.getName());
     
     private static final String REPORTS_JSON = "reports.json";
-    private static final String REPORT_MANAGER = "java:global/overlord-rtgov/ReportManager";
 
-    @Resource(lookup=REPORT_MANAGER)
     private org.overlord.rtgov.reports.ReportManager _reportManager=null;
     
     private java.util.List<ReportDefinition> _reportDefinitions=null;
@@ -64,6 +62,13 @@ public class JEEReportsLoader extends AbstractReportsLoader {
      */
     @PostConstruct
     public void init() {
+        
+        _reportManager = ReportManagerAccessor.getReportManager();
+        
+        if (_reportManager == null) {
+            LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                    "reports-loader-jee.Messages").getString("REPORTS-LOADER-JEE-5"));
+        }
         
         try {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(REPORTS_JSON);

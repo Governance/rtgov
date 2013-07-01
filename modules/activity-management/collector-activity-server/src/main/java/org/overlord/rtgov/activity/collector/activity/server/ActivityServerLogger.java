@@ -15,19 +15,20 @@
  */
 package org.overlord.rtgov.activity.collector.activity.server;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.collector.BatchedActivityUnitLogger;
+import org.overlord.rtgov.common.util.RTGovConfig;
 
 /**
  * This class provides a bridge between the Collector and Activity Server,
@@ -36,18 +37,27 @@ import org.overlord.rtgov.activity.collector.BatchedActivityUnitLogger;
  *
  */
 @Singleton
-public class ActivityServerLogger extends BatchedActivityUnitLogger {
+public class ActivityServerLogger extends BatchedActivityUnitLogger implements ActivityServerLoggerMBean {
 
     private static final Logger LOG=Logger.getLogger(ActivityServerLogger.class.getName());
     
     private static final int MAX_THREADS = 10;
 
-    private ExecutorService _executor=Executors.newFixedThreadPool(MAX_THREADS);
+    @Inject @RTGovConfig
+    private Integer _maxThreads=MAX_THREADS;
+    
+    private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _queue=
+            new java.util.concurrent.ArrayBlockingQueue<java.util.List<ActivityUnit>>(10000);
+    
+    private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _freeActivityLists=
+            new java.util.concurrent.ArrayBlockingQueue<java.util.List<ActivityUnit>>(100);
 
-    @Inject
+    @Inject @Dependent
     private ActivityServer _activityServer=null;
     
     private java.util.List<ActivityUnit> _activities=null;
+    
+    private java.util.Set<Thread> _threads=new java.util.HashSet<Thread>();
     
     /**
      * This method initializes the Activity Server Logger.
@@ -55,8 +65,41 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger {
     @PostConstruct
     public void init() {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Initialize Logger for Activity Server: "+_activityServer);
+            LOG.fine("Initialize Logger for Activity Server (max threads "+_maxThreads+"): "+_activityServer);
         }
+        
+        if (_maxThreads == null) {
+            _maxThreads = MAX_THREADS;
+        }
+        
+        // Start dispatch thread
+        for (int i=0; i < _maxThreads; i++) {
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    while (true) {
+                        try {
+                            java.util.List<ActivityUnit> list=_queue.take();
+                            
+                            _activityServer.store(list);
+                            
+                            // Free up the list
+                            list.clear();
+                            
+                            _freeActivityLists.offer(list);
+                            
+                        } catch (Exception e) {
+                            LOG.log(Level.SEVERE, "Failed to store list of activity units", e);
+                        }
+                    }
+                }            
+            });
+            
+            _threads.add(thread);
+            
+            thread.setDaemon(true);
+            thread.start();
+        }
+        
         super.init();
     }
     
@@ -77,13 +120,20 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger {
     public ActivityServer getActivityServer() {
         return (_activityServer);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getPendingActivityUnits() {
+        return (_queue.size());
+    }
     
     /**
      * {@inheritDoc}
      */
     protected void appendActivity(ActivityUnit act) throws Exception {
         if (_activities == null) {
-            _activities = new java.util.Vector<ActivityUnit>();
+            _activities = new java.util.ArrayList<ActivityUnit>();
         }
         _activities.add(act);
     }
@@ -91,22 +141,19 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger {
     /**
      * {@inheritDoc}
      */
-    protected void sendMessage() throws Exception {
+    protected void sendMessage() throws Exception {        
         if (_activities != null) {
-            final java.util.List<ActivityUnit> list=_activities;
 
-            _executor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        _activityServer.store(list);    
-                    } catch (Exception e) {
-                        LOG.log(Level.SEVERE, "Failed to store list of activity units", e);
-                    }
-                }
-            });
+            if (!_queue.offer(_activities, 500, TimeUnit.MILLISECONDS)) {
+                LOG.warning("Failed to send message - queue is full");
+            }
 
             // Clear the list
-            _activities = new java.util.ArrayList<ActivityUnit>();
+            _activities = _freeActivityLists.poll();
+            
+            if (_activities == null) {
+                _activities = new java.util.ArrayList<ActivityUnit>();
+            }
         }
     }
 

@@ -18,7 +18,6 @@ package org.overlord.rtgov.analytics.service;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.Collections;
 
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 
@@ -36,8 +35,6 @@ public abstract class MEPDefinition implements java.io.Externalizable {
     
     private java.util.List<InvocationDefinition> _invocations=
                 new java.util.ArrayList<InvocationDefinition>();
-    private java.util.List<MEPDefinition> _merged=
-            new java.util.ArrayList<MEPDefinition>();
     
     private InvocationMetric _metrics=new InvocationMetric();
 
@@ -221,17 +218,6 @@ public abstract class MEPDefinition implements java.io.Externalizable {
 
             cur.merge(id);
         }
-        
-        _merged.add(mep);
-    }
-    
-    /**
-     * This method returns the list of merged MEP definitions.
-     * 
-     * @return The merged list
-     */
-    public java.util.List<MEPDefinition> getMerged() {
-        return (Collections.unmodifiableList(_merged));
     }
     
     /**
@@ -249,11 +235,6 @@ public abstract class MEPDefinition implements java.io.Externalizable {
         out.writeInt(_invocations.size());
         for (int i=0; i < _invocations.size(); i++) {
             out.writeObject(_invocations.get(i));
-        }
-        
-        out.writeInt(_merged.size());
-        for (int i=0; i < _merged.size(); i++) {
-            out.writeObject(_merged.get(i));
         }
     }
 
@@ -274,11 +255,6 @@ public abstract class MEPDefinition implements java.io.Externalizable {
         int len=in.readInt();
         for (int i=0; i < len; i++) {
             _invocations.add((InvocationDefinition)in.readObject());
-        }
-        
-        len = in.readInt();
-        for (int i=0; i < len; i++) {
-            _merged.add((MEPDefinition)in.readObject());
         }
     }
 }

@@ -39,6 +39,7 @@ public abstract class AbstractActivityValidatorManager implements ActivityValida
      * The default constructor.
      */
     public AbstractActivityValidatorManager() {
+        ActivityValidatorManagerAccessor.setActivityValidatorManager(this);
     }
     
     /**

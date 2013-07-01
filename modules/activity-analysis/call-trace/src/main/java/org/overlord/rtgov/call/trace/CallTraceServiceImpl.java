@@ -24,9 +24,9 @@ import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.annotation.Resource;
 import javax.inject.Singleton;
+import javax.transaction.UserTransaction;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -52,13 +52,15 @@ import org.overlord.rtgov.call.trace.util.CallTraceUtil;
  *
  */
 @Singleton
-@Transactional
 public class CallTraceServiceImpl implements CallTraceService {
     
     private static final Logger LOG=Logger.getLogger(CallTraceServiceImpl.class.getName());
     
     private static final long DEFAULT_TIMEFRAME=10000;  // 10 seconds
 
+    @Resource
+    private UserTransaction _tx;
+        
     private ActivityServer _activityServer=null;
     
     /**
@@ -80,6 +82,73 @@ public class CallTraceServiceImpl implements CallTraceService {
     }
     
     /**
+     * This method starts the transaction.
+     * 
+     * @return Whether the transaction has been started
+     * @throws Exception Failed to start txn
+     */
+    protected boolean startTxn() throws Exception {
+        boolean ret=false;
+
+        if (_tx != null && _tx.getStatus()
+                    == javax.transaction.Status.STATUS_NO_TRANSACTION) {
+            _tx.begin();
+
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Started transaction");
+            }
+            
+            ret = true;
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method commits the transaction.
+     * 
+     * @throws Exception Failed to commit
+     */
+    protected void commitTxn() throws Exception {
+        try {
+            _tx.commit();
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Committed transaction");
+            }
+        } catch (Exception e) {
+            _tx.rollback();
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Rolling back transaction: exception="+e);
+            }
+            
+            throw e;
+        }
+    }
+    
+    /**
+     * This method rolls back the transaction.
+     * 
+     * @throws Exception Failed to rollback
+     */
+    protected void rollbackTxn() throws Exception {
+        try {
+            _tx.rollback();
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Rolled back transaction");
+            }
+        } catch (Exception e) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Failed to roll back transaction: exception="+e);
+            }
+            
+            throw e;
+        }
+    }
+    
+    /**
      * This method creates a call trace associated with the
      * supplied correlation value.
      * 
@@ -87,16 +156,33 @@ public class CallTraceServiceImpl implements CallTraceService {
      * @return The call trace, or null if not found
      * @throws Exception Failed to create call trace
      */
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public CallTrace createCallTrace(Context context) 
                             throws Exception {
-        CTState state=new CTState();
+        boolean f_txnStarted=startTxn();
         
-        // Recursively load activity units that are directly or
-        // indirectly associated with the context
-        loadActivityUnits(state, context, null);
+        CallTrace ret=null;
+
+        try {
+            CTState state=new CTState();
         
-        return (processAUs(state));
+            // Recursively load activity units that are directly or
+            // indirectly associated with the context
+            loadActivityUnits(state, context, null);
+        
+            ret = processAUs(state);
+            
+            if (f_txnStarted) {
+                commitTxn();
+            }
+        } catch (Exception e) {
+            if (f_txnStarted) {
+                rollbackTxn();
+            }            
+            
+            throw e;
+        }
+        
+        return (ret);
     }
     
     /**

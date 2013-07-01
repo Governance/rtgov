@@ -113,15 +113,15 @@ public class ServiceDefinitionTest {
             fail("Failed to get op3");
         }
         
-        if (sd.getMerged().size() != 2) {
-            fail("Expecting 2 merged: "+sd.getMerged().size());
+        if (sd.getHistory().size() != 2) {
+            fail("Expecting 2 merged: "+sd.getHistory().size());
         }
         
-        if (sd.getMerged().get(0) != sd1) {
+        if (sd.getHistory().get(0).equals(sd1.getMetrics())) {
             fail("Merged 0 should be sd1");
         }
         
-        if (sd.getMerged().get(1) != sd2) {
+        if (sd.getHistory().get(1).equals(sd2.getMetrics())) {
             fail("Merged 1 should be sd2");
         }
     }
@@ -256,7 +256,7 @@ public class ServiceDefinitionTest {
         
         OperationDefinition od=idefres.getOperation(OPERATION_1);
         
-        if (od.getMerged().size() != 2) {
+        if (od.getHistory().size() != 2) {
             fail("Should be two merged ops");
         }
         
@@ -264,26 +264,6 @@ public class ServiceDefinitionTest {
         
         if (rrd == null) {
             fail("Request/response defn is null");
-        }
-        
-        if (rrd.getMerged().size() != 2) {
-            fail("Req/resp defn should have two merged entries: "+rrd.getMerged().size());
-        }
-        
-        if (rrd.getMerged().get(0).getMetrics().getCount() != 1) {
-            fail("First rrd count should be 1: "+rrd.getMerged().get(0).getMetrics().getCount());
-        }
-        
-        if (rrd.getMerged().get(0).getMetrics().getAverage() != 1250) {
-            fail("First rrd average should be 1250: "+rrd.getMerged().get(0).getMetrics().getAverage());
-        }
-        
-        if (rrd.getMerged().get(1).getMetrics().getCount() != 1) {
-            fail("Second rrd count should be 1: "+rrd.getMerged().get(1).getMetrics().getCount());
-        }
-        
-        if (rrd.getMerged().get(1).getMetrics().getAverage() != 400) {
-            fail("Second rrd average should be 400: "+rrd.getMerged().get(1).getMetrics().getAverage());
         }
         
         if (rrd.getMetrics().getCount() != 2) {

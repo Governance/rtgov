@@ -19,10 +19,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -42,10 +44,28 @@ public class JPAActivityStore implements ActivityStore {
     @Inject
     private RTGovPropertiesProvider _properties;
     
-    @PersistenceContext(unitName="overlord-rtgov-activity")
     private EntityManager _entityManager;
+    
+    private EntityManagerFactory _entityManagerFactory=null;
         
     private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
+    
+    /**
+     * Initialize the activity store.
+     */
+    @PostConstruct
+    public void init() {
+        _entityManagerFactory = Persistence.createEntityManagerFactory("overlord-rtgov-activity");
+    }
+    
+    /**
+     * This method returns an entity manager.
+     * 
+     * @return The entity manager
+     */
+    protected EntityManager getEntityManager() {
+        return (_entityManager == null ? _entityManagerFactory.createEntityManager() : _entityManager);
+    }
     
     /**
      * {@inheritDoc}
@@ -54,8 +74,11 @@ public class JPAActivityStore implements ActivityStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Store="+new String(ActivityUtil.serializeActivityUnitList(activities)));
         }
-        for (ActivityUnit au : activities) {
-            _entityManager.persist(au);
+        
+        EntityManager em=getEntityManager();
+        
+        for (int i=0; i < activities.size(); i++) {
+            em.persist(activities.get(i));
         }
     }
 
@@ -67,8 +90,10 @@ public class JPAActivityStore implements ActivityStore {
             LOG.finest("Get Activity Unit="+id);
         }
 
+        EntityManager em=getEntityManager();
+        
         ActivityUnit ret=(ActivityUnit)
-                _entityManager.createQuery("SELECT au FROM ActivityUnit au "
+                em.createQuery("SELECT au FROM ActivityUnit au "
                             +"WHERE au.id = '"+id+"'")
                             .getSingleResult();
         
@@ -88,16 +113,18 @@ public class JPAActivityStore implements ActivityStore {
                     long from, long to) throws Exception {
         List<ActivityType> ret=null;
         
+        EntityManager em=getEntityManager();
+        
         if (from == 0 && to == 0) {
             ret = (List<ActivityType>)
-                _entityManager.createQuery("SELECT at from ActivityType at "
+                em.createQuery("SELECT at from ActivityType at "
                         +"JOIN at.context ctx "
                         +"WHERE ctx.value = '"+context.getValue()+"' "
                         +"AND ctx.type = '"+context.getType().name()+"'")
                         .getResultList();
             
         } else {            
-            ret = (List<ActivityType>)_entityManager.createQuery("SELECT at from ActivityType at "
+            ret = (List<ActivityType>)em.createQuery("SELECT at from ActivityType at "
                     +"JOIN at.context ctx "
                     +"WHERE ctx.value = '"+context.getValue()+"' "
                     +"AND ctx.type = '"+context.getType().name()+"' "
@@ -144,10 +171,11 @@ public class JPAActivityStore implements ActivityStore {
      */
     public List<ActivityType> query(String query) throws Exception {
 
+        EntityManager em=getEntityManager();
+        
         @SuppressWarnings("unchecked")
         List<ActivityType> ret=(List<ActivityType>)
-            _entityManager.createQuery(query)
-                .getResultList();
+                    em.createQuery(query).getResultList();
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Query="+query+" Result="
@@ -164,7 +192,9 @@ public class JPAActivityStore implements ActivityStore {
      * @throws Exception Failed to remove activity unit
      */
     public void remove(ActivityUnit au) throws Exception {
-        _entityManager.remove(au);
+        EntityManager em=getEntityManager();
+        
+        em.remove(au);
     }
     
     /**

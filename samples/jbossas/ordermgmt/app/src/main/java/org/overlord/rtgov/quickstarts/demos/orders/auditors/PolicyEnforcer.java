@@ -137,7 +137,7 @@ public class PolicyEnforcer implements Auditor {
                         // Check if customer is suspended
                         if (props.containsKey("suspended")
                                 && props.get("suspended").equals(Boolean.TRUE)) {                            
-                            throw new org.switchyard.exception.SwitchYardException("Customer '"+customer
+                            throw new RuntimeException("Customer '"+customer
                                             +"' has been suspended");
                         }
                     }

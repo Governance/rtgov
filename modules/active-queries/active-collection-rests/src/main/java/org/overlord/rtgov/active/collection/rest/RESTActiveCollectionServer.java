@@ -21,15 +21,12 @@ import java.util.logging.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveCollectionVisibility;
 import org.overlord.rtgov.active.collection.QuerySpec;
 import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -46,44 +43,17 @@ public class RESTActiveCollectionServer {
     
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
-    //@javax.inject.Inject
     private ActiveCollectionManager _acmManager=null;
     
     /**
      * This is the default constructor.
      */
-    @SuppressWarnings("unchecked")
     public RESTActiveCollectionServer() {
         
-        try {
-            // Need to obtain active collection manager directly, as inject does not
-            // work for REST service, and RESTeasy/CDI integration did not
-            // appear to work in AS7. Directly accessing the bean manager
-            // should be portable.
-            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
-            
-            java.util.Set<Bean<?>> beans=bm.getBeans(ActiveCollectionManager.class);
-            
-            for (Bean<?> b : beans) {                
-                CreationalContext<Object> cc=new CreationalContext<Object>() {
-                    public void push(Object arg0) {
-                    }
-                    public void release() {
-                    }                   
-                };
-                
-                _acmManager = (ActiveCollectionManager)((Bean<Object>)b).create(cc);
-                
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Active collection manager="+_acmManager+" for bean="+b);
-                }
-                
-                if (_acmManager != null) {
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+        
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Active collection manager="+_acmManager);
         }
     }
     

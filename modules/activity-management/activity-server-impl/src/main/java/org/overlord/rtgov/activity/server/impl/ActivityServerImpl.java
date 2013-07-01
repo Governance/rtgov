@@ -17,13 +17,19 @@ package org.overlord.rtgov.activity.server.impl;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.transaction.Status;
+import javax.transaction.UserTransaction;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -38,15 +44,48 @@ import org.overlord.rtgov.activity.server.QuerySpec;
  *
  */
 @Singleton
-@Transactional
 public class ActivityServerImpl implements ActivityServer {
 
-    @Inject
+    private static final Logger LOG=Logger.getLogger(ActivityServerImpl.class.getName());
+    
+    @Resource
+    private UserTransaction _tx;
+        
+    @Inject @Dependent
     private ActivityStore _store=null;
     
     private java.util.List<ActivityNotifier> _notifiers=new java.util.Vector<ActivityNotifier>();
     
-    private @Inject @Any Instance<ActivityNotifier> _injectedNotifiers=null;
+    private @Inject @Dependent @Any Instance<ActivityNotifier> _injectedNotifiers=null;
+    
+    /**
+     * Initialize the activity server implementation.
+     */
+    @PostConstruct
+    public void init() {
+        if (_injectedNotifiers != null) {
+            for (ActivityNotifier notifier : _injectedNotifiers) {
+
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Injecting activity notifier="+notifier);
+                }
+                
+                _notifiers.add(notifier);
+            }
+        }       
+    }
+    
+    /**
+     * Close the activity server implementation.
+     */
+    @PreDestroy
+    public void close() {
+        if (_injectedNotifiers != null) {
+            for (ActivityNotifier notifier : _injectedNotifiers) {
+                _notifiers.remove(notifier);
+            }
+        }       
+    }
     
     /**
      * This method sets the activity store.
@@ -76,35 +115,108 @@ public class ActivityServerImpl implements ActivityServer {
     }
     
     /**
+     * This method starts the transaction.
+     * 
+     * @return Whether the transaction has been started
+     * @throws Exception Failed to start txn
+     */
+    protected boolean startTxn() throws Exception {
+        boolean ret=false;
+
+        if (_tx != null && _tx.getStatus() == Status.STATUS_NO_TRANSACTION) {
+            _tx.begin();
+
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Started transaction");
+            }
+            
+            ret = true;
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method commits the transaction.
+     * 
+     * @throws Exception Failed to commit
+     */
+    protected void commitTxn() throws Exception {
+        try {
+            _tx.commit();
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Committed transaction");
+            }
+        } catch (Exception e) {
+            _tx.rollback();
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Rolling back transaction: exception="+e);
+            }
+            
+            throw e;
+        }
+    }
+    
+    /**
+     * This method rolls back the transaction.
+     * 
+     * @throws Exception Failed to rollback
+     */
+    protected void rollbackTxn() throws Exception {
+        try {
+            _tx.rollback();
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Rolled back transaction");
+            }
+        } catch (Exception e) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Failed to roll back transaction: exception="+e);
+            }
+            
+            throw e;
+        }
+    }
+    
+    /**
      * This method stores the supplied activity events.
      * 
      * @param activities The activity events
      * @throws Exception Failed to store the activities
      */
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
-    public void store(java.util.List<ActivityUnit> activities) throws Exception {
-        
-        // Process activity units to establish consistent id info
-        for (ActivityUnit au : activities) {
-            processActivityUnit(au);
-        }
-        
-        // Store the activities
-        if (_store != null) {
-            _store.store(activities);
-        } else {
+    public void store(java.util.List<ActivityUnit> activities) throws Exception {        
+
+        if (_store == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
-        // Inform registered notifiers
-        for (ActivityNotifier notifier : _notifiers) {
-            notifier.notify(activities);
-        }
-        
-        if (_injectedNotifiers != null) {
-            for (ActivityNotifier notifier : _injectedNotifiers) {
-                notifier.notify(activities);
+        boolean f_txnStarted=startTxn();
+
+        try {
+            // Process activity units to establish consistent id info
+            for (int i=0; i < activities.size(); i++) {
+                processActivityUnit(activities.get(i));
             }
+            
+            // Store the activities
+            _store.store(activities);
+             
+            // Inform registered notifiers
+            for (int i=0; i < _notifiers.size(); i++) {
+                _notifiers.get(i).notify(activities);
+            }
+            
+            if (f_txnStarted) {
+                commitTxn();
+            }
+        } catch (Exception e) {
+            if (f_txnStarted) {
+                rollbackTxn();
+            }            
+            
+            throw e;
         }
     }
     
@@ -138,53 +250,119 @@ public class ActivityServerImpl implements ActivityServer {
     /**
      * {@inheritDoc}
      */
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public ActivityUnit getActivityUnit(String id) throws Exception {
         
         if (_store == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
-        return (_store.getActivityUnit(id));
+        boolean f_txnStarted=startTxn();
+
+        ActivityUnit ret=null;
+        
+        try {
+            ret = _store.getActivityUnit(id);
+            
+            if (f_txnStarted) {
+                commitTxn();
+            }
+        } catch (Exception e) {
+            if (f_txnStarted) {
+                rollbackTxn();
+            }
+            
+            throw e;
+        }
+
+        return (ret);
     }
 
     /**
      * {@inheritDoc}
      */
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public java.util.List<ActivityType> query(QuerySpec query) throws Exception {
         
         if (_store == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
-        return (_store.query(query));
+        boolean f_txnStarted=startTxn();
+
+        java.util.List<ActivityType> ret=null;
+        
+        try {
+            ret = _store.query(query);        
+            
+            if (f_txnStarted) {
+                commitTxn();
+            }
+        } catch (Exception e) {
+            if (f_txnStarted) {
+                rollbackTxn();
+            }
+            
+            throw e;
+        }
+        
+        return (ret);
     }
 
     /**
      * {@inheritDoc}
      */
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public List<ActivityType> getActivityTypes(Context context) throws Exception {
         
         if (_store == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
-        return (_store.getActivityTypes(context));
+        boolean f_txnStarted=startTxn();
+        List<ActivityType> ret=null;
+        
+        try {
+            ret = _store.getActivityTypes(context);
+            
+            if (f_txnStarted) {
+                commitTxn();
+            }
+        } catch (Exception e) {
+            if (f_txnStarted) {
+                rollbackTxn();
+            }
+            
+            throw e;
+        }
+        
+        return (ret);
     }
     
     /**
      * {@inheritDoc}
      */
-    @TransactionAttribute(value= TransactionAttributeType.REQUIRED)
     public List<ActivityType> getActivityTypes(Context context, long from, long to) throws Exception {
         
         if (_store == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
-        return (_store.getActivityTypes(context, from, to));
+        boolean f_txnStarted=startTxn();
+        List<ActivityType> ret=null;
+        
+        try {
+            ret = _store.getActivityTypes(context, from, to);
+            
+            if (f_txnStarted) {
+                commitTxn();
+            }
+        } catch (Exception e) {
+            if (f_txnStarted) {
+                rollbackTxn();
+            }
+
+            throw e;
+        }
+        
+        return (ret);
     }
     
 }

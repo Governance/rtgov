@@ -18,7 +18,7 @@
 		
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>collector-jee</artifactId>
+			<artifactId>activity-jee</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

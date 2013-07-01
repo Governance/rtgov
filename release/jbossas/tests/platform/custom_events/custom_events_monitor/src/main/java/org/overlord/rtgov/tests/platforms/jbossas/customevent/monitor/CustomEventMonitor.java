@@ -19,14 +19,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.naming.InitialContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.EPNManagerAccessor;
 import org.overlord.rtgov.epn.EventList;
 import org.overlord.rtgov.epn.NotificationListener;
 import org.overlord.rtgov.tests.platforms.jbossas.customevent.data.CustomActivityEvent;
@@ -47,8 +48,6 @@ public class CustomEventMonitor implements NotificationListener {
 
     private static final Logger LOG=Logger.getLogger(CustomEventMonitor.class.getName());
     
-    private static final String ACS_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
-
     private EPNManager _epnManager=null;
     private ActiveCollectionManager _activeCollectionManager;
     
@@ -62,14 +61,12 @@ public class CustomEventMonitor implements NotificationListener {
     public CustomEventMonitor() {
         
         try {
-            InitialContext ctx=new InitialContext();
-            
-            _epnManager = (EPNManager)ctx.lookup(EPNManager.URI);
+            _epnManager = EPNManagerAccessor.getEPNManager();
 
             _epnManager.addNotificationListener(CUSTOM_EVENTS_PROCESSED_SUBJECT, this);
             _epnManager.addNotificationListener(CUSTOM_EVENTS_RESULTS_SUBJECT, this);
             
-            _activeCollectionManager = (ActiveCollectionManager)ctx.lookup(ACS_MANAGER);
+            _activeCollectionManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
             
             _customEventsACS = (ActiveList)_activeCollectionManager.getActiveCollection(ACS_NAME);
             

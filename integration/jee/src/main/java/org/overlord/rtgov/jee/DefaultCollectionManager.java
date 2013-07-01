@@ -19,11 +19,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.naming.InitialContext;
 
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.ActiveMap;
 
@@ -35,24 +34,16 @@ public class DefaultCollectionManager implements CollectionManager {
 
     private static final Logger LOG=Logger.getLogger(DefaultCollectionManager.class.getName());
     
-    private static final String ACTIVE_COLLECTION_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
-
-    @Resource(lookup=ACTIVE_COLLECTION_MANAGER)
     private ActiveCollectionManager _activeCollectionManager=null;
     
     private boolean _initialized=false;
 
     @PostConstruct
     protected void init() {
+        _activeCollectionManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+        
         if (_activeCollectionManager == null) {
-            try {
-                InitialContext ctx=new InitialContext();
-                
-                _activeCollectionManager = (ActiveCollectionManager)ctx.lookup(ACTIVE_COLLECTION_MANAGER);
-                
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to initialize active collection manager", e);
-            }
+            LOG.severe("Failed to initialize active collection manager");
         }
         
         if (LOG.isLoggable(Level.FINE)) {

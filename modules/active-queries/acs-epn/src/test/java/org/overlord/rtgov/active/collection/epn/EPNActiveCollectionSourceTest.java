@@ -24,6 +24,8 @@ import org.junit.Test;
 import org.overlord.rtgov.active.collection.ActiveCollectionType;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource;
+import org.overlord.rtgov.epn.AbstractEPNManager;
+import org.overlord.rtgov.epn.EPNContainer;
 import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.EventList;
 import org.overlord.rtgov.epn.Network;
@@ -119,7 +121,7 @@ public class EPNActiveCollectionSourceTest {
         
     }
 
-    public class TestEPNManager implements EPNManager {
+    public class TestEPNManager extends AbstractEPNManager implements EPNManager {
         
         private java.util.List<NotificationListener> _nodeListeners=new java.util.ArrayList<NotificationListener>();
         private java.util.List<NetworkListener> _networkListeners=new java.util.ArrayList<NetworkListener>();
@@ -158,6 +160,10 @@ public class EPNActiveCollectionSourceTest {
         }
 
         public void close() throws Exception {
+        }
+
+        protected EPNContainer getContainer() {
+            return null;
         }
         
     }

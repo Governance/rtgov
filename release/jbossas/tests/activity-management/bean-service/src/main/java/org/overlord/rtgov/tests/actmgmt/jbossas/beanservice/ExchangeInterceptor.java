@@ -22,6 +22,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.naming.InitialContext;
 
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
@@ -29,13 +30,14 @@ import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.switchyard.Exchange;
-import org.switchyard.ExchangeHandler;
 import org.switchyard.ExchangePhase;
-import org.switchyard.HandlerException;
-import org.switchyard.handlers.MessageTrace;
+import org.switchyard.bus.camel.audit.Audit;
+import org.switchyard.bus.camel.audit.Auditor;
+import org.switchyard.bus.camel.processors.Processors;
 
-public class ExchangeInterceptor extends MessageTrace implements ExchangeHandler {
+@Audit({Processors.TRANSFORMATION})
+@Named("ExchangeInterceptor")
+public class ExchangeInterceptor implements Auditor {
     
     private static final Logger LOG=Logger.getLogger(ExchangeInterceptor.class.getName());
     
@@ -77,43 +79,44 @@ public class ExchangeInterceptor extends MessageTrace implements ExchangeHandler
         _initialized = true;
     }
 
-    public void handleMessage(Exchange exchange) throws HandlerException {
+    public void beforeCall(Processors processor,
+            org.apache.camel.Exchange exch) {
+        
         if (!_initialized) {
             init();
         }
-        super.handleMessage(exchange);
         
         if (_activityCollector != null) {
-        	try {
-	            if (exchange.getPhase() == ExchangePhase.IN) {
-	                RequestSent sent=new RequestSent();
-	                
-	                _activityCollector.record(sent);
-	                
-	                RequestReceived recvd=new RequestReceived();
-	                
-	                _activityCollector.record(recvd);
-	                
-	            } else if (exchange.getPhase() == ExchangePhase.OUT) {
-	                ResponseSent sent=new ResponseSent();
-	                
-	                _activityCollector.record(sent);
-	                
-	                ResponseReceived recvd=new ResponseReceived();
-	                
-	                _activityCollector.record(recvd);
-	            }
-        	} catch (Exception e) {
-        		throw new HandlerException("Failed to record activity", e);
-        	}
+            ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
+
+            try {
+                if (phase == ExchangePhase.IN) {
+                    RequestSent sent=new RequestSent();
+                    
+                    _activityCollector.record(sent);
+                    
+                    RequestReceived recvd=new RequestReceived();
+                    
+                    _activityCollector.record(recvd);
+                    
+                } else if (phase == ExchangePhase.OUT) {
+                    ResponseSent sent=new ResponseSent();
+                    
+                    _activityCollector.record(sent);
+                    
+                    ResponseReceived recvd=new ResponseReceived();
+                    
+                    _activityCollector.record(recvd);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to record activity", e);
+            }
         }
     }
 
-    public void handleFault(Exchange exchange) {
-        if (!_initialized) {
-            init();
-        }
-        super.handleFault(exchange);
+    public void afterCall(Processors processor,
+            org.apache.camel.Exchange exchange) {
+        
     }
 
 }

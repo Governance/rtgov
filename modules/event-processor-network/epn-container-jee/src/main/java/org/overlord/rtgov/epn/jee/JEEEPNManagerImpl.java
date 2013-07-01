@@ -24,9 +24,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-import static javax.ejb.ConcurrencyManagementType.BEAN;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.Singleton;
+import javax.inject.Singleton;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -47,8 +45,7 @@ import org.overlord.rtgov.epn.Node;
  * the EPN Manager.
  *
  */
-@Singleton(name="EPNManager")
-@ConcurrencyManagement(BEAN)
+@Singleton
 public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManager {
     
     @Resource(mappedName = "java:/JmsXA")
@@ -185,7 +182,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
         String[] subjects=subjectList.split(",");
         long timestamp=System.currentTimeMillis();
         
-        for (String subject : subjects) {
+        for (int i=0; i < subjects.length; i++) {
+            String subject=subjects[i];
             java.util.List<Network> networks=getNetworksForSubject(subject);
             
             if (networks == null) {
@@ -193,14 +191,16 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                     LOG.fine("No networks exist for subject="+subject);
                 }
             } else {
-                for (Network network : networks) {
+                for (int j=0; j < networks.size(); j++) {
+                    Network network=networks.get(j);
+                    
                     java.util.List<Node> nodes=network.getNodesForSubject(subject);
 
                     if (nodes != null) {
                         preProcessEvents(events, network);
                         
-                        for (int i=0; i < nodes.size(); i++) {
-                            dispatch(network, nodes.get(i), subject, events, -1);
+                        for (int k=0; k < nodes.size(); k++) {
+                            dispatch(network, nodes.get(k), subject, events, -1);
                         }
                         
                         postProcessEvents(events);
@@ -245,8 +245,8 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
             preProcessEvents(events, network);
 
             String[] nodes=nodeList.split(",");
-            for (String nodeName : nodes) {
-                Node node=network.getNode(nodeName);
+            for (int i=0; i < nodes.length; i++) {
+                Node node=network.getNode(nodes[i]);
                 
                 dispatch(network, node, source, events, retriesLeft);
             }
@@ -425,7 +425,9 @@ public class JEEEPNManagerImpl extends AbstractEPNManager implements JEEEPNManag
                 String version=null;
                 String sourceNode=null;
                 
-                for (Channel channel : channels) {
+                for (int i=0; i < channels.size(); i++) {
+                    Channel channel=channels.get(i);
+                    
                     if (channel instanceof JMSChannel) {
                         JMSChannel jmsc=(JMSChannel)channel;
                         

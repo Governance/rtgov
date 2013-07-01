@@ -25,8 +25,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
-import org.overlord.rtgov.analytics.service.OperationDefinition;
-import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.service.dependency.InvocationLink;
 import org.overlord.rtgov.service.dependency.OperationNode;
@@ -326,16 +324,11 @@ public class SVGServiceGraphGenerator {
         
         rect.setAttribute("fill", "#B8DBFF");
         
-        // Get metrics from merged definitions
-        java.util.List<InvocationMetric> history=new java.util.ArrayList<InvocationMetric>();
-        for (ServiceDefinition sd : sn.getService().getMerged()) {
-            history.add(sd.getMetrics());
-        }
-        
         // Derive the color
         Severity severity=null;        
         if (getSeverityAnalyzer() != null) {
-            severity = getSeverityAnalyzer().getSeverity(sn, sn.getService().getMetrics(), history);
+            severity = getSeverityAnalyzer().getSeverity(sn, sn.getService().getMetrics(),
+                            sn.getService().getHistory());
         }
         
         String color=getColor(severity);
@@ -598,13 +591,7 @@ public class SVGServiceGraphGenerator {
         for (int i=0; i < invocations.size(); i++) {
             InvocationDefinition id=invocations.get(i);
             
-            // Get metrics from merged definitions
-            java.util.List<InvocationMetric> history=new java.util.ArrayList<InvocationMetric>();
-            for (InvocationDefinition mid : id.getMerged()) {
-                history.add(mid.getMetrics());
-            }
-
-            severities[i] = getSeverityAnalyzer().getSeverity(id, id.getMetrics(), history);
+            severities[i] = getSeverityAnalyzer().getSeverity(id, id.getMetrics(), id.getHistory());
         }
 
         return (getAverageSeverity(severities));
@@ -730,16 +717,11 @@ public class SVGServiceGraphGenerator {
         
         rect.setAttribute("fill", "#85D6FF");
 
-        // Get metrics from merged definitions
-        java.util.List<InvocationMetric> history=new java.util.ArrayList<InvocationMetric>();
-        for (OperationDefinition od : opn.getOperation().getMerged()) {
-            history.add(od.getMetrics());
-        }
-
         // Derive the colour
         Severity severity=null;
         if (getSeverityAnalyzer() != null) {
-            severity = getSeverityAnalyzer().getSeverity(opn, opn.getOperation().getMetrics(), history);
+            severity = getSeverityAnalyzer().getSeverity(opn, opn.getOperation().getMetrics(),
+                    opn.getOperation().getHistory());
         }
         String color=getColor(severity);
         

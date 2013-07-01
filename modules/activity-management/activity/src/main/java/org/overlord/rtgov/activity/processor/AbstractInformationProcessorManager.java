@@ -39,6 +39,7 @@ public abstract class AbstractInformationProcessorManager implements Information
      * The default constructor.
      */
     public AbstractInformationProcessorManager() {
+        InformationProcessorManagerAccessor.setInformationProcessorManager(this);
     }
     
     /**

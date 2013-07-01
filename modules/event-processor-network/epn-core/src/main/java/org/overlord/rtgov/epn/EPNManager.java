@@ -23,11 +23,6 @@ package org.overlord.rtgov.epn;
 public interface EPNManager {
     
     /**
-     * The URI for the EPNManager registered in JNDI.
-     */
-    public static final String URI="java:global/overlord-rtgov/EPNManager";
-
-    /**
      * This method registers a network.
      * 
      * @param network The network

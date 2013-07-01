@@ -22,6 +22,7 @@ import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
 
 import org.overlord.rtgov.common.util.RTGovConfig;
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
 /**
@@ -36,6 +37,15 @@ public class JBossAS7RTGovConfig implements RTGovPropertiesProvider {
     private static final Logger LOG=Logger.getLogger(JBossAS7RTGovConfig.class.getName());
     
     private static java.util.Properties _properties=null;
+    
+    /**
+     * This is the default constructor.
+     */
+    public JBossAS7RTGovConfig() {
+        // Initialize the static reference to the provider, so that it
+        // can be used outside of the archive injecting this implementation
+        RTGovProperties.setPropertiesProvider(this);
+    }
     
     /**
      * This method provides configuration information for injection
@@ -95,6 +105,29 @@ public class JBossAS7RTGovConfig implements RTGovPropertiesProvider {
         return (ret);
     }
     
+    /**
+     * This method provides configuration information for injection
+     * points identified by the RTGovConfig annotation.
+     * 
+     * @param p The injection point
+     * @return The configuration value, or null if not known
+     */
+    public @Produces @RTGovConfig Integer getConfigurationAsInteger(InjectionPoint p) {
+        Integer ret=null;
+        
+        String prop=getConfiguration(p);
+        
+        if (prop != null) {
+            ret = Integer.valueOf(prop);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Runtime Governance integer value = "+ret);
+            }
+        }
+
+        return (ret);
+    }
+
     /**
      * This method returns the properties.
      * 

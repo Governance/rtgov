@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -30,6 +29,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.overlord.rtgov.epn.AbstractEPNLoader;
 import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.EPNManagerAccessor;
 import org.overlord.rtgov.epn.Network;
 import org.overlord.rtgov.epn.util.NetworkUtil;
 
@@ -48,7 +48,6 @@ public class JEEEPNLoader extends AbstractEPNLoader {
     
     private static final String EPN_JSON = "epn.json";
 
-    @Resource(lookup=EPNManager.URI)
     private EPNManager _epnManager=null;
  
     private Network _network=null;
@@ -64,6 +63,13 @@ public class JEEEPNLoader extends AbstractEPNLoader {
      */
     @PostConstruct
     public void init() {
+        
+        _epnManager = EPNManagerAccessor.getEPNManager();
+        
+        if (_epnManager == null) {
+            LOG.severe("Failed to obtain reference to EPNManager");
+            throw new java.lang.IllegalStateException("Failed to obtain reference to EPNManager");
+        }
         
         try {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(EPN_JSON);

@@ -26,10 +26,10 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.naming.InitialContext;
 
 import org.overlord.rtgov.activity.processor.InformationProcessor;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
+import org.overlord.rtgov.activity.processor.InformationProcessorManagerAccessor;
 import org.overlord.rtgov.activity.processor.validation.IPValidationListener;
 import org.overlord.rtgov.activity.processor.validation.IPValidator;
 import org.overlord.rtgov.activity.util.InformationProcessorUtil;
@@ -48,7 +48,6 @@ public class JEEIPLoader {
     private static final Logger LOG=Logger.getLogger(JEEIPLoader.class.getName());
     
     private static final String IP_JSON = "ip.json";
-    private static final String IP_MANAGER = "java:global/overlord-rtgov/InformationProcessorManager";
     
     private InformationProcessorManager _ipManager=null;
     private java.util.List<InformationProcessor> _informationProcessors=null;
@@ -65,11 +64,14 @@ public class JEEIPLoader {
     @PostConstruct
     public void init() {
         
-        try {
-            InitialContext ctx=new InitialContext();
-            
-            _ipManager = (InformationProcessorManager)ctx.lookup(IP_MANAGER);
+        _ipManager = InformationProcessorManagerAccessor.getInformationProcessorManager();
+        
+        if (_ipManager == null) {
+            LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                "ip-loader-jee.Messages").getString("IP-LOADER-JEE-5"));
+        }
 
+        try {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(IP_JSON);
             
             if (is == null) {

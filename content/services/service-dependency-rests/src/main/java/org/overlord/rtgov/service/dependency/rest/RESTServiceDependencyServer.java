@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
@@ -50,8 +51,6 @@ public class RESTServiceDependencyServer {
 
     private static final Logger LOG=Logger.getLogger(RESTServiceDependencyServer.class.getName());
     
-    private static final String ACT_COLL_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
-
     private ActiveCollectionManager _acmManager=null;
     
     private ActiveCollection _servDefns=null;
@@ -65,14 +64,11 @@ public class RESTServiceDependencyServer {
     @SuppressWarnings("unchecked")
     public RESTServiceDependencyServer() {
         
-        try {
-            InitialContext ctx=new InitialContext();
+        _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
             
-            _acmManager = (ActiveCollectionManager)ctx.lookup(ACT_COLL_MANAGER);
-            
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-1"), e);
+        if (_acmManager == null) {
+            LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                    "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-1"));
         }
 
         try {

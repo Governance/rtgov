@@ -42,6 +42,14 @@ public abstract class AbstractEPNManager implements EPNManager {
     private boolean _usePrePostEventListProcessing=false;
     
     /**
+     * This is the default constructor.
+     */
+    public AbstractEPNManager() {
+        // Register this EPNManager with the factory
+        EPNManagerAccessor.setEPNManager(this);
+    }
+    
+    /**
      * This method returns the Event Processor Network Container.
      * 
      * @return The container
@@ -417,7 +425,8 @@ public abstract class AbstractEPNManager implements EPNManager {
         if (ret == null || ret.size() < events.size()) { 
             EventList notifyList=null;
             
-            for (Notification no : node.getNotifications()) {
+            for (int i=0; i < node.getNotifications().size(); i++) {
+                Notification no=node.getNotifications().get(i);
                 
                 if (no.getType() == NotificationType.Processed) {
                     
@@ -425,7 +434,8 @@ public abstract class AbstractEPNManager implements EPNManager {
                         if (ret != null) {
                             java.util.List<java.io.Serializable> processed = new java.util.ArrayList<java.io.Serializable>();
                             
-                            for (java.io.Serializable event : events) {
+                            for (int j=0; j < events.size(); j++) {
+                                java.io.Serializable event=events.get(j);
                                 if (!ret.contains(event)) {
                                     processed.add(event);
                                 }

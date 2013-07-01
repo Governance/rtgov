@@ -32,8 +32,8 @@ public class OperationDefinition implements java.io.Externalizable {
     private RequestResponseDefinition _requestResponse=null;
     private java.util.List<RequestFaultDefinition> _requestFaults=
             new java.util.ArrayList<RequestFaultDefinition>();
-    private java.util.List<OperationDefinition> _merged=
-            new java.util.ArrayList<OperationDefinition>();
+    private java.util.List<InvocationMetric> _history=
+            new java.util.ArrayList<InvocationMetric>();
 
     /**
      * Default constructor.
@@ -180,16 +180,17 @@ public class OperationDefinition implements java.io.Externalizable {
             cur.merge(rfd);
         }
         
-        _merged.add(opdef);
+        _history.add(opdef.getMetrics());
     }
     
     /**
-     * This method returns the list of merged operation definitions.
+     * This method returns the historic list of invocation
+     * metrics merged into the current operation definition.
      * 
-     * @return The merged list
+     * @return The invocation metrics history
      */
-    public java.util.List<OperationDefinition> getMerged() {
-        return (Collections.unmodifiableList(_merged));
+    public java.util.List<InvocationMetric> getHistory() {
+        return (Collections.unmodifiableList(_history));
     }
     
     /**
@@ -227,9 +228,9 @@ public class OperationDefinition implements java.io.Externalizable {
             out.writeObject(_requestFaults.get(i));
         }
         
-        out.writeInt(_merged.size());
-        for (int i=0; i < _merged.size(); i++) {
-            out.writeObject(_merged.get(i));
+        out.writeInt(_history.size());
+        for (int i=0; i < _history.size(); i++) {
+            out.writeObject(_history.get(i));
         }
     }
 
@@ -251,7 +252,7 @@ public class OperationDefinition implements java.io.Externalizable {
         
         len = in.readInt();
         for (int i=0; i < len; i++) {
-            _merged.add((OperationDefinition)in.readObject());
+            _history.add((InvocationMetric)in.readObject());
         }
     }
 }

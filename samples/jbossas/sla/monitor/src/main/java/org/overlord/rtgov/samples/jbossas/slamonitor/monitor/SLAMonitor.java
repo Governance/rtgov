@@ -19,13 +19,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.naming.InitialContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.predicate.MVEL;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
@@ -46,8 +46,6 @@ public class SLAMonitor {
 
     private static final Logger LOG=Logger.getLogger(SLAMonitor.class.getName());
     
-    private static final String ACM_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
-
     private ActiveCollectionManager _acmManager=null;
     
     private ActiveList _serviceResponseTime=null;
@@ -59,9 +57,7 @@ public class SLAMonitor {
     public SLAMonitor() {
         
         try {
-            InitialContext ctx=new InitialContext();
-            
-            _acmManager = (ActiveCollectionManager)ctx.lookup(ACM_MANAGER);
+            _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
 
             _serviceResponseTime = (ActiveList)
                     _acmManager.getActiveCollection(SERVICE_RESPONSE_TIMES);

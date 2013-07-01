@@ -364,7 +364,9 @@ public final class ServiceDefinitionUtil {
         // Store context details
         sd.getContext().addAll(rqr.getContext());
         
-        for (Context c : rps.getContext()) {
+        for (int i=0; i < rps.getContext().size(); i++) {
+            Context c=rps.getContext().get(i);
+            
             if (!sd.getContext().contains(c)) {
                 sd.getContext().add(c);
             }
@@ -450,7 +452,8 @@ public final class ServiceDefinitionUtil {
         java.util.Set<String> keys=new java.util.HashSet<String>();
         
         // Build key set
-        for (java.util.Map<String,ServiceDefinition> sds : snapshots) {
+        for (int i=0; i < snapshots.size(); i++) {
+            java.util.Map<String,ServiceDefinition> sds=snapshots.get(i);
             keys.addAll(sds.keySet());
         }
         
@@ -458,7 +461,8 @@ public final class ServiceDefinitionUtil {
             ServiceDefinition sd=new ServiceDefinition();
             sd.setServiceType(key);
             
-            for (java.util.Map<String,ServiceDefinition> sds : snapshots) {
+            for (int i=0; i < snapshots.size(); i++) {
+                java.util.Map<String,ServiceDefinition> sds=snapshots.get(i);
                 if (sds.containsKey(key)) {
                     try {
                         sd.merge(sds.get(key), retainContexts);

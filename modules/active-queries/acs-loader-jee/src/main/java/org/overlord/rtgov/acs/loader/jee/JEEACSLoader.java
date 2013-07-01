@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -30,6 +29,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.overlord.rtgov.active.collection.AbstractACSLoader;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
 
@@ -47,9 +47,7 @@ public class JEEACSLoader extends AbstractACSLoader {
     private static final Logger LOG=Logger.getLogger(JEEACSLoader.class.getName());
     
     private static final String ACS_JSON = "acs.json";
-    private static final String ACT_COLL_MANAGER = "java:global/overlord-rtgov/ActiveCollectionManager";
 
-    @Resource(lookup=ACT_COLL_MANAGER)
     private ActiveCollectionManager _acmManager=null;
     
     private java.util.List<ActiveCollectionSource> _activeCollectionSources=null;
@@ -65,6 +63,13 @@ public class JEEACSLoader extends AbstractACSLoader {
      */
     @PostConstruct
     public void init() {
+        
+        _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+        
+        if (_acmManager == null) {
+            LOG.severe("Failed to obtain reference to ActiveCollectionManager");
+            throw new java.lang.IllegalStateException("Failed to obtain reference to ActiveCollectionManager");
+        }
         
         try {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(ACS_JSON);

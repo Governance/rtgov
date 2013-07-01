@@ -19,10 +19,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.naming.InitialContext;
 
 import org.overlord.rtgov.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.app.CustomActivity;
 import org.overlord.rtgov.activity.model.app.LogMessage;
@@ -36,9 +35,6 @@ public class DefaultActivityReporter implements ActivityReporter {
 
     private static final Logger LOG=Logger.getLogger(DefaultActivityReporter.class.getName());
     
-    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
-
-    @Resource(lookup=ACTIVITY_COLLECTOR)
     private ActivityCollector _activityCollector=null;
     
     private boolean _initialized=false;
@@ -48,17 +44,12 @@ public class DefaultActivityReporter implements ActivityReporter {
      */
     @PostConstruct
     protected void init() {
-        if (_activityCollector == null) {
-            try {
-                InitialContext ctx=new InitialContext();
-                
-                _activityCollector = (ActivityCollector)ctx.lookup(ACTIVITY_COLLECTOR);
-                
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to initialize activity collector", e);
-            }
-        }
+        _activityCollector = ActivityCollectorAccessor.getActivityCollector();
         
+        if (_activityCollector == null) {
+            LOG.severe("Failed to obtain Activity Collector from Client Manager");
+        }
+
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("*********** Default Activity Reporter initialized with collector="+_activityCollector);
         }

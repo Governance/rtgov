@@ -15,9 +15,13 @@
  */
 package org.overlord.rtgov.jee;
 
-import javax.annotation.Resource;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.annotation.PostConstruct;
 
 import org.overlord.rtgov.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
@@ -27,11 +31,26 @@ import org.overlord.rtgov.activity.model.ActivityType;
  */
 public class DefaultActivityValidator implements ActivityValidator {
 
-    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
-
-    @Resource(lookup=ACTIVITY_COLLECTOR)
+    private static final Logger LOG=Logger.getLogger(DefaultActivityValidator.class.getName());
+    
     private ActivityCollector _activityCollector=null;
     
+    /**
+     * This method initializes the auditor.
+     */
+    @PostConstruct
+    protected void init() {
+        _activityCollector = ActivityCollectorAccessor.getActivityCollector();
+        
+        if (_activityCollector == null) {
+            LOG.severe("Unable to obtain activity collector from Client Manager");
+        }
+        
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("*********** Default Activity Validator initialized with collector="+_activityCollector);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */

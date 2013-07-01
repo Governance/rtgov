@@ -29,9 +29,4 @@
         <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Transformers" from="{urn:switchyard-quickstart:bean-service:1.0}submitOrder" to="java:org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Order"/>
         <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Transformers" from="java:org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.OrderAck" to="{urn:switchyard-quickstart:bean-service:1.0}submitOrderResponse"/>
     </transforms>
-    <domain name="TestDomain">
-        <handlers>
-            <handler class="org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.ExchangeInterceptor" name="handler1"/>
-        </handlers>
-    </domain>
 </switchyard>

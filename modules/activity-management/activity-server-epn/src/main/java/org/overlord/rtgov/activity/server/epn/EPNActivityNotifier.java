@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -40,7 +41,7 @@ public class EPNActivityNotifier implements ActivityNotifier {
 
     private static final Logger LOG=Logger.getLogger(EPNActivityNotifier.class.getName());
     
-    @Inject
+    @Inject @Dependent
     private EPNManager _epnManager=null;
     
     /**

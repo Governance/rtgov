@@ -15,12 +15,9 @@
  */
 package org.overlord.rtgov.active.collection.jee;
 
-import static javax.ejb.ConcurrencyManagementType.BEAN;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.Singleton;
+import javax.inject.Singleton;
 
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.AbstractActiveCollectionManager;
@@ -31,8 +28,7 @@ import org.overlord.rtgov.active.collection.AbstractActiveCollectionManager;
  * interface.
  *
  */
-@Singleton(name="ActiveCollectionManager")
-@ConcurrencyManagement(BEAN)
+@Singleton
 public class JEEActiveCollectionManager extends AbstractActiveCollectionManager
                     implements ActiveCollectionManager {
     

@@ -19,8 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 
 import org.overlord.rtgov.activity.model.soa.RPCActivityType;
@@ -29,15 +27,16 @@ import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 import org.switchyard.ExchangePhase;
 import org.switchyard.Message;
 import org.switchyard.Property;
 import org.switchyard.Service;
 import org.switchyard.ServiceReference;
+import org.switchyard.extensions.java.JavaService;
 import org.switchyard.extensions.wsdl.WSDLService;
 import org.switchyard.metadata.BaseExchangeContract;
 import org.switchyard.metadata.ServiceInterface;
-import org.switchyard.metadata.java.JavaService;
 import org.switchyard.security.SecurityContext;
 import org.switchyard.security.credential.Credential;
 
@@ -50,34 +49,22 @@ public class AbstractExchangeValidator {
     
     private static final Logger LOG=Logger.getLogger(AbstractExchangeValidator.class.getName());
     
-    private static final String ACTIVITY_COLLECTOR = "java:global/overlord-rtgov/ActivityCollector";
-
-    @Resource(lookup=ACTIVITY_COLLECTOR)
     private ActivityCollector _activityCollector=null;
-    
-    private boolean _initialized=false;
     
     /**
      * This method initializes the auditor.
      */
     @PostConstruct
     protected void init() {
-        if (_activityCollector == null) {
-            try {
-                InitialContext ctx=new InitialContext();
-                
-                _activityCollector = (ActivityCollector)ctx.lookup(ACTIVITY_COLLECTOR);
-                
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to initialize activity collector", e);
-            }
-        }
-        
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("*********** Exchange Interceptor Initialized with collector="+_activityCollector);
         }
         
-        _initialized = true;
+        _activityCollector = ActivityCollectorAccessor.getActivityCollector();
+        
+        if (_activityCollector == null) {
+            LOG.severe("Failed to get activity collector");
+        }
     }
 
     /**
@@ -86,11 +73,7 @@ public class AbstractExchangeValidator {
      * @param exch The exchange
      * @param phase The phase
      */
-    protected void handleExchange(org.apache.camel.Exchange exch, ExchangePhase phase) {
-        if (!_initialized) {
-            init();
-        }
-        
+    protected void handleExchange(org.apache.camel.Exchange exch, ExchangePhase phase) {        
         org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
         
         if (mesg == null) {
@@ -285,7 +268,7 @@ public class AbstractExchangeValidator {
                 _activityCollector.validate(at);
             } catch (Exception e) {
                 // Strip the exception and just return the message
-                throw new org.switchyard.exception.SwitchYardException(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         }
     }

@@ -19,6 +19,9 @@ import static javax.ejb.ConcurrencyManagementType.BEAN;
 
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.enterprise.context.ApplicationScoped;
+
 import org.overlord.rtgov.reports.ReportManager;
 import org.overlord.rtgov.reports.AbstractReportManager;
 
@@ -27,7 +30,9 @@ import org.overlord.rtgov.reports.AbstractReportManager;
  * manager interface.
  *
  */
-@Singleton(name="ReportManager")
+@ApplicationScoped
+@Singleton
+@Startup
 @ConcurrencyManagement(BEAN)
 public class JEEReportManager extends AbstractReportManager
                         implements ReportManager {

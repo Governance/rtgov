@@ -31,7 +31,7 @@ import org.overlord.rtgov.reports.model.Report;
  * interface.
  *
  */
-public class AbstractReportManager implements ReportManager {
+public abstract class AbstractReportManager implements ReportManager {
     
     private static final Logger LOG=Logger.getLogger(AbstractReportManager.class.getName());
 
@@ -43,6 +43,13 @@ public class AbstractReportManager implements ReportManager {
     @Inject
     private ReportContext _context=null;
 
+    /**
+     * The default constructor.
+     */
+    public AbstractReportManager() {
+        ReportManagerAccessor.setReportManager(this);
+    }
+    
     /**
      * This method initializes the report manager.
      */

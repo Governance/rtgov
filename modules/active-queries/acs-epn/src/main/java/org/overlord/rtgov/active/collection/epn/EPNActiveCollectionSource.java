@@ -18,12 +18,11 @@ package org.overlord.rtgov.active.collection.epn;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.naming.InitialContext;
-
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 import org.overlord.rtgov.epn.ContextualNotificationListener;
 import org.overlord.rtgov.epn.EPNManager;
+import org.overlord.rtgov.epn.EPNManagerAccessor;
 import org.overlord.rtgov.epn.EventList;
 
 /**
@@ -81,22 +80,19 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
             LOG.fine("Initializing EPN Active Collection Source");
         }
 
+        _epnManager = EPNManagerAccessor.getEPNManager();
+
         if (_epnManager == null) {
-            try {
-                InitialContext ctx=new InitialContext();
                 
-                _epnManager = (EPNManager)ctx.lookup(EPNManager.URI);
+            LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                       "acs-epn.Messages").getString("ACS-EPN-1"));
                 
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                           "acs-epn.Messages").getString("ACS-EPN-1"), e);
-                
-                throw e;
-            }
+            throw new IllegalStateException(java.util.PropertyResourceBundle.getBundle(
+                    "acs-epn.Messages").getString("ACS-EPN-1"));
         }
         
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Register notification listener for subject="+_subject);
+            LOG.fine("Register notification listener on EPNManagr ("+_epnManager+") for subject="+_subject);
         }
 
         _epnManager.addNotificationListener(_subject, _listener);
@@ -140,8 +136,8 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
             LOG.finest("aggregateEvents subject="+subject+"events="+events);
         }
         
-        for (java.io.Serializable event : events) {
-            aggregateEvent(event);
+        for (int i=0; i < events.size(); i++) {
+            aggregateEvent(events.get(i));
         }
     }
     
@@ -200,8 +196,8 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         
         // Default behaviour is to simply add all events to the
         // active collection
-        for (Object event : events) {
-            maintainEntry(null, event);
+        for (int i=0; i < events.size(); i++) {
+            maintainEntry(null, events.get(i));
         }
     }
     

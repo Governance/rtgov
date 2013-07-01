@@ -28,6 +28,7 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -54,7 +55,7 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
     
     private static final Logger LOG=Logger.getLogger(ACManagement.class.getName());
     
-    @Inject
+    @Inject @Dependent
     private ActiveCollectionManager _acManager;
     
     /**
