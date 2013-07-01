@@ -371,7 +371,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                     int num=getSize()-getMaxItems();
                     
                     while (num > 0) {
-                        remove(0, null);
+                        remove(0, _list.get(0));
                         num--;
                     }
                 }
@@ -389,7 +389,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                         if (_listTimestamps.get(i) < expiration) {
                             // TODO: Could do bulk remove and then
                             // send notifications all at once???
-                            remove(i, null);
+                            remove(i, _list.get(i));
                         }
                     }
                 }
