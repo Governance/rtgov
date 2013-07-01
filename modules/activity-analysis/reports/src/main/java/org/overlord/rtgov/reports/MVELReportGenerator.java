@@ -21,6 +21,11 @@ import java.util.logging.Logger;
 import org.mvel2.MVEL;
 import org.overlord.rtgov.reports.model.Report;
 
+/**
+ * This class provides the MVEL based implementation of the ReportGenerator
+ * interface.
+ *
+ */
 public class MVELReportGenerator extends ReportGenerator {
     
     private static final Logger LOG=Logger.getLogger(MVELReportGenerator.class.getName());

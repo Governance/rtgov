@@ -65,7 +65,7 @@ public class ServiceGraph {
      * This method returns the service node associated with
      * the supplied service interface.
      * 
-     * @param intf The interface
+     * @param serviceType The service type
      * @return The service node, or null if not found
      */
     public ServiceNode getServiceNode(String serviceType) {

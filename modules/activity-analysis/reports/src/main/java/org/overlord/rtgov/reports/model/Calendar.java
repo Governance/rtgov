@@ -326,9 +326,9 @@ public class Calendar {
         WorkingDay wd=findWorkingDay(cal);
         
         if (wd != null) {
-            int dttime=(cal.get(java.util.Calendar.HOUR_OF_DAY)*60)+cal.get(java.util.Calendar.MINUTE);
-            int wdstarttime=(wd.getStartHour()*60)+wd.getStartMinute();
-            int wdendtime=(wd.getEndHour()*60)+wd.getEndMinute();
+            int dttime=(cal.get(java.util.Calendar.HOUR_OF_DAY) * 60)+cal.get(java.util.Calendar.MINUTE);
+            int wdstarttime=(wd.getStartHour() * 60)+wd.getStartMinute();
+            int wdendtime=(wd.getEndHour() * 60)+wd.getEndMinute();
             
             if (dttime >= wdstarttime && dttime < wdendtime) {
                 ret = !isExcluded(cal);               
@@ -365,9 +365,9 @@ public class Calendar {
      * This method calculates the number of milliseconds of working time
      * during the supplied timestamps.
      * 
-     * @param from
-     * @param to
-     * @return
+     * @param from The from timestamp
+     * @param to The to timestamp
+     * @return The duration in milliseconds
      */
     public long getWorkingDuration(long from, long to) {
         long ret=0;
@@ -407,7 +407,7 @@ public class Calendar {
                 }    
                 
                 // Move the 'from' date/time to the start of the next day
-                fromDateTime = createCalendar(fromDateTime.getTimeInMillis()+(24*60*60*1000));
+                fromDateTime = createCalendar(fromDateTime.getTimeInMillis() + (24 * 60 * 60 * 1000));
                 fromDateTime.set(java.util.Calendar.HOUR_OF_DAY, 0);
                 fromDateTime.set(java.util.Calendar.MINUTE, 0);
                 
@@ -448,6 +448,7 @@ public class Calendar {
          * This method sets the start hour.
          * 
          * @param val The start hour
+         * @return The working day
          */
         public WorkingDay setStartHour(int val) {
             _startHour = val;
@@ -467,6 +468,7 @@ public class Calendar {
          * This method sets the start minute.
          * 
          * @param val The start minute
+         * @return The working day
          */
         public WorkingDay setStartMinute(int val) {
             _startMinute = val;
@@ -486,6 +488,7 @@ public class Calendar {
          * This method sets the end hour.
          * 
          * @param val The end hour
+         * @return The working day
          */
         public WorkingDay setEndHour(int val) {
             _endHour = val;
@@ -505,6 +508,7 @@ public class Calendar {
          * This method sets the end minute.
          * 
          * @param val The end minute
+         * @return The working day
          */
         public WorkingDay setEndMinute(int val) {
             _endMinute = val;
@@ -538,6 +542,7 @@ public class Calendar {
          * This method sets the day.
          * 
          * @param val The day
+         * @return The excluded day
          */
         public ExcludedDay setDay(int val) {
             _day = val;
@@ -561,6 +566,7 @@ public class Calendar {
          * represented by 12.
          * 
          * @param val The month
+         * @return The excluded day
          */
         public ExcludedDay setMonth(int val) {
             _month = val;
@@ -582,6 +588,7 @@ public class Calendar {
          * This method sets the year.
          * 
          * @param val The year
+         * @return The excluded day
          */
         public ExcludedDay setYear(int val) {
             _year = val;
@@ -601,6 +608,7 @@ public class Calendar {
          * This method sets the reason for exclusion.
          * 
          * @param val The reason
+         * @return The excluded day
          */
         public ExcludedDay setReason(String val) {
             _reason = val;

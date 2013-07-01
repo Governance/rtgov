@@ -93,18 +93,18 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger {
      */
     protected void sendMessage() throws Exception {
         if (_activities != null) {
-        	final java.util.List<ActivityUnit> list=_activities;
-        	
-        	_executor.execute(new Runnable() {
-        		public void run() {
-        			try {
-        				_activityServer.store(list);    
-        			} catch (Exception e) {
-        				LOG.log(Level.SEVERE, "Failed to store list of activity units", e);
-        			}
-        		}
-        	});
-            
+            final java.util.List<ActivityUnit> list=_activities;
+
+            _executor.execute(new Runnable() {
+                public void run() {
+                    try {
+                        _activityServer.store(list);    
+                    } catch (Exception e) {
+                        LOG.log(Level.SEVERE, "Failed to store list of activity units", e);
+                    }
+                }
+            });
+
             // Clear the list
             _activities = new java.util.ArrayList<ActivityUnit>();
         }

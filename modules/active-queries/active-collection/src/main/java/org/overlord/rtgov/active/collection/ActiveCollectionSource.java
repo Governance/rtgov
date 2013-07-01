@@ -371,8 +371,8 @@ public class ActiveCollectionSource {
     public synchronized java.util.List<ActiveCollection> getDerivedActiveCollections() {
         
         // Create the derived active collections, if not already defined
-        if (_activeCollection != null && _derived.size() > 0 &&
-                            _derivedActiveCollections.size() == 0) {
+        if (_activeCollection != null && _derived.size() > 0
+                    && _derivedActiveCollections.size() == 0) {
             
             // Create derived active collections
             for (DerivedDefinition dd : getDerived()) {
@@ -646,6 +646,7 @@ public class ActiveCollectionSource {
     /**
      * This method initializes the active collection source.
      * 
+     * @param context The context
      * @throws Exception Failed to initialize source
      */
     public void init(ActiveCollectionContext context) throws Exception {
