@@ -17,8 +17,8 @@ package org.overlord.rtgov.switchyard.bpm;
 
 import java.util.EventObject;
 
-import org.drools.event.ProcessVariableChangedEventImpl;
-import org.kie.event.process.ProcessVariableChangedEvent;
+import org.drools.core.event.ProcessVariableChangedEventImpl;
+import org.kie.api.event.process.ProcessVariableChangedEvent;
 import org.overlord.rtgov.switchyard.AbstractEventProcessor;
 
 /**

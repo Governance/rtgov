@@ -17,8 +17,8 @@ package org.overlord.rtgov.switchyard.bpm;
 
 import java.util.EventObject;
 
-import org.drools.event.ProcessCompletedEventImpl;
-import org.kie.event.process.ProcessCompletedEvent;
+import org.drools.core.event.ProcessCompletedEventImpl;
+import org.kie.api.event.process.ProcessCompletedEvent;
 import org.overlord.rtgov.switchyard.AbstractEventProcessor;
 
 /**

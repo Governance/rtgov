@@ -17,8 +17,8 @@ package org.overlord.rtgov.switchyard.bpm;
 
 import java.util.EventObject;
 
-import org.drools.event.ProcessStartedEventImpl;
-import org.kie.event.process.ProcessStartedEvent;
+import org.drools.core.event.ProcessStartedEventImpl;
+import org.kie.api.event.process.ProcessStartedEvent;
 import org.overlord.rtgov.switchyard.AbstractEventProcessor;
 
 /**
