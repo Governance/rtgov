@@ -34,13 +34,14 @@
         <module name="javaee.api" export="true" />
         <module name="org.codehaus.jackson.jackson-core-asl" export="true" />
         <module name="org.codehaus.jackson.jackson-mapper-asl" export="true" />
+        <module name="org.kie" export="true" optional="true" />
         <module name="org.drools" export="true" optional="true" />
+        <module name="org.jbpm" export="true" optional="true" />
         <module name="org.mvel.mvel2" export="true" />
         <module name="org.hibernate" export="true" />
         <module name="org.infinispan" export="true" />
         <module name="org.jaxen" export="true" />
         <module name="org.javassist" export="true" />
-        <module name="org.mvel.mvel2" export="true" />
     </dependencies>
 </module>
 

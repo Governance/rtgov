@@ -152,7 +152,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         QName serviceType=consumer.getName();
         String opName=contract.getConsumerOperation().getName();
         
-        if (consumer.getConsumerMetadata().isBinding()) {
+        if (consumer.getServiceMetadata().getRegistrant().isBinding()) {
             getActivityCollector().startScope();
         } else {
             // Only record the request being sent, if the
@@ -162,7 +162,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             // Only report service type if provider is not a binding
             if (provider == null
-                    || !provider.getProviderMetadata().isBinding()) {
+                    || !provider.getServiceMetadata().getRegistrant().isBinding()) {
                 sent.setServiceType(serviceType.toString()); 
             }
             
@@ -179,7 +179,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         }
         
         if (provider == null
-                || !provider.getProviderMetadata().isBinding()) {
+                || !provider.getServiceMetadata().getRegistrant().isBinding()) {
             RequestReceived recvd=new RequestReceived();
             
             recvd.setServiceType(serviceType.toString());                
@@ -237,12 +237,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
 
         // Record the response
         if (provider == null
-                || !provider.getProviderMetadata().isBinding()) {
+                || !provider.getServiceMetadata().getRegistrant().isBinding()) {
             ResponseSent sent=new ResponseSent();
                             
             // Only report service type if provider is not a binding
             if (provider == null
-                    || !provider.getProviderMetadata().isBinding()) {
+                    || !provider.getServiceMetadata().getRegistrant().isBinding()) {
                 sent.setServiceType(serviceType.toString()); 
             }
 
@@ -254,7 +254,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             record(mesg, contentType, sent, securityContext, exch); 
         }
         
-        if (consumer.getConsumerMetadata().isBinding()) {
+        if (consumer.getServiceMetadata().getRegistrant().isBinding()) {
             getActivityCollector().endScope();
         } else {
             // Only record the response being received, if the
@@ -282,7 +282,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         String ret=null;
         ServiceInterface intf=null;
         
-        if (consumer.getConsumerMetadata().isBinding()) {
+        if (consumer.getServiceMetadata().getRegistrant().isBinding()) {
             intf = consumer.getInterface();
         } else if (provider != null) {
             intf = provider.getInterface();

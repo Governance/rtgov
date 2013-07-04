@@ -39,7 +39,7 @@
 		<jbossas.version>7.2.0.Final</jbossas.version>
 		<jbossts.version>4.16.4.Final</jbossts.version>
 		<mvel.version>2.1.4.Final</mvel.version>
-		<switchyard.version>1.0.0.Alpha1</switchyard.version>
+		<switchyard.version>1.0.0-SNAPSHOT</switchyard.version>
 	</properties>
 
 	<modules>

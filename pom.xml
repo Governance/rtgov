@@ -75,11 +75,11 @@
 		<jta.version>1.0.0.Final</jta.version>
 		<kie.version>6.0.0.Beta4</kie.version>
 		<maven-aether.version>3.0.1</maven-aether.version>
-		<mvel.version>2.1.4.Final</mvel.version>			<!-- Passed into junit tests -->
+		<mvel.version>2.1.6.Final</mvel.version>			<!-- Passed into junit tests -->
 		<overlord-commons.version>1.0.9</overlord-commons.version>
 		<shrinkwrap.version>1.0.0</shrinkwrap.version>
 		<shrinkwrap-resolver.version>1.0.0-beta-6</shrinkwrap-resolver.version>
-		<switchyard.version>1.0.0.Alpha1</switchyard.version>
+		<switchyard.version>1.0.0-SNAPSHOT</switchyard.version>
 	</properties>
 
 	<modules>

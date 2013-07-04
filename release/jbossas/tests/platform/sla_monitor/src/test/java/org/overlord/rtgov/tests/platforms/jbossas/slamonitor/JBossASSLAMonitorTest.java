@@ -109,6 +109,7 @@ public class JBossASSLAMonitorTest {
                         TestUtils.copyToTmpFile(archiveFiles[0],"slamonitor.war"));
     }
 
+    @SuppressWarnings("unchecked")
     @Test @OperateOnDeployment("orders-app")
     public void testViolationsFromACMgr() {
         
@@ -174,13 +175,20 @@ public class JBossASSLAMonitorTest {
                 		+" = "+(result1.size()-result0.size()));
             }
             
-            @SuppressWarnings("unchecked")
-            java.util.Map<String,?> results=(java.util.Map<String,?>)result1.get(result1.size()-1);
+            java.util.Map<String,?> results1=(java.util.Map<String,?>)result1.get(result1.size()-1);
+            java.util.Map<String,?> results2=(java.util.Map<String,?>)result1.get(result1.size()-2);
             
-            System.out.println("RESULT KEYS="+results.keySet());
+            System.out.println("RESULT1 KEYS="+results1.keySet()+" SUBJECT="+results1.get("subject"));
+            System.out.println("RESULT2 KEYS="+results2.keySet()+" SUBJECT="+results2.get("subject"));
             
             // Check that conversation id is in the context
-            java.util.List<?> contextList=(java.util.List<?>)results.get("context");
+            java.util.List<?> contextList=null;
+            
+            if (((String)results1.get("subject")).endsWith("OrderService")) {
+                contextList=(java.util.List<?>)results1.get("context");
+            } else {
+                contextList=(java.util.List<?>)results2.get("context");
+            }
             
             if (contextList.size() != 3) {
                 fail("Expecting 3 entries in context list: "+contextList.size());
@@ -189,7 +197,6 @@ public class JBossASSLAMonitorTest {
             boolean f_found=false;
             
             for (int i=0; i < contextList.size(); i++) {
-	            @SuppressWarnings("unchecked")
 	            java.util.Map<String,String> contextEntry=(java.util.Map<String,String>)contextList.get(i);
 	            
 	            if (contextEntry.containsKey("type") && contextEntry.get("type").equalsIgnoreCase("conversation")) {
@@ -211,9 +218,13 @@ public class JBossASSLAMonitorTest {
             }
             
             // Check that the customer properties has been included
-            @SuppressWarnings("unchecked")
-            java.util.Map<String,String> properties=
-                    (java.util.Map<String,String>)results.get("properties");
+            java.util.Map<String,String> properties=null;
+            
+            if (((String)results1.get("subject")).endsWith("OrderService")) {
+                properties=(java.util.Map<String,String>)results1.get("properties");
+            } else {
+                properties=(java.util.Map<String,String>)results2.get("properties");
+            }
             
         	System.err.println("PROPS="+properties);
 

@@ -146,7 +146,7 @@ public class AbstractExchangeValidator {
             String opName=contract.getConsumerOperation().getName();
             
             if (phase == ExchangePhase.IN) {
-                if (!consumer.getConsumerMetadata().isBinding()) {
+                if (!consumer.getServiceMetadata().getRegistrant().isBinding()) {
                     // Only record the request being sent, if the
                     // source is a component, not a binding
                 
@@ -154,7 +154,7 @@ public class AbstractExchangeValidator {
                     
                     // Only report service type if provider is not a binding
                     if (provider == null
-                            || !provider.getProviderMetadata().isBinding()) {
+                            || !provider.getServiceMetadata().getRegistrant().isBinding()) {
                         sent.setServiceType(serviceType.toString()); 
                     }
                     
@@ -166,7 +166,7 @@ public class AbstractExchangeValidator {
                 }
                 
                 if (provider == null
-                        || !provider.getProviderMetadata().isBinding()) {
+                        || !provider.getServiceMetadata().getRegistrant().isBinding()) {
                     RequestReceived recvd=new RequestReceived();
                     
                     recvd.setServiceType(serviceType.toString());                
@@ -188,12 +188,12 @@ public class AbstractExchangeValidator {
                 }
                 
                 if (provider == null
-                        || !provider.getProviderMetadata().isBinding()) {
+                        || !provider.getServiceMetadata().getRegistrant().isBinding()) {
                     ResponseSent sent=new ResponseSent();
                                     
                     // Only report service type if provider is not a binding
                     if (provider == null
-                            || !provider.getProviderMetadata().isBinding()) {
+                            || !provider.getServiceMetadata().getRegistrant().isBinding()) {
                         sent.setServiceType(serviceType.toString()); 
                     }
 
@@ -205,7 +205,7 @@ public class AbstractExchangeValidator {
                     validate(mesg, contentType, sent, securityContext); 
                 }
                 
-                if (!consumer.getConsumerMetadata().isBinding()) {
+                if (!consumer.getServiceMetadata().getRegistrant().isBinding()) {
                     // Only record the response being received, if the
                     // target is a component, not a binding
                     ResponseReceived recvd=new ResponseReceived();
@@ -233,7 +233,7 @@ public class AbstractExchangeValidator {
         String ret=null;
         ServiceInterface intf=null;
         
-        if (consumer.getConsumerMetadata().isBinding()) {
+        if (consumer.getServiceMetadata().getRegistrant().isBinding()) {
             intf = consumer.getInterface();
         } else {
             intf = provider.getInterface();
