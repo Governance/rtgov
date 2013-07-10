@@ -21,6 +21,7 @@ import java.util.Properties;
 
 import org.junit.Test;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
+import org.overlord.rtgov.internal.jee.reports.JEEReportContext;
 import org.overlord.rtgov.reports.model.Calendar;
 
 public class JEEReportContextTest {

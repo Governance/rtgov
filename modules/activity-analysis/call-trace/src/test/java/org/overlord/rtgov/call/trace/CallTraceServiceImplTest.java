@@ -28,13 +28,13 @@ import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
-import org.overlord.rtgov.activity.server.impl.ActivityServerImpl;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.call.trace.CallTraceServiceImpl;
 import org.overlord.rtgov.call.trace.CallTraceServiceImpl.CTState;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 import org.overlord.rtgov.call.trace.util.CallTraceUtilTest;
+import org.overlord.rtgov.internal.activity.jee.JEEActivityServer;
 
 public class CallTraceServiceImplTest {
 
@@ -42,7 +42,7 @@ public class CallTraceServiceImplTest {
         CallTraceServiceImpl ctp=new CallTraceServiceImpl();
         
         MemActivityStore memas=new MemActivityStore();
-        ActivityServerImpl as=new ActivityServerImpl();
+        JEEActivityServer as=new JEEActivityServer();
         
         as.setActivityStore(memas);
         

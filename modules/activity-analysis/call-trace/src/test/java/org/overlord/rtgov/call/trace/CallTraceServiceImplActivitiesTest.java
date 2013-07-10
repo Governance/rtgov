@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import org.overlord.rtgov.activity.model.Context;
-import org.overlord.rtgov.activity.server.impl.ActivityServerImpl;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.call.trace.CallTraceServiceImpl;
@@ -28,6 +27,7 @@ import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.TraceNode;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 import org.overlord.rtgov.call.trace.util.CallTraceUtilTest;
+import org.overlord.rtgov.internal.activity.jee.JEEActivityServer;
 
 public class CallTraceServiceImplActivitiesTest {
 	
@@ -37,7 +37,7 @@ public class CallTraceServiceImplActivitiesTest {
         CallTraceServiceImpl ctp=new CallTraceServiceImpl();
         
         MemActivityStore memas=new MemActivityStore();
-        ActivityServerImpl as=new ActivityServerImpl();
+        JEEActivityServer as=new JEEActivityServer();
         
         as.setActivityStore(memas);
         

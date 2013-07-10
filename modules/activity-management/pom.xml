@@ -15,8 +15,8 @@
 
 	<modules>
 		<module>activity</module>
+		<module>activity-embedded</module>
 		<module>activity-jee</module>
-		<module>activity-server-impl</module>
 		<module>activity-server-restc</module>
 		<module>activity-server-rests</module>
 		<module>activity-server-jmsc</module>
@@ -24,7 +24,6 @@
 		<module>activity-store-jpa</module>
 		<module>activity-store-mem</module>
 		<module>av-loader-jee</module>
-		<module>collector-embedded</module>
 		<module>collector-activity-server</module>
 		<module>ip-loader-jee</module>
 	</modules>

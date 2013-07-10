@@ -12,7 +12,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.rtgov.call.trace.rest.RESTCallTraceServerApplication</param-value>
+            <param-value>org.overlord.rtgov.internal.call.trace.rest.RESTCallTraceServerApplication</param-value>
         </init-param>
     </servlet>
 

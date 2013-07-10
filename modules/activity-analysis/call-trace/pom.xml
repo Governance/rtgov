@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-server-impl</artifactId>
+			<artifactId>activity-jee</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>

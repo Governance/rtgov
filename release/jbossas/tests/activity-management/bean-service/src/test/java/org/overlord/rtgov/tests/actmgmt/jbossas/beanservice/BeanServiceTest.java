@@ -83,7 +83,6 @@ public class BeanServiceTest {
                             "org.overlord.rtgov.common:rtgov-common:"+version,
                     		"org.overlord.rtgov.activity-management:activity-jee:"+version,
                             "org.overlord.rtgov.integration:rtgov-jbossas:"+version,
-                            "org.overlord.rtgov.activity-management:activity-server-impl:"+version,
                             "org.overlord.rtgov.activity-management:collector-activity-server:"+version)
                     .resolveAsFiles());
     }

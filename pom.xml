@@ -348,7 +348,7 @@
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<configuration>
 						<aggregate>true</aggregate>
-						<excludePackageNames>org.overlord.rtgov.tests.*:*.internal.*</excludePackageNames>
+						<excludePackageNames>org.overlord.rtgov.tests.*:*.internal.*:*.quickstarts.*:*.samples.*</excludePackageNames>
 					</configuration>
 				</plugin>
 				<plugin>

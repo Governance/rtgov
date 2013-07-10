@@ -14,13 +14,15 @@
 	</parent>
 
 	<dependencies>		
-		<!-- Collector modules -->
-		
+
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-jee</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+
+		<!-- Collector modules -->
+		
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>collector-activity-server</artifactId>
@@ -29,11 +31,6 @@
 		
 		<!-- Activity Server modules -->
 		
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-server-impl</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-rests</artifactId>

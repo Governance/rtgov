@@ -12,7 +12,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.rtgov.activity.server.rest.RESTActivityServerApplication</param-value>
+            <param-value>org.overlord.rtgov.internal.activity.server.rest.RESTActivityServerApplication</param-value>
         </init-param>
     </servlet>
 
@@ -28,7 +28,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.rtgov.active.collection.rest.RESTActiveCollectionServerApplication</param-value>
+            <param-value>org.overlord.rtgov.internal.active.collection.rest.RESTActiveCollectionServerApplication</param-value>
         </init-param>
     </servlet>
 
@@ -46,7 +46,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.rtgov.service.dependency.rest.RESTServiceDependencyServerApplication</param-value>
+            <param-value>org.overlord.rtgov.internal.service.dependency.rest.RESTServiceDependencyServerApplication</param-value>
         </init-param>
     </servlet>
 
@@ -62,7 +62,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.rtgov.call.trace.rest.RESTCallTraceServerApplication</param-value>
+            <param-value>org.overlord.rtgov.internal.call.trace.rest.RESTCallTraceServerApplication</param-value>
         </init-param>
     </servlet>
 
@@ -78,7 +78,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.rtgov.situation.manager.rest.RESTSituationManagerServerApplication</param-value>
+            <param-value>org.overlord.rtgov.internal.situation.manager.rest.RESTSituationManagerServerApplication</param-value>
         </init-param>
     </servlet>
 
@@ -94,7 +94,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>org.overlord.rtgov.reports.rest.RESTReportServerApplication</param-value>
+            <param-value>org.overlord.rtgov.internal.reports.rest.RESTReportServerApplication</param-value>
         </init-param>
     </servlet>
 
