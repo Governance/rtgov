@@ -14,8 +14,8 @@
 	</parent>
 
 	<modules>
+		<module>client</module>
 		<module>jbossas</module>
-		<module>jee</module>
 		<module>switchyard</module>
 	</modules>
 

@@ -19,8 +19,8 @@ package org.overlord.rtgov.quickstarts.demos.orders;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.overlord.rtgov.jee.ActivityReporter;
-import org.overlord.rtgov.jee.DefaultActivityReporter;
+import org.overlord.rtgov.client.ActivityReporter;
+import org.overlord.rtgov.client.DefaultActivityReporter;
 import org.switchyard.component.bean.Service;
 
 @Service(InventoryService.class)

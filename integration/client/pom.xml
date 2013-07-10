@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.integration</groupId>
-	<artifactId>rtgov-switchyard</artifactId> 
+	<artifactId>rtgov-client</artifactId> 
 	<packaging>jar</packaging>
-	<name>Overlord RTGov::Integration::SwitchYard</name>
+	<name>Overlord RTGov::Integration::Client</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
@@ -18,6 +18,12 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-common</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>
@@ -29,12 +35,9 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- Add dependency on integration client module, to make
-			the utilities available to switchyard apps -->
 		<dependency>
-			<groupId>org.overlord.rtgov.integration</groupId>
-			<artifactId>rtgov-client</artifactId>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
@@ -51,35 +54,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.switchyard</groupId>
-			<artifactId>switchyard-bus-camel</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.switchyard</groupId>
-			<artifactId>switchyard-extensions-java</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.switchyard</groupId>
-			<artifactId>switchyard-extensions-wsdl</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.switchyard.components</groupId>
-			<artifactId>switchyard-component-bpel</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.switchyard.components</groupId>
-			<artifactId>switchyard-component-bpm</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<scope>provided</scope>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-api</artifactId>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -120,5 +97,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	
 </project>

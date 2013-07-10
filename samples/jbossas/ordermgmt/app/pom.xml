@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
-			<artifactId>rtgov-jee</artifactId>
+			<artifactId>rtgov-client</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

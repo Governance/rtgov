@@ -13,26 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.overlord.rtgov.internal.switchyard.camel;
 
-package org.overlord.rtgov.quickstarts.demos.orders;
-
-import org.overlord.rtgov.client.ActivityReporter;
-import org.overlord.rtgov.client.DefaultActivityReporter;
-import org.switchyard.component.bean.Service;
-
-@Service(LogisticsService.class)
-public class LogisticsServiceBean implements LogisticsService {
-
-    private ActivityReporter _reporter=new DefaultActivityReporter();
+/**
+ * This class provides the ExchangeCreatedEvent implementation of the
+ * event processor.
+ *
+ */
+public class ExchangeCreatedEventProcessor extends AbstractExchangeEventProcessor {
     
-    public LogisticsServiceBean() {
+    /**
+     * This is the default constructor.
+     */
+    public ExchangeCreatedEventProcessor() {
+        super(org.apache.camel.management.event.ExchangeCreatedEvent.class);        
     }
 
-    @Override
-    public DeliveryAck deliver(Order order) {
-        if (_reporter != null) {
-            _reporter.logInfo("Delivering the goods");
-        }
-        return (new DeliveryAck().setOrderId(order.getOrderId()));
-    }
 }
+

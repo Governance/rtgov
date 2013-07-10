@@ -19,7 +19,7 @@
 	</parent>
 
 	<scm>
-		<connection>https://github.com/Governance</connection>
+		<connection>scm:git:https://github.com/Governance</connection>
 		<url>https://github.com/Governance</url>
 	</scm>
 
@@ -61,7 +61,7 @@
 		<arquillian.version>1.0.0.Final</arquillian.version>
 		<cdi.version>1.0-SP4</cdi.version>
 		<commons-codec.version>1.5</commons-codec.version>
-		<drools.version>6.0.0.Beta5</drools.version>
+		<drools.version>6.0.0.Beta4</drools.version>
 		<gadgets.version>1.0.0-SNAPSHOT</gadgets.version>
 		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
 		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
@@ -73,7 +73,7 @@
 		<jbossts.version>4.16.4.Final</jbossts.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jta.version>1.0.0.Final</jta.version>
-		<kie.version>6.0.0.Beta5</kie.version>
+		<kie.version>6.0.0.Beta4</kie.version>
 		<maven-aether.version>3.0.1</maven-aether.version>
 		<mvel.version>2.1.6.Final</mvel.version>			<!-- Passed into junit tests -->
 		<overlord-commons.version>1.0.9</overlord-commons.version>
@@ -349,6 +349,36 @@
 					<configuration>
 						<aggregate>true</aggregate>
 						<excludePackageNames>org.overlord.rtgov.tests.*:*.internal.*:*.quickstarts.*:*.samples.*</excludePackageNames>
+						<groups>
+							<group>
+								<title>Activity Model</title>
+								<packages>org.overlord.rtgov.activity.model*</packages>
+							</group>
+							<group>
+								<title>Activity Collection</title>
+								<packages>org.overlord.rtgov.activity.collector*:org.overlord.rtgov.activity.processor*:org.overlord.rtgov.activity.validator*:org.overlord.rtgov.activity.embedded*</packages>
+							</group>
+							<group>
+								<title>Activity Server</title>
+								<packages>org.overlord.rtgov.activity.server*:org.overlord.rtgov.activity.store*</packages>
+							</group>
+							<group>
+								<title>Event Processing</title>
+								<packages>org.overlord.rtgov.ep*:org.overlord.rtgov.epn*:org.overlord.rtgov.content.epn*</packages>
+							</group>
+							<group>
+								<title>Active Collections</title>
+								<packages>org.overlord.rtgov.active.collection*</packages>
+							</group>
+							<group>
+								<title>Services</title>
+								<packages>org.overlord.rtgov.call.trace*:org.overlord.rtgov.reports*:org.overlord.rtgov.service.dependency*:org.overlord.rtgov.situation.manager*</packages>
+							</group>
+							<group>
+								<title>Integration Support</title>
+								<packages>org.overlord.rtgov.client*:org.overlord.rtgov.switchyard*</packages>
+							</group>
+						</groups>
 					</configuration>
 				</plugin>
 				<plugin>

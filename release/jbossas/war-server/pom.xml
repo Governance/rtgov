@@ -143,11 +143,11 @@
 			<artifactId>overlord-commons-auth</artifactId>
 		</dependency>
 
-		<!-- JEE Specific -->
+		<!-- Client -->
 		
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
-			<artifactId>rtgov-jee</artifactId>
+			<artifactId>rtgov-client</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		
