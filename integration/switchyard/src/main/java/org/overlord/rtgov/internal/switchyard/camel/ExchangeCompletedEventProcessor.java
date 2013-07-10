@@ -26,7 +26,7 @@ public class ExchangeCompletedEventProcessor extends AbstractExchangeEventProces
      * This is the default constructor.
      */
     public ExchangeCompletedEventProcessor() {
-        super(org.apache.camel.management.event.ExchangeCompletedEvent.class);
+        super(org.apache.camel.management.event.ExchangeCompletedEvent.class, true);
     }
 
 }

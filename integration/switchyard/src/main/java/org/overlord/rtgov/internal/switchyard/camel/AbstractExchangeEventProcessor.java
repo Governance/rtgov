@@ -49,13 +49,18 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
     
     private static final Logger LOG=Logger.getLogger(AbstractExchangeEventProcessor.class.getName());
 
+    private boolean _completedEvent=false;
+    
     /**
      * This is the constructor.
      * 
      * @param eventType The event type associated with the processor
+     * @param completed Whether the event processor represents a completed event
      */
-    public AbstractExchangeEventProcessor(Class<? extends EventObject> eventType) {
-        super(eventType);       
+    public AbstractExchangeEventProcessor(Class<? extends EventObject> eventType, boolean completed) {
+        super(eventType);    
+        
+        _completedEvent = completed;
     }
 
     /**
@@ -139,6 +144,16 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             Service provider, ServiceReference consumer, String messageId,
             String contentType, org.switchyard.bus.camel.CamelMessage mesg) {
         Registrant consumerReg=consumer.getServiceMetadata().getRegistrant();
+        
+        if (_completedEvent) {
+            if (consumerReg.isBinding()) {
+                getActivityCollector().endScope();
+            }
+            
+            // Nothing to do, as appears to be a one-way exchange
+            return;
+        }
+
         Registrant providerReg=(provider == null ? null : provider.getServiceMetadata().getRegistrant());
 
         String intf=getInterface(consumer, provider, consumerReg);
