@@ -204,7 +204,9 @@ public abstract class ActivityType implements java.io.Externalizable {
      * @return The context
      */
     @ElementCollection()
-    @CollectionTable(name="RTGOV_ACTIVITY_CONTEXT")
+    @CollectionTable(name="RTGOV_ACTIVITY_CONTEXT",joinColumns={
+            @JoinColumn(name="unitId",referencedColumnName="unitId"),
+            @JoinColumn(name="unitIndex",referencedColumnName="unitIndex")})
     public java.util.List<Context> getContext() {
         return (_contexts);
     }
@@ -227,8 +229,8 @@ public abstract class ActivityType implements java.io.Externalizable {
     @MapKeyColumn(name="name")
     @Column(name="value")
     @CollectionTable(name="RTGOV_ACTIVITY_PROPERTIES",joinColumns={
-            @JoinColumn(name="unit_id",referencedColumnName="unitId"),
-            @JoinColumn(name="unit_index",referencedColumnName="unitIndex")})
+            @JoinColumn(name="unitId",referencedColumnName="unitId"),
+            @JoinColumn(name="unitIndex",referencedColumnName="unitIndex")})
     public java.util.Map<String,String> getProperties() {
         return (_properties);
     }

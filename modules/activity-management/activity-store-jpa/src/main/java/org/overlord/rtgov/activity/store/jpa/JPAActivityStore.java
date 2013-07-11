@@ -194,7 +194,23 @@ public class JPAActivityStore implements ActivityStore {
     public void remove(ActivityUnit au) throws Exception {
         EntityManager em=getEntityManager();
         
-        em.remove(au);
+        // Cascading delete is not working from activity unit to activity types,
+        // so resorting to native SQL for now to delete an activity unit and its
+        // associated components
+        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_CONTEXT WHERE unitId = '"
+                        +au.getId()+"'").executeUpdate();
+
+        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_PROPERTIES WHERE unitId = '"
+                        +au.getId()+"'").executeUpdate();
+
+        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITIES WHERE unitId = '"
+                        +au.getId()+"'").executeUpdate();
+        
+        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_UNITS WHERE id = '"
+                        +au.getId()+"'").executeUpdate();
+        
+        em.flush();
+        em.clear();
     }
     
     /**

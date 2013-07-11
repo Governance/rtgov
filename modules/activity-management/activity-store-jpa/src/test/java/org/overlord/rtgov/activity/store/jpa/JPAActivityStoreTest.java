@@ -112,9 +112,25 @@ public class JPAActivityStoreTest {
         return (act);
     }
     
+    protected void checkTableEmpty(String table) {
+        int rows=em.createNativeQuery("SELECT * FROM "+table).getResultList().size();
+        
+        if (rows != 0) {
+            fail("Table '"+table+"' is not empty: "+rows);
+        }
+    }
+    
+    protected void checkAllTablesEmpty() {
+        checkTableEmpty("RTGOV_ACTIVITY_UNITS");
+        checkTableEmpty("RTGOV_ACTIVITIES");
+        checkTableEmpty("RTGOV_ACTIVITY_CONTEXT");
+        checkTableEmpty("RTGOV_ACTIVITY_PROPERTIES");        
+    }
+    
     @Test
-    @Ignore
     public void testStoreAndQueryAllORM() {
+        
+        checkAllTablesEmpty();
     	
         java.util.List<ActivityType> results=
             testStoreAndQuery(OVERLORD_RTGOV_ACTIVITY_ORM,
@@ -128,12 +144,15 @@ public class JPAActivityStoreTest {
         }
         
         System.out.println("RESULTS="+results);
+        
+        checkAllTablesEmpty();
     }
     
     @Test
-    @Ignore
     public void testQueryActivityFieldORM() {
     	
+        checkAllTablesEmpty();
+
         java.util.List<ActivityType> results=
             testStoreAndQuery(OVERLORD_RTGOV_ACTIVITY_ORM,
                 new QuerySpec()
@@ -152,6 +171,8 @@ public class JPAActivityStoreTest {
         }
 
         System.out.println("RESULTS="+results);
+
+        checkAllTablesEmpty();
     }
 
     @Test
@@ -159,6 +180,8 @@ public class JPAActivityStoreTest {
         java.util.List<ActivityType> results=null;
                 
         java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
+
+        checkAllTablesEmpty();
         
         ActivityUnit au1=createTestActivityUnit(AU_ID_1, CONV_ID_1, ENDPOINT_ID_1, 0);
         ActivityUnit au2=createTestActivityUnit(AU_ID_2, CONV_ID_2, ENDPOINT_ID_2, 5000);
@@ -188,7 +211,6 @@ public class JPAActivityStoreTest {
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
-            /*
             try {
                 em.getTransaction().begin();
                 
@@ -198,8 +220,8 @@ public class JPAActivityStoreTest {
                 em.getTransaction().commit();
            } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
-            }
-            */
+           }
+
         }
  
         System.out.println("RESULTS="+results);
@@ -207,10 +229,12 @@ public class JPAActivityStoreTest {
         if (results.size() != 1) {
             fail("Only expecting a single activity event: "+results.size());
         }
+
+        checkAllTablesEmpty();
     }
     
     @Test
-    @Ignore
+    @Ignore("RTGOV-234 - awaiting support for hibernate OGM")
     public void testStoreAndQueryAllOGMM() {
         testStoreAndQuery(OVERLORD_RTGOV_ACTIVITY_OGM_M,
                 new QuerySpec().setFormat(MONGODB_FORMAT).
@@ -223,6 +247,8 @@ public class JPAActivityStoreTest {
         
         java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
         
+        checkAllTablesEmpty();
+
         ActivityUnit au1=createTestActivityUnit("3", "3", "3", 0);
         ActivityUnit au2=createTestActivityUnit("4", "4", "4", 5000);
         
@@ -247,7 +273,6 @@ public class JPAActivityStoreTest {
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
-            /*
             try {
                 em.getTransaction().begin();
                 activityStore.remove(au1);
@@ -256,7 +281,6 @@ public class JPAActivityStoreTest {
             } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
             }
-            */
         }
         
         if (results == null) {
@@ -270,6 +294,8 @@ public class JPAActivityStoreTest {
         if (!results.get(0).getUnitId().equals("3")) {
             fail("Expecting au 3: "+results.get(0).getUnitId());
         }
+
+        checkAllTablesEmpty();
     }
     
     @Test
@@ -278,6 +304,8 @@ public class JPAActivityStoreTest {
         
         java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
         
+        checkAllTablesEmpty();
+
         ActivityUnit au1=createTestActivityUnit("5", "5", "5", 0);
         ActivityUnit au2=createTestActivityUnit("6", "6", "6", 5000);
         
@@ -303,7 +331,6 @@ public class JPAActivityStoreTest {
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
-            /*
             try {
                 em.getTransaction().begin();
                 activityStore.remove(au1);
@@ -312,7 +339,6 @@ public class JPAActivityStoreTest {
             } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
             }
-            */
         }
         
         if (results == null) {
@@ -326,8 +352,9 @@ public class JPAActivityStoreTest {
         if (!results.get(0).getUnitId().equals("6")) {
             fail("Expecting au 6: "+results.get(0).getUnitId());
         }
-    }
-    
+
+        checkAllTablesEmpty();
+    }    
     
     @Test
     public void testGetActivityTypesContextTimeframe() {
@@ -336,6 +363,8 @@ public class JPAActivityStoreTest {
         
         java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
         
+        checkAllTablesEmpty();
+
         ActivityUnit au1=createTestActivityUnit("7", "C1", "E1", 0);
         ActivityUnit au2=createTestActivityUnit("8", "C1", "E1", 5000);
         
@@ -369,7 +398,6 @@ public class JPAActivityStoreTest {
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
-            /*
             try {
                 em.getTransaction().begin();
                 activityStore.remove(au1);
@@ -378,7 +406,6 @@ public class JPAActivityStoreTest {
             } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
             }
-            */
         }
         
         if (results1 == null) {
@@ -400,6 +427,8 @@ public class JPAActivityStoreTest {
         if (!results2.get(0).getUnitId().equals("8")) {
             fail("Expecting au 8: "+results2.get(0).getUnitId());
         }
+
+        checkAllTablesEmpty();
     }
     
     protected java.util.List<ActivityType> testStoreAndQuery(String emname, QuerySpec qs) {
@@ -440,38 +469,4 @@ public class JPAActivityStoreTest {
         
         return (results);
     }
-
-    /*
-    protected java.util.List<ActivityType> testStoreAndQuery(String emname, String query) {
-        java.util.List<ActivityType> results=null;
-        
-        JPAActivityStore astore=new JPAActivityStore();
-        
-        astore.setEntityManagerName(emname);
-        astore.init();
-        
-        java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
-        
-        activities.add(createTestActivityUnit("au1"));
-        activities.add(createTestActivityUnit("au2"));
-        
-        try {
-            astore.store(activities);
-        } catch(Exception e) {
-            fail("Failed to store activities: "+e);
-        }
-        
-        try {
-            results = astore.query(query);
-            
-            System.out.println("RESULTS="+results);
-        } catch(Exception e) {
-            fail("Failed to query activities: "+e);
-        }
-        
-        astore.close();
-        
-        return (results);
-    }
-*/
 }

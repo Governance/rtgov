@@ -114,6 +114,25 @@ public class ActivityTypeId implements java.io.Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean equals(Object obj) {
+        if (obj instanceof ActivityTypeId) {
+            return (((ActivityTypeId)obj)._unitId.equals(_unitId)
+                    && ((ActivityTypeId)obj)._unitIndex == _unitIndex);
+        }
+        
+        return (false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return (_unitId.hashCode());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(VERSION);
         
