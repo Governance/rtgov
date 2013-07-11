@@ -1,0 +1,12 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0">
+         <order>
+            <orderId>3</orderId>
+            <itemId>JAM</itemId>
+            <quantity>100</quantity>
+            <customer>Fred</customer>
+         </order>
+      </orders:submitOrder>
+   </soap:Body>
+</soap:Envelope>

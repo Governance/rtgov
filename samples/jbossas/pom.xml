@@ -101,6 +101,11 @@
 				<version>${switchyard.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.switchyard.components</groupId>
+				<artifactId>switchyard-component-test-mixin-http</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.mvel</groupId>
 				<artifactId>mvel2</artifactId>
 				<version>${mvel.version}</version>

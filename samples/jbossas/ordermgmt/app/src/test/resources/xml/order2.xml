@@ -1,0 +1,13 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:switchyard-quickstart-demo:orders:1.0">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:submitOrder>
+         <order>
+            <orderId>2</orderId>
+            <itemId>Laptop</itemId>
+            <quantity>100</quantity>
+            <customer>Fred</customer>
+         </order>
+      </urn:submitOrder>
+   </soapenv:Body>
+</soapenv:Envelope>
