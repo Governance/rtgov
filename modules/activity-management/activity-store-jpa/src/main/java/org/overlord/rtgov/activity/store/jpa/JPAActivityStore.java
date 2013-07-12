@@ -68,6 +68,17 @@ public class JPAActivityStore implements ActivityStore {
     }
     
     /**
+     * This method closes the supplied entity manager.
+     * 
+     * @param em The entity manager
+     */
+    protected void closeEntityManager(EntityManager em) {
+        if (em != _entityManager) {
+            em.close();
+        }
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public void store(List<ActivityUnit> activities) throws Exception {
@@ -77,8 +88,12 @@ public class JPAActivityStore implements ActivityStore {
         
         EntityManager em=getEntityManager();
         
-        for (int i=0; i < activities.size(); i++) {
-            em.persist(activities.get(i));
+        try {
+            for (int i=0; i < activities.size(); i++) {
+                em.persist(activities.get(i));
+            }
+        } finally {
+            closeEntityManager(em);
         }
     }
 
@@ -92,14 +107,19 @@ public class JPAActivityStore implements ActivityStore {
 
         EntityManager em=getEntityManager();
         
-        ActivityUnit ret=(ActivityUnit)
-                em.createQuery("SELECT au FROM ActivityUnit au "
-                            +"WHERE au.id = '"+id+"'")
-                            .getSingleResult();
+        ActivityUnit ret=null;
         
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("ActivityUnit id="+id+" Result="
-                    +new String(ActivityUtil.serializeActivityUnit(ret)));
+        try {
+            ret=(ActivityUnit)em.createQuery("SELECT au FROM ActivityUnit au "
+                                +"WHERE au.id = '"+id+"'")
+                                .getSingleResult();
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("ActivityUnit id="+id+" Result="
+                        +new String(ActivityUtil.serializeActivityUnit(ret)));
+            }
+        } finally {
+            closeEntityManager(em);
         }
 
         return (ret);
@@ -115,27 +135,31 @@ public class JPAActivityStore implements ActivityStore {
         
         EntityManager em=getEntityManager();
         
-        if (from == 0 && to == 0) {
-            ret = (List<ActivityType>)
-                em.createQuery("SELECT at from ActivityType at "
+        try {
+            if (from == 0 && to == 0) {
+                ret = (List<ActivityType>)
+                    em.createQuery("SELECT at from ActivityType at "
+                            +"JOIN at.context ctx "
+                            +"WHERE ctx.value = '"+context.getValue()+"' "
+                            +"AND ctx.type = '"+context.getType().name()+"'")
+                            .getResultList();
+                
+            } else {            
+                ret = (List<ActivityType>)em.createQuery("SELECT at from ActivityType at "
                         +"JOIN at.context ctx "
                         +"WHERE ctx.value = '"+context.getValue()+"' "
-                        +"AND ctx.type = '"+context.getType().name()+"'")
+                        +"AND ctx.type = '"+context.getType().name()+"' "
+                        +"AND at.timestamp >= "+from+" "
+                        +"AND at.timestamp <= "+to)
                         .getResultList();
+            }
             
-        } else {            
-            ret = (List<ActivityType>)em.createQuery("SELECT at from ActivityType at "
-                    +"JOIN at.context ctx "
-                    +"WHERE ctx.value = '"+context.getValue()+"' "
-                    +"AND ctx.type = '"+context.getType().name()+"' "
-                    +"AND at.timestamp >= "+from+" "
-                    +"AND at.timestamp <= "+to)
-                    .getResultList();
-        }
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("ActivityTypes context '"+context+"' from="+from+" to="+to+" Result="
-                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("ActivityTypes context '"+context+"' from="+from+" to="+to+" Result="
+                        +new String(ActivityUtil.serializeActivityTypeList(ret)));
+            }
+        } finally {
+            closeEntityManager(em);
         }
 
         return (ret);        
@@ -169,17 +193,23 @@ public class JPAActivityStore implements ActivityStore {
      * @return The list of activity types
      * @throws Exception Failed to perform query
      */
+    @SuppressWarnings("unchecked")
     public List<ActivityType> query(String query) throws Exception {
 
         EntityManager em=getEntityManager();
         
-        @SuppressWarnings("unchecked")
-        List<ActivityType> ret=(List<ActivityType>)
+        List<ActivityType> ret=null;
+        
+        try {
+            ret = (List<ActivityType>)
                     em.createQuery(query).getResultList();
         
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Query="+query+" Result="
-                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Query="+query+" Result="
+                        +new String(ActivityUtil.serializeActivityTypeList(ret)));
+            }
+        } finally {
+            closeEntityManager(em);
         }
 
         return (ret);
@@ -194,23 +224,27 @@ public class JPAActivityStore implements ActivityStore {
     public void remove(ActivityUnit au) throws Exception {
         EntityManager em=getEntityManager();
         
-        // Cascading delete is not working from activity unit to activity types,
-        // so resorting to native SQL for now to delete an activity unit and its
-        // associated components
-        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_CONTEXT WHERE unitId = '"
-                        +au.getId()+"'").executeUpdate();
-
-        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_PROPERTIES WHERE unitId = '"
-                        +au.getId()+"'").executeUpdate();
-
-        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITIES WHERE unitId = '"
-                        +au.getId()+"'").executeUpdate();
-        
-        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_UNITS WHERE id = '"
-                        +au.getId()+"'").executeUpdate();
-        
-        em.flush();
-        em.clear();
+        try {
+            // Cascading delete is not working from activity unit to activity types,
+            // so resorting to native SQL for now to delete an activity unit and its
+            // associated components
+            em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_CONTEXT WHERE unitId = '"
+                            +au.getId()+"'").executeUpdate();
+    
+            em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_PROPERTIES WHERE unitId = '"
+                            +au.getId()+"'").executeUpdate();
+    
+            em.createNativeQuery("DELETE FROM RTGOV_ACTIVITIES WHERE unitId = '"
+                            +au.getId()+"'").executeUpdate();
+            
+            em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_UNITS WHERE id = '"
+                            +au.getId()+"'").executeUpdate();
+            
+            em.flush();
+            em.clear();
+        } finally {
+            closeEntityManager(em);
+        }
     }
     
     /**
