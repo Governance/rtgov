@@ -34,7 +34,7 @@ import org.overlord.rtgov.call.trace.CallTraceServiceImpl.CTState;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 import org.overlord.rtgov.call.trace.util.CallTraceUtilTest;
-import org.overlord.rtgov.internal.activity.jee.JEEActivityServer;
+import org.overlord.rtgov.internal.activity.server.jee.JEEActivityServer;
 
 public class CallTraceServiceImplTest {
 

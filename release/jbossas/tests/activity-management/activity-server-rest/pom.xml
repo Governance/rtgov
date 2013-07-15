@@ -16,7 +16,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-jee</artifactId>
+			<artifactId>activity-server-jee</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

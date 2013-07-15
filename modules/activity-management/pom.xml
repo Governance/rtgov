@@ -16,7 +16,8 @@
 	<modules>
 		<module>activity</module>
 		<module>activity-embedded</module>
-		<module>activity-jee</module>
+		<module>activity-client-jee</module>
+		<module>activity-server-jee</module>
 		<module>activity-server-restc</module>
 		<module>activity-server-rests</module>
 		<module>activity-server-jmsc</module>

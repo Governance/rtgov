@@ -68,7 +68,7 @@ public class ActivityServerRESTTest {
                     DependencyResolvers
                     .use(MavenDependencyResolver.class)
                     .artifacts("org.overlord.rtgov.activity-management:activity:"+rtgovversion,
-                    		"org.overlord.rtgov.activity-management:activity-jee:"+rtgovversion,
+                    		"org.overlord.rtgov.activity-management:activity-server-jee:"+rtgovversion,
                             "org.overlord.rtgov.activity-management:collector-activity-server:"+rtgovversion,
                             "org.overlord.rtgov.common:rtgov-common:"+rtgovversion,
                             "org.overlord.rtgov.integration:rtgov-jbossas:"+rtgovversion,

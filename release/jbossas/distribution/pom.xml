@@ -22,7 +22,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
-			<artifactId>overlord-rtgov-client-rest</artifactId>
+			<artifactId>overlord-rtgov-client</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
