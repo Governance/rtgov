@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>org.overlord.rtgov.samples.jbossas</groupId>
 		<artifactId>ordermgmt</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
+		<version>1.0.0.Final</version>
 	</parent>
 
 	<dependencies>

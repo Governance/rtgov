@@ -26,7 +26,7 @@ import org.codehaus.jackson.type.TypeReference;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.collector.CollectorContext;
 import org.overlord.rtgov.activity.collector.activity.server.ActivityServerLogger;
-import org.overlord.rtgov.activity.collector.embedded.EmbeddedActivityCollector;
+import org.overlord.rtgov.activity.embedded.EmbeddedActivityCollector;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
