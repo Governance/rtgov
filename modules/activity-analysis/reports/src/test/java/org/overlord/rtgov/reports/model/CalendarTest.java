@@ -294,4 +294,23 @@ public class CalendarTest {
             fail("Should be 2.5 hours: "+cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()));          
         }
     }
+
+    @Test
+    public void testGetWorkingDurationDefaultCalOneYear() {
+        Calendar defcal = new Calendar().setName(Calendar.DEFAULT);
+        
+        // Define working week
+        defcal.setMonday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
+        defcal.setTuesday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
+        defcal.setWednesday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
+        defcal.setThursday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
+        defcal.setFriday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
+        
+        defcal.getExcludedDays().add(new Calendar.ExcludedDay().setDay(25).
+                    setMonth(12).setReason("Christmas Day"));
+
+        long duration=defcal.getWorkingDuration(1357065979362L, 1388515579362L);
+        System.out.println("DURATION="+duration);
+        
+    }
 }

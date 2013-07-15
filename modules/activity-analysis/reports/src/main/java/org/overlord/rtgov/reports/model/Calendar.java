@@ -407,7 +407,8 @@ public class Calendar {
                 }    
                 
                 // Move the 'from' date/time to the start of the next day
-                fromDateTime = createCalendar(fromDateTime.getTimeInMillis() + (24 * 60 * 60 * 1000));
+                fromDateTime.set(java.util.Calendar.DAY_OF_MONTH,
+                            fromDateTime.get(java.util.Calendar.DAY_OF_MONTH)+1);
                 fromDateTime.set(java.util.Calendar.HOUR_OF_DAY, 0);
                 fromDateTime.set(java.util.Calendar.MINUTE, 0);
                 

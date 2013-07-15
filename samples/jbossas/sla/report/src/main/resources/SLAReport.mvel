@@ -33,6 +33,7 @@ def calcResponseTime(request, pos, activities) {
 	for (int j=pos+1; response == null && j < activities.size(); j++) {
 	
 		if (activities.get(j) instanceof ResponseSent &&
+				activities.get(j).getReplyToId() != null &&
 				activities.get(j).getReplyToId().equals(request.getMessageId())) {
 			response = activities.get(j);
 		}
