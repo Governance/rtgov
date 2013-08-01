@@ -30,7 +30,7 @@ import org.kie.api.conf.EqualityBehaviorOption;
 import org.kie.api.conf.EventProcessingOption;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.rule.SessionEntryPoint;
+import org.kie.api.runtime.rule.EntryPoint;
 import org.overlord.rtgov.ep.EventProcessor;
 import org.overlord.rtgov.internal.ep.DefaultEPContext;
 
@@ -99,7 +99,7 @@ public class DroolsEventProcessor extends EventProcessor {
 
             // Get entry point
             // TODO: If not simple lookup, then may want to cache this
-            SessionEntryPoint entryPoint=_session.getEntryPoint(source);
+            EntryPoint entryPoint=_session.getEntryPoint(source);
 
             if (entryPoint != null) {
                 if (LOG.isLoggable(Level.FINEST)) {
