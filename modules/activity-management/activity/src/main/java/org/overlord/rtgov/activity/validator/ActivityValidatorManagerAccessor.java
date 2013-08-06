@@ -31,7 +31,7 @@ public final class ActivityValidatorManagerAccessor {
     
     private static ActivityValidatorManager _activityValidatorManager=null;
     
-    private static final String SYNC=new String("sync");
+    private static final Object SYNC=new Object();
     
     /**
      * The default constructor.

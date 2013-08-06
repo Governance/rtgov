@@ -31,7 +31,7 @@ public final class InformationProcessorManagerAccessor {
     
     private static InformationProcessorManager _informationProcessorManager=null;
     
-    private static final String SYNC=new String("sync");
+    private static final Object SYNC=new Object();
     
     /**
      * The default constructor.

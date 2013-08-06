@@ -31,7 +31,7 @@ public final class EPNManagerAccessor {
     
     private static EPNManager _epnManager=null;
     
-    private static final String SYNC=new String("sync");
+    private static final Object SYNC=new Object();
     
     /**
      * The default constructor.
