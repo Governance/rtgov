@@ -24,6 +24,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Inheritance;
@@ -83,7 +84,7 @@ public abstract class ActivityType implements java.io.Externalizable {
     
     private String _principal=null;
     
-    private java.util.List<Context> _contexts=new java.util.Vector<Context>();
+    private java.util.Set<Context> _contexts=new java.util.LinkedHashSet<Context>();
     private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
 
     /**
@@ -194,7 +195,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @param context The context
      */
-    public void setContext(java.util.List<Context> context) {
+    public void setContext(java.util.Set<Context> context) {
         _contexts = context;
     }
     
@@ -203,11 +204,11 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @return The context
      */
-    @ElementCollection()
+    @ElementCollection(fetch=FetchType.EAGER)
     @CollectionTable(name="RTGOV_ACTIVITY_CONTEXT",joinColumns={
             @JoinColumn(name="unitId",referencedColumnName="unitId"),
             @JoinColumn(name="unitIndex",referencedColumnName="unitIndex")})
-    public java.util.List<Context> getContext() {
+    public java.util.Set<Context> getContext() {
         return (_contexts);
     }
     
@@ -225,7 +226,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @return The properties
      */
-    @ElementCollection(targetClass=String.class)
+    @ElementCollection(targetClass=String.class,fetch=FetchType.EAGER)
     @MapKeyColumn(name="name")
     @Column(name="value")
     @CollectionTable(name="RTGOV_ACTIVITY_PROPERTIES",joinColumns={
@@ -249,8 +250,9 @@ public abstract class ActivityType implements java.io.Externalizable {
         int len=_contexts.size();
         
         out.writeInt(len);
-        for (int i=0; i < len; i++) {
-            out.writeObject(_contexts.get(i));
+        java.util.Iterator<Context> iter=_contexts.iterator();
+        while (iter.hasNext()) {
+            out.writeObject(iter.next());
         }    
         
         out.writeObject(_properties);    

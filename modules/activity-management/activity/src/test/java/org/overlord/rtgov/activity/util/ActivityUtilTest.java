@@ -17,6 +17,7 @@ package org.overlord.rtgov.activity.util;
 
 import static org.junit.Assert.*;
 
+import org.codehaus.jackson.JsonNode;
 import org.junit.Test;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -100,14 +101,13 @@ public class ActivityUtilTest {
             is.read(inb2);
             is.close();
             
-            ActivityUnit act2=ActivityUtil.deserializeActivityUnit(inb2);
+            JsonNode node1=ActivityUtil.MAPPER.readTree(b);            
+            JsonNode node2=ActivityUtil.MAPPER.readTree(inb2);
             
-            byte[] b2=ActivityUtil.serializeActivityUnit(act2);            
-            
-            String s1=new String(b);
-            String s2=new String(b2);
-            
-            if (!s1.equals(s2)) {
+            if (!node1.equals(node2)) {
+                String s1=new String(b);
+                String s2=new String(inb2);
+                
                 fail("JSON is different: created="+s1+" stored="+s2);
             }
 
@@ -138,14 +138,13 @@ public class ActivityUtilTest {
             is.read(inb2);
             is.close();
             
-            java.util.List<ActivityUnit> acts2=ActivityUtil.deserializeActivityUnitList(inb2);
+            JsonNode node1=ActivityUtil.MAPPER.readTree(b);            
+            JsonNode node2=ActivityUtil.MAPPER.readTree(inb2);
             
-            byte[] b2=ActivityUtil.serializeActivityUnitList(acts2);            
-            
-            String s1=new String(b);
-            String s2=new String(b2);
-            
-            if (!s1.equals(s2)) {
+            if (!node1.equals(node2)) {
+                String s1=new String(b);
+                String s2=new String(inb2);
+                
                 fail("JSON is different: created="+s1+" stored="+s2);
             }
 
@@ -176,24 +175,13 @@ public class ActivityUtilTest {
             ois.close();
             is.close();
             
-            // Compare property lists
-            if (act1.properties().size() != act2.properties().size()) {
-                fail("Number of properties differ");
-            }
-            
-            // Clear properties, as map results in non-deterministic order
-            for (ActivityType at : act1.getActivityTypes()) {
-                at.getProperties().clear();
-            }
-            
-            for (ActivityType at : act2.getActivityTypes()) {
-                at.getProperties().clear();
-            }
-            
             String s1=new String(ActivityUtil.serializeActivityUnit(act1));
             String s2=new String(ActivityUtil.serializeActivityUnit(act2));
 
-            if (!s1.equals(s2)) {
+            JsonNode node1=ActivityUtil.MAPPER.readTree(s1);            
+            JsonNode node2=ActivityUtil.MAPPER.readTree(s2);
+
+            if (!node1.equals(node2)) {
                 fail("Representations are different: s1="+s1+" s2="+s2);
             }
         } catch(Exception e) {

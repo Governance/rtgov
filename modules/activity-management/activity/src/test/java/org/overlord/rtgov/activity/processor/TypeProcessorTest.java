@@ -18,6 +18,7 @@ package org.overlord.rtgov.activity.processor;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.model.Context.Type;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.processor.TypeProcessor;
@@ -105,20 +106,16 @@ public class TypeProcessorTest {
             fail("Expecting 2 context: "+rr.getContext().size());
         }
         
-        if (rr.getContext().get(0).getType() != Type.Message) {
-            fail("First context type should be message: "+rr.getContext().get(0).getType());
+        Context c1=new Context(Type.Message, VALUE1);
+        
+        if (!rr.getContext().contains(c1)) {
+            fail("Message context not found");
         }
         
-        if (!rr.getContext().get(0).getValue().equals(VALUE1)) {
-            fail("First context value incorrect: "+rr.getContext().get(0).getValue());
-        }
+        Context c2=new Context(Type.Endpoint, VALUE2);
         
-        if (rr.getContext().get(1).getType() != Type.Endpoint) {
-            fail("Second context type should be endpoint: "+rr.getContext().get(1).getType());
-        }
-        
-        if (!rr.getContext().get(1).getValue().equals(VALUE2)) {
-            fail("Second context value incorrect: "+rr.getContext().get(1).getValue());
+        if (!rr.getContext().contains(c2)) {
+            fail("Endpoint context not found");
         }
     }
 
@@ -176,20 +173,16 @@ public class TypeProcessorTest {
             fail("Expecting 2 context: "+rr.getContext().size());
         }
         
-        if (rr.getContext().get(0).getType() != Type.Message) {
-            fail("First context type should be message: "+rr.getContext().get(0).getType());
+        Context c1=new Context(Type.Message, VALUE1);
+        
+        if (!rr.getContext().contains(c1)) {
+            fail("Message context not found");
         }
         
-        if (!rr.getContext().get(0).getValue().equals(VALUE1)) {
-            fail("First context value incorrect: "+rr.getContext().get(0).getValue());
-        }
+        Context c2=new Context(Type.Endpoint, VALUE2);
         
-        if (rr.getContext().get(1).getType() != Type.Endpoint) {
-            fail("Second context type should be endpoint: "+rr.getContext().get(1).getType());
-        }
-        
-        if (!rr.getContext().get(1).getValue().equals(VALUE2)) {
-            fail("Second context value incorrect: "+rr.getContext().get(1).getValue());
+        if (!rr.getContext().contains(c2)) {
+            fail("Endpoint context not found");
         }
     }
 
@@ -233,12 +226,14 @@ public class TypeProcessorTest {
             fail("Expecting 1 context: "+rr.getContext().size());
         }
         
-        if (rr.getContext().get(0).getType() != Type.Link) {
-            fail("First context type should be link: "+rr.getContext().get(0).getType());
+        Context c=rr.getContext().iterator().next();
+        
+        if (c.getType() != Type.Link) {
+            fail("First context type should be link: "+c.getType());
         }
         
-        if (rr.getContext().get(0).getTimeframe() != 100) {
-            fail("First context type should have timeframe 100: "+rr.getContext().get(0).getTimeframe());
+        if (c.getTimeframe() != 100) {
+            fail("First context type should have timeframe 100: "+c.getTimeframe());
         }
         
     }

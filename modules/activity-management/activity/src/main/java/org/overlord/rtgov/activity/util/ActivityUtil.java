@@ -31,7 +31,7 @@ import org.overlord.rtgov.activity.server.QuerySpec;
  */
 public final class ActivityUtil {
     
-    private static final ObjectMapper MAPPER=new ObjectMapper();
+    protected static final ObjectMapper MAPPER=new ObjectMapper();
 
     private static final TypeReference<java.util.List<ActivityUnit>> ACTIVITY_UNIT_LIST=
             new TypeReference<java.util.List<ActivityUnit>>() { };

@@ -209,7 +209,7 @@ public class AbstractActivityCollectorTest {
         
         RequestSent req=new RequestSent();
         
-        java.util.List<Context> cl1=new java.util.Vector<Context>();
+        java.util.Set<Context> cl1=new java.util.HashSet<Context>();
         cl1.add(c1);
         cl1.add(c2);
         
@@ -227,7 +227,7 @@ public class AbstractActivityCollectorTest {
         
         RequestReceived resp=new RequestReceived();
         
-        java.util.List<Context> cl2=new java.util.Vector<Context>();
+        java.util.Set<Context> cl2=new java.util.HashSet<Context>();
         cl2.add(c2);
         cl2.add(c3);
         

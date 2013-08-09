@@ -151,7 +151,7 @@ public class Context implements java.io.Externalizable {
      * {@inheritDoc}
      */
     public int hashCode() {
-        return (_value.hashCode());
+        return (_value == null ? 0 : _value.hashCode());
     }
     
     /**

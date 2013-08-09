@@ -364,8 +364,9 @@ public final class ServiceDefinitionUtil {
         // Store context details
         sd.getContext().addAll(rqr.getContext());
         
-        for (int i=0; i < rps.getContext().size(); i++) {
-            Context c=rps.getContext().get(i);
+        java.util.Iterator<Context> iter=rps.getContext().iterator();
+        while (iter.hasNext()) {
+            Context c=iter.next();
             
             if (!sd.getContext().contains(c)) {
                 sd.getContext().add(c);
