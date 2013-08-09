@@ -15,6 +15,7 @@
  */
 package org.overlord.rtgov.activity.store.jpa;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -179,6 +180,18 @@ public class JPAActivityStore implements ActivityStore {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Query="+query);
+        }
+        
+        if (query.getFormat() == null || !query.getFormat().equalsIgnoreCase("jpql")) {
+            throw new IllegalArgumentException(MessageFormat.format(
+                    java.util.PropertyResourceBundle.getBundle(
+                    "activity-store-jpa.Messages").getString("ACTIVITY-STORE-JPA-1"),
+                    (query.getFormat() == null ? "" : query.getFormat())));
+        }
+        
+        if (query.getExpression() == null || !query.getExpression().toLowerCase().startsWith("select ")) {
+            throw new IllegalArgumentException(java.util.PropertyResourceBundle.getBundle(
+                    "activity-store-jpa.Messages").getString("ACTIVITY-STORE-JPA-2"));
         }
 
         return (query(query.getExpression()));

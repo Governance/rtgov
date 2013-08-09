@@ -127,11 +127,27 @@ public class JBossASActivityServerServiceTest {
         }
     }
 
-    public static java.util.List<ActivityType> getActivityEvents() throws Exception {
+    @Test @OperateOnDeployment("orders-app")
+    public void testInvalidQuery() {
         
+        try {            
+            sendRequest("NotASelect");
+
+            fail("Server should not return a response");
+            
+        } catch (java.io.IOException ioe) {
+            // Ignore as expected to fail
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to invoke service: "+e);
+        }
+    }
+
+    public static byte[] sendRequest(String expression) throws Exception {
         Authenticator.setDefault(new DefaultAuthenticator());
         
-        QuerySpec query=new QuerySpec().setFormat("jpql").setExpression("SELECT at FROM ActivityType at");
+        QuerySpec query=new QuerySpec().setFormat("jpql").setExpression(expression);
         
         URL queryUrl = new URL("http://localhost:8080/overlord-rtgov/activity/query");
         
@@ -160,8 +176,14 @@ public class JBossASActivityServerServiceTest {
         
         System.out.println(">>>> JSON="+new String(b));
         
+        return (b);
+    }
+    
+    public static java.util.List<ActivityType> getActivityEvents() throws Exception {
+        byte[] b=sendRequest("SELECT at FROM ActivityType at");
+        
         return (ActivityUtil.deserializeActivityTypeList(b));
-     }
+    }
     
     static class DefaultAuthenticator extends Authenticator {
 

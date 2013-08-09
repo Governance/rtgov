@@ -128,10 +128,42 @@ public class JPAActivityStoreTest {
     }
     
     @Test
+    public void testQueryUnsupportedFormat() {
+        
+        try {
+            activityStore.query(new QuerySpec()
+                        .setFormat("mvel")
+                        .setExpression("true"));
+            
+            fail("Should have returned an exception");
+        } catch (IllegalArgumentException iae) {
+            System.out.println("EXPECTED EXCEPTION="+iae);
+        } catch (Exception e) {
+            fail("Unexpected exception: "+e);
+        }
+    }
+    
+    @Test
+    public void testQueryNotSelect() {
+        
+        try {
+            activityStore.query(new QuerySpec()
+                        .setFormat("jpql")
+                        .setExpression("update activities"));
+            
+            fail("Should have returned an exception");
+        } catch (IllegalArgumentException iae) {
+            System.out.println("EXPECTED EXCEPTION="+iae);
+        } catch (Exception e) {
+            fail("Unexpected exception: "+e);
+        }
+    }
+    
+    @Test
     public void testStoreAndQueryAllORM() {
         
         checkAllTablesEmpty();
-    	
+        
         java.util.List<ActivityType> results=
             testStoreAndQuery(OVERLORD_RTGOV_ACTIVITY_ORM,
                 new QuerySpec()

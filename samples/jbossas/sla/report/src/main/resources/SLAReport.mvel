@@ -84,6 +84,7 @@ calendar = context.getCalendar(properties.get("calendar"), properties.get("timez
 // Query activity store for events related to service, optional operation, date/time range and optional principal
 QuerySpec qs=new QuerySpec();
 qs.setExpression("SELECT at FROM ActivityType at WHERE at.timestamp >= "+start+" AND at.timestamp <= "+end+" ORDER BY at.timestamp");
+qs.setFormat("jpql");
 
 activities=activityStore.query(qs);
 

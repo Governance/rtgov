@@ -204,32 +204,36 @@ public class RESTActivityServer {
     @POST
     @Path("/query")
     @Produces("application/json")
-    public String query(String qspec) throws Exception {
+    public Response query(String qspec) throws Exception {
         String ret="";
         
-        QuerySpec qs=ActivityUtil.deserializeQuerySpec(qspec.getBytes());
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Activity Server Query Spec="+qs);        
-        }
-        
-        if (_activityServer == null) {
-            throw new Exception("Activity Server is not available");
-        }
-        
-        java.util.List<ActivityType> list=_activityServer.query(qs);
-        
-        if (list != null) {
-            byte[] b=ActivityUtil.serializeActivityTypeList(list);
+        try {
+            QuerySpec qs=ActivityUtil.deserializeQuerySpec(qspec.getBytes());
             
-            ret = new String(b);
-        }
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Activity Server Query Result="+ret);        
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Activity Server Query Spec="+qs);        
+            }
+            
+            if (_activityServer == null) {
+                throw new Exception("Activity Server is not available");
+            }
+            
+            java.util.List<ActivityType> list=_activityServer.query(qs);
+            
+            if (list != null) {
+                byte[] b=ActivityUtil.serializeActivityTypeList(list);
+                
+                ret = new String(b);
+            }
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Activity Server Query Result="+ret);        
+            }
+        } catch (Exception e) {
+            return (Response.serverError().entity(e.getMessage()).build());
         }
 
-        return (ret);
+        return (Response.ok(ret).build());
     }
 
     /**

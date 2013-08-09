@@ -185,7 +185,8 @@ public class SLAReportTest {
         try {
             QuerySpec qs=new QuerySpec().setExpression("SELECT at FROM ActivityType at WHERE at.timestamp >= "+
                     TEST1[0].getStartTime()+" AND at.timestamp <= "+
-                    (TEST1[TEST1.length-1].getStartTime()+TEST1[TEST1.length-1].getResponseTime()));
+                    (TEST1[TEST1.length-1].getStartTime()+TEST1[TEST1.length-1].getResponseTime())).
+                    setFormat("jpql");
             
             java.util.List<ActivityType> list=_activityStore.query(qs);
             
@@ -252,7 +253,8 @@ public class SLAReportTest {
         try {
             QuerySpec qs= new QuerySpec().setExpression("SELECT at FROM ActivityType at WHERE at.timestamp >= "+
                     TEST2[0].getStartTime()+" AND at.timestamp <= "+
-                    (TEST2[TEST2.length-1].getStartTime()+TEST2[TEST2.length-1].getResponseTime()));
+                    (TEST2[TEST2.length-1].getStartTime()+TEST2[TEST2.length-1].getResponseTime())).
+                    setFormat("jpql");
             
             java.util.List<ActivityType> list = _activityStore.query(qs);
             
@@ -320,7 +322,8 @@ public class SLAReportTest {
         try {
             QuerySpec qs= new QuerySpec().setExpression("SELECT at FROM ActivityType at WHERE at.timestamp >= "+
                     TEST3[0].getStartTime()+" AND at.timestamp <= "+
-                    (TEST3[TEST3.length-1].getStartTime()+500));
+                    (TEST3[TEST3.length-1].getStartTime()+500)).
+                    setFormat("jpql");
             
             java.util.List<ActivityType> list = _activityStore.query(qs);
             
@@ -391,7 +394,8 @@ public class SLAReportTest {
         try {
             QuerySpec qs= new QuerySpec().setExpression("SELECT at FROM ActivityType at WHERE at.timestamp >= "+
                     TEST4[0].getStartTime()+" AND at.timestamp <= "+
-                    (TEST4[TEST4.length-1].getStartTime()+500));
+                    (TEST4[TEST4.length-1].getStartTime()+500)).
+                    setFormat("jpql");
             
             java.util.List<ActivityType> list = _activityStore.query(qs);
             
