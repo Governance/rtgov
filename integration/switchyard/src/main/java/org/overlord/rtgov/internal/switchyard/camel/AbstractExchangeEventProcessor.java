@@ -105,6 +105,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         Property ctp=context.getProperty("org.switchyard.contentType", org.switchyard.Scope.MESSAGE);
         if (ctp != null) {
             contentType = ((QName)ctp.getValue()).toString();
+            
+            // RTGOV-250 - remove java: prefix from Java types, to make the type consistent with
+            // events reported outside switchyard
+            if (contentType != null && contentType.startsWith("java:")) {
+                contentType = contentType.substring(5);
+            }
         }
         
         if (phase == ExchangePhase.IN) {

@@ -46,7 +46,7 @@
 				}
 			}]
 		},
-		"java:org.switchyard.quickstarts.demos.orders.Order":{
+		"org.overlord.rtgov.quickstarts.demos.orders.Order":{
 			"contexts":[{
 				"type":"Conversation",
 				"evaluator":{
@@ -68,7 +68,7 @@
 				}
 			}]
 		},
-		"java:org.switchyard.quickstarts.demos.orders.OrderAck":{
+		"org.overlord.rtgov.quickstarts.demos.orders.OrderAck":{
 			"contexts":[{
 				"type":"Conversation",
 				"evaluator":{
@@ -120,7 +120,7 @@
 				}
 			}]
 		},
-		"java:org.switchyard.quickstarts.demos.orders.Receipt":{
+		"org.overlord.rtgov.quickstarts.demos.orders.Receipt":{
 			"properties":[{
 				"name":"customer",
 				"evaluator":{
@@ -135,7 +135,7 @@
 				}
 			}]
 		},
-		"java:org.switchyard.quickstarts.demos.orders.ItemNotFoundException":{
+		"org.overlord.rtgov.quickstarts.demos.orders.ItemNotFoundException":{
 			"script":{
 				"type":"mvel",
 				"expression":"activity.fault = \"ItemNotFound\""
