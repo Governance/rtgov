@@ -19,6 +19,8 @@ import java.util.EventObject;
 
 import org.drools.core.event.ProcessCompletedEventImpl;
 import org.kie.api.event.process.ProcessCompletedEvent;
+import org.kie.api.runtime.process.ProcessInstance;
+import org.overlord.rtgov.activity.model.bpm.ProcessCompleted.Status;
 import org.overlord.rtgov.internal.switchyard.AbstractEventProcessor;
 
 /**
@@ -46,6 +48,9 @@ public class ProcessCompletedEventProcessor extends AbstractEventProcessor {
         
         pc.setProcessType(bpmEvent.getProcessInstance().getProcessName());
         pc.setInstanceId(Long.toString(bpmEvent.getProcessInstance().getId()));
+        
+        pc.setStatus(bpmEvent.getProcessInstance().getState() == ProcessInstance.STATE_ABORTED
+                            ? Status.Fail : Status.Success);
         
         recordActivity(event, pc);
     }

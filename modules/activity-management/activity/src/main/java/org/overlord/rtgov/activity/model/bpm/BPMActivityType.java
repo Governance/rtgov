@@ -135,6 +135,15 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
     /**
      * {@inheritDoc}
      */
+    public String toString() {
+        return (getClass().getSimpleName()+":"
+                +" processType="+_processType
+                +" instanceId="+_instanceId);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void writeExternal(ObjectOutput out) throws IOException {
         super.writeExternal(out);
         

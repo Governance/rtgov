@@ -18,6 +18,7 @@ package org.overlord.rtgov.internal.switchyard.bpel;
 import java.util.EventObject;
 
 import org.apache.ode.bpel.evt.ProcessCompletionEvent;
+import org.overlord.rtgov.activity.model.bpm.ProcessCompleted.Status;
 import org.overlord.rtgov.internal.switchyard.AbstractEventProcessor;
 
 /**
@@ -45,6 +46,8 @@ public class ProcessCompletionEventProcessor extends AbstractEventProcessor {
         
         pc.setProcessType(bpelEvent.getProcessName().toString());
         pc.setInstanceId(bpelEvent.getProcessInstanceId().toString());
+        
+        pc.setStatus(bpelEvent.getFault() == null ? Status.Success : Status.Fail);
         
         recordActivity(event, pc);
     }

@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 
 import org.codehaus.jackson.JsonNode;
 import org.junit.Test;
-import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.model.Origin;

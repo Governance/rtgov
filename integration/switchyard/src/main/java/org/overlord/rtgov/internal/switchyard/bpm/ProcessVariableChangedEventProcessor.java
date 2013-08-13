@@ -50,6 +50,8 @@ public class ProcessVariableChangedEventProcessor extends AbstractEventProcessor
         
         if (bpmEvent.getNewValue() != null) {
             type = bpmEvent.getNewValue().getClass().getName();
+            
+            pvs.setVariableType(type);
         }
         
         pvs.setVariableValue(getActivityCollector().processInformation(null, type,
