@@ -146,9 +146,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         Registrant consumerReg=consumer.getServiceMetadata().getRegistrant();
         
         if (_completedEvent) {
-            if (consumerReg.isBinding()) {
-                getActivityCollector().endScope();
-            }
+            // The return side of a one way exchange, so record a response sent/received
+            handleOutExchange(exch, provider, consumer, messageId+"onewayreturn", messageId, null, null);
             
             // Nothing to do, as appears to be a one-way exchange
             return;
@@ -333,10 +332,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         if (at != null) {
             at.setMessageType(contentType);
             
-            Object content=msg.getContent();
-            
-            at.setContent(getActivityCollector().processInformation(null,
-                          contentType, content, null, at));
+            if (msg != null) {
+                Object content=msg.getContent();
+                
+                at.setContent(getActivityCollector().processInformation(null,
+                              contentType, content, null, at));
+            }
             
             // Check if principal has been defined
             if (sc != null && sc.getCredentials().size() > 0) {
