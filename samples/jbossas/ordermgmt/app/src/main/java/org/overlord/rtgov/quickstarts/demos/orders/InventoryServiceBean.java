@@ -48,6 +48,11 @@ public class InventoryServiceBean implements InventoryService {
 
     @Override
     public Item lookupItem(String itemId) throws ItemNotFoundException {
+        
+        if (itemId.equals("ERROR")) {
+            throw new RuntimeException("Failed with an error");
+        }
+        
         Item item = _inventory.get(itemId);
         if (item == null) {
             if (_reporter != null) {

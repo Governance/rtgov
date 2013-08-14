@@ -116,16 +116,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         if (phase == ExchangePhase.IN) {
             handleInExchange(exch, provider, consumer, messageId, contentType, mesg);
             
-        } else if (phase == ExchangePhase.OUT) {
-            
-            if (contentType == null) {
-                // Ignore as probably due to exception on handling the request
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("No content type - possibly due to exception on handling the request");
-                }
-                return;
-            }
-            
+        } else if (phase == ExchangePhase.OUT) {            
             String relatesTo=null;
             Property rtp=context.getProperty("org.switchyard.relatesTo", org.switchyard.Scope.MESSAGE);
             if (rtp != null) {
@@ -341,8 +332,14 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             if (msg != null) {
                 Object content=msg.getContent();
                 
-                at.setContent(getActivityCollector().processInformation(null,
+                if (contentType != null) {
+                    at.setContent(getActivityCollector().processInformation(null,
                               contentType, content, null, at));
+                    
+                } else if (content != null) {
+                    // Assume this is an exception response
+                    at.setContent(content.toString());
+                }
             }
             
             // Check if principal has been defined

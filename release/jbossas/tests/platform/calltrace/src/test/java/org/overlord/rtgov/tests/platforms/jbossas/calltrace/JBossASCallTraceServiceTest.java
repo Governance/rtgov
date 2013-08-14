@@ -149,6 +149,83 @@ public class JBossASCallTraceServiceTest {
         }
     }
 
+    @Test @OperateOnDeployment("orders-app")
+    public void testCallTraceWithException() {
+        
+        try {
+            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
+            SOAPConnection con=factory.createConnection();
+            
+            java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
+            
+            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
+                        "   <soap:Body>"+
+                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
+                        "            <order>"+
+                        "                <orderId>2</orderId>"+
+                        "                <itemId>ERROR</itemId>"+
+                        "                <quantity>100</quantity>"+
+                        "                <customer>Fred</customer>"+
+                        "            </order>"+
+                        "        </orders:submitOrder>"+
+                        "    </soap:Body>"+
+                        "</soap:Envelope>";
+            
+            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
+            
+            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
+            
+            is.close();
+            
+            SOAPMessage response=con.call(request, url);
+
+            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+            
+            response.writeTo(baos);
+            
+            baos.close();
+            
+            // Wait for events to propagate
+            Thread.sleep(4000);
+            
+            String ct = getCallTrace("2");
+            
+            if (ct == null) {
+                fail("Call trace is null");
+            }
+            
+            CallTrace trace=CallTraceUtil.deserializeCallTrace(ct.getBytes());
+            
+            if (trace == null) {
+                fail("Failed to deserialize call trace");
+            }
+            
+            if (trace.getTasks().size() != 1) {
+                fail("Should only be one top level task: "+trace.getTasks().size());
+            }
+            
+            if (!(trace.getTasks().get(0) instanceof Call)) {
+                fail("Top level task should be a Call: "+trace.getTasks().get(0));
+            }
+            
+            Call call=(Call)trace.getTasks().get(0);
+            
+            if (call.getTasks().size() != 1) {
+                fail("Should be 1 child tasks: "+call.getTasks().size());
+            }
+            
+            // Verify that the top level call had one inner call
+
+            if (!(call.getTasks().get(0) instanceof Call)) {
+                fail("Child task 0 should be a Call: "+call.getTasks().get(0));
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to invoke service: "+e);
+        }
+    }
+
     public static String getCallTrace(String id) throws Exception {
         
         Authenticator.setDefault(new DefaultAuthenticator());
@@ -172,6 +249,8 @@ public class JBossASCallTraceServiceTest {
         String result=new String(b);
         
         is.close();
+        
+        System.out.println("JSON RESULT="+result);
         
         return (result);
     }
