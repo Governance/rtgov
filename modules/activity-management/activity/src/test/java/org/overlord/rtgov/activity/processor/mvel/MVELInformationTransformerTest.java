@@ -43,7 +43,57 @@ public class MVELInformationTransformerTest {
         }
         
         if (!value.equals(info.value)) {
-        	fail("Value mismatch: "+value+" not equal "+info.value);
+            fail("Value mismatch: "+value+" not equal "+info.value);
+        }
+    }
+
+    @Test
+    public void testTransformNonString1() {
+        MVELInformationTransformer transformer=new MVELInformationTransformer();
+        
+        transformer.setExpression("information.bool");
+        
+        try {
+            transformer.init();
+        } catch (Exception e) {
+            fail("Evaluator should have initialized: "+e);
+        }
+        
+        TestInfo info=new TestInfo();
+        
+        String value=transformer.transform(info);
+        
+        if (value == null) {
+            fail("Null value returned");
+        }
+        
+        if (!value.equals("true")) {
+            fail("Value mismatch: "+value+" not equal true");
+        }
+    }
+    
+    @Test
+    public void testTransformNonString2() {
+        MVELInformationTransformer transformer=new MVELInformationTransformer();
+        
+        transformer.setExpression("information");
+        
+        try {
+            transformer.init();
+        } catch (Exception e) {
+            fail("Evaluator should have initialized: "+e);
+        }
+        
+        TestInfo info=new TestInfo();
+        
+        String value=transformer.transform(info);
+        
+        if (value == null) {
+            fail("Null value returned");
+        }
+        
+        if (!value.equals(info.toString())) {
+            fail("Value mismatch: "+value+" not equal "+info.toString());
         }
     }
 
@@ -62,5 +112,10 @@ public class MVELInformationTransformerTest {
 
     public class TestInfo {
     	public String value="Hello";
+    	public boolean bool=true;
+    	
+    	public String toString() {
+    	    return ("TestInfo");
+    	}
     }
 }
