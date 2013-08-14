@@ -27,7 +27,7 @@ import org.overlord.rtgov.internal.switchyard.AbstractEventProcessor;
  *
  */
 public class ProcessStartedEventProcessor extends AbstractEventProcessor {
-
+    
     /**
      * This is the default constructor.
      */
@@ -46,6 +46,7 @@ public class ProcessStartedEventProcessor extends AbstractEventProcessor {
         
         ps.setProcessType(bpmEvent.getProcessInstance().getProcessName());
         ps.setInstanceId(Long.toString(bpmEvent.getProcessInstance().getId()));
+        ps.setVersion(bpmEvent.getProcessInstance().getProcess().getVersion());
         
         recordActivity(event, ps);
     }
