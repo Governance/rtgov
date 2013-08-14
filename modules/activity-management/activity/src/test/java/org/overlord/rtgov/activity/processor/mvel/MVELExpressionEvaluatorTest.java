@@ -52,6 +52,57 @@ public class MVELExpressionEvaluatorTest {
     }
 
     @Test
+    public void testEvaluateBoolean() {
+        MVELExpressionEvaluator evaluator=new MVELExpressionEvaluator();
+        
+        RequestReceived rr=new RequestReceived();
+        rr.setMessageId(TEST_MESSAGE_ID);
+        
+        evaluator.setExpression("request");
+        
+        try {
+            evaluator.init();
+        } catch (Exception e) {
+            fail("Evaluator should have initialized: "+e);
+        }
+        
+        String result=evaluator.evaluate(rr);
+        
+        if (result == null) {
+            fail("Result is null");
+        }
+        
+        if (!result.equals("true")) {
+            fail("Unexpected result: "+result);
+        }
+    }
+
+    @Test
+    public void testEvaluateTestValue() {
+        MVELExpressionEvaluator evaluator=new MVELExpressionEvaluator();
+        
+        TestHolder th=new TestHolder();
+        
+        evaluator.setExpression("value");
+        
+        try {
+            evaluator.init();
+        } catch (Exception e) {
+            fail("Evaluator should have initialized: "+e);
+        }
+        
+        String result=evaluator.evaluate(th);
+        
+        if (result == null) {
+            fail("Result is null");
+        }
+        
+        if (!result.equals("TheValue")) {
+            fail("Unexpected result: "+result);
+        }
+    }
+
+    @Test
     public void testEvaluateBadExpression() {
         MVELExpressionEvaluator evaluator=new MVELExpressionEvaluator();
         
@@ -64,4 +115,17 @@ public class MVELExpressionEvaluatorTest {
         }
     }
 
+    public static class TestValue {
+        
+        public String toString() {
+            return ("TheValue");
+        }
+    }
+    
+    public static class TestHolder {
+        
+        public TestValue getValue() {
+            return (new TestValue());
+        }
+    }
 }
