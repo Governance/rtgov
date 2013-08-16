@@ -74,6 +74,14 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             LOG.finest("********* Exchange="+exch);
         }
         
+        // If not a switchyard camel exchange, then ignore
+        if (!(exch.getIn() instanceof org.switchyard.bus.camel.CamelMessage)) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("********* Exchange not for a switchyard message ="+exch.getIn());
+            }
+            return;
+        }
+        
         org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
         ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
 
