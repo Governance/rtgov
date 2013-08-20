@@ -233,6 +233,7 @@ public class JPAActivityStoreTest {
         
         try {
             Context query=new Context();
+            query.setType(Type.Conversation);
             query.setValue(CONV_ID_1);
             
             em.getTransaction().begin();
@@ -297,6 +298,7 @@ public class JPAActivityStoreTest {
         
         try {
             Context context=new Context();
+            context.setType(Type.Conversation);
             context.setValue("3");
             
             em.getTransaction().begin();

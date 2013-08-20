@@ -23,6 +23,7 @@ import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -136,7 +137,7 @@ public class RESTCallTraceServer {
     @GET
     @Path("/instance")
     @Produces("image/svg+xml")
-    public String instance(@QueryParam("type") String type,
+    public String instance(@DefaultValue("Conversation") @QueryParam("type") String type,
                     @QueryParam("value") String value) throws Exception {
         String ret="";
         

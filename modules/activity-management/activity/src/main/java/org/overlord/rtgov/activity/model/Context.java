@@ -35,7 +35,7 @@ public class Context implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
-    private Type _type=Type.Conversation;
+    private Type _type=null;
     private String _value=null;
     private long _timeframe=0;
 
