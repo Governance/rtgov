@@ -121,6 +121,18 @@ public class JBossASActivityServerServiceTest {
                 fail("Expecting 12 activity events: "+acts.size());
             }
             
+            // RTGOV-256 Check that first activity type has header value extracted as a property
+            ActivityType at=acts.get(0);
+            
+            if (!at.getProperties().containsKey("contentType")) {
+                fail("Property 'contentType' not found");
+            }
+            
+            if (!at.getProperties().get("contentType").equals("{urn:switchyard-quickstart-demo:orders:1.0}submitOrder")) {
+                fail("Incorrect content type, expecting '{urn:switchyard-quickstart-demo:orders:1.0}submitOrder' but got: "
+                                +at.getProperties().get("contentType"));
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failed to invoke service: "+e);

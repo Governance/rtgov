@@ -28,6 +28,7 @@ import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
+import org.overlord.rtgov.internal.switchyard.camel.PropertyAccessor;
 import org.switchyard.ExchangePhase;
 import org.switchyard.Message;
 import org.switchyard.Property;
@@ -248,7 +249,7 @@ public class AbstractExchangeValidator {
             Object content=msg.getContent();
             
             at.setContent(_activityCollector.processInformation(null,
-                          contentType, content, null, at));
+                          contentType, content, new PropertyAccessor(msg.getContext()), at));
             
             // Check if principal has been defined
             if (sc != null) {

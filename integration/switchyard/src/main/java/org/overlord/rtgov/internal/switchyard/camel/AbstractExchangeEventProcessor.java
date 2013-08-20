@@ -342,7 +342,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 
                 if (contentType != null) {
                     at.setContent(getActivityCollector().processInformation(null,
-                              contentType, content, null, at));
+                              contentType, content, new PropertyAccessor(msg.getContext()), at));
                     
                 } else if (content != null) {
                     // Assume this is an exception response

@@ -22,6 +22,13 @@
 					"type":"xpath",
 					"expression":"order/itemId"
 				}
+			},{
+				"name":"contentType",
+				"header":"org.switchyard.contentType",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"toString()"
+				}
 			}]
 		},
 		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse":{

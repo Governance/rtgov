@@ -222,8 +222,8 @@ public class JBossASSLAMonitorTest {
             
         	System.err.println("PROPS="+properties);
 
-        	if (properties.size() != 5) {
-                fail("Expecting 5 entries in property list: "+properties.size());
+        	if (properties.size() != 6) {
+                fail("Expecting 6 entries in property list: "+properties.size());
             }
             
             if (!properties.containsKey("customer")) {
