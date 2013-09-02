@@ -45,8 +45,6 @@ public class DroolsEventProcessor extends EventProcessor {
 
     private DefaultEPContext _context=null; //new DefaultEPNContext();
 
-    private static final java.util.Map<String,KieSession> SESSIONS=
-                new java.util.HashMap<String,KieSession>();
     private KieSession _session=null;
     private String _ruleName=null;
 
@@ -140,31 +138,23 @@ public class DroolsEventProcessor extends EventProcessor {
     private KieSession createSession() throws Exception {
         KieSession ret=null;
         
-        synchronized (SESSIONS) {
-            ret = SESSIONS.get(getRuleName());
-            
-            if (ret == null) {              
-                KieBase kbase = loadRuleBase();
-                
-                if (kbase != null) {
-                    ret = kbase.newKieSession();
+        KieBase kbase = loadRuleBase();
+        
+        if (kbase != null) {
+            ret = kbase.newKieSession();
 
-                    if (ret != null) {
-                        ret.setGlobal("epc", _context);
-                        ret.fireAllRules();
-                        
-                        SESSIONS.put(getRuleName(), ret);
-                    } else {
-                        String mesg=MessageFormat.format(
-                                java.util.PropertyResourceBundle.getBundle(
-                                "ep-drools.Messages").getString("EP-DROOLS-2"),
-                                getRuleName());
-                        
-                        LOG.severe(mesg);
-                        
-                        throw new Exception(mesg);
-                    }
-                }
+            if (ret != null) {
+                ret.setGlobal("epc", _context);
+                ret.fireAllRules();
+            } else {
+                String mesg=MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "ep-drools.Messages").getString("EP-DROOLS-2"),
+                        getRuleName());
+                
+                LOG.severe(mesg);
+                
+                throw new Exception(mesg);
             }
         }
 
