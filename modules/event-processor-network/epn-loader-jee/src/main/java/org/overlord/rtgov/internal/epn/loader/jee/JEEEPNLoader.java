@@ -95,8 +95,13 @@ public class JEEEPNLoader extends AbstractEPNLoader {
                 _epnManager.register(_network);
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-2"), e);
+            String mesg=java.util.PropertyResourceBundle.getBundle(
+                    "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-2");
+            
+            LOG.log(Level.SEVERE, mesg, e);
+            
+            // Throw runtime exception to cause the deployment to fail
+            throw new RuntimeException(mesg, e);
         }
     }
     

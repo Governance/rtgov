@@ -135,8 +135,9 @@ public class DroolsEventProcessor extends EventProcessor {
      * Drools event processor.
      * 
      * @return The stateful knowledge session
+     * @throws Exception Failed to create session
      */
-    private KieSession createSession() {
+    private KieSession createSession() throws Exception {
         KieSession ret=null;
         
         synchronized (SESSIONS) {
@@ -154,7 +155,14 @@ public class DroolsEventProcessor extends EventProcessor {
                         
                         SESSIONS.put(getRuleName(), ret);
                     } else {
-                        System.out.println("The kieSession is null!!!");
+                        String mesg=MessageFormat.format(
+                                java.util.PropertyResourceBundle.getBundle(
+                                "ep-drools.Messages").getString("EP-DROOLS-2"),
+                                getRuleName());
+                        
+                        LOG.severe(mesg);
+                        
+                        throw new Exception(mesg);
                     }
                 }
             }
@@ -168,8 +176,9 @@ public class DroolsEventProcessor extends EventProcessor {
      * event processor.
      * 
      * @return The knowledge base
+     * @throws Exception Failed to load rule base
      */
-    private KieBase loadRuleBase() {
+    private KieBase loadRuleBase() throws Exception {
         String droolsRuleBase=getRuleName()+".drl";
 
         try {
@@ -196,13 +205,15 @@ public class DroolsEventProcessor extends EventProcessor {
             return kbase;
 
         } catch (Throwable e) {
-            LOG.log(Level.SEVERE, MessageFormat.format(
-                            java.util.PropertyResourceBundle.getBundle(
-                            "ep-drools.Messages").getString("EP-DROOLS-1"),
-                            droolsRuleBase, getRuleName()), e);
+            String mesg=MessageFormat.format(
+                    java.util.PropertyResourceBundle.getBundle(
+                    "ep-drools.Messages").getString("EP-DROOLS-1"),
+                    droolsRuleBase, getRuleName());
+            
+            LOG.log(Level.SEVERE, mesg, e);
+            
+            throw new Exception(mesg, e);
         }
-
-        return (null);
     }
 
 }
