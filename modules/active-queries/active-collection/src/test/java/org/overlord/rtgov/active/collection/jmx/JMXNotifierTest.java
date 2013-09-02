@@ -17,6 +17,9 @@ package org.overlord.rtgov.active.collection.jmx;
 
 import static org.junit.Assert.*;
 
+import javax.management.Notification;
+import javax.management.NotificationListener;
+
 import org.junit.Test;
 import org.overlord.rtgov.active.collection.TestObject;
 import org.overlord.rtgov.active.collection.jmx.JMXNotifier;
@@ -194,4 +197,72 @@ public class JMXNotifierTest {
         }
     }
 
+    @Test
+    public void testNotificationListener() {
+        JMXNotifier notifier=new JMXNotifier();
+        
+        NotificationListener l=new NotificationListener() {
+            public void handleNotification(Notification notification,
+                    Object handback) {
+            }           
+        };
+        
+        // Register
+        notifier.addNotificationListener(l, null, "Hello");
+        
+        // Unregister
+        try {
+            notifier.removeNotificationListener(l);
+            
+        } catch (Exception e) {
+            fail("Failed to unregister listener");
+        }
+    }
+
+    @Test
+    public void testNotificationListenerNotFound() {
+        JMXNotifier notifier=new JMXNotifier();
+        
+        NotificationListener l=new NotificationListener() {
+            public void handleNotification(Notification notification,
+                    Object handback) {
+            }           
+        };
+        
+        // Unregister
+        try {
+            notifier.removeNotificationListener(l);
+            
+            fail("Should have failed to remove listener");                
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    public void testNotificationListenerUnregisterMultiple() {
+        JMXNotifier notifier=new JMXNotifier();
+        
+        NotificationListener l=new NotificationListener() {
+            public void handleNotification(Notification notification,
+                    Object handback) {
+            }           
+        };
+        
+        // Register
+        notifier.addNotificationListener(l, null, "Hello");
+        notifier.addNotificationListener(l, null, "Goodbye");
+
+        // Unregister
+        try {
+            notifier.removeNotificationListener(l);
+        } catch (Exception e) {            
+            fail("Should NOT have failed to remove listeners");                
+        }
+        
+        try {
+            notifier.removeNotificationListener(l);
+            fail("Should have failed, as first call to remove listener should have removed both");                
+        } catch (Exception e) {            
+        }
+    }
 }

@@ -444,12 +444,19 @@ public class JMXNotifier extends AbstractActiveChangeListener
      */
     public void removeNotificationListener(NotificationListener l)
             throws ListenerNotFoundException {
-        for (int i=_notificationDetails.size(); i >= 0; i--) {
+        boolean f_found=false;
+        
+        for (int i=_notificationDetails.size()-1; i >= 0; i--) {
             NotificationDetails n=_notificationDetails.get(i);
 
             if (n.getListener() == l) {
                 _notificationDetails.remove(i);
+                f_found = true;
             }
+        }
+        
+        if (!f_found) {
+            throw new ListenerNotFoundException();
         }
     }
 
@@ -459,13 +466,22 @@ public class JMXNotifier extends AbstractActiveChangeListener
     public void removeNotificationListener(NotificationListener l,
             NotificationFilter filter, Object handback)
             throws ListenerNotFoundException {
-        for (int i=_notificationDetails.size(); i >= 0; i--) {
+        boolean f_found=false;
+        
+        for (int i=_notificationDetails.size()-1; i >= 0; i--) {
             NotificationDetails n=_notificationDetails.get(i);
 
             if (n.getListener() == l && n.getFilter() == filter
                     && n.getHandback() == handback) {
                 _notificationDetails.remove(i);
-            }
+                f_found = true;
+                
+                break;
+           }
+        }
+        
+        if (!f_found) {
+            throw new ListenerNotFoundException();
         }
     }
 
