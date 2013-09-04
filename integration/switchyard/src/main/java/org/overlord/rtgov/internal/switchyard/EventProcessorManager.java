@@ -23,14 +23,11 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-//import javax.annotation.Resource;
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -55,8 +52,19 @@ public class EventProcessorManager {
     @Inject @Dependent
     private ActivityCollector _activityCollector=null;
 
-    @Inject @Any @Dependent
-    private Instance<EventProcessor> _eventProcessors=null;
+    private java.util.List<EventProcessor> _eventProcessors=new java.util.ArrayList<EventProcessor>();
+    
+    private static final String[] EVENT_PROCESSOR_CLASS_NAMES={
+        "org.overlord.rtgov.internal.switchyard.bpel.NewProcessInstanceEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.bpel.ProcessCompletionEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.bpel.ProcessTerminationEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.bpel.VariableModificationEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.bpm.ProcessCompletedEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.bpm.ProcessStartedEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.bpm.ProcessVariableChangedEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.camel.ExchangeCompletedEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.camel.ExchangeCreatedEventProcessor"
+    };
     
     /**
      * Initialize the event processors.
@@ -72,10 +80,18 @@ public class EventProcessorManager {
         ObjectName objname=null;
         
         try {
-            objname = new ObjectName(SWITCHAYRD_MANAGEMENT_LOCAL);
+            // Check if switchyard present - if not then will fail and not try to load beans
+            String observerClassName=org.switchyard.event.EventObserver.class.getName();
             
-            for (EventProcessor ep : _eventProcessors) {
+            objname = new ObjectName(SWITCHAYRD_MANAGEMENT_LOCAL);
+                       
+            for (String clsName : EVENT_PROCESSOR_CLASS_NAMES) {    
+                Class<?> cls=EventProcessorManager.class.getClassLoader().loadClass(clsName);
                 
+                EventProcessor ep=(EventProcessor)cls.newInstance();
+                
+                _eventProcessors.add(ep);
+                                
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("SwitchYard EventProcessorManager register event processor="+ep);
                 }
@@ -88,15 +104,15 @@ public class EventProcessorManager {
                 
                 Object[] params={ep, eventTypes};
                 
-                String[] types={org.switchyard.event.EventObserver.class.getName(),
+                String[] types={observerClassName,
                         java.util.List.class.getName()};
                 
                 mbs.invoke(objname, "addObserver", params, types);
             }
-            
-        } catch (Exception e) {
+
+        } catch (Throwable e) {
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "Failed to register SwitchYard event observer via MBean", e);
+                LOG.log(Level.FINE, "Failed to register SwitchYard event processor", e);
             }
         }
 
