@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="urn:switchyard-quickstart-demo:orders:1.0"
+        xmlns:tns="urn:switchyard-quickstart-demo:orders:1.0">
+        
+        <element name="submitOrder" type="tns:submitOrderType"/>
+        <element name="submitOrderResponse" type="tns:submitOrderResponseType"/>
+        <element name="order" type="tns:orderType"/>
+        <element name="orderAck" type="tns:orderAckType"/>
+        <complexType name="submitOrderType">
+            <sequence>
+                <element name="order" type="tns:orderType"/>
+            </sequence>
+        </complexType>
+        <complexType name="submitOrderResponseType">
+            <sequence>
+                <element name="orderAck" type="tns:orderAckType"/>
+            </sequence>
+        </complexType>
+        <complexType name="orderType">
+            <sequence>
+                <element name="orderId" type="string"/>
+                <element name="itemId" type="string"/>
+                <element name="quantity" type="int"/>
+                <element name="customer" type="string"/>
+            </sequence>
+        </complexType>
+        <complexType name="orderAckType">
+            <sequence>
+                <element name="orderId" type="string"/>
+                <element name="accepted" type="boolean"/>
+                <element name="status" type="string"/>
+                <element name="customer" type="string"/>
+                <element name="total" type="double"/>
+            </sequence>
+        </complexType>
+
+        <element name="makePayment" type="tns:makePaymentType"/>
+        <element name="makePaymentResponse" type="tns:makePaymentResponseType"/>
+        <element name="payment" type="tns:paymentType"/>
+        <element name="receipt" type="tns:receiptType"/>
+        <complexType name="makePaymentType">
+            <sequence>
+                <element name="payment" type="tns:paymentType"/>
+            </sequence>
+        </complexType>
+        <complexType name="makePaymentResponseType">
+            <sequence>
+                <element name="receipt" type="tns:receiptType"/>
+            </sequence>
+        </complexType>
+        <complexType name="paymentType">
+            <sequence>
+                <element name="customer" type="string"/>
+                <element name="amount" type="double"/>
+            </sequence>
+        </complexType>
+        <complexType name="receiptType">
+            <sequence>
+                <element name="customer" type="string"/>
+                <element name="amount" type="double"/>
+            </sequence>
+        </complexType>
+</schema>

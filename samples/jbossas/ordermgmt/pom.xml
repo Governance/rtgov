@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>app</module>
+		<module>epn</module>
 		<module>ip</module>
 	</modules>
 

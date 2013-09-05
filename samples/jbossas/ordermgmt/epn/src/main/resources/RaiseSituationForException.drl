@@ -1,0 +1,28 @@
+import org.overlord.rtgov.activity.model.soa.ResponseSent
+import org.overlord.rtgov.analytics.situation.Situation
+
+global org.overlord.rtgov.ep.EPContext epc
+
+declare ResponseTime
+    @role( event )
+end
+
+rule "Create situation to represent exception"
+when
+    $rs : ResponseSent() from entry-point "SOAEvents" 
+then
+
+	Situation situation=new Situation();
+	
+	situation.setType("Exception");
+	situation.setSubject(Situation.createSubject($rs.getServiceType(), $rs.getOperation(),
+					$rs.getFault()));
+	situation.setDescription($rs.getContent());
+	situation.setSeverity(Situation.Severity.Low);
+	situation.setTimestamp(System.currentTimeMillis());	
+	situation.getProperties().putAll($rs.getProperties());
+	situation.getContext().addAll($rs.getContext());
+		
+	epc.handle(situation);	
+
+end

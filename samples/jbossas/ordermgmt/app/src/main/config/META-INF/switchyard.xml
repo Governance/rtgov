@@ -10,4 +10,11 @@
             </binding.soap>
         </service>
     </composite>
+    <validates>
+        <validate.xml xmlns="urn:switchyard-config:validate:1.0" name="{urn:switchyard-quickstart-demo:orders:1.0}submitOrder" schemaType="XML_SCHEMA" namespaceAware="true">
+            <schemaFiles>
+                <entry file="/xsd/orders.xsd"/>
+            </schemaFiles>
+        </validate.xml>
+    </validates>
 </switchyard>
