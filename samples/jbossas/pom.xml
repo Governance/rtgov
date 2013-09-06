@@ -33,7 +33,7 @@
 	</licenses>
 
 	<properties>
-		<commons-codec.version>1.5</commons-codec.version>
+		<commons-codec.version>1.4</commons-codec.version>
 		<javaee-api.version>6.0</javaee-api.version>
 		<javassist.version>3.9.0.GA</javassist.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>

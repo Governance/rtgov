@@ -60,7 +60,7 @@
 		<arquillian.jbossas.version>7.2.0.Final</arquillian.jbossas.version>
 		<arquillian.version>1.0.0.Final</arquillian.version>
 		<cdi.version>1.0-SP4</cdi.version>
-		<commons-codec.version>1.5</commons-codec.version>
+		<commons-codec.version>1.4</commons-codec.version>
 		<drools.version>6.0.0.CR1</drools.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
 		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
