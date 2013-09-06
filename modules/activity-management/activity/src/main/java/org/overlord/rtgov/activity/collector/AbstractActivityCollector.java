@@ -19,7 +19,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
@@ -46,16 +45,16 @@ public class AbstractActivityCollector implements ActivityCollector, AbstractAct
     @Inject @RTGovConfig
     private Boolean _collectionEnabled=DEFAULT_COLLECTION_ENABLED;
     
-    @Inject @Dependent
+    @Inject
     private CollectorContext _collectorContext=null;
     
-    @Inject @Dependent
+    @Inject
     private ActivityUnitLogger _activityLogger=null;
     
-    @Inject @Dependent
+    @Inject
     private InformationProcessorManager _infoProcessorManager=null;
     
-    @Inject @Dependent
+    @Inject
     private ActivityValidatorManager _activityValidatorManager=null;
     
     private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();

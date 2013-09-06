@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
@@ -51,12 +50,12 @@ public class JEEActivityServer implements ActivityServer {
     @Resource
     private UserTransaction _tx;
         
-    @Inject @Dependent
+    @Inject
     private ActivityStore _store=null;
     
     private java.util.List<ActivityNotifier> _notifiers=new java.util.Vector<ActivityNotifier>();
     
-    private @Inject @Dependent @Any Instance<ActivityNotifier> _injectedNotifiers=null;
+    private @Inject @Any Instance<ActivityNotifier> _injectedNotifiers=null;
     
     /**
      * Initialize the activity server implementation.

@@ -27,7 +27,6 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -49,7 +48,7 @@ public class EventProcessorManager {
 
     private static final Logger LOG=Logger.getLogger(EventProcessorManager.class.getName());
 
-    @Inject @Dependent
+    @Inject
     private ActivityCollector _activityCollector=null;
 
     private java.util.List<EventProcessor> _eventProcessors=new java.util.ArrayList<EventProcessor>();

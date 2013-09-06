@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -52,7 +51,7 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger implements A
     private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _freeActivityLists=
             new java.util.concurrent.ArrayBlockingQueue<java.util.List<ActivityUnit>>(100);
 
-    @Inject @Dependent
+    @Inject
     private ActivityServer _activityServer=null;
     
     private java.util.List<ActivityUnit> _activities=null;

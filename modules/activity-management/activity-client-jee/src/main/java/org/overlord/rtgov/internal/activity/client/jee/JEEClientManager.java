@@ -25,7 +25,6 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.overlord.rtgov.activity.collector.ActivityCollector;
@@ -46,13 +45,13 @@ public class JEEClientManager {
     
     private static final Logger LOG=Logger.getLogger(JEEClientManager.class.getName());
     
-    @Inject @Dependent
+    @Inject
     private ActivityCollector _activityCollector;
     
-    @Inject @Dependent
+    @Inject
     private InformationProcessorManager _informationProcessorManager;
     
-    @Inject @Dependent
+    @Inject
     private ActivityValidatorManager _activityValidatorManager;
     
     /**

@@ -23,7 +23,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -49,7 +48,7 @@ public class EPNEventsServer implements MessageListener {
 
     private static final Logger LOG=Logger.getLogger(EPNEventsServer.class.getName());
     
-    @Inject @Dependent
+    @Inject
     private JEEEPNManager _epnManager;
     
     /**
