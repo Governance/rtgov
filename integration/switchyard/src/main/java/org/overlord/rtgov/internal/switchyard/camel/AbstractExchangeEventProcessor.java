@@ -47,6 +47,10 @@ import org.switchyard.security.credential.Credential;
  */
 public abstract class AbstractExchangeEventProcessor extends AbstractEventProcessor {
     
+    private static final String RTGOV_REQUEST_SENT = "rtgov.request.sent";
+
+    private static final String RTGOV_REQUEST_RECEIVED = "rtgov.request.received";
+
     private static final Logger LOG=Logger.getLogger(AbstractExchangeEventProcessor.class.getName());
 
     private boolean _completedEvent=false;
@@ -193,7 +197,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             if (intf == null) {
                 // Save activity event in exchange
-                exch.setProperty("rtgov.request.sent", sent);
+                exch.setProperty(RTGOV_REQUEST_SENT, sent);
             }
         }
         
@@ -208,10 +212,10 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             record(mesg, contentType, recvd, securityContext, exch); 
             
-            if (intf == null) {
-                // Save activity event in exchange
-                exch.setProperty("rtgov.request.received", recvd);
-            }               
+            // Save activity event in exchange
+            // RTGOV-262 Need to store this event, event if interface set,
+            // in case needs to establish relationship from exception response
+            exch.setProperty(RTGOV_REQUEST_RECEIVED, recvd);
         }
     }
     
@@ -245,8 +249,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         QName serviceType=consumer.getName();
         String opName=contract.getConsumerOperation().getName();
         
-        RequestReceived rr=(RequestReceived)exch.getProperty("rtgov.request.received");
-        RequestSent rs=(RequestSent)exch.getProperty("rtgov.request.sent");
+        RequestReceived rr=(RequestReceived)exch.getProperty(RTGOV_REQUEST_RECEIVED);
+        RequestSent rs=(RequestSent)exch.getProperty(RTGOV_REQUEST_SENT);
         
         if (intf != null) {
             if (rr != null) {
@@ -271,6 +275,17 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             sent.setInterface(intf);                
             sent.setOperation(opName);
             sent.setMessageId(messageId);
+            
+            // RTGOV-262 Check if replyTo id not set, due to exception - if so, then
+            // use request received id if available
+            if (relatesTo == null && rr != null) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Exception seems to have occurred, " +
+                    		"so establishing relationship to original request: "+rr.getMessageId());
+                }
+                relatesTo = rr.getMessageId();
+            }
+            
             sent.setReplyToId(relatesTo);
             
             record(mesg, contentType, sent, securityContext, exch); 

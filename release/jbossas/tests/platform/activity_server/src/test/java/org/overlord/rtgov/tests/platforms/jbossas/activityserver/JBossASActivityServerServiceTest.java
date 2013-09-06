@@ -36,6 +36,8 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
 
@@ -90,6 +92,8 @@ public class JBossASActivityServerServiceTest {
                         "    </soap:Body>"+
                         "</soap:Envelope>";
             
+            java.util.List<ActivityType> initialActivities = getActivityEvents();
+            
             java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
             
             SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
@@ -117,12 +121,12 @@ public class JBossASActivityServerServiceTest {
             
             System.out.println("LIST="+acts);
             
-            if (acts.size() != 12) {
-                fail("Expecting 12 activity events: "+acts.size());
+            if ((acts.size()-initialActivities.size()) != 12) {
+                fail("Expecting 12 activity events: "+(acts.size()-initialActivities.size()));
             }
             
             // RTGOV-256 Check that first activity type has header value extracted as a property
-            ActivityType at=acts.get(0);
+            ActivityType at=acts.get(initialActivities.size());
             
             if (!at.getProperties().containsKey("contentType")) {
                 fail("Property 'contentType' not found");
@@ -133,6 +137,89 @@ public class JBossASActivityServerServiceTest {
                                 +at.getProperties().get("contentType"));
             }
             
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to invoke service: "+e);
+        }
+    }
+
+    @Test @OperateOnDeployment("orders-app")
+    public void testQueryActivityServerInvalidRequestStructure() {
+        
+        try {
+            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
+            SOAPConnection con=factory.createConnection();
+            
+            java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
+            
+            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
+                        "   <soap:Body>"+
+                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
+                        "            <order>"+
+                        "                <orderId>1</orderId>"+
+                        "                <itemId>BUTTER</itemId>"+
+                        "                <quantity>100</quantity>"+
+                        "                <customerx>Fred</customerx>"+
+                        "            </order>"+
+                        "        </orders:submitOrder>"+
+                        "    </soap:Body>"+
+                        "</soap:Envelope>";
+            
+            java.util.List<ActivityType> initialActivities = getActivityEvents();
+            
+            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
+            
+            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
+            
+            is.close();
+            
+            SOAPMessage response=con.call(request, url);
+
+            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+            
+            response.writeTo(baos);
+            
+            baos.close();
+            
+            // Wait for events to propagate
+            Thread.sleep(4000);
+            
+            java.util.List<ActivityType> acts = getActivityEvents();
+            
+            if (acts == null) {
+                fail("Activity event list is null");
+            }
+            
+            System.out.println("LIST SIZE="+acts.size());
+            
+            System.out.println("LIST="+acts);
+            
+            if ((acts.size()-initialActivities.size()) != 2) {
+                fail("Expecting 2 activity events: "+(acts.size()-initialActivities.size()));
+            }
+            
+            // RTGOV-262 Check response has replyTo id
+            ActivityType at1=acts.get(initialActivities.size());
+            ActivityType at2=acts.get(initialActivities.size()+1);
+            
+            if ((at1 instanceof RequestReceived) == false) {
+                fail("Expecting a 'request received' event");
+            }
+            
+            if ((at2 instanceof ResponseSent) == false) {
+                fail("Expecting a 'response sent' event");
+            }
+            
+            RequestReceived req=(RequestReceived)at1;
+            ResponseSent resp=(ResponseSent)at2;
+            
+            if (resp.getReplyToId() == null) {
+                fail("Response 'replyTo' id not set");
+            }
+
+            if (!req.getMessageId().equals(resp.getReplyToId())) {
+                fail("Response 'replyTo' id not same as request message id");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failed to invoke service: "+e);
