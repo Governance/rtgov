@@ -1,7 +1,6 @@
 result=new org.overlord.rtgov.analytics.service.ResponseTime();
 
-int total=0;
-int min=0, max=0;
+int avg=0, min=0, max=0;
 
 firstEvent = events.get(0);
 
@@ -13,18 +12,18 @@ result.setFault(firstEvent.getFault());
 for (i=0; i < events.size(); i++) {
 	to = events.get(i);
 
-	total += to.getAverage();
+	avg += to.getAverage();
 	
-	if (min == 0 || to.getAverage() < min) {
-		min = to.getAverage();
+	if (min == 0 || to.getMin() < min) {
+		min = to.getMin();
 	}
 	
-	if (max == 0 || to.getAverage() > max) {
-		max = to.getAverage();
+	if (max == 0 || to.getMax() > max) {
+		max = to.getMax();
 	}
 }
 
-result.setAverage(total/events.size());
+result.setAverage(avg/events.size());
 result.setMin(min);
 result.setMax(max);
 
