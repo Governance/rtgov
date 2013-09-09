@@ -1,3 +1,4 @@
+import org.overlord.rtgov.activity.model.ActivityTypeId
 import org.overlord.rtgov.activity.model.soa.ResponseSent
 import org.overlord.rtgov.analytics.situation.Situation
 
@@ -22,6 +23,8 @@ then
 	situation.setTimestamp(System.currentTimeMillis());	
 	situation.getProperties().putAll($rs.getProperties());
 	situation.getContext().addAll($rs.getContext());
+	
+	situation.getActivityTypeIds().add(ActivityTypeId.createId($rs));
 		
 	epc.handle(situation);	
 
