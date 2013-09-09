@@ -32,4 +32,12 @@ public interface ActivityServerLoggerMBean extends BatchedActivityUnitLoggerMBea
      */
     public int getPendingActivityUnits();
     
+    /**
+     * This method returns the number of failures that have occurred since the
+     * last successful activity information was logged.
+     * 
+     * @return The number of failures since last success
+     */
+    public int getFailuresSinceLastSuccess();
+    
 }

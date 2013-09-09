@@ -15,6 +15,7 @@
  */
 package org.overlord.rtgov.activity.collector.activity.server;
 
+import java.text.MessageFormat;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,11 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.management.ListenerNotFoundException;
+import javax.management.MBeanNotificationInfo;
+import javax.management.Notification;
+import javax.management.NotificationFilter;
+import javax.management.NotificationListener;
 
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.server.ActivityServer;
@@ -36,7 +42,10 @@ import org.overlord.rtgov.common.util.RTGovConfig;
  *
  */
 @Singleton
-public class ActivityServerLogger extends BatchedActivityUnitLogger implements ActivityServerLoggerMBean {
+public class ActivityServerLogger extends BatchedActivityUnitLogger
+            implements ActivityServerLoggerMBean, javax.management.NotificationEmitter {
+
+    private static final int DURATION_BETWEEN_FAILURE_REPORTS = 5*60*1000;
 
     private static final Logger LOG=Logger.getLogger(ActivityServerLogger.class.getName());
     
@@ -58,6 +67,14 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger implements A
     
     private java.util.Set<Thread> _threads=new java.util.HashSet<Thread>();
     
+    private java.util.List<NotificationDetails> _notificationDetails=
+            new java.util.ArrayList<NotificationDetails>();
+    
+    private int _sequenceNumber=1;
+    
+    private long _lastFailure=0;
+    private int _failuresSinceLastSuccess=0;
+
     /**
      * This method initializes the Activity Server Logger.
      */
@@ -86,8 +103,10 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger implements A
                             
                             _freeActivityLists.offer(list);
                             
+                            _failuresSinceLastSuccess = 0;
+                            
                         } catch (Exception e) {
-                            LOG.log(Level.SEVERE, "Failed to store list of activity units", e);
+                            reportFailure(e);
                         }
                     }
                 }            
@@ -100,6 +119,42 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger implements A
         }
         
         super.init();
+    }
+    
+    /**
+     * This method handles reporting failures.
+     * 
+     * @param e The exception
+     */
+    protected void reportFailure(Exception e) {
+        
+        _failuresSinceLastSuccess++;
+        
+        long currentTime=System.currentTimeMillis();
+        
+        if (currentTime > _lastFailure + DURATION_BETWEEN_FAILURE_REPORTS) {            
+            LOG.log(Level.SEVERE, "Failed to store list of activity units", e);
+            
+            _lastFailure = currentTime;
+            
+            Notification notification=new Notification(java.util.PropertyResourceBundle.getBundle(
+                    "collector-activity-server.Messages").getString("COLLECTOR-ACTIVITY-SERVER-1"), this,
+                    _sequenceNumber++, MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                                "collector-activity-server.Messages").getString("COLLECTOR-ACTIVITY-SERVER-2"),
+                                        e.getMessage()));
+            
+            for (NotificationDetails n : _notificationDetails) {
+                n.getListener().handleNotification(notification, n.getHandback());
+            }
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int getFailuresSinceLastSuccess() {
+        return (_failuresSinceLastSuccess);
     }
     
     /**
@@ -165,5 +220,119 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger implements A
             LOG.fine("Close Logger for Activity Server: "+_activityServer);
         }
         super.close();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addNotificationListener(NotificationListener l,
+            NotificationFilter filter, Object handback)
+            throws IllegalArgumentException {
+        _notificationDetails.add(new NotificationDetails(l, filter, handback));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public MBeanNotificationInfo[] getNotificationInfo() {
+        return new MBeanNotificationInfo[0];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeNotificationListener(NotificationListener l)
+            throws ListenerNotFoundException {
+        boolean f_found=false;
+        
+        for (int i=_notificationDetails.size()-1; i >= 0; i--) {
+            NotificationDetails n=_notificationDetails.get(i);
+
+            if (n.getListener() == l) {
+                _notificationDetails.remove(i);
+                f_found = true;
+            }
+        }
+        
+        if (!f_found) {
+            throw new ListenerNotFoundException();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeNotificationListener(NotificationListener l,
+            NotificationFilter filter, Object handback)
+            throws ListenerNotFoundException {
+        boolean f_found=false;
+        
+        for (int i=_notificationDetails.size()-1; i >= 0; i--) {
+            NotificationDetails n=_notificationDetails.get(i);
+
+            if (n.getListener() == l && n.getFilter() == filter
+                    && n.getHandback() == handback) {
+                _notificationDetails.remove(i);
+                f_found = true;
+                
+                break;
+           }
+        }
+        
+        if (!f_found) {
+            throw new ListenerNotFoundException();
+        }
+    }
+
+    /**
+     * This class provides a container for the listener details.
+     *
+     */
+    protected class NotificationDetails {
+        
+        private NotificationListener _listener=null;
+        private NotificationFilter _filter=null;
+        private Object _handback=null;
+        
+        /**
+         * This is the constructor.
+         * 
+         * @param listener The listener
+         * @param filter The filter
+         * @param handback The handback
+         */
+        public NotificationDetails(NotificationListener listener,
+                NotificationFilter filter, Object handback) {
+            _listener = listener;
+            _filter = filter;
+            _handback = handback;
+        }
+        
+        /**
+         * The listener.
+         * 
+         * @return The listener
+         */
+        public NotificationListener getListener() {
+            return (_listener);
+        }
+        
+        /**
+         * The filter.
+         * 
+         * @return The filter
+         */
+        public NotificationFilter getFilter() {
+            return (_filter);
+        }
+        
+        /**
+         * The handback.
+         * 
+         * @return The handback
+         */
+        public Object getHandback() {
+            return (_handback);
+        }
     }
 }
