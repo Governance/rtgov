@@ -61,7 +61,7 @@
 		<arquillian.version>1.0.0.Final</arquillian.version>
 		<cdi.version>1.0-SP4</cdi.version>
 		<commons-codec.version>1.4</commons-codec.version>
-		<drools.version>6.0.0.CR1</drools.version>
+		<drools.version>6.0.0.CR3</drools.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
 		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
 		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
@@ -73,7 +73,7 @@
 		<jbossts.version>4.16.4.Final</jbossts.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jta.version>1.0.0.Final</jta.version>
-		<kie.version>6.0.0.CR1</kie.version>
+		<kie.version>6.0.0.CR3</kie.version>
 		<maven-aether.version>3.0.1</maven-aether.version>
 		<mvel.version>2.1.6.Final</mvel.version>			<!-- Passed into junit tests -->
 		<overlord-commons.version>2.0.0-SNAPSHOT</overlord-commons.version>
