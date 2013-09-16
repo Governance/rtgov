@@ -1,0 +1,143 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overlord.rtgov.samples.karaf</groupId>
+	<artifactId>parent</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Overlord RTGov::Samples::Karaf</name>
+	<url>http://www.overlord.org</url>
+	<description>
+		The Overlord Runtime Governance project - Karaf Samples
+	</description>
+
+	<parent>
+		<groupId>org.jboss.integration-platform</groupId>
+		<artifactId>jboss-integration-platform-parent</artifactId>
+		<version>6.0.0-SNAPSHOT</version>
+	</parent>
+
+	<scm>
+		<connection>https://github.com/Governance</connection>
+		<url>https://github.com/Governance</url>
+	</scm>
+
+	<licenses>
+		<license>
+			<name>Apache License</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+			<distribution>repo</distribution>
+			<comments>Apache License</comments>
+		</license>
+	</licenses>
+
+	<properties>
+		<javaee-api.version>6.0</javaee-api.version>
+		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
+		<jbossas.version>7.2.0.Final</jbossas.version>
+		<switchyard.version>1.1.0.CR1</switchyard.version>
+	</properties>
+
+	<modules>
+		<module>ordermgmt</module>
+		<module>policy</module>
+		<module>sla</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Imported dependencies -->
+			<dependency>
+				<groupId>org.jboss.integration-platform</groupId>
+				<artifactId>jboss-integration-platform-bom</artifactId>
+				<version>6.0.0-SNAPSHOT</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>${javaee-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-api</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-plugin</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-extensions-wsdl</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard.components</groupId>
+				<artifactId>switchyard-component-bean</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard.components</groupId>
+				<artifactId>switchyard-component-soap</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-test</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard.components</groupId>
+				<artifactId>switchyard-component-test-mixin-http</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-remote</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss-javaee.version}</version>
+				<type>pom</type>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<!-- This section defines the default plugin settings inherited by child projects. -->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.switchyard</groupId>
+					<artifactId>switchyard-plugin</artifactId>
+					<version>${switchyard.version}</version>
+				</plugin>
+
+				<plugin>
+					<groupId>org.jboss.as.plugins</groupId>
+					<artifactId>jboss-as-maven-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>

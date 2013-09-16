@@ -20,10 +20,8 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
-
 import org.overlord.rtgov.active.collection.predicate.Predicate;
-import org.overlord.rtgov.common.util.RTGovConfig;
+import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
  * This class provides the abstract base implementation of the ActiveCollectionManager
@@ -48,8 +46,7 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     private java.util.List<ActiveCollectionListener> _activeCollectionListeners=
                 new java.util.ArrayList<ActiveCollectionListener>();
     
-    @Inject @RTGovConfig
-    private Long _houseKeepingInterval=HOUSE_KEEPING_INTERVAL;
+    private Long _houseKeepingInterval;
     
     private HouseKeeper _houseKeeper=null;
     private ActiveCollectionContext _context=new DefaultActiveCollectionContext(this);
@@ -59,12 +56,18 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
      */
     public AbstractActiveCollectionManager() {
         ActiveCollectionManagerAccessor.setActiveCollectionManager(this);
+        
+        _houseKeepingInterval = RTGovProperties.getPropertyAsLong("ActiveCollectionManager.houseKeepingInterval",
+                                    HOUSE_KEEPING_INTERVAL);
     }
     
     /**
      * This method initializes the Active Collection Manager.
      */
     public void init() {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Initialize active collection manager");
+        }
         _houseKeeper = new HouseKeeper();
     }
     
@@ -72,6 +75,9 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
      * This method closes the Active Collection Manager.
      */
     public void close() {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Close active collection manager");
+        }
         if (_houseKeeper != null) {
             _houseKeeper.cancel();
         }

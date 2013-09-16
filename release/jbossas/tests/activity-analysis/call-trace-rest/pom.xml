@@ -161,6 +161,10 @@
 							<name>commons-configuration.version</name>
 							<value>${commons-configuration.version}</value>
 						</property>
+						<property>
+							<name>commons-lang.version</name>
+							<value>${version.commons-lang}</value>
+						</property>
 					</systemProperties>
 					<includes>
 						<include>**/*TestCase.java</include>

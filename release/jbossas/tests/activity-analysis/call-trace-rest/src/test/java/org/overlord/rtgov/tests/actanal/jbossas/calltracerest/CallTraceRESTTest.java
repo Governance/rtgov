@@ -69,6 +69,7 @@ public class CallTraceRESTTest {
         String commonsversion=System.getProperty("overlord-commons.version");
         String jacksonversion=System.getProperty("jackson.version");
         String configversion=System.getProperty("commons-configuration.version");
+        String langversion=System.getProperty("commons-lang.version");
         
         return ShrinkWrap.create(WebArchive.class, "overlord-rtgov.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -86,10 +87,12 @@ public class CallTraceRESTTest {
                     Maven.resolver().resolve("org.overlord:overlord-commons-auth:"+commonsversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord:overlord-commons-auth-jboss7:"+commonsversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord:overlord-commons-auth-tomcat7:"+commonsversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withoutTransitivity().asSingleFile(),
+                    //Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
-            ).addAsLibraries(Maven.resolver().resolve("org.overlord:overlord-commons-config:"+commonsversion).withTransitivity().asFile());
+            ).addAsLibraries(Maven.resolver().resolve("org.overlord:overlord-commons-config:"+commonsversion).withTransitivity().asFile()
+            ).addAsLibraries(Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withTransitivity().asFile()
+            ).addAsLibraries(Maven.resolver().resolve("commons-lang:commons-lang:"+langversion).withTransitivity().asFile());
     }
     
     protected void initActivityStore() {

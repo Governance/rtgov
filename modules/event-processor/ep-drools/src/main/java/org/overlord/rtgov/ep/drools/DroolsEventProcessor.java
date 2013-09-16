@@ -29,8 +29,8 @@ import org.kie.api.builder.Results;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.EntryPoint;
+import org.overlord.rtgov.ep.DefaultEPContext;
 import org.overlord.rtgov.ep.EventProcessor;
-import org.overlord.rtgov.internal.ep.DefaultEPContext;
 
 /**
  * This class represents the Drools implementation of the Event

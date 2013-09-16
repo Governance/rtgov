@@ -1,0 +1,25 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overlord.rtgov.samples.karaf</groupId>
+	<artifactId>ordermgmt</artifactId>
+	<packaging>pom</packaging>
+	<name>Overlord RTGov::Samples::Karaf::OrderManagement</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov.samples.karaf</groupId>
+		<artifactId>parent</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>model</module>
+		<module>inventoryservice</module>
+		<module>logisticsservice</module>
+		<module>orderservice</module>
+		<module>orderservice-rests</module>
+	</modules>
+
+</project>
+

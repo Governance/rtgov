@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.overlord.rtgov.activity.model.ActivityType;
@@ -31,7 +30,7 @@ import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
 
-import org.overlord.rtgov.common.util.RTGovConfig;
+import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
  * This class provides the REST client implementation of the activity server.
@@ -47,15 +46,22 @@ public class RESTActivityServer implements ActivityServer {
     private static final String QUERY="/overlord-rtgov/activity/query";
     private static final String EVENTS="/overlord-rtgov/activity/events";
     
-    @Inject @RTGovConfig
-    private String _serverURL="http://localhost:8080";
-            
-    @Inject @RTGovConfig
-    private String _serverUsername="admin";
-            
-    @Inject @RTGovConfig
-    private String _serverPassword="overlord";
-            
+    private String _serverURL;            
+    private String _serverUsername;
+    private String _serverPassword;
+
+    /**
+     * The default constructor.
+     */
+    public RESTActivityServer() {
+        _serverURL = RTGovProperties.getProperty("RESTActivityServer.serverURL",
+                                    "http://localhost:8080");
+        _serverUsername = RTGovProperties.getProperty("RESTActivityServer.serverUsername",
+                                    "");
+        _serverPassword = RTGovProperties.getProperty("RESTActivityServer.serverPassword",
+                                    "");
+    }
+    
     /**
      * This method sets the URL of the Activity Server.
      * 

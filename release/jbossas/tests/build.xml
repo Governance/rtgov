@@ -40,9 +40,9 @@
 		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov.war"
 			file="${org.overlord.rtgov.release.jbossas:overlord-rtgov:war}" />
 		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-epn.war"
-			file="${org.overlord.rtgov.content:overlord-rtgov-epn:war}" />
+			file="${org.overlord.rtgov.content:overlord-rtgov-epn-jee:war}" />
 		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-acs.war"
-			file="${org.overlord.rtgov.content:overlord-rtgov-acs:war}" />
+			file="${org.overlord.rtgov.content:overlord-rtgov-acs-jee:war}" />
 
 		<!-- Create database -->
 		<sql driver="${driver}"

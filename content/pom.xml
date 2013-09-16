@@ -14,8 +14,10 @@
 	</parent>
 
 	<modules>
-		<module>acs</module>
-		<module>epn</module>
+		<module>acs-jee</module>
+		<module>acs-osgi</module>
+		<module>epn-jee</module>
+		<module>epn-osgi</module>
 		<module>services</module>
 	</modules>
 

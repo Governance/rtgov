@@ -19,12 +19,11 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.ep.EventProcessor;
 
 /**
@@ -39,9 +38,6 @@ public class JPAEventProcessor extends EventProcessor {
     private EntityManagerFactory _emf=null;
     private EntityManager _em=null;
     private String _entityManager=null;
-    
-    @Inject
-    private RTGovPropertiesProvider _properties=null;
     
     /**
      * This method returns the entity manager name.
@@ -77,14 +73,10 @@ public class JPAEventProcessor extends EventProcessor {
     public void init() throws Exception {
         
         if (_emf == null) {
-            java.util.Properties props=null;
+            java.util.Properties props=RTGovProperties.getProperties();
             
             try {
-                if (_properties != null) {
-                    props = _properties.getProperties();
-                }
-                
-                if (LOG.isLoggable(Level.FINE)) {
+                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("Properties passed to entity manager factory creation: "+props);                
                 }
                 

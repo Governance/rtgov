@@ -1,0 +1,56 @@
+import org.overlord.rtgov.activity.model.ActivityUnit
+import org.overlord.rtgov.activity.model.ActivityType
+import org.overlord.rtgov.activity.model.ActivityTypeId
+import org.overlord.rtgov.activity.model.soa.ResponseSent
+import org.overlord.rtgov.activity.model.soa.RequestReceived
+import org.overlord.rtgov.analytics.situation.Situation
+
+global org.overlord.rtgov.ep.EPContext epc
+
+declare ActivityUnit
+    @role( event )
+end
+
+rule "Create situation to represent exception"
+when
+    $au : ActivityUnit() from entry-point "ActivityUnits" 
+then
+
+	for (int i=0; i < $au.getActivityTypes().size(); i++) {
+		ActivityType evt=$au.getActivityTypes().get(i);
+
+		if (evt instanceof ResponseSent) {
+			ResponseSent rs=(ResponseSent)evt;
+			
+			if (rs.getContent() != null && rs.getMessageType() == null) {
+				Situation situation=new Situation();
+	
+				situation.setType("Exception");
+				situation.setSubject(Situation.createSubject(rs.getServiceType(), rs.getOperation(),
+								rs.getFault()));
+				situation.setDescription(rs.getContent());
+				situation.setSeverity(Situation.Severity.Low);
+				situation.setTimestamp(System.currentTimeMillis());	
+				situation.getProperties().putAll(rs.getProperties());
+				situation.getContext().addAll(rs.getContext());
+	
+				situation.getActivityTypeIds().add(ActivityTypeId.createId(rs));
+
+				// Check if request can be found
+				for (int j=0; j < i; j++) {
+					if ($au.getActivityTypes().get(j) instanceof RequestReceived) {
+						RequestReceived rr=(RequestReceived)$au.getActivityTypes().get(j);
+
+						if (rr.getMessageId().equals(rs.getReplyToId())) {
+							situation.getActivityTypeIds().add(ActivityTypeId.createId(rr));
+							break;
+						}
+					}
+				}
+		
+				epc.handle(situation);	
+			}
+		}
+	}
+
+end

@@ -1,0 +1,28 @@
+{
+  "name" : "OrderManagementEPN",
+  "subscriptions" : [ {
+    "nodeName" : "CheckForException",
+    "subject" : "ActivityUnits"
+  } ],
+  "nodes" : [
+    {
+      "name" : "CheckForException",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ "Situations" ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.ep.drools.DroolsEventProcessor",
+        "ruleName" : "RaiseSituationForException"
+      },
+      "notifications" : [ {
+      	 "type" : "Processed",
+      	 "subject" : "SituationsProcessed"
+      },{
+      	 "type" : "Results",
+      	 "subject" : "Situations"
+      } ]
+    }
+  ],
+  "version" : "1"
+}

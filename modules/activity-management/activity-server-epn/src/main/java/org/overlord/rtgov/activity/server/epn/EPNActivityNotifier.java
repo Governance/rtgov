@@ -44,6 +44,24 @@ public class EPNActivityNotifier implements ActivityNotifier {
     private EPNManager _epnManager=null;
     
     /**
+     * This method returns the Event Processor Network Manager.
+     * 
+     * @return The EPN manager
+     */
+    public EPNManager getManager() {
+        return (_epnManager);
+    }
+    
+    /**
+     * This method sets the Event Processor Network Manager.
+     * 
+     * @param epnm The EPN manager
+     */
+    public void setManager(EPNManager epnm) {
+        _epnManager = epnm;
+    }
+    
+    /**
      * This method initializes the Activity Server to EPN bridge.
      */
     @PostConstruct

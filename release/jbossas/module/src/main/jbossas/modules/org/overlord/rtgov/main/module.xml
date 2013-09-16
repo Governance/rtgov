@@ -28,6 +28,9 @@
         <resource-root path="ep-drools-${project.version}.jar"/>
         <resource-root path="ep-mvel-${project.version}.jar"/>
         <resource-root path="epn-core-${project.version}.jar"/>
+        <resource-root path="ep-mvel-${project.version}.jar"/>
+        <resource-root path="epn-core-${project.version}.jar"/>
+        <resource-root path="overlord-commons-config-${overlord-commons.version}.jar"/>
     </resources>
 
     <dependencies>

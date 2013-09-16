@@ -3,7 +3,7 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.common</groupId>
 	<artifactId>rtgov-common</artifactId> 
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Overlord RTGov::Modules::Common::RTGov Commmon</name>
 
 	<parent>
@@ -13,6 +13,12 @@
 	</parent>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+			<version>${overlord-commons.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
@@ -36,4 +42,27 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>
+							org.overlord.rtgov.common.*;version=${project.version}
+						</Export-Package>
+						<Import-Package>
+							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,*
+						</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 </project>

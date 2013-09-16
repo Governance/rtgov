@@ -47,14 +47,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
-			<artifactId>overlord-rtgov-epn</artifactId>
+			<artifactId>overlord-rtgov-epn-jee</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
-			<artifactId>overlord-rtgov-acs</artifactId>
+			<artifactId>overlord-rtgov-acs-jee</artifactId>
 			<type>war</type>
 			<version>${project.version}</version>
 			<scope>provided</scope>

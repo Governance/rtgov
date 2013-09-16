@@ -32,6 +32,7 @@ import org.overlord.rtgov.common.util.RTGovProperties;
 public final class InfinispanManager {
 
     private static final String INFINISPAN_CONTAINER = "infinispan.container";
+    private static final String INFINISPAN_CONFIG = "infinispan.config";
 
     // Untyped to avoid classloading issues when CDI scans classes, if Infinispan
     // is not in class path
@@ -55,12 +56,14 @@ public final class InfinispanManager {
     public static synchronized CacheContainer getCacheContainer(String container) {
         CacheContainer ret=null;
         boolean f_initDefault=false;
+        String config=null;
         
         // If container not defined, and default container not initialized,
         // then check if default container name has been defined in the RTGov
         // properties
         if (container == null && _cacheContainer == null) {
             container = RTGovProperties.getProperty(INFINISPAN_CONTAINER);
+            config = RTGovProperties.getProperty(INFINISPAN_CONFIG);
             
             // If default container retrieved from RTGov properties, then
             // need to save retrieved container reference
@@ -87,12 +90,24 @@ public final class InfinispanManager {
             }
         } else {
             if (_cacheContainer == null) {
+                ClassLoader cl=Thread.currentThread().getContextClassLoader();
                 try {
-                    _cacheContainer = new DefaultCacheManager();
+                    // TODO: When infinispan updated to load its root resources from
+                    // its own classloader, rather than the context classloader, this
+                    // can be removed
+                    Thread.currentThread().setContextClassLoader(DefaultCacheManager.class.getClassLoader());
+                    
+                    if (config != null) {
+                        _cacheContainer = new DefaultCacheManager(config);
+                    } else {
+                        _cacheContainer = new DefaultCacheManager();
+                    }
                 } catch (Exception e) {
                     LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
                             "rtgov-infinispan.Messages").getString("RTGOV-INFINISPAN-2"),
                             container), e);
+                } finally {
+                    Thread.currentThread().setContextClassLoader(cl);
                 }
             }
             

@@ -47,11 +47,11 @@ public class EPMailTest {
             .addAsLibraries(
                     Maven.resolver().resolve("org.overlord.rtgov.event-processor:ep-core:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.event-processor:ep-mail:"+rtgovversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.overlord.rtgov.common:rtgov-common:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.mvel:mvel2:"+mvelversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
-             );
+             )
+             .addAsLibraries(Maven.resolver().resolve("org.overlord.rtgov.common:rtgov-common:"+rtgovversion).withTransitivity().asFile());
     }
 
     @Test

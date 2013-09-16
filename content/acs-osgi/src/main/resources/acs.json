@@ -1,0 +1,66 @@
+[
+  {
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "ServiceResponseTimes",
+    "type" : "List",
+    "itemExpiration" : 0,
+    "maxItems" : 100,
+    "subject" : "ServiceResponseTimes",
+    "aggregationDuration" : 1000,
+    "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
+    "aggregationScript" : "AggregateServiceResponseTime.mvel"
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "ServiceDefinitions",
+    "type" : "Map",
+    "itemExpiration" : 0,
+    "maxItems" : 100,
+    "subject" : "ServiceDefinitions",
+    "scheduledScript" : "TidyServiceDefinitions.mvel",
+    "scheduledInterval" : 60000,
+    "properties" : {
+        "maxSnapshots" : 5
+    },
+    "maintenanceScript" : "MaintainServiceDefinitions.mvel"
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "Situations",
+    "type" : "List",
+    "itemExpiration" : 40000,
+    "maxItems" : 0,
+    "subject" : "Situations",
+    "activeChangeListeners" : [ {
+        "@class" : "org.overlord.rtgov.active.collection.jmx.JMXNotifier",
+    	"objectName" : "overlord.rtgov.services:name=Situations",
+    	"descriptionScript" : "SituationDescription.mvel",
+    	"insertTypeScript" : "SituationType.mvel"
+	} ],
+	"derived": [ {
+		"name": "FilteredSituations",
+		"predicate": {
+			"type": "MVEL",
+			"expression": "map = context.getMap(\"IgnoredSituationSubjects\"); if (map == null) { return false; } return !map.containsKey(subject);"
+		},
+	    "properties" : {
+	        "active" : false
+	    }
+	} ]
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.ActiveCollectionSource",
+    "name" : "IgnoredSituationSubjects",
+    "type" : "Map",
+    "factory" : {
+        "@class" : "org.overlord.rtgov.active.collection.infinispan.InfinispanActiveCollectionFactory",
+        "cache" : "IgnoredSituationSubjects"
+    }
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.ActiveCollectionSource",
+    "name" : "Principals",
+    "type" : "Map",
+    "visibility" : "Private",
+    "factory" : {
+        "@class" : "org.overlord.rtgov.active.collection.infinispan.InfinispanActiveCollectionFactory",
+        "cache" : "Principals"
+    }
+  }
+]

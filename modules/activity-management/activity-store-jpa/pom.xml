@@ -3,7 +3,7 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.activity-management</groupId>
 	<artifactId>activity-store-jpa</artifactId> 
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Overlord RTGov::Modules::Activity Management::Activity Store JPA</name>
 
 	<parent>
@@ -105,5 +105,32 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>
+							org.overlord.rtgov.activity.store.jpa.*;version=${project.version}
+						</Export-Package>
+						<Import-Package>
+							org.overlord.rtgov.activity.model.app,
+							org.overlord.rtgov.activity.model.bpm,
+							org.overlord.rtgov.activity.model.common,
+							org.overlord.rtgov.activity.model.mom,
+							org.overlord.rtgov.activity.model.soa,
+							*
+						</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	
 </project>

@@ -69,8 +69,8 @@
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov:war</include>
-				<include>org.overlord.rtgov.content:overlord-rtgov-epn:war</include>
-				<include>org.overlord.rtgov.content:overlord-rtgov-acs:war</include>
+				<include>org.overlord.rtgov.content:overlord-rtgov-epn-jee:war</include>
+				<include>org.overlord.rtgov.content:overlord-rtgov-acs-jee:war</include>
 				<include>org.overlord.rtgov.content.services:overlord-rtgov-services:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>

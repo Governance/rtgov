@@ -1,0 +1,12 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <service interface="org.overlord.rtgov.active.collection.ActiveCollectionManager"
+    			ref="activeCollectionManager" />
+
+    <bean id="activeCollectionManager"
+    		class="org.overlord.rtgov.active.collection.embedded.EmbeddedActiveCollectionManager"
+        	init-method="init" destroy-method="close" />
+        		
+</blueprint>

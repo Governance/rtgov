@@ -48,6 +48,7 @@
 				<include>org.overlord.rtgov.active-queries:active-collection:jar</include>
 				<include>org.overlord.rtgov.active-queries:acs-epn:jar</include>
 				<include>org.overlord.rtgov.activity-analysis:analytics:jar</include>
+				<include>org.overlord:overlord-commons-config:jar</include>
 			</includes>
 		</dependencySet>
         
