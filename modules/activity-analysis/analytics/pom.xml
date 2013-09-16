@@ -42,6 +42,7 @@
 			<scope>test</scope>
 		</dependency>
 
+<!--
 		<dependency>
 			<groupId>org.hibernate.ogm</groupId>
 			<artifactId>hibernate-ogm-mongodb</artifactId>
@@ -52,16 +53,11 @@
 			<artifactId>jbossjta</artifactId>
 			<scope>test</scope>
 		</dependency>
+-->
 		
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			
-			<!-- TODO: Remove once AS7 version supports
-				org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy
-				from hibernate-core -->
-			
-			<version>4.1.7.Final</version>
 			<scope>test</scope>
 			<exclusions>
 				<exclusion>
@@ -98,7 +94,7 @@
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>javassist</groupId>
+			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 			<scope>test</scope>
 		</dependency>		

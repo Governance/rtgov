@@ -59,20 +59,13 @@
 		<aether.version>1.8</aether.version>
 		<arquillian.jbossas.version>7.2.0.Final</arquillian.jbossas.version>
 		<arquillian.version>1.0.0.Final</arquillian.version>
-		<cdi.version>1.0-SP4</cdi.version>
-		<commons-codec.version>1.4</commons-codec.version>
 		<drools.version>6.0.0.CR3</drools.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
-		<hibernate-jpa.version>1.0.1.Final</hibernate-jpa.version>
-		<hibernate-ogm.version>4.0.0.Beta1</hibernate-ogm.version>
-		<jackson.version>1.9.2</jackson.version>			<!-- Passed into junit tests -->
+		<jackson.version>1.9.9</jackson.version>			<!-- Passed into junit tests -->
 		<javaee-api.version>6.0</javaee-api.version>
-		<javassist.version>3.9.0.GA</javassist.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.2.0.Final</jbossas.version>
-		<jbossts.version>4.16.4.Final</jbossts.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
-		<jta.version>1.0.0.Final</jta.version>
 		<kie.version>6.0.0.CR3</kie.version>
 		<maven-aether.version>3.0.1</maven-aether.version>
 		<mvel.version>2.1.6.Final</mvel.version>			<!-- Passed into junit tests -->
@@ -103,18 +96,6 @@
 				<scope>import</scope>
 			</dependency>
 
-			<dependency>
-				<groupId>org.jboss.arquillian</groupId>
-				<artifactId>arquillian-bom</artifactId>
-				<version>${arquillian.version}</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.as</groupId>
-				<artifactId>jboss-as-arquillian-container-managed</artifactId>
-				<version>${arquillian.jbossas.version}</version>
-			</dependency>
 
 			<dependency>
 				<groupId>org.overlord.gadgets.server</groupId>
@@ -132,6 +113,18 @@
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth</artifactId>
 				<version>${overlord-commons.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>${javaee-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.spec</groupId>
+				<artifactId>jboss-javaee-6.0</artifactId>
+				<version>${jboss-javaee.version}</version>
+				<type>pom</type>
 			</dependency>
 
 			<dependency>
@@ -158,64 +151,6 @@
 				<groupId>org.mvel</groupId>
 				<artifactId>mvel2</artifactId>
 				<version>${mvel.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax</groupId>
-				<artifactId>javaee-api</artifactId>
-				<version>${javaee-api.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.jboss.spec</groupId>
-				<artifactId>jboss-javaee-6.0</artifactId>
-				<version>${jboss-javaee.version}</version>
-				<type>pom</type>
-			</dependency>
-			<dependency>
-				<groupId>org.hibernate.javax.persistence</groupId>
-				<artifactId>hibernate-jpa-2.0-api</artifactId>
-				<version>${hibernate-jpa.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.enterprise</groupId>
-				<artifactId>cdi-api</artifactId>
-				<version>${cdi.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.spec.javax.transaction</groupId>
-				<artifactId>jboss-transaction-api_1.1_spec</artifactId>
-				<version>${jta.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.jboss.naming</groupId>
-				<artifactId>jnp-client</artifactId>
-				<version>${jnp-client.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.jbossts</groupId>
-				<artifactId>jbossjta</artifactId>
-				<version>${jbossts.version}</version>
-			</dependency>
-		
-
-			<dependency>
-				<groupId>org.hibernate.ogm</groupId>
-				<artifactId>hibernate-ogm-mongodb</artifactId>
-				<version>${hibernate-ogm.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>javassist</groupId>
-				<artifactId>javassist</artifactId>
-				<version>${javassist.version}</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>${commons-codec.version}</version>
 			</dependency>
 
 			<dependency>
@@ -268,6 +203,13 @@
 				<artifactId>switchyard-test</artifactId>
 				<version>${switchyard.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.jboss.naming</groupId>
+				<artifactId>jnp-client</artifactId>
+				<version>${jnp-client.version}</version>
+			</dependency>
+
 
 			<!--
 				Dependencies required to get arquillian tests running against
@@ -330,7 +272,6 @@
 				<version>${maven-aether.version}</version>
 				<scope>test</scope>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
