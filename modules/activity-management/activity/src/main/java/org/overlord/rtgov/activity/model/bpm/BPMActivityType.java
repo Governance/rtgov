@@ -100,36 +100,42 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * changed.
      */
     protected void updateEndpointContext() {
-        Context current=null;
-        
-        for (Context context : getContext()) {
-            if (context.getType() == Context.Type.Endpoint) {
-                current = context;
-                break;
+        try {
+            Context current=null;
+            
+            for (Context context : getContext()) {
+                if (context.getType() == Context.Type.Endpoint) {
+                    current = context;
+                    break;
+                }
             }
-        }
-        
-        if (current == null) {
-            current = new Context();
-            current.setType(Context.Type.Endpoint);
-            getContext().add(current);
-        }
-        
-        String endpoint="";
-        
-        if (_processType != null) {
-            endpoint = _processType;
+            
+            if (current == null) {
+                current = new Context();
+                current.setType(Context.Type.Endpoint);
+                getContext().add(current);
+            }
+            
+            String endpoint="";
+            
+            if (_processType != null) {
+                endpoint = _processType;
+                
+                if (_instanceId != null) {
+                    endpoint += ":";
+                }
+            }
             
             if (_instanceId != null) {
-                endpoint += ":";
+                endpoint += _instanceId;
             }
+            
+            current.setValue(endpoint);
+        } catch (Throwable t) {
+            // RTGOV-278 NPE exception occurs when de-serializing
+            // BPM activity type events with Hibernate, where the
+            // query accesses the context information.
         }
-        
-        if (_instanceId != null) {
-            endpoint += _instanceId;
-        }
-        
-        current.setValue(endpoint);
     }
     
     /**
