@@ -19,7 +19,10 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
 import org.overlord.rtgov.active.collection.predicate.Predicate;
+import org.overlord.rtgov.common.util.RTGovConfig;
 
 /**
  * This class provides the abstract base implementation of the ActiveCollectionManager
@@ -31,6 +34,8 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     
     private static final Logger LOG=Logger.getLogger(AbstractActiveCollectionManager.class.getName());
 
+    private static final long HOUSE_KEEPING_INTERVAL = 10000;
+
     private java.util.Map<String, ActiveCollection> _activeCollections=
             new java.util.HashMap<String, ActiveCollection>();
     private java.util.Map<String, ActiveCollectionSource> _activeCollectionSources=
@@ -41,7 +46,10 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
             new java.util.HashMap<String, ActiveCollection>();
     private java.util.List<ActiveCollectionListener> _activeCollectionListeners=
                 new java.util.ArrayList<ActiveCollectionListener>();
-    private long _houseKeepingInterval=10000;
+    
+    @Inject @RTGovConfig
+    private Long _houseKeepingInterval=HOUSE_KEEPING_INTERVAL;
+    
     private HouseKeeper _houseKeeper=null;
     private ActiveCollectionContext _context=new DefaultActiveCollectionContext(this);
     
@@ -83,6 +91,9 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
      * @return The interval
      */
     public long getHouseKeepingInterval() {
+        if (_houseKeepingInterval == null) {
+            return (HOUSE_KEEPING_INTERVAL);
+        }
         return (_houseKeepingInterval);
     }
     

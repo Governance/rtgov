@@ -129,6 +129,29 @@ public class JBossASRTGovConfig implements RTGovPropertiesProvider {
     }
 
     /**
+     * This method provides configuration information for injection
+     * points identified by the RTGovConfig annotation.
+     * 
+     * @param p The injection point
+     * @return The configuration value, or null if not known
+     */
+    public @Produces @RTGovConfig Long getConfigurationAsLong(InjectionPoint p) {
+        Long ret=null;
+        
+        String prop=getConfiguration(p);
+        
+        if (prop != null) {
+            ret = Long.valueOf(prop);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Runtime Governance integer value = "+ret);
+            }
+        }
+
+        return (ret);
+    }
+
+    /**
      * This method returns the properties.
      * 
      * @return The properties

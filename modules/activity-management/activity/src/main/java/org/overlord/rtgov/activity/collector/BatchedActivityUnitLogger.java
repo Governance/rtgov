@@ -21,8 +21,10 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.common.util.RTGovConfig;
 
 /**
  * This class provides the abstract activity unit logger implementation that
@@ -33,13 +35,19 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
                             BatchedActivityUnitLoggerMBean {
 
     private static final Logger LOG=Logger.getLogger(BatchedActivityUnitLogger.class.getName());
+
+    private static final int MAX_UNIT_COUNT = 1000;
+    private static final long MAX_TIME_INTERVAL = 500;
     
     private int _messageCounter=0;
     private java.util.Timer _timer;
     private java.util.TimerTask _timerTask;
     
-    private long _maxTimeInterval=500;
-    private int _maxUnitCount=1000;
+    @Inject @RTGovConfig
+    private Long _maxTimeInterval=MAX_TIME_INTERVAL;
+    
+    @Inject @RTGovConfig
+    private Integer _maxUnitCount=MAX_UNIT_COUNT;
     
     /**
      * This method initializes the activity logger.
@@ -66,6 +74,9 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
      * @return The maximum number of messages
      */
     public long getMaxTimeInterval() {
+        if (_maxTimeInterval == null) {
+            return (MAX_TIME_INTERVAL);
+        }
         return (_maxTimeInterval);
     }
     
@@ -86,6 +97,9 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
      * @return The maximum number of activity units
      */
     public int getMaxUnitCount() {
+        if (_maxUnitCount == null) {
+            return (MAX_UNIT_COUNT);
+        }
         return (_maxUnitCount);
     }
     
@@ -115,14 +129,14 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
                          };
                          
                      // Schedule send
-                     _timer.schedule(_timerTask, _maxTimeInterval);
+                     _timer.schedule(_timerTask, getMaxTimeInterval());
                  }
 
                  appendActivity(act);
                  
                  _messageCounter++;
 
-                 if (_messageCounter > _maxUnitCount) {
+                 if (_messageCounter > getMaxUnitCount()) {
                      sendMessage();
                      
                      reset();
