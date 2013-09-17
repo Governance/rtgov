@@ -41,7 +41,7 @@ public class ProcessCompleted extends BPMActivityType implements java.io.Externa
         Fail
     }
     
-    private Status _status=Status.Success;
+    private Status _status=null;
     
     /**
      * The default constructor.
