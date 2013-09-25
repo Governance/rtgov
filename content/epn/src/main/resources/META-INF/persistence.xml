@@ -3,7 +3,7 @@
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
             version="2.0">
-	<persistence-unit name="overlord-rtgov-epn">
+	<persistence-unit name="overlord-rtgov-epn" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 
 		<jta-data-source>java:jboss/datasource/OverlordRTGov</jta-data-source>
@@ -14,18 +14,9 @@
 
 		<class>org.overlord.rtgov.analytics.situation.Situation</class>
 
-	</persistence-unit>
-	<persistence-unit name="overlord-rtgov-epn-non-jta">
-		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-
-		<non-jta-data-source>java:jboss/datasource/OverlordRTGov</non-jta-data-source>
-
-		<class>org.overlord.rtgov.activity.model.ActivityUnit</class>
-		<class>org.overlord.rtgov.activity.model.ActivityType</class>
-		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
-
-		<class>org.overlord.rtgov.analytics.situation.Situation</class>
-
+		<properties>
+			<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
+		</properties>
 	</persistence-unit>
 </persistence>
 

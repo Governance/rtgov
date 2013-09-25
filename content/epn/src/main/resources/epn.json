@@ -59,7 +59,7 @@
       "retryInterval" : 0,
       "eventProcessor" : {
         "@class" : "org.overlord.rtgov.ep.jpa.JPAEventProcessor",
-        "entityManager" : "overlord-rtgov-epn-non-jta"
+        "entityManager" : "overlord-rtgov-epn"
       }
     }
   ]

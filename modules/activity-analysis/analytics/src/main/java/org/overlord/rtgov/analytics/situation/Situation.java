@@ -18,12 +18,12 @@ package org.overlord.rtgov.analytics.situation;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.UUID;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapKeyColumn;
@@ -42,7 +42,7 @@ public class Situation implements java.io.Externalizable {
 
     private static final int VERSION = 1;
     
-    private Long _id;
+    private String _id=UUID.randomUUID().toString();
     
     /**
      * The separator character between parts of the subject.
@@ -99,8 +99,7 @@ public class Situation implements java.io.Externalizable {
      * @return The id
      */
     @Id
-    @GeneratedValue 
-    protected Long getId() {
+    public String getId() {
         return (_id);
     }
     
@@ -109,7 +108,7 @@ public class Situation implements java.io.Externalizable {
      * 
      * @param id The id
      */
-    protected void setId(Long id) {
+    public void setId(String id) {
         _id = id;
     }
     
@@ -402,7 +401,7 @@ public class Situation implements java.io.Externalizable {
             ClassNotFoundException {
         in.readInt(); // Consume version, as not required for now
         
-        _id = (Long)in.readObject();
+        _id = (String)in.readObject();
         _type = (String)in.readObject();
         _subject = (String)in.readObject();
         _description = (String)in.readObject();

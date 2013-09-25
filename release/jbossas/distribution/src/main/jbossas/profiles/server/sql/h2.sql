@@ -17,3 +17,23 @@ alter table RTGOV_ACTIVITY_CONTEXT add constraint FK7FFC19525A6A791D foreign key
 
 alter table RTGOV_ACTIVITY_PROPERTIES add constraint FK728366909BA1A17D foreign key (unitId, unitIndex) references RTGOV_ACTIVITIES;
 
+
+drop table RTGOV_SITUATIONS if exists;
+drop table RTGOV_SITUATION_ACTIVITY_TYPES if exists;
+drop table RTGOV_SITUATION_CONTEXT if exists;
+drop table RTGOV_SITUATION_PROPERTIES if exists;
+
+create table RTGOV_SITUATIONS (id varchar(255) not null, description varchar(255), severity integer, subject varchar(255), timestamp bigint not null, type varchar(255), primary key (id));
+
+create table RTGOV_SITUATION_ACTIVITY_TYPES (Situation_id varchar(255) not null, unitId varchar(255), unitIndex integer not null);
+
+create table RTGOV_SITUATION_CONTEXT (Situation_id varchar(255) not null, timeframe bigint, type varchar(255), value varchar(255));
+
+create table RTGOV_SITUATION_PROPERTIES (id varchar(255) not null, value varchar(255), name varchar(255) not null, primary key (id, name));
+
+alter table RTGOV_SITUATION_ACTIVITY_TYPES add constraint FK_l3yoqst9iu0euiw0vo2b5t5yu foreign key (Situation_id) references RTGOV_SITUATIONS;
+
+alter table RTGOV_SITUATION_CONTEXT add constraint FK_b08bon7ya4r67qlm24alhqdpg foreign key (Situation_id) references RTGOV_SITUATIONS;
+
+alter table RTGOV_SITUATION_PROPERTIES add constraint FK_js9tml3lmnlrl38etv7mouwox foreign key (id) references RTGOV_SITUATIONS;
+

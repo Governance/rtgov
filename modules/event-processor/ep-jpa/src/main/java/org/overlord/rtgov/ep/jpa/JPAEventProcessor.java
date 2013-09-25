@@ -16,8 +16,6 @@
 package org.overlord.rtgov.ep.jpa;
 
 import java.text.MessageFormat;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,8 +36,8 @@ public class JPAEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(JPAEventProcessor.class.getName());
 
-    private EntityManager _em=null;
     private EntityManagerFactory _emf=null;
+    private EntityManager _em=null;
     private String _entityManager=null;
     
     @Inject
@@ -69,7 +67,7 @@ public class JPAEventProcessor extends EventProcessor {
      * @return The entity manager
      */
     protected EntityManager getEntityMgr() {
-        return (_em);
+        return (_em == null ? _emf.createEntityManager() : _em);
     }
     
     /**
@@ -79,57 +77,29 @@ public class JPAEventProcessor extends EventProcessor {
     public void init() throws Exception {
         
         if (_emf == null) {
-            try {
-                // BAM-120 Use separate thread as causes problem when hibernate creates
-                // the schema within a transaction scope
-                Executors.newSingleThreadExecutor().submit(new Runnable() {
-                    public void run() {                    
-                        java.util.Properties props=null;
-                        
-                        try {
-                            if (_properties != null) {
-                                props = _properties.getProperties();
-                            }
-                            
-                            if (LOG.isLoggable(Level.FINE)) {
-                                LOG.fine("Properties passed to entity manager factory creation: "+props);                
-                            }
-                            
-                            _emf = Persistence.createEntityManagerFactory(getEntityManager(), props);
-                    
-                        } catch (Throwable e) {
-                            LOG.log(Level.SEVERE, MessageFormat.format(
-                                    java.util.PropertyResourceBundle.getBundle(
-                                            "ep-jpa.Messages").getString("EP-JPA-1"),
-                                            getEntityManager()), e);
-                        }
-                    }
-                }).get(5000, TimeUnit.MILLISECONDS);
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                                "ep-jpa.Messages").getString("EP-JPA-2"),
-                                getEntityManager()), e);
-            }
-        }
+            java.util.Properties props=null;
             
-        if (_em == null) {
             try {
-                _em = _emf.createEntityManager();
+                if (_properties != null) {
+                    props = _properties.getProperties();
+                }
                 
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("EntityManager '"+getEntityManager()+"' created");                
+                    LOG.fine("Properties passed to entity manager factory creation: "+props);                
                 }
+                
+                _emf = Persistence.createEntityManagerFactory(getEntityManager(), props);
+        
             } catch (Throwable e) {
                 LOG.log(Level.SEVERE, MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
-                                "ep-jpa.Messages").getString("EP-JPA-3"),
+                                "ep-jpa.Messages").getString("EP-JPA-1"),
                                 getEntityManager()), e);
             }
-        }
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("JPAEventProcessor init: entity manager="+_entityManager+" em="+_em);
+
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("JPAEventProcessor init: entity manager="+_entityManager+" emf="+_emf);
+            }
         }
     }
     
@@ -140,15 +110,40 @@ public class JPAEventProcessor extends EventProcessor {
                 java.io.Serializable event, int retriesLeft) throws Exception {
         java.io.Serializable ret=null;
         
+        EntityManager em=getEntityMgr();
+        
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Process event '"+event+" from source '"+source
-                    +"' on JPA Event Processor '"+getEntityManager()
+                    +"' on JPA Event Processor '"+em
                     +"'");
         }
 
-        _em.persist(event);
+        try {
+            em.persist(event);
+        } finally {
+            closeEntityManager(em);
+        }
 
         return (ret);
     }
 
+    /**
+     * This method closes the supplied entity manager.
+     * 
+     * @param em The entity manager
+     */
+    protected void closeEntityManager(EntityManager em) {
+        if (em != _em) {
+            em.close();
+        }
+    }
+    
+    /**
+     * This method sets the entity manager.
+     * 
+     * @param em The entity manager
+     */
+    public void setEntityMgr(EntityManager em) {
+        _em = em;
+    }
 }
