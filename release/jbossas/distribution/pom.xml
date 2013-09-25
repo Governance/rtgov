@@ -62,6 +62,15 @@
 			<groupId>org.overlord</groupId>
 			<artifactId>overlord-commons-installer</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-idp</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth</artifactId>
+		</dependency>
 
 		<!-- Database drivers -->
 

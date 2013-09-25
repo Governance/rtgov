@@ -111,6 +111,12 @@
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-idp</artifactId>
+				<version>${overlord-commons.version}</version>
+				<type>war</type>
+			</dependency>
+			<dependency>
+				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth</artifactId>
 				<version>${overlord-commons.version}</version>
 			</dependency>

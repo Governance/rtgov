@@ -13,10 +13,11 @@
 		<ant antfile="build.xml" target="install"
 				dir="overlord-commons" >
 			<property name="overlord-commons.appserver.dir" value="${jboss.home}" />
-			<property name="overlord-commons.install.dir" value="${basedir}/overlord-commons" />
+			<property name="overlord-commons.idp.download.url" value="file:${basedir}/overlord-commons/overlord-commons-idp.war" />
+			<property name="overlord-commons.auth.download.url" value="file:${basedir}/overlord-commons/overlord-commons-auth.jar" />
 
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
-			<property name="overlord-commons.version" value="1.0.9" />
+			<property name="overlord-commons.version" value="2.0.0-SNAPSHOT" />
 		</ant>
 
 		<ant antfile="gadget-server/build.xml" target="deploy">
