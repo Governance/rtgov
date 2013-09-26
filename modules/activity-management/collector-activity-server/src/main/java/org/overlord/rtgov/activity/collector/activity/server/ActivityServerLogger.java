@@ -101,7 +101,10 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
                             // Free up the list
                             list.clear();
                             
-                            _freeActivityLists.offer(list);
+                            // Add protection to make sure list cannot grow unnecessarily large
+                            if (_freeActivityLists.size() < _maxThreads*2) {
+                                _freeActivityLists.offer(list);
+                            }
                             
                             _failuresSinceLastSuccess = 0;
                             

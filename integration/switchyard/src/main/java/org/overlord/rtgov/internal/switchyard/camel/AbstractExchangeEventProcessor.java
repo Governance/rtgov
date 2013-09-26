@@ -71,71 +71,76 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
      * {@inheritDoc}
      */
     public void handleEvent(EventObject event) {
-        org.apache.camel.Exchange exch=
-                ((org.apache.camel.management.event.AbstractExchangeEvent)event).getExchange();
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("********* Exchange="+exch);
-        }
-        
-        // If not a switchyard camel exchange, then ignore
-        if (!(exch.getIn() instanceof org.switchyard.bus.camel.CamelMessage)) {
+        try {
+            org.apache.camel.Exchange exch=
+                    ((org.apache.camel.management.event.AbstractExchangeEvent)event).getExchange();
+            
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("********* Exchange not for a switchyard message ="+exch.getIn());
-            }
-            return;
-        }
-        
-        org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
-        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
-
-        if (phase == null) {
-            LOG.severe("Could not obtain phase from exchange: "+exch);
-            return;
-        }
-
-        if (mesg == null) {
-            LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
-            return;
-        }
-        
-        org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
-        
-        Service provider=exch.getProperty("org.switchyard.bus.camel.provider", Service.class);
-        ServiceReference consumer=exch.getProperty("org.switchyard.bus.camel.consumer", ServiceReference.class);
-        
-        // TODO: If message is transformed, then should the contentType
-        // be updated to reflect the transformed type?
-        
-        String messageId=null;
-        Property mip=context.getProperty("org.switchyard.messageId", org.switchyard.Scope.MESSAGE);
-        if (mip != null) {
-            messageId = (String)mip.getValue();
-        }
-        
-        String contentType=null;
-        Property ctp=context.getProperty("org.switchyard.contentType", org.switchyard.Scope.MESSAGE);
-        if (ctp != null) {
-            contentType = ((QName)ctp.getValue()).toString();
-            
-            // RTGOV-250 - remove java: prefix from Java types, to make the type consistent with
-            // events reported outside switchyard
-            if (contentType != null && contentType.startsWith("java:")) {
-                contentType = contentType.substring(5);
-            }
-        }
-        
-        if (phase == ExchangePhase.IN) {
-            handleInExchange(exch, provider, consumer, messageId, contentType, mesg);
-            
-        } else if (phase == ExchangePhase.OUT) {            
-            String relatesTo=null;
-            Property rtp=context.getProperty("org.switchyard.relatesTo", org.switchyard.Scope.MESSAGE);
-            if (rtp != null) {
-                relatesTo = (String)rtp.getValue();
+                LOG.finest("********* Exchange="+exch);
             }
             
-            handleOutExchange(exch, provider, consumer, messageId, relatesTo, contentType, mesg);
+            // If not a switchyard camel exchange, then ignore
+            if (!(exch.getIn() instanceof org.switchyard.bus.camel.CamelMessage)) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("********* Exchange not for a switchyard message ="+exch.getIn());
+                }
+                return;
+            }
+            
+            org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
+            ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
+    
+            if (phase == null) {
+                LOG.severe("Could not obtain phase from exchange: "+exch);
+                return;
+            }
+    
+            if (mesg == null) {
+                LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
+                return;
+            }
+            
+            org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
+            
+            Service provider=exch.getProperty("org.switchyard.bus.camel.provider", Service.class);
+            ServiceReference consumer=exch.getProperty("org.switchyard.bus.camel.consumer", ServiceReference.class);
+            
+            // TODO: If message is transformed, then should the contentType
+            // be updated to reflect the transformed type?
+            
+            String messageId=null;
+            Property mip=context.getProperty("org.switchyard.messageId", org.switchyard.Scope.MESSAGE);
+            if (mip != null) {
+                messageId = (String)mip.getValue();
+            }
+            
+            String contentType=null;
+            Property ctp=context.getProperty("org.switchyard.contentType", org.switchyard.Scope.MESSAGE);
+            if (ctp != null) {
+                contentType = ((QName)ctp.getValue()).toString();
+                
+                // RTGOV-250 - remove java: prefix from Java types, to make the type consistent with
+                // events reported outside switchyard
+                if (contentType != null && contentType.startsWith("java:")) {
+                    contentType = contentType.substring(5);
+                }
+            }
+            
+            if (phase == ExchangePhase.IN) {
+                handleInExchange(exch, provider, consumer, messageId, contentType, mesg);
+                
+            } else if (phase == ExchangePhase.OUT) {            
+                String relatesTo=null;
+                Property rtp=context.getProperty("org.switchyard.relatesTo", org.switchyard.Scope.MESSAGE);
+                if (rtp != null) {
+                    relatesTo = (String)rtp.getValue();
+                }
+                
+                handleOutExchange(exch, provider, consumer, messageId, relatesTo, contentType, mesg);
+            }
+        } catch (Throwable t) {
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "rtgov-switchyard.Messages").getString("RTGOV-SWITCHYARD-1"), t);
         }
     }
     
@@ -184,7 +189,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             RequestSent sent=new RequestSent();
             
             // Only report service type if provider is not a binding
-            if (provider == null
+            if (providerReg == null
                     || !providerReg.isBinding()) {
                 sent.setServiceType(serviceType.toString()); 
             }
@@ -201,7 +206,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             }
         }
         
-        if (provider == null
+        if (providerReg == null
                 || !providerReg.isBinding()) {
             RequestReceived recvd=new RequestReceived();
             
@@ -262,12 +267,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         }
         
         // Record the response
-        if (provider == null
+        if (providerReg == null
                 || !providerReg.isBinding()) {
             ResponseSent sent=new ResponseSent();
                             
             // Only report service type if provider is not a binding
-            if (provider == null
+            if (providerReg == null
                     || !providerReg.isBinding()) {
                 sent.setServiceType(serviceType.toString()); 
             }
