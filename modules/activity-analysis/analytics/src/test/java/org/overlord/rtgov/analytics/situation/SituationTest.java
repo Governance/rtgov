@@ -56,12 +56,12 @@ public class SituationTest {
 		
 		Situation s1=new Situation();
 		
-		java.util.List<ActivityTypeId> atid1=new java.util.Vector<ActivityTypeId>();
+		java.util.Set<ActivityTypeId> atid1=new java.util.LinkedHashSet<ActivityTypeId>();
 		atid1.add(new ActivityTypeId("1", 1));
 		
 		s1.setActivityTypeIds(atid1);
 		
-		java.util.List<Context> ctxt1=new java.util.Vector<Context>();
+		java.util.Set<Context> ctxt1=new java.util.LinkedHashSet<Context>();
 		
 		ctxt1.add(new Context(Type.Message, "M1"));
 		
@@ -79,12 +79,12 @@ public class SituationTest {
 
 		Situation s2=new Situation();
 		
-		java.util.List<ActivityTypeId> atid2=new java.util.Vector<ActivityTypeId>();
+		java.util.Set<ActivityTypeId> atid2=new java.util.LinkedHashSet<ActivityTypeId>();
 		atid2.add(new ActivityTypeId("2", 2));
 		
 		s2.setActivityTypeIds(atid2);
 		
-		java.util.List<Context> ctxt2=new java.util.Vector<Context>();
+		java.util.Set<Context> ctxt2=new java.util.LinkedHashSet<Context>();
 		
 		ctxt2.add(new Context(Type.Message, "M2"));
 		ctxt2.add(new Context(Type.Endpoint, "E2"));

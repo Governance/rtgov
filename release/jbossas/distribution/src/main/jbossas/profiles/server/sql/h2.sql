@@ -23,7 +23,7 @@ drop table RTGOV_SITUATION_ACTIVITY_TYPES if exists;
 drop table RTGOV_SITUATION_CONTEXT if exists;
 drop table RTGOV_SITUATION_PROPERTIES if exists;
 
-create table RTGOV_SITUATIONS (id varchar(255) not null, description varchar(255), severity integer, subject varchar(255), timestamp bigint not null, type varchar(255), primary key (id));
+create table RTGOV_SITUATIONS (id varchar(255) not null, description clob, severity integer, subject varchar(255), timestamp bigint not null, type varchar(255), primary key (id));
 
 create table RTGOV_SITUATION_ACTIVITY_TYPES (Situation_id varchar(255) not null, unitId varchar(255), unitIndex integer not null);
 

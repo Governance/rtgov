@@ -24,8 +24,10 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
@@ -87,11 +89,11 @@ public class Situation implements java.io.Externalizable {
     private String _description=null;
     private long _timestamp=0;
     private Severity _severity=null;
-    private java.util.List<ActivityTypeId> _activityTypeIds=
-                        new java.util.ArrayList<ActivityTypeId>();
+    private java.util.Set<ActivityTypeId> _activityTypeIds=
+                        new java.util.LinkedHashSet<ActivityTypeId>();
     private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
-    private java.util.List<Context> _contexts=
-                        new java.util.ArrayList<Context>();
+    private java.util.Set<Context> _contexts=
+                        new java.util.LinkedHashSet<Context>();
 
     /**
      * This method returns the id.
@@ -213,6 +215,8 @@ public class Situation implements java.io.Externalizable {
      * 
      * @return The description
      */
+    @Column(length=10240)
+    @Lob
     public String getDescription() {
         return (_description);
     }
@@ -258,7 +262,7 @@ public class Situation implements java.io.Externalizable {
      * 
      * @param activityTypeIds The list of activity type ids
      */
-    public void setActivityTypeIds(java.util.List<ActivityTypeId> activityTypeIds) {
+    public void setActivityTypeIds(java.util.Set<ActivityTypeId> activityTypeIds) {
         _activityTypeIds = activityTypeIds;
     }
     
@@ -268,9 +272,9 @@ public class Situation implements java.io.Externalizable {
      * 
      * @return The related activity type ids
      */
-    @ElementCollection()
+    @ElementCollection(fetch=FetchType.EAGER)
     @CollectionTable(name="RTGOV_SITUATION_ACTIVITY_TYPES")
-    public java.util.List<ActivityTypeId> getActivityTypeIds() {
+    public java.util.Set<ActivityTypeId> getActivityTypeIds() {
         return (_activityTypeIds);
     }
     
@@ -288,7 +292,7 @@ public class Situation implements java.io.Externalizable {
      * 
      * @return The properties
      */
-    @ElementCollection(targetClass=String.class)
+    @ElementCollection(targetClass=String.class,fetch=FetchType.EAGER)
     @MapKeyColumn(name="name")
     @Column(name="value")
     @CollectionTable(name="RTGOV_SITUATION_PROPERTIES",joinColumns={
@@ -302,7 +306,7 @@ public class Situation implements java.io.Externalizable {
      * 
      * @param context The context
      */
-    public void setContext(java.util.List<Context> context) {
+    public void setContext(java.util.Set<Context> context) {
         _contexts = context;
     }
     
@@ -311,9 +315,9 @@ public class Situation implements java.io.Externalizable {
      * 
      * @return The context
      */
-    @ElementCollection()
+    @ElementCollection(fetch=FetchType.EAGER)
     @CollectionTable(name="RTGOV_SITUATION_CONTEXT")
-    public java.util.List<Context> getContext() {
+    public java.util.Set<Context> getContext() {
         return (_contexts);
     }
 
@@ -381,16 +385,18 @@ public class Situation implements java.io.Externalizable {
         out.writeLong(_timestamp);
         
         out.writeInt(_activityTypeIds.size());
-        for (int i=0; i < _activityTypeIds.size(); i++) {
-            out.writeObject(_activityTypeIds.get(i));            
-        }
+        java.util.Iterator<ActivityTypeId> iter=_activityTypeIds.iterator();
+        while (iter.hasNext()) {
+            out.writeObject(iter.next());
+        }    
         
         out.writeObject(_properties);    
         
         out.writeInt(_contexts.size());
-        for (int i=0; i < _contexts.size(); i++) {
-            out.writeObject(_contexts.get(i));
-        }
+        java.util.Iterator<Context> iter2=_contexts.iterator();
+        while (iter2.hasNext()) {
+            out.writeObject(iter2.next());
+        }    
     }
 
     /**
