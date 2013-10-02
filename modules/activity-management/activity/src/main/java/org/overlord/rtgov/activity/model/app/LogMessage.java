@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import org.overlord.rtgov.activity.model.ActivityType;
@@ -84,6 +85,7 @@ public class LogMessage extends ActivityType implements java.io.Externalizable {
      * 
      * @return The level
      */
+    @Column(name="logLevel")
     public Level getLevel() {
         return (_level);
     }

@@ -128,6 +128,7 @@ public class Situation implements java.io.Externalizable {
      * 
      * @return The situation type
      */
+    @Column(name="situationType")
     public String getType() {
         return (_type);
     }
@@ -235,6 +236,7 @@ public class Situation implements java.io.Externalizable {
      * 
      * @return The timestamp
      */
+    @Column(name="tstamp")
     public long getTimestamp() {
         return (_timestamp);
     }
