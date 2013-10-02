@@ -20,8 +20,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.rtgov.ep.mail.MailEventProcessor;
@@ -46,15 +45,13 @@ public class EPMailTest {
             .addAsResource("script/Content.mvel")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsLibraries(
-                    DependencyResolvers
-                    .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.rtgov.event-processor:ep-core:"+rtgovversion,
-                            "org.overlord.rtgov.event-processor:ep-mail:"+rtgovversion,
-                            "org.overlord.rtgov.common:rtgov-common:"+rtgovversion,
-                            "org.mvel:mvel2:"+mvelversion,
-                            "org.codehaus.jackson:jackson-core-asl:"+jacksonversion,
-                            "org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion)
-                    .resolveAsFiles());
+                    Maven.resolver().resolve("org.overlord.rtgov.event-processor:ep-core:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.event-processor:ep-mail:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.common:rtgov-common:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.mvel:mvel2:"+mvelversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
+             );
     }
 
     @Test

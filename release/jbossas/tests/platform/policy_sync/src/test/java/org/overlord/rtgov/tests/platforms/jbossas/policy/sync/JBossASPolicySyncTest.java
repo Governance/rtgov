@@ -26,8 +26,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,33 +41,30 @@ public class JBossASPolicySyncTest {
     public static JavaArchive createDeployment1() {
         String version=System.getProperty("rtgov.version");
 
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-app:"+version)
-                .resolveAsFiles();
+        java.io.File archiveFile=Maven.resolver().resolve("org.overlord.rtgov.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-app:"+version)
+                .withoutTransitivity().asSingleFile();
         
-        return ShrinkWrap.createFromZipFile(JavaArchive.class, archiveFiles[0]);
+        return ShrinkWrap.createFromZipFile(JavaArchive.class, archiveFile);
     }
     
     @Deployment(name="orders-ip", order=2)
     public static WebArchive createDeployment2() {
         String version=System.getProperty("rtgov.version");
 
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-ip:war:"+version)
-                .resolveAsFiles();
+        java.io.File archiveFile=Maven.resolver().resolve("org.overlord.rtgov.samples.jbossas.ordermgmt:samples-jbossas-ordermgmt-ip:war:"+version)
+                .withoutTransitivity().asSingleFile();
         
-        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFile);
     }
     
     @Deployment(name="policy-sync", order=3)
     public static WebArchive createDeployment3() {
         String version=System.getProperty("rtgov.version");
 
-        java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
-                .artifacts("org.overlord.rtgov.samples.jbossas.policy:samples-jbossas-policy-sync:war:"+version)
-                .resolveAsFiles();
+        java.io.File archiveFile=Maven.resolver().resolve("org.overlord.rtgov.samples.jbossas.policy:samples-jbossas-policy-sync:war:"+version)
+                .withoutTransitivity().asSingleFile();
         
-        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
+        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFile);
     }
     
     @Test @OperateOnDeployment("orders-app")

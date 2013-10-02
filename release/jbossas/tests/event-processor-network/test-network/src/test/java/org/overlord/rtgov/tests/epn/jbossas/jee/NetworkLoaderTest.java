@@ -21,8 +21,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.rtgov.epn.Network;
@@ -57,15 +56,13 @@ public class NetworkLoaderTest {
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
             .addAsManifestResource("rtgov-epn-hornetq-jms.xml")
             .addAsLibraries(
-                    DependencyResolvers
-                    .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.rtgov.event-processor-network:epn-core:"+rtgovversion,
-                    		"org.overlord.rtgov.event-processor:ep-core:"+rtgovversion,
-                            "org.overlord.rtgov.event-processor-network:epn-container-jee:"+rtgovversion,
-                            "org.overlord.rtgov.common:rtgov-common:"+rtgovversion,
-                            "org.codehaus.jackson:jackson-core-asl:"+jacksonversion,
-                            "org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion)
-                    .resolveAsFiles());
+                    Maven.resolver().resolve("org.overlord.rtgov.event-processor-network:epn-core:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.event-processor:ep-core:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.event-processor-network:epn-container-jee:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.common:rtgov-common:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
+             );
     }
 
     @Test

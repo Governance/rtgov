@@ -13,9 +13,9 @@
 	</description>
 
 	<parent>
-		<groupId>org.jboss.integration-platform</groupId>
-		<artifactId>jboss-integration-platform-bom</artifactId>
-		<version>6.0.0-SNAPSHOT</version>
+		<groupId>org.jboss</groupId>
+		<artifactId>jboss-parent</artifactId>
+		<version>10</version>
 	</parent>
 
 	<scm>
@@ -56,22 +56,15 @@
 	</developers>
 
 	<properties>
-		<aether.version>1.8</aether.version>
-		<arquillian.jbossas.version>7.2.0.Final</arquillian.jbossas.version>
-		<arquillian.version>1.0.0.Final</arquillian.version>
 		<drools.version>6.0.0.CR3</drools.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
 		<jackson.version>1.9.9</jackson.version>			<!-- Passed into junit tests -->
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
-		<jbossas.version>7.2.0.Final</jbossas.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<kie.version>6.0.0.CR3</kie.version>
-		<maven-aether.version>3.0.1</maven-aether.version>
 		<mvel.version>2.1.6.Final</mvel.version>			<!-- Passed into junit tests -->
 		<overlord-commons.version>2.0.0-SNAPSHOT</overlord-commons.version>
-		<shrinkwrap.version>1.0.0</shrinkwrap.version>
-		<shrinkwrap-resolver.version>1.0.0-beta-6</shrinkwrap-resolver.version>
 		<switchyard.version>1.0.0.Final</switchyard.version>
 	</properties>
 
@@ -89,9 +82,9 @@
 
 			<!-- Imported dependencies -->
 			<dependency>
-				<groupId>org.jboss.as</groupId>
-				<artifactId>jboss-as-parent</artifactId>
-				<version>${jbossas.version}</version>
+				<groupId>org.jboss.integration-platform</groupId>
+				<artifactId>jboss-integration-platform-bom</artifactId>
+				<version>6.0.0-SNAPSHOT</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -153,11 +146,6 @@
 				<artifactId>drools-compiler</artifactId>
 				<version>${drools.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>org.mvel</groupId>
-				<artifactId>mvel2</artifactId>
-				<version>${mvel.version}</version>
-			</dependency>
 
 			<dependency>
 				<groupId>org.switchyard</groupId>
@@ -214,69 +202,6 @@
 				<groupId>org.jboss.naming</groupId>
 				<artifactId>jnp-client</artifactId>
 				<version>${jnp-client.version}</version>
-			</dependency>
-
-
-			<!--
-				Dependencies required to get arquillian tests running against
-				AS7.2, due to incompatibility between shrinkwrap and aether, resulting in:
-				
-				org.sonatype.aether.repository.NoLocalRepositoryManagerException:
-					No manager available for local repository /Users/..../.m2/repository of
-					type enhanced using the available factories EnhancedLocalRepositoryManagerFactory,
-							SimpleLocalRepositoryManagerFactory
-			-->
-
-			<dependency>
-				<groupId>org.jboss.shrinkwrap</groupId>
-				<artifactId>shrinkwrap-bom</artifactId>
-				<version>${shrinkwrap.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.jboss.shrinkwrap.resolver</groupId>
-				<artifactId>shrinkwrap-resolver-bom</artifactId>
-				<version>${shrinkwrap-resolver.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>org.sonatype.aether</groupId>
-				<artifactId>aether-api</artifactId>
-				<version>${aether.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.sonatype.aether</groupId>
-				<artifactId>aether-util</artifactId>
-				<version>${aether.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.sonatype.aether</groupId>
-				<artifactId>aether-connector-wagon</artifactId>
-				<version>${aether.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.sonatype.aether</groupId>
-				<artifactId>aether-spi</artifactId>
-				<version>${aether.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.sonatype.aether</groupId>
-				<artifactId>aether-impl</artifactId>
-				<version>${aether.version}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.maven</groupId>
-				<artifactId>maven-aether-provider</artifactId>
-				<version>${maven-aether.version}</version>
-				<scope>test</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

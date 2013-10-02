@@ -46,7 +46,7 @@ public class PerformanceJEETest {
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
                 .artifacts("org.overlord.rtgov.release.jbossas:overlord-rtgov:war:"+version)
-                .resolveAsFiles();
+                .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
                 copyToTmpFile(archiveFiles[0],"overlord-rtgov.war"));
@@ -58,7 +58,7 @@ public class PerformanceJEETest {
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
                 .artifacts("org.overlord.rtgov.release.jbossas.performance:performance-jbossas-app:war:"+version)
-                .resolveAsFiles();
+                .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
                 			copyToTmpFile(archiveFiles[0],"jeeapp.war"));
@@ -70,7 +70,7 @@ public class PerformanceJEETest {
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
                 .artifacts("org.overlord.rtgov.release.jbossas.performance:performance-jbossas-epn:war:"+version)
-                .resolveAsFiles();
+                .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
@@ -81,7 +81,7 @@ public class PerformanceJEETest {
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
                 .artifacts("org.overlord.rtgov.release.jbossas.performance:performance-jbossas-acs:war:"+version)
-                .resolveAsFiles();
+                .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFiles[0]);
     }
@@ -92,7 +92,7 @@ public class PerformanceJEETest {
 
         java.io.File[] archiveFiles=DependencyResolvers.use(MavenDependencyResolver.class)
                 .artifacts("org.overlord.rtgov.release.jbossas.performance:performance-jbossas-monitor:war:"+version)
-                .resolveAsFiles();
+                .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class,
                         copyToTmpFile(archiveFiles[0],"jeemonitor.war"));

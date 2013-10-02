@@ -25,8 +25,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -77,19 +76,17 @@ public class CallTraceRESTTest {
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
             .setWebXML("web.xml")
             .addAsLibraries(
-                    DependencyResolvers
-                    .use(MavenDependencyResolver.class)
-                    .artifacts("org.overlord.rtgov.activity-management:activity-server-jee:"+rtgovversion,
-                            "org.overlord.rtgov.activity-management:activity:"+rtgovversion,
-                            "org.overlord.rtgov.activity-management:collector-activity-server:"+rtgovversion,
-                            "org.overlord.rtgov.common:rtgov-common:"+rtgovversion,
-                            "org.overlord.rtgov.integration:rtgov-jbossas:"+rtgovversion,
-                            "org.overlord.rtgov.activity-management:activity-store-mem:"+rtgovversion,
-                            "org.overlord.rtgov.activity-analysis:call-trace:"+rtgovversion,
-                            "org.overlord.rtgov.content.services:call-trace-rests:"+rtgovversion,
-                            "org.codehaus.jackson:jackson-core-asl:"+jacksonversion,
-                            "org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion)
-                    .resolveAsFiles());
+                    Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-server-jee:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.activity-management:collector-activity-server:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.common:rtgov-common:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.integration:rtgov-jbossas:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-store-mem:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.activity-analysis:call-trace:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord.rtgov.content.services:call-trace-rests:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
+            );
     }
     
     protected void initActivityStore() {
