@@ -267,10 +267,18 @@ public class JBossASActivityServerServiceTest {
         
         java.io.InputStream is=connection.getInputStream();
 
-        b = new byte[is.available()];
-        is.read(b);
+        java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
         
-        System.out.println(">>>> JSON="+new String(b));
+        while (is.available() > 0) {
+            b = new byte[is.available()];
+            is.read(b);
+            baos.write(b);
+        }
+        
+        is.close();
+        baos.close();
+        
+        System.out.println(">>>> JSON="+new String(baos.toByteArray()));
         
         return (b);
     }
