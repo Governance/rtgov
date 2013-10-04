@@ -15,3 +15,6 @@ To undeploy the quickstart, run:
 
 	mvn jboss-as:undeploy
 
+
+NOTE: This quickstart can be deployed with the profile(s): server
+

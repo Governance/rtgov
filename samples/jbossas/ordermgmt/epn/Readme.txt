@@ -13,3 +13,7 @@ To undeploy the quickstart, run:
 
 	mvn jboss-as:undeploy
 
+
+NOTE: This quickstart can be deployed with the profile(s): client or server (needs to be co-located with
+switchyard execution environment)
+
