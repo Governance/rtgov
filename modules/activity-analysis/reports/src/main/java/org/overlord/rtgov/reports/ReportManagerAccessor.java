@@ -27,6 +27,8 @@ import java.util.logging.Logger;
  */
 public final class ReportManagerAccessor {
 
+    private static final int DEFAULT_WAIT_TIME = 300000;
+
     private static final Logger LOG=Logger.getLogger(ReportManagerAccessor.class.getName());
     
     private static ReportManager _reportManager=null;
@@ -72,7 +74,7 @@ public final class ReportManagerAccessor {
             synchronized (SYNC) {
                 if (_reportManager == null) {
                     try {
-                        SYNC.wait(10000);
+                        SYNC.wait(getWaitTime());
                     } catch (Exception e) {
                         LOG.log(Level.SEVERE, "Failed to wait for ReportManager to become available", e);
                     }
@@ -89,5 +91,18 @@ public final class ReportManagerAccessor {
         }
 
         return (_reportManager);
+    }
+    
+    private static long getWaitTime() {
+        final String waitTimeVal = System.getProperty("org.overlord.ServiceWaitTime");
+        long waitTime = DEFAULT_WAIT_TIME;
+        if (waitTimeVal != null) {
+            try {
+                waitTime = Long.parseLong(waitTimeVal);
+            } catch (final NumberFormatException nfe) {
+                LOG.warning("Failed to parse ServiceWaitTime " + waitTimeVal + ", using default value of " + waitTime);
+            }
+        }
+        return waitTime;
     }
 }
