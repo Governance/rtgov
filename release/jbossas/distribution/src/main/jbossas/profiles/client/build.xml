@@ -4,6 +4,16 @@
 	<property name="rtgov-layer" value="soa" />
 
 	<target name="deploy" >
+		<ant antfile="build.xml" target="install-vault"
+				dir="overlord-commons" >
+			<property name="overlord-commons.appserver.dir" value="${jboss.home}" />
+			<property name="overlord-commons.idp.download.url" value="file:${basedir}/overlord-commons/overlord-commons-idp.war" />
+			<property name="overlord-commons.auth.download.url" value="file:${basedir}/overlord-commons/overlord-commons-auth.jar" />
+
+			<!-- Temporary workaround - version needs to be correct in the called ant script -->
+			<property name="overlord-commons.version" value="2.0.0-SNAPSHOT" />
+		</ant>
+
 		<copy todir="${jboss.home}/modules/system/layers/${rtgov-layer}" >
 			<fileset dir="../../modules" />
 		</copy>
@@ -13,6 +23,64 @@
 		<copy todir="${jboss.home}/standalone/configuration" >
 			<fileset dir="configuration" />
 		</copy>
+		
+		<!-- Load the Overlord Vault Keys -->
+		<property file="${jboss.home}/standalone/configuration/overlord-vault-keys.properties" />
+
+		<!-- Prompt the user for rtgov client credentials -->
+	    <echo message="" />
+	    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+	    <echo message="!    User Input Required    !" />
+	    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+	    <echo message="" />
+		<input message="Please enter a valid RTGov (server) username: "
+			   addproperty="rtgov.users.client.username">
+		</input>
+		<input message="Please enter user ${rtgov.users.client.username}'s password: "
+			   addproperty="rtgov.users.client.password">
+			<handler type="secure" />
+		</input>
+
+	    <!-- Store rtgov client user's password in vault -->
+	    <property name="rtgov.tmp.file" location="_tmp_vault.properties" />
+	    <java jar="${jboss.home}/jboss-modules.jar"
+	          fork="true" dir="${jboss.home}"
+	          failonerror="true" maxmemory="128m">
+	      <arg value="-mp"/>
+	      <arg value="${jboss.home}/modules"/>
+	      <arg value="org.overlord.commons.overlord-commons-auth-tool"/>
+	      <arg value="storepassword"/>
+	      <arg value="-vaultdir"/>
+	      <arg value="${jboss.home}/vault/"/>
+	      <arg value="-keystore"/>
+	      <arg value="${jboss.home}/standalone/configuration/vault.keystore"/>
+	      <arg value="-storepass"/>
+	      <arg value="vault22"/>
+	      <arg value="-alias"/>
+	      <arg value="vault"/>
+	      <arg value="-salt"/>
+	      <arg value="8675309K"/>
+	      <arg value="-count"/>
+	      <arg value="50"/>
+	      <arg value="-name"/>
+	      <arg value="client.password"/>
+	      <arg value="-password"/>
+	      <arg value="${rtgov.users.client.password}"/>
+	      <arg value="-block"/>
+	      <arg value="rtgov"/>
+	      <arg value="-propertyfile"/>
+	      <arg value="${rtgov.tmp.file}"/>
+	      <arg value="-property"/>
+	      <arg value="rtgov.users.client.password.hash"/>
+	    </java>
+	    <property file="${rtgov.tmp.file}" />
+	    <delete file="${rtgov.tmp.file}" />
+	    <echo message="Vault key for ${rtgov.users.client.username}'s password: ${rtgov.users.client.password.hash}" />
+
+	    <propertyfile file="${jboss.home}/standalone/configuration/overlord-rtgov.properties">
+			<entry key="RESTActivityServer.serverUsername" value="${rtgov.users.client.username}" />
+			<entry key="RESTActivityServer.serverPassword" value="$${vault:${rtgov.users.client.password.hash}}" />
+	    </propertyfile>
 	</target>
 
 	<target name="undeploy" >
@@ -20,6 +88,14 @@
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
 	</target>
+
+	<scriptdef name="genguid" language="javascript">
+		<attribute name="property" />
+	      <![CDATA[
+	      importClass( java.util.UUID );
+	      project.setProperty( attributes.get( "property" ), UUID.randomUUID() );
+		  ]]>
+	</scriptdef>
 
 </project>
  

@@ -11,3 +11,4 @@ bin/
 **/*.iml
 .DS_Store
 .gwt
+.checkstyle
