@@ -41,7 +41,14 @@
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-jee</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>
+
+		<!-- Overlord commons -->
+		
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+		</dependency>
 
 		<!-- Client -->
 		
@@ -50,7 +57,7 @@
 			<artifactId>rtgov-client</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+	
 		<!-- JBossAS Specific -->
 		
 		<dependency>
