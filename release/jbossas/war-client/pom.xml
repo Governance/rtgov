@@ -71,6 +71,23 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+		<!-- Overlord commons -->
+		
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-configuration</groupId>
+					<artifactId>commons-configuration</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		<!-- Switchyard Specific -->
 		
 		<dependency>

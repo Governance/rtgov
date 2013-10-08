@@ -70,7 +70,9 @@ public class CallTraceRESTTest {
     @Deployment
     public static WebArchive createDeployment() {
         String rtgovversion=System.getProperty("rtgov.version");
+        String commonsversion=System.getProperty("overlord-commons.version");
         String jacksonversion=System.getProperty("jackson.version");
+        String configversion=System.getProperty("commons-configuration.version");
         
         return ShrinkWrap.create(WebArchive.class, "overlord-rtgov.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -84,6 +86,8 @@ public class CallTraceRESTTest {
                     Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-store-mem:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.activity-analysis:call-trace:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.content.services:call-trace-rests:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("org.overlord:overlord-commons-config:"+commonsversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
             );

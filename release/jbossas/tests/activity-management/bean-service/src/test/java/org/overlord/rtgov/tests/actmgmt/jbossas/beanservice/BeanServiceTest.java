@@ -56,6 +56,7 @@ public class BeanServiceTest {
     @Deployment
     public static WebArchive createDeployment() {
         String version=System.getProperty("rtgov.version");
+        String configversion=System.getProperty("commons-configuration.version");
         
         return ShrinkWrap.create(WebArchive.class)
             .addClass(InventoryService.class)
@@ -81,7 +82,8 @@ public class BeanServiceTest {
                     Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-server-jee:"+version).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-client-jee:"+version).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.integration:rtgov-jbossas:"+version).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.overlord.rtgov.activity-management:collector-activity-server:"+version).withoutTransitivity().asSingleFile()
+                    Maven.resolver().resolve("org.overlord.rtgov.activity-management:collector-activity-server:"+version).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withoutTransitivity().asSingleFile()
              );
     }
 

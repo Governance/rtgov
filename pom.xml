@@ -56,6 +56,7 @@
 	</developers>
 
 	<properties>
+		<commons-configuration.version>1.6</commons-configuration.version>  <!-- Passed into junit tests -->
 		<drools.version>6.0.0.CR3</drools.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
 		<jackson.version>1.9.9</jackson.version>			<!-- Passed into junit tests -->
@@ -63,7 +64,7 @@
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<kie.version>6.0.0.CR3</kie.version>
-		<mvel.version>2.1.6.Final</mvel.version>			<!-- Passed into junit tests -->
+		<mvel.version>2.1.7.Final</mvel.version>			<!-- Passed into junit tests -->
 		<overlord-commons.version>2.0.0-SNAPSHOT</overlord-commons.version>
 		<switchyard.version>1.0.0.Final</switchyard.version>
 	</properties>
@@ -117,7 +118,6 @@
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-config</artifactId>
 				<version>${overlord-commons.version}</version>
-				<scope>provided</scope>
 			</dependency>
 
 			<dependency>

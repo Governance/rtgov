@@ -59,6 +59,7 @@ public class ActivityServerRESTTest {
         String rtgovversion=System.getProperty("rtgov.version");
         String jacksonversion=System.getProperty("jackson.version");
         String mvelversion=System.getProperty("mvel.version");
+        String configversion=System.getProperty("commons-configuration.version");
         
         return ShrinkWrap.create(WebArchive.class, "overlord-rtgov.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -71,6 +72,7 @@ public class ActivityServerRESTTest {
                     Maven.resolver().resolve("org.overlord.rtgov.integration:rtgov-jbossas:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-store-mem:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-server-rests:"+rtgovversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.mvel:mvel2:"+mvelversion).withoutTransitivity().asSingleFile()

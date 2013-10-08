@@ -32,6 +32,8 @@
 
     <dependencies>
         <module name="javaee.api" export="true" />
+        <module name="org.apache.commons.configuration" export="true" />
+        <module name="org.apache.commons.lang" export="true" />
         <module name="org.codehaus.jackson.jackson-core-asl" export="true" />
         <module name="org.codehaus.jackson.jackson-mapper-asl" export="true" />
         <module name="org.kie" export="true" optional="true" />

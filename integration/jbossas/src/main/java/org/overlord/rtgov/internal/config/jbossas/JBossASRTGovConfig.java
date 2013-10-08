@@ -176,7 +176,7 @@ public class JBossASRTGovConfig implements RTGovPropertiesProvider {
                     configFile,
                     OVERLORD_RTGOV_PROPERTIES,
                     refreshDelay,
-                    "/META-INF/config/org.overlord.sramp.ui.server.api.properties",
+                    null,
                     JBossASRTGovConfig.class);
         }
         

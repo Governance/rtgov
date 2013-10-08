@@ -106,10 +106,15 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
+					<skip>true</skip>
 					<systemProperties>
 						<property>
 							<name>rtgov.version</name>
 							<value>${project.version}</value>
+						</property>
+						<property>
+							<name>commons-configuration.version</name>
+							<value>${commons-configuration.version}</value>
 						</property>
 					</systemProperties>
 					<includes>
