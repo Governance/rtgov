@@ -146,12 +146,7 @@
 		<dependency>
 			<groupId>org.overlord</groupId>
 			<artifactId>overlord-commons-auth</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-codec</groupId>
-					<artifactId>commons-codec</artifactId>
-				</exclusion>
-			</exclusions>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord</groupId>
@@ -217,7 +212,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.rtgov export services, org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel optional, org.switchyard.api optional, org.apache.camel.core optional, org.switchyard.api.extensions.java optional, org.switchyard.api.extensions.wsdl optional, org.switchyard.security optional, org.switchyard.runtime optional, org.switchyard.component.bpel optional, org.drools</Dependencies>
+							<Dependencies>org.overlord.rtgov export services, org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel optional, org.switchyard.api optional, org.apache.camel.core optional, org.switchyard.api.extensions.java optional, org.switchyard.api.extensions.wsdl optional, org.switchyard.security optional, org.switchyard.runtime optional, org.switchyard.component.bpel optional, org.drools, org.overlord.commons.overlord-commons-auth</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>
