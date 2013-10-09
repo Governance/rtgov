@@ -19,6 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
+import javax.naming.InitialContext;
+import javax.transaction.TransactionManager;
 import javax.xml.namespace.QName;
 
 import org.overlord.rtgov.activity.model.soa.RPCActivityType;
@@ -28,6 +30,7 @@ import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.internal.switchyard.camel.PropertyAccessor;
 import org.switchyard.ExchangePhase;
 import org.switchyard.Message;
@@ -50,6 +53,11 @@ public class AbstractExchangeValidator {
     
     private static final Logger LOG=Logger.getLogger(AbstractExchangeValidator.class.getName());
     
+    private static final String JAVAX_TRANSACTION_MANAGER = "javax.transaction.manager";
+    private static final String JBOSS_TRANSACTION_MANAGER = "java:jboss/TransactionManager";
+
+    private TransactionManager _transactionManager=null;
+
     private ActivityCollector _activityCollector=null;
     
     /**
@@ -65,6 +73,26 @@ public class AbstractExchangeValidator {
         
         if (_activityCollector == null) {
             LOG.severe("Failed to get activity collector");
+        }
+        
+        try {
+            String txnMgr=RTGovProperties.getProperty(JAVAX_TRANSACTION_MANAGER);
+            
+            if (txnMgr == null) {
+                txnMgr = JBOSS_TRANSACTION_MANAGER;
+            }
+            
+            InitialContext ctx=new InitialContext();
+            
+            _transactionManager = (TransactionManager)ctx.lookup(txnMgr);
+            
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.finer("Transaction manager '"+txnMgr+"' = "+_transactionManager);
+            }
+            
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                    "rtgov-jbossas.Messages").getString("RTGOV-JBOSSAS-1"), e);
         }
     }
 
@@ -99,108 +127,138 @@ public class AbstractExchangeValidator {
         
         if (_activityCollector != null) {
             
-            // TODO: If message is transformed, then should the contentType
-            // be updated to reflect the transformed type?
+            // Check if transaction should be started
+            boolean f_txnStarted=false;
             
-            String messageId=null;
-            String relatesTo=null;
-            String contentType=null;
-            
-            java.util.Set<Property> props=context.getProperties(
-                    org.switchyard.Scope.MESSAGE);
-            
-            for (Property p : props) {
-                
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("Switchyard property: name="+p.getName()+" value="+p.getValue());
+            try {
+                if (_transactionManager != null && _transactionManager.getTransaction() == null) {
+                    _transactionManager.begin();
+                    f_txnStarted = true;
+                    
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Validator txn has started");
+                    }
                 }
-                
-                if (p.getName().equals("org.switchyard.messageId")) {
-                    messageId = (String)p.getValue();
-                } else if (p.getName().equals("org.switchyard.relatesTo")) {
-                    relatesTo = (String)p.getValue();
-                } else if (p.getName().equals("org.switchyard.contentType")) {
-                    contentType = ((QName)p.getValue()).toString();
-                }
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Failed to start validator transaction", e);
             }
             
-            // Extract service type and operation from the consumer
-            // (service reference), as provider is not always available
-            QName serviceType=consumer.getName();
-            String opName=contract.getConsumerOperation().getName();
-            
-            if (phase == ExchangePhase.IN) {
-                if (!consumer.getServiceMetadata().getRegistrant().isBinding()) {
-                    // Only record the request being sent, if the
-                    // source is a component, not a binding
+            try {
+                // TODO: If message is transformed, then should the contentType
+                // be updated to reflect the transformed type?
                 
-                    RequestSent sent=new RequestSent();
-                    
-                    // Only report service type if provider is not a binding
-                    if (provider == null
-                            || !provider.getServiceMetadata().getRegistrant().isBinding()) {
-                        sent.setServiceType(serviceType.toString()); 
-                    }
-                    
-                    sent.setInterface(getInterface(consumer, provider));                
-                    sent.setOperation(opName);
-                    sent.setMessageId(messageId);
-                    
-                    validate(mesg, contentType, sent, securityContext); 
-                }
+                String messageId=null;
+                String relatesTo=null;
+                String contentType=null;
                 
-                if (provider == null
-                        || !provider.getServiceMetadata().getRegistrant().isBinding()) {
-                    RequestReceived recvd=new RequestReceived();
-                    
-                    recvd.setServiceType(serviceType.toString());                
-                    recvd.setInterface(getInterface(consumer, provider));                
-                    recvd.setOperation(opName);
-                    recvd.setMessageId(messageId);
-                    
-                    validate(mesg, contentType, recvd, securityContext); 
-                }
+                java.util.Set<Property> props=context.getProperties(
+                        org.switchyard.Scope.MESSAGE);
                 
-            } else if (phase == ExchangePhase.OUT) {
-                
-                if (contentType == null) {
-                    // Ignore as probably due to exception on handling the request
+                for (Property p : props) {
+                    
                     if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.finest("No content type - possibly due to exception on handling the request");
+                        LOG.finest("Switchyard property: name="+p.getName()+" value="+p.getValue());
                     }
-                    return;
+                    
+                    if (p.getName().equals("org.switchyard.messageId")) {
+                        messageId = (String)p.getValue();
+                    } else if (p.getName().equals("org.switchyard.relatesTo")) {
+                        relatesTo = (String)p.getValue();
+                    } else if (p.getName().equals("org.switchyard.contentType")) {
+                        contentType = ((QName)p.getValue()).toString();
+                    }
                 }
                 
-                if (provider == null
-                        || !provider.getServiceMetadata().getRegistrant().isBinding()) {
-                    ResponseSent sent=new ResponseSent();
-                                    
-                    // Only report service type if provider is not a binding
+                // Extract service type and operation from the consumer
+                // (service reference), as provider is not always available
+                QName serviceType=consumer.getName();
+                String opName=contract.getConsumerOperation().getName();
+                
+                if (phase == ExchangePhase.IN) {
+                    if (!consumer.getServiceMetadata().getRegistrant().isBinding()) {
+                        // Only record the request being sent, if the
+                        // source is a component, not a binding
+                    
+                        RequestSent sent=new RequestSent();
+                        
+                        // Only report service type if provider is not a binding
+                        if (provider == null
+                                || !provider.getServiceMetadata().getRegistrant().isBinding()) {
+                            sent.setServiceType(serviceType.toString()); 
+                        }
+                        
+                        sent.setInterface(getInterface(consumer, provider));                
+                        sent.setOperation(opName);
+                        sent.setMessageId(messageId);
+                        
+                        validate(mesg, contentType, sent, securityContext); 
+                    }
+                    
                     if (provider == null
                             || !provider.getServiceMetadata().getRegistrant().isBinding()) {
-                        sent.setServiceType(serviceType.toString()); 
+                        RequestReceived recvd=new RequestReceived();
+                        
+                        recvd.setServiceType(serviceType.toString());                
+                        recvd.setInterface(getInterface(consumer, provider));                
+                        recvd.setOperation(opName);
+                        recvd.setMessageId(messageId);
+                        
+                        validate(mesg, contentType, recvd, securityContext); 
                     }
-
-                    sent.setInterface(getInterface(consumer, provider));                
-                    sent.setOperation(opName);
-                    sent.setMessageId(messageId);
-                    sent.setReplyToId(relatesTo);
                     
-                    validate(mesg, contentType, sent, securityContext); 
+                } else if (phase == ExchangePhase.OUT) {
+                    
+                    if (contentType == null) {
+                        // Ignore as probably due to exception on handling the request
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("No content type - possibly due to exception on handling the request");
+                        }
+                        return;
+                    }
+                    
+                    if (provider == null
+                            || !provider.getServiceMetadata().getRegistrant().isBinding()) {
+                        ResponseSent sent=new ResponseSent();
+                                        
+                        // Only report service type if provider is not a binding
+                        if (provider == null
+                                || !provider.getServiceMetadata().getRegistrant().isBinding()) {
+                            sent.setServiceType(serviceType.toString()); 
+                        }
+    
+                        sent.setInterface(getInterface(consumer, provider));                
+                        sent.setOperation(opName);
+                        sent.setMessageId(messageId);
+                        sent.setReplyToId(relatesTo);
+                        
+                        validate(mesg, contentType, sent, securityContext); 
+                    }
+                    
+                    if (!consumer.getServiceMetadata().getRegistrant().isBinding()) {
+                        // Only record the response being received, if the
+                        // target is a component, not a binding
+                        ResponseReceived recvd=new ResponseReceived();
+                        
+                        recvd.setServiceType(serviceType.toString());                
+                        recvd.setInterface(getInterface(consumer, provider));                
+                        recvd.setOperation(opName);
+                        recvd.setMessageId(messageId);
+                        recvd.setReplyToId(relatesTo);
+                        
+                        validate(mesg, contentType, recvd, securityContext); 
+                    }
                 }
-                
-                if (!consumer.getServiceMetadata().getRegistrant().isBinding()) {
-                    // Only record the response being received, if the
-                    // target is a component, not a binding
-                    ResponseReceived recvd=new ResponseReceived();
-                    
-                    recvd.setServiceType(serviceType.toString());                
-                    recvd.setInterface(getInterface(consumer, provider));                
-                    recvd.setOperation(opName);
-                    recvd.setMessageId(messageId);
-                    recvd.setReplyToId(relatesTo);
-                    
-                    validate(mesg, contentType, recvd, securityContext); 
+            } finally {
+                if (f_txnStarted) {
+                    try {
+                        _transactionManager.commit();
+                        
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Validator txn has committed");
+                        }
+                    } catch (Exception e) {
+                        LOG.log(Level.SEVERE, "Failed to commit validator transaction", e);
+                    }
                 }
             }
         }
