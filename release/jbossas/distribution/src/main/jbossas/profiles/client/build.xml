@@ -35,6 +35,7 @@
 	    <echo message="" />
 		<input message="Please enter a valid RTGov (server) username: "
 			   addproperty="rtgov.users.client.username">
+			<handler type="secure" />
 		</input>
 		<input message="Please enter user ${rtgov.users.client.username}'s password: "
 			   addproperty="rtgov.users.client.password">
