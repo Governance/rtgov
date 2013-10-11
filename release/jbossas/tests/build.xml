@@ -9,7 +9,7 @@
 		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />
 		
 		<unzip src="${org.overlord.rtgov.release.jbossas:module:zip}"
-			dest="${jboss.home}" />
+			dest="${jboss.home}/modules" />
 
 		<echo message="Setting up Overlord Runtime Governance deployments"/>
 

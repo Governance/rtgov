@@ -39,7 +39,7 @@
         <module name="org.kie" export="true" optional="true" />
         <module name="org.drools" export="true" optional="true" />
         <module name="org.jbpm" export="true" optional="true" />
-        <module name="org.mvel.mvel2" export="true" />
+        <module name="org.mvel" export="true" />
         <module name="org.hibernate" export="true" />
         <module name="org.infinispan" export="true" />
         <module name="org.jaxen" export="true" />

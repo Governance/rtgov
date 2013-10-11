@@ -51,6 +51,12 @@
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
 
+		<!-- Copy soa modules -->
+		<fileSet>
+			<directory>${project.build.directory}/drools-modules/modules/system/layers/soa</directory>
+			<outputDirectory>/modules/drools</outputDirectory>
+		</fileSet>
+
 	</fileSets>
     
 	<dependencySets>
@@ -150,7 +156,7 @@
 		<!-- Modules -->
 
 		<dependencySet>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory>/modules/rtgov</outputDirectory>
 			<unpack>true</unpack>
 			<includes>
 				<include>org.overlord.rtgov.release.jbossas:module:zip</include>

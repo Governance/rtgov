@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RTGovClient">
 
-	<property name="rtgov-layer" value="soa" />
+	<target name="check-not-soa">
+		<condition property="soa.not.installed">
+			<not>
+				<available file="${jboss.home}/modules/system/layers/soa"/>
+			</not>
+		</condition>
+	</target>
 
-	<target name="deploy" >
+	<target name="non-soa-deploy" depends="check-not-soa" if="soa.not.installed" >
+		<echo message="**** Not a SOA environment, so installing additional modules ****" />
+
+		<copy todir="${jboss.home}/modules" >
+			<fileset dir="../../modules/drools" />
+		</copy>
+	</target>
+
+	<target name="deploy" depends="non-soa-deploy" >
 		<ant antfile="build.xml" target="install-vault"
 				dir="overlord-commons" >
 			<property name="overlord-commons.appserver.dir" value="${jboss.home}" />
@@ -14,8 +28,8 @@
 			<property name="overlord-commons.version" value="2.0.0-SNAPSHOT" />
 		</ant>
 
-		<copy todir="${jboss.home}/modules/system/layers/${rtgov-layer}" >
-			<fileset dir="../../modules" />
+		<copy todir="${jboss.home}/modules" >
+			<fileset dir="../../modules/rtgov" />
 		</copy>
 		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
 			<fileset dir="deployments" />
@@ -85,7 +99,7 @@
 	</target>
 
 	<target name="undeploy" >
-		<delete dir="${jboss.home}/modules/system/layers/${rtgov-layer}/org/overlord/rtgov" />
+		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
 	</target>

@@ -56,17 +56,22 @@
 	</developers>
 
 	<properties>
-		<commons-configuration.version>1.6</commons-configuration.version>  <!-- Passed into junit tests -->
 		<drools.version>6.0.0.CR3</drools.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
-		<jackson.version>1.9.9</jackson.version>			<!-- Passed into junit tests -->
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<kie.version>6.0.0.CR3</kie.version>
-		<mvel.version>2.1.7.Final</mvel.version>			<!-- Passed into junit tests -->
 		<overlord-commons.version>2.0.0-SNAPSHOT</overlord-commons.version>
-		<switchyard.version>1.0.0.Final</switchyard.version>
+		<switchyard.version>1.1.0-SNAPSHOT</switchyard.version>
+
+		<!-- The following properties are required as they are passed to
+		junit tests. They need to be kept in step with the versions in
+		the imported integration-platform bom -->
+
+		<commons-configuration.version>1.6</commons-configuration.version>
+		<jackson.version>1.9.9</jackson.version>
+		<mvel.version>2.1.7.Final</mvel.version>
 	</properties>
 
 	<modules>
@@ -139,9 +144,60 @@
 			</dependency>
 			<dependency>
 				<groupId>org.kie</groupId>
+				<artifactId>kie-ci</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie</groupId>
 				<artifactId>kie-internal</artifactId>
 				<version>${kie.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-commons-cdi</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-commons-data</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-commons-io</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-commons-regex</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-commons-validation</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-nio2-api</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-nio2-fs</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-nio2-jgit</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.kie.commons</groupId>
+				<artifactId>kie-nio2-model</artifactId>
+				<version>${kie.version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-core</artifactId>
@@ -150,6 +206,21 @@
 			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-compiler</artifactId>
+				<version>${drools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-decisiontables</artifactId>
+				<version>${drools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-persistence-jpa</artifactId>
+				<version>${drools.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.drools</groupId>
+				<artifactId>drools-templates</artifactId>
 				<version>${drools.version}</version>
 			</dependency>
 

@@ -123,7 +123,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.rtgov export services, org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel, org.switchyard.api, org.apache.camel.core, org.switchyard.api.extensions.java, org.switchyard.api.extensions.wsdl, org.switchyard.security, org.switchyard.runtime, org.switchyard.component.bpel, org.drools</Dependencies>
+							<Dependencies>org.overlord.rtgov export services, org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel optional, org.switchyard.api optional, org.apache.camel.core optional, org.switchyard.api.extensions.java optional, org.switchyard.api.extensions.wsdl optional, org.switchyard.security optional, org.switchyard.runtime optional, org.switchyard.component.bpel optional, org.drools</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

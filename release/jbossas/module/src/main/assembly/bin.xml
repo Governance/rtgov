@@ -17,7 +17,7 @@
 <assembly>
 	<!-- id typically identifies the "type" (src vs bin etc) of the assembly -->
 	<id>bin</id>
-	<includeBaseDirectory>true</includeBaseDirectory>
+	<includeBaseDirectory>false</includeBaseDirectory>
 	<formats>
 		<format>zip</format>
 	</formats>
@@ -48,14 +48,6 @@
 				<include>org.overlord.rtgov.active-queries:active-collection:jar</include>
 				<include>org.overlord.rtgov.active-queries:acs-epn:jar</include>
 				<include>org.overlord.rtgov.activity-analysis:analytics:jar</include>
-			</includes>
-		</dependencySet>
-        
-		<dependencySet>
-			<outputDirectory>org/mvel/mvel2/main</outputDirectory>
-			<unpack>false</unpack>
-			<includes>
-				<include>org.mvel:mvel2:jar</include>
 			</includes>
 		</dependencySet>
         

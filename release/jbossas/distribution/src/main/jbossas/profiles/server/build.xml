@@ -6,9 +6,23 @@
 
 	<property name="appserver.id" value="jboss-eap-6.1" />
 
-	<property name="rtgov-layer" value="soa" />
+	<target name="check-not-soa">
+		<condition property="soa.not.installed">
+			<not>
+				<available file="${jboss.home}/modules/system/layers/soa"/>
+			</not>
+		</condition>
+	</target>
 
-	<target name="deploy" depends="create.schema" >
+	<target name="non-soa-deploy" depends="check-not-soa" if="soa.not.installed" >
+		<echo message="**** Not a SOA environment, so installing additional modules ****" />
+
+		<copy todir="${jboss.home}/modules" >
+			<fileset dir="../../modules/drools" />
+		</copy>
+	</target>
+
+	<target name="deploy" depends="create.schema, non-soa-deploy" >
 
 		<ant antfile="build.xml" target="install"
 				dir="overlord-commons" >
@@ -28,8 +42,8 @@
 
 		<!-- Install Runtime Governance -->
 
-		<copy todir="${jboss.home}/modules/system/layers/${rtgov-layer}" >
-			<fileset dir="../../modules" />
+		<copy todir="${jboss.home}/modules" >
+			<fileset dir="../../modules/rtgov" />
 		</copy>
 		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
 			<fileset dir="deployments" />
@@ -47,7 +61,7 @@
 	</target>
 	
 	<target name="undeploy" depends="drop.schema" >
-		<delete dir="${jboss.home}/modules/system/layers/${rtgov-layer}/org/overlord/rtgov" />
+		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
 

@@ -13,6 +13,10 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
+	<properties>
+		<drools.modules.dir>${project.build.directory}/drools-modules</drools.modules.dir>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
@@ -91,6 +95,29 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>install-as7-kiedroolsjbpm</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.switchyard</groupId>
+									<artifactId>switchyard-as7-kiedroolsjbpm</artifactId>
+									<type>zip</type>
+									<version>${switchyard.version}</version>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${drools.modules.dir}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<executions>
