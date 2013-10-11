@@ -20,18 +20,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.kie.api.KieBase;
-import org.kie.api.KieBaseConfiguration;
+import org.kie.api.KieServices;
+import org.kie.api.builder.model.KieBaseModel;
+import org.kie.api.builder.KieBuilder;
+import org.kie.api.builder.KieFileSystem;
+import org.kie.api.builder.model.KieModuleModel;
+import org.kie.api.builder.KieRepository;
+import org.kie.api.conf.EqualityBehaviorOption;
 import org.kie.api.conf.EventProcessingOption;
-import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.EntryPoint;
-import org.kie.internal.KnowledgeBase;
-import org.kie.internal.KnowledgeBaseFactory;
-import org.kie.internal.builder.KnowledgeBuilder;
-import org.kie.internal.builder.KnowledgeBuilderConfiguration;
-import org.kie.internal.builder.KnowledgeBuilderFactory;
-import org.kie.internal.definition.KnowledgePackage;
-import org.kie.internal.io.ResourceFactory;
 import org.overlord.rtgov.ep.EventProcessor;
 import org.overlord.rtgov.internal.ep.DefaultEPContext;
 
@@ -169,36 +168,32 @@ public class DroolsEventProcessor extends EventProcessor {
      * @return The knowledge base
      * @throws Exception Failed to load rule base
      */
-    @SuppressWarnings("deprecation")
     private KieBase loadRuleBase() throws Exception {
         String droolsRuleBase=getRuleName()+".drl";
 
         try {
-            KnowledgeBuilderConfiguration kBuilderConfiguration = KnowledgeBuilderFactory.newKnowledgeBuilderConfiguration(null, Thread.currentThread().getContextClassLoader());
-            KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder(kBuilderConfiguration);
+            KieServices ks = KieServices.Factory.get();
+            KieRepository kr = ks.getRepository();
 
-            kbuilder.add(ResourceFactory.newClassPathResource(droolsRuleBase), ResourceType.DRL);
-            
-            if (kbuilder.hasErrors()) {
-                String mesg=MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "ep-drools.Messages").getString("EP-DROOLS-1"),
-                        droolsRuleBase, getRuleName());
-                
-                mesg += ": "+kbuilder.getErrors().toString();
-                
-                LOG.log(Level.SEVERE, mesg);
-                
-                throw new Exception(mesg);
-            }
+            KieModuleModel kmm = ks.newKieModuleModel();
+            KieBaseModel kbm = kmm.newKieBaseModel(getRuleName())
+                        .setEqualsBehavior(EqualityBehaviorOption.EQUALITY)
+                        .setEventProcessingMode(EventProcessingOption.STREAM);
+            kbm.setDefault(true);
 
-            KieBaseConfiguration config = KnowledgeBaseFactory.newKnowledgeBaseConfiguration(null, Thread.currentThread().getContextClassLoader());
-            config.setOption(EventProcessingOption.STREAM);
-            KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase(config);
-         
-            kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
+            KieFileSystem kfs = ks.newKieFileSystem();
+            kfs.write("src/main/resources/" + kbm.getName() + "/rule1.drl", ks.getResources().newClassPathResource(droolsRuleBase));
+            kfs.writeKModuleXML(kmm.toXML());
 
+            KieBuilder kb = ks.newKieBuilder(kfs);
+            kb.buildAll();
+
+            KieContainer container = ks.newKieContainer(kr.getDefaultReleaseId());
+            KieBase kbase = container.getKieBase();
+            //TODO: hack it for now, this attribute should be supported in the following drools6 release.
+            System.setProperty("kie.mbean", "enabled");
             return kbase;
+
         } catch (Throwable e) {
             String mesg=MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
