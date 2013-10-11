@@ -15,6 +15,9 @@
  */
 package org.overlord.rtgov.internal.switchyard.camel;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.EventObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -202,7 +205,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             if (intf == null) {
                 // Save activity event in exchange
-                exch.setProperty(RTGOV_REQUEST_SENT, sent);
+                exch.setProperty(RTGOV_REQUEST_SENT, new TransientWrapper(sent));
             }
         }
         
@@ -220,7 +223,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             // Save activity event in exchange
             // RTGOV-262 Need to store this event, event if interface set,
             // in case needs to establish relationship from exception response
-            exch.setProperty(RTGOV_REQUEST_RECEIVED, recvd);
+            exch.setProperty(RTGOV_REQUEST_RECEIVED, new TransientWrapper(recvd));
         }
     }
     
@@ -254,8 +257,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         QName serviceType=consumer.getName();
         String opName=contract.getConsumerOperation().getName();
         
-        RequestReceived rr=(RequestReceived)exch.getProperty(RTGOV_REQUEST_RECEIVED);
-        RequestSent rs=(RequestSent)exch.getProperty(RTGOV_REQUEST_SENT);
+        // Attempt to retrieve any stored request activity event
+        TransientWrapper rrtw=(TransientWrapper)exch.getProperty(RTGOV_REQUEST_RECEIVED);
+        TransientWrapper rstw=(TransientWrapper)exch.getProperty(RTGOV_REQUEST_SENT);
+        
+        RequestReceived rr=(rrtw == null ? null : (RequestReceived)rrtw.getContent());
+        RequestSent rs=(rstw == null ? null : (RequestSent)rstw.getContent());
         
         if (intf != null) {
             if (rr != null) {
@@ -388,5 +395,51 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         }
     }
 
+    /**
+     * This class provides a wrapper for exchange properties that must not be
+     * serialized, however will remain accessible to the requester who
+     * stored the property.
+     *
+     * NOTE: If migrating to use the switchyard exchange start/completed events,
+     * then investigating using the transient property mechanism in switchyard.
+     */
+    public static class TransientWrapper implements java.io.Externalizable {
+        
+        private transient Object _content=null;
+        
+        /**
+         * This constructor initializes the content.
+         * 
+         * @param content The content
+         */
+        public TransientWrapper(Object content) {
+            _content = content;
+        }
+        
+        /**
+         * This method returns the content.
+         * 
+         * @return The content
+         */
+        public Object getContent() {
+            return (_content);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void writeExternal(ObjectOutput out) throws IOException {
+            // Don't implement as we don't want to serialize the contents
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public void readExternal(ObjectInput in) throws IOException,
+                ClassNotFoundException {
+            // Don't implement as we don't want to deserialize the contents
+        }
+        
+    }
 }
 
