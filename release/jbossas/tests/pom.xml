@@ -13,6 +13,23 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
+	<profiles>
+		<profile>
+			<activation>
+				<property>
+					<name>env.JBOSS_HOME</name>
+				</property>
+			</activation>
+
+			<modules>
+				<module>activity-analysis</module>
+				<module>activity-management</module>
+				<module>event-processor-network</module>
+				<module>platform</module>
+			</modules>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
@@ -49,13 +66,6 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-	<modules>
-		<module>activity-analysis</module>
-		<module>activity-management</module>
-		<module>event-processor-network</module>
-		<module>platform</module>
-	</modules>
 
 	<build>
 		<pluginManagement>

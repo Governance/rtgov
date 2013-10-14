@@ -13,14 +13,9 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
-	<profiles>
-		<profile>
-			<id>jbossas</id>
-			<modules>
-				<module>jbossas</module>
-			</modules>
-		</profile>
-	</profiles>
+	<modules>
+		<module>jbossas</module>
+	</modules>
 
 </project>
 

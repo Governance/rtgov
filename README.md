@@ -13,11 +13,11 @@ The following environment needs to be setup for the selected target platform:
 
 JBossAS7/Switchyard:
 
-The 'jbossas' target platform requires JBossAS7 with Switchyard. This can be obtained from: http://www.jboss.org/switchyard/downloads
+The 'jbossas' target platform requires JBossEAP with Switchyard. This can be obtained from: http://www.jboss.org/switchyard/downloads
 
 (Note: currently requires switchyard-1.0 or later).
 
-Once installed, set the JBOSS_HOME environment variable to point to the root of the switchyard installation.
+Once installed, set the JBOSS_HOME environment variable to point to the root of the JBossEAP/SwitchYard installation.
 
 
 
@@ -25,9 +25,10 @@ Once installed, set the JBOSS_HOME environment variable to point to the root of 
 
 From the root folder, build the distribution using:
 
-**mvn clean install -P&lt;platform&gt;**
+**mvn clean install**
 
-where platform can be: jbossas 
+NOTE: If the JBOSS_HOME environment variable has been defined, then the integration tests will automatically
+be invoked using the specified JBossEAP/SwitchYard environment.
 
 
 Once the build has completed, the distribution can be found in the release/jbossas/distribution/target folder.

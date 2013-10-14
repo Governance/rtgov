@@ -13,6 +13,24 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
+	<profiles>
+		<profile>
+			<activation>
+				<property>
+					<name>env.JBOSS_HOME</name>
+				</property>
+			</activation>
+
+			<modules>
+				<module>app</module>
+				<module>acs</module>
+				<module>epn</module>
+				<module>monitor</module>
+				<module>tester</module>
+			</modules>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
@@ -21,14 +39,6 @@
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
-
-	<modules>
-		<module>app</module>
-		<module>acs</module>
-		<module>epn</module>
-		<module>monitor</module>
-		<module>tester</module>
-	</modules>
 
 	<build>
 		<pluginManagement>
