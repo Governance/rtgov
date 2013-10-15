@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <datasources>
-	<datasource jndi-name="java:jboss/datasource/OverlordRTGov" pool-name="OverlordRTGov" enabled="true" use-java-context="true">
+	<datasource jndi-name="java:jboss/datasources/OverlordRTGov" pool-name="OverlordRTGov" enabled="true" use-java-context="true">
 		<connection-url>jdbc:h2:${jboss.server.data.dir}${/}h2${/}rtgov;MVCC=true</connection-url>
 		<driver>h2</driver>
 		<security>
