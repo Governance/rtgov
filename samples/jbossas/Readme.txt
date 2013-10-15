@@ -11,7 +11,7 @@ server has been started:
 
 and to undeploy:
 
-	mvn jboss-as:deploy
+	mvn jboss-as:undeploy
 
 
 
