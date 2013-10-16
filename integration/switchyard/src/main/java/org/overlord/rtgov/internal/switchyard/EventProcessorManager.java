@@ -44,7 +44,7 @@ import org.overlord.rtgov.activity.collector.ActivityCollector;
 @ConcurrencyManagement(BEAN)
 public class EventProcessorManager {
     
-    private static final String SWITCHAYRD_MANAGEMENT_LOCAL = "org.switchyard.admin:type=Management.Local";
+    private static final String SWITCHYARD_MANAGEMENT_LOCAL = "org.switchyard.admin:type=Management.Local";
 
     private static final Logger LOG=Logger.getLogger(EventProcessorManager.class.getName());
 
@@ -82,7 +82,7 @@ public class EventProcessorManager {
             // Check if switchyard present - if not then will fail and not try to load beans
             String observerClassName=org.switchyard.event.EventObserver.class.getName();
             
-            objname = new ObjectName(SWITCHAYRD_MANAGEMENT_LOCAL);
+            objname = new ObjectName(SWITCHYARD_MANAGEMENT_LOCAL);
                        
             for (String clsName : EVENT_PROCESSOR_CLASS_NAMES) {    
                 Class<?> cls=EventProcessorManager.class.getClassLoader().loadClass(clsName);
@@ -129,7 +129,7 @@ public class EventProcessorManager {
         ObjectName objname=null;
         
         try {
-            objname = new ObjectName(SWITCHAYRD_MANAGEMENT_LOCAL);
+            objname = new ObjectName(SWITCHYARD_MANAGEMENT_LOCAL);
             
             for (EventProcessor ep : _eventProcessors) {
                 if (LOG.isLoggable(Level.FINE)) {
@@ -140,10 +140,12 @@ public class EventProcessorManager {
                 
                 String[] types={org.switchyard.event.EventObserver.class.getName()};
                 
-                mbs.invoke(objname, "removeObserver", params, types);
+                if (mbs.isRegistered(objname)) {
+                    mbs.invoke(objname, "removeObserver", params, types);
+                }
            }
             
-        } catch (Exception e) {
+        } catch (Throwable e) {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.log(Level.FINE, "Failed to unregister SwitchYard event observer via MBean", e);
             }
