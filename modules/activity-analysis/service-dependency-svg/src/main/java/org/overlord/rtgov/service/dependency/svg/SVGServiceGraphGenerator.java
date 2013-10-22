@@ -353,27 +353,25 @@ public class SVGServiceGraphGenerator {
                     sn.getService().getMetrics());
         }
         
-        if (isGenerateText(ratio)) {
-            // Generate text
-            org.w3c.dom.Element text=
-                    container.getOwnerDocument().createElement("text");
-            
-            text.setAttribute("x", ""+x);
-            text.setAttribute("y", ""+y);
-            
-            text.setAttribute("font-family", "Verdana");
-            text.setAttribute("font-size", "10");
-            text.setAttribute("fill", "#00008F");
+        // Generate text
+        org.w3c.dom.Element text=
+                container.getOwnerDocument().createElement("text");
         
-            String localname=getLocalName(sn.getService().getServiceType());
-            
-            org.w3c.dom.Text value=
-                    container.getOwnerDocument().createTextNode(
-                            localname);
-            text.appendChild(value);
-            
-            container.insertBefore(text, insertPoint);    
-        }
+        text.setAttribute("x", ""+x);
+        text.setAttribute("y", ""+y);
+        
+        text.setAttribute("font-family", "Verdana");
+        text.setAttribute("font-size", "10");
+        text.setAttribute("fill", "#00008F");
+    
+        String localname=getLocalName(sn.getService().getServiceType());
+        
+        org.w3c.dom.Text value=
+                container.getOwnerDocument().createTextNode(
+                        localname);
+        text.appendChild(value);
+        
+        container.insertBefore(text, insertPoint);
 
         if (sn.getSituations().size() > 0) {
             generateSituations(container, insertPoint, x+(int)(width * 0.9), y, ratio,
