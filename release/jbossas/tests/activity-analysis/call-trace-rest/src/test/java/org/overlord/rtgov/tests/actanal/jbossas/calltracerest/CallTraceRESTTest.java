@@ -50,17 +50,17 @@ public class CallTraceRESTTest {
     		"[{\"type\":\"Task\"," +
             "\"properties\":{\"processType\":\"proc1\",\"instanceId\":\"456\",\"version\":\"1\"}," +
     		"\"description\":\"ProcessStarted instanceId=456 processType=proc1 version=1\"," +
-    		"\"duration\":10,\"percentage\":15},{\"type\":\"Call\",\"operation\":\"op2\",\"component\":\"st2\"," +
+    		"\"duration\":10,\"percentage\":11},{\"type\":\"Call\",\"operation\":\"op2\",\"component\":\"st2\"," +
     		"\"requestLatency\":7,\"responseLatency\":8,\"tasks\":[{\"type\":\"Task\"," +
     		"\"properties\":{\"processType\":\"proc2\",\"instanceId\":\"123\",\"version\":\"2\"}," +
     		"\"description\":\"ProcessStarted " +
-    		"instanceId=123 processType=proc2 version=2\",\"duration\":11,\"percentage\":55},{\"type\":\"Task\"," +
+    		"instanceId=123 processType=proc2 version=2\",\"duration\":11,\"percentage\":29},{\"type\":\"Task\"," +
     		"\"properties\":{\"instanceId\":\"123\"},"+
-    		"\"description\":\"ProcessCompleted instanceId=123\",\"duration\":9,\"percentage\":45}],\"duration\":37," +
-    		"\"percentage\":58},{\"type\":\"Task\"," +
+    		"\"description\":\"ProcessCompleted instanceId=123\",\"duration\":9,\"percentage\":24}],\"duration\":37," +
+    		"\"percentage\":42},{\"type\":\"Task\"," +
     		"\"properties\":{\"instanceId\":\"456\"},"+
     		"\"description\":\"ProcessCompleted instanceId=456\",\"duration\":16," +
-    		"\"percentage\":25}],\"duration\":88,\"percentage\":100}]}";
+    		"\"percentage\":18}],\"duration\":88,\"percentage\":100}]}";
     
     @Inject
     org.overlord.rtgov.activity.server.ActivityStore _activityStore=null;
@@ -302,6 +302,32 @@ public class CallTraceRESTTest {
             String s2=new String(b2);
             
             if (!s1.equals(s2)) {
+                int pos=-1;
+                for (int i=0; i < s1.length(); ++i) {
+                    if (i >= s2.length()) {
+                        break;
+                    }
+                    if (s1.charAt(i) != s2.charAt(i)) {
+                        pos = i;
+                        break;
+                    }
+                }
+                
+                if (pos != -1) {
+                    pos -= 15;
+                    if (pos < 0) {
+                        pos = 0;
+                    }
+                    int endpos=pos+40;
+                    if (endpos >= s1.length()) {
+                        endpos = s1.length();
+                    }
+                    if (endpos >= s2.length()) {
+                        endpos = s2.length();
+                    }
+                    System.out.println("DIFF:\r\n"+s1.substring(pos, endpos)+"\r\n"+s2.substring(pos, endpos));
+                }
+
                 fail("JSON is different: created="+s1+" stored="+s2);
             }
 

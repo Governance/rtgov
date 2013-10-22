@@ -324,7 +324,41 @@ public class CallTraceServiceImpl implements CallTraceService {
         
         state.finalizeScope();
         
+        // Iterate over call trace to set the percentages
+        long duration=0;
+        
+        // First calculate overall duration of top level nodes
+        for (TraceNode tn : ret.getTasks()) {
+            duration += tn.getDuration();
+        }
+
+        // Update percentage for each top level node
+        for (TraceNode tn : ret.getTasks()) {
+            initPercentages(duration, tn);
+        }
+        
         return (ret);
+    }
+    
+    /**
+     * This method initializes the percentages related to the
+     * supplied trace node, traversing the tree structure if
+     * appropriate.
+     * 
+     * @param duration The parent duration
+     * @param node The node
+     */
+    protected static void initPercentages(long duration, TraceNode node) {
+        
+        if (node.getDuration() > 0 && duration > 0) {
+            node.setPercentage((int)(((double)node.getDuration()/duration) * 100));
+        }
+        
+        if (node instanceof Call) {
+            for (TraceNode tn : ((Call)node).getTasks()) {
+                initPercentages(node.getDuration(), tn);
+            }
+        }
     }
     
     /**
@@ -1072,20 +1106,11 @@ public class CallTraceServiceImpl implements CallTraceService {
             }
             
             java.util.List<TraceNode> tasks=getTasksStack().peek();
-            long duration=0;
             Status status=Status.Success;
             
             for (TraceNode task : tasks) {
-                duration += task.getDuration();
-                
                 if (task.getStatus().ordinal() > status.ordinal()) {
                     status = task.getStatus();
-                }
-            }
-            
-            if (duration > 0) {
-                for (TraceNode task : tasks) {
-                    task.setPercentage((int)(((double)task.getDuration()/duration) * 100));
                 }
             }
             

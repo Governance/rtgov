@@ -19,7 +19,7 @@
 					"message":"Found the item 'BUTTER'"
 				},
 				"duration":2,
-				"percentage":100
+				"percentage":16
 			}],
 			"properties":{
 				"client-host":"<ignore>",
@@ -28,7 +28,7 @@
 				"client-node":"<ignore>"
 			},
 			"duration":12,
-			"percentage":60
+			"percentage":26
 		},{
 			"type":"Call",
 			"operation":"deliver",
@@ -44,7 +44,7 @@
 					"message":"Delivering the goods"
 				},
 				"duration":2,
-				"percentage":100
+				"percentage":25
 			}],
 			"properties":{
 				"client-host":"<ignore>",
@@ -53,7 +53,7 @@
 				"client-node":"<ignore>"
 			},
 			"duration":8,
-			"percentage":40
+			"percentage":17
 		}],
 		"properties":{
 			"total":"125.0",
@@ -81,7 +81,7 @@
 				"description":"Information: Found the item 'BUTTER'",
 				"properties":{"message":"Found the item 'BUTTER'"},
 				"duration":1,
-				"percentage":100
+				"percentage":16
 			}],
 			"properties":{
 				"client-host":"<ignore>",
@@ -90,7 +90,7 @@
 				"client-node":"<ignore>"
 			},
 			"duration":6,
-			"percentage":54
+			"percentage":18
 		},{
 			"type":"Call",
 			"operation":"deliver",
@@ -112,7 +112,7 @@
 				"client-node":"<ignore>"
 			},
 			"duration":5,
-			"percentage":45
+			"percentage":15
 		}],
 		"properties":{
 			"total":"125.0",

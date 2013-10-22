@@ -14,7 +14,7 @@
 					},
 					"description":"ProcessStarted instanceId=456 processType=proc1 version=1",
 					"duration":10,
-					"percentage":15
+					"percentage":11
 				},{
 					"type":"Call",
 					"operation":"op2",
@@ -29,16 +29,14 @@
 								"version":"2"
 							},
 							"description":"ProcessStarted instanceId=123 processType=proc2 version=2",
-							"duration":11,
-							"percentage":55
+							"duration":11
 						},{
 							"type":"Task",
 							"properties":{
 								"instanceId":"123"
 							},
 							"description":"ProcessCompleted instanceId=123",
-							"duration":9,
-							"percentage":45
+							"duration":9
 						}
 					]
 				},{
@@ -48,7 +46,7 @@
 					},
 					"description":"ProcessCompleted instanceId=456",
 					"duration":53,
-					"percentage":84
+					"percentage":60
 				}
 			],
 			"duration":88,

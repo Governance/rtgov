@@ -1145,6 +1145,32 @@ public class CallTraceServiceImplTest {
             String s2=new String(b2);
             
             if (!s1.equals(s2)) {
+                int pos=-1;
+                for (int i=0; i < s1.length(); ++i) {
+                    if (i >= s2.length()) {
+                        break;
+                    }
+                    if (s1.charAt(i) != s2.charAt(i)) {
+                        pos = i;
+                        break;
+                    }
+                }
+                
+                if (pos != -1) {
+                    pos -= 15;
+                    if (pos < 0) {
+                        pos = 0;
+                    }
+                    int endpos=pos+40;
+                    if (endpos >= s1.length()) {
+                        endpos = s1.length();
+                    }
+                    if (endpos >= s2.length()) {
+                        endpos = s2.length();
+                    }
+                    System.out.println("DIFF:\r\n"+s1.substring(pos, endpos)+"\r\n"+s2.substring(pos, endpos));
+                }
+
                 fail("JSON is different: created="+s1+" stored="+s2);
             }
 
