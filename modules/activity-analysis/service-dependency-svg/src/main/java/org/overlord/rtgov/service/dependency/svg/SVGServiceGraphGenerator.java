@@ -796,7 +796,7 @@ public class SVGServiceGraphGenerator {
         org.w3c.dom.Document ret=null;
         
         try {
-            String template="templates"+java.io.File.separator+name+".svg";
+            String template="templates/" + name + ".svg";
             
             java.io.InputStream is=
                     Thread.currentThread().getContextClassLoader().getResourceAsStream("/"+template);
@@ -808,7 +808,7 @@ public class SVGServiceGraphGenerator {
             DocumentBuilder builder=DocumentBuilderFactory.newInstance().newDocumentBuilder();
             
             ret = builder.parse(is);
-                        
+
             is.close();
             
         } catch (Exception e) {
