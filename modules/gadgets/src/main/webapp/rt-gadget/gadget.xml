@@ -22,6 +22,15 @@
     padding: 0;
     overflow: none;
 	}
+    #title span {
+      font-size: 12px;
+    }
+    #serviceLabel, #operationLabel {
+      font-weight: bold;
+    }
+    span.hspacer {
+      padding-left: 15px;
+    }
    </style>
 
    <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
@@ -168,6 +177,24 @@
 	}
 	
 	function updateUI(response) {
+        var service = getUserPreferenceValue("serviceType");
+        var operation = getUserPreferenceValue("operations");
+        
+        if (isNotEmpty(service)) {
+          $('#serviceLabel').show();
+          $('#serviceName').text(service);
+        } else {
+          $('#serviceLabel').hide();
+          $('#serviceName').hide();
+        }
+        if (isNotEmpty(operation)) {
+          $('#operationLabel').show();
+          $('#operationName').text(operation);
+        } else {
+          $('#operationLabel').hide();
+          $('#operationName').hide();
+        }
+        
 		if (response.data == undefined) {
 			return;
 		}
@@ -254,6 +281,13 @@
 
    </script>
 	
+    <div id="title">
+      <span id="serviceLabel">Service:</span>
+      <span id="serviceName"></span>
+      <span class="hspacer"></span>
+      <span id="operationLabel">Operation:</span>
+      <span id="operationName"></span>
+    </div>
 	<div id="rtchart">
 	  <svg></svg>
 	</div>
