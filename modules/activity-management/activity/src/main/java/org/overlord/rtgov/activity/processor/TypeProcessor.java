@@ -303,8 +303,12 @@ public class TypeProcessor {
             } else {
                 source = information;
             }
+            
+            String val=null;
 
-            String val=getEvaluator().evaluate(source);
+            if (source != null) {
+                val = getEvaluator().evaluate(source);
+            }
             
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Property evaluator '"+this+"' = "+val);
@@ -464,7 +468,11 @@ public class TypeProcessor {
                 source = information;
             }
 
-            String val=getEvaluator().evaluate(source);
+            String val=null;
+            
+            if (source != null) {
+                val = getEvaluator().evaluate(source);
+            }
             
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Context evaluator '"+this+"' = "+val);
