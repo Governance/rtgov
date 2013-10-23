@@ -93,6 +93,11 @@
 	}
 	
 	function updateServiceDefinition(response) {
+        // If the prefs are currently open, skip this so we don't whack the user's choice(s).
+        if (parent.$("#serviceType").is(":visible")) {
+          return;
+        }
+  
 		var i, theobj, serviceDefs, exists;
 		var thesvcValue = getUserPreferenceValue("serviceType");
 		var theopValue = getUserPreferenceValue("operations");
