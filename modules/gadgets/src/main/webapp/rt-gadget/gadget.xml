@@ -77,7 +77,7 @@
 		
 		gadgets.io.makeRequest(restUrl, updateUI, params);
 		
-		svcDef = "{\"collection\":\"ServiceDefinitions\"}";
+		svcDef = "{\"collection\":\"ServiceResponseTimes\"}";
 		params[gadgets.io.RequestParameters.POST_DATA]= svcDef;
 		
 		gadgets.io.makeRequest(restUrl, updateServiceDefinition, params);	
@@ -109,17 +109,39 @@
 		theop.empty();
 		theop.append($("<option></option>").attr("value","all").text("all"));
 		if (response.data != undefined){
-			serviceDefs = new Array(response.data.length);
-			for (i = 0; i < serviceDefs.length; i++) {
-				theobj = new Object();
-				theobj.serviceType = response.data[i].value.serviceType;
+			serviceDefs = [];
+			for (i = 0; i < response.data.length; i++) {
+				var theobj=undefined;
 				
-				<!-- TODO: Currently only handles first interface -->
-				if (response.data[i].value.interfaces.length > 0) {
-					theobj.operations = response.data[i].value.interfaces[0].operations;
+				$.each(serviceDefs, function(index, value){
+					if (serviceDefs[index].serviceType === response.data[i].serviceType) {
+						theobj = serviceDefs[index];
+					}
+				});
+				
+				if (theobj == undefined) {
+					theobj = new Object();
+					theobj.serviceType = response.data[i].serviceType;
+				
+					theobj.operations = [];
+				
+					serviceDefs.push(theobj);
 				}
-					
-				serviceDefs[i] = theobj;
+				
+				var theop=undefined;
+				
+				$.each(theobj.operations, function(index, value){
+					if (theobj.operations[index].name === response.data[i].operation) {
+						theop = theobj.operations[index];
+					}
+				});
+				
+				if (theop == undefined) {
+					theop = new Object();
+					theop.name = response.data[i].operation;
+					theobj.operations.push(theop);
+				}
+				
 				if (thesvcValue == theobj.serviceType) {
 					exists = true;
 				}
@@ -132,6 +154,8 @@
 				thesvc.append($("<option></option>").attr("value",thesvcValue).text(thesvcValue));
 			}
 			thesvc.val(thesvcValue);
+			
+			//console.log("service definition data ->: " + JSON.stringify(serviceDefs));
 			
 			refreshOperationsOptions(serviceDefs, theopValue);
 			
