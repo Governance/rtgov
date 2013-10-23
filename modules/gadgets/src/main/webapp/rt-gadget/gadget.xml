@@ -204,7 +204,7 @@
 	                .xAxis.label('Number')
 	                .width(width(margin))
 	                .height(height(margin))
-	                .yAxis.label('Response Time (sec)');
+	                .yAxis.label('Response Time (ms)');
 	
 	  var svg = d3.select('#rtchart svg')
 	      .datum(getData(response));
