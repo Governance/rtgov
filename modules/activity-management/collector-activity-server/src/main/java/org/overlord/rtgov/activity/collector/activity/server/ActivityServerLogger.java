@@ -45,20 +45,28 @@ import org.overlord.rtgov.common.util.RTGovConfig;
 public class ActivityServerLogger extends BatchedActivityUnitLogger
             implements ActivityServerLoggerMBean, javax.management.NotificationEmitter {
 
-    private static final int DURATION_BETWEEN_FAILURE_REPORTS = 5*60*1000;
-
     private static final Logger LOG=Logger.getLogger(ActivityServerLogger.class.getName());
     
+    private static final int DURATION_BETWEEN_FAILURE_REPORTS = 5*60*1000;
     private static final int MAX_THREADS = 10;
+
+    private static final int FREE_ACTIVITY_LIST_QUEUE_SIZE = 100;
+    private static final int ACTIVITY_LIST_QUEUE_SIZE = 10000;
+
+    @Inject @RTGovConfig
+    private Integer _durationBetweenFailureReports=DURATION_BETWEEN_FAILURE_REPORTS;
 
     @Inject @RTGovConfig
     private Integer _maxThreads=MAX_THREADS;
     
-    private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _queue=
-            new java.util.concurrent.ArrayBlockingQueue<java.util.List<ActivityUnit>>(10000);
+    @Inject @RTGovConfig
+    private Integer _freeActivityListQueueSize=FREE_ACTIVITY_LIST_QUEUE_SIZE;
     
-    private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _freeActivityLists=
-            new java.util.concurrent.ArrayBlockingQueue<java.util.List<ActivityUnit>>(100);
+    @Inject @RTGovConfig
+    private Integer _activityListQueueSize=ACTIVITY_LIST_QUEUE_SIZE;
+    
+    private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _queue=null;    
+    private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _freeActivityLists=null;
 
     @Inject
     private ActivityServer _activityServer=null;
@@ -84,10 +92,25 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
             LOG.fine("Initialize Logger for Activity Server (max threads "+_maxThreads+"): "+_activityServer);
         }
         
+        // In case injection has reset value (if not specified), then need to re-establish
+        // the defaults
         if (_maxThreads == null) {
             _maxThreads = MAX_THREADS;
         }
+        if (_durationBetweenFailureReports == null) {
+            _durationBetweenFailureReports = DURATION_BETWEEN_FAILURE_REPORTS;
+        }
+        if (_freeActivityListQueueSize == null) {
+            _freeActivityListQueueSize = FREE_ACTIVITY_LIST_QUEUE_SIZE;
+        }
+        if (_activityListQueueSize == null) {
+            _activityListQueueSize = ACTIVITY_LIST_QUEUE_SIZE;
+        }
         
+        _queue=new java.util.concurrent.ArrayBlockingQueue<java.util.List<ActivityUnit>>(_activityListQueueSize);
+        
+        _freeActivityLists=new java.util.concurrent.ArrayBlockingQueue<java.util.List<ActivityUnit>>(_freeActivityListQueueSize);
+
         // Start dispatch thread
         for (int i=0; i < _maxThreads; i++) {
             Thread thread = new Thread(new Runnable() {
@@ -135,7 +158,7 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
         
         long currentTime=System.currentTimeMillis();
         
-        if (currentTime > _lastFailure + DURATION_BETWEEN_FAILURE_REPORTS) {            
+        if (currentTime > _lastFailure + _durationBetweenFailureReports) {            
             LOG.log(Level.SEVERE, "Failed to store list of activity units", e);
             
             _lastFailure = currentTime;
