@@ -41,7 +41,7 @@ import org.switchyard.extensions.java.JavaService;
 import org.switchyard.extensions.wsdl.WSDLService;
 import org.switchyard.metadata.BaseExchangeContract;
 import org.switchyard.metadata.ServiceInterface;
-import org.switchyard.security.SecurityContext;
+import org.switchyard.security.context.SecurityContext;
 import org.switchyard.security.credential.Credential;
 
 /**

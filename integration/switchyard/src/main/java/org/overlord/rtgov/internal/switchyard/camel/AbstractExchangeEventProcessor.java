@@ -40,7 +40,7 @@ import org.switchyard.metadata.BaseExchangeContract;
 import org.switchyard.metadata.Registrant;
 import org.switchyard.metadata.ServiceInterface;
 import org.switchyard.extensions.java.JavaService;
-import org.switchyard.security.SecurityContext;
+import org.switchyard.security.context.SecurityContext;
 import org.switchyard.security.credential.Credential;
 
 /**
