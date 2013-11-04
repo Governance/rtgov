@@ -13,9 +13,6 @@
 	</parent>
 
 	<properties>
-		<overlord.username>admin</overlord.username>
-		<overlord.password>TO BE SET</overlord.password>
-		
 		<maven.antrun.skip>true</maven.antrun.skip>
 	</properties>
 
@@ -91,8 +88,6 @@
 									<mainClass>org.overlord.rtgov.samples.jbossas.activityclient.ActivityClient</mainClass>
 									<arguments>
 										<argument>http://localhost:8080</argument>
-										<argument>${overlord.username}</argument>
-										<argument>${overlord.password}</argument>
 										<argument>${project.build.directory}/classes/txns/Transactions.properties</argument>
 										<argument>${count}</argument>
 									</arguments>
