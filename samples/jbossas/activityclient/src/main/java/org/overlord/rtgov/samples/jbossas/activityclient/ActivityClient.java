@@ -16,6 +16,7 @@
 package org.overlord.rtgov.samples.jbossas.activityclient;
 
 import java.util.Random;
+import java.util.Scanner;
 
 import javax.transaction.TransactionManager;
 
@@ -66,20 +67,30 @@ public class ActivityClient {
      */
     public static void main(String[] args) {
         
-        if (args.length != 5) {
-            System.err.println("Usage: ActivityClient <url> <username> <password> <filename> <numOfTxns>\r\n"
+        if (args.length != 3) {
+            System.err.println("Usage: ActivityClient <url> <filename> <numOfTxns>\r\n"
                     +"Set numOfTxns to -1 for continous");
             System.exit(1);
         }
         
-        ActivityClient ac=new ActivityClient(args[0], args[1], args[2]);
+        Scanner scanner=new Scanner(System.in);
+        
+        System.out.print("Enter username: ");        
+        String username = scanner.nextLine();
+        
+        System.out.print("Enter password: ");        
+        String password = scanner.nextLine();
+        
+        scanner.close();
+        
+        ActivityClient ac=new ActivityClient(args[0], username, password);
         
         ac.init();
         
-        ac.loadTransactions(args[3]);
+        ac.loadTransactions(args[1]);
         
         try {
-            ac.scheduleTxns(Integer.parseInt(args[4]));
+            ac.scheduleTxns(Integer.parseInt(args[2]));
         } catch (Exception e) {
             e.printStackTrace();
         }
