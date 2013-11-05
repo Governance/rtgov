@@ -61,8 +61,8 @@ public class EventProcessorManager {
         "org.overlord.rtgov.internal.switchyard.bpm.ProcessCompletedEventProcessor",
         "org.overlord.rtgov.internal.switchyard.bpm.ProcessStartedEventProcessor",
         "org.overlord.rtgov.internal.switchyard.bpm.ProcessVariableChangedEventProcessor",
-        "org.overlord.rtgov.internal.switchyard.camel.ExchangeCompletedEventProcessor",
-        "org.overlord.rtgov.internal.switchyard.camel.ExchangeCreatedEventProcessor"
+        "org.overlord.rtgov.internal.switchyard.exchange.ExchangeCompletionEventProcessor",
+        "org.overlord.rtgov.internal.switchyard.exchange.ExchangeInitiatedEventProcessor"
     };
     
     /**

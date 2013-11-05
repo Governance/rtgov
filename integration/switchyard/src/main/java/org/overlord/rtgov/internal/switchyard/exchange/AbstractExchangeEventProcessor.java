@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.switchyard.camel;
+package org.overlord.rtgov.internal.switchyard.exchange;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -30,17 +30,20 @@ import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.internal.switchyard.AbstractEventProcessor;
+import org.switchyard.Exchange;
 import org.switchyard.ExchangePhase;
 import org.switchyard.Message;
 import org.switchyard.Property;
+import org.switchyard.Scope;
 import org.switchyard.Service;
 import org.switchyard.ServiceReference;
 import org.switchyard.extensions.wsdl.WSDLService;
-import org.switchyard.metadata.BaseExchangeContract;
+import org.switchyard.metadata.ExchangeContract;
 import org.switchyard.metadata.Registrant;
 import org.switchyard.metadata.ServiceInterface;
 import org.switchyard.extensions.java.JavaService;
 import org.switchyard.security.context.SecurityContext;
+import org.switchyard.security.context.SecurityContextManager;
 import org.switchyard.security.credential.Credential;
 
 /**
@@ -69,29 +72,29 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         
         _completedEvent = completed;
     }
+    
+    /**
+     * This method obtains the exchange from the supplied event.
+     * 
+     * @param event The event
+     * @return The exchange
+     */
+    protected abstract Exchange getExchange(EventObject event);
 
     /**
      * {@inheritDoc}
      */
     public void handleEvent(EventObject event) {
         try {
-            org.apache.camel.Exchange exch=
-                    ((org.apache.camel.management.event.AbstractExchangeEvent)event).getExchange();
+            Exchange exch=getExchange(event);
             
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("********* Exchange="+exch);
             }
             
-            // If not a switchyard camel exchange, then ignore
-            if (!(exch.getIn() instanceof org.switchyard.bus.camel.CamelMessage)) {
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("********* Exchange not for a switchyard message ="+exch.getIn());
-                }
-                return;
-            }
+            org.switchyard.Message mesg=exch.getMessage();
             
-            org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
-            ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
+            ExchangePhase phase=exch.getPhase();
     
             if (phase == null) {
                 LOG.severe("Could not obtain phase from exchange: "+exch);
@@ -103,10 +106,10 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 return;
             }
             
-            org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
+            org.switchyard.Context context=exch.getContext();
             
-            Service provider=exch.getProperty("org.switchyard.bus.camel.provider", Service.class);
-            ServiceReference consumer=exch.getProperty("org.switchyard.bus.camel.consumer", ServiceReference.class);
+            Service provider=exch.getProvider();
+            ServiceReference consumer=exch.getConsumer();
             
             // TODO: If message is transformed, then should the contentType
             // be updated to reflect the transformed type?
@@ -157,9 +160,9 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
      * @param contentType The content type
      * @param mesg The message
      */
-    protected void handleInExchange(org.apache.camel.Exchange exch,
+    protected void handleInExchange(Exchange exch,
             Service provider, ServiceReference consumer, String messageId,
-            String contentType, org.switchyard.bus.camel.CamelMessage mesg) {
+            String contentType, org.switchyard.Message mesg) {
         Registrant consumerReg=consumer.getServiceMetadata().getRegistrant();
         
         if (_completedEvent) {
@@ -174,9 +177,11 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
 
         String intf=getInterface(consumer, provider, consumerReg);
         
-        SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
+        SecurityContextManager scm=new SecurityContextManager(exch.getConsumer().getDomain());
+        
+        SecurityContext securityContext=scm.getContext(exch);
 
-        BaseExchangeContract contract=exch.getProperty("org.switchyard.bus.camel.contract", BaseExchangeContract.class);
+        ExchangeContract contract=exch.getContract();
         
         // Extract service type and operation from the consumer
         // (service reference), as provider is not always available
@@ -205,7 +210,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             if (intf == null) {
                 // Save activity event in exchange
-                exch.setProperty(RTGOV_REQUEST_SENT, new TransientWrapper(sent));
+                exch.getContext().setProperty(RTGOV_REQUEST_SENT, new TransientWrapper(sent), Scope.EXCHANGE);
             }
         }
         
@@ -223,7 +228,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             // Save activity event in exchange
             // RTGOV-262 Need to store this event, event if interface set,
             // in case needs to establish relationship from exception response
-            exch.setProperty(RTGOV_REQUEST_RECEIVED, new TransientWrapper(recvd));
+            exch.getContext().setProperty(RTGOV_REQUEST_RECEIVED, new TransientWrapper(recvd), Scope.EXCHANGE);
         }
     }
     
@@ -238,9 +243,9 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
      * @param contentType The content type
      * @param mesg The message
      */
-    protected void handleOutExchange(org.apache.camel.Exchange exch,
+    protected void handleOutExchange(Exchange exch,
             Service provider, ServiceReference consumer, String messageId, String relatesTo,
-            String contentType, org.switchyard.bus.camel.CamelMessage mesg) {
+            String contentType, org.switchyard.Message mesg) {
 
         Registrant consumerReg=consumer.getServiceMetadata().getRegistrant();
         Registrant providerReg=(provider == null ? null : provider.getServiceMetadata().getRegistrant());
@@ -248,9 +253,11 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         // Check if interface on associated request needs to be set
         String intf=getInterface(consumer, provider, consumerReg);
         
-        SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
+        SecurityContextManager scm=new SecurityContextManager(exch.getConsumer().getDomain());
+        
+        SecurityContext securityContext=scm.getContext(exch);
 
-        BaseExchangeContract contract=exch.getProperty("org.switchyard.bus.camel.contract", BaseExchangeContract.class);
+        ExchangeContract contract=exch.getContract();
         
         // Extract service type and operation from the consumer
         // (service reference), as provider is not always available
@@ -258,12 +265,12 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         String opName=contract.getConsumerOperation().getName();
         
         // Attempt to retrieve any stored request activity event
-        TransientWrapper rrtw=(TransientWrapper)exch.getProperty(RTGOV_REQUEST_RECEIVED);
-        TransientWrapper rstw=(TransientWrapper)exch.getProperty(RTGOV_REQUEST_SENT);
+        Property rrtw=exch.getContext().getProperty(RTGOV_REQUEST_RECEIVED);
+        Property rstw=exch.getContext().getProperty(RTGOV_REQUEST_SENT);
         
-        RequestReceived rr=(rrtw == null ? null : (RequestReceived)rrtw.getContent());
-        RequestSent rs=(rstw == null ? null : (RequestSent)rstw.getContent());
-        
+        RequestReceived rr=(rrtw == null ? null : (RequestReceived)((TransientWrapper)rrtw.getValue()).getContent());
+        RequestSent rs=(rstw == null ? null : (RequestSent)((TransientWrapper)rstw.getValue()).getContent());
+ 
         if (intf != null) {
             if (rr != null) {
                 rr.setInterface(intf);
@@ -360,7 +367,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
      * @param exch The original exchange event
      */
     protected void record(Message msg, String contentType,
-                RPCActivityType at, SecurityContext sc, org.apache.camel.Exchange exch) {
+                RPCActivityType at, SecurityContext sc, Exchange exch) {
         if (at != null) {
             at.setMessageType(contentType);
             

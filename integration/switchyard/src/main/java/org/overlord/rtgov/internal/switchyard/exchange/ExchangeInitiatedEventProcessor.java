@@ -13,20 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.switchyard.camel;
+package org.overlord.rtgov.internal.switchyard.exchange;
+
+import java.util.EventObject;
+
+import org.switchyard.Exchange;
+import org.switchyard.runtime.event.ExchangeInitiatedEvent;
 
 /**
- * This class provides the ExchangeCreatedEvent implementation of the
+ * This class provides the ExchangeInitiatedEvent implementation of the
  * event processor.
  *
  */
-public class ExchangeCreatedEventProcessor extends AbstractExchangeEventProcessor {
+public class ExchangeInitiatedEventProcessor extends AbstractExchangeEventProcessor {
     
     /**
      * This is the default constructor.
      */
-    public ExchangeCreatedEventProcessor() {
-        super(org.apache.camel.management.event.ExchangeCreatedEvent.class, false);        
+    public ExchangeInitiatedEventProcessor() {
+        super(ExchangeInitiatedEvent.class, false);        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected Exchange getExchange(EventObject event) {
+        return (((ExchangeInitiatedEvent)event).getExchange());
     }
 
 }

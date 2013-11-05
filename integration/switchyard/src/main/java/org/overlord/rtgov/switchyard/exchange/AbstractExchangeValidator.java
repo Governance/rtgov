@@ -31,7 +31,7 @@ import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 import org.overlord.rtgov.common.util.RTGovProperties;
-import org.overlord.rtgov.internal.switchyard.camel.PropertyAccessor;
+import org.overlord.rtgov.internal.switchyard.exchange.PropertyAccessor;
 import org.switchyard.ExchangePhase;
 import org.switchyard.Message;
 import org.switchyard.Property;
