@@ -13,45 +13,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.quickstarts.demos.orders.auditors;
+package org.overlord.rtgov.quickstarts.demos.orders.interceptors;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Named;
 
 import org.overlord.rtgov.switchyard.exchange.AbstractExchangeValidator;
+import org.switchyard.Exchange;
+import org.switchyard.ExchangeInterceptor;
 import org.switchyard.ExchangePhase;
-import org.switchyard.bus.camel.audit.Audit;
-import org.switchyard.bus.camel.audit.Auditor;
-import org.switchyard.bus.camel.processors.Processors;
+import org.switchyard.HandlerException;
 
 /**
  * This class observes exchanges and validates them against validation policies.
  *
  */
-@Audit({Processors.TRANSFORMATION})
 @Named("ExchangeValidator")
-public class ExchangeValidator extends AbstractExchangeValidator implements Auditor {
+public class ExchangeValidator extends AbstractExchangeValidator implements ExchangeInterceptor {
     
     /**
      * {@inheritDoc}
      */
-    public void afterCall(Processors processor, org.apache.camel.Exchange exch) {
-        
-        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
-
-        if (phase == ExchangePhase.OUT) {
-            handleExchange(exch, phase);
+    public void before(String target, Exchange exchange) {
+        if (exchange.getPhase() == ExchangePhase.IN) {
+            handleExchange(exchange);
         }
     }
 
     /**
      * {@inheritDoc}
      */
-    public void beforeCall(Processors processor, org.apache.camel.Exchange exch) {
-
-        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
-
-        if (phase == ExchangePhase.IN) {
-            handleExchange(exch, phase);
+    public void after(String target, Exchange exchange) throws HandlerException {
+        if (exchange.getPhase() == ExchangePhase.OUT) {
+            handleExchange(exchange);
         }
+    }
+    
+    @Override
+    public List<String> getTargets() {
+        return Arrays.asList(PROVIDER);
     }
 }

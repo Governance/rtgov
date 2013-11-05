@@ -32,6 +32,7 @@ import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.internal.switchyard.exchange.PropertyAccessor;
+import org.switchyard.Exchange;
 import org.switchyard.ExchangePhase;
 import org.switchyard.Message;
 import org.switchyard.Property;
@@ -39,9 +40,10 @@ import org.switchyard.Service;
 import org.switchyard.ServiceReference;
 import org.switchyard.extensions.java.JavaService;
 import org.switchyard.extensions.wsdl.WSDLService;
-import org.switchyard.metadata.BaseExchangeContract;
+import org.switchyard.metadata.ExchangeContract;
 import org.switchyard.metadata.ServiceInterface;
 import org.switchyard.security.context.SecurityContext;
+import org.switchyard.security.context.SecurityContextManager;
 import org.switchyard.security.credential.Credential;
 
 /**
@@ -65,12 +67,13 @@ public class AbstractExchangeValidator {
      */
     @PostConstruct
     protected void init() {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("*********** Exchange Interceptor Initialized with collector="+_activityCollector);
-        }
         
         _activityCollector = ActivityCollectorAccessor.getActivityCollector();
         
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("*********** Exchange Interceptor Initialized with collector="+_activityCollector);
+        }
+
         if (_activityCollector == null) {
             LOG.severe("Failed to get activity collector");
         }
@@ -100,24 +103,26 @@ public class AbstractExchangeValidator {
      * This method handles the exchange.
      * 
      * @param exch The exchange
-     * @param phase The phase
      */
-    protected void handleExchange(org.apache.camel.Exchange exch, ExchangePhase phase) {        
-        org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
+    protected void handleExchange(Exchange exch) {        
+        org.switchyard.Message mesg=exch.getMessage();
+        ExchangePhase phase=exch.getPhase();
         
         if (mesg == null) {
             LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
             return;
         }
         
-        org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
+        org.switchyard.Context context=exch.getContext();
         
-        Service provider=exch.getProperty("org.switchyard.bus.camel.provider", Service.class);
-        ServiceReference consumer=exch.getProperty("org.switchyard.bus.camel.consumer", ServiceReference.class);
+        Service provider=exch.getProvider();
+        ServiceReference consumer=exch.getConsumer();
         
-        SecurityContext securityContext=exch.getProperty("org.switchyard.bus.camel.securityContext", SecurityContext.class);
+        SecurityContextManager scm=new SecurityContextManager(exch.getConsumer().getDomain());
+        
+        SecurityContext securityContext=scm.getContext(exch);
 
-        BaseExchangeContract contract=exch.getProperty("org.switchyard.bus.camel.contract", BaseExchangeContract.class);
+        ExchangeContract contract=exch.getContract();
         
         if (provider == null
                 && LOG.isLoggable(Level.FINEST)) {
@@ -148,24 +153,20 @@ public class AbstractExchangeValidator {
                 // be updated to reflect the transformed type?
                 
                 String messageId=null;
-                String relatesTo=null;
+                Property mip=context.getProperty(Exchange.MESSAGE_ID, org.switchyard.Scope.MESSAGE);
+                if (mip != null) {
+                    messageId = (String)mip.getValue();
+                }
+                
                 String contentType=null;
-                
-                java.util.Set<Property> props=context.getProperties(
-                        org.switchyard.Scope.MESSAGE);
-                
-                for (Property p : props) {
+                Property ctp=context.getProperty(Exchange.CONTENT_TYPE, org.switchyard.Scope.MESSAGE);
+                if (ctp != null) {
+                    contentType = ((QName)ctp.getValue()).toString();
                     
-                    if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.finest("Switchyard property: name="+p.getName()+" value="+p.getValue());
-                    }
-                    
-                    if (p.getName().equals("org.switchyard.messageId")) {
-                        messageId = (String)p.getValue();
-                    } else if (p.getName().equals("org.switchyard.relatesTo")) {
-                        relatesTo = (String)p.getValue();
-                    } else if (p.getName().equals("org.switchyard.contentType")) {
-                        contentType = ((QName)p.getValue()).toString();
+                    // RTGOV-250 - remove java: prefix from Java types, to make the type consistent with
+                    // events reported outside switchyard
+                    if (contentType != null && contentType.startsWith("java:")) {
+                        contentType = contentType.substring(5);
                     }
                 }
                 
@@ -214,6 +215,12 @@ public class AbstractExchangeValidator {
                             LOG.finest("No content type - possibly due to exception on handling the request");
                         }
                         return;
+                    }
+                    
+                    String relatesTo=null;
+                    Property rtp=context.getProperty(Exchange.RELATES_TO, org.switchyard.Scope.MESSAGE);
+                    if (rtp != null) {
+                        relatesTo = (String)rtp.getValue();
                     }
                     
                     if (provider == null
@@ -301,6 +308,11 @@ public class AbstractExchangeValidator {
      */
     protected void validate(Message msg, String contentType,
                 RPCActivityType at, SecurityContext sc) {
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Validate msg="+msg+" contentType="+contentType+" at="+at);
+        }
+        
         if (at != null) {
             at.setMessageType(contentType);
             
@@ -329,6 +341,11 @@ public class AbstractExchangeValidator {
                 // Strip the exception and just return the message
                 throw new RuntimeException(e.getMessage());
             }
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Activity is valid: at="+at);
+            }
+            
         }
     }
 

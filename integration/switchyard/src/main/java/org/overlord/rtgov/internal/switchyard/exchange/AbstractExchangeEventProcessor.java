@@ -115,13 +115,13 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             // be updated to reflect the transformed type?
             
             String messageId=null;
-            Property mip=context.getProperty("org.switchyard.messageId", org.switchyard.Scope.MESSAGE);
+            Property mip=context.getProperty(Exchange.MESSAGE_ID, org.switchyard.Scope.MESSAGE);
             if (mip != null) {
                 messageId = (String)mip.getValue();
             }
             
             String contentType=null;
-            Property ctp=context.getProperty("org.switchyard.contentType", org.switchyard.Scope.MESSAGE);
+            Property ctp=context.getProperty(Exchange.CONTENT_TYPE, org.switchyard.Scope.MESSAGE);
             if (ctp != null) {
                 contentType = ((QName)ctp.getValue()).toString();
                 
@@ -137,7 +137,7 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 
             } else if (phase == ExchangePhase.OUT) {            
                 String relatesTo=null;
-                Property rtp=context.getProperty("org.switchyard.relatesTo", org.switchyard.Scope.MESSAGE);
+                Property rtp=context.getProperty(Exchange.RELATES_TO, org.switchyard.Scope.MESSAGE);
                 if (rtp != null) {
                     relatesTo = (String)rtp.getValue();
                 }

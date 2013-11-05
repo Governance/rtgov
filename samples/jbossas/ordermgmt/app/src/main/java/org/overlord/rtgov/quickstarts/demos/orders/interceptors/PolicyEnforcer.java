@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.quickstarts.demos.orders.auditors;
+package org.overlord.rtgov.quickstarts.demos.orders.interceptors;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Named;
-import javax.xml.transform.dom.DOMSource;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -27,18 +28,15 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.client.CollectionManager;
 import org.overlord.rtgov.client.DefaultCollectionManager;
+import org.overlord.rtgov.quickstarts.demos.orders.Order;
+import org.switchyard.Exchange;
+import org.switchyard.ExchangeInterceptor;
 import org.switchyard.ExchangePhase;
 import org.switchyard.Message;
 import org.switchyard.Property;
-import org.switchyard.bus.camel.audit.Audit;
-import org.switchyard.bus.camel.audit.Auditor;
-import org.switchyard.bus.camel.processors.Processors;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-@Audit({Processors.TRANSFORMATION})
 @Named("PolicyEnforcer")
-public class PolicyEnforcer implements Auditor {
+public class PolicyEnforcer implements ExchangeInterceptor {
     
     private static final String PRINCIPALS = "Principals";
 
@@ -68,7 +66,7 @@ public class PolicyEnforcer implements Auditor {
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("*********** Policy Enforcer Initialized with acm="
-                        +_collectionManager+" ac="+_principals);
+                        +_collectionManager+", principals map="+_principals);
         }
         
         _initialized = true;
@@ -77,15 +75,15 @@ public class PolicyEnforcer implements Auditor {
     /**
      * {@inheritDoc}
      */
-    public void afterCall(Processors processor, org.apache.camel.Exchange exch) {
+    public void after(String call, Exchange exch) {
     }
     
     /**
      * {@inheritDoc}
      */
-    public void beforeCall(Processors processor, org.apache.camel.Exchange exch) {
+    public void before(String call, Exchange exch) {
 
-        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);        
+        ExchangePhase phase=exch.getPhase();  
 
         if (phase != ExchangePhase.IN) {
             return;
@@ -100,14 +98,14 @@ public class PolicyEnforcer implements Auditor {
         }
         
         if (_principals != null) {            
-            org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
+            org.switchyard.Message mesg=exch.getMessage();
             
             if (mesg == null) {
                 LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
                 return;
             }
 
-            org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
+            org.switchyard.Context context=exch.getContext();
             
             java.util.Set<Property> contextProps=context.getProperties(
                     org.switchyard.Scope.MESSAGE);
@@ -121,8 +119,12 @@ public class PolicyEnforcer implements Auditor {
                 }
             }
             
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.finer("Content type="+(p==null?null:p.getValue()));
+            }
+            
             if (p != null && p.getValue().toString().equals(
-                            "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder")) {
+                            "java:org.overlord.rtgov.quickstarts.demos.orders.Order")) {
 
                 String customer=getCustomer(mesg);
                        
@@ -166,37 +168,20 @@ public class PolicyEnforcer implements Auditor {
 
         Object content=msg.getContent();
         
-        if (content instanceof String) {
-            String text=(String)content;
-            
-            int start=text.indexOf("<customer>");
-            
-            if (start != -1) {
-                int end=text.indexOf("</", start);
-                
-                if (end != -1) {
-                    customer=text.substring(start+10, end);
-                }
-            }
-        } else if (content instanceof DOMSource) {
-            Node n=((DOMSource)content).getNode();
-            
-            if (n instanceof Element) {
-                org.w3c.dom.NodeList nl=((Element)n).getElementsByTagName("customer");
-                
-                if (nl.getLength() == 1) {
-                    customer = nl.item(0).getFirstChild().getNodeValue();
-                } else {
-                    LOG.warning("Customer nodes found: "+nl.getLength());
-                }
-            } else {
-                LOG.warning("Not an element");
-            }
-        } else {
-            LOG.warning("Message content type '"+content.getClass()+"' cannot be handled");
+        if (content instanceof Order) {
+            customer = ((Order)content).getCustomer();
+        }
+        
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("Customer="+customer);
         }
         
         return (customer);
+    }
+    
+    @Override
+    public List<String> getTargets() {
+        return Arrays.asList(PROVIDER);
     }
     
 }
