@@ -36,7 +36,7 @@ public class ExchangeValidator extends AbstractExchangeValidator implements Exch
     /**
      * {@inheritDoc}
      */
-    public void before(String target, Exchange exchange) {
+    public void before(String target, Exchange exchange) throws HandlerException {
         if (exchange.getPhase() == ExchangePhase.IN) {
             handleExchange(exchange);
         }

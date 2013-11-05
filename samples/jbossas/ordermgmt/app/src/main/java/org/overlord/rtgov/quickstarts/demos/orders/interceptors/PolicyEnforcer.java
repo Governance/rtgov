@@ -32,6 +32,7 @@ import org.overlord.rtgov.quickstarts.demos.orders.Order;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangeInterceptor;
 import org.switchyard.ExchangePhase;
+import org.switchyard.HandlerException;
 import org.switchyard.Message;
 import org.switchyard.Property;
 
@@ -75,13 +76,13 @@ public class PolicyEnforcer implements ExchangeInterceptor {
     /**
      * {@inheritDoc}
      */
-    public void after(String call, Exchange exch) {
+    public void after(String call, Exchange exch) throws HandlerException {
     }
     
     /**
      * {@inheritDoc}
      */
-    public void before(String call, Exchange exch) {
+    public void before(String call, Exchange exch) throws HandlerException {
 
         ExchangePhase phase=exch.getPhase();  
 
@@ -139,7 +140,7 @@ public class PolicyEnforcer implements ExchangeInterceptor {
                         // Check if customer is suspended
                         if (props.containsKey("suspended")
                                 && props.get("suspended").equals(Boolean.TRUE)) {                            
-                            throw new RuntimeException("Customer '"+customer
+                            throw new HandlerException("Customer '"+customer
                                             +"' has been suspended");
                         }
                     }

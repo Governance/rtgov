@@ -34,6 +34,7 @@ import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.internal.switchyard.exchange.PropertyAccessor;
 import org.switchyard.Exchange;
 import org.switchyard.ExchangePhase;
+import org.switchyard.HandlerException;
 import org.switchyard.Message;
 import org.switchyard.Property;
 import org.switchyard.Service;
@@ -103,8 +104,9 @@ public class AbstractExchangeValidator {
      * This method handles the exchange.
      * 
      * @param exch The exchange
+     * @throws HandlerException Validation issue found
      */
-    protected void handleExchange(Exchange exch) {        
+    protected void handleExchange(Exchange exch) throws HandlerException {        
         org.switchyard.Message mesg=exch.getMessage();
         ExchangePhase phase=exch.getPhase();
         
@@ -305,9 +307,10 @@ public class AbstractExchangeValidator {
      * @param contentType The message content type
      * @param at The activity type
      * @param sc The optional security context
+     * @throws HandlerException Validation failure
      */
     protected void validate(Message msg, String contentType,
-                RPCActivityType at, SecurityContext sc) {
+                RPCActivityType at, SecurityContext sc) throws HandlerException {
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Validate msg="+msg+" contentType="+contentType+" at="+at);
@@ -339,7 +342,7 @@ public class AbstractExchangeValidator {
                 _activityCollector.validate(at);
             } catch (Exception e) {
                 // Strip the exception and just return the message
-                throw new RuntimeException(e.getMessage());
+                throw new HandlerException(e.getMessage());
             }
             
             if (LOG.isLoggable(Level.FINEST)) {
