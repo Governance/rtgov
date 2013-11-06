@@ -108,17 +108,7 @@ public class PolicyEnforcer implements ExchangeInterceptor {
 
             org.switchyard.Context context=exch.getContext();
             
-            java.util.Set<Property> contextProps=context.getProperties(
-                    org.switchyard.Scope.MESSAGE);
-
-            Property p=null;
-            
-            for (Property prop : contextProps) {
-                if (prop.getName().equals("org.switchyard.contentType")) {
-                    p = prop;
-                    break;
-                }
-            }
+            Property p=context.getProperty(Exchange.CONTENT_TYPE, org.switchyard.Scope.MESSAGE);
             
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.finer("Content type="+(p==null?null:p.getValue()));
