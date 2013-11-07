@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<switchyard xmlns="urn:switchyard-config:switchyard:1.0" name="orders" targetNamespace="urn:switchyard-quickstart-demo:orders:0.1.0">
-    <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912" name="orders" targetNamespace="urn:switchyard-quickstart-demo:orders:0.1.0">
+<?xml version="1.0" encoding="UTF-8"?><switchyard xmlns="urn:switchyard-config:switchyard:1.0" name="orders" targetNamespace="urn:switchyard-quickstart-demo:orders:0.1.0">
+    <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912" name="samples-jbossas-ordermgmt-app" targetNamespace="urn:switchyard-quickstart-demo:orders:0.1.0">
         <service name="OrderService" promote="OrderService">
             <interface.wsdl interface="wsdl/OrderService.wsdl#wsdl.porttype(OrderService)"/>
             <binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
@@ -9,9 +8,39 @@
                 <contextPath>demo-orders</contextPath>
             </binding.soap>
         </service>
+        <component name="OrderService">
+            <implementation.bean xmlns="urn:switchyard-component-bean:config:1.1" class="org.overlord.rtgov.quickstarts.demos.orders.OrderServiceBean"/>
+            <service name="OrderService">
+                <interface.java interface="org.overlord.rtgov.quickstarts.demos.orders.OrderService"/>
+            </service>
+            <reference name="InventoryService">
+                <interface.java interface="org.overlord.rtgov.quickstarts.demos.orders.InventoryService"/>
+            </reference>
+            <reference name="LogisticsService">
+                <interface.java interface="org.overlord.rtgov.quickstarts.demos.orders.LogisticsService"/>
+            </reference>
+        </component>
+        <component name="LogisticsService">
+            <implementation.bean xmlns="urn:switchyard-component-bean:config:1.1" class="org.overlord.rtgov.quickstarts.demos.orders.LogisticsServiceBean"/>
+            <service name="LogisticsService">
+                <interface.java interface="org.overlord.rtgov.quickstarts.demos.orders.LogisticsService"/>
+            </service>
+        </component>
+        <component name="InventoryService">
+            <implementation.bean xmlns="urn:switchyard-component-bean:config:1.1" class="org.overlord.rtgov.quickstarts.demos.orders.InventoryServiceBean"/>
+            <service name="InventoryService">
+                <interface.java interface="org.overlord.rtgov.quickstarts.demos.orders.InventoryService"/>
+            </service>
+        </component>
     </composite>
+    <transforms>
+        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="java:org.overlord.rtgov.quickstarts.demos.orders.OrderAck" to="{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="java:org.overlord.rtgov.quickstarts.demos.orders.Receipt" to="{urn:switchyard-quickstart-demo:orders:1.0}makePaymentResponse"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="{urn:switchyard-quickstart-demo:orders:1.0}makePayment" to="java:org.overlord.rtgov.quickstarts.demos.orders.Payment"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="{urn:switchyard-quickstart-demo:orders:1.0}submitOrder" to="java:org.overlord.rtgov.quickstarts.demos.orders.Order"/>
+    </transforms>
     <validates>
-        <validate.xml xmlns="urn:switchyard-config:validate:1.0" name="{urn:switchyard-quickstart-demo:orders:1.0}submitOrder" schemaType="XML_SCHEMA" namespaceAware="true">
+        <validate.xml xmlns="urn:switchyard-config:validate:1.0" name="{urn:switchyard-quickstart-demo:orders:1.0}submitOrder" namespaceAware="true" schemaType="XML_SCHEMA">
             <schemaFiles>
                 <entry file="/xsd/orders.xsd"/>
             </schemaFiles>

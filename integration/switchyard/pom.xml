@@ -81,6 +81,12 @@
 			<groupId>org.switchyard.components</groupId>
 			<artifactId>switchyard-component-bpm</artifactId>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.lucene</groupId>
+					<artifactId>*</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
