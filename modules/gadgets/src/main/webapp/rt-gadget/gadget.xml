@@ -86,12 +86,20 @@
 	function isNotEmpty(value) {
 		return (value != undefined && value != " " && value!= "" && value != "all" );
 	}
-	
-	function getDateTime(theDate) {
-		return theDate.getFullYear() + "-" + (theDate.getMonth() +1) + "-" + theDate.getDate() + " " + theDate.getHours()
-				+ ":" + theDate.getMinutes() + ":" + theDate.getSeconds();
-	}
-	
+
+    function getDateTime(theDate) {
+        return theDate.getFullYear() + "-" + (pad(theDate.getMonth() + 1)) + "-" + pad(theDate.getDate()) + " " + pad(theDate.getHours())
+                + ":" + pad(theDate.getMinutes()) + ":" + pad(theDate.getSeconds());
+    }
+    
+    function pad(value) {
+        if (value < 10) {
+            return "0" + value;
+        } else {
+            return "" + value;
+        }
+    }
+
 	function updateServiceDefinition(response) {
         // If the prefs are currently open, skip this so we don't whack the user's choice(s).
         if (parent.$("#serviceType").is(":visible")) {
@@ -248,13 +256,13 @@
 		      left = e.pos[0] + offset.left,
 		      top = e.pos[1] + offset.top;
 
-		   	var content = '<p>interface:<b>' + e.point[5] + '</b></p>'
-						  + '<p>operation:<b>' + e.point[3] + '</b></p>'
-						  + '<p>' + e.series.label + ':<b>' + e.point[1] + '</b></p>'
-						  + '<p>time:<b>' + e.point[4] + '</b></p>';
+		   	var content = '<p>Interface: <b>' + e.point[5] + '</b></p>'
+						  + '<p>Operation: <b>' + e.point[3] + '</b></p>'
+						  + '<p>' + e.series.label + ': <b>' + e.point[1] + '</b></p>'
+						  + '<p>Time: <b>' + e.point[4] + '</b></p>';
 						  
 			if (e.point[2] != undefined && e.point[2] != "undefined" ) {
-				content = '<p>serviceType:<b>' + e.point[2] + '</b></p>' + content;
+				content = '<p>Service Type: <b>' + e.point[2] + '</b></p>' + content;
 			}
 
 		   nvtooltip.show([left, top], content);
