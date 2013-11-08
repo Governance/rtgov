@@ -15,6 +15,13 @@
  */
 package org.overlord.rtgov.active.collection.predicate;
 
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.Permissions;
+import java.security.PrivilegedAction;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
 
@@ -74,34 +81,51 @@ public class MVEL extends Predicate {
     /**
      * {@inheritDoc}
      */
-    public boolean evaluate(ActiveCollectionContext context, Object item) {
+    public boolean evaluate(final ActiveCollectionContext context, final Object item) {
         boolean ret=false;
         
-        if (!_initialized) {
-            if (_expression != null) {
-                _expressionCompiled = org.mvel2.MVEL.compileExpression(_expression);
-            } else {
-                _expressionCompiled = null;
-            }
-
-            _initialized = true;
-        }
+        Permissions perms=new Permissions();
+        perms.add(new java.util.PropertyPermission("*","read"));
+        perms.add(new java.lang.RuntimePermission("createClassLoader"));
+        perms.add(new java.lang.RuntimePermission("accessDeclaredMembers"));
         
-        if (_expressionCompiled != null) {
-            java.util.Map<String,Object> vars=new java.util.HashMap<String,Object>();
-            vars.put("context", context);
-            
-            Object result=org.mvel2.MVEL.executeExpression(_expressionCompiled, item, vars);
-            
-            if (result instanceof Boolean) {
-                ret = ((Boolean)result).booleanValue();
-            } else {
-                LOG.severe(MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "active-collection.Messages").getString("ACTIVE-COLLECTION-2"),
-                        _expression, result, item));
+        ProtectionDomain[] pds={new ProtectionDomain(new CodeSource(null, (Certificate[]) null), perms)};
+        
+        ret = AccessController.doPrivileged(new PrivilegedAction<Boolean>() {
+
+            public Boolean run() { 
+                Boolean ret=null;
+                
+                if (!_initialized) {
+                    if (_expression != null) {
+                        _expressionCompiled = org.mvel2.MVEL.compileExpression(_expression);
+                    } else {
+                        _expressionCompiled = null;
+                    }
+
+                    _initialized = true;
+                }
+                
+                if (_expressionCompiled != null) {                    
+                    java.util.Map<String,Object> vars=new java.util.HashMap<String,Object>();
+                    vars.put("context", context);
+                    
+                    Object result=org.mvel2.MVEL.executeExpression(_expressionCompiled, item, vars);
+                    
+                    if (result instanceof Boolean) {
+                        ret = ((Boolean)result).booleanValue();
+                    } else {
+                        LOG.severe(MessageFormat.format(
+                                java.util.PropertyResourceBundle.getBundle(
+                                "active-collection.Messages").getString("ACTIVE-COLLECTION-2"),
+                                _expression, result, item));
+                    }
+                }
+                
+                return ret;
             }
-        }
+            
+        }, new AccessControlContext(pds));
         
         return (ret);
     }
