@@ -48,6 +48,8 @@ public class DroolsEventProcessor extends EventProcessor {
     private KieSession _session=null;
     private String _ruleName=null;
 
+    private static final Object SYNC=new Object();
+
     /**
      * {@inheritDoc}
      */
@@ -113,9 +115,15 @@ public class DroolsEventProcessor extends EventProcessor {
                 // how to trace the individual results??
                 _session.fireAllRules();
 
-            } else if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("No entry point for source Event Processor '"+source
-                        +"' on Drools Event Processor '"+getRuleName()+"'");
+            } else {
+                String mesg=MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "ep-drools.Messages").getString("EP-DROOLS-3"),
+                        source, getRuleName());
+                
+                LOG.severe(mesg);
+                
+                throw new Exception(mesg);
             }
 
             ret = (java.io.Serializable)_context.getResult();
@@ -138,23 +146,25 @@ public class DroolsEventProcessor extends EventProcessor {
     private KieSession createSession() throws Exception {
         KieSession ret=null;
         
-        KieBase kbase = loadRuleBase();
-        
-        if (kbase != null) {
-            ret = kbase.newKieSession();
-
-            if (ret != null) {
-                ret.setGlobal("epc", _context);
-                ret.fireAllRules();
-            } else {
-                String mesg=MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                        "ep-drools.Messages").getString("EP-DROOLS-2"),
-                        getRuleName());
-                
-                LOG.severe(mesg);
-                
-                throw new Exception(mesg);
+        synchronized (SYNC) {
+            KieBase kbase = loadRuleBase();
+            
+            if (kbase != null) {
+                ret = kbase.newKieSession();
+    
+                if (ret != null) {
+                    ret.setGlobal("epc", _context);
+                    ret.fireAllRules();
+                } else {
+                    String mesg=MessageFormat.format(
+                            java.util.PropertyResourceBundle.getBundle(
+                            "ep-drools.Messages").getString("EP-DROOLS-2"),
+                            getRuleName());
+                    
+                    LOG.severe(mesg);
+                    
+                    throw new Exception(mesg);
+                }
             }
         }
 
@@ -182,7 +192,14 @@ public class DroolsEventProcessor extends EventProcessor {
             kbm.setDefault(true);
 
             KieFileSystem kfs = ks.newKieFileSystem();
-            kfs.write("src/main/resources/" + kbm.getName() + "/rule1.drl", ks.getResources().newClassPathResource(droolsRuleBase));
+            
+            String loc="src/main/resources/" + kbm.getName() + "/rule1.drl";
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("About to write to location: "+loc);
+            }
+            
+            kfs.write(loc, ks.getResources().newClassPathResource(droolsRuleBase));
             kfs.writeKModuleXML(kmm.toXML());
 
             KieBuilder kb = ks.newKieBuilder(kfs);
