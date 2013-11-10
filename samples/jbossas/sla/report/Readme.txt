@@ -18,7 +18,7 @@ folder). Then using a REST client, issue the following GET:
 
 http://localhost:8080/overlord-rtgov/report/generate?report=SLAReport&startDay=1&startMonth=1&startYear=2013&endDay=31&endMonth=12&endYear=2013&maxResponseTime=400&averagedDuration=450&calendar=Default
 
-using the basic authentication username=admin password=overlord.
+using appropriate basic authentication credentials, e.g. username 'admin' with the password specified during installation.
 
 This will generate an example report. Current the report is based on all activities, but will eventually
 be updated to filter based on service type and optionally operation name and principal. Please see

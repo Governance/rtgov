@@ -113,9 +113,30 @@ for (int i=0; i < activities.size(); i++) {
 		if (activity instanceof RequestReceived) {
 			
 			// Check if invocation is within working hours
-			if (calendar == null || calendar.isWorkingDateTime(activity.timestamp)) {
-		
-				long respTime=calcResponseTime(activity, i, activities);
+			if (calendar == null || calendar.isWorkingDateTime(activity.timestamp)) {	
+
+				// >>>> Expanded function call due to mvel npe on deployment (RTGOV-299)
+				// long respTime=calcResponseTime(activity, i, activities);
+				ResponseSent response=null;
+				long respTime=0;
+	
+				// Find accompanying response
+				for (int j=i+1; response == null && j < activities.size(); j++) {
+	
+					if (activities.get(j) instanceof ResponseSent &&
+							activities.get(j).getReplyToId() != null &&
+							activities.get(j).getReplyToId().equals(activity.getMessageId())) {
+						response = activities.get(j);
+					}
+				}
+	
+				context.logDebug("Checking response time for req="+activity+" resp="+response);
+	
+				if (response != null) {
+					context.logDebug("Reponse time="+(response.timestamp-activity.timestamp));
+					respTime = response.timestamp - activity.timestamp;
+				}
+				// <<<< End of expanded function
 				
 				// Check if response time violates the SLA
 				if (respTime > maxResponseTime) {
@@ -131,7 +152,28 @@ for (int i=0; i < activities.size(); i++) {
 							if (activities.get(k).timestamp <= (activity.timestamp+averagedDuration)) {
 							
 								if (activities.get(k) instanceof RequestReceived) {
-									long subRespTime=calcResponseTime(activities.get(k), k, activities);
+									// >>>> Expanded function call due to mvel npe on deployment (RTGOV-299)
+									// long subRespTime=calcResponseTime(activities.get(k), k, activities);
+									ResponseSent subResponse=null;
+									long subRespTime=0;
+	
+									// Find accompanying response
+									for (int m=k+1; subResponse == null && m < activities.size(); m++) {
+	
+										if (activities.get(m) instanceof ResponseSent &&
+												activities.get(m).getReplyToId() != null &&
+												activities.get(m).getReplyToId().equals(activities.get(k).getMessageId())) {
+											subResponse = activities.get(m);
+										}
+									}
+	
+									context.logDebug("Checking sub response time for req="+activities.get(k)+" resp="+subResponse);
+	
+									if (subResponse != null) {
+										context.logDebug("Sub Reponse time="+(subResponse.timestamp-activities.get(k).timestamp));
+										subRespTime = subResponse.timestamp - activities.get(k).timestamp;
+									}				
+									// <<<< End of expanded function
 									
 									if (subRespTime > 0) {
 										respTime += subRespTime;
