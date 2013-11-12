@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><switchyard xmlns="urn:switchyard-config:switchyard:1.0" name="orders" targetNamespace="urn:switchyard-quickstart-demo:orders:0.1.0">
+<?xml version="1.0" encoding="UTF-8"?><switchyard xmlns="urn:switchyard-config:switchyard:1.1" name="orders" targetNamespace="urn:switchyard-quickstart-demo:orders:0.1.0">
     <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912" name="samples-jbossas-ordermgmt-app" targetNamespace="urn:switchyard-quickstart-demo:orders:0.1.0">
         <service name="OrderService" promote="OrderService">
             <interface.wsdl interface="wsdl/OrderService.wsdl#wsdl.porttype(OrderService)"/>
-            <binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+            <binding.soap xmlns="urn:switchyard-component-soap:config:1.1">
                 <wsdl>wsdl/OrderService.wsdl</wsdl>
                 <socketAddr>:18001</socketAddr>
                 <contextPath>demo-orders</contextPath>
@@ -34,13 +34,13 @@
         </component>
     </composite>
     <transforms>
-        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="java:org.overlord.rtgov.quickstarts.demos.orders.OrderAck" to="{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse"/>
-        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="java:org.overlord.rtgov.quickstarts.demos.orders.Receipt" to="{urn:switchyard-quickstart-demo:orders:1.0}makePaymentResponse"/>
-        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="{urn:switchyard-quickstart-demo:orders:1.0}makePayment" to="java:org.overlord.rtgov.quickstarts.demos.orders.Payment"/>
-        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="{urn:switchyard-quickstart-demo:orders:1.0}submitOrder" to="java:org.overlord.rtgov.quickstarts.demos.orders.Order"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.1" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="java:org.overlord.rtgov.quickstarts.demos.orders.OrderAck" to="{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.1" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="java:org.overlord.rtgov.quickstarts.demos.orders.Receipt" to="{urn:switchyard-quickstart-demo:orders:1.0}makePaymentResponse"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.1" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="{urn:switchyard-quickstart-demo:orders:1.0}makePayment" to="java:org.overlord.rtgov.quickstarts.demos.orders.Payment"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.1" class="org.overlord.rtgov.quickstarts.demos.orders.Transformers" from="{urn:switchyard-quickstart-demo:orders:1.0}submitOrder" to="java:org.overlord.rtgov.quickstarts.demos.orders.Order"/>
     </transforms>
     <validates>
-        <validate.xml xmlns="urn:switchyard-config:validate:1.0" name="{urn:switchyard-quickstart-demo:orders:1.0}submitOrder" namespaceAware="true" schemaType="XML_SCHEMA">
+        <validate.xml xmlns="urn:switchyard-config:validate:1.1" name="{urn:switchyard-quickstart-demo:orders:1.0}submitOrder" namespaceAware="true" schemaType="XML_SCHEMA">
             <schemaFiles>
                 <entry file="/xsd/orders.xsd"/>
             </schemaFiles>

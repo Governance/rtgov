@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<switchyard xmlns="urn:switchyard-config:switchyard:1.0" name="orders" targetNamespace="urn:switchyard-quickstart:bean-service:0.1.0">
+<switchyard xmlns="urn:switchyard-config:switchyard:1.1" name="orders" targetNamespace="urn:switchyard-quickstart:bean-service:0.1.0">
     <composite xmlns="http://docs.oasis-open.org/ns/opencsa/sca/200912" name="orders" targetNamespace="urn:switchyard-quickstart:bean-service:0.1.0">
         <service name="OrderService" promote="OrderService">
             <interface.wsdl interface="wsdl/OrderService.wsdl#wsdl.porttype(OrderService)"/>
-            <binding.soap xmlns="urn:switchyard-component-soap:config:1.0">
+            <binding.soap xmlns="urn:switchyard-component-soap:config:1.1">
                 <wsdl>wsdl/OrderService.wsdl</wsdl>
                 <socketAddr>:18001</socketAddr>
                 <contextPath>quickstart-bean</contextPath>
@@ -26,7 +26,7 @@
         </component>
     </composite>
     <transforms>
-        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Transformers" from="{urn:switchyard-quickstart:bean-service:1.0}submitOrder" to="java:org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Order"/>
-        <transform.java xmlns="urn:switchyard-config:transform:1.0" class="org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Transformers" from="java:org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.OrderAck" to="{urn:switchyard-quickstart:bean-service:1.0}submitOrderResponse"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.1" class="org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Transformers" from="{urn:switchyard-quickstart:bean-service:1.0}submitOrder" to="java:org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Order"/>
+        <transform.java xmlns="urn:switchyard-config:transform:1.1" class="org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.Transformers" from="java:org.overlord.rtgov.tests.actmgmt.jbossas.beanservice.OrderAck" to="{urn:switchyard-quickstart:bean-service:1.0}submitOrderResponse"/>
     </transforms>
 </switchyard>
