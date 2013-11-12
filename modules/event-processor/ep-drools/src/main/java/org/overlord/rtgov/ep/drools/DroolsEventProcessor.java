@@ -21,13 +21,11 @@ import java.util.logging.Logger;
 
 import org.kie.api.KieBase;
 import org.kie.api.KieServices;
-import org.kie.api.builder.model.KieBaseModel;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
-import org.kie.api.builder.model.KieModuleModel;
-import org.kie.api.builder.KieRepository;
-import org.kie.api.conf.EqualityBehaviorOption;
-import org.kie.api.conf.EventProcessingOption;
+import org.kie.api.builder.Message;
+import org.kie.api.builder.ReleaseId;
+import org.kie.api.builder.Results;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.EntryPoint;
@@ -43,12 +41,11 @@ public class DroolsEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(DroolsEventProcessor.class.getName());
 
-    private DefaultEPContext _context=null; //new DefaultEPNContext();
+    private DefaultEPContext _context=null;
 
     private KieSession _session=null;
     private String _ruleName=null;
-
-    private static final Object SYNC=new Object();
+    private static java.util.concurrent.atomic.AtomicInteger _count=new java.util.concurrent.atomic.AtomicInteger();
 
     /**
      * {@inheritDoc}
@@ -146,25 +143,23 @@ public class DroolsEventProcessor extends EventProcessor {
     private KieSession createSession() throws Exception {
         KieSession ret=null;
         
-        synchronized (SYNC) {
-            KieBase kbase = loadRuleBase();
-            
-            if (kbase != null) {
-                ret = kbase.newKieSession();
-    
-                if (ret != null) {
-                    ret.setGlobal("epc", _context);
-                    ret.fireAllRules();
-                } else {
-                    String mesg=MessageFormat.format(
-                            java.util.PropertyResourceBundle.getBundle(
-                            "ep-drools.Messages").getString("EP-DROOLS-2"),
-                            getRuleName());
-                    
-                    LOG.severe(mesg);
-                    
-                    throw new Exception(mesg);
-                }
+        KieBase kbase = loadRuleBase();
+        
+        if (kbase != null) {
+            ret = kbase.newKieSession();
+
+            if (ret != null) {
+                ret.setGlobal("epc", _context);
+                ret.fireAllRules();
+            } else {
+                String mesg=MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                        "ep-drools.Messages").getString("EP-DROOLS-2"),
+                        getRuleName());
+                
+                LOG.severe(mesg);
+                
+                throw new Exception(mesg);
             }
         }
 
@@ -182,34 +177,26 @@ public class DroolsEventProcessor extends EventProcessor {
         String droolsRuleBase=getRuleName()+".drl";
 
         try {
-            KieServices ks = KieServices.Factory.get();
-            KieRepository kr = ks.getRepository();
+            KieServices kieServices = KieServices.Factory.get();
+            ReleaseId releaseId = KieServices.Factory.get().newReleaseId("org.overlord.rtgov.tmp", getRuleName(),
+                                    String.valueOf(_count.getAndIncrement()));
+            KieFileSystem kieFileSystem = kieServices.newKieFileSystem().generateAndWritePomXML(releaseId);
 
-            KieModuleModel kmm = ks.newKieModuleModel();
-            KieBaseModel kbm = kmm.newKieBaseModel(getRuleName())
-                        .setEqualsBehavior(EqualityBehaviorOption.EQUALITY)
-                        .setEventProcessingMode(EventProcessingOption.STREAM);
-            kbm.setDefault(true);
+            kieFileSystem.write(kieServices.getResources().newClassPathResource(droolsRuleBase));
 
-            KieFileSystem kfs = ks.newKieFileSystem();
+            KieBuilder kieBuilder = kieServices.newKieBuilder(kieFileSystem).buildAll();
+            Results results = kieBuilder.getResults();
             
-            String loc="src/main/resources/" + kbm.getName() + "/rule1.drl";
-            
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("About to write to location: "+loc);
+            if (results.hasMessages(Message.Level.ERROR)) {
+                StringBuffer buf=new StringBuffer();
+                for (Message message : results.getMessages(Message.Level.ERROR)) {
+                    buf.append("ERROR: "+message.toString().trim()+"\r\n");
+                }
+                throw new Exception(buf.toString());
             }
-            
-            kfs.write(loc, ks.getResources().newClassPathResource(droolsRuleBase));
-            kfs.writeKModuleXML(kmm.toXML());
 
-            KieBuilder kb = ks.newKieBuilder(kfs);
-            kb.buildAll();
-
-            KieContainer container = ks.newKieContainer(kr.getDefaultReleaseId());
-            KieBase kbase = container.getKieBase();
-            //TODO: hack it for now, this attribute should be supported in the following drools6 release.
-            System.setProperty("kie.mbean", "enabled");
-            return kbase;
+            KieContainer kieContainer = kieServices.newKieContainer(releaseId);
+            return kieContainer.getKieBase();
 
         } catch (Throwable e) {
             String mesg=MessageFormat.format(
