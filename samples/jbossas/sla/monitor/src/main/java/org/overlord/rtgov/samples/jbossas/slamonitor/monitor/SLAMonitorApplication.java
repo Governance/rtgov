@@ -16,6 +16,7 @@
 package org.overlord.rtgov.samples.jbossas.slamonitor.monitor;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,7 @@ import java.util.Set;
  *
  */
 @ApplicationScoped
+@ApplicationPath("/monitor")
 public class SLAMonitorApplication extends Application {
 
     private Set<Object> _singletons = new HashSet<Object>();

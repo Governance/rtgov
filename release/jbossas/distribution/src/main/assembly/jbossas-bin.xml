@@ -41,6 +41,7 @@
 			<excludes>
 				<exclude>**/.*</exclude>
 				<exclude>**/target/**</exclude>
+				<exclude>**/bin/**</exclude>
 				<exclude>**/.settings/**</exclude>
 			</excludes>
 		</fileSet>
