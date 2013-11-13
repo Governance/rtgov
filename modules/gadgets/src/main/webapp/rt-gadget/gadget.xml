@@ -101,16 +101,18 @@
     }
 
 	function updateServiceDefinition(response) {
+        var portletDiv = parent.$("#" + window.frameElement.id).closest("div.portlet");
+        
         // If the prefs are currently open, skip this so we don't whack the user's choice(s).
-        if (parent.$("#serviceType").is(":visible")) {
+        if (portletDiv.find(".serviceType").is(":visible")) {
           return;
         }
-  
+        
 		var i, theobj, serviceDefs, exists;
 		var thesvcValue = getUserPreferenceValue("serviceType");
 		var theopValue = getUserPreferenceValue("operations");
-		var thesvc = parent.$("#serviceType");
-		var theop = parent.$("#operations");
+		var thesvc = portletDiv.find(".serviceType");
+		var theop = portletDiv.find(".operations");
 		exists = false;
 		thesvc.empty();
 		thesvc.append($("<option></option>").attr("value","all").text("all"));
@@ -170,19 +172,18 @@
 			thesvc.on('change', function(){
 				refreshOperationsOptions(serviceDefs);
 			});
-			
 		}
-	
 	}
 	
 	function refreshOperationsOptions(serviceDefs, defaultValue) {
 		var opdata, i, selectedValue, theop, exists;
 		var thesvcValue = getUserPreferenceValue("serviceType");
 		var theopValue = getUserPreferenceValue("operations");
+        var portletDiv = parent.$("#" + window.frameElement.id).closest("div.portlet");
 		
 		exists = false;
-		selectedValue = parent.$("#serviceType").val();
-		theop = parent.$("#operations");
+		selectedValue = portletDiv.find(".serviceType").val();
+		theop = portletDiv.find(".operations");
 		
 		//console.log("the op is: " + theop + " and the selected value is: " + selectedValue);
 		
