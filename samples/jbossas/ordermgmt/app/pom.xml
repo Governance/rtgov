@@ -93,14 +93,9 @@
                 <artifactId>switchyard-plugin</artifactId>
                 <configuration>
                     <scannerClassNames>
-                        <param>org.switchyard.component.bean.config.model.BeanSwitchYardScanner</param>
                         <param>org.switchyard.transform.config.model.TransformSwitchYardScanner</param>
+                        <param>org.switchyard.validate.config.model.ValidateSwitchYardScanner</param>
                     </scannerClassNames>
-                    <scanDirectories>
-                        <param>target/classes</param>
-                        <param>src/main/config</param>
-                    </scanDirectories>
-                    <outputDirectory>target/classes</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
