@@ -13,9 +13,9 @@
 	</description>
 
 	<parent>
-		<groupId>org.jboss</groupId>
-		<artifactId>jboss-parent</artifactId>
-		<version>10</version>
+		<groupId>org.jboss.integration-platform</groupId>
+		<artifactId>jboss-integration-platform-parent</artifactId>
+		<version>6.0.0.CR3</version>
 	</parent>
 
 	<scm>
@@ -56,8 +56,6 @@
 	</developers>
 
 	<properties>
-		<integration-platform-bom.version>6.0.0.CR2</integration-platform-bom.version>
-
 		<drools.version>6.0.0.Final</drools.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
 		<javaee-api.version>6.0</javaee-api.version>
@@ -92,7 +90,7 @@
 			<dependency>
 				<groupId>org.jboss.integration-platform</groupId>
 				<artifactId>jboss-integration-platform-bom</artifactId>
-				<version>${integration-platform-bom.version}</version>
+				<version>6.0.0.CR3</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
