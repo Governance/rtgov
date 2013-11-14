@@ -56,12 +56,12 @@
 	</developers>
 
 	<properties>
-		<drools.version>6.0.0.Final</drools.version>
+		<drools.version>6.0.0.CR5</drools.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
-		<kie.version>6.0.0.Final</kie.version>
+		<kie.version>6.0.0.CR5</kie.version>
 		<overlord-commons.version>2.0.0-SNAPSHOT</overlord-commons.version>
 		<switchyard.version>1.1.0.CR1</switchyard.version>
 
