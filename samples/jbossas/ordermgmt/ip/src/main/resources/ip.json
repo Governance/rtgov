@@ -29,7 +29,10 @@
 					"type":"mvel",
 					"expression":"toString()"
 				}
-			}]
+			}],
+			"transformer":{
+				"type":"serialize"
+			}
 		},
 		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse":{
 			"contexts":[{

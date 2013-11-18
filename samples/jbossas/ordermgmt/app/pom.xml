@@ -67,6 +67,11 @@
             <artifactId>switchyard-component-test-mixin-http</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.switchyard</groupId>
+            <artifactId>switchyard-remote</artifactId>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

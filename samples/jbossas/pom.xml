@@ -103,6 +103,11 @@
 				<artifactId>switchyard-component-test-mixin-http</artifactId>
 				<version>${switchyard.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-remote</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.spec</groupId>

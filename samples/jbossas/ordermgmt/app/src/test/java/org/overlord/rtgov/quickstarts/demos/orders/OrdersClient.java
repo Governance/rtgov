@@ -19,6 +19,15 @@ package org.overlord.rtgov.quickstarts.demos.orders;
 
 import org.switchyard.component.test.mixins.http.HTTPMixIn;
 
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.dom.DOMSource;
+
+import org.switchyard.remote.RemoteInvoker;
+import org.switchyard.remote.RemoteMessage;
+import org.switchyard.remote.http.HttpInvoker;
+
 /**
  * This class provides the client for sending SOAP messages
  * to the Orders switchyard application.
@@ -26,8 +35,14 @@ import org.switchyard.component.test.mixins.http.HTTPMixIn;
  */
 public class OrdersClient {
 
+    private static final String OPERATION = "submitOrder";
     private static final String URL = "/demo-orders/OrderService";
     private static final String XML_PATH = "src/test/resources/xml/";
+    
+    private static final QName SERVICE = new QName(
+            "urn:switchyard-quickstart-demo:orders:0.1.0",
+            "OrderService");
+    private static final String REMOTE_INVOKER_URL = "http://localhost:8080/switchyard-remote";
 
     /**
      * Private no-args constructor.
@@ -48,6 +63,15 @@ public class OrdersClient {
             System.exit(1);
         }
         
+        if (args[1].endsWith("resubmit")) {
+            OrdersClient.resubmit(args);
+        } else {
+            OrdersClient.send(args);
+        }
+        
+    }
+    
+    protected static void send(String[] args) {
         HTTPMixIn soapMixIn = new HTTPMixIn();
         soapMixIn.initialize();
 
@@ -67,6 +91,42 @@ public class OrdersClient {
             }
         } finally {
             soapMixIn.uninitialize();
+        }
+    }
+    
+    protected static void resubmit(String[] args) {
+        String request="/xml/"+args[1]+".xml";
+        
+        try {
+            java.io.InputStream is=OrdersClient.class.getResourceAsStream(request);
+            
+            DocumentBuilder builder=DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            org.w3c.dom.Document doc=builder.parse(is);
+            
+            is.close();
+            
+            Object content=new DOMSource(doc.getDocumentElement());
+
+            // Create a new remote client invoker
+            RemoteInvoker invoker = new HttpInvoker(REMOTE_INVOKER_URL);
+    
+            // Create the request message
+            RemoteMessage message = new RemoteMessage();
+            message.setService(SERVICE).setOperation(OPERATION).setContent(content);
+    
+            // Invoke the service
+            RemoteMessage reply = invoker.invoke(message);
+            if (reply.isFault()) {
+                System.err.println("Oops ... something bad happened.  "
+                        + reply.getContent());
+                if (reply.getContent() instanceof Exception) {
+                    ((Exception)reply.getContent()).printStackTrace();
+                }
+            } else {
+                System.out.println("Response: "+reply.getContent());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

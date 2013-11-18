@@ -2,7 +2,7 @@
   "name" : "OrderManagementEPN",
   "subscriptions" : [ {
     "nodeName" : "CheckForException",
-    "subject" : "SOAEvents"
+    "subject" : "ActivityUnits"
   } ],
   "nodes" : [
     {
@@ -14,10 +14,6 @@
       "eventProcessor" : {
         "@class" : "org.overlord.rtgov.ep.drools.DroolsEventProcessor",
         "ruleName" : "RaiseSituationForException"
-      },
-      "predicate" : {
-    	"@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
-    	"expression" : "event instanceof org.overlord.rtgov.activity.model.soa.ResponseSent && event.content != null && event.messageType == null"
       },
       "notifications" : [ {
       	 "type" : "Processed",

@@ -1,0 +1,9 @@
+<orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0">
+    <order>
+        <orderId>5</orderId>
+        <itemId>BUTTER</itemId>
+        <quantity>100</quantity>
+    	<customer>Alice</customer>
+    </order>
+</orders:submitOrder>
+

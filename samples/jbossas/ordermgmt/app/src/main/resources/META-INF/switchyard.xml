@@ -8,6 +8,10 @@
                 <contextPath>demo-orders</contextPath>
             </binding.soap>
         </service>
+        <service name="OrderService" promote="OrderService">
+            <interface.wsdl interface="wsdl/OrderService.wsdl#wsdl.porttype(OrderService)"/>
+            <binding.sca/>
+        </service>
         <component name="OrderService">
             <implementation.bean xmlns="urn:switchyard-component-bean:config:1.1" class="org.overlord.rtgov.quickstarts.demos.orders.OrderServiceBean"/>
             <service name="OrderService">

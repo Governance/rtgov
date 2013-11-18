@@ -37,7 +37,9 @@ public class ExchangeValidator extends AbstractExchangeValidator implements Exch
      * {@inheritDoc}
      */
     public void before(String target, Exchange exchange) throws HandlerException {
-        if (exchange.getPhase() == ExchangePhase.IN) {
+        if (exchange.getPhase() == ExchangePhase.IN
+                && (exchange.getProvider() == null
+                || exchange.getProvider().getServiceMetadata().getRegistrant() != null)) {
             handleExchange(exchange);
         }
     }
@@ -46,7 +48,9 @@ public class ExchangeValidator extends AbstractExchangeValidator implements Exch
      * {@inheritDoc}
      */
     public void after(String target, Exchange exchange) throws HandlerException {
-        if (exchange.getPhase() == ExchangePhase.OUT) {
+        if (exchange.getPhase() == ExchangePhase.OUT
+                && (exchange.getProvider() == null
+                || exchange.getProvider().getServiceMetadata().getRegistrant() != null)) {
             handleExchange(exchange);
         }
     }
