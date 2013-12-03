@@ -161,7 +161,9 @@ public class ActiveMap extends ActiveCollection
      */
     public Object get(Object key) {
         if (!isDerived() || isActive()) {
-            return (_map.get(key));
+            synchronized (_map) {
+                return (_map.get(key));
+            }
         } else {
             ActiveMap parent=(ActiveMap)getParent();
             Object ret=parent.get(key);
@@ -352,7 +354,9 @@ public class ActiveMap extends ActiveCollection
      */
     public boolean isEmpty() {
         if (!isDerived() || isActive()) {
-            return (_map.isEmpty());
+            synchronized (_map) {
+                return (_map.isEmpty());
+            }
         } else {
             java.util.Map<Object,Object> derived=deriveContent();
             return (derived.isEmpty());
@@ -371,7 +375,9 @@ public class ActiveMap extends ActiveCollection
      */
     public boolean containsKey(Object key) {
         if (!isDerived() || isActive()) {
-            return (_map.containsKey(key));
+            synchronized (_map) {
+                return (_map.containsKey(key));
+            }
         } else {
             java.util.Map<Object,Object> derived=deriveContent();
             return (derived.containsKey(key));
@@ -383,7 +389,9 @@ public class ActiveMap extends ActiveCollection
      */
     public boolean containsValue(Object value) {
         if (!isDerived() || isActive()) {
-            return (_map.containsValue(value));
+            synchronized (_map) {            
+                return (_map.containsValue(value));
+            }
         } else {
             java.util.Map<Object,Object> derived=deriveContent();
             return (derived.containsValue(value));

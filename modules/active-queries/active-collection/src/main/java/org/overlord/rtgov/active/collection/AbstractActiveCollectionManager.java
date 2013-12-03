@@ -16,6 +16,7 @@
 package org.overlord.rtgov.active.collection;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -104,7 +105,7 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
         ActiveCollection ac=null;
         
         // Check whether active collection for name has already been created
-        synchronized (_activeCollectionSources) {
+        synchronized (_activeCollections) {
             if (_activeCollectionSources.containsKey(acs.getName())) {
                 throw new IllegalArgumentException("Active collection source already exists for '"
                         +acs.getName()+"'");
@@ -116,18 +117,18 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
             _activeCollectionSources.put(acs.getName(), acs);
             
             LOG.info("Registered active collection source '"+acs.getName()+"'");            
-        }
-        
-        // If not lazy instantiation
-        if (!acs.getLazy()) {
-            synchronized (_activeCollections) {
+
+            // If not lazy instantiation
+            if (!acs.getLazy()) {
                 ac = acs.getActiveCollection();
 
                 _activeCollections.put(acs.getName(), ac);
                 
                 // Check for derived collections
-                for (ActiveCollection dac : acs.getDerivedActiveCollections()) {
-                    _derivedActiveCollectionsRetain.put(dac.getName(), dac);
+                if (acs.getDerivedActiveCollections().size() > 0) {
+                    for (ActiveCollection dac : acs.getDerivedActiveCollections()) {
+                        _derivedActiveCollectionsRetain.put(dac.getName(), dac);
+                    }
                 }
 
                 if (LOG.isLoggable(Level.FINE)) {
@@ -153,20 +154,18 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
         
         synchronized (_activeCollections) {
             ac = _activeCollections.remove(acs.getName());
-        }
         
-        if (ac != null) {
-            // Active collection needs to be unregistered before closing
-            // the active collection source, as the source unregisters
-            // any active change listeners associated with the collection
-            synchronized (_activeCollectionListeners) {
-                for (int i=0; i < _activeCollectionListeners.size(); i++) {
-                    _activeCollectionListeners.get(i).unregistered(ac);
+            if (ac != null) {
+                // Active collection needs to be unregistered before closing
+                // the active collection source, as the source unregisters
+                // any active change listeners associated with the collection
+                synchronized (_activeCollectionListeners) {
+                    for (int i=0; i < _activeCollectionListeners.size(); i++) {
+                        _activeCollectionListeners.get(i).unregistered(ac);
+                    }
                 }
             }
-        }
-        
-        synchronized (_activeCollectionSources) {
+            
             if (!_activeCollectionSources.containsKey(acs.getName())) {
                 throw new IllegalArgumentException("Active collection '"
                         +acs.getName()+"' is not registered");
@@ -178,63 +177,63 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
             acs.setActiveCollection(null);
             
             _activeCollectionSources.remove(acs.getName());
-            
+        
             // Remove derived collections
             for (ActiveCollection dac : acs.getDerivedActiveCollections()) {
                 _derivedActiveCollectionsRetain.remove(dac.getName());
-            }
-
-            LOG.info("Unregistered active collection for source '"+acs.getName()+"'");
+            }                
         }
+
+        LOG.info("Unregistered active collection for source '"+acs.getName()+"'");
     }
 
     /**
      * {@inheritDoc}
      */
     public ActiveCollection getActiveCollection(String name) {
-        ActiveCollection ret=_activeCollections.get(name);
+        ActiveCollection ret=null;
         
-        if (ret == null) {
-            // Check if active collection source exists
-            if (_activeCollectionSources.containsKey(name)) {
-                synchronized (_activeCollections) {
-                    // Check again, to make sure active collection wasn't
-                    // created in another thread outside sync block
-                    if (_activeCollections.containsKey(name)) {
-                        ret = _activeCollections.get(name);
-                    } else {
-                        ActiveCollectionSource acs=_activeCollectionSources.get(name);
-                        ret = acs.getActiveCollection();
+        synchronized (_activeCollections) {
+            ret = _activeCollections.get(name);
+
+            if (ret == null) {
+                if (_activeCollectionSources.containsKey(name)) {
+                    ActiveCollectionSource acs=_activeCollectionSources.get(name);
+                    ret = acs.getActiveCollection();
+                    
+                    if (ret != null) {
+                        _activeCollections.put(acs.getName(), ret);
                         
-                        if (ret != null) {
-                            _activeCollections.put(acs.getName(), ret);
-                            
-                            // Check for derived collections
+                        // Check for derived collections
+                        if (acs.getDerivedActiveCollections().size() > 0) {
                             for (ActiveCollection dac : acs.getDerivedActiveCollections()) {
                                 _derivedActiveCollectionsRetain.put(dac.getName(), dac);
-                            }
-
-                           // Register listeners
-                            synchronized (_activeCollectionListeners) {
-                                for (int i=0; i < _activeCollectionListeners.size(); i++) {
-                                    _activeCollectionListeners.get(i).registered(ret);
-                                }
+                            }                                
+                        }
+    
+                        // Register listeners
+                        synchronized (_activeCollectionListeners) {
+                            for (int i=0; i < _activeCollectionListeners.size(); i++) {
+                                _activeCollectionListeners.get(i).registered(ret);
                             }
                         }
                     }
+                } else {
+                    // Check if a retained derived active collection
+                    ret = _derivedActiveCollectionsRetain.get(name);
                 }
-            } else {
+            }
+        }
+        
+        if (ret == null) {
                 
-                // Check if a retained derived active collection
-                ret = _derivedActiveCollectionsRetain.get(name);
+            synchronized (_derivedActiveCollections) {
                 
-                if (ret == null) {
-                    // Check if a derived active collection
-                    java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
-                    
-                    if (ref != null) {
-                        ret = ref.get();
-                    }
+                // Check if a derived active collection
+                java.lang.ref.SoftReference<ActiveCollection> ref=_derivedActiveCollections.get(name);
+                
+                if (ref != null) {
+                    ret = ref.get();
                 }
             }
         }
@@ -246,7 +245,7 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
      * {@inheritDoc}
      */
     public java.util.Collection<ActiveCollection> getActiveCollections() {
-        return (_activeCollections.values());
+        return (Collections.synchronizedMap(_activeCollections).values());
     }
 
     /**
@@ -309,7 +308,7 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
             LOG.finest("Running active collection cleanup ....");
         }
         
-        synchronized (_activeCollectionSources) {
+        synchronized (_activeCollections) {
             for (ActiveCollectionSource acs : _activeCollectionSources.values()) {
                 
                 if (acs.hasActiveCollection()) {

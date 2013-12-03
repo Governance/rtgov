@@ -631,7 +631,9 @@ public abstract class AbstractEPNManager implements EPNManager {
          * @return The number of networks
          */
         public int size() {
-            return (_networks.size());
+            synchronized (_networks) {
+                return (_networks.size());
+            }
         }
     }
 }

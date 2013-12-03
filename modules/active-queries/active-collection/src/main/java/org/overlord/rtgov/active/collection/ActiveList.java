@@ -402,7 +402,9 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      */
     public boolean isEmpty() {
         if (!isDerived() || isActive()) {
-            return (_list.isEmpty());
+            synchronized (_list) {
+                return (_list.isEmpty());
+            }
         } else {
             java.util.List<Object> derived=deriveContent();
             return (derived.isEmpty());
@@ -414,7 +416,9 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      */
     public boolean contains(Object o) {
         if (!isDerived() || isActive()) {
-            return (_list.contains(o));
+            synchronized (_list) {
+                return (_list.contains(o));
+            }
         } else {
             java.util.List<Object> derived=deriveContent();
             return (derived.contains(o));
