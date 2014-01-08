@@ -27,8 +27,10 @@ public class MVELSecurityTest {
     @org.junit.BeforeClass
     public static void init() {
         java.net.URL url=ClassLoader.getSystemResource("security/security.policy");
+        java.net.URL rtgovURL=ClassLoader.getSystemResource("security/rtgov.policy");
         
         System.setProperty("java.security.policy", url.getFile());
+        System.setProperty("rtgov.security.policy", rtgovURL.getFile());
         
         // Create a security manager
         System.setSecurityManager(new SecurityManager());        
@@ -51,13 +53,8 @@ public class MVELSecurityTest {
         to.setServiceType("OrderService");
         to.setOperation("buy");
         
-        try {
-            predicate.evaluate(null, to);
-            
-        } catch (Exception e) {            
-            e.printStackTrace();
-            fail("Should NOT have failed");
-        }        
+        final boolean result = predicate.evaluate(null, to);
+        assertTrue("Evaluation should have succeeded", result);
     }
     
     @Test
@@ -82,13 +79,8 @@ public class MVELSecurityTest {
         TestObject to=new TestObject();
         to.setServiceType("TestService");
         
-        try {
-            predicate.evaluate(context, to);
-            
-        } catch (Exception e) {            
-            e.printStackTrace();
-            fail("Should NOT have failed");
-        }        
+        final boolean result = predicate.evaluate(context, to);
+        assertTrue("Evaluation should have succeeded", result);
     }
     
     @Test
@@ -98,14 +90,8 @@ public class MVELSecurityTest {
         
         predicate.setExpression("System.exit(0)");
         
-        try {
-            predicate.evaluate(null, "TestValue");
-            
-            fail("Should have failed due to security exception");
-            
-        } catch (Exception e) {
-            //e.printStackTrace();
-        }        
+        final boolean result = predicate.evaluate(null, "TestValue");
+        assertFalse("Evaluation should have failed", result);
     }
 
     public class TestObject {
