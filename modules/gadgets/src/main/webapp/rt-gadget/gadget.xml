@@ -114,6 +114,7 @@
 		var thesvc = portletDiv.find(".serviceType");
 		var theop = portletDiv.find(".operations");
 		exists = false;
+        thesvc.off('change');
 		thesvc.empty();
 		thesvc.append($("<option></option>").attr("value","all").text("all"));
 		theop.empty();
