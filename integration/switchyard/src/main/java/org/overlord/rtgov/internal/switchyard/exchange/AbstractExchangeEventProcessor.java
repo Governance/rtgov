@@ -38,6 +38,7 @@ import org.switchyard.Scope;
 import org.switchyard.Service;
 import org.switchyard.ServiceReference;
 import org.switchyard.extensions.wsdl.WSDLService;
+import org.switchyard.label.BehaviorLabel;
 import org.switchyard.metadata.ExchangeContract;
 import org.switchyard.metadata.Registrant;
 import org.switchyard.metadata.ServiceInterface;
@@ -210,7 +211,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             if (intf == null) {
                 // Save activity event in exchange
-                exch.getContext().setProperty(RTGOV_REQUEST_SENT, new TransientWrapper(sent), Scope.EXCHANGE);
+                Property prop=exch.getContext().setProperty(RTGOV_REQUEST_SENT, sent, Scope.EXCHANGE);
+                prop.addLabels(BehaviorLabel.TRANSIENT.label());
             }
         }
         
@@ -228,7 +230,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             // Save activity event in exchange
             // RTGOV-262 Need to store this event, event if interface set,
             // in case needs to establish relationship from exception response
-            exch.getContext().setProperty(RTGOV_REQUEST_RECEIVED, new TransientWrapper(recvd), Scope.EXCHANGE);
+            Property prop=exch.getContext().setProperty(RTGOV_REQUEST_RECEIVED, recvd, Scope.EXCHANGE);
+            prop.addLabels(BehaviorLabel.TRANSIENT.label());
         }
     }
     
@@ -268,8 +271,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
         Property rrtw=exch.getContext().getProperty(RTGOV_REQUEST_RECEIVED);
         Property rstw=exch.getContext().getProperty(RTGOV_REQUEST_SENT);
         
-        RequestReceived rr=(rrtw == null ? null : (RequestReceived)((TransientWrapper)rrtw.getValue()).getContent());
-        RequestSent rs=(rstw == null ? null : (RequestSent)((TransientWrapper)rstw.getValue()).getContent());
+        RequestReceived rr=(rrtw == null ? null : (RequestReceived)rrtw.getValue());
+        RequestSent rs=(rstw == null ? null : (RequestSent)rstw.getValue());
  
         if (intf != null) {
             if (rr != null) {
@@ -400,53 +403,6 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             
             recordActivity(exch, at);
         }
-    }
-
-    /**
-     * This class provides a wrapper for exchange properties that must not be
-     * serialized, however will remain accessible to the requester who
-     * stored the property.
-     *
-     * NOTE: If migrating to use the switchyard exchange start/completed events,
-     * then investigating using the transient property mechanism in switchyard.
-     */
-    public static class TransientWrapper implements java.io.Externalizable {
-        
-        private transient Object _content=null;
-        
-        /**
-         * This constructor initializes the content.
-         * 
-         * @param content The content
-         */
-        public TransientWrapper(Object content) {
-            _content = content;
-        }
-        
-        /**
-         * This method returns the content.
-         * 
-         * @return The content
-         */
-        public Object getContent() {
-            return (_content);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void writeExternal(ObjectOutput out) throws IOException {
-            // Don't implement as we don't want to serialize the contents
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void readExternal(ObjectInput in) throws IOException,
-                ClassNotFoundException {
-            // Don't implement as we don't want to deserialize the contents
-        }
-        
     }
 }
 
