@@ -155,6 +155,26 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth-jboss7</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth-tomcat7</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
 			<artifactId>overlord-commons-config</artifactId>
 			<exclusions>
 				<exclusion>

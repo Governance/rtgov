@@ -101,7 +101,7 @@
 		<dependencySet>
 			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
 			<includes>
-				<include>org.overlord:overlord-commons-idp:war</include>
+				<include>org.overlord:overlord-commons-idp-eap61:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
@@ -109,6 +109,27 @@
 			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
 			<includes>
 				<include>org.overlord:overlord-commons-auth:jar</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
+			<includes>
+				<include>org.overlord:overlord-commons-auth-jboss7:jar</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
+			<includes>
+				<include>org.overlord:overlord-commons-auth-tomcat7:jar</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
+			<includes>
+				<include>org.overlord:overlord-commons-services:jar</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>

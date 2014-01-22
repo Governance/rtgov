@@ -27,8 +27,11 @@
 		<ant antfile="build.xml" target="install"
 				dir="overlord-commons" >
 			<property name="overlord-commons.appserver.dir" value="${jboss.home}" />
-			<property name="overlord-commons.idp.download.url" value="file:${basedir}/overlord-commons/overlord-commons-idp.war" />
-			<property name="overlord-commons.auth.download.url" value="file:${basedir}/overlord-commons/overlord-commons-auth.jar" />
+			<property name="overlord-commons.idp.file" value="${basedir}/overlord-commons/overlord-commons-idp-eap61.war" />
+			<property name="overlord-commons.services.file" value="${basedir}/overlord-commons/overlord-commons-services.jar" />
+			<property name="overlord-commons.auth.file" value="${basedir}/overlord-commons/overlord-commons-auth.jar" />
+			<property name="overlord-commons.auth.jboss7.file" value="${basedir}/overlord-commons/overlord-commons-auth-jboss7.jar" />
+			<property name="overlord-commons.auth.tomcat7.file" value="${basedir}/overlord-commons/overlord-commons-auth-tomcat7.jar" />
 
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
 			<property name="overlord-commons.version" value="2.0.0-SNAPSHOT" />
