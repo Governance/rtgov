@@ -60,6 +60,7 @@ public class ActivityServerRESTTest {
         String jacksonversion=System.getProperty("jackson.version");
         String mvelversion=System.getProperty("mvel.version");
         String configversion=System.getProperty("commons-configuration.version");
+        String commonsversion=System.getProperty("overlord-commons.version");
         
         return ShrinkWrap.create(WebArchive.class, "overlord-rtgov.war")
             .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
@@ -76,7 +77,7 @@ public class ActivityServerRESTTest {
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.mvel:mvel2:"+mvelversion).withoutTransitivity().asSingleFile()
-             );
+             ).addAsLibraries(Maven.resolver().resolve("org.overlord:overlord-commons-config:"+commonsversion).withTransitivity().asFile());
     }
     
     @Test

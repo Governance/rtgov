@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import javax.enterprise.inject.Alternative;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,17 +32,14 @@ import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
-import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
 /**
  * This class provides the JPA implementation of the Activity Store.
  *
  */
 @Singleton
+@Alternative
 public class JPAActivityStore implements ActivityStore {
-    
-    @Inject
-    private RTGovPropertiesProvider _properties;
     
     private EntityManager _entityManager;
     
@@ -52,20 +48,20 @@ public class JPAActivityStore implements ActivityStore {
     private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
     
     /**
-     * Initialize the activity store.
-     */
-    @PostConstruct
-    public void init() {
-        _entityManagerFactory = Persistence.createEntityManagerFactory("overlord-rtgov-activity");
-    }
-    
-    /**
      * This method returns an entity manager.
      * 
      * @return The entity manager
      */
-    protected EntityManager getEntityManager() {
-        return (_entityManager == null ? _entityManagerFactory.createEntityManager() : _entityManager);
+    protected synchronized EntityManager getEntityManager() {
+        if (_entityManager != null) {
+            return (_entityManager);
+        }
+        
+        if (_entityManagerFactory == null) {
+            _entityManagerFactory = Persistence.createEntityManagerFactory("overlord-rtgov-activity");
+        }
+
+        return (_entityManagerFactory.createEntityManager());
     }
     
     /**

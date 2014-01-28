@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.enterprise.inject.Alternative;
 import javax.inject.Singleton;
 
 import org.mvel2.MVEL;
@@ -34,6 +35,7 @@ import org.overlord.rtgov.activity.util.ActivityUtil;
  *
  */
 @Singleton
+@Alternative
 public class MemActivityStore implements ActivityStore {
     
     private static final Logger LOG=Logger.getLogger(MemActivityStore.class.getName());
