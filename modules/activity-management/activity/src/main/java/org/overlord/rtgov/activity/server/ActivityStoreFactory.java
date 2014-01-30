@@ -13,23 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.activity.server.jee;
+package org.overlord.rtgov.activity.server;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.inject.Produces;
-
-import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
  * This class represents a CDI factory for obtaining an activity store implementation.
  *
  */
-public class JEEActivityStoreFactory {
+public class ActivityStoreFactory {
 
-    private static final Logger LOG=Logger.getLogger(JEEActivityStoreFactory.class.getName());
+    private static final Logger LOG=Logger.getLogger(ActivityStoreFactory.class.getName());
     
     private static final String[] DEFAULT_IMPLEMENTATIONS={
         "org.overlord.rtgov.activity.store.jpa.JPAActivityStore",
@@ -45,8 +42,7 @@ public class JEEActivityStoreFactory {
      * 
      * @return The activity store
      */
-    @Produces
-    public synchronized ActivityStore getActivityStore() {
+    public static synchronized ActivityStore getActivityStore() {
         if (_instance == null) {
             String clsName=(String)RTGovProperties.getProperties().get(ACTIVITY_STORE_CLASS);
             

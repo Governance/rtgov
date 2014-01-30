@@ -36,6 +36,7 @@ import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityNotifier;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.ActivityStoreFactory;
 import org.overlord.rtgov.activity.server.QuerySpec;
 
 /**
@@ -50,8 +51,7 @@ public class JEEActivityServer implements ActivityServer {
     @Resource
     private UserTransaction _tx;
         
-    @Inject
-    private ActivityStore _store=null;
+    private ActivityStore _store;
     
     private java.util.List<ActivityNotifier> _notifiers=new java.util.Vector<ActivityNotifier>();
     
@@ -62,6 +62,9 @@ public class JEEActivityServer implements ActivityServer {
      */
     @PostConstruct
     public void init() {
+        
+        _store = ActivityStoreFactory.getActivityStore();
+        
         if (_injectedNotifiers != null) {
             for (ActivityNotifier notifier : _injectedNotifiers) {
 
