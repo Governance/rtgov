@@ -18,8 +18,6 @@ package org.overlord.rtgov.tests.actmgmt.jbossas.actsvrrest;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.inject.Inject;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -33,6 +31,7 @@ import org.junit.runner.RunWith;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.server.ActivityStoreFactory;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.activity.util.ActivityUtil;
@@ -50,9 +49,6 @@ public class ActivityServerRESTTest {
         
         MAPPER.setSerializationConfig(config);
     }
-
-    @Inject
-    org.overlord.rtgov.activity.server.ActivityStore _activityStore=null;
 
     @Deployment
     public static WebArchive createDeployment() {
@@ -83,10 +79,13 @@ public class ActivityServerRESTTest {
     @Test
     public void queryAll() {
         
-        if (_activityStore == null) {
+        org.overlord.rtgov.activity.server.ActivityStore activityStore=
+                            ActivityStoreFactory.getActivityStore();
+        
+        if (activityStore == null) {
             fail("Activity Store has not been initialized");
-        } else if (_activityStore instanceof MemActivityStore) {
-            ((MemActivityStore)_activityStore).clear();
+        } else if (activityStore instanceof MemActivityStore) {
+            ((MemActivityStore)activityStore).clear();
         } else {
             fail("Activity Store unexpected type");
         }
@@ -94,7 +93,7 @@ public class ActivityServerRESTTest {
         try {
 
             // Check if any activity types already exist
-            java.util.List<ActivityType> result=_activityStore.query(
+            java.util.List<ActivityType> result=activityStore.query(
                     new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (result == null) {
@@ -124,7 +123,7 @@ public class ActivityServerRESTTest {
             aulist.add(au1);
             aulist.add(au2);
             
-            _activityStore.store(aulist);
+            activityStore.store(aulist);
             
             // Query via REST interface
             QuerySpec query=new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true");
@@ -178,17 +177,20 @@ public class ActivityServerRESTTest {
     @Test
     public void getActivityUnitId() {
         
-        if (_activityStore == null) {
+        org.overlord.rtgov.activity.server.ActivityStore activityStore=
+                ActivityStoreFactory.getActivityStore();
+
+        if (activityStore == null) {
             fail("Activity Store has not been initialized");
-        } else if (_activityStore instanceof MemActivityStore) {
-            ((MemActivityStore)_activityStore).clear();
+        } else if (activityStore instanceof MemActivityStore) {
+            ((MemActivityStore)activityStore).clear();
         } else {
             fail("Activity Store unexpected type");
         }
         
         try {
 
-            java.util.List<ActivityType> atypes=_activityStore.query(
+            java.util.List<ActivityType> atypes=activityStore.query(
                     new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (atypes == null) {
@@ -218,7 +220,7 @@ public class ActivityServerRESTTest {
             aulist.add(au1);
             aulist.add(au2);
             
-            _activityStore.store(aulist);
+            activityStore.store(aulist);
             
             // Query via REST interface
             URL getUrl = new URL("http://localhost:8080/overlord-rtgov/activity/unit?id="+au2.getId());
@@ -259,17 +261,20 @@ public class ActivityServerRESTTest {
     @Test
     public void queryActivityTypes() {
         
-        if (_activityStore == null) {
+        org.overlord.rtgov.activity.server.ActivityStore activityStore=
+                ActivityStoreFactory.getActivityStore();
+
+        if (activityStore == null) {
             fail("Activity Store has not been initialized");
-        } else if (_activityStore instanceof MemActivityStore) {
-            ((MemActivityStore)_activityStore).clear();
+        } else if (activityStore instanceof MemActivityStore) {
+            ((MemActivityStore)activityStore).clear();
         } else {
             fail("Activity Store unexpected type");
         }
         
         try {
 
-            java.util.List<ActivityType> result=_activityStore.query(
+            java.util.List<ActivityType> result=activityStore.query(
                     new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (result == null) {
@@ -299,7 +304,7 @@ public class ActivityServerRESTTest {
             aulist.add(au1);
             aulist.add(au2);
             
-            _activityStore.store(aulist);
+            activityStore.store(aulist);
             
             // Query via REST interface
             URL getUrl = new URL("http://localhost:8080/overlord-rtgov/activity/query");
@@ -359,17 +364,20 @@ public class ActivityServerRESTTest {
     @Test
     public void storeAndQuery() {
         
-        if (_activityStore == null) {
+        org.overlord.rtgov.activity.server.ActivityStore activityStore=
+                ActivityStoreFactory.getActivityStore();
+
+        if (activityStore == null) {
             fail("Activity Store has not been initialized");
-        } else if (_activityStore instanceof MemActivityStore) {
-            ((MemActivityStore)_activityStore).clear();
+        } else if (activityStore instanceof MemActivityStore) {
+            ((MemActivityStore)activityStore).clear();
         } else {
             fail("Activity Store unexpected type");
         }
         
         try {
 
-            java.util.List<ActivityType> result=_activityStore.query(
+            java.util.List<ActivityType> result=activityStore.query(
                             new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (result == null) {
@@ -429,7 +437,7 @@ public class ActivityServerRESTTest {
             System.out.println("RESULT="+new String(b));
             
             // Re-issue query
-            result = _activityStore.query(
+            result = activityStore.query(
                     new QuerySpec().setFormat(MVEL_FORMAT).setExpression("true"));
             
             if (result == null) {

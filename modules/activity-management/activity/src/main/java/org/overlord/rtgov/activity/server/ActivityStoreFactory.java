@@ -44,15 +44,22 @@ public class ActivityStoreFactory {
      */
     public static synchronized ActivityStore getActivityStore() {
         if (_instance == null) {
-            String clsName=(String)RTGovProperties.getProperties().get(ACTIVITY_STORE_CLASS);
-            
             try {
-                @SuppressWarnings("unchecked")
-                Class<ActivityStore> cls=(Class<ActivityStore>)Class.forName(clsName);
+                String clsName=(String)RTGovProperties.getProperties().get(ACTIVITY_STORE_CLASS);
                 
-                _instance = (ActivityStore)cls.newInstance();
+                if (clsName != null) {
+                    try {
+                        @SuppressWarnings("unchecked")
+                        Class<ActivityStore> cls=(Class<ActivityStore>)
+                                Thread.currentThread().getContextClassLoader().loadClass(clsName);
+                        
+                        _instance = (ActivityStore)cls.newInstance();
+                    } catch (Throwable t) {
+                        LOG.log(Level.FINEST, "Failed to find activity store class '"+clsName+"'", t);
+                    }
+                }
             } catch (Throwable t) {
-                LOG.log(Level.FINEST, "Failed to find activity store class '"+clsName+"'", t);
+                LOG.log(Level.FINEST, "Failed to get activity store class property", t);
             }
         }
         
@@ -60,7 +67,8 @@ public class ActivityStoreFactory {
             for (String clsName : DEFAULT_IMPLEMENTATIONS) {
                 try {
                     @SuppressWarnings("unchecked")
-                    Class<ActivityStore> cls=(Class<ActivityStore>)Class.forName(clsName);
+                    Class<ActivityStore> cls=(Class<ActivityStore>)
+                            Thread.currentThread().getContextClassLoader().loadClass(clsName);
                     
                     _instance = (ActivityStore)cls.newInstance();
                     

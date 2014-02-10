@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.inject.Alternative;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -38,7 +37,6 @@ import org.overlord.rtgov.activity.util.ActivityUtil;
  *
  */
 @Singleton
-@Alternative
 public class JPAActivityStore implements ActivityStore {
     
     private EntityManager _entityManager;

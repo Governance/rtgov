@@ -18,8 +18,6 @@ package org.overlord.rtgov.tests.actanal.jbossas.calltracerest;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import javax.inject.Inject;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -38,6 +36,7 @@ import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.activity.server.ActivityStoreFactory;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 
@@ -61,9 +60,6 @@ public class CallTraceRESTTest {
     		"\"properties\":{\"instanceId\":\"456\"},"+
     		"\"description\":\"ProcessCompleted instanceId=456\",\"duration\":16," +
     		"\"percentage\":18}],\"duration\":88,\"percentage\":100}]}";
-    
-    @Inject
-    org.overlord.rtgov.activity.server.ActivityStore _activityStore=null;
     
     private boolean _initialized=false;
 
@@ -97,6 +93,8 @@ public class CallTraceRESTTest {
     }
     
     protected void initActivityStore() {
+        
+        org.overlord.rtgov.activity.server.ActivityStore _activityStore=ActivityStoreFactory.getActivityStore();
         
         if (!_initialized) {
             try {
