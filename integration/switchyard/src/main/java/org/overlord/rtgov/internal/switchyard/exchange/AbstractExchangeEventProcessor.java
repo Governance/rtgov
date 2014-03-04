@@ -15,9 +15,6 @@
  */
 package org.overlord.rtgov.internal.switchyard.exchange;
 
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.EventObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -372,10 +369,33 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
     protected void record(Message msg, String contentType,
                 RPCActivityType at, SecurityContext sc, Exchange exch) {
         if (at != null) {
-            at.setMessageType(contentType);
-            
             if (msg != null) {
                 Object content=msg.getContent();
+                
+                // Check if content type not set
+                if (contentType == null) {
+                    
+                    // Determine whether checked exception (RTGOV-356)
+                    if (!(content instanceof org.switchyard.HandlerException)) {
+                        contentType = content.getClass().getName();
+                        
+                        // By default, set the fault to the exception class name
+                        // This can always be overridden by the information processor
+                        // To make it more readable, if the name ends in Exception, then
+                        // remove it
+                        String faultName=content.getClass().getSimpleName();
+                        
+                        if (faultName != null && faultName.endsWith("Exception")) {
+                            faultName = faultName.substring(0, faultName.length()-9);
+                        }
+                        
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Setting fault for type '"+contentType+"' to: "+faultName);
+                        }
+                        
+                        at.setFault(faultName);
+                    }
+                }
                 
                 if (contentType != null) {
                     at.setContent(getActivityCollector().processInformation(null,
@@ -386,6 +406,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                     at.setContent(content.toString());
                 }
             }
+            
+            at.setMessageType(contentType);
             
             // Check if principal has been defined
             if (sc != null && sc.getCredentials().size() > 0) {

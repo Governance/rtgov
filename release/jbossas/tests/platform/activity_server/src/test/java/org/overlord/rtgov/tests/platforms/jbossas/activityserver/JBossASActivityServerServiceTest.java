@@ -141,6 +141,87 @@ public class JBossASActivityServerServiceTest {
     }
 
     @Test @OperateOnDeployment("orders-app")
+    public void testQueryActivityServerFaultResponse() {
+        
+        try {
+            SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
+            SOAPConnection con=factory.createConnection();
+            
+            java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
+            
+            String mesg="<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
+                        "   <soap:Body>"+
+                        "       <orders:submitOrder xmlns:orders=\"urn:switchyard-quickstart-demo:orders:1.0\">"+
+                        "            <order>"+
+                        "                <orderId>1</orderId>"+
+                        "                <itemId>Laptop</itemId>"+
+                        "                <quantity>100</quantity>"+
+                        "                <customer>Fred</customer>"+
+                        "            </order>"+
+                        "        </orders:submitOrder>"+
+                        "    </soap:Body>"+
+                        "</soap:Envelope>";
+            
+            java.util.List<ActivityType> initialActivities = getActivityEvents();
+            
+            java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
+            
+            SOAPMessage request=MessageFactory.newInstance().createMessage(null, is);
+            
+            is.close();
+            
+            SOAPMessage response=con.call(request, url);
+
+            java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+            
+            response.writeTo(baos);
+            
+            baos.close();
+            
+            // Wait for events to propagate
+            Thread.sleep(4000);
+            
+            java.util.List<ActivityType> acts = getActivityEvents();
+            
+            if (acts == null) {
+                fail("Activity event list is null");
+            }
+            
+            System.out.println("LIST SIZE="+acts.size());
+            
+            System.out.println("LIST="+acts);
+            
+            if ((acts.size()-initialActivities.size()) != 7) {
+                fail("Expecting 7 activity events: "+(acts.size()-initialActivities.size()));
+            }
+            
+            ActivityType at1=acts.get(initialActivities.size()+4);
+            
+             if ((at1 instanceof ResponseSent) == false) {
+                fail("Expecting a 'response sent' event");
+            }
+            
+            ResponseSent resp=(ResponseSent)at1;
+            
+            if (resp.getMessageType() == null) {
+                fail("Message type should not be null");
+            }
+            
+            if (resp.getFault() == null) {
+                fail("Fault should not be null");
+            }
+            
+            if (!resp.getFault().equals("ItemNotFound")) {
+                fail("Fault should be 'ItemNotFound': "+resp.getFault());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to invoke service: "+e);
+        }
+    }
+
+
+    @Test @OperateOnDeployment("orders-app")
     public void testQueryActivityServerInvalidRequestStructure() {
         
         try {
@@ -216,6 +297,18 @@ public class JBossASActivityServerServiceTest {
 
             if (!req.getMessageId().equals(resp.getReplyToId())) {
                 fail("Response 'replyTo' id not same as request message id");
+            }
+            
+            if (resp.getMessageType() != null) {
+                fail("Message type of fault response, for validation error, should be null: "+resp.getMessageType());
+            }
+            
+            if (resp.getFault() != null) {
+                fail("Fault for fault response, for validation error, should be null: "+resp.getFault());
+            }
+            
+            if (resp.getContent() == null) {
+                fail("Fault response should have message content representing a description of the fault");
             }
         } catch (Exception e) {
             e.printStackTrace();
