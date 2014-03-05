@@ -12,14 +12,14 @@
 	}],
 	"properties":{
 		"item":"JAM",
-		"customer":"Fred"
+		"customer":"{CUSTOMER}"
 	}
 },{
 	"type":"RequestSent",
 	"interface":"org.switchyard.quickstarts.demos.orders.InventoryService",
 	"operation":"lookupItem",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
-	"messageType":"java:java.lang.String",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+	"messageType":"java.lang.String",
 	"context":[{
 		"value":"{ID}-2",
 		"type":"Message"
@@ -28,8 +28,8 @@
 	"type":"RequestReceived",
 	"interface":"org.switchyard.quickstarts.demos.orders.InventoryService",
 	"operation":"lookupItem",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
-	"messageType":"java:java.lang.String",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+	"messageType":"java.lang.String",
 	"context":[{
 		"value":"{ID}-2",
 		"type":"Message"
@@ -43,8 +43,8 @@
 	"replyToId":"{ID}-2",
 	"interface":"org.switchyard.quickstarts.demos.orders.InventoryService",
 	"operation":"lookupItem",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
-	"messageType":"java:org.switchyard.quickstarts.demos.orders.Item",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+	"messageType":"org.switchyard.quickstarts.demos.orders.Item",
 	"context":[{
 		"value":"{ID}-3",
 		"type":"Message"
@@ -55,8 +55,8 @@
 	"replyToId":"{ID}-2",
 	"interface":"org.switchyard.quickstarts.demos.orders.InventoryService",
 	"operation":"lookupItem",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}InventoryService",
-	"messageType":"java:org.switchyard.quickstarts.demos.orders.Item",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+	"messageType":"org.switchyard.quickstarts.demos.orders.Item",
 	"context":[{
 		"value":"{ID}-3",
 		"type":"Message"
@@ -66,8 +66,8 @@
 	"type":"RequestSent",
 	"interface":"org.switchyard.quickstarts.demos.orders.LogisticsService",
 	"operation":"deliver",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}LogisticsService",
-	"messageType":"java:org.switchyard.quickstarts.demos.orders.Order",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+	"messageType":"org.switchyard.quickstarts.demos.orders.Order",
 	"context":[{
 		"value":"{ID}-4",
 		"type":"Message"
@@ -76,15 +76,15 @@
 	}],
 	"properties":{
 		"itemId":"JAM",
-		"customer":"Fred"
+		"customer":"{CUSTOMER}"
 	},
 	"timestamp":130
 },{
 	"type":"RequestReceived",
 	"interface":"org.switchyard.quickstarts.demos.orders.LogisticsService",
 	"operation":"deliver",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}LogisticsService",
-	"messageType":"java:org.switchyard.quickstarts.demos.orders.Order",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+	"messageType":"org.switchyard.quickstarts.demos.orders.Order",
 	"context":[{
 		"value":"{ID}-4",
 		"type":"Message"
@@ -93,7 +93,7 @@
 	}],
 	"properties":{
 		"itemId":"JAM",
-		"customer":"Fred"
+		"customer":"{CUSTOMER}"
 	},
 	"timestamp":40
 },{
@@ -104,8 +104,8 @@
 	"replyToId":"{ID}-4",
 	"interface":"org.switchyard.quickstarts.demos.orders.LogisticsService",
 	"operation":"deliver",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}LogisticsService",
-	"messageType":"java:org.switchyard.quickstarts.demos.orders.DeliveryAck",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+	"messageType":"org.switchyard.quickstarts.demos.orders.DeliveryAck",
 	"context":[{
 		"value":"{ID}-5",
 		"type":"Message"
@@ -115,8 +115,8 @@
 	"replyToId":"{ID}-4",
 	"interface":"org.switchyard.quickstarts.demos.orders.LogisticsService",
 	"operation":"deliver",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}LogisticsService",
-	"messageType":"java:org.switchyard.quickstarts.demos.orders.DeliveryAck",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+	"messageType":"org.switchyard.quickstarts.demos.orders.DeliveryAck",
 	"context":[{
 		"value":"{ID}-5",
 		"type":"Message"
@@ -137,6 +137,6 @@
 	}],
 	"properties":{
 		"total":"125.0",
-		"customer":"Fred"
+		"customer":"{CUSTOMER}"
 	}
 }]
