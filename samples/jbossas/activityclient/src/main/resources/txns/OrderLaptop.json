@@ -11,7 +11,7 @@
 		"value":"{ID}"
 	}],
 	"properties":{
-		"item":"BUTTER",
+		"item":"JAM",
 		"customer":"{CUSTOMER}"
 	}
 },{
@@ -34,92 +34,36 @@
 		"value":"{ID}-2",
 		"type":"Message"
 	}],
-	"timestamp":30
+	"timestamp":50
 },{
 	"type":"LogMessage",
-	"message":"Found the item 'BUTTER'"
+	"message":"Did not find the item 'LAPTOP'"
 },{
 	"type":"ResponseSent",
 	"replyToId":"{ID}-2",
 	"interface":"org.switchyard.quickstarts.demos.orders.InventoryService",
 	"operation":"lookupItem",
 	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
-	"messageType":"org.switchyard.quickstarts.demos.orders.Item",
+	"messageType":"org.switchyard.quickstarts.demos.orders.ItemNotFoundException",
+	"fault":"ItemNotFound",
 	"context":[{
 		"value":"{ID}-3",
 		"type":"Message"
-	}]
+	}],
+	"timestamp":60
 },{
 	"type":"ResponseReceived",
 	"replyToId":"{ID}-2",
 	"interface":"org.switchyard.quickstarts.demos.orders.InventoryService",
 	"operation":"lookupItem",
 	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
-	"messageType":"org.switchyard.quickstarts.demos.orders.Item",
+	"messageType":"org.switchyard.quickstarts.demos.orders.ItemNotFoundException",
+	"fault":"ItemNotFound",
 	"context":[{
 		"value":"{ID}-3",
 		"type":"Message"
 	}],
-	"timestamp":30
-},{
-	"type":"RequestSent",
-	"interface":"org.switchyard.quickstarts.demos.orders.LogisticsService",
-	"operation":"deliver",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
-	"messageType":"org.switchyard.quickstarts.demos.orders.Order",
-	"context":[{
-		"value":"{ID}-4",
-		"type":"Message"
-	},{
-		"value":"{ID}"
-	}],
-	"properties":{
-		"itemId":"BUTTER",
-		"customer":"{CUSTOMER}"
-	}
-},{
-	"type":"RequestReceived",
-	"interface":"org.switchyard.quickstarts.demos.orders.LogisticsService",
-	"operation":"deliver",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
-	"messageType":"org.switchyard.quickstarts.demos.orders.Order",
-	"context":[{
-		"value":"{ID}-4",
-		"type":"Message"
-	},{
-		"value":"{ID}"
-	}],
-	"properties":{
-		"itemId":"BUTTER",
-		"customer":"{CUSTOMER}"
-	},
-	"timestamp":30
-},{
-	"type":"LogMessage",
-	"message":"Delivering the goods"
-},{
-	"type":"ResponseSent",
-	"replyToId":"{ID}-4",
-	"interface":"org.switchyard.quickstarts.demos.orders.LogisticsService",
-	"operation":"deliver",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
-	"messageType":"org.switchyard.quickstarts.demos.orders.DeliveryAck",
-	"context":[{
-		"value":"{ID}-5",
-		"type":"Message"
-	}]
-},{
-	"type":"ResponseReceived",
-	"replyToId":"{ID}-4",
-	"interface":"org.switchyard.quickstarts.demos.orders.LogisticsService",
-	"operation":"deliver",
-	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
-	"messageType":"org.switchyard.quickstarts.demos.orders.DeliveryAck",
-	"context":[{
-		"value":"{ID}-5",
-		"type":"Message"
-	}],
-	"timestamp":30
+	"timestamp":50
 },{
 	"type":"ResponseSent",
 	"replyToId":"{ID}-1",

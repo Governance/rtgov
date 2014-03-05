@@ -49,6 +49,10 @@ public class ActivityClient {
     private java.util.Map<String, java.io.File> _txnFileMap=
                         new java.util.HashMap<String, java.io.File>();
     private java.util.List<String> _txnList=new java.util.Vector<String>();
+    
+    private static final String[] CUSTOMERS={
+        "Fred", "Joe", "Jane", "Lee", "Rachel", "Tina", "Kurt", "David", "Eric", "Kev", "Gary"
+    };
 
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
@@ -265,11 +269,10 @@ public class ActivityClient {
         
         while (num == -1 || count < num) {
             
-            int pos=Math.abs(rand.nextInt()) % _txnList.size();
+            int txnpos=Math.abs(rand.nextInt()) % _txnList.size();
+            int custpos=Math.abs(rand.nextInt()) % CUSTOMERS.length;
             
-            String txnName=_txnList.get(pos);
-            
-            send(txnName, count);
+            send(_txnList.get(txnpos), CUSTOMERS[custpos], count);
             
             count++;
         }
@@ -280,8 +283,10 @@ public class ActivityClient {
      * server.
      * 
      * @param txnName The txnName
+     * @param customer The customer
+     * @param count The number
      */
-    public void send(String txnName, int count) {
+    public void send(String txnName, String customer, int count) {
 
         try {
             int id=count;
@@ -294,10 +299,11 @@ public class ActivityClient {
             
             is.close();
             
-            // Transform any ID fields in the txn with the unique id
+            // Transform any ID fields in the txn with the unique id, and set a random customer
             String txn=new String(b);
             
             txn = txn.replaceAll("\\{ID\\}", ""+id);
+            txn = txn.replaceAll("\\{CUSTOMER\\}", customer);
             
             is = new java.io.ByteArrayInputStream(txn.getBytes());
             
