@@ -1,0 +1,30 @@
+[{
+	"type":"RequestReceived",
+	"interface":"{urn:switchyard-quickstart-demo:orders:1.0}OrderService",
+	"operation":"submitOrder",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+	"messageType":"{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
+	"context":[{
+		"value":"{ID}-1",
+		"type":"Message"
+	},{
+		"value":"{ID}"
+	}],
+	"properties":{
+		"item":"JAM",
+		"customer":"{CUSTOMER}"
+	}
+},{
+	"type":"ResponseSent",
+	"replyToId":"{ID}-1",
+	"interface":"{urn:switchyard-quickstart-demo:orders:1.0}OrderService",
+	"operation":"submitOrder",
+	"serviceType":"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+	"fault":"ERROR",
+	"context":[{
+		"value":"{ID}-6",
+		"type":"Message"
+	},{
+		"value":"{ID}"
+	}]
+}]
