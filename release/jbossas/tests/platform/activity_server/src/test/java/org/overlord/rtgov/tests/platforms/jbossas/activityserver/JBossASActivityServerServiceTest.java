@@ -303,8 +303,12 @@ public class JBossASActivityServerServiceTest {
                 fail("Message type of fault response, for validation error, should be null: "+resp.getMessageType());
             }
             
-            if (resp.getFault() != null) {
-                fail("Fault for fault response, for validation error, should be null: "+resp.getFault());
+            if (resp.getFault() == null) {
+                fail("Fault for invalid response should not be null");
+            }
+            
+            if (!resp.getFault().equals("ERROR")) {
+                fail("Fault for invalid response should be 'ERROR': "+resp.getFault());
             }
             
             if (resp.getContent() == null) {

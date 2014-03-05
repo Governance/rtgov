@@ -51,6 +51,8 @@ import org.switchyard.security.credential.Credential;
  */
 public abstract class AbstractExchangeEventProcessor extends AbstractEventProcessor {
     
+    private static final String UNEXPECTED_FAULT = "ERROR";
+
     private static final String RTGOV_REQUEST_SENT = "rtgov.request.sent";
 
     private static final String RTGOV_REQUEST_RECEIVED = "rtgov.request.received";
@@ -394,6 +396,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                         }
                         
                         at.setFault(faultName);
+                    } else {
+                        at.setFault(UNEXPECTED_FAULT);
                     }
                 }
                 
