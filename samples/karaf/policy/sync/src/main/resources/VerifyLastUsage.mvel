@@ -1,0 +1,37 @@
+String customer=event.properties.get("customer");
+
+if (customer == null) {
+	return;
+}
+
+cm = epc.getService("CacheManager");
+	
+// Attempt to lock the entry
+if (!cm.lock("Principals", customer)) {
+	epc.handle(new java.lang.RuntimeException("Unable to lock entry for principal '"+customer+"'"));
+	
+	return;
+}
+
+// Access the cache of principals
+principals = cm.getCache("Principals");
+
+principal = principals.get(customer);
+
+if (principal == null) {
+	principal = new java.util.HashMap();
+}
+
+java.util.Date current=principal.get(event.serviceType+"-lastaccess");
+java.util.Date now=new java.util.Date();
+
+if (current != null && (now.getTime()-current.getTime()) < 2000) {
+	epc.handle(new java.lang.RuntimeException("Customer '"+customer+"' cannot perform more than one request every 2 seconds"));
+	
+	return;
+}
+
+principal.put(event.serviceType+"-lastaccess", now);	
+principals.put(customer, principal);
+	
+epc.logDebug("Updated principal '"+customer+"': "+principals.get(customer));

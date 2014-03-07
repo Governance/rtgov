@@ -25,6 +25,7 @@
 		<module>activity-store-jpa</module>
 		<module>activity-store-mem</module>
 		<module>av-loader-jee</module>
+		<module>av-loader-osgi</module>
 		<module>collector-activity-server</module>
 		<module>ip-loader-jee</module>
 		<module>ip-loader-osgi</module>
