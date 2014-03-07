@@ -15,9 +15,12 @@
 
 	<modules>
 		<module>epn-core</module>
+		<module>epn-jms</module>
+		<module>epn-jms-activemq</module>
 		<module>epn-container-embedded</module>
 		<module>epn-container-jee</module>
 		<module>epn-loader-jee</module>
+		<module>epn-loader-osgi</module>
 	</modules>
 
 </project>

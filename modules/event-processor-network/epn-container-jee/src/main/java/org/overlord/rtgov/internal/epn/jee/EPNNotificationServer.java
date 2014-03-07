@@ -27,6 +27,8 @@ import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
+import org.overlord.rtgov.epn.jms.JMSEPNManager;
+
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +50,7 @@ public class EPNNotificationServer implements MessageListener {
     private static final Logger LOG=Logger.getLogger(EPNNotificationServer.class.getName());
     
     @Inject
-    private JEEEPNManager _epnManager;
+    private JMSEPNManager _epnManager;
     
     /**
      * This is the default constructor.

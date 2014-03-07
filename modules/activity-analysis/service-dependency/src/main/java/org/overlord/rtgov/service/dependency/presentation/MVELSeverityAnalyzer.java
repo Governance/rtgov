@@ -19,10 +19,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.overlord.rtgov.analytics.service.InvocationMetric;
-import org.overlord.rtgov.common.util.RTGovConfig;
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.mvel2.MVEL;
 import org.mvel2.ParserContext;
 
@@ -37,10 +36,16 @@ public class MVELSeverityAnalyzer implements SeverityAnalyzer {
 
     private static final Logger LOG=Logger.getLogger(MVELSeverityAnalyzer.class.getName());
 
-    @Inject @RTGovConfig
     private String _scriptLocation=null;
     private java.io.Serializable _scriptExpression=null;
 
+    /**
+     * The default constructor.
+     */
+    public MVELSeverityAnalyzer() {
+        _scriptLocation = RTGovProperties.getProperty("MVELSeverityAnalyzer.scriptLocation");
+    }
+    
     /**
      * This method sets the script location.
      * 

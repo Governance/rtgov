@@ -117,6 +117,15 @@ public class JEEActivityServer implements ActivityServer {
     }
     
     /**
+     * This method sets the list of activity notifiers.
+     * 
+     * @param notifiers The activity notifiers
+     */
+    public void setActivityNotifiers(java.util.List<ActivityNotifier> notifiers) {
+        _notifiers = notifiers;
+    }
+    
+    /**
      * This method starts the transaction.
      * 
      * @return Whether the transaction has been started

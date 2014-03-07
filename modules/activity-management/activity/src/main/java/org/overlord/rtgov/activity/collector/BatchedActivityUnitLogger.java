@@ -21,10 +21,9 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.inject.Inject;
 
 import org.overlord.rtgov.activity.model.ActivityUnit;
-import org.overlord.rtgov.common.util.RTGovConfig;
+import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
  * This class provides the abstract activity unit logger implementation that
@@ -43,11 +42,8 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
     private java.util.Timer _timer;
     private java.util.TimerTask _timerTask;
     
-    @Inject @RTGovConfig
-    private Long _maxTimeInterval=MAX_TIME_INTERVAL;
-    
-    @Inject @RTGovConfig
-    private Integer _maxUnitCount=MAX_UNIT_COUNT;
+    private Long _maxTimeInterval;
+    private Integer _maxUnitCount;
     
     /**
      * This method initializes the activity logger.
@@ -55,6 +51,9 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
     @PostConstruct
     public void init() {
         _timer = new java.util.Timer();
+        
+        _maxTimeInterval = RTGovProperties.getPropertyAsLong("BatchedActivityUnitLogger.maxTimeInterval", MAX_TIME_INTERVAL);
+        _maxUnitCount = RTGovProperties.getPropertyAsInteger("BatchedActivityUnitLogger.maxUnitCount", MAX_UNIT_COUNT);
     }
     
     /**

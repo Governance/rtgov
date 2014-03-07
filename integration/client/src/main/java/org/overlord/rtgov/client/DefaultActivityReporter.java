@@ -44,10 +44,12 @@ public class DefaultActivityReporter implements ActivityReporter {
      */
     @PostConstruct
     protected void init() {
-        _activityCollector = ActivityCollectorAccessor.getActivityCollector();
-        
         if (_activityCollector == null) {
-            LOG.severe("Failed to obtain Activity Collector from Client Manager");
+            _activityCollector = ActivityCollectorAccessor.getActivityCollector();
+            
+            if (_activityCollector == null) {
+                LOG.severe("Failed to obtain Activity Collector from Client Manager");
+            }
         }
 
         if (LOG.isLoggable(Level.FINE)) {
@@ -55,6 +57,15 @@ public class DefaultActivityReporter implements ActivityReporter {
         }
         
         _initialized = true;
+    }
+    
+    /**
+     * This method sets the activity collector.
+     * 
+     * @param ac The activity collector
+     */
+    public void setActivityCollector(ActivityCollector ac) {
+        _activityCollector = ac;
     }
 
     /**

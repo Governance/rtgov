@@ -23,10 +23,9 @@ import java.util.logging.Logger;
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
 import javax.naming.InitialContext;
 
-import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.reports.model.Calendar;
 import org.overlord.rtgov.reports.util.ReportsUtil;
 
@@ -38,18 +37,6 @@ import org.overlord.rtgov.reports.util.ReportsUtil;
 public class JEEReportContext implements org.overlord.rtgov.reports.ReportContext {
     
     private static final Logger LOG=Logger.getLogger(JEEReportContext.class.getName());
-    
-    @Inject
-    private RTGovPropertiesProvider _propertiesProvider=null;
-    
-    /**
-     * This method is used to set the properties provider.
-     * 
-     * @param properties The properties provider
-     */
-    public void setPropertiesProvider(RTGovPropertiesProvider properties) {
-        _propertiesProvider = properties;
-    }
     
     /**
      * {@inheritDoc}
@@ -159,7 +146,7 @@ public class JEEReportContext implements org.overlord.rtgov.reports.ReportContex
         if (name != null) {
             
             // Attempt to load calendar - if no name specified, then use 'default'
-            String location=_propertiesProvider.getProperty("calendar."+name);
+            String location=RTGovProperties.getProperty("calendar."+name);
             
             if (location != null) {
                 java.io.File f=new java.io.File(location);

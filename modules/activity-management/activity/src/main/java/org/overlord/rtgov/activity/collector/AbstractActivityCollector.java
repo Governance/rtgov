@@ -29,21 +29,20 @@ import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
-import org.overlord.rtgov.common.util.RTGovConfig;
+import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
  * This class provides an abstract implementation of the activity
  * collector interface.
  *
  */
-public class AbstractActivityCollector implements ActivityCollector, AbstractActivityCollectorMBean {
+public abstract class AbstractActivityCollector implements ActivityCollector, AbstractActivityCollectorMBean {
 
     private static final Logger LOG=Logger.getLogger(AbstractActivityCollector.class.getName());
     
     private static final boolean DEFAULT_COLLECTION_ENABLED=true;
     
-    @Inject @RTGovConfig
-    private Boolean _collectionEnabled=DEFAULT_COLLECTION_ENABLED;
+    private Boolean _enabled;
     
     @Inject
     private CollectorContext _collectorContext=null;
@@ -64,6 +63,8 @@ public class AbstractActivityCollector implements ActivityCollector, AbstractAct
      */
     public AbstractActivityCollector() {
         ActivityCollectorAccessor.setActivityCollector(this);
+        
+        _enabled = RTGovProperties.getPropertyAsBoolean("ActivityCollector.enabled", DEFAULT_COLLECTION_ENABLED);
     }
     
     /**
@@ -91,7 +92,7 @@ public class AbstractActivityCollector implements ActivityCollector, AbstractAct
      * @return Whether collection is enabled
      */
     public boolean isCollectionEnabled() {
-        return (_collectionEnabled == null ? DEFAULT_COLLECTION_ENABLED : _collectionEnabled);
+        return (_enabled == null ? DEFAULT_COLLECTION_ENABLED : _enabled);
     }
     
     /**
@@ -111,7 +112,7 @@ public class AbstractActivityCollector implements ActivityCollector, AbstractAct
      * @param enabled Whether enabled
      */
     public void setCollectionEnabled(boolean enabled) {
-        _collectionEnabled = enabled;
+        _enabled = enabled;
     }
     
     /**

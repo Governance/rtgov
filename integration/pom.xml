@@ -16,6 +16,7 @@
 	<modules>
 		<module>client</module>
 		<module>jbossas</module>
+		<module>osgi</module>
 		<module>switchyard</module>
 	</modules>
 

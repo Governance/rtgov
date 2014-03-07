@@ -255,6 +255,15 @@ public class JPAActivityStore implements ActivityStore {
     }
     
     /**
+     * This method sets the entity manager factory.
+     * 
+     * @param entityManagerFactory The entity manager factory
+     */
+    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
+        _entityManagerFactory = entityManagerFactory;
+    }
+    
+    /**
      * This method sets the entity manager.
      * 
      * @param entityManager The entity manager

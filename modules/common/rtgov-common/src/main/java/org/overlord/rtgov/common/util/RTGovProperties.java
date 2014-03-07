@@ -18,11 +18,6 @@ package org.overlord.rtgov.common.util;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
-
 /**
  * This class provides access to Runtime Governance properties.
  *
@@ -31,8 +26,7 @@ public final class RTGovProperties {
     
     private static final Logger LOG=Logger.getLogger(RTGovProperties.class.getName());
     
-    private static RTGovPropertiesProvider _provider=null;
-    private static boolean _initialized=false;
+    private static RTGovPropertiesProvider _provider=new DefaultRTGovPropertiesProvider();
     
     /**
      * Make constructor private.
@@ -54,45 +48,7 @@ public final class RTGovProperties {
      * 
      * @return The properties
      */
-    @SuppressWarnings("unchecked")
     public static RTGovPropertiesProvider getPropertiesProvider() {
-
-        // If provider is null, see if can be resolved from bean manager
-        if (_provider == null && !_initialized) {
-            try {
-                BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
-                
-                java.util.Set<Bean<?>> beans=bm.getBeans(RTGovPropertiesProvider.class);
-                
-                for (Bean<?> b : beans) {                
-                    CreationalContext<Object> cc=new CreationalContext<Object>() {
-                        public void push(Object arg0) {
-                        }
-                        public void release() {
-                        }                   
-                    };
-                    
-                    _provider = (RTGovPropertiesProvider)((Bean<Object>)b).create(cc);
-                    
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine("Found Runtime Governance Properties provider="+_provider);
-                    }
-                    
-                    if (_provider != null) {
-                        break;
-                    }
-                }
-            } catch (Exception e) {                
-                LOG.warning(java.util.PropertyResourceBundle.getBundle(
-                        "rtgov-common.Messages").getString("RTGOV-COMMON-1"));
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "Failed to get runtime governance properties", e);
-                }
-            }
-            
-            _initialized = true;
-        }
-        
         return (_provider);
     }
     
@@ -113,6 +69,146 @@ public final class RTGovProperties {
             LOG.fine("Runtime Governance property '"+name+"' = "+ret);
         }
 
+        return (ret);
+    }
+    
+    /**
+     * This method returns the named property.
+     * 
+     * @param name The property name
+     * @param def The optional default
+     * @return The value, or null if not found
+     */
+    public static String getProperty(String name, String def) {
+        String ret=getProperty(name);
+
+        if (ret == null) {
+            ret = def;
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method returns the named property as a
+     * boolean.
+     * 
+     * @param name The property name
+     * @return The value, or null if not found
+     */
+    public static Boolean getPropertyAsBoolean(String name) {
+        Boolean ret=null;
+        
+        String prop=getProperty(name);
+        
+        if (prop != null) {
+            ret = Boolean.valueOf(prop);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Runtime Governance boolean value = "+ret);
+            }
+        }
+
+        return (ret);
+    }
+    
+    /**
+     * This method returns the named property as a
+     * boolean.
+     * 
+     * @param name The property name
+     * @param def The optional default
+     * @return The value, or null if not found
+     */
+    public static Boolean getPropertyAsBoolean(String name, Boolean def) {
+        Boolean ret=getPropertyAsBoolean(name);
+
+        if (ret == null) {
+            ret = def;
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method returns the named property as an
+     * integer.
+     * 
+     * @param name The property name
+     * @return The value, or null if not found
+     */
+    public static Integer getPropertyAsInteger(String name) {
+        Integer ret=null;
+        
+        String prop=getProperty(name);
+        
+        if (prop != null) {
+            ret = Integer.valueOf(prop);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Runtime Governance integer value = "+ret);
+            }
+        }
+
+        return (ret);
+    }
+    
+    /**
+     * This method returns the named property as an
+     * integer.
+     * 
+     * @param name The property name
+     * @param def The optional default
+     * @return The value, or null if not found
+     */
+    public static Integer getPropertyAsInteger(String name, Integer def) {
+        Integer ret=getPropertyAsInteger(name);
+
+        if (ret == null) {
+            ret = def;
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method returns the named property as an
+     * long.
+     * 
+     * @param name The property name
+     * @return The value, or null if not found
+     */
+    public static Long getPropertyAsLong(String name) {
+        Long ret=null;
+        
+        String prop=getProperty(name);
+        
+        if (prop != null) {
+            ret = Long.valueOf(prop);
+            
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Runtime Governance long value = "+ret);
+            }
+        }
+
+        return (ret);
+    }
+    
+    /**
+     * This method returns the named property as an
+     * long.
+     * 
+     * @param name The property name
+     * @param def The optional default
+     * @return The value, or null if not found
+     */
+    public static Long getPropertyAsLong(String name, Long def) {
+        Long ret=getPropertyAsLong(name);
+        
+        if (ret == null) {
+            ret = def;
+        }
+        
         return (ret);
     }
     

@@ -21,6 +21,7 @@
 		<module>active-collection-rests</module>
 		<module>acs-epn</module>
 		<module>acs-loader-jee</module>
+		<module>acs-loader-osgi</module>
 	</modules>
 
 </project>

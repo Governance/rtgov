@@ -87,7 +87,7 @@ public final class EPNManagerAccessor {
         }
 
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Get activity collection manager="+_epnManager);
+            LOG.finest("Get event process network manager="+_epnManager);
         }
 
         return (_epnManager);

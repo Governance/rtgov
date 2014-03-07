@@ -3,7 +3,7 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.active-queries</groupId>
 	<artifactId>active-collection</artifactId> 
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Overlord RTGov::Modules::Active Queries::Active Collection</name>
 
 	<parent>
@@ -45,6 +45,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
 	<build>
 		<plugins>
 			<plugin>
@@ -53,6 +54,24 @@
 					<forkMode>always</forkMode>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>
+							org.overlord.rtgov.active.collection.*;version=${project.version}
+						</Export-Package>
+						<Import-Package>
+							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,*
+						</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+	
 </project>

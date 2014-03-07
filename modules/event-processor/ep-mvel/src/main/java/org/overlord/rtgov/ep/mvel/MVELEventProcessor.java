@@ -19,8 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.mvel2.MVEL;
+import org.overlord.rtgov.ep.DefaultEPContext;
 import org.overlord.rtgov.ep.EventProcessor;
-import org.overlord.rtgov.internal.ep.DefaultEPContext;
 
 /**
  * This class represents the MVEL implementation of the Event

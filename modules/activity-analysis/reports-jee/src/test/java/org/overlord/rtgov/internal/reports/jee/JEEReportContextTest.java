@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 import java.util.Properties;
 
 import org.junit.Test;
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 import org.overlord.rtgov.internal.reports.jee.JEEReportContext;
 import org.overlord.rtgov.reports.model.Calendar;
@@ -28,10 +29,10 @@ public class JEEReportContextTest {
 
     @Test
     public void testGetCalendar() {
-        JEEReportContext context=new JEEReportContext();
-        
         TestPropertiesProvider provider=new TestPropertiesProvider();
-        context.setPropertiesProvider(provider);
+        RTGovProperties.setPropertiesProvider(provider);
+        
+        JEEReportContext context=new JEEReportContext();
         
         java.net.URL url=JEEReportContextTest.class.getResource("/config/TestCalendar.json");
         
@@ -42,6 +43,9 @@ public class JEEReportContextTest {
         provider.getProperties().put("calendar.Test", url.getFile());
         
         Calendar cal=context.getCalendar("Test", null);
+        
+        // Reset the provider
+        RTGovProperties.setPropertiesProvider(null);
         
         if (cal == null) {
             fail("Failed to get calendar");

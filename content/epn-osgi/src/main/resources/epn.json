@@ -1,0 +1,54 @@
+{
+  "name" : "Overlord-RTGov-EPN",
+  "version" : "1.0.0-SNAPSHOT",
+  "subscriptions" : [ {
+    "nodeName" : "SOAEvents",
+    "subject" : "ActivityUnits"
+  },
+  {
+    "nodeName" : "ServiceDefinitions",
+    "subject" : "ActivityUnits"
+  } ],
+  "nodes" : [
+    {
+      "name" : "SOAEvents",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ "SOAEvents" ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.content.epn.SOAActivityTypeEventSplitter"
+      },
+      "predicate" : null,
+      "notifications" : [ ]
+    },{
+      "name" : "ServiceDefinitions",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.content.epn.ServiceDefinitionProcessor"
+      },
+      "predicate" : null,
+      "notifications" : [ {
+      	"type" : "Results",
+      	"subject" : "ServiceDefinitions"
+      } ]
+    },{
+      "name" : "ServiceResponseTimes",
+      "sourceNodes" : [ "ServiceDefinitions" ],
+      "destinationSubjects" : [ "ServiceResponseTimes" ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.content.epn.ServiceResponseTimeProcessor"
+      },
+      "predicate" : null,
+      "notifications" : [ {
+      	"type" : "Results",
+      	"subject" : "ServiceResponseTimes"
+      } ]
+    }
+  ]
+}

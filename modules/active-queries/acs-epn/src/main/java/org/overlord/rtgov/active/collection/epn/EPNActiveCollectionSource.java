@@ -80,7 +80,9 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
             LOG.fine("Initializing EPN Active Collection Source");
         }
 
-        _epnManager = EPNManagerAccessor.getEPNManager();
+        if (_epnManager == null) {
+            _epnManager = EPNManagerAccessor.getEPNManager();
+        }
 
         if (_epnManager == null) {
                 

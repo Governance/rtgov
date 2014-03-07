@@ -58,6 +58,11 @@
 			
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
+			<artifactId>epn-jms</artifactId>
+			<version>${project.version}</version>
+		</dependency>	
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
 			<version>${project.version}</version>
 		</dependency>	

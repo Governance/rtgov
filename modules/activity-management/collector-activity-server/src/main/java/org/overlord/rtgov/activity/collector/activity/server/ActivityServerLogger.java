@@ -33,7 +33,7 @@ import javax.management.NotificationListener;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.collector.BatchedActivityUnitLogger;
-import org.overlord.rtgov.common.util.RTGovConfig;
+import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
  * This class provides a bridge between the Collector and Activity Server,
@@ -53,16 +53,12 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
     private static final int FREE_ACTIVITY_LIST_QUEUE_SIZE = 100;
     private static final int ACTIVITY_LIST_QUEUE_SIZE = 10000;
 
-    @Inject @RTGovConfig
     private Integer _durationBetweenFailureReports=DURATION_BETWEEN_FAILURE_REPORTS;
 
-    @Inject @RTGovConfig
     private Integer _maxThreads=MAX_THREADS;
     
-    @Inject @RTGovConfig
     private Integer _freeActivityListQueueSize=FREE_ACTIVITY_LIST_QUEUE_SIZE;
     
-    @Inject @RTGovConfig
     private Integer _activityListQueueSize=ACTIVITY_LIST_QUEUE_SIZE;
     
     private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _queue=null;    
@@ -92,20 +88,14 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
             LOG.fine("Initialize Logger for Activity Server (max threads "+_maxThreads+"): "+_activityServer);
         }
         
-        // In case injection has reset value (if not specified), then need to re-establish
-        // the defaults
-        if (_maxThreads == null) {
-            _maxThreads = MAX_THREADS;
-        }
-        if (_durationBetweenFailureReports == null) {
-            _durationBetweenFailureReports = DURATION_BETWEEN_FAILURE_REPORTS;
-        }
-        if (_freeActivityListQueueSize == null) {
-            _freeActivityListQueueSize = FREE_ACTIVITY_LIST_QUEUE_SIZE;
-        }
-        if (_activityListQueueSize == null) {
-            _activityListQueueSize = ACTIVITY_LIST_QUEUE_SIZE;
-        }
+        _maxThreads = RTGovProperties.getPropertyAsInteger("ActivityServerLogger.maxThreads",
+                MAX_THREADS);
+        _durationBetweenFailureReports = RTGovProperties.getPropertyAsInteger("ActivityServerLogger.durationBetweenFailureReports",
+                DURATION_BETWEEN_FAILURE_REPORTS);
+        _freeActivityListQueueSize = RTGovProperties.getPropertyAsInteger("ActivityServerLogger.freeActivityListQueueSize",
+                FREE_ACTIVITY_LIST_QUEUE_SIZE);
+        _activityListQueueSize = RTGovProperties.getPropertyAsInteger("ActivityServerLogger.activityListQueueSize",
+                ACTIVITY_LIST_QUEUE_SIZE);
         
         _queue=new java.util.concurrent.ArrayBlockingQueue<java.util.List<ActivityUnit>>(_activityListQueueSize);
         

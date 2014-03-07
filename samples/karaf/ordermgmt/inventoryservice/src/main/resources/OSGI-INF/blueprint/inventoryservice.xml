@@ -1,0 +1,17 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <service interface="org.overlord.rtgov.quickstarts.demos.ordermgmt.inventoryservice.InventoryService"
+    					ref="inventoryServiceProxy" />
+    
+    <bean id="inventoryServiceProxy" class="org.overlord.rtgov.client.ActivityProxyHelper"
+    			factory-method="createServiceProxy" >
+    	<argument value="org.overlord.rtgov.quickstarts.demos.ordermgmt.inventoryservice.InventoryService" />
+    	<argument ref="inventoryServiceBean" />
+   	</bean>
+
+    <bean id="inventoryServiceBean" class="org.overlord.rtgov.quickstarts.demos.ordermgmt.inventoryservice.InventoryServiceBean" >
+    </bean>
+
+</blueprint>

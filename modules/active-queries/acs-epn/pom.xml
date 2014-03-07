@@ -3,7 +3,7 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.active-queries</groupId>
 	<artifactId>acs-epn</artifactId> 
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Overlord RTGov::Modules::Active Queries::ACS EPN</name>
 
 	<parent>
@@ -48,4 +48,27 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>
+							org.overlord.rtgov.active.collection.epn.*;version=${project.version}
+						</Export-Package>
+						<Import-Package>
+							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,*
+						</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 </project>

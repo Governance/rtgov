@@ -20,6 +20,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.overlord.rtgov.event-processor-network</groupId>
+			<artifactId>epn-jms</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>

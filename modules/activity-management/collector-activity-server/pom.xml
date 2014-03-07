@@ -3,7 +3,7 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.activity-management</groupId>
 	<artifactId>collector-activity-server</artifactId> 
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Overlord RTGov::Modules::Activity Management::Collector for Activity Server</name>
 
 	<parent>
@@ -41,5 +41,27 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>
+							org.overlord.rtgov.activity.collector.activity.server.*;version=${project.version}
+						</Export-Package>
+						<Import-Package>
+							!javax.inject.*,*
+						</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	
 </project>
