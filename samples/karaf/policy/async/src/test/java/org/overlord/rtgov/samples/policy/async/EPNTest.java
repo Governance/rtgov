@@ -71,26 +71,22 @@ public class EPNTest {
         
         RequestSent rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqs.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
+        rqs.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         RequestReceived rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqr.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
+        rqr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         ResponseSent rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rps.setContent("{\"total\":100,\"customer\":\"Fred\"}");
+        rps.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps.getProperties().put("total", "100");
         rps.getProperties().put("customer", "Fred");
         
         ResponseReceived rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rpr.setContent("{\"total\":100,\"customer\":\"Fred\"}");
+        rpr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         events.add(rqs);
         events.add(rqr);
@@ -123,26 +119,22 @@ public class EPNTest {
     
         rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqs.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
+        rqs.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqr.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
+        rqr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rps.setContent("{\"customer\":\"Fred\",\"total\":100}");
+        rps.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps.getProperties().put("total", "100");
         rps.getProperties().put("customer", "Fred");
         
         rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rpr.setContent("{\"customer\":\"Fred\",\"total\":100}");
+        rpr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         events.add(rqs);
         events.add(rqr);
@@ -210,26 +202,22 @@ public class EPNTest {
         
         RequestSent rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqs.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
+        rqs.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         RequestReceived rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqr.setContent("<Order><customer>Fred</customer><total>100</total></Order>");
+        rqr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         ResponseSent rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rps.setContent("{\"total\":100,\"customer\":\"Fred\"}");
+        rps.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps.getProperties().put("total", "100");
         rps.getProperties().put("customer", "Fred");
         
         ResponseReceived rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rpr.setContent("{\"total\":100,\"customer\":\"Fred\"}");
+        rpr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         events.add(rqs);
         events.add(rqr);
@@ -262,27 +250,23 @@ public class EPNTest {
     
         rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqs.setContent("<Order><customer>Joe</customer><total>100</total></Order>");
+        rqs.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqr.setContent("<Order><customer>Joe</customer><total>100</total></Order>");
+        rqr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rps.setContent("{\"total\":100,\"customer\":\"Joe\"}");
+        rps.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps.getProperties().put("total", "100");
         rps.getProperties().put("customer", "Joe");
         
         rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rpr.setContent("{\"total\":100,\"customer\":\"Joe\"}");
-        
+        rpr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
+         
         events.add(rqs);
         events.add(rqr);
         events.add(rps);
@@ -350,26 +334,22 @@ public class EPNTest {
         
         RequestSent rqs=new RequestSent();
         rqs.setOperation("submitOrder");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqs.setContent("<Order><customer>Fred</customer><total>200</total></Order>");
+        rqs.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         RequestReceived rqr=new RequestReceived();
         rqr.setOperation("submitOrder");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqr.setContent("<Order><customer>Fred</customer><total>200</total></Order>");
+        rqr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         ResponseSent rps=new ResponseSent();
         rps.setOperation("submitOrder");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rps.setContent("{\"total\":200,\"customer\":\"Fred\"}");
+        rps.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps.getProperties().put("total", "200");
         rps.getProperties().put("customer", "Fred");
         
         ResponseReceived rpr=new ResponseReceived();
         rpr.setOperation("submitOrder");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rps.setContent("{\"total\":200,\"customer\":\"Fred\"}");
+        rpr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         events.add(rqs);
         events.add(rqr);
@@ -406,26 +386,22 @@ public class EPNTest {
     
         rqs=new RequestSent();
         rqs.setOperation("makePayment");
-        rqs.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqs.setContent("<Payment><customer>Fred</customer><amount>170</amount></Payment>");
+        rqs.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rqr=new RequestReceived();
         rqr.setOperation("makePayment");
-        rqr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rqr.setContent("<Payment><customer>Fred</customer><amount>170</amount></Payment>");
+        rqr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps=new ResponseSent();
         rps.setOperation("makePayment");
-        rps.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rps.setContent("{\"amount\":170,\"customer\":\"Fred\"}");
+        rps.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         rps.getProperties().put("total", "170");
         rps.getProperties().put("customer", "Fred");
         
         rpr=new ResponseReceived();
         rpr.setOperation("makePayment");
-        rpr.setServiceType("{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService");
-        rpr.setContent("{\"amount\":170,\"customer\":\"Fred\"}");
+        rpr.setServiceType("org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean");
         
         events.add(rqs);
         events.add(rqr);
