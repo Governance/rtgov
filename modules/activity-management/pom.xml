@@ -27,6 +27,7 @@
 		<module>av-loader-jee</module>
 		<module>collector-activity-server</module>
 		<module>ip-loader-jee</module>
+		<module>ip-loader-osgi</module>
 	</modules>
 
 </project>

@@ -16,6 +16,7 @@
 	<modules>
 		<module>model</module>
 		<module>inventoryservice</module>
+		<module>ip</module>
 		<module>logisticsservice</module>
 		<module>orderservice</module>
 		<module>orderservice-rests</module>

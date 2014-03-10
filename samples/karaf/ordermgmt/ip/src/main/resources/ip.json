@@ -2,61 +2,7 @@
 	"name":"OrderManagementIP",
 	"version":"1",
 	"typeProcessors":{
-		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrder":{
-			"contexts":[{
-				"type":"Conversation",
-				"evaluator":{
-					"type":"xpath",
-					"expression":"order/orderId"
-				}
-			}],
-			"properties":[{
-				"name":"customer",
-				"evaluator":{
-					"type":"xpath",
-					"expression":"order/customer"
-				}
-			},{
-				"name":"item",
-				"evaluator":{
-					"type":"xpath",
-					"expression":"order/itemId"
-				}
-			},{
-				"name":"contentType",
-				"header":"org.switchyard.contentType",
-				"evaluator":{
-					"type":"mvel",
-					"expression":"toString()"
-				}
-			}],
-			"transformer":{
-				"type":"serialize"
-			}
-		},
-		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse":{
-			"contexts":[{
-				"type":"Conversation",
-				"evaluator":{
-					"type":"xpath",
-					"expression":"orderAck/orderId"
-				}
-			}],
-			"properties":[{
-				"name":"customer",
-				"evaluator":{
-					"type":"xpath",
-					"expression":"orderAck/customer"
-				}
-			},{
-				"name":"total",
-				"evaluator":{
-					"type":"xpath",
-					"expression":"orderAck/total"
-				}
-			}]
-		},
-		"org.overlord.rtgov.quickstarts.demos.orders.Order":{
+		"org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Order":{
 			"contexts":[{
 				"type":"Conversation",
 				"evaluator":{
@@ -71,14 +17,17 @@
 					"expression":"customer"
 				}
 			},{
-				"name":"itemId",
+				"name":"item",
 				"evaluator":{
 					"type":"mvel",
 					"expression":"itemId"
 				}
-			}]
+			}],
+			"transformer":{
+				"type":"serialize"
+			}
 		},
-		"org.overlord.rtgov.quickstarts.demos.orders.OrderAck":{
+		"org.overlord.rtgov.quickstarts.demos.ordermgmt.model.OrderAck":{
 			"contexts":[{
 				"type":"Conversation",
 				"evaluator":{
@@ -100,37 +49,22 @@
 				}
 			}]
 		},
-		"{urn:switchyard-quickstart-demo:orders:1.0}makePayment":{
+		"org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Payment":{
 			"properties":[{
 				"name":"customer",
 				"evaluator":{
-					"type":"xpath",
-					"expression":"payment/customer"
+					"type":"mvel",
+					"expression":"customer"
 				}
 			},{
 				"name":"amount",
 				"evaluator":{
-					"type":"xpath",
-					"expression":"payment/amount"
+					"type":"mvel",
+					"expression":"amount"
 				}
 			}]
 		},
-		"{urn:switchyard-quickstart-demo:orders:1.0}makePaymentResponse":{
-			"properties":[{
-				"name":"customer",
-				"evaluator":{
-					"type":"xpath",
-					"expression":"receipt/customer"
-				}
-			},{
-				"name":"amount",
-				"evaluator":{
-					"type":"xpath",
-					"expression":"receipt/amount"
-				}
-			}]
-		},
-		"org.overlord.rtgov.quickstarts.demos.orders.Receipt":{
+		"org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Receipt":{
 			"properties":[{
 				"name":"customer",
 				"evaluator":{

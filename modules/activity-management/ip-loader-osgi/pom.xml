@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
-	<artifactId>samples-karaf-ordermgmt-ip</artifactId> 
+	<groupId>org.overlord.rtgov.activity-management</groupId>
+	<artifactId>ip-loader-osgi</artifactId> 
 	<packaging>bundle</packaging>
-	<name>Overlord RTGov::Samples::Karaf::OrderManagement::IP</name>
+	<name>Overlord RTGov::Modules::Activity Management::IP Loader OSGi</name>
 
 	<parent>
-		<groupId>org.overlord.rtgov.samples.karaf</groupId>
-		<artifactId>ordermgmt</artifactId>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>activity-management</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
@@ -19,15 +19,15 @@
 			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>ip-loader-osgi</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 		
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.compendium</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -36,9 +36,8 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
-		<finalName>ordermgmt-ip</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -48,18 +47,12 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Bundle-Activator>org.overlord.rtgov.activity.processor.loader.osgi.IPActivator</Bundle-Activator>
+						<Export-Package>
+							org.overlord.rtgov.acs.loader.osgi.*;version=${project.version}
+						</Export-Package>
 						<Import-Package>
-							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,
-							org.overlord.rtgov.activity.model,
-							org.overlord.rtgov.activity.model.app,
-							org.overlord.rtgov.activity.model.bpm,
-							org.overlord.rtgov.activity.model.common,
-							org.overlord.rtgov.activity.model.mom,
-							org.overlord.rtgov.activity.model.soa,
-							*
+							!javax.inject.*,!javax.enterprise.*,!javax.ejb.*,!javax.persistence.*,*
 						</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
 					</instructions>
 				</configuration>
 			</plugin>
