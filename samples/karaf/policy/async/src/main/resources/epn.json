@@ -14,7 +14,7 @@
       "retryInterval" : 0,
       "predicate" : {
         "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
-        "expression" : "event.serviceProvider && !event.request && event.serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\""
+        "expression" : "event.serviceProvider && !event.request && event.serviceType == \"org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean\""
       },
       "eventProcessor" : {
         "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
