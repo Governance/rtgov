@@ -25,8 +25,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
@@ -67,36 +65,8 @@ public class ActivityProxyHelper {
      * @param callee The service component
      * @return The proxy
      */
-    public static <T> T createClientProxy(Class<T> intf, Object caller, T callee) {
-        return (createClientProxy(intf, caller, callee, new JSONContentSerializer()));
-    }
-    
-    /**
-     * This class creates a proxy for reporting activities based on the caller
-     * invoking methods on the callee, via the supplied interface.
-     * 
-     * @param intfName The interface name for the component being invoked
-     * @param caller The caller
-     * @param callee The service component
-     * @return The proxy
-     */
-    public static <T> T createClientProxy(String intfName, Object caller, T callee) {
-        return (createClientProxy(intfName, caller, callee, new JSONContentSerializer()));
-    }
-    
-    /**
-     * This class creates a proxy for reporting activities based on the caller
-     * invoking methods on the callee, via the supplied interface.
-     * 
-     * @param intf The interface definition for the component being invoked
-     * @param caller The caller
-     * @param callee The service component
-     * @param ser The content serializer
-     * @return The proxy
-     */
     @SuppressWarnings("unchecked")
-    public static <T> T createClientProxy(String intfName, Object caller, T callee,
-                                ContentSerializer ser) {
+    public static <T> T createClientProxy(String intfName, Object caller, T callee) {
         Class<?> intf=null;
         
         for (Class<?> i : callee.getClass().getInterfaces()) {
@@ -107,7 +77,7 @@ public class ActivityProxyHelper {
         }
         
         if (intf != null) {
-            return (createClientProxy((Class<T>)intf, caller, callee, ser));
+            return (createClientProxy((Class<T>)intf, caller, callee));
         } else {
             LOG.severe("Interface '"+intfName+"' does not exist on class '"+callee.getClass()+"'");
             return (null);
@@ -121,12 +91,10 @@ public class ActivityProxyHelper {
      * @param intf The interface definition for the component being invoked
      * @param caller The caller
      * @param callee The service component
-     * @param ser The content serializer
      * @return The proxy
      */
     @SuppressWarnings("unchecked")
-    public static <T> T createClientProxy(final Class<T> intf, final Object caller, final T callee,
-                                final ContentSerializer ser) {
+    public static <T> T createClientProxy(final Class<T> intf, final Object caller, final T callee) {
         return ((T)Proxy.newProxyInstance(callee.getClass().getClassLoader(), new Class<?>[]{intf}, new InvocationHandler() {
 
             public Object invoke(Object proxy, Method method, Object[] args)
@@ -147,26 +115,6 @@ public class ActivityProxyHelper {
                 */
 
                 if (supportedMethod) {
-                    if (args != null && args.length > 0) {
-                        mesgType = "";
-                        
-                        try {
-                            content = ser.serialize(args);
-                            
-                            for (int i=0; i < args.length; i++) {
-                                if (i > 0) {
-                                    mesgType += ",";
-                                }
-                                mesgType += args[i].getClass().getName();
-                            }
-                        } catch (Exception e) {
-                            LOG.log(Level.SEVERE, MessageFormat.format(
-                                    java.util.PropertyResourceBundle.getBundle(
-                                            "rtgov-client.Messages").getString("RTGOV-CLIENT-1"),
-                                            method.getName()), e);
-                        }
-                    }
-                    
                     // Check if initial activity in thread
                     if (!_collector.isScopeActive()) {
                         _collector.startScope();
@@ -183,9 +131,36 @@ public class ActivityProxyHelper {
                         rs.setOperation(method.getName());
                         rs.setInterface(intf.getName());
                         rs.setServiceType(caller.getClass().getName());
+                        
+                        if (args != null && args.length > 0) {
+                            mesgType = "";
+                            
+                            try {
+                                for (int i=0; i < args.length; i++) {
+                                    
+                                    if (i > 0) {
+                                        mesgType += ",";
+                                    }
+                                    mesgType += args[i].getClass().getName();
+
+                                    String data=_collector.processInformation(null, args[i].getClass().getName(),
+                                            args[i], null, rs);
+                                    
+                                    if (content == null) {
+                                        content = data;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                LOG.log(Level.SEVERE, MessageFormat.format(
+                                        java.util.PropertyResourceBundle.getBundle(
+                                                "rtgov-client.Messages").getString("RTGOV-CLIENT-1"),
+                                                method.getName()), e);
+                            }
+                        }
+                        
                         rs.setContent(content);
                         rs.setMessageType(mesgType);
-                        
+
                         _collector.record(rs);
                     }
                 }
@@ -198,9 +173,7 @@ public class ActivityProxyHelper {
                 
                 try {
                     resp = method.invoke(callee, args);
-                    
-                    respContent = ser.serialize(resp);
-                    
+                   
                 } catch (java.lang.reflect.InvocationTargetException e) {
                     faultName = e.getCause().getClass().getName();
                     
@@ -220,6 +193,9 @@ public class ActivityProxyHelper {
                         
                         if (resp != null) {
                             rr.setMessageType(resp.getClass().getName());
+                            
+                            rr.setContent(_collector.processInformation(null,
+                                    resp.getClass().getName(), resp, null, rr));
                         }
                         
                         _collector.record(rr);
@@ -249,33 +225,7 @@ public class ActivityProxyHelper {
      * @param callee The service component
      * @return The proxy
      */
-    @SuppressWarnings("unchecked")
-    public static <T> T createServiceProxy(final Class<T> intf, final T callee) {
-        return ((T)createServiceProxy(intf, callee, new JSONContentSerializer()));
-    }
-    
-    /**
-     * This class creates a service proxy for reporting activities associated with the
-     * service being invoked.
-     * 
-     * @param intfName The interface name for the component being invoked
-     * @param callee The service component
-     * @return The proxy
-     */
-    public static Object createServiceProxy(String intfName, Object callee) {
-        return (createServiceProxy(intfName, callee, new JSONContentSerializer()));
-    }
-    
-    /**
-     * This class creates a service proxy for reporting activities associated with the
-     * service being invoked.
-     * 
-     * @param intfName The interface name for the component being invoked
-     * @param callee The service component
-     * @param ser The content serializer
-     * @return The proxy
-     */
-    public static Object createServiceProxy(final String intfName, final Object callee, final ContentSerializer ser) {
+    public static Object createServiceProxy(final String intfName, final Object callee) {
         Class<?> intf=null;
         
         for (Class<?> i : callee.getClass().getInterfaces()) {
@@ -286,7 +236,7 @@ public class ActivityProxyHelper {
         }
         
         if (intf != null) {
-            return (createServiceProxy(intf, callee, ser));
+            return (createServiceProxy(intf, callee));
         } else {
             LOG.severe("Interface '"+intfName+"' does not exist on class '"+callee.getClass()+"'");
             return (null);
@@ -299,10 +249,9 @@ public class ActivityProxyHelper {
      * 
      * @param intf The interface for the component being invoked
      * @param callee The service component
-     * @param ser The content serializer
      * @return The proxy
      */
-    public static Object createServiceProxy(final Class<?> intf, final Object callee, final ContentSerializer ser) {
+    public static Object createServiceProxy(final Class<?> intf, final Object callee) {
         return (Proxy.newProxyInstance(callee.getClass().getClassLoader(), new Class<?>[]{intf}, new InvocationHandler() {
 
             public Object invoke(Object proxy, Method method, Object[] args)
@@ -323,26 +272,6 @@ public class ActivityProxyHelper {
                 */
 
                 if (supportedMethod) {             
-                    if (args != null && args.length > 0) {
-                        mesgType = "";
-                        
-                        try {
-                            content = ser.serialize(args);
-                            
-                            for (int i=0; i < args.length; i++) {
-                                if (i > 0) {
-                                    mesgType += ",";
-                                }
-                                mesgType += args[i].getClass().getName();
-                            }
-                        } catch (Exception e) {
-                            LOG.log(Level.SEVERE, MessageFormat.format(
-                                    java.util.PropertyResourceBundle.getBundle(
-                                            "rtgov-client.Messages").getString("RTGOV-CLIENT-1"),
-                                            method.getName()), e);
-                        }
-                    }
-                    
                     // Check if initial activity in thread
                     if (!_collector.isScopeActive()) {
                         _collector.startScope();
@@ -359,6 +288,32 @@ public class ActivityProxyHelper {
                         rr.setOperation(method.getName());
                         rr.setInterface(intf.getName());
                         rr.setServiceType(callee.getClass().getName());
+
+                        if (args != null && args.length > 0) {
+                            mesgType = "";
+                            
+                            try {
+                                for (int i=0; i < args.length; i++) {
+                                    if (i > 0) {
+                                        mesgType += ",";
+                                    }
+                                    mesgType += args[i].getClass().getName();
+                                    
+                                    String data=_collector.processInformation(null, args[i].getClass().getName(),
+                                            args[i], null, rr);
+                                    
+                                    if (content == null) {
+                                        content = data;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                LOG.log(Level.SEVERE, MessageFormat.format(
+                                        java.util.PropertyResourceBundle.getBundle(
+                                                "rtgov-client.Messages").getString("RTGOV-CLIENT-1"),
+                                                method.getName()), e);
+                            }
+                        }
+                        
                         rr.setContent(content);
                         rr.setMessageType(mesgType);
                         
@@ -374,8 +329,6 @@ public class ActivityProxyHelper {
                 
                 try {
                     resp = method.invoke(callee, args);
-                    
-                    respContent = ser.serialize(resp);
                     
                 } catch (java.lang.reflect.InvocationTargetException e) {
                     faultName = e.getCause().getClass().getName();
@@ -396,6 +349,9 @@ public class ActivityProxyHelper {
                         
                         if (resp != null) {
                             rs.setMessageType(resp.getClass().getName());
+                            
+                            rs.setContent(_collector.processInformation(null,
+                                    resp.getClass().getName(), resp, null, rs));
                         }
                         
                         _collector.record(rs);
@@ -416,48 +372,4 @@ public class ActivityProxyHelper {
         }));
     }
     
-    /**
-     * This abstract class provides the base for content serializer
-     * implementations, which convert Java objects into a string
-     * representation suitable for inclusion within the activity events.
-     *
-     */
-    public static abstract class ContentSerializer {
-        
-        /**
-         * This method serializes the supplied object into a
-         * string representation.
-         * 
-         * @param obj The object
-         * @return The string representation
-         * @throws Exception Failed to serialize
-         */
-        public abstract String serialize(Object obj) throws Exception;
-        
-    }
-    
-    /**
-     * This class provides a JSON based content serializer.
-     *
-     */
-    public static class JSONContentSerializer extends ContentSerializer {
-        
-        private static final ObjectMapper MAPPER=new ObjectMapper();
-        
-        static {
-            SerializationConfig config=MAPPER.getSerializationConfig().with(SerializationConfig.Feature.INDENT_OUTPUT);
-            
-            MAPPER.setSerializationConfig(config);
-        }
-        
-        /**
-         * {@inheritDoc}
-         */
-        public String serialize(Object obj) throws Exception {
-            if (obj.getClass().isArray()) {
-                obj = ((Object[])obj)[0];
-            }
-            return (MAPPER.writeValueAsString(obj));
-        }
-    }
 }
