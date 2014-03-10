@@ -160,6 +160,8 @@ public class ActivityProxyHelper {
                         
                         rs.setContent(content);
                         rs.setMessageType(mesgType);
+                        
+                        _collector.validate(rs);
 
                         _collector.record(rs);
                     }
@@ -316,6 +318,8 @@ public class ActivityProxyHelper {
                         
                         rr.setContent(content);
                         rr.setMessageType(mesgType);
+                        
+                        _collector.validate(rr);
                         
                         _collector.record(rr);
                     }

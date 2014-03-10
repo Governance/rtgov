@@ -144,9 +144,8 @@
 	<feature name='rtgov-samples' version='${project.version}' > 
 		<feature>rtgov-server</feature>
 
-<!--
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.policy/samples-karaf-policy-async/${project.version}</bundle>
--->
+		<bundle>mvn:org.overlord.rtgov.samples.karaf.policy/samples-karaf-policy-sync/${project.version}</bundle>
 
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.sla/samples-karaf-sla-epn/${project.version}</bundle>
 

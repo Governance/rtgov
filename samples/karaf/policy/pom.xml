@@ -15,9 +15,7 @@
 
 	<modules>
 		<module>async</module>
-<!--
 		<module>sync</module>
--->
 	</modules>
 
 </project>

@@ -1,0 +1,65 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overlord.rtgov.activity-management</groupId>
+	<artifactId>av-loader-osgi</artifactId> 
+	<packaging>bundle</packaging>
+	<name>Overlord RTGov::Modules::Activity Management::AV Loader OSGi</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>activity-management</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<compiler.endorsed>${project.build.directory}/endorsed</compiler.endorsed>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.compendium</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>
+							org.overlord.rtgov.epn.loader.osgi.*;version=${project.version}
+						</Export-Package>
+						<Import-Package>
+							!javax.inject.*,!javax.enterprise.*,!javax.ejb.*,!javax.persistence.*,*
+						</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
