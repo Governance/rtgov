@@ -1,0 +1,22 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <cm:property-placeholder persistent-id="org.overlord.rtgov.activity.server.rest.client">
+    	<cm:default-properties>
+			<cm:property name="serverURL" value="http://localhost:8080"/>
+			<cm:property name="serverUsername" value=""/>
+			<cm:property name="serverPassword" value=""/>
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+    <service interface="org.overlord.rtgov.activity.server.ActivityServer">
+        <bean class="org.overlord.rtgov.activity.server.rest.client.RESTActivityServer" >
+			<property name="serverURL" value="${serverURL}" />
+			<property name="serverUsername" value="${serverUsername}" />
+			<property name="serverPassword" value="${serverPassword}" />
+        </bean>
+    </service>
+
+</blueprint>

@@ -69,11 +69,25 @@
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov.release.jbossas:overlord-rtgov:war</include>
-				<include>org.overlord.rtgov.content:overlord-rtgov-epn-jee:war</include>
-				<include>org.overlord.rtgov.content:overlord-rtgov-acs-jee:war</include>
 				<include>org.overlord.rtgov.content.services:overlord-rtgov-services:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/server/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.content:overlord-rtgov-epn-jee:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-epn.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/server/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.content:overlord-rtgov-acs-jee:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-acs.war</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>profiles/server/jdbc/drivers</outputDirectory>
