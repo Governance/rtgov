@@ -42,7 +42,6 @@
 	</feature>
 	<feature name='rtgov-activity' version='${project.version}' > 
 		<feature>rtgov-common</feature>
-		<feature>rtgov-event-processor</feature>
 
 		<bundle>wrap:mvn:jaxen/jaxen/${version.jaxen}</bundle>
 
@@ -68,6 +67,10 @@
 		<feature>rtgov-infinispan</feature>
 
 		<bundle>mvn:org.overlord.rtgov.active-queries/active-collection/${project.version}</bundle>
+	</feature>
+	<feature name='rtgov-active-queries-server' version='${project.version}' > 
+		<feature>rtgov-active-queries</feature>
+
 		<bundle>mvn:org.overlord.rtgov.active-queries/active-collection-embedded/${project.version}</bundle>
 		<bundle>mvn:org.overlord.rtgov.active-queries/active-collection-rests/${project.version}</bundle>
 		<bundle>mvn:org.overlord.rtgov.active-queries/active-collection-infinispan/${project.version}</bundle>
@@ -102,11 +105,8 @@
 	<feature name='rtgov-server' version='${project.version}' > 
 		<feature>rtgov-activity-server</feature>
 		<feature>rtgov-event-processor-network</feature>
-		<feature>rtgov-active-queries</feature>
+		<feature>rtgov-active-queries-server</feature>
 		<feature>rtgov-services</feature>
-
-		<!-- Support co-located activity collection -->
-		<bundle>mvn:org.overlord.rtgov.activity-management/collector-activity-server/${project.version}</bundle>
 
 		<!-- Activity notifier implementation to transfer stored activity events to the
 		Event Processor Network -->
@@ -131,24 +131,31 @@
 	</feature>
 	<feature name='rtgov-client' version='${project.version}' > 
 		<feature>rtgov-activity</feature>
+		<feature>rtgov-event-processor</feature>
+		<feature>rtgov-active-queries</feature>
 
 		<bundle>mvn:org.overlord.rtgov.activity-management/activity-embedded/${project.version}</bundle>
 		<bundle>mvn:org.overlord.rtgov.activity-management/collector-activity-server/${project.version}</bundle>
+		<bundle>mvn:org.overlord.rtgov.integration/rtgov-client/${project.version}</bundle>
+		<bundle>mvn:org.overlord.rtgov.integration/rtgov-osgi/${project.version}</bundle>
 
 		<!-- Default to REST client, although this could be installed separately if other implementations -->
 		<bundle>mvn:org.overlord.rtgov.activity-management/activity-server-restc/${project.version}</bundle>
-
-		<bundle>mvn:org.overlord.rtgov.integration/rtgov-client/${project.version}</bundle>
 	</feature>
 
-	<feature name='rtgov-samples' version='${project.version}' > 
-		<feature>rtgov-server</feature>
-
+	<feature name='rtgov-samples-policy-async' version='${project.version}' > 
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.policy/samples-karaf-policy-async/${project.version}</bundle>
+	</feature>
+
+	<feature name='rtgov-samples-policy-sync' version='${project.version}' > 
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.policy/samples-karaf-policy-sync/${project.version}</bundle>
+	</feature>
 
+	<feature name='rtgov-samples-sla' version='${project.version}' > 
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.sla/samples-karaf-sla-epn/${project.version}</bundle>
+	</feature>
 
+	<feature name='rtgov-samples-ordermgmt' version='${project.version}' > 
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.ordermgmt/samples-karaf-ordermgmt-model/${project.version}</bundle>
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.ordermgmt/samples-karaf-ordermgmt-inventoryservice/${project.version}</bundle>
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.ordermgmt/samples-karaf-ordermgmt-logisticsservice/${project.version}</bundle>

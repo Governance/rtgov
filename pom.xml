@@ -63,7 +63,7 @@
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<kie.version>6.0.0.CR5</kie.version>
-		<overlord-commons.version>2.0.0-SNAPSHOT</overlord-commons.version>
+		<overlord-commons.version>2.0.0.Final</overlord-commons.version>
 		<switchyard.version>1.1.0.CR1</switchyard.version>
 
 		<!-- The following properties are required as they are passed to
