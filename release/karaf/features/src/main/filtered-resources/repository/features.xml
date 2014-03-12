@@ -161,6 +161,7 @@
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.ordermgmt/samples-karaf-ordermgmt-logisticsservice/${project.version}</bundle>
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.ordermgmt/samples-karaf-ordermgmt-orderservice/${project.version}</bundle>
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.ordermgmt/samples-karaf-ordermgmt-orderservice-rests/${project.version}</bundle>
+		<bundle>mvn:org.overlord.rtgov.samples.karaf.ordermgmt/samples-karaf-ordermgmt-epn/${project.version}</bundle>
 		<bundle>mvn:org.overlord.rtgov.samples.karaf.ordermgmt/samples-karaf-ordermgmt-ip/${project.version}</bundle>
 
 	</feature>
