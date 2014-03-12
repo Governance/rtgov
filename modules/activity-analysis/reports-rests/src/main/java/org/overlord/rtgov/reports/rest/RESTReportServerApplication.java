@@ -17,6 +17,9 @@ package org.overlord.rtgov.reports.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+
+import org.overlord.rtgov.reports.ReportManager;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,14 +31,57 @@ import java.util.Set;
 @ApplicationPath("/report")
 public class RESTReportServerApplication extends Application {
 
-    private Set<Object> _singletons = new HashSet<Object>();
+    private static Set<Object> _singletons = new HashSet<Object>();
     private Set<Class<?>> _empty = new HashSet<Class<?>>();
 
     /**
      * This is the default constructor.
      */
     public RESTReportServerApplication() {
-       _singletons.add(new RESTReportServer());
+        synchronized (_singletons) {
+            if (_singletons.isEmpty()) {
+                _singletons.add(new RESTReportServer());
+            }
+        }
+    }
+
+    /**
+     * This method sets the report manager.
+     * 
+     * @param rm The report manager
+     */
+    public void setReportManager(ReportManager rm) {
+        synchronized (_singletons) {
+            RESTReportServer server=null;
+            
+            if (!_singletons.isEmpty()) {
+                server = (RESTReportServer)_singletons.iterator().next();
+            } else {
+                server = new RESTReportServer();                
+                _singletons.add(server);
+            }
+            
+            server.setReportManager(rm);
+        }
+    }
+
+    /**
+     * This method returns the report manager.
+     * 
+     * @return The report manager
+     */
+    public ReportManager getReportManager() {
+        ReportManager ret=null;
+        
+        synchronized (_singletons) {
+            if (!_singletons.isEmpty()) {
+                RESTReportServer server = (RESTReportServer)_singletons.iterator().next();
+                
+                ret = server.getReportManager();
+            }
+        }
+        
+        return (ret);
     }
 
     /**

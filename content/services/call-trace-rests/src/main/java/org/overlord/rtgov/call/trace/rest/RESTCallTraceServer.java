@@ -18,11 +18,8 @@ package org.overlord.rtgov.call.trace.rest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -37,6 +34,7 @@ import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.Task;
 import org.overlord.rtgov.call.trace.model.TraceNode.Status;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
+import org.overlord.rtgov.common.util.BeanResolverUtil;
 
 /**
  * This class represents the RESTful interface to the call trace server.
@@ -50,80 +48,25 @@ public class RESTCallTraceServer {
     
     private CallTraceService _callTraceService=null;
     
-    private ActivityServer _activityServer=null;
-
     /**
      * This is the default constructor.
      */
-    @SuppressWarnings("unchecked")
     public RESTCallTraceServer() {
-        BeanManager bm=null;
+    }
+    
+    /**
+     * This method initializes the call trace REST service.
+     */
+    @PostConstruct
+    public void init() {
+        // Only access CDI if service not set, to support both OSGi and CDI
+        if (_callTraceService == null) {
+            _callTraceService = BeanResolverUtil.getBean(CallTraceService.class);
 
-        try {
-            bm = InitialContext.doLookup("java:comp/BeanManager");
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-1"), e);
-        }
-
-        try {
-            // Need to obtain activity server directly, as inject does not
-            // work for REST service, and RESTeasy/CDI integration did not
-            // appear to work in AS7. Directly accessing the bean manager
-            // should be portable.
-            
-            java.util.Set<Bean<?>> asbeans=bm.getBeans(ActivityServer.class);
-            
-            for (Bean<?> b : asbeans) {                
-                CreationalContext<Object> cc=new CreationalContext<Object>() {
-                    public void push(Object arg0) {
-                    }
-                    public void release() {
-                    }                   
-                };
-                
-                _activityServer = (ActivityServer)((Bean<Object>)b).create(cc);
-                
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Activity server="+_activityServer+" for bean="+b);
-                }
-                
-                if (_activityServer != null) {
-                    break;
-                }
+            if (_callTraceService != null && _callTraceService.getActivityServer() == null) {
+                _callTraceService.setActivityServer(BeanResolverUtil.getBean(ActivityServer.class));
             }
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-2"), e);
         }
-
-        try {
-            java.util.Set<Bean<?>> ctsbeans=bm.getBeans(CallTraceService.class);
-            
-            for (Bean<?> b : ctsbeans) {                
-                CreationalContext<Object> cc=new CreationalContext<Object>() {
-                    public void push(Object arg0) {
-                    }
-                    public void release() {
-                    }                   
-                };
-                
-                _callTraceService = (CallTraceService)((Bean<Object>)b).create(cc);
-                
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Call Trace Service="+_callTraceService+" for bean="+b);
-                }
-                
-                if (_callTraceService != null) {
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "call-trace-rests.Messages").getString("CALL-TRACE-RESTS-3"), e);
-        }
-        
-        _callTraceService.setActivityServer(_activityServer);
     }
     
     /**
@@ -136,10 +79,12 @@ public class RESTCallTraceServer {
      */
     @GET
     @Path("/instance")
-    @Produces("image/svg+xml")
+    @Produces("application/json")
     public String instance(@DefaultValue("Conversation") @QueryParam("type") String type,
                     @QueryParam("value") String value) throws Exception {
         String ret="";
+        
+        init();
         
         CallTrace ct=getCallTrace(type, value);
         
@@ -156,6 +101,24 @@ public class RESTCallTraceServer {
         }
 
         return (ret);
+    }
+    
+    /**
+     * This method returns the call trace service.
+     * 
+     * @return The call trace service
+     */
+    public CallTraceService getCallTraceService() {
+        return (_callTraceService);
+    }
+    
+    /**
+     * This method sets the call trace service.
+     * 
+     * @param cts The call trace service
+     */
+    public void setCallTraceService(CallTraceService cts) {
+        _callTraceService = cts;
     }
 
     /**

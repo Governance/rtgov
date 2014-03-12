@@ -5,7 +5,7 @@
 	<groupId>org.overlord.rtgov</groupId>
 	<artifactId>karaf</artifactId>
 	<packaging>pom</packaging>
-	<name>Overlord RTGov::Release::Karaf</name>
+	<name>Overlord RTGov::Karaf</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
@@ -14,6 +14,7 @@
 	</parent>
 
 	<modules>
+		<module>war-server</module>
 		<module>ds</module>
 		<module>features</module>
 	</modules>

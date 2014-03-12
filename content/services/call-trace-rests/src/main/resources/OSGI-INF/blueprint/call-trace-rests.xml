@@ -5,12 +5,12 @@
            			http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
     <!-- Implementation of the rest service -->
-    <bean id="activeCollectionManager" class="org.overlord.rtgov.active.collection.rest.RESTActiveCollectionServerApplication">
-    	<property name="activeCollectionManager" ref="activeCollectionManagerBean"/>
+    <bean id="callTraceService" class="org.overlord.rtgov.call.trace.rest.RESTCallTraceServerApplication">
+    	<property name="callTraceService" ref="callTraceServiceBean"/>
     </bean>
 
-    <reference id="activeCollectionManagerBean"
-               interface="org.overlord.rtgov.active.collection.ActiveCollectionManager">
+    <reference id="callTraceServiceBean"
+               interface="org.overlord.rtgov.call.trace.CallTraceService">
     </reference>
 
 </blueprint>

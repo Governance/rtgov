@@ -14,6 +14,12 @@
   
 	<dependencies>
 		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-common</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
 			<version>${project.version}</version>
@@ -58,6 +64,9 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>
+							org.overlord.rtgov.reports.rest.*;version=${project.version}
+						</Export-Package>
 						<Import-Package>
 							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,*
 						</Import-Package>

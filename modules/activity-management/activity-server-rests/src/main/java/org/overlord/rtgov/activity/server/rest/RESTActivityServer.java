@@ -56,6 +56,9 @@ public class RESTActivityServer {
     public RESTActivityServer() {
     }
     
+    /**
+     * This method initializes the activity server REST service.
+     */
     @PostConstruct
     public void init() {
         // Only access CDI if service not set, to support both OSGi and CDI
@@ -234,7 +237,6 @@ public class RESTActivityServer {
     @POST
     @Path("/store")
     public Response store(String acts) throws Exception {
- 
         init();
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -257,8 +259,8 @@ public class RESTActivityServer {
             
             return Response.status(Status.OK).entity("Activities stored").build();
         } catch (Exception e) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "Failed to store activities", e);
+            if (LOG.isLoggable(Level.SEVERE)) {
+                LOG.log(Level.SEVERE, "Failed to store activities", e);
             }
             return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Failed to store activities: "+e).build();
         }

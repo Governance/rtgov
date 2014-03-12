@@ -26,6 +26,7 @@ import org.overlord.rtgov.active.collection.ActiveCollectionVisibility;
 import org.overlord.rtgov.active.collection.QuerySpec;
 import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -49,11 +50,19 @@ public class RESTActiveCollectionServer {
      * This is the default constructor.
      */
     public RESTActiveCollectionServer() {
-        
-        _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
-        
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Active collection manager="+_acmManager);
+    }
+    
+    /**
+     * This method initializes the active collection REST service.
+     */
+    @PostConstruct
+    public void init() {
+        if (_acmManager == null) {
+            _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+            
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Active collection manager="+_acmManager);
+            }
         }
     }
     
@@ -88,6 +97,8 @@ public class RESTActiveCollectionServer {
     @Produces("application/json")
     public String query(String qspec) throws Exception {
         String ret="";
+        
+        init();
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Active Collection JSON Query="+qspec);        

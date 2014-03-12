@@ -17,6 +17,9 @@ package org.overlord.rtgov.situation.manager.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+
+import org.overlord.rtgov.situation.manager.SituationManager;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,14 +31,57 @@ import java.util.Set;
 @ApplicationPath("/situation/manager")
 public class RESTSituationManagerServerApplication extends Application {
 
-    private Set<Object> _singletons = new HashSet<Object>();
+    private static Set<Object> _singletons = new HashSet<Object>();
     private Set<Class<?>> _empty = new HashSet<Class<?>>();
 
     /**
      * This is the default constructor.
      */
     public RESTSituationManagerServerApplication() {
-       _singletons.add(new RESTSituationManagerServer());
+        synchronized (_singletons) {
+            if (_singletons.isEmpty()) {
+                _singletons.add(new RESTSituationManagerServer());
+            }
+        }
+    }
+
+    /**
+     * This method sets the situation manager.
+     * 
+     * @param sm The situation manager
+     */
+    public void setSituationManager(SituationManager sm) {
+        synchronized (_singletons) {
+            RESTSituationManagerServer server=null;
+            
+            if (!_singletons.isEmpty()) {
+                server = (RESTSituationManagerServer)_singletons.iterator().next();
+            } else {
+                server = new RESTSituationManagerServer();                
+                _singletons.add(server);
+            }
+            
+            server.setSituationManager(sm);
+        }
+    }
+
+    /**
+     * This method returns the situation manager.
+     * 
+     * @return The situation manager
+     */
+    public SituationManager getSituationManager() {
+        SituationManager ret=null;
+        
+        synchronized (_singletons) {
+            if (!_singletons.isEmpty()) {
+                RESTSituationManagerServer server = (RESTSituationManagerServer)_singletons.iterator().next();
+                
+                ret = server.getSituationManager();
+            }
+        }
+        
+        return (ret);
     }
 
     /**

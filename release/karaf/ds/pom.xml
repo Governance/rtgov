@@ -5,7 +5,7 @@
 	<groupId>org.overlord.rtgov.karaf</groupId>
 	<artifactId>ds</artifactId>
 	<packaging>pom</packaging>
-	<name>Overlord RTGov::Release::Karaf::DS</name>
+	<name>Overlord RTGov::Karaf::DS</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
