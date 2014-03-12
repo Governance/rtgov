@@ -98,7 +98,7 @@ public class ActivityProxyHelperTest {
             fail("Event 1 should be a fault");
         }
         
-        if (!((ResponseReceived)collector.getEvents().get(1)).getFault().equals("java.lang.Exception")) {
+        if (!((ResponseReceived)collector.getEvents().get(1)).getFault().equals("Runtime")) {
             fail("Event 1 fault name incorrect: "+((ResponseReceived)collector.getEvents().get(1)).getFault());
         }
     }
@@ -169,24 +169,47 @@ public class ActivityProxyHelperTest {
             fail("Event 1 should be a fault");
         }
         
-        if (!((ResponseSent)collector.getEvents().get(1)).getFault().equals("java.lang.Exception")) {
+        if (!((ResponseSent)collector.getEvents().get(1)).getFault().equals("Runtime")) {
             fail("Event 1 fault name incorrect: "+((ResponseSent)collector.getEvents().get(1)).getFault());
+        }
+    }
+    
+    @Test
+    public void testHandlesException() {
+        try {
+            java.lang.reflect.Method method=TestClass.class.getMethod("testMethod");
+            
+            if (ActivityProxyHelper.getDefinedException(method, new TestParentException()) != TestParentException.class) {
+                fail("Method should handle parent exception");
+            }
+            
+            if (ActivityProxyHelper.getDefinedException(method, new TestChildException()) != TestParentException.class) {
+                fail("Method should handle child exception");
+            }
+            
+            if (ActivityProxyHelper.getDefinedException(method, new IllegalArgumentException()) != null) {
+                fail("Method should NOT handle illegal argument exception");
+            }
+            
+        } catch (Exception e) {
+            fail("Failed to check if method handles exception");
         }
     }
     
     public interface TestService {
         
-        public String testMethod(String name) throws Exception;        
+        public String testMethod(String name) throws RuntimeException;        
     }
     
     public class TestServiceImpl implements TestService {
         private static final String HELLO_EXCEPTION = "Hello Exception";
 
-        public String testMethod(String name) throws Exception {
+        public String testMethod(String name) throws RuntimeException {
             
             if (name == EXCEPTION) {
-                throw new Exception(HELLO_EXCEPTION);
+                throw new IllegalArgumentException(HELLO_EXCEPTION);
             }
+
             return (response(name));
         }
     }
@@ -214,4 +237,15 @@ public class ActivityProxyHelperTest {
         }
     };
 
+    public interface TestClass {
+        public void testMethod() throws TestParentException;        
+    }
+    
+    public class TestParentException extends Exception {
+        private static final long serialVersionUID = 1L;        
+    }
+    
+    public class TestChildException extends TestParentException {
+        private static final long serialVersionUID = 1L;
+    }
 }

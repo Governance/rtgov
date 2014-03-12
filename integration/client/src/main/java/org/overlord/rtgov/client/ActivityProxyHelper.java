@@ -169,7 +169,6 @@ public class ActivityProxyHelper {
                 
                 // Invoke the target method
                 String respContent=null;
-                String faultName=null;
                 Object resp=null;
                 Throwable excResp=null;
                 
@@ -177,8 +176,6 @@ public class ActivityProxyHelper {
                     resp = method.invoke(callee, args);
                    
                 } catch (java.lang.reflect.InvocationTargetException e) {
-                    faultName = e.getCause().getClass().getName();
-                    
                     excResp = e.getCause();
                 }
                 
@@ -188,7 +185,6 @@ public class ActivityProxyHelper {
                         rr.setMessageId(respId);
                         rr.setReplyToId(reqId);
                         rr.setOperation(method.getName());
-                        rr.setFault(faultName);
                         rr.setInterface(intf.getName());
                         rr.setServiceType(caller.getClass().getName());
                         rr.setContent(respContent);
@@ -198,6 +194,24 @@ public class ActivityProxyHelper {
                             
                             rr.setContent(_collector.processInformation(null,
                                     resp.getClass().getName(), resp, null, rr));
+                        } else if (excResp != null) {
+                            Class<?> excType=getDefinedException(method, excResp);
+
+                            if (excType != null) {
+                                String faultName = excType.getSimpleName();
+                                
+                                if (faultName != null && faultName.endsWith("Exception")
+                                                    && faultName.length() > 9) {
+                                    faultName = faultName.substring(0, faultName.length()-9);
+                                }
+                                
+                                rr.setFault(faultName);
+                                rr.setContent(_collector.processInformation(null,
+                                        excResp.getClass().getName(), excResp, null, rr));
+                            } else {
+                                rr.setFault("ERROR");
+                                rr.setContent(excResp.toString());
+                            }
                         }
                         
                         _collector.record(rr);
@@ -217,6 +231,26 @@ public class ActivityProxyHelper {
             }
             
         }));
+    }
+    
+    /**
+     * This method determines whether the method handles the supplied exception,
+     * and returns the appropriate type.
+     * 
+     * @param method The method
+     * @param t The exception
+     * @return The handled exception type, or null if not handled
+     */
+    protected static Class<?> getDefinedException(Method method, Throwable t) {
+        Class<?> ret=null;
+        
+        for (int i=0; ret == null && i < method.getExceptionTypes().length; i++) {
+            if (method.getExceptionTypes()[i].isAssignableFrom(t.getClass())) {
+                ret = method.getExceptionTypes()[i];
+            }
+        }
+        
+        return (ret);
     }
     
     /**
@@ -327,7 +361,6 @@ public class ActivityProxyHelper {
                 
                 // Invoke the target method
                 String respContent=null;
-                String faultName=null;
                 Object resp=null;
                 Throwable excResp=null;
                 
@@ -335,8 +368,6 @@ public class ActivityProxyHelper {
                     resp = method.invoke(callee, args);
                     
                 } catch (java.lang.reflect.InvocationTargetException e) {
-                    faultName = e.getCause().getClass().getName();
-                    
                     excResp = e.getCause();
                 }
                 
@@ -346,7 +377,6 @@ public class ActivityProxyHelper {
                         rs.setMessageId(respId);
                         rs.setReplyToId(reqId);
                         rs.setOperation(method.getName());
-                        rs.setFault(faultName);
                         rs.setInterface(intf.getName());
                         rs.setServiceType(callee.getClass().getName());
                         rs.setContent(respContent);
@@ -356,6 +386,24 @@ public class ActivityProxyHelper {
                             
                             rs.setContent(_collector.processInformation(null,
                                     resp.getClass().getName(), resp, null, rs));
+                        } else if (excResp != null) {
+                            Class<?> excType=getDefinedException(method, excResp);
+                            
+                            if (excType != null) {
+                                String faultName = excType.getSimpleName();
+                                
+                                if (faultName != null && faultName.endsWith("Exception")
+                                                    && faultName.length() > 9) {
+                                    faultName = faultName.substring(0, faultName.length()-9);
+                                }
+                                
+                                rs.setFault(faultName);
+                                rs.setContent(_collector.processInformation(null,
+                                        excResp.getClass().getName(), excResp, null, rs));
+                            } else {
+                                rs.setFault("ERROR");
+                                rs.setContent(excResp.toString());
+                            }
                         }
                         
                         _collector.record(rs);

@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
-	<artifactId>samples-jbossas-ordermgmt-epn</artifactId> 
-	<packaging>war</packaging>
-	<name>Overlord RTGov::Samples::JBossAS::OrderManagement::EPN</name>
+	<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
+	<artifactId>samples-karaf-ordermgmt-epn</artifactId> 
+	<packaging>bundle</packaging>
+	<name>Overlord RTGov::Samples::Karaf::OrderManagement::EPN</name>
 
 	<parent>
-		<groupId>org.overlord.rtgov.samples.jbossas</groupId>
+		<groupId>org.overlord.rtgov.samples.karaf</groupId>
 		<artifactId>ordermgmt</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
@@ -21,7 +21,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-loader-jee</artifactId>
+			<artifactId>epn-loader-osgi</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -53,21 +53,32 @@
 		<finalName>ordermgmt-epn</finalName>
 		<plugins>
 			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
 				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
- 					<archive>
-						<manifestEntries>
-							<Dependencies>deployment.overlord-rtgov.war</Dependencies>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.jboss.as.plugins</groupId>
-				<artifactId>jboss-as-maven-plugin</artifactId>
-				<configuration>
-					<skip>false</skip>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Bundle-Activator>org.overlord.rtgov.epn.loader.osgi.EPNActivator</Bundle-Activator>
+						<Import-Package>
+							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,
+							org.overlord.rtgov.epn,org.overlord.rtgov.ep,org.overlord.rtgov.ep.drools,
+							org.overlord.rtgov.analytics.service,org.overlord.rtgov.analytics.situation,
+							org.overlord.rtgov.activity.model,
+							org.overlord.rtgov.activity.model.app,
+							org.overlord.rtgov.activity.model.bpm,
+							org.overlord.rtgov.activity.model.common,
+							org.overlord.rtgov.activity.model.mom,
+							org.overlord.rtgov.activity.model.soa,
+							javax.xml.namespace,
+							org.drools.core.conflict,org.drools.core.rule.builder.dialect.asm,
+							org.drools.core.spi,org.drools.core.reteoo,org.drools.core,
+							org.drools.core.common,org.drools.core.rule,
+							*
+						</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+					</instructions>
 				</configuration>
 			</plugin>
 		</plugins>
