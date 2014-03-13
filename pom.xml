@@ -399,7 +399,7 @@
 					<configLocation>checkstyle/checkstyle.xml</configLocation>
 					<consoleOutput>false</consoleOutput>
 					<suppressionsLocation>checkstyle/suppressions.xml</suppressionsLocation>
-					<failsOnError>false</failsOnError>
+					<failsOnError>true</failsOnError>
 					<useFile/>
 				</configuration>
 				<dependencies>
@@ -412,7 +412,7 @@
 				<executions>
 					<execution>
 						<id>check-style</id>
-						<phase>site</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>checkstyle</goal>
 						</goals>
