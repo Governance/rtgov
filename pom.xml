@@ -63,7 +63,7 @@
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<kie.version>6.0.0.CR5</kie.version>
-		<overlord-commons.version>2.0.0.Final</overlord-commons.version>
+		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<switchyard.version>1.1.0.CR1</switchyard.version>
 
 		<!-- The following properties are required as they are passed to
@@ -76,7 +76,6 @@
 	</properties>
 
 	<modules>
-		<module>build</module>
 		<module>modules</module>
 		<module>integration</module>
 		<module>content</module>
@@ -405,9 +404,9 @@
 				</configuration>
 				<dependencies>
 					<dependency>
-						<groupId>org.overlord.rtgov</groupId>
-						<artifactId>build</artifactId>
-						<version>${project.version}</version>
+						<groupId>org.overlord</groupId>
+						<artifactId>overlord-commons-build</artifactId>
+						<version>${overlord-commons.version}</version>
 					</dependency>
 				</dependencies>
 				<executions>
