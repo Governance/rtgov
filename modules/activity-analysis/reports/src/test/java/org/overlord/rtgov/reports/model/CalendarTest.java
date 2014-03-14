@@ -40,6 +40,7 @@ public class CalendarTest {
         tc1.set(java.util.Calendar.YEAR, 2013);
         tc1.set(java.util.Calendar.HOUR_OF_DAY, 11);
         tc1.set(java.util.Calendar.MINUTE, 30);
+        tc1.set(java.util.Calendar.MILLISECOND,0);
         
         if (cal.isWorkingDateTime(tc1.getTimeInMillis())) {            
             fail("Sunday is not a working day");          
@@ -51,8 +52,9 @@ public class CalendarTest {
         tc2.set(java.util.Calendar.MONTH, java.util.Calendar.JUNE);
         tc2.set(java.util.Calendar.YEAR, 2013);
         tc2.set(java.util.Calendar.HOUR_OF_DAY, 11);
-        tc2.set(java.util.Calendar.MINUTE, 30);
-        
+        tc2.set(java.util.Calendar.MINUTE, 30); 
+        tc2.set(java.util.Calendar.MILLISECOND,0);
+       
         if (!cal.isWorkingDateTime(tc2.getTimeInMillis())) {            
             fail("Monday is a working day");          
         }
@@ -64,6 +66,7 @@ public class CalendarTest {
         tc3.set(java.util.Calendar.YEAR, 2013);
         tc3.set(java.util.Calendar.HOUR_OF_DAY, 17);
         tc3.set(java.util.Calendar.MINUTE, 31);
+        tc3.set(java.util.Calendar.MILLISECOND,0);
         
         if (cal.isWorkingDateTime(tc3.getTimeInMillis())) {            
             fail("Monday is a working day, but should be out of hours");          
@@ -96,6 +99,7 @@ public class CalendarTest {
         tc1.set(java.util.Calendar.YEAR, 2013);
         tc1.set(java.util.Calendar.HOUR_OF_DAY, 11);
         tc1.set(java.util.Calendar.MINUTE, 30);
+        tc1.set(java.util.Calendar.MILLISECOND,0);
         
         if (!cal.isWorkingDateTime(tc1.getTimeInMillis())) {            
             fail("This wednesday is a working day");          
@@ -108,6 +112,7 @@ public class CalendarTest {
         tc2.set(java.util.Calendar.YEAR, 2013);
         tc2.set(java.util.Calendar.HOUR_OF_DAY, 11);
         tc2.set(java.util.Calendar.MINUTE, 30);
+        tc1.set(java.util.Calendar.MILLISECOND,0);
         
         if (cal.isWorkingDateTime(tc2.getTimeInMillis())) {            
             fail("Christmas Wednesday is not a working day");          
@@ -132,13 +137,15 @@ public class CalendarTest {
         from1.set(java.util.Calendar.YEAR, 2013);
         from1.set(java.util.Calendar.HOUR_OF_DAY, 11);
         from1.set(java.util.Calendar.MINUTE, 0);
-        
+        from1.set(java.util.Calendar.MILLISECOND,0);
+	
         java.util.Calendar to1=java.util.Calendar.getInstance();
         to1.set(java.util.Calendar.DAY_OF_MONTH, 24);
         to1.set(java.util.Calendar.MONTH, java.util.Calendar.JUNE);
         to1.set(java.util.Calendar.YEAR, 2013);
         to1.set(java.util.Calendar.HOUR_OF_DAY, 12);
         to1.set(java.util.Calendar.MINUTE, 0);
+        to1.set(java.util.Calendar.MILLISECOND,0);
         
         if (cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()) != 60*60*1000) {            
             fail("Should be an hour: "+cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()));          
@@ -151,6 +158,7 @@ public class CalendarTest {
         from2.set(java.util.Calendar.YEAR, 2013);
         from2.set(java.util.Calendar.HOUR_OF_DAY, 6);
         from2.set(java.util.Calendar.MINUTE, 0);
+        from2.set(java.util.Calendar.MILLISECOND,0);
         
         java.util.Calendar to2=java.util.Calendar.getInstance();
         to2.set(java.util.Calendar.DAY_OF_MONTH, 24);
@@ -158,6 +166,7 @@ public class CalendarTest {
         to2.set(java.util.Calendar.YEAR, 2013);
         to2.set(java.util.Calendar.HOUR_OF_DAY, 23);
         to2.set(java.util.Calendar.MINUTE, 0);
+        to2.set(java.util.Calendar.MILLISECOND,0);
         
         if (cal.getWorkingDuration(from2.getTimeInMillis(), to2.getTimeInMillis()) != 8.5*60*60*1000) {            
             fail("Should be 8.5 hours: "+cal.getWorkingDuration(from2.getTimeInMillis(), to2.getTimeInMillis()));          
@@ -189,6 +198,7 @@ public class CalendarTest {
         from1.set(java.util.Calendar.YEAR, 2013);
         from1.set(java.util.Calendar.HOUR_OF_DAY, 16);
         from1.set(java.util.Calendar.MINUTE, 0);
+        from1.set(java.util.Calendar.MILLISECOND,0);
         
         java.util.Calendar to1=java.util.Calendar.getInstance();
         to1.set(java.util.Calendar.DAY_OF_MONTH, 25);
@@ -196,6 +206,7 @@ public class CalendarTest {
         to1.set(java.util.Calendar.YEAR, 2013);
         to1.set(java.util.Calendar.HOUR_OF_DAY, 10);
         to1.set(java.util.Calendar.MINUTE, 0);
+        to1.set(java.util.Calendar.MILLISECOND,0);
         
         double val=Math.abs(cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()) - 2.5*60*60*1000);
         
@@ -229,14 +240,16 @@ public class CalendarTest {
         from1.set(java.util.Calendar.YEAR, 2013);
         from1.set(java.util.Calendar.HOUR_OF_DAY, 16);
         from1.set(java.util.Calendar.MINUTE, 0);
+        from1.set(java.util.Calendar.MILLISECOND,0);
         
         java.util.Calendar to1=java.util.Calendar.getInstance();
         to1.set(java.util.Calendar.DAY_OF_MONTH, 1);
         to1.set(java.util.Calendar.MONTH, java.util.Calendar.MARCH);
         to1.set(java.util.Calendar.YEAR, 2013);
         to1.set(java.util.Calendar.HOUR_OF_DAY, 10);
-        to1.set(java.util.Calendar.MINUTE, 0);
-        
+        to1.set(java.util.Calendar.MINUTE, 0); 
+        to1.set(java.util.Calendar.MILLISECOND,0);       
+
         if (cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()) != 2.5*60*60*1000) {            
             fail("Should be 2.5 hours: "+cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()));          
         }
@@ -282,6 +295,7 @@ public class CalendarTest {
         from1.set(java.util.Calendar.YEAR, 2013);
         from1.set(java.util.Calendar.HOUR_OF_DAY, 16);
         from1.set(java.util.Calendar.MINUTE, 0);
+        from1.set(java.util.Calendar.MILLISECOND,0);
         
         java.util.Calendar to1=java.util.Calendar.getInstance();
         to1.set(java.util.Calendar.DAY_OF_MONTH, 26);
@@ -289,6 +303,7 @@ public class CalendarTest {
         to1.set(java.util.Calendar.YEAR, 2013);
         to1.set(java.util.Calendar.HOUR_OF_DAY, 10);
         to1.set(java.util.Calendar.MINUTE, 0);
+        to1.set(java.util.Calendar.MILLISECOND,0);
         
         if (cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()) != 2.5*60*60*1000) {            
             fail("Should be 2.5 hours: "+cal.getWorkingDuration(from1.getTimeInMillis(), to1.getTimeInMillis()));          
