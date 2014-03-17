@@ -34,12 +34,14 @@ import org.switchyard.Property;
 import org.switchyard.Scope;
 import org.switchyard.Service;
 import org.switchyard.ServiceReference;
+import org.switchyard.config.model.composite.BindingModel;
 import org.switchyard.extensions.wsdl.WSDLService;
 import org.switchyard.label.BehaviorLabel;
 import org.switchyard.metadata.ExchangeContract;
 import org.switchyard.metadata.Registrant;
 import org.switchyard.metadata.ServiceInterface;
 import org.switchyard.extensions.java.JavaService;
+import org.switchyard.runtime.event.ExchangeCompletionEvent;
 import org.switchyard.security.context.SecurityContext;
 import org.switchyard.security.context.SecurityContextManager;
 import org.switchyard.security.credential.Credential;
@@ -51,6 +53,8 @@ import org.switchyard.security.credential.Credential;
  */
 public abstract class AbstractExchangeEventProcessor extends AbstractEventProcessor {
     
+    private static final String GATEWAY_PROPERTY = "gateway";
+
     private static final String UNEXPECTED_FAULT = "ERROR";
 
     private static final String RTGOV_REQUEST_SENT = "rtgov.request.sent";
@@ -200,12 +204,24 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             if (providerReg == null
                     || !providerReg.isBinding()) {
                 sent.setServiceType(serviceType.toString()); 
+
+            } else if (providerReg.isBinding()) {
+                String gatewayName=exch.getContext().<String>getPropertyValue(ExchangeCompletionEvent.GATEWAY_NAME);
+                
+                java.util.List<BindingModel> bindings=providerReg.<java.util.List<BindingModel>>getConfig();
+                
+                for (int i=0; gatewayName != null && i < bindings.size(); i++) {
+                    BindingModel bm=bindings.get(i);
+                    if (gatewayName.equals(bm.getName())) {
+                        sent.getProperties().put(GATEWAY_PROPERTY, bm.getType());
+                    }
+                }                
             }
             
             sent.setInterface(intf);                
             sent.setOperation(opName);
             sent.setMessageId(messageId);
-            
+           
             record(mesg, contentType, sent, securityContext, exch); 
             
             if (intf == null) {
@@ -223,6 +239,19 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             recvd.setInterface(intf);                
             recvd.setOperation(opName);
             recvd.setMessageId(messageId);
+            
+            if (consumerReg.isBinding()) {
+                String gatewayName=exch.getContext().<String>getPropertyValue(ExchangeCompletionEvent.GATEWAY_NAME);
+                
+                java.util.List<BindingModel> bindings=consumerReg.<java.util.List<BindingModel>>getConfig();
+                
+                for (int i=0; gatewayName != null && i < bindings.size(); i++) {
+                    BindingModel bm=bindings.get(i);
+                    if (gatewayName.equals(bm.getName())) {
+                        recvd.getProperties().put(GATEWAY_PROPERTY, bm.getType());
+                    }
+                }
+            }
             
             record(mesg, contentType, recvd, securityContext, exch); 
             
@@ -297,6 +326,19 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             sent.setOperation(opName);
             sent.setMessageId(messageId);
             
+            if (consumerReg.isBinding()) {
+                String gatewayName=exch.getContext().<String>getPropertyValue(ExchangeCompletionEvent.GATEWAY_NAME);
+                
+                java.util.List<BindingModel> bindings=consumerReg.<java.util.List<BindingModel>>getConfig();
+                
+                for (int i=0; gatewayName != null && i < bindings.size(); i++) {
+                    BindingModel bm=bindings.get(i);
+                    if (gatewayName.equals(bm.getName())) {
+                        sent.getProperties().put(GATEWAY_PROPERTY, bm.getType());
+                    }
+                }
+            }
+            
             // RTGOV-262 Check if replyTo id not set, due to exception - if so, then
             // use request received id if available
             if (relatesTo == null && rr != null) {
@@ -324,6 +366,19 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             recvd.setOperation(opName);
             recvd.setMessageId(messageId);
             recvd.setReplyToId(relatesTo);
+            
+            if (providerReg != null && providerReg.isBinding()) {
+                String gatewayName=exch.getContext().<String>getPropertyValue(ExchangeCompletionEvent.GATEWAY_NAME);
+                
+                java.util.List<BindingModel> bindings=providerReg.<java.util.List<BindingModel>>getConfig();
+                
+                for (int i=0; gatewayName != null && i < bindings.size(); i++) {
+                    BindingModel bm=bindings.get(i);
+                    if (gatewayName.equals(bm.getName())) {
+                        recvd.getProperties().put(GATEWAY_PROPERTY, bm.getType());
+                    }
+                }
+            }
             
             record(mesg, contentType, recvd, securityContext, exch); 
         }
