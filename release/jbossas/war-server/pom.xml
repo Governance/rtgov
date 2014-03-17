@@ -29,12 +29,18 @@
 			<artifactId>epn-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.event-processor</groupId>
-			<artifactId>ep-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-elasticsearch</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-drools</artifactId>
 			<version>${project.version}</version>
@@ -286,16 +292,40 @@
 			<artifactId>rtgov-infinispan</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<!-- Switchyard Specific -->
+        <dependency>
+            <groupId>org.overlord.rtgov.common</groupId>
+            <artifactId>rtgov-elasticsearch</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <!-- Switchyard Specific -->
 		
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-switchyard</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<!-- Test dependencies -->
+
+        <!-- Elasticsearch Specific: eventually defined a jboss module -->
+
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>${elasticsearch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+
+        <!-- Test dependencies -->
 		
 		<dependency>
 			<groupId>junit</groupId>

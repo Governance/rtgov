@@ -13,9 +13,10 @@
 	</description>
 
 	<parent>
-		<groupId>org.jboss.integration-platform</groupId>
-		<artifactId>jboss-integration-platform-parent</artifactId>
-		<version>6.0.0-SNAPSHOT</version>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>samples</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+        <relativePath/>
 	</parent>
 
 	<scm>
@@ -33,9 +34,11 @@
 	</licenses>
 
 	<properties>
+		<elasticsearch.version>1.0.1</elasticsearch.version>
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.2.0.Final</jbossas.version>
+		<lucene.version>4.6.1</lucene.version>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<switchyard.version>1.1.0.CR1</switchyard.version>
 	</properties>
@@ -45,6 +48,7 @@
 		<module>ordermgmt</module>
 		<module>policy</module>
 		<module>sla</module>
+		<module>elasticsearch</module>
 	</modules>
 
 	<dependencyManagement>

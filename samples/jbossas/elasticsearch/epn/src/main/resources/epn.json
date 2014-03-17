@@ -1,0 +1,82 @@
+{
+    "name": "ElasticSearchEPN",
+    "version": "1",
+
+    "subscriptions": [
+        {
+            "nodeName": "ElasticSearchActivityUnitStore",
+            "subject": "ActivityUnits"
+        } ,
+        {
+            "nodeName": "ElasticSearchResponseTimeStore",
+            "subject": "ServiceResponseTimes"
+
+        }   ,
+        {
+            "nodeName": "ElasticSearchSituationStore",
+            "subject": "Situations"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "ElasticSearchActivityUnitStore",
+            "destinationSubjects": [ "ElasticSearchActivityUnitStore"],
+            "predicate": {
+                "@class": "org.overlord.rtgov.ep.mvel.MVELPredicate",
+                "expression": "event instanceof org.overlord.rtgov.activity.model.ActivityUnit"
+            },
+            "eventProcessor": {
+                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "services": {
+                    "KeyValueStore": {
+                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
+                        "index": "rtgov",
+                        "type": "activity",
+                        "hosts": "localhost:9300"
+
+                    }
+                }
+            }
+        },
+        {
+            "name": "ElasticSearchResponseTimeStore",
+            "destinationSubjects": [ "ElasticSearchResponseTimeStore"],
+            "predicate": {
+                "@class": "org.overlord.rtgov.ep.mvel.MVELPredicate",
+                "expression": "event instanceof org.overlord.rtgov.analytics.service.ResponseTime"
+            },
+            "eventProcessor": {
+                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "script": "genrandom.mvel",
+                "services": {
+                    "KeyValueStore": {
+                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
+                        "index": "rtgov",
+                        "type": "responsetime",
+                        "hosts": "localhost:9300"
+                    }
+                }
+            }
+        } ,
+        {
+            "name": "ElasticSearchSituationStore",
+            "destinationSubjects": [ "ElasticSearchSituationStore"],
+            "predicate": {
+                "@class": "org.overlord.rtgov.ep.mvel.MVELPredicate",
+                "expression": "event instanceof org.overlord.rtgov.analytics.situation.Situation"
+            },
+            "eventProcessor": {
+                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "services": {
+                    "KeyValueStore": {
+                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
+                        "index": "rtgov",
+                        "type": "situation",
+                        "hosts": "localhost:9300"
+                    }
+                }
+            }
+        }
+
+
+    ]}

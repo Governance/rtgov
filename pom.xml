@@ -57,12 +57,14 @@
 
 	<properties>
 		<drools.version>6.0.0.CR5</drools.version>
+		<elasticsearch.version>1.0.1</elasticsearch.version>
 		<felix.version>2.3.7</felix.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<kie.version>6.0.0.CR5</kie.version>
+		<lucene.version>4.6.1</lucene.version>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<picketlink.version>2.1.6.Final</picketlink.version>
 		<switchyard.version>1.1.0.CR1</switchyard.version>
@@ -333,6 +335,18 @@
 				<artifactId>picketlink-core</artifactId>
 				<version>${picketlink.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.elasticsearch</groupId>
+				<artifactId>elasticsearch</artifactId>
+				<version>${elasticsearch.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.lucene</groupId>
+				<artifactId>lucene-core</artifactId>
+				<version>${lucene.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
