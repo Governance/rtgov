@@ -12,7 +12,7 @@ To deploy the quickstart, after the server has been started, run:
 
 To test the service, there are a set of example request SOAP messages defined in the
 test/main/resources/xml folder. These can be sent to the service using a SOAP client (e.g. SOAP UI),
-or using the following command:
+initialized using the wsdl found in the src/main/resources/wsdl folder, or using the following command:
 
 	mvn exec:java -Dreq=<name> [ -Dcount=<number> ]
 
