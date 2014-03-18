@@ -7,9 +7,6 @@
                 <socketAddr>:18001</socketAddr>
                 <contextPath>demo-orders</contextPath>
             </binding.soap>
-        </service>
-        <service name="OrderService" promote="OrderService">
-            <interface.wsdl interface="wsdl/OrderService.wsdl#wsdl.porttype(OrderService)"/>
             <binding.sca/>
         </service>
         <component name="OrderService">
