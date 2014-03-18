@@ -134,6 +134,15 @@ public class JBossASActivityServerServiceTest {
                                 +at.getProperties().get("contentType"));
             }
             
+            if (!at.getProperties().containsKey("gateway")) {
+                fail("Property 'gateway' not found");
+            }
+            
+            if (!at.getProperties().get("gateway").equals("soap")) {
+                fail("Incorrect gateway, expecting 'soap' but got: "
+                                +at.getProperties().get("gateway"));
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failed to invoke service: "+e);
