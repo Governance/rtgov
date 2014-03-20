@@ -19,15 +19,13 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.rtgov.common.util.BeanResolverUtil;
 import org.overlord.rtgov.reports.ReportManager;
 import org.overlord.rtgov.reports.model.Report;
 import org.overlord.rtgov.reports.util.ReportsUtil;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -52,39 +50,17 @@ public class RESTReportServer {
     /**
      * This is the default constructor.
      */
-    @SuppressWarnings("unchecked")
     public RESTReportServer() {
-        
-        try {
-            // Need to obtain report manager directly, as inject does not
-            // work for REST service, and RESTeasy/CDI integration did not
-            // appear to work in AS7. Directly accessing the bean manager
-            // should be portable.
-            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
-            
-            java.util.Set<Bean<?>> beans=bm.getBeans(ReportManager.class);
-            
-            for (Bean<?> b : beans) {                
-                CreationalContext<Object> cc=new CreationalContext<Object>() {
-                    public void push(Object arg0) {
-                    }
-                    public void release() {
-                    }                   
-                };
-                
-                _reportManager = (ReportManager)((Bean<Object>)b).create(cc);
-                
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Report manager="+_reportManager+" for bean="+b);
-                }
-                
-                if (_reportManager != null) {
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "report-manager-rests.Messages").getString("REPORT-MANAGER-RESTS-1"), e);
+    }
+    
+    /**
+     * This method initializes the report server REST service.
+     */
+    @PostConstruct
+    public void init() {
+        // Only access CDI if service not set, to support both OSGi and CDI
+        if (_reportManager == null) {
+            _reportManager = BeanResolverUtil.getBean(ReportManager.class);
         }
     }
     
@@ -99,6 +75,15 @@ public class RESTReportServer {
     }
     
     /**
+     * This method returns the report manager.
+     * 
+     * @return The report manager
+     */
+    public ReportManager getReportManager() {
+        return (_reportManager);
+    }
+    
+    /**
      * This method generates a report based on the supplied
      * query parameters.
      * 
@@ -109,7 +94,10 @@ public class RESTReportServer {
     @GET
     @Path("/generate")
     @Produces("application/json")
-    public Response generate(@Context UriInfo info) throws Exception {        
+    public Response generate(@Context UriInfo info) throws Exception {   
+        
+        init();
+        
         MultivaluedMap<String,String> params=info.getQueryParameters();
         
         if (params.containsKey("report")) {

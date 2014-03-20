@@ -24,17 +24,15 @@ import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.common.util.BeanResolverUtil;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;
 import org.overlord.rtgov.service.dependency.presentation.SeverityAnalyzer;
 import org.overlord.rtgov.service.dependency.svg.SVGServiceGraphGenerator;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -61,57 +59,71 @@ public class RESTServiceDependencyServer {
     /**
      * This is the default constructor.
      */
-    @SuppressWarnings("unchecked")
     public RESTServiceDependencyServer() {
+    }
+    
+    /**
+     * This method initializes the service dependency REST service.
+     */
+    @PostConstruct
+    public void init() {
         
-        _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
-            
+        // Only access CDI if service not set, to support both OSGi and CDI
         if (_acmManager == null) {
-            LOG.severe(java.util.PropertyResourceBundle.getBundle(
-                    "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-1"));
+            _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+                
+            if (_acmManager == null) {
+                LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                        "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-1"));
+            }
         }
 
-        try {
-            // Need to obtain active collection manager directly, as inject does not
-            // work for REST service, and RESTeasy/CDI integration did not
-            // appear to work in AS7. Directly accessing the bean manager
-            // should be portable.
-            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
-            
-            java.util.Set<Bean<?>> beans=bm.getBeans(SeverityAnalyzer.class);
-            
-            for (Bean<?> b : beans) {                
-                CreationalContext<Object> cc=new CreationalContext<Object>() {
-                    public void push(Object arg0) {
-                    }
-                    public void release() {
-                    }                   
-                };
-                
-                _severityAnalyzer = (SeverityAnalyzer)((Bean<Object>)b).create(cc);
-                
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Severity analyzer="+_severityAnalyzer+" for bean="+b);
-                }
-                
-                if (_severityAnalyzer != null) {
-                    break;
-                }
+        // Only access CDI if service not set, to support both OSGi and CDI
+        if (_severityAnalyzer == null) {
+            _severityAnalyzer = BeanResolverUtil.getBean(SeverityAnalyzer.class);
+
+            if (_severityAnalyzer == null) {
+                LOG.severe(java.util.PropertyResourceBundle.getBundle(
+                        "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-2"));
             }
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "service-dependency-rests.Messages").getString("SERVICE-DEPENDENCY-RESTS-2"), e);
         }
     }
     
     /**
-     * This method sets the activity server.
+     * This method sets the active collection manager.
      * 
-     * @param acm The activity server
+     * @param acm The active collection manager
      */
-    public void setActivityCollectionManager(ActiveCollectionManager acm) {
+    public void setActiveCollectionManager(ActiveCollectionManager acm) {
         LOG.info("Set Active Collection Manager="+acm);
         _acmManager = acm;
+    }
+    
+    /**
+     * This method returns the active collection manager.
+     * 
+     * @return The active collection manager
+     */
+    public ActiveCollectionManager getActiveCollectionManager() {
+        return (_acmManager);
+    }
+    
+    /**
+     * This method sets the severity analyzer.
+     * 
+     * @param sa The severity analyzer
+     */
+    public void setSeverityAnalyzer(SeverityAnalyzer sa) {
+        _severityAnalyzer = sa;
+    }
+    
+    /**
+     * This method gets the severity analyzer.
+     * 
+     * @return The severity analyzer
+     */
+    public SeverityAnalyzer getSeverityAnalyzer() {
+        return (_severityAnalyzer);
     }
     
     /**
@@ -126,6 +138,8 @@ public class RESTServiceDependencyServer {
     @Produces("image/svg+xml")
     public String overview(@DefaultValue("0") @QueryParam("width") int width) throws Exception {
         String ret="";
+        
+        init();
         
         // Obtain service definition collection
         if (_acmManager != null && _servDefns == null) {

@@ -4,7 +4,7 @@
 	<groupId>org.overlord.rtgov.karaf.ds</groupId>
 	<artifactId>activity-store-jpa-h2</artifactId> 
 	<packaging>bundle</packaging>
-	<name>Overlord RTGov::Release::Karaf::DS::Activity Store JPA H2</name>
+	<name>Overlord RTGov::Karaf::DS::Activity Store JPA H2</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov.karaf</groupId>

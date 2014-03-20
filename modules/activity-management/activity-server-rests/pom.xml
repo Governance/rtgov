@@ -82,6 +82,9 @@
 						<Export-Package>
 							org.overlord.rtgov.activity.server.rest.*;version=${project.version}
 						</Export-Package>
+						<Export-Package>
+							org.overlord.rtgov.activity.server.rest.*;version=${project.version}
+						</Export-Package>
 						<Import-Package>
 							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,*
 						</Import-Package>

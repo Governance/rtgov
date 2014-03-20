@@ -17,6 +17,9 @@ package org.overlord.rtgov.active.collection.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,14 +31,57 @@ import java.util.Set;
 @ApplicationPath("/acm")
 public class RESTActiveCollectionServerApplication extends Application {
 
-    private Set<Object> _singletons = new HashSet<Object>();
+    private static Set<Object> _singletons = new HashSet<Object>();
     private Set<Class<?>> _empty = new HashSet<Class<?>>();
 
     /**
      * This is the default constructor.
      */
     public RESTActiveCollectionServerApplication() {
-       _singletons.add(new RESTActiveCollectionServer());
+        synchronized (_singletons) {
+            if (_singletons.isEmpty()) {
+                _singletons.add(new RESTActiveCollectionServer());
+            }
+        }
+    }
+
+    /**
+     * This method sets the active collection manager on the server.
+     * 
+     * @param acm The active collection manager
+     */
+    public void setActiveCollectionManager(ActiveCollectionManager acm) {
+        synchronized (_singletons) {
+            RESTActiveCollectionServer server=null;
+            
+            if (!_singletons.isEmpty()) {
+                server = (RESTActiveCollectionServer)_singletons.iterator().next();
+            } else {
+                server = new RESTActiveCollectionServer();                
+                _singletons.add(server);
+            }
+            
+            server.setActiveCollectionManager(acm);
+        }
+    }
+
+    /**
+     * This method returns the active collection manager on the server.
+     * 
+     * @return The active collection manager
+     */
+    public ActiveCollectionManager getActiveCollectionManager() {
+        ActiveCollectionManager ret=null;
+        
+        synchronized (_singletons) {
+            if (!_singletons.isEmpty()) {
+                RESTActiveCollectionServer server = (RESTActiveCollectionServer)_singletons.iterator().next();
+                
+                ret = server.getActiveCollectionManager();
+            }
+        }
+        
+        return (ret);
     }
 
     /**

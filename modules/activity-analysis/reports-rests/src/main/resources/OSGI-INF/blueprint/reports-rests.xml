@@ -5,12 +5,12 @@
            			http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
     <!-- Implementation of the rest service -->
-    <bean id="activeCollectionManager" class="org.overlord.rtgov.active.collection.rest.RESTActiveCollectionServerApplication">
-    	<property name="activeCollectionManager" ref="activeCollectionManagerBean"/>
+    <bean id="reportsService" class="org.overlord.rtgov.reports.rest.RESTReportServerApplication">
+    	<property name="reportManager" ref="reportManagerBean"/>
     </bean>
 
-    <reference id="activeCollectionManagerBean"
-               interface="org.overlord.rtgov.active.collection.ActiveCollectionManager">
+    <reference id="reportManagerBean"
+               interface="org.overlord.rtgov.reports.ReportManager">
     </reference>
 
 </blueprint>
