@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.samples.karaf.sla</groupId>
-	<artifactId>samples-karaf-sla-epn</artifactId> 
+	<artifactId>samples-karaf-sla-report</artifactId> 
 	<packaging>bundle</packaging>
-	<name>Overlord RTGov::Samples::Karaf::SLA::EPN</name>
+	<name>Overlord RTGov::Samples::Karaf::SLA::Report</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov.samples.karaf</groupId>
@@ -14,43 +14,62 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-core</artifactId>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-loader-osgi</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-loader-osgi</artifactId>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-common</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 		
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
+			<groupId>org.mvel</groupId>
+			<artifactId>mvel2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
-		<finalName>sla-epn</finalName>
+		<finalName>sla-report</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -60,11 +79,10 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Bundle-Activator>org.overlord.rtgov.epn.loader.osgi.EPNActivator</Bundle-Activator>
+						<Bundle-Activator>org.overlord.rtgov.reports.loader.osgi.ReportsActivator</Bundle-Activator>
 						<Import-Package>
 							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,
-							org.overlord.rtgov.epn,org.overlord.rtgov.ep,org.overlord.rtgov.ep.drools,
-							org.overlord.rtgov.analytics.service,org.overlord.rtgov.analytics.situation,
+							org.overlord.rtgov.reports.model,
 							org.overlord.rtgov.activity.model,
 							org.overlord.rtgov.activity.model.app,
 							org.overlord.rtgov.activity.model.bpm,
@@ -72,9 +90,6 @@
 							org.overlord.rtgov.activity.model.mom,
 							org.overlord.rtgov.activity.model.soa,
 							javax.xml.namespace,
-							org.drools.core.conflict,org.drools.core.rule.builder.dialect.asm,
-							org.drools.core.spi,org.drools.core.reteoo,org.drools.core,
-							org.drools.core.common,org.drools.core.rule,
 							*
 						</Import-Package>
 						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>

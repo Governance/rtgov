@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.reports.jee;
+package org.overlord.rtgov.reports;
 
 import static org.junit.Assert.*;
 
@@ -22,19 +22,25 @@ import java.util.Properties;
 import org.junit.Test;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
-import org.overlord.rtgov.internal.reports.jee.JEEReportContext;
 import org.overlord.rtgov.reports.model.Calendar;
 
-public class JEEReportContextTest {
+public class AbstractReportContextTest {
 
     @Test
     public void testGetCalendar() {
         TestPropertiesProvider provider=new TestPropertiesProvider();
         RTGovProperties.setPropertiesProvider(provider);
         
-        JEEReportContext context=new JEEReportContext();
+        AbstractReportContext context=new AbstractReportContext() {
+            public Object getService(String name) {
+                return null;
+            }
+            public Object getService(Class<?> cls) {
+                return null;
+            }
+        };
         
-        java.net.URL url=JEEReportContextTest.class.getResource("/config/TestCalendar.json");
+        java.net.URL url=AbstractReportContextTest.class.getResource("/config/TestCalendar.json");
         
         if (url == null) {
             fail("Failed to find URL for test calendar");

@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.activity-analysis</groupId>
-	<artifactId>reports-jee</artifactId> 
-	<packaging>jar</packaging>
-	<name>Overlord RTGov::Modules::Activity Analysis::Reports JEE</name>
+	<artifactId>reports-osgi</artifactId> 
+	<packaging>bundle</packaging>
+	<name>Overlord RTGov::Modules::Activity Analysis::Reports OSGi</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
@@ -26,16 +26,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		    <groupId>javax.enterprise</groupId>
-		    <artifactId>cdi-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-		    <groupId>javax</groupId>
-		    <artifactId>javaee-api</artifactId>
-		    <scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
 			<scope>provided</scope>
@@ -47,10 +37,40 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.compendium</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Import-Package>
+							!javax.inject.*,!javax.ejb.*,!javax.enterprise.*,!javax.persistence.*,*
+						</Import-Package>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>
