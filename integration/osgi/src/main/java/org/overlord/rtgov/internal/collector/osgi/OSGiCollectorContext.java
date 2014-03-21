@@ -15,6 +15,11 @@
  */
 package org.overlord.rtgov.internal.collector.osgi;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.transaction.TransactionManager;
 
 import org.overlord.rtgov.activity.collector.CollectorContext;
@@ -26,18 +31,34 @@ import org.overlord.rtgov.activity.collector.CollectorContext;
  */
 public class OSGiCollectorContext implements CollectorContext {
 
+    private static final String UNKNOWN_HOST = "Unknown-Host";
+    private static final String UNKNOWN_NODE = "Unknown-Node";
+    private static final String NODE_PROPERTY = "karaf.name";
+
+    private static final Logger LOG=Logger.getLogger(OSGiCollectorContext.class.getName());
+
     /**
      * {@inheritDoc}
      */
     public String getHost() {
-        return ("UNKNOWN");
+        String ret=UNKNOWN_HOST;
+        
+        try {
+            ret = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Unable to get host name: "+e);
+            }
+        }
+        
+        return (ret);
     }
 
     /**
      * {@inheritDoc}
      */
     public String getNode() {
-        return ("UNKNOWN");
+        return (System.getProperty(NODE_PROPERTY,UNKNOWN_NODE));
     }
 
     /**
