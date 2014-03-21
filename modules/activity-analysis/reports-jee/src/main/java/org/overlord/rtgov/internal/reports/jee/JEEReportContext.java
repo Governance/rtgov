@@ -16,7 +16,6 @@
 package org.overlord.rtgov.internal.reports.jee;
 
 import java.text.MessageFormat;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,16 +24,14 @@ import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.naming.InitialContext;
 
-import org.overlord.rtgov.common.util.RTGovProperties;
-import org.overlord.rtgov.reports.model.Calendar;
-import org.overlord.rtgov.reports.util.ReportsUtil;
+import org.overlord.rtgov.reports.AbstractReportContext;
 
 /**
  * This class provides the JEE implementation of the ReportContext
  * interface.
  *
  */
-public class JEEReportContext implements org.overlord.rtgov.reports.ReportContext {
+public class JEEReportContext extends AbstractReportContext implements org.overlord.rtgov.reports.ReportContext {
     
     private static final Logger LOG=Logger.getLogger(JEEReportContext.class.getName());
     
@@ -100,104 +97,6 @@ public class JEEReportContext implements org.overlord.rtgov.reports.ReportContex
         
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Get service for class="+cls+" ret="+ret);
-        }
-        
-        return (ret);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void logError(String mesg) {
-        LOG.severe(mesg);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void logWarning(String mesg) {
-        LOG.warning(mesg);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void logInfo(String mesg) {
-        if (LOG.isLoggable(Level.INFO)) {
-            LOG.info(mesg);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void logDebug(String mesg) {
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(mesg);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Calendar getCalendar(String name, String timezone) {
-        Calendar ret=null;
-        
-        if (name != null) {
-            
-            // Attempt to load calendar - if no name specified, then use 'default'
-            String location=RTGovProperties.getProperty("calendar."+name);
-            
-            if (location != null) {
-                java.io.File f=new java.io.File(location);
-                
-                if (f.exists()) {
-                    try {
-                        java.io.InputStream is=new java.io.FileInputStream(f);
-                        
-                        byte[] b=new byte[is.available()];
-                        
-                        is.read(b);
-                        
-                        is.close();
-                        
-                        ret = ReportsUtil.deserializeCalendar(b);
-                        
-                    } catch (Exception e) {
-                        LOG.log(Level.SEVERE, MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                                "reports-jee.Messages").getString("REPORTS-JEE-4"),
-                                name, location), e);
-                    }
-                    
-                } else {
-                    LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                            "reports-jee.Messages").getString("REPORTS-JEE-3"),
-                            name, location));
-                }
-            }
-            
-            // If not found, and no name defined, then create default
-            if (ret == null && name.equalsIgnoreCase(Calendar.DEFAULT)) {
-                ret = new Calendar().setName(Calendar.DEFAULT);
-                
-                // Define working week
-                ret.setMonday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
-                ret.setTuesday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
-                ret.setWednesday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
-                ret.setThursday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
-                ret.setFriday(new Calendar.WorkingDay().setStartHour(9).setEndHour(17));
-                
-                ret.getExcludedDays().add(new Calendar.ExcludedDay().setDay(25).
-                            setMonth(12).setReason("Christmas Day"));
-            }
-            
-            if (ret != null && timezone != null) {
-                ret.setTimeZone(TimeZone.getTimeZone(timezone));
-            }
-        }
-        
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Calendar name="+name+" timezone="+timezone+" ret="+ret);
         }
         
         return (ret);

@@ -129,7 +129,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>reports-jee</artifactId>
+			<artifactId>reports-osgi</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-loader-osgi</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -250,6 +255,11 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.sla</groupId>
 			<artifactId>samples-karaf-sla-epn</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.samples.karaf.sla</groupId>
+			<artifactId>samples-karaf-sla-report</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -565,7 +575,8 @@
 										<include>org.overlord.rtgov.activity-analysis:analytics:*</include>
 										<include>org.overlord.rtgov.activity-analysis:call-trace:*</include>
 										<include>org.overlord.rtgov.activity-analysis:reports:*</include>
-										<include>org.overlord.rtgov.activity-analysis:reports-jee:*</include>
+										<include>org.overlord.rtgov.activity-analysis:reports-osgi:*</include>
+										<include>org.overlord.rtgov.activity-analysis:reports-loader-osgi:*</include>
 										<include>org.overlord.rtgov.activity-analysis:reports-rests:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency-svg:*</include>
@@ -697,6 +708,7 @@
 									<comment>RTGov Samples SLA</comment>
 									<includes>
 										<include>org.overlord.rtgov.samples.karaf.sla:samples-karaf-sla-epn:*</include>
+										<include>org.overlord.rtgov.samples.karaf.sla:samples-karaf-sla-report:*</include>
 									</includes>
 								</feature>
 								<feature>
