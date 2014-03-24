@@ -212,59 +212,58 @@ public final class ServiceDependencyBuilder {
             OperationNode opn, java.util.List<InvocationDefinition> ids) {
         
         for (InvocationDefinition id : ids) {
-            ServiceNode tsn=sg.getServiceNodeForInterface(id.getInterface());
+            ServiceNode tsn=null;
+            
+            if (id.getServiceType() != null) {
+                tsn = sg.getServiceNode(id.getServiceType());
+            } else {
+                tsn = sg.getServiceNodeForInterface(id.getInterface());
+            }
             
             if (tsn != null) {
-                UsageLink ul=new UsageLink();
+                UsageLink existingul=sg.getUsageLink(sn, tsn);
                 
-                ul.setSource(sn);
-                ul.setTarget(tsn);
-                ul.getInvocations().add(id);
-                
-                if (!sg.getUsageLinks().contains(ul)) {
+                if (existingul == null) {
+                    UsageLink ul=new UsageLink();
+                    
+                    ul.setSource(sn);
+                    ul.setTarget(tsn);
+                    ul.getInvocations().add(id);
+                    
                     sg.getUsageLinks().add(ul);
+                    
                 } else {
                     LOG.fine("Usage link between source '"+sn
                             +"' and target '"+tsn
-                            +"' has already been defined: "+ul);
+                            +"' has already been defined: "+existingul);
                     
                     // Copy invocation definitions to existing link
-                    for (UsageLink existing : sg.getUsageLinks()) {
-                        
-                        if (existing.equals(ul)) {
-                            existing.getInvocations().addAll(ul.getInvocations());
-                            break;
-                        }
-                    }
+                    existingul.getInvocations().add(id);
                 }
 
                 // Find target for invocation link
                 OperationNode topn=tsn.getOperation(id.getOperation());
                 
                 if (topn != null) {
-                    InvocationLink il=new InvocationLink();
+                    InvocationLink existingil=sg.getInvocationLink(opn, topn);
                     
-                    il.setSource(opn);
-                    il.setTarget(topn);
-                    il.getInvocations().add(id);
-                    
-                    if (!sg.getInvocationLinks().contains(il)) {
+                    if (existingil == null) {
+                        InvocationLink il=new InvocationLink();
+                        
+                        il.setSource(opn);
+                        il.setTarget(topn);
+                        il.getInvocations().add(id);
+                        
                         sg.getInvocationLinks().add(il);
                     } else {
                         LOG.fine("Link between source '"+opn
                                 +"' and target '"+topn
-                                +"' has already been defined: "+il);
+                                +"' has already been defined: "+existingil);
                         
                         // Copy invocation definitions to existing link
-                        for (InvocationLink existing : sg.getInvocationLinks()) {
-                            
-                            if (existing.equals(il)) {
-                                existing.getInvocations().addAll(il.getInvocations());
-                                break;
-                            }
-                        }
+                        existingil.getInvocations().add(id);
                     }
-                }
+                }                
             }
         }
     }

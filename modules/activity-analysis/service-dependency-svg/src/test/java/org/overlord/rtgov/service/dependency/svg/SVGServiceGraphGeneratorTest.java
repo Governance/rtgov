@@ -17,7 +17,11 @@ package org.overlord.rtgov.service.dependency.svg;
 
 import static org.junit.Assert.*;
 
+import java.util.Collections;
+
 import org.junit.Test;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.analytics.service.InterfaceDefinition;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
@@ -25,8 +29,12 @@ import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.analytics.util.ServiceDefinitionUtil;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
+import org.overlord.rtgov.service.dependency.ServiceNode;
+import org.overlord.rtgov.service.dependency.layout.LayoutFactory;
+import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayout;
 import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;
 import org.overlord.rtgov.service.dependency.presentation.Severity;
 import org.overlord.rtgov.service.dependency.svg.SVGServiceGraphGenerator;
@@ -253,7 +261,7 @@ public class SVGServiceGraphGeneratorTest {
             fail("Not a SVG document");
         }
         
-        System.out.println(svg);
+        System.out.println("LAYOUT GRAPH:\r\n"+svg);
     }
 
     @Test
@@ -298,7 +306,7 @@ public class SVGServiceGraphGeneratorTest {
             fail("Not a SVG document");
         }
         
-        System.out.println(svg);
+        System.out.println("EMPTY:\r\n"+svg);
     }
 
     @Test
@@ -312,6 +320,78 @@ public class SVGServiceGraphGeneratorTest {
         
         if (avg != Severity.Warning) {
             fail("Average should be Warning: "+avg);
+        }
+    }
+    
+    
+    @Test
+    public void testMultiCastExample() {
+        try {
+            java.io.InputStream is=SVGServiceGraphGeneratorTest.class.getResourceAsStream("/activities/multicast.json");
+            
+            byte[] b=new byte[is.available()];
+            is.read(b);
+            
+            ActivityUnit actUnit=ActivityUtil.deserializeActivityUnit(b);       
+            
+            java.util.Collection<ServiceDefinition> sds=ServiceDefinitionUtil.derive(actUnit);
+            
+            java.util.Set<ServiceDefinition> defns=new java.util.HashSet<ServiceDefinition>(sds);
+
+            ServiceGraph graph=ServiceDependencyBuilder.buildGraph(defns, Collections.<Situation> emptyList());
+            
+            if (graph == null) {
+                fail("Graph is null");
+            }
+            
+            java.util.Set<ServiceNode> nodes=graph.getServiceNodes();
+            
+            if (nodes == null) {
+                fail("Nodes list is null");
+            }
+            
+            if (nodes.size() != 3) {
+                fail("Should be 3 nodes: "+nodes.size());
+            }
+            
+            ServiceNode initialNode=null;
+            
+            java.util.Iterator<ServiceNode> iter=nodes.iterator();
+            
+            while (iter.hasNext()) {
+                ServiceNode sn=iter.next();
+                
+                if (sn.getProperties().get(ServiceNode.INITIAL_NODE) == Boolean.TRUE) {
+                    if (initialNode != null) {
+                        fail("Should only be a single initial node");
+                    }
+                    initialNode = sn;
+                }
+            }
+            
+            ServiceGraphLayout layout=LayoutFactory.getServiceGraphLayout();
+            
+            layout.layout(graph);
+            
+            SVGServiceGraphGenerator generator=new SVGServiceGraphGenerator();
+            
+            java.io.ByteArrayOutputStream os=new java.io.ByteArrayOutputStream();
+            
+            generator.generate(graph, 0, os);
+
+            os.close();
+                        
+            String svg=new String(os.toByteArray());
+            
+            if (!svg.contains("<svg")) {
+                fail("Not a SVG document");
+            }
+            
+            System.out.println("MULTICAST:\r\n"+svg);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to test multicast example: "+e);
         }
     }
 }
