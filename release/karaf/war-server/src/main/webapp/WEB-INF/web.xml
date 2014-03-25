@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+    <display-name>Runtime Governance</display-name>
+
+    <servlet>
+        <servlet-name>ActivityServer</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.activity.server.rest.RESTActivityServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ActivityServer</servlet-name>
+        <url-pattern>/activity/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ActiveCollectionManager</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.active.collection.rest.RESTActiveCollectionServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ActiveCollectionManager</servlet-name>
+        <url-pattern>/acm/*</url-pattern>
+    </servlet-mapping>
+
+	<!-- Services -->
+	
+    <servlet>
+        <servlet-name>ServiceDependency</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.service.dependency.rest.RESTServiceDependencyServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ServiceDependency</servlet-name>
+        <url-pattern>/service/dependency/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CallTrace</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.call.trace.rest.RESTCallTraceServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CallTrace</servlet-name>
+        <url-pattern>/call/trace/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SituationManager</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.situation.manager.rest.RESTSituationManagerServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SituationManager</servlet-name>
+        <url-pattern>/situation/manager/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReportServer</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.reports.rest.RESTReportServerApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReportServer</servlet-name>
+        <url-pattern>/report/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Security -->
+    
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>org.overlord.commons.auth.jetty8.Jetty8SamlBearerTokenAuthFilter</filter-class>
+        <init-param>
+            <param-name>allowedIssuers</param-name>
+            <param-value>/overlord-rtgov</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>ActivityServer</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>ActiveCollectionManager</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>ServiceDependency</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>CallTrace</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>SituationManager</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>ReportServer</servlet-name>
+    </filter-mapping>
+
+</web-app>

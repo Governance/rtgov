@@ -3,7 +3,7 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.karaf</groupId>
 	<artifactId>features</artifactId> 
-	<name>Overlord RTGov::Release::Karaf::Features</name>
+	<name>Overlord RTGov::Karaf::Features</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
@@ -102,16 +102,16 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
-			<artifactId>active-collection-rests</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-infinispan</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Services -->
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-rests</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
@@ -125,6 +125,16 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-osgi</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-loader-osgi</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -161,6 +171,12 @@
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>call-trace-rests</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.karaf</groupId>
+			<artifactId>overlord-rtgov</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
 		</dependency>
 
 		<!-- RTGov Activity Store Inmemory -->
@@ -239,6 +255,11 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.sla</groupId>
 			<artifactId>samples-karaf-sla-epn</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.samples.karaf.sla</groupId>
+			<artifactId>samples-karaf-sla-report</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -347,6 +368,42 @@
 			<artifactId>jaxen</artifactId>
 		</dependency>		
 
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth-jetty8</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.picketlink</groupId>
+			<artifactId>picketlink-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-atom-provider</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxb-provider</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>javax.servlet</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>jaxrs-api</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -377,6 +434,7 @@
 									<excludes>
 										<exclude>org.overlord.rtgov.*:*:*</exclude>
 										<exclude>org.infinispan:infinispan-core:*</exclude>
+										<exclude>log4j:log4j:*</exclude>
 									</excludes>
 									<bundles>
 										<!-- Add the infinispan dependency here in order to override its Import-Package spec (which 
@@ -442,7 +500,6 @@
 									</dependsOnFeatures>
 									<includes>
 										<include>org.overlord.rtgov.activity-management:activity-server-jee:*</include>
-										<include>org.overlord.rtgov.activity-management:activity-server-rests:*</include>
 									</includes>
 								</feature>
 								<feature>
@@ -491,7 +548,6 @@
 									</dependsOnFeatures>
 									<includes>
 										<include>org.overlord.rtgov.active-queries:active-collection-embedded:*</include>
-										<include>org.overlord.rtgov.active-queries:active-collection-rests:*</include>
 										<include>org.overlord.rtgov.active-queries:active-collection-infinispan:*</include>
 									</includes>
 								</feature>
@@ -504,11 +560,23 @@
 											<name>rtgov-common</name>
 											<version>${project.version}</version>
 										</feature>
+										<feature>
+											<name>rtgov-activity</name>
+											<version>${project.version}</version>
+										</feature>
+										<feature>
+											<name>rtgov-active-queries</name>
+											<version>${project.version}</version>
+										</feature>
 									</dependsOnFeatures>
 									<includes>
+										<include>org.overlord.rtgov.activity-management:activity-server-rests:*</include>
+										<include>org.overlord.rtgov.active-queries:active-collection-rests:*</include>
 										<include>org.overlord.rtgov.activity-analysis:analytics:*</include>
 										<include>org.overlord.rtgov.activity-analysis:call-trace:*</include>
 										<include>org.overlord.rtgov.activity-analysis:reports:*</include>
+										<include>org.overlord.rtgov.activity-analysis:reports-osgi:*</include>
+										<include>org.overlord.rtgov.activity-analysis:reports-loader-osgi:*</include>
 										<include>org.overlord.rtgov.activity-analysis:reports-rests:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency-svg:*</include>
@@ -516,6 +584,7 @@
 										<include>org.overlord.rtgov.content.services:call-trace-rests:*</include>
 										<include>org.overlord.rtgov.content.services:service-dependency-rests:*</include>
 										<include>org.overlord.rtgov.content.services:situation-manager-rests:*</include>
+										<include>org.overlord.rtgov.karaf:overlord-rtgov:*</include>
 									</includes>
 								</feature>
 								<feature>
@@ -639,6 +708,7 @@
 									<comment>RTGov Samples SLA</comment>
 									<includes>
 										<include>org.overlord.rtgov.samples.karaf.sla:samples-karaf-sla-epn:*</include>
+										<include>org.overlord.rtgov.samples.karaf.sla:samples-karaf-sla-report:*</include>
 									</includes>
 								</feature>
 								<feature>

@@ -17,6 +17,9 @@ package org.overlord.rtgov.activity.server.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+
+import org.overlord.rtgov.activity.server.ActivityServer;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,14 +31,57 @@ import java.util.Set;
 @ApplicationPath("/activity")
 public class RESTActivityServerApplication extends Application {
 
-    private Set<Object> _singletons = new HashSet<Object>();
+    private static Set<Object> _singletons = new HashSet<Object>();
     private Set<Class<?>> _empty = new HashSet<Class<?>>();
 
     /**
      * This is the default constructor.
      */
     public RESTActivityServerApplication() {
-       _singletons.add(new RESTActivityServer());
+        synchronized (_singletons) {
+            if (_singletons.isEmpty()) {
+                _singletons.add(new RESTActivityServer());
+            }
+        }
+    }
+    
+    /**
+     * This method sets the activity server.
+     * 
+     * @param as The activity server
+     */
+    public void setActivityServer(ActivityServer as) {
+        synchronized (_singletons) {
+            RESTActivityServer server=null;
+            
+            if (!_singletons.isEmpty()) {
+                server = (RESTActivityServer)_singletons.iterator().next();
+            } else {
+                server = new RESTActivityServer();                
+                _singletons.add(server);
+            }
+            
+            server.setActivityServer(as);
+        }
+    }
+
+    /**
+     * This method returns the activity server.
+     * 
+     * @return The activity server
+     */
+    public ActivityServer getActivityServer() {
+        ActivityServer ret=null;
+        
+        synchronized (_singletons) {
+            if (!_singletons.isEmpty()) {
+                RESTActivityServer server = (RESTActivityServer)_singletons.iterator().next();
+                
+                ret = server.getActivityServer();
+            }
+        }
+        
+        return (ret);
     }
 
     /**
@@ -51,6 +97,6 @@ public class RESTActivityServerApplication extends Application {
      */
     @Override
     public Set<Object> getSingletons() {
-       return _singletons;
+        return _singletons;
     }
 }

@@ -972,7 +972,7 @@ public class ServiceDefinitionUtilTest {
         }
         
         InvocationDefinition id1=op1.getRequestResponse().getInvocation(INTERFACE_2,
-                                OPERATION_2, null);
+                          SERVICE_TYPE_2, OPERATION_2, null);
         
         if (id1 == null) {
             fail("Failed to get invocation definition 1");

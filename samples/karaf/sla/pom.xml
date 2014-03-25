@@ -15,9 +15,9 @@
 
 	<modules>
 		<module>epn</module>
+		<module>report</module>
 <!--
 		<module>monitor</module>
-		<module>report</module>
 -->
 	</modules>
 

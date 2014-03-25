@@ -49,9 +49,6 @@
 		</dependency>
 	</dependencies>
 	
-	<!-- 
-							org.drools.core.rule,org.drools.core.conflict,org.drools.core,
-	 -->
 	<build>
 		<finalName>sla-epn</finalName>
 		<plugins>

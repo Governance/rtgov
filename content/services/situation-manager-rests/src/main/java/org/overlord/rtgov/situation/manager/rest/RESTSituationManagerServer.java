@@ -20,13 +20,11 @@ import java.util.logging.Logger;
 
 import org.overlord.rtgov.analytics.situation.IgnoreSubject;
 import org.overlord.rtgov.analytics.util.SituationUtil;
+import org.overlord.rtgov.common.util.BeanResolverUtil;
 import org.overlord.rtgov.situation.manager.SituationManager;
 
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.CreationalContext;
-import javax.enterprise.inject.spi.Bean;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.naming.InitialContext;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
@@ -49,39 +47,18 @@ public class RESTSituationManagerServer {
     /**
      * This is the default constructor.
      */
-    @SuppressWarnings("unchecked")
     public RESTSituationManagerServer() {
+    }
+
+    /**
+     * This method initializes the situation manager REST service.
+     */
+    @PostConstruct
+    public void init() {
         
-        try {
-            // Need to obtain situation manager directly, as inject does not
-            // work for REST service, and RESTeasy/CDI integration did not
-            // appear to work in AS7. Directly accessing the bean manager
-            // should be portable.
-            BeanManager bm=InitialContext.doLookup("java:comp/BeanManager");
-            
-            java.util.Set<Bean<?>> beans=bm.getBeans(SituationManager.class);
-            
-            for (Bean<?> b : beans) {                
-                CreationalContext<Object> cc=new CreationalContext<Object>() {
-                    public void push(Object arg0) {
-                    }
-                    public void release() {
-                    }                   
-                };
-                
-                _situationManager = (SituationManager)((Bean<Object>)b).create(cc);
-                
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Situation manager="+_situationManager+" for bean="+b);
-                }
-                
-                if (_situationManager != null) {
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "situation-manager-rests.Messages").getString("SITUATION-MANAGER-RESTS-1"), e);
+        // Only access CDI if service not set, to support both OSGi and CDI
+        if (_situationManager == null) {
+            _situationManager = BeanResolverUtil.getBean(SituationManager.class);
         }
     }
     
@@ -96,6 +73,15 @@ public class RESTSituationManagerServer {
     }
     
     /**
+     * This method returns the situation manager.
+     * 
+     * @return The situation manager
+     */
+    public SituationManager getSituationManager() {
+        return (_situationManager);
+    }
+    
+    /**
      * This method ignores a situation subject.
      * 
      * @param details The ignore subject details
@@ -106,6 +92,8 @@ public class RESTSituationManagerServer {
     @POST
     @Path("/ignore")
     public Response ignore(String details, @Context SecurityContext context) throws Exception {
+        
+        init();
  
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Ignore situation: "+details);        
@@ -140,6 +128,8 @@ public class RESTSituationManagerServer {
     @POST
     @Path("/observe")
     public Response observe(String subject, @Context SecurityContext context) throws Exception {
+        
+        init();
  
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Observe subject: "+subject);        

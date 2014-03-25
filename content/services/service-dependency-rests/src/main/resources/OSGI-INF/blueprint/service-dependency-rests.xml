@@ -1,0 +1,21 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+           		xsi:schemaLocation="
+           			http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <!-- Implementation of the rest service -->
+    <bean id="serviceDependencyServer" class="org.overlord.rtgov.service.dependency.rest.RESTServiceDependencyServerApplication">
+    	<property name="activeCollectionManager" ref="activeCollectionManagerBean"/>
+    	<property name="severityAnalyzer" ref="severityAnalyzerBean"/>
+    </bean>
+
+    <reference id="activeCollectionManagerBean"
+               interface="org.overlord.rtgov.active.collection.ActiveCollectionManager">
+    </reference>
+
+    <reference id="severityAnalyzerBean"
+               interface="org.overlord.rtgov.service.dependency.presentation.SeverityAnalyzer">
+    </reference>
+
+</blueprint>

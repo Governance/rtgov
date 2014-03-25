@@ -17,6 +17,10 @@ package org.overlord.rtgov.service.dependency.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.service.dependency.presentation.SeverityAnalyzer;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,16 +32,98 @@ import java.util.Set;
 @ApplicationPath("/service/dependency")
 public class RESTServiceDependencyServerApplication extends Application {
 
-    private Set<Object> _singletons = new HashSet<Object>();
+    private static Set<Object> _singletons = new HashSet<Object>();
     private Set<Class<?>> _empty = new HashSet<Class<?>>();
 
     /**
      * This is the default constructor.
      */
     public RESTServiceDependencyServerApplication() {
-       _singletons.add(new RESTServiceDependencyServer());
+        synchronized (_singletons) {
+            if (_singletons.isEmpty()) {
+                _singletons.add(new RESTServiceDependencyServer());
+            }
+        }
     }
 
+    /**
+     * This method sets the active collection manager.
+     * 
+     * @param acm The active collection manager
+     */
+    public void setActiveCollectionManager(ActiveCollectionManager acm) {
+        synchronized (_singletons) {
+            RESTServiceDependencyServer server=null;
+            
+            if (!_singletons.isEmpty()) {
+                server = (RESTServiceDependencyServer)_singletons.iterator().next();
+            } else {
+                server = new RESTServiceDependencyServer();                
+                _singletons.add(server);
+            }
+            
+            server.setActiveCollectionManager(acm);
+        }
+    }
+    
+    /**
+     * This method returns the active collection manager.
+     * 
+     * @return The active collection manager
+     */
+    public ActiveCollectionManager getActiveCollectionManager() {
+        ActiveCollectionManager ret=null;
+        
+        synchronized (_singletons) {
+            if (!_singletons.isEmpty()) {
+                RESTServiceDependencyServer server = (RESTServiceDependencyServer)_singletons.iterator().next();
+                
+                ret = server.getActiveCollectionManager();
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method sets the severity analyzer.
+     * 
+     * @param sa The severity analyzer
+     */
+    public void setSeverityAnalyzer(SeverityAnalyzer sa) {
+        synchronized (_singletons) {
+            RESTServiceDependencyServer server=null;
+            
+            if (!_singletons.isEmpty()) {
+                server = (RESTServiceDependencyServer)_singletons.iterator().next();
+            } else {
+                server = new RESTServiceDependencyServer();                
+                _singletons.add(server);
+            }
+            
+            server.setSeverityAnalyzer(sa);
+        }
+    }
+    
+    /**
+     * This method gets the severity analyzer.
+     * 
+     * @return The severity analyzer
+     */
+    public SeverityAnalyzer getSeverityAnalyzer() {
+        SeverityAnalyzer ret=null;
+        
+        synchronized (_singletons) {
+            if (!_singletons.isEmpty()) {
+                RESTServiceDependencyServer server = (RESTServiceDependencyServer)_singletons.iterator().next();
+                
+                ret = server.getSeverityAnalyzer();
+            }
+        }
+        
+        return (ret);
+    }
+    
     /**
      * {@inheritDoc}
      */

@@ -111,12 +111,56 @@ public class ServiceGraph {
     }
     
     /**
+     * This method returns the invocation link associated with the supplied
+     * source and target operation nodes.
+     * 
+     * @param source The source
+     * @param target The target
+     * @return The invocation link, or null if not found
+     */
+    public InvocationLink getInvocationLink(OperationNode source, OperationNode target) {
+        InvocationLink ret=null;
+        
+        for (InvocationLink eil : getInvocationLinks()) {
+            if (eil.getSource() == source &&
+                    eil.getTarget() == target) {
+                ret = eil;
+                break;
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
      * This method returns the service usage links.
      * 
      * @return The service usage links
      */
     public java.util.Set<UsageLink> getUsageLinks() {
         return (_usageLinks);
+    }
+    
+    /**
+     * This method returns the usage link associated with the supplied
+     * source and target service nodes.
+     * 
+     * @param source The source
+     * @param target The target
+     * @return The usage link, or null if not found
+     */
+    public UsageLink getUsageLink(ServiceNode source, ServiceNode target) {
+        UsageLink ret=null;
+        
+        for (UsageLink eul : getUsageLinks()) {
+            if (eul.getSource() == source &&
+                    eul.getTarget() == target) {
+                ret = eul;
+                break;
+            }
+        }
+        
+        return (ret);
     }
 
     /**

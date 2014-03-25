@@ -148,8 +148,30 @@ public abstract class MEPDefinition implements java.io.Externalizable {
      */
     public InvocationDefinition getInvocation(String intf, String operation,
                                 String fault) {
+        return (getInvocation(intf, null, operation, fault));
+    }
+    
+    /**
+     * This method returns the invocation associated with the supplied
+     * interface, service type, operation and optional fault.
+     * 
+     * @param intf The interface
+     * @param serviceType The optional service type
+     * @param operation The operation
+     * @param fault The optional fault
+     * @return The invocation definition, or null if not found
+     */
+    public InvocationDefinition getInvocation(String intf, String serviceType,
+                    String operation, String fault) {
         for (int i=0; i < _invocations.size(); i++) {
             InvocationDefinition id=(InvocationDefinition)_invocations.get(i);
+            
+            if ((id.getServiceType() == null && serviceType != null) ||
+                    (id.getServiceType() != null && serviceType == null)) {
+                continue;
+            } else if (serviceType != null && !serviceType.equals(id.getServiceType())) {
+                continue;
+            }
             
             if (id.getInterface().equals(intf)
                     && id.getOperation().equals(operation)) {
@@ -209,7 +231,7 @@ public abstract class MEPDefinition implements java.io.Externalizable {
             InvocationDefinition id=mep.getInvocations().get(i);
             
             InvocationDefinition cur=getInvocation(id.getInterface(),
-                            id.getOperation(), id.getFault());
+                    id.getServiceType(), id.getOperation(), id.getFault());
             
             if (cur == null) {
                 cur = id.shallowCopy();

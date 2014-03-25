@@ -97,13 +97,6 @@ public class InvocationLink {
     /**
      * {@inheritDoc}
      */
-    public int hashCode() {
-        return (_source.hashCode());
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public boolean equals(Object obj) {
         if (obj instanceof InvocationLink) {
             InvocationLink il=(InvocationLink)obj;

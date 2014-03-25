@@ -123,7 +123,7 @@ public final class ServiceDefinitionUtil {
         java.util.Map<String,ServiceDefinition> ret=
                         new java.util.HashMap<String,ServiceDefinition>();
         
-        checkForServiceInvoked(ret, actUnit, 0, actUnit.getActivityTypes().size());
+        checkForServiceInvoked(ret, actUnit, 0, actUnit.getActivityTypes().size(), null);
         
         if (LOG.isLoggable(Level.FINEST)) {
             String au=null;
@@ -148,9 +148,10 @@ public final class ServiceDefinitionUtil {
      * @param actUnit The activity unit
      * @param from The 'from' index
      * @param to The 'to' index
+     * @param idef The invocation definition
      */
     protected static void checkForServiceInvoked(java.util.Map<String,ServiceDefinition> sdefs,
-                        ActivityUnit actUnit, int from, int to) {
+                        ActivityUnit actUnit, int from, int to, InvocationDefinition idef) {
         
         // Scan the activity types for a received request
         for (int i=from; i < to; i++) {
@@ -158,6 +159,10 @@ public final class ServiceDefinitionUtil {
             
             if (at1 instanceof RequestReceived) {
                 RequestReceived rqr=(RequestReceived)at1;
+                
+                if (idef != null && idef.getServiceType() == null) {
+                    idef.setServiceType(rqr.getServiceType());
+                }
                 
                 if (rqr.getMessageId() != null) {
                     // Locate the matching response sent activity
@@ -226,11 +231,11 @@ public final class ServiceDefinitionUtil {
                             
                             // Process the activities related to this
                             // matched interaction
-                            processExternalInvocation(sdefs, mep, rqs, rpr);
+                            InvocationDefinition idef=processExternalInvocation(sdefs, mep, rqs, rpr);
                             
                             // Check if any invocations are performed in the
                             // scope of this req/resp
-                            checkForServiceInvoked(sdefs, actUnit, i+1, j);
+                            checkForServiceInvoked(sdefs, actUnit, i+1, j, idef);
                             
                             // Advance 'i' so only checks after the received
                             // response
@@ -384,8 +389,9 @@ public final class ServiceDefinitionUtil {
      * @param call The MEP definition
      * @param rqs The request
      * @param rpr The response
+     * @return The invocation definition
      */
-    protected static void processExternalInvocation(java.util.Map<String,ServiceDefinition> sdefs,
+    protected static InvocationDefinition processExternalInvocation(java.util.Map<String,ServiceDefinition> sdefs,
                 MEPDefinition call, RequestSent rqs, ResponseReceived rpr) {
         
         InvocationDefinition idef=call.getInvocation(rqs.getInterface(),
@@ -420,6 +426,8 @@ public final class ServiceDefinitionUtil {
         if (idef.getFault() != null) {
             metrics.setFaults(metrics.getFaults()+1);
         }
+        
+        return (idef);
     }
     
     /**

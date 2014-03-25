@@ -64,6 +64,7 @@
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<kie.version>6.0.0.CR5</kie.version>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
+		<picketlink.version>2.1.6.Final</picketlink.version>
 		<switchyard.version>1.1.0.CR1</switchyard.version>
 
 		<!-- The following properties are required as they are passed to
@@ -73,6 +74,7 @@
 		<commons-configuration.version>1.6</commons-configuration.version>
 		<jackson.version>1.9.9</jackson.version>
 		<mvel.version>2.1.7.Final</mvel.version>
+
 	</properties>
 
 	<modules>
@@ -127,6 +129,11 @@
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth-jboss7</artifactId>
+				<version>${overlord-commons.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-auth-jetty8</artifactId>
 				<version>${overlord-commons.version}</version>
 			</dependency>
 			<dependency>
@@ -294,6 +301,12 @@
 				<groupId>org.jboss.naming</groupId>
 				<artifactId>jnp-client</artifactId>
 				<version>${jnp-client.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.picketlink</groupId>
+				<artifactId>picketlink-core</artifactId>
+				<version>${picketlink.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

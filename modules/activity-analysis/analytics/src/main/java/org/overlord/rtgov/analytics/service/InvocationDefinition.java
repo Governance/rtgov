@@ -27,9 +27,10 @@ import java.util.Collections;
  */
 public class InvocationDefinition implements java.io.Externalizable {
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     private String _interface=null;
+    private String _serviceType=null;
     private String _operation=null;
     private String _fault=null;
     private InvocationMetric _metrics=new InvocationMetric();
@@ -51,6 +52,7 @@ public class InvocationDefinition implements java.io.Externalizable {
         InvocationDefinition ret=new InvocationDefinition();
         
         ret.setInterface(_interface);
+        ret.setServiceType(_serviceType);
         ret.setOperation(_operation);
         ret.setFault(_fault);
         
@@ -73,6 +75,24 @@ public class InvocationDefinition implements java.io.Externalizable {
      */
     public String getInterface() {
         return (_interface);
+    }
+    
+    /**
+     * This method sets the optional service type.
+     * 
+     * @param stype The service type
+     */
+    public void setServiceType(String stype) {
+        _serviceType = stype;
+    }
+    
+    /**
+     * This method gets the optional service type.
+     * 
+     * @return The optional service type
+     */
+    public String getServiceType() {
+        return (_serviceType);
     }
     
     /**
@@ -160,6 +180,7 @@ public class InvocationDefinition implements java.io.Externalizable {
         out.writeInt(VERSION);
         
         out.writeObject(_interface);
+        out.writeObject(_serviceType);
         out.writeObject(_operation);
         out.writeObject(_fault);
         out.writeObject(_metrics);
@@ -175,9 +196,14 @@ public class InvocationDefinition implements java.io.Externalizable {
      */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
-        in.readInt(); // Consume version, as not required for now
+        int version=in.readInt();
         
         _interface = (String)in.readObject();
+        
+        if (version > 1) {
+            _serviceType = (String)in.readObject();
+        }
+        
         _operation = (String)in.readObject();
         _fault = (String)in.readObject();
         _metrics = (InvocationMetric)in.readObject();
