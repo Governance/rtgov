@@ -17,7 +17,11 @@ package org.overlord.rtgov.service.dependency;
 
 import static org.junit.Assert.*;
 
+import java.util.Collections;
+
 import org.junit.Test;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.analytics.service.InterfaceDefinition;
 import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.InvocationMetric;
@@ -26,12 +30,15 @@ import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
 import org.overlord.rtgov.analytics.service.RequestResponseDefinition;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.analytics.util.ServiceDefinitionUtil;
 import org.overlord.rtgov.service.dependency.InvocationLink;
 import org.overlord.rtgov.service.dependency.OperationNode;
 import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.ServiceNode;
 import org.overlord.rtgov.service.dependency.UsageLink;
+import org.overlord.rtgov.service.dependency.layout.LayoutFactory;
+import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayout;
 
 public class ServiceDependencyBuilderTest {
 
@@ -308,19 +315,19 @@ public class ServiceDependencyBuilderTest {
         ServiceNode sn3=result.getServiceNodeForInterface(INTERFACE3);
         OperationNode opn3=sn3.getOperation(OP3);
         
-        if (!result.getUsageLinks().contains(new UsageLink(sn1, sn2))) {
+        if (result.getUsageLink(sn1, sn2) == null) {
             fail("UsageLink from s1 to s2 not present");
         }
         
-        if (!result.getUsageLinks().contains(new UsageLink(sn2, sn1))) {
+        if (result.getUsageLink(sn2, sn1) == null) {
             fail("UsageLink from s2 to s1 not present");
         }
         
-        if (!result.getUsageLinks().contains(new UsageLink(sn2, sn3))) {
+        if (result.getUsageLink(sn2, sn3) == null) {
             fail("UsageLink from s2 to s3 not present");
         }
         
-        if (result.getUsageLinks().contains(new UsageLink(sn3, sn2))) {
+        if (result.getUsageLink(sn3, sn2) != null) {
             fail("UsageLink from s3 to s2 should not be present");
         }
         
@@ -335,19 +342,19 @@ public class ServiceDependencyBuilderTest {
         }
         
         
-        if (!result.getInvocationLinks().contains(new InvocationLink(opn1, opn2))) {
+        if (result.getInvocationLink(opn1, opn2) == null) {
             fail("Link from op1 to op2 not present");
         }
         
-        if (!result.getInvocationLinks().contains(new InvocationLink(opn2, opn1))) {
+        if (result.getInvocationLink(opn2, opn1) == null) {
             fail("Link from op2 to op1 not present");
         }
         
-        if (!result.getInvocationLinks().contains(new InvocationLink(opn2, opn3))) {
+        if (result.getInvocationLink(opn2, opn3) == null) {
             fail("Link from op2 to op3 not present");
         }
         
-        if (result.getInvocationLinks().contains(new InvocationLink(opn3, opn2))) {
+        if (result.getInvocationLink(opn3, opn2) != null) {
             fail("Link from op3 to op2 should not be present");
         }
         
@@ -409,6 +416,71 @@ public class ServiceDependencyBuilderTest {
         
         if (imresult.getCount() != 3) {
             fail("Expecting count of 3: "+imresult.getCount());
+        }
+    }
+    
+    @Test
+    public void testMultiCastExample() {
+        try {
+            java.io.InputStream is=ServiceDependencyBuilderTest.class.getResourceAsStream("/activities/multicast.json");
+            
+            byte[] b=new byte[is.available()];
+            is.read(b);
+            
+            ActivityUnit actUnit=ActivityUtil.deserializeActivityUnit(b);       
+            
+            java.util.Collection<ServiceDefinition> sds=ServiceDefinitionUtil.derive(actUnit);
+            
+            java.util.Set<ServiceDefinition> defns=new java.util.HashSet<ServiceDefinition>(sds);
+
+            ServiceGraph graph=ServiceDependencyBuilder.buildGraph(defns, Collections.<Situation> emptyList());
+            
+            if (graph == null) {
+                fail("Graph is null");
+            }
+            
+            java.util.Set<ServiceNode> nodes=graph.getServiceNodes();
+            
+            if (nodes == null) {
+                fail("Nodes list is null");
+            }
+            
+            if (nodes.size() != 3) {
+                fail("Should be 3 nodes: "+nodes.size());
+            }
+            
+            ServiceNode initialNode=null;
+            
+            java.util.Iterator<ServiceNode> iter=nodes.iterator();
+            
+            while (iter.hasNext()) {
+                ServiceNode sn=iter.next();
+                
+                if (sn.getProperties().get(ServiceNode.INITIAL_NODE) == Boolean.TRUE) {
+                    if (initialNode != null) {
+                        fail("Should only be a single initial node");
+                    }
+                    initialNode = sn;
+                }
+            }
+            
+            ServiceGraphLayout layout=LayoutFactory.getServiceGraphLayout();
+            
+            layout.layout(graph);
+            
+            iter = nodes.iterator();
+            
+            while (iter.hasNext()) {
+                ServiceNode sn=iter.next();
+                
+                if (sn.getProperties().size() == 1) {
+                    fail("Service node '"+sn+"' does not have layout properties");
+                }
+            }            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to test multicast example: "+e);
         }
     }
 }

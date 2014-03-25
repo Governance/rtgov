@@ -177,6 +177,21 @@ public class SVGServiceGraphGenerator {
     protected void generateUsageLink(UsageLink ul, double ratio,
                     org.w3c.dom.Element container, org.w3c.dom.Node insertPoint) {
         
+        // Check that layout information is available
+        if (!ul.getSource().getProperties().containsKey(ServiceGraphLayout.WIDTH)) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.fine("Source node on usage link with definition '"+ul.getSource().getService()+"' does not have layout information");
+            }
+            return;
+        }        
+        
+        if (!ul.getTarget().getProperties().containsKey(ServiceGraphLayout.WIDTH)) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.fine("Target node on usage link with definition '"+ul.getTarget().getService()+"' does not have layout information");
+            }
+            return;
+        }        
+        
         int x1=(int)(((Integer)ul.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
                 +(Integer)ul.getSource().getProperties().get(ServiceGraphLayout.WIDTH)) * ratio);
         
@@ -252,6 +267,21 @@ public class SVGServiceGraphGenerator {
     protected void generateInvocationLink(InvocationLink il, double ratio,
                     org.w3c.dom.Element container, org.w3c.dom.Node insertPoint) {
         
+        // Check that layout information is available
+        if (!il.getSource().getProperties().containsKey(ServiceGraphLayout.WIDTH)) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.fine("Source node on invocation link with definition '"+il.getSource().getService()+"' does not have layout information");
+            }
+            return;
+        }        
+        
+        if (!il.getTarget().getProperties().containsKey(ServiceGraphLayout.WIDTH)) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.fine("Target node on invocation link with definition '"+il.getTarget().getService()+"' does not have layout information");
+            }
+            return;
+        }        
+        
         int x1=(int)(((Integer)il.getSource().getProperties().get(ServiceGraphLayout.X_POSITION)
                 +(Integer)il.getSource().getProperties().get(ServiceGraphLayout.WIDTH)) * ratio);
         
@@ -306,6 +336,14 @@ public class SVGServiceGraphGenerator {
      */
     protected void generateService(ServiceNode sn, double ratio, org.w3c.dom.Element container,
                         org.w3c.dom.Node insertPoint) {
+        
+        // Check that layout information is available
+        if (!sn.getProperties().containsKey(ServiceGraphLayout.WIDTH)) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.fine("Service node with definition '"+sn.getService()+"' does not have layout information");
+            }
+            return;
+        }
         
         org.w3c.dom.Element rect=
                     container.getOwnerDocument().createElement("rect");
