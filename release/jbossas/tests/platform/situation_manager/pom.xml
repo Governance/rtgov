@@ -14,6 +14,18 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>analytics</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			<artifactId>samples-jbossas-ordermgmt-app</artifactId>
 			<type>jar</type>

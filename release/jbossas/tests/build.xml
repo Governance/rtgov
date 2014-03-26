@@ -4,13 +4,6 @@
 	<property file="${ant.file.rtgovtests}/../../distribution/src/main/jbossas/profiles/server/jdbc/${database}.properties" />
 
 	<target name="setup">
-		<echo message="Setting up Overlord Runtime Governance modules"/>
-	
-		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />
-		
-		<unzip src="${org.overlord.rtgov.release.jbossas:module:zip}"
-			dest="${jboss.home}/modules" />
-
 		<echo message="Setting up Overlord Runtime Governance deployments"/>
 
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov" />
@@ -59,9 +52,6 @@
 	</target>
 
 	<target name="clean">
-		<echo message="Cleaning up Overlord Runtime Governance modules"/>
-		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />
-
 		<echo message="Cleaning up Overlord Runtime Governance deployments"/>
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov" />
 
