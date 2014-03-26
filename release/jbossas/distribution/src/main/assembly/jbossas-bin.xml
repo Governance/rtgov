@@ -188,17 +188,6 @@
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
-
-		<!-- Modules -->
-
-		<dependencySet>
-			<outputDirectory>/modules/rtgov</outputDirectory>
-			<unpack>true</unpack>
-			<includes>
-				<include>org.overlord.rtgov.release.jbossas:module:zip</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}</outputFileNameMapping>
-		</dependencySet>
         
 	</dependencySets>
 
