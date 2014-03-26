@@ -68,7 +68,9 @@ public class DefaultRTGovPropertiesProvider implements RTGovPropertiesProvider {
         while (keys.hasNext()) {
             String key = (String) keys.next();
             String value = _configuration.getString(key);
-            properties.setProperty(key, value);
+            if (value != null) {
+                properties.setProperty(key, value);
+            }
         }
         return properties;
     }

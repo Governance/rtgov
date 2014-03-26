@@ -17,14 +17,13 @@
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-common</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-core</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
