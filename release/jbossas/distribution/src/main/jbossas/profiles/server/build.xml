@@ -45,9 +45,6 @@
 
 		<!-- Install Runtime Governance -->
 
-		<copy todir="${jboss.home}/modules" >
-			<fileset dir="../../modules/rtgov" />
-		</copy>
 		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
 			<fileset dir="deployments" />
 		</copy>
@@ -64,7 +61,6 @@
 	</target>
 	
 	<target name="undeploy" depends="drop.schema" >
-		<delete dir="${jboss.home}/modules/org/overlord/rtgov" />
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
 

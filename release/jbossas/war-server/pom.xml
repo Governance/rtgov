@@ -14,16 +14,77 @@
 	</parent>
 
 	<dependencies>		
-
 		<dependency>
-			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-server-jee</artifactId>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-client-jee</artifactId>
+			<artifactId>activity</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor-network</groupId>
+			<artifactId>epn-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-drools</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mvel</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>acs-epn</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>analytics</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>service-dependency</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>service-dependency-svg</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Overlord Commons -->
+
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-configuration</groupId>
+					<artifactId>commons-configuration</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- Collector modules -->
@@ -36,6 +97,18 @@
 		
 		<!-- Activity Server modules -->
 		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-server-jee</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-client-jee</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-rests</artifactId>
@@ -246,7 +319,7 @@
 							as a runtime dependency for overlord-commons-auth. If
 							this is changed to a module dependency, then the
 							direct dependency on codec can be removed -->
-							<Dependencies>org.overlord.rtgov export services, org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel optional, org.switchyard.api optional, org.switchyard.config optional, org.apache.camel.core optional, org.switchyard.api.extensions.java optional, org.switchyard.api.extensions.wsdl optional, org.switchyard.security optional, org.switchyard.runtime optional, org.switchyard.component.bpel optional, org.drools, org.apache.commons.codec</Dependencies>
+							<Dependencies>org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel optional, org.switchyard.api optional, org.switchyard.config optional, org.apache.camel.core optional, org.switchyard.api.extensions.java optional, org.switchyard.api.extensions.wsdl optional, org.switchyard.security optional, org.switchyard.runtime optional, org.switchyard.component.bpel optional, org.drools export, org.apache.commons.codec, javaee.api export, org.apache.commons.configuration export, org.apache.commons.lang export, org.codehaus.jackson.jackson-core-asl export, org.codehaus.jackson.jackson-mapper-asl export, org.kie export, org.jbpm export, org.mvel export, org.hibernate export, org.infinispan export, org.jaxen, org.javassist</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

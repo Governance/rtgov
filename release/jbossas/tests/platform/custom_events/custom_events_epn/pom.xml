@@ -14,6 +14,12 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-core</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
 			<version>${project.version}</version>
@@ -67,7 +73,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>org.overlord.rtgov,deployment.overlord-rtgov.war</Dependencies>
+							<Dependencies>deployment.overlord-rtgov.war</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>
