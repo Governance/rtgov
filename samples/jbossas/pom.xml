@@ -37,6 +37,8 @@
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.2.0.Final</jbossas.version>
 		<switchyard.version>1.1.0.CR1</switchyard.version>
+        <elasticsearch.version>1.0.1</elasticsearch.version>
+        <lucene.version>4.6.1</lucene.version>
 	</properties>
 
 	<modules>
@@ -44,6 +46,7 @@
 		<module>ordermgmt</module>
 		<module>policy</module>
 		<module>sla</module>
+		<module>elasticsearch</module>
 	</modules>
 
 	<dependencyManagement>

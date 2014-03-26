@@ -103,22 +103,26 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
 
         client = new TransportClient()
                 .addTransportAddress(new InetSocketTransportAddress(host, port));
-        InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream(index + ".json");
-        if (s == null) {
-            throw new FileNotFoundException("Could not locate " + index + ".json mapping file. Mapping file require to start elasticsearch store service");
-        }
-        String jsonDefaultUserIndex = IOUtils.toString(s);
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("index Mapping settings " + index + ".json  [" + jsonDefaultUserIndex + "]");
-        }
-        //  String jsonDefaultUserIndex = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(index + ".json"));
-        Map<String, Object> dataMap = XContentFactory.xContent(jsonDefaultUserIndex).createParser(jsonDefaultUserIndex).mapAndClose();
+        InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream(index + "-mapping.json");
+        if (s != null) {
 
-        if (prepareIndex((Map<String, Object>) dataMap.get(SETTINGS))) {
-            System.out.println("");//  prepareIndex()
-        }
-        prepareMapping((Map<String, Object>) dataMap.get(MAPPINGS));
+            String jsonDefaultUserIndex = IOUtils.toString(s);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("index Mapping settings " + index + ".json  [" + jsonDefaultUserIndex + "]");
+            }
+            //  String jsonDefaultUserIndex = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(index + ".json"));
+            Map<String, Object> dataMap = XContentFactory.xContent(jsonDefaultUserIndex).createParser(jsonDefaultUserIndex).mapAndClose();
 
+            if (prepareIndex((Map<String, Object>) dataMap.get(SETTINGS))) {
+                System.out.println("");//  prepareIndex()
+            }
+            prepareMapping((Map<String, Object>) dataMap.get(MAPPINGS));
+        } else {
+            LOG.log(Level.INFO, "Could not locate " + index + "-mapping.json  index mapping file. Mapping file require to start elasticsearch store service");
+            //throw new FileNotFoundException("Could not locate " + index + ".json mapping file. Mapping file require to start elasticsearch store service");
+
+
+        }
     }
 
     /**

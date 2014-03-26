@@ -126,6 +126,7 @@ public class ElasticSearchProcessor extends EventProcessor {
         return event;
     }
 
+
     protected String getRandom() {
         return (UUID.randomUUID().toString());
     }
