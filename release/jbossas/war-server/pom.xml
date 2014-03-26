@@ -29,12 +29,18 @@
 			<artifactId>epn-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.event-processor</groupId>
-			<artifactId>ep-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-elasticsearch</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-drools</artifactId>
 			<version>${project.version}</version>
@@ -286,8 +292,14 @@
 			<artifactId>rtgov-infinispan</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<!-- Switchyard Specific -->
+        <dependency>
+            <groupId>org.overlord.rtgov.common</groupId>
+            <artifactId>rtgov-elasticsearch</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <!-- Switchyard Specific -->
 		
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
