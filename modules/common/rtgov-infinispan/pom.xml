@@ -17,22 +17,7 @@
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-common</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
 		</dependency>
-		
-		<!--	
-		<dependency>
-			<groupId>org.infinispan</groupId>
-			<artifactId>infinispan-core</artifactId>
-			<scope>provided</scope>
-		</dependency>		
-		<dependency>
-			<groupId>org.jboss.spec</groupId>
-			<artifactId>jboss-javaee-6.0</artifactId>
-			<type>pom</type>
-			<scope>provided</scope>
-		</dependency>
-		-->
 		
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

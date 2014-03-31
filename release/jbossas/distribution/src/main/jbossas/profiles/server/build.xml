@@ -34,7 +34,7 @@
 			<property name="overlord-commons.auth.tomcat7.file" value="${basedir}/overlord-commons/overlord-commons-auth-tomcat7.jar" />
 
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
-			<property name="overlord-commons.version" value="2.0.0-SNAPSHOT" />
+			<property name="overlord-commons.version" value="2.0.1-SNAPSHOT" />
 		</ant>
 
 		<ant antfile="gadget-server/build.xml" target="deploy">
