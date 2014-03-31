@@ -20,6 +20,21 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-elasticsearch</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.overlord.rtgov.common</groupId>
+            <artifactId>rtgov-elasticsearch</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.overlord.rtgov.event-processor</groupId>

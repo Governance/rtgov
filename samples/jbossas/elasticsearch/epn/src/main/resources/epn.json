@@ -27,14 +27,13 @@
             },
             "eventProcessor": {
                 "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
-                "script": "NONE",
                 "services": {
                     "KeyValueStore": {
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
                         "index": "rtgov",
                         "type": "activity",
-                        "host": "localhost",
-                        "port": "9300"
+                        "hosts": "localhost:9300"
+
                     }
                 }
             }
@@ -48,14 +47,13 @@
             },
             "eventProcessor": {
                 "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
-                "script": "NONE",
+                "script": "genrandom.mvel",
                 "services": {
                     "KeyValueStore": {
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
                         "index": "rtgov",
                         "type": "responsetime",
-                        "host": "localhost",
-                        "port": "9300"
+                        "hosts": "localhost:9300"
                     }
                 }
             }
@@ -69,14 +67,12 @@
             },
             "eventProcessor": {
                 "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
-                "script": "NONE",
                 "services": {
                     "KeyValueStore": {
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
                         "index": "rtgov",
                         "type": "situation",
-                        "host": "localhost",
-                        "port": "9300"
+                        "hosts": "localhost:9300"
                     }
                 }
             }

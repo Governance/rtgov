@@ -4,12 +4,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created with IntelliJ IDEA.
+ * .
  * User: imk@redhat.com
  * Date: 23/03/14
  * Time: 23:27
  * ES impl for batch operations. it could be that constantly strwaming data to es maybe suboptimal. i
- * Todo, implement a batch es integration that would push datza to es every minute or so.
+ * Todo, implement a batch es integration that would push data to es every minute or so instead of realtime
  */
 public class BatchElasticSearchKeyValueStore extends ElasticSearchKeyValueStore {
     private static final Logger LOG = Logger.getLogger(ElasticSearchKeyValueStore.class.getName());

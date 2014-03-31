@@ -306,8 +306,26 @@
 			<artifactId>rtgov-switchyard</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
-		<!-- Test dependencies -->
+
+        <!-- Elasticsearch Specific: eventually defined a jboss module -->
+
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>${elasticsearch.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+
+        <!-- Test dependencies -->
 		
 		<dependency>
 			<groupId>junit</groupId>

@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created with IntelliJ IDEA.
+ * .
  * User: imk@redhat.com
  * Date: 19/03/14
  * Time: 22:11
@@ -46,26 +46,29 @@ public class ElasticSearchProcessor extends EventProcessor {
     @Override
     public void init() throws Exception {
         super.init();
-        if (script != null && script.equals("NONE"))
-            this.script = "genrandom.mvel";
+        if (script != null) {
 
-        // Load the script
-        java.io.InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(script);
+            // Load the script
+            java.io.InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(script);
 
-        if (is == null) {
-            throw new Exception("Unable to locate MVEL script '" + script + "'");
-        } else {
-            byte[] b = new byte[is.available()];
-            is.read(b);
-            is.close();
+            if (is == null) {
+                throw new Exception("Unable to locate MVEL script '" + script + "'");
+            } else {
+                byte[] b = new byte[is.available()];
+                is.read(b);
+                is.close();
 
-            // Compile expression
-            scriptExpression = MVEL.compileExpression(new String(b));
+                // Compile expression
+                scriptExpression = MVEL.compileExpression(new String(b));
 
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Initialized script=" + script
-                        + " compiled=" + scriptExpression);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Initialized script=" + script
+                            + " compiled=" + scriptExpression);
+                }
             }
+        } else {
+            scriptExpression = MVEL.compileExpression("java.lang.String t = (java.util.UUID.randomUUID().toString());\n" +
+                    "t;");
         }
 
         _context = new DefaultEPContext(getServices());
@@ -125,8 +128,6 @@ public class ElasticSearchProcessor extends EventProcessor {
 
         return event;
     }
-
-
 
 
     protected String getRandom() {

@@ -4,10 +4,12 @@ import org.apache.commons.io.IOUtils;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.common.service.KeyValueStore;
 
 import java.io.FileNotFoundException;
@@ -15,9 +17,12 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+//todo define a time to live on client
+//todo,  pool client resources. not optimal currently
+//todo, correct maven dependencies. currently the  jboss-as.server.war provides the elastic search dependencies
 
 /**
- * Created with IntelliJ IDEA.
+ * .
  * User: imk@redhat.com
  * Date: 23/03/14
  * Time: 22:03
@@ -29,9 +34,8 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     protected String type = null;
     //todo . Make configurable Elastic Search url. eg a list would be desired. currently not a list because of legacy rest version i had
 
-    //todo change host and port to be a list of connections as opposed to a single connection.
-    protected String host = null;
-    protected int port = -1;
+
+    protected String hosts = null;
     /**
      * settings for the index this store is related to
      */
@@ -40,6 +44,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
      * type mappings for the index this store is related to
      */
     public static final String MAPPINGS = "mappings";
+    public static final String DEFAULT_SETTING = "_default_";
     private static final Logger LOG = Logger.getLogger(ElasticSearchKeyValueStore.class.getName());
 
     @Override
@@ -47,25 +52,8 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         return "AbstractElasticRepo{" +
                 "index='" + index + '\'' +
                 ", type='" + type + '\'' +
-                ", host='" + host + '\'' +
-                ", port=" + port +
+                ", hosts='" + hosts + '\'' +
                 '}';
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
     }
 
     public String getIndex() {
@@ -91,18 +79,23 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
 
     public void init() throws Exception {
 
-        if (host == null)
-            throw new IllegalArgumentException("Host property not set ");
-        if (port < 0)
-            throw new IllegalArgumentException("Port property not set ");
+        if (hosts == null)
+            throw new IllegalArgumentException("Hosts property not set ");
+
         if (index == null)
             throw new IllegalArgumentException("Index property not set ");
         if (type == null)
             throw new IllegalArgumentException("Type property not set ");
 
-
-        client = new TransportClient()
-                .addTransportAddress(new InetSocketTransportAddress(host, port));
+        String[] hostsArray = hosts.split(",");
+        TransportClient c = new TransportClient();
+        for (String aHostsArray : hostsArray) {
+            String s = aHostsArray.trim();
+            String[] host = s.split(":");
+            LOG.info(" Connecting to elasticsearch host host. [" + host[0] + ":" + host[1] + "]");
+            c = c.addTransportAddress(new InetSocketTransportAddress(host[0], new Integer(host[1])));
+        }
+        client = c;
         InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream(index + "-mapping.json");
         if (s != null) {
 
@@ -118,7 +111,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
             }
             prepareMapping((Map<String, Object>) dataMap.get(MAPPINGS));
         } else {
-            LOG.log(Level.INFO, "Could not locate " + index + "-mapping.json  index mapping file. Mapping file require to start elasticsearch store service");
+            LOG.warning("Could not locate " + index + "-mapping.json  index mapping file. Mapping file require to start elasticsearch store service");
             //throw new FileNotFoundException("Could not locate " + index + ".json mapping file. Mapping file require to start elasticsearch store service");
 
 
@@ -182,9 +175,25 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     }
 
     @Override
-    public <V> void add(String id, V document) {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Adding " + document.getClass().toString() + ". for id " + id);
+    public <V> void add(String id, V document) throws Exception {
+        if (LOG.isLoggable(Level.INFO)) {
+            LOG.info("Adding " + document.getClass().toString() + ". for id " + id);
+        }
+        try {
+            IndexResponse indexResponse = client.prepareIndex(index, type, id).setSource(convertTypeToJson(document)).execute().actionGet();
+            if (!indexResponse.isCreated()) {
+                LOG.fine(" Document could not be created for index [" + index + "/" + type + "/" + id + "]");
+                throw new Exception("Document could not be created for index [" + index + "/" + type + "/" + id + "]");
+            }
+            LOG.fine(" Document successfully created for index [" + index + "/" + type + "/" + id + "]");
+
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "[/" + index + "/" + type + "] Could not store  json document from Type [" + document.getClass().getName() + "] ");
+            throw new Exception("[/" + index + "/" + type + "] Could not store  json document from Type [" + document.getClass().getName() + "] ", e);
+        } finally {
+            if (LOG.isLoggable(Level.INFO))
+                LOG.info(" Todo. Possibly need to close the connection here. ");
+            // client.close();
         }
 
     }
@@ -206,4 +215,22 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
 
     }
 
+    protected <V> String convertTypeToJson(V obj) {
+        try {
+            LOG.info("[/" + index.toLowerCase() + "/" + type + "] Converting to json document from Type [" + obj.getClass().getName() + "] ");
+
+            return ActivityUtil.objectToJSONString(obj);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to convert from object to json String [class:" + obj.getClass().getName() + "]", e);
+        }
+    }
+
+    public String getHosts() {
+        return hosts;
+    }
+
+    public void setHosts(String hosts) {
+        this.hosts = hosts;
+    }
 }
