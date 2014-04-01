@@ -92,7 +92,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         for (String aHostsArray : hostsArray) {
             String s = aHostsArray.trim();
             String[] host = s.split(":");
-            LOG.info(" Connecting to elasticsearch host host. [" + host[0] + ":" + host[1] + "]");
+            LOG.info(" Connecting to elasticsearch host. [" + host[0] + ":" + host[1] + "]");
             c = c.addTransportAddress(new InetSocketTransportAddress(host[0], new Integer(host[1])));
         }
         client = c;
@@ -107,8 +107,10 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
             Map<String, Object> dataMap = XContentFactory.xContent(jsonDefaultUserIndex).createParser(jsonDefaultUserIndex).mapAndClose();
 
             if (prepareIndex((Map<String, Object>) dataMap.get(SETTINGS))) {
-                System.out.println("");//  prepareIndex()
-            }
+                LOG.fine("Index initialized");
+            }else
+                LOG.fine("Index already initialized. Doing nothing.");
+
             prepareMapping((Map<String, Object>) dataMap.get(MAPPINGS));
         } else {
             LOG.warning("Could not locate " + index + "-mapping.json  index mapping file. Mapping file require to start elasticsearch store service");
@@ -156,7 +158,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
             req.setSettings(defaultSettings);
             created = req.execute().actionGet().isAcknowledged();
             if (!created)
-                throw new RuntimeException("Could not create index");
+                throw new RuntimeException("Could not create index ["+index+"]");
             // todo, possible to update a mapping. it is not possible to change a mapping as this is related to the data that already exists in the index. but possible to add mapping data that does not already set
             //
             // DeleteIndexRequestBuilder delIdx = client.admin().indices().prepareDelete(index);
