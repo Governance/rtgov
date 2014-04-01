@@ -22,13 +22,23 @@ import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Order;
 //import org.overlord.rtgov.client.ActivityReporter;
 //import org.overlord.rtgov.client.DefaultActivityReporter;
 
+/**
+ * This class implements the logistics service.
+ *
+ */
 public class LogisticsServiceBean implements LogisticsService {
 
     //private ActivityReporter _reporter=new DefaultActivityReporter();
     
+    /**
+     * The constructor.
+     */
     public LogisticsServiceBean() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DeliveryAck deliver(Order order) {
         /*

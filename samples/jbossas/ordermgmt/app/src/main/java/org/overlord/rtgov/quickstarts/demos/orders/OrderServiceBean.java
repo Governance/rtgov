@@ -22,6 +22,10 @@ import javax.inject.Inject;
 import org.switchyard.component.bean.Reference;
 import org.switchyard.component.bean.Service;
 
+/**
+ * This class provides the implementation of the order service.
+ *
+ */
 @Service(OrderService.class)
 @ApplicationScoped
 public class OrderServiceBean implements OrderService {
@@ -32,11 +36,14 @@ public class OrderServiceBean implements OrderService {
     @Inject @Reference
     private LogisticsService _logistics;
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrderAck submitOrder(Order order) {
         // Create an order ack
         OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId())
-        				.setCustomer(order.getCustomer());
+                        .setCustomer(order.getCustomer());
 
         // Check the inventory
         try {
@@ -49,7 +56,7 @@ public class OrderServiceBean implements OrderService {
                 _logistics.deliver(order);
                 
                 orderAck.setAccepted(true).setStatus("Order Accepted");
-                orderAck.setTotal(orderItem.getUnitPrice()*order.getQuantity());
+                orderAck.setTotal(orderItem.getUnitPrice() * order.getQuantity());
             } else {
                 orderAck.setAccepted(false).setStatus("Insufficient Quantity");
             }
@@ -60,6 +67,9 @@ public class OrderServiceBean implements OrderService {
         return orderAck;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Receipt makePayment(Payment payment) {
         Receipt ret=new Receipt();
         

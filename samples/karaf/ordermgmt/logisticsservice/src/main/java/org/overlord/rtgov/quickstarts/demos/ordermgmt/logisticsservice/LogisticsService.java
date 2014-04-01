@@ -19,7 +19,17 @@ package org.overlord.rtgov.quickstarts.demos.ordermgmt.logisticsservice;
 import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.DeliveryAck;
 import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Order;
 
+/**
+ * This interface represents the logistics service.
+ *
+ */
 public interface LogisticsService {
 
+    /**
+     * This method requests delivery of an order.
+     * 
+     * @param order The order
+     * @return The delivery response
+     */
     DeliveryAck deliver(Order order);
 }

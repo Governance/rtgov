@@ -23,12 +23,19 @@ import java.util.Map;
 //import org.overlord.rtgov.client.DefaultActivityReporter;
 import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Item;
 
+/**
+ * The implementation of the inventory service.
+ *
+ */
 public class InventoryServiceBean implements InventoryService {
 
     private final Map<String, Item> _inventory = new HashMap<String, Item>();
     
     //private ActivityReporter _reporter=new DefaultActivityReporter();
     
+    /**
+     * The constructor.
+     */
     public InventoryServiceBean() {
         Item butter = new Item()
             .setItemId("BUTTER")
@@ -45,6 +52,9 @@ public class InventoryServiceBean implements InventoryService {
         _inventory.put(jam.getItemId(), jam);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Item lookupItem(String itemId) throws ItemNotFoundException {
         

@@ -16,7 +16,18 @@
 
 package org.overlord.rtgov.quickstarts.demos.orders;
 
+/**
+ * The interface represents the inventory service.
+ *
+ */
 public interface InventoryService {
 
+    /**
+     * This method looks up an item.
+     * 
+     * @param itemId The item id
+     * @return The item
+     * @throws ItemNotFoundException Item not found
+     */
     Item lookupItem(String itemId) throws ItemNotFoundException;
 }

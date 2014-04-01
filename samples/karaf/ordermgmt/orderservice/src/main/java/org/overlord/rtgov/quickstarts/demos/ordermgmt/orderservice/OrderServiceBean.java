@@ -25,26 +25,42 @@ import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.OrderAck;
 import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Payment;
 import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Receipt;
 
-
+/**
+ * This class provides the implementation of the order service.
+ *
+ */
 public class OrderServiceBean implements OrderService {
     
     private InventoryService _inventory;
     
     private LogisticsService _logistics;
     
+    /**
+     * This method sets the inventory service.
+     * 
+     * @param is The inventory service
+     */
     public void setInventoryService(InventoryService is) {
         _inventory = is;
     }
     
+    /**
+     * This method sets the logistics service.
+     * 
+     * @param ls The logistics service
+     */
     public void setLogisticsService(LogisticsService ls) {
         _logistics = ls;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrderAck submitOrder(Order order) {
         // Create an order ack
         OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId())
-        				.setCustomer(order.getCustomer());
+                        .setCustomer(order.getCustomer());
 
         // Check the inventory
         try {
@@ -57,7 +73,7 @@ public class OrderServiceBean implements OrderService {
                 _logistics.deliver(order);
                 
                 orderAck.setAccepted(true).setStatus("Order Accepted");
-                orderAck.setTotal(orderItem.getUnitPrice()*order.getQuantity());
+                orderAck.setTotal(orderItem.getUnitPrice() * order.getQuantity());
             } else {
                 orderAck.setAccepted(false).setStatus("Insufficient Quantity");
             }
@@ -68,6 +84,9 @@ public class OrderServiceBean implements OrderService {
         return orderAck;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Receipt makePayment(Payment payment) {
         Receipt ret=new Receipt();
         

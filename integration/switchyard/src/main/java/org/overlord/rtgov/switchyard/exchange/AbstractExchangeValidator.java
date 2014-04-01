@@ -115,15 +115,11 @@ public class AbstractExchangeValidator {
             return;
         }
         
-        org.switchyard.Context context=exch.getContext();
-        
+        org.switchyard.Context context=exch.getContext();        
         Service provider=exch.getProvider();
-        ServiceReference consumer=exch.getConsumer();
-        
-        SecurityContextManager scm=new SecurityContextManager(exch.getConsumer().getDomain());
-        
+        ServiceReference consumer=exch.getConsumer();        
+        SecurityContextManager scm=new SecurityContextManager(exch.getConsumer().getDomain());        
         SecurityContext securityContext=scm.getContext(exch);
-
         ExchangeContract contract=exch.getContract();
         
         if (provider == null
@@ -132,16 +128,14 @@ public class AbstractExchangeValidator {
                         +mesg.getContent());
         }
         
-        if (_activityCollector != null) {
-            
+        if (_activityCollector != null) {            
             // Check if transaction should be started
             boolean f_txnStarted=false;
             
             try {
                 if (_transactionManager != null && _transactionManager.getTransaction() == null) {
                     _transactionManager.begin();
-                    f_txnStarted = true;
-                    
+                    f_txnStarted = true;                    
                     if (LOG.isLoggable(Level.FINEST)) {
                         LOG.finest("Validator txn has started");
                     }
@@ -152,8 +146,7 @@ public class AbstractExchangeValidator {
             
             try {
                 // TODO: If message is transformed, then should the contentType
-                // be updated to reflect the transformed type?
-                
+                // be updated to reflect the transformed type?               
                 String messageId=null;
                 Property mip=context.getProperty(Exchange.MESSAGE_ID, org.switchyard.Scope.MESSAGE);
                 if (mip != null) {
@@ -179,9 +172,7 @@ public class AbstractExchangeValidator {
                 
                 if (phase == ExchangePhase.IN) {
                     if (!consumer.getServiceMetadata().getRegistrant().isBinding()) {
-                        // Only record the request being sent, if the
-                        // source is a component, not a binding
-                    
+                        // Only record the request being sent, if the source is a component, not a binding
                         RequestSent sent=new RequestSent();
                         
                         // Only report service type if provider is not a binding
@@ -192,25 +183,19 @@ public class AbstractExchangeValidator {
                         
                         sent.setInterface(getInterface(consumer, provider));                
                         sent.setOperation(opName);
-                        sent.setMessageId(messageId);
-                        
+                        sent.setMessageId(messageId);                        
                         validate(mesg, contentType, sent, securityContext); 
                     }
                     
-                    if (provider == null
-                            || !provider.getServiceMetadata().getRegistrant().isBinding()) {
-                        RequestReceived recvd=new RequestReceived();
-                        
+                    if (provider == null || !provider.getServiceMetadata().getRegistrant().isBinding()) {
+                        RequestReceived recvd=new RequestReceived();                       
                         recvd.setServiceType(serviceType.toString());                
                         recvd.setInterface(getInterface(consumer, provider));                
                         recvd.setOperation(opName);
-                        recvd.setMessageId(messageId);
-                        
+                        recvd.setMessageId(messageId);                        
                         validate(mesg, contentType, recvd, securityContext); 
-                    }
-                    
-                } else if (phase == ExchangePhase.OUT) {
-                    
+                    }                    
+                } else if (phase == ExchangePhase.OUT) {                    
                     if (contentType == null) {
                         // Ignore as probably due to exception on handling the request
                         if (LOG.isLoggable(Level.FINEST)) {
@@ -238,8 +223,7 @@ public class AbstractExchangeValidator {
                         sent.setInterface(getInterface(consumer, provider));                
                         sent.setOperation(opName);
                         sent.setMessageId(messageId);
-                        sent.setReplyToId(relatesTo);
-                        
+                        sent.setReplyToId(relatesTo);                        
                         validate(mesg, contentType, sent, securityContext); 
                     }
                     
@@ -252,8 +236,7 @@ public class AbstractExchangeValidator {
                         recvd.setInterface(getInterface(consumer, provider));                
                         recvd.setOperation(opName);
                         recvd.setMessageId(messageId);
-                        recvd.setReplyToId(relatesTo);
-                        
+                        recvd.setReplyToId(relatesTo);                        
                         validate(mesg, contentType, recvd, securityContext); 
                     }
                 }

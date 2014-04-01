@@ -24,7 +24,7 @@ import org.overlord.rtgov.common.util.RTGovProperties;
  * This class represents a CDI factory for obtaining an activity store implementation.
  *
  */
-public class ActivityStoreFactory {
+public final class ActivityStoreFactory {
 
     private static final Logger LOG=Logger.getLogger(ActivityStoreFactory.class.getName());
     
@@ -36,6 +36,12 @@ public class ActivityStoreFactory {
     private static final String ACTIVITY_STORE_CLASS="ActivityStore.class";
     
     private static ActivityStore _instance;
+    
+    /**
+     * Private constructor.
+     */
+    private ActivityStoreFactory() {
+    }
     
     /**
      * This method returns an instance of the ActivityStore interface.

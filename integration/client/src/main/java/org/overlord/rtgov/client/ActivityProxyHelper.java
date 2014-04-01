@@ -36,16 +36,23 @@ import org.overlord.rtgov.activity.model.soa.ResponseSent;
  * activity events based on Java invocations.
  *
  */
-public class ActivityProxyHelper {
+public final class ActivityProxyHelper {
     
     private static final Logger LOG=Logger.getLogger(ActivityProxyHelper.class.getName());
     
     private static ActivityCollector _collector=null;
     
     /**
+     * Default constructor.
+     */
+    private ActivityProxyHelper() {
+    }
+    
+    /**
      * This method sets the activity collector.
      * 
      * @param collector The activity collector
+     * @return The activity proxy helper
      */
     public static ActivityProxyHelper setActivityCollector(ActivityCollector collector) {
         if (LOG.isLoggable(Level.FINER)) {
@@ -60,9 +67,10 @@ public class ActivityProxyHelper {
      * This class creates a proxy for reporting activities based on the caller
      * invoking methods on the callee, via the supplied interface.
      * 
-     * @param intf The interface definition for the component being invoked
+     * @param intfName The interface definition for the component being invoked
      * @param caller The caller
      * @param callee The service component
+     * @param <T> Client type
      * @return The proxy
      */
     @SuppressWarnings("unchecked")
@@ -91,6 +99,7 @@ public class ActivityProxyHelper {
      * @param intf The interface definition for the component being invoked
      * @param caller The caller
      * @param callee The service component
+     * @param <T> Client type
      * @return The proxy
      */
     @SuppressWarnings("unchecked")

@@ -27,6 +27,10 @@ import org.w3c.dom.NodeList;
 
 import java.io.StringReader;
 
+/**
+ * This class represents the transformers for the order mgmt app.
+ *
+ */
 public class Transformers {
 
     // Element names in XML document

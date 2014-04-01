@@ -16,6 +16,10 @@
 
 package org.overlord.rtgov.quickstarts.demos.ordermgmt.model;
 
+/**
+ * The order acknowledgement.
+ *
+ */
 public class OrderAck {
     
     private String _orderId;
@@ -24,50 +28,107 @@ public class OrderAck {
     private String _customer;
     private double _total=0;
     
+    /**
+     * This method returns the order id.
+     * 
+     * @return The order id
+     */
     public String getOrderId() {
         return _orderId;
     }
     
+    /**
+     * This method returns the accepted status.
+     * 
+     * @return The accepted status
+     */
     public boolean isAccepted() {
         return _accepted;
     }
     
+    /**
+     * This method returns order status.
+     * 
+     * @return The order status
+     */
     public String getStatus() {
         return _status;
     }
     
+    /**
+     * This method sets the order id.
+     * 
+     * @param orderId The order id
+     * @return Order ack
+     */
     public OrderAck setOrderId(String orderId) {
         _orderId = orderId;
         return this;
     }
     
+    /**
+     * This method sets the order status.
+     * 
+     * @param status The order status
+     * @return Order ack
+     */
     public OrderAck setStatus(String status) {
         _status = status;
         return this;
     }
 
+    /**
+     * This method sets the order accepted.
+     * 
+     * @param accepted The order accepted
+     * @return Order ack
+     */
     public OrderAck setAccepted(boolean accepted) {
         _accepted = accepted;
         return this;
     }
     
+    /**
+     * This method returns the order id.
+     * 
+     * @return The order id
+     */
     public double getTotal() {
         return _total;
     }
 
+    /**
+     * This method sets the total.
+     * 
+     * @param total The total
+     */
     public void setTotal(double total) {
         this._total = total;
     }
     
+    /**
+     * This method sets the customer.
+     * 
+     * @param customer The customer
+     * @return Order ack
+     */
     public OrderAck setCustomer(String customer) {
         this._customer = customer;
         return this;
     }
     
+    /**
+     * This method returns the order id.
+     * 
+     * @return The order id
+     */
     public String getCustomer() {
         return _customer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         if (_accepted) {

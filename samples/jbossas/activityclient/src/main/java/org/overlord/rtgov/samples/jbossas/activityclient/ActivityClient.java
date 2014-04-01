@@ -226,8 +226,8 @@ public class ActivityClient {
                     java.io.File txnFile=new java.io.File(f.getParentFile(), fn);
                     
                     if (!txnFile.exists()) {
-                        System.err.println("Could not find transaction ("+name+
-                                ") file '"+fn+"' relative to: "+f.getParentFile());
+                        System.err.println("Could not find transaction ("+name
+                                +") file '"+fn+"' relative to: "+f.getParentFile());
                         continue;
                     }
                     
@@ -243,7 +243,7 @@ public class ActivityClient {
                                 _txnList.add(name);
                             }
                             
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     } else {
@@ -260,6 +260,7 @@ public class ActivityClient {
     /**
      * This method performs a random series of business transactions.
      * 
+     * @param num The number of transactions
      */
     public void scheduleTxns(int num) {
         
@@ -323,7 +324,7 @@ public class ActivityClient {
                 // Check the timestamp, to see if a delay should occur
                 if (actType.getTimestamp() > 0) {
                     synchronized (this) {
-                        int variation=_random.nextInt()%20;
+                        int variation=_random.nextInt() % 20;
                         wait(actType.getTimestamp()+variation);
                     }
                 }
