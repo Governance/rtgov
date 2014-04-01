@@ -16,6 +16,7 @@
 	<modules>
 		<module>rtgov-common</module>
 		<module>rtgov-infinispan</module>
+		<module>rtgov-elasticsearch</module>
 	</modules>
 
 </project>

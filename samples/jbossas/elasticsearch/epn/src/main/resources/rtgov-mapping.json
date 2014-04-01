@@ -1,0 +1,124 @@
+{
+
+    "settings": {
+        "index.number_of_shards": 1,
+        "index.number_of_replicas": 1
+    },
+    "mappings": {
+        "_default_": {
+            "dynamic_templates": [
+                {
+                    "string_template": {
+                        "match": "*",
+                        "mapping": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ]
+        },
+        "activity": {
+
+
+            "properties": {
+                "activityTypes.serviceType": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "activityTypes.replyToId": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "activityTypes.context.value": {
+                    "type": "string"
+
+                }
+
+
+            }
+        },
+        "responsetime": {
+
+            "_timestamp": {
+                "enabled": true,
+                "path": "timestamp",
+                "format": "yyyy/MM/dd HH:mm:ss"
+            },
+            "properties": {
+                "serviceType": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+                "average": {
+                    "type": "integer"
+                },
+                "context.value": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "date",
+                    "format": "yyyy/MM/dd HH:mm:ss"
+                }
+
+
+
+            }
+        },
+        "situation": {
+
+            "properties": {
+                "serviceType": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                }
+
+            }
+        },
+        "documents": {
+            "_source": {
+                "enabled": false
+            },
+            "properties": {
+
+                "content": {
+                    "type": "string"
+                },
+                "author": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string",
+                    "include_in_all": "false"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "date": {
+                    "format": "dateOptionalTime",
+                    "type": "date",
+                    "include_in_all": "false"
+                },
+                "user": {
+                    "type": "string",
+                    "include_in_all": "false"
+                },
+                "content_type": {
+                    "type": "string",
+                    "include_in_all": "false"
+                },
+                "size": {
+                    "type": "long",
+                    "include_in_all": "false"
+                },
+                "md5": {
+                    "type": "string",
+                    "include_in_all": "false",
+                    "index": "no"
+                }
+            }
+        }
+    }
+}
