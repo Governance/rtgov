@@ -16,7 +16,17 @@
 
 package org.overlord.rtgov.quickstarts.demos.orders;
 
+/**
+ * This interface represents the logistics service.
+ *
+ */
 public interface LogisticsService {
 
+    /**
+     * This method requests delivery of an order.
+     * 
+     * @param order The order
+     * @return The delivery response
+     */
     DeliveryAck deliver(Order order);
 }

@@ -20,7 +20,6 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
 import org.overlord.commons.config.ConfigurationFactory;
-import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
 /**
  * This class provides the default properties provider.

@@ -122,8 +122,7 @@ public class ServiceGraph {
         InvocationLink ret=null;
         
         for (InvocationLink eil : getInvocationLinks()) {
-            if (eil.getSource() == source &&
-                    eil.getTarget() == target) {
+            if (eil.getSource() == source && eil.getTarget() == target) {
                 ret = eil;
                 break;
             }
@@ -153,8 +152,7 @@ public class ServiceGraph {
         UsageLink ret=null;
         
         for (UsageLink eul : getUsageLinks()) {
-            if (eul.getSource() == source &&
-                    eul.getTarget() == target) {
+            if (eul.getSource() == source && eul.getTarget() == target) {
                 ret = eul;
                 break;
             }

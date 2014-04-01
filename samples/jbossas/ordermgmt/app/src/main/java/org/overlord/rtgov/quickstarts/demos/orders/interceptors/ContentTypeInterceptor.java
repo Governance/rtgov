@@ -36,21 +36,30 @@ import org.switchyard.label.BehaviorLabel;
 @Named("ContentType")
 public class ContentTypeInterceptor implements ExchangeInterceptor {
 
-	@Override
-	public void before(String target, Exchange exchange) {
-		// NOP
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void before(String target, Exchange exchange) {
+        // NOP
+    }
 
-	@Override
-	public void after(String target, Exchange exchange) throws HandlerException {
-		QName msgType = exchange.getContract().getProviderOperation().getOutputType();
-		exchange.getMessage().getContext().setProperty(
-				Exchange.CONTENT_TYPE, msgType).addLabels(BehaviorLabel.TRANSIENT.label());
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void after(String target, Exchange exchange) throws HandlerException {
+        QName msgType = exchange.getContract().getProviderOperation().getOutputType();
+        exchange.getMessage().getContext().setProperty(
+                Exchange.CONTENT_TYPE, msgType).addLabels(BehaviorLabel.TRANSIENT.label());
+    }
 
-	@Override
-	public List<String> getTargets() {
-		return Arrays.asList(PROVIDER);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<String> getTargets() {
+        return Arrays.asList(PROVIDER);
+    }
 
 }

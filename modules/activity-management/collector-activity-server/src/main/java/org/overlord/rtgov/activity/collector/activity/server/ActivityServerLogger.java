@@ -47,7 +47,7 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
 
     private static final Logger LOG=Logger.getLogger(ActivityServerLogger.class.getName());
     
-    private static final int DURATION_BETWEEN_FAILURE_REPORTS = 5*60*1000;
+    private static final int DURATION_BETWEEN_FAILURE_REPORTS = 5 * 60 * 1000;
     private static final int MAX_THREADS = 10;
 
     private static final int FREE_ACTIVITY_LIST_QUEUE_SIZE = 100;
@@ -115,7 +115,7 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
                             list.clear();
                             
                             // Add protection to make sure list cannot grow unnecessarily large
-                            if (_freeActivityLists.size() < _maxThreads*2) {
+                            if (_freeActivityLists.size() < _maxThreads * 2) {
                                 _freeActivityLists.offer(list);
                             }
                             

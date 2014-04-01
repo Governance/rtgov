@@ -83,9 +83,9 @@ public class SLAMonitor {
     @Path("/responseTimes")
     @Produces("application/json")
     public java.util.List<ResponseTime> getResponseTimes(
-    					@QueryParam("serviceType") String serviceType,
-    					@QueryParam("operation") String operation,
-    					@QueryParam("fault") String fault) {
+                        @QueryParam("serviceType") String serviceType,
+                        @QueryParam("operation") String operation,
+                        @QueryParam("fault") String fault) {
         java.util.List<ResponseTime> ret=new java.util.ArrayList<ResponseTime>();
 
         ActiveList list=getResponseTimeList(serviceType, operation, fault);
@@ -109,41 +109,41 @@ public class SLAMonitor {
      * @return The active list of response times
      */
     protected ActiveList getResponseTimeList(String serviceType, String operation, String fault) {
-    	ActiveList ret=_serviceResponseTime;
-    	
-    	if (LOG.isLoggable(Level.FINE)) {
-    	    LOG.fine("Get Response Time List: serviceType="+serviceType+" operation="
-    	            +operation+" fault="+fault);
-    	}
-    	
-    	if (serviceType != null || operation != null || fault != null) {
-        	String alname="RespTime:"+serviceType+":"+operation+":"+fault;
+        ActiveList ret=_serviceResponseTime;
 
-        	ret = (ActiveList)_acmManager.getActiveCollection(alname);
-        	
-        	if (ret == null) {
-        	    String expr=expressionBuilder(null, "serviceType", serviceType);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Get Response Time List: serviceType="+serviceType+" operation="
+                    +operation+" fault="+fault);
+        }
+
+        if (serviceType != null || operation != null || fault != null) {
+            String alname="RespTime:"+serviceType+":"+operation+":"+fault;
+
+            ret = (ActiveList)_acmManager.getActiveCollection(alname);
+
+            if (ret == null) {
+                String expr=expressionBuilder(null, "serviceType", serviceType);
                 expr = expressionBuilder(expr, "operation", operation);
                 expr = expressionBuilder(expr, "fault", fault);
-        	    
-        		Predicate predicate=new MVEL(expr);        		
-        		
+                
+                Predicate predicate=new MVEL(expr);
+
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("Create derived collection for: serviceType="+serviceType+" operation="
                             +operation+" fault="+fault);
                 }
-                
-        		ret = (ActiveList)_acmManager.create(alname, _serviceResponseTime,
-        		                    predicate, null);
-        	}
-    	}
-    	
+
+                ret = (ActiveList)_acmManager.create(alname, _serviceResponseTime,
+                                predicate, null);
+            }
+        }
+
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Returning: serviceType="+serviceType+" operation="
                     +operation+" fault="+fault+" ret="+ret);
         }
-        
-    	return (ret);
+
+        return (ret);
     }
     
     /**

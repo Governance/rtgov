@@ -96,6 +96,13 @@ public class UsageLink {
     /**
      * {@inheritDoc}
      */
+    public int hashCode() {
+        return (_source.hashCode());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean equals(Object obj) {
         if (obj instanceof UsageLink) {
             UsageLink il=(UsageLink)obj;

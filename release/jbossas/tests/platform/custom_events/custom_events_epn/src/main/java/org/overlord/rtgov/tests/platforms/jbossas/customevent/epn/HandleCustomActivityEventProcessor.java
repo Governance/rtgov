@@ -40,10 +40,10 @@ public class HandleCustomActivityEventProcessor extends org.overlord.rtgov.ep.Ev
                     +((CustomActivityEvent)event).getActivityType());
             
             if (((CustomActivityEvent)event).getActivityType() instanceof RequestReceived) {
-            	RequestReceived rr=(RequestReceived)((CustomActivityEvent)event).getActivityType();
+                RequestReceived rr=(RequestReceived)((CustomActivityEvent)event).getActivityType();
                 
                 if (rr.getProperties().containsKey("item")
-                		&& rr.getProperties().get("item").equals("JAM")) {
+                        && rr.getProperties().get("item").equals("JAM")) {
                     ret = event;
                 }
             }

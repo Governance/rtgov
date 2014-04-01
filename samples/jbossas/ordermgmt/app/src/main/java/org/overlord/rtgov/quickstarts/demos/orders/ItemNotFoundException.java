@@ -16,10 +16,19 @@
 
 package org.overlord.rtgov.quickstarts.demos.orders;
 
+/**
+ * This class represents an item not found exception.
+ *
+ */
 public class ItemNotFoundException extends Exception {
 
     private static final long serialVersionUID = -5606765308041390300L;
 
+    /**
+     * The constructor, with the message.
+     * 
+     * @param msg The message
+     */
     public ItemNotFoundException(String msg) {
         super(msg);
     }

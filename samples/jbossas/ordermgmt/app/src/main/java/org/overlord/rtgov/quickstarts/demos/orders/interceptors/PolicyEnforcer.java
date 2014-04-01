@@ -36,6 +36,10 @@ import org.switchyard.HandlerException;
 import org.switchyard.Message;
 import org.switchyard.Property;
 
+/**
+ * This class represents a policy enforcer.
+ *
+ */
 @Named("PolicyEnforcer")
 public class PolicyEnforcer implements ExchangeInterceptor {
     
@@ -59,6 +63,9 @@ public class PolicyEnforcer implements ExchangeInterceptor {
         MAPPER.setSerializationConfig(config);
     }
 
+    /**
+     * This method initializes the enforcer.
+     */
     protected void init() {
                 
         if (_collectionManager != null) {
@@ -111,7 +118,7 @@ public class PolicyEnforcer implements ExchangeInterceptor {
             Property p=context.getProperty(Exchange.CONTENT_TYPE, org.switchyard.Scope.MESSAGE);
             
             if (LOG.isLoggable(Level.FINER)) {
-                LOG.finer("Content type="+(p==null?null:p.getValue()));
+                LOG.finer("Content type=" + (p == null ? null : p.getValue()));
             }
             
             if (p != null && p.getValue().toString().equals(
@@ -170,6 +177,9 @@ public class PolicyEnforcer implements ExchangeInterceptor {
         return (customer);
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> getTargets() {
         return Arrays.asList(PROVIDER);

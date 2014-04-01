@@ -100,9 +100,9 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
      * changed.
      */
     protected void updateEndpointContext() {
+        Context current=null;
+        
         try {
-            Context current=null;
-            
             for (Context context : getContext()) {
                 if (context.getType() == Context.Type.Endpoint) {
                     current = context;
@@ -135,6 +135,7 @@ public abstract class BPMActivityType extends ActivityType implements java.io.Ex
             // RTGOV-278 NPE exception occurs when de-serializing
             // BPM activity type events with Hibernate, where the
             // query accesses the context information.
+            current = null;
         }
     }
     

@@ -41,14 +41,14 @@ import javax.ws.rs.core.Response;
 public class RESTOrderService {
 
     private static final Logger LOG=Logger.getLogger(RESTOrderService.class.getName());
-    
+
     private static final ObjectMapper MAPPER=new ObjectMapper();
-    
+
     private OrderService _orderService=null;
 
     static {
         SerializationConfig config=MAPPER.getSerializationConfig().with(SerializationConfig.Feature.INDENT_OUTPUT);
-        
+
         MAPPER.setSerializationConfig(config);
     }
 
@@ -57,10 +57,10 @@ public class RESTOrderService {
      */
     public RESTOrderService() {
     }
-    
+
     /**
      * This method sets the order service.
-     * 
+     *
      * @param os The order service
      */
     public void setOrderService(OrderService os) {
@@ -68,6 +68,13 @@ public class RESTOrderService {
         _orderService = os;
     }
     
+    /**
+     * This method submits an order represented as a JSON object.
+     * 
+     * @param json The order
+     * @return The response
+     * @throws Exception Failed to submit the order
+     */
     @POST
     @Path("/submit")
     @Produces("application/json")
@@ -115,6 +122,13 @@ public class RESTOrderService {
         return (Response.ok(ret).build());
     }
     
+    /**
+     * This method accepts a payment as a JSON formatted object.
+     * 
+     * @param json The payment
+     * @return The response
+     * @throws Exception Failed to accept payment
+     */
     @POST
     @Path("/pay")
     @Produces("application/json")

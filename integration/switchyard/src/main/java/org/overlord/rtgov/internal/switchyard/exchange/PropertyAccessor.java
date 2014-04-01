@@ -43,8 +43,8 @@ public class PropertyAccessor extends java.util.HashMap<String,Object> {
      */
     @Override
     public boolean containsKey(Object key) {
-        return (_context != null && key instanceof String ?
-                    _context.getProperty((String)key) != null : false);
+        return (_context != null && key instanceof String
+                ? _context.getProperty((String)key) != null : false);
     }
     
     /**

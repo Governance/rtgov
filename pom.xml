@@ -445,9 +445,9 @@
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<configuration>
 					<configLocation>checkstyle/checkstyle.xml</configLocation>
-					<consoleOutput>false</consoleOutput>
+					<consoleOutput>true</consoleOutput>
 					<suppressionsLocation>checkstyle/suppressions.xml</suppressionsLocation>
-					<failsOnError>false</failsOnError>
+					<failsOnError>true</failsOnError>
 					<useFile/>
 				</configuration>
 				<dependencies>
@@ -460,7 +460,7 @@
 				<executions>
 					<execution>
 						<id>check-style</id>
-						<phase>site</phase>
+						<phase>package</phase>
 						<goals>
 							<goal>checkstyle</goal>
 						</goals>

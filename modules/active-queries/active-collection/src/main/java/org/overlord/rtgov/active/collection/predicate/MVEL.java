@@ -42,6 +42,10 @@ import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 public class MVEL extends Predicate {
 
     private static final Logger LOG=Logger.getLogger(MVEL.class.getName());
+    
+    /**
+     * The RTGov security policy.
+     */
     public static final String RTGOV_POLICY = "rtgov.security.policy";
     
     private String _expression;
@@ -94,7 +98,7 @@ public class MVEL extends Predicate {
 
         if (_expressionCompiled == null) {
             if (_expression != null) {
-                synchronized(this) {
+                synchronized (this) {
                     _expressionCompiled = org.mvel2.MVEL.compileExpression(_expression);
                 }
             }
@@ -113,7 +117,7 @@ public class MVEL extends Predicate {
                             LOG.warning(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
                                     "active-collection.Messages").getString("ACTIVE-COLLECTION-15"),
                                     _expression, cause.getMessage()));
-                            break ;
+                            break;
                         } else {
                             cause = cause.getCause();
                         }
@@ -134,24 +138,28 @@ public class MVEL extends Predicate {
         return ("MVEL["+_expression+"]");
     }
 
+    /**
+     * MVEL privileged action.
+     *
+     */
     private class MVELEvaluateAction implements PrivilegedAction<Boolean> {
-       private final ActiveCollectionContext context;
-       private final Serializable expressionCompiled;
-       private final Object item;
+       private final ActiveCollectionContext _context;
+       private final Serializable _expressionCompiled;
+       private final Object _item;
 
        MVELEvaluateAction(final ActiveCollectionContext context, final Serializable expressionCompiled, final Object item) {
-           this.context = context;
-           this.expressionCompiled = expressionCompiled;
-           this.item = item;
+           _context = context;
+           _expressionCompiled = expressionCompiled;
+           _item = item;
        }
 
         public Boolean run() {
             Boolean ret=null;
 
             java.util.Map<String,Object> vars=new java.util.HashMap<String,Object>();
-            vars.put("context", context);
+            vars.put("context", _context);
 
-            Object result=org.mvel2.MVEL.executeExpression(expressionCompiled, item, vars);
+            Object result=org.mvel2.MVEL.executeExpression(_expressionCompiled, _item, vars);
 
             if (result instanceof Boolean) {
                 ret = Boolean.class.cast(result);
@@ -159,7 +167,7 @@ public class MVEL extends Predicate {
                 LOG.severe(MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
                         "active-collection.Messages").getString("ACTIVE-COLLECTION-2"),
-                        _expression, result, item));
+                        _expression, result, _item));
             }
 
             return ret;
@@ -180,7 +188,7 @@ public class MVEL extends Predicate {
                     final Policy policy = Policy.getInstance("JavaPolicy", new URIParameter(rtgovPolicyResource));
                     final CodeSource codeSource = new CodeSource(null, (Certificate[])null);
                     final PermissionCollection perms = policy.getPermissions(codeSource);
-                    final ProtectionDomain[] pds = { new ProtectionDomain(codeSource, perms)};
+                    final ProtectionDomain[] pds = {new ProtectionDomain(codeSource, perms)};
                     RTGOV_ACC = new AccessControlContext(pds);
                     LOG.info(java.util.PropertyResourceBundle.getBundle(
                             "active-collection.Messages").getString("ACTIVE-COLLECTION-13"));

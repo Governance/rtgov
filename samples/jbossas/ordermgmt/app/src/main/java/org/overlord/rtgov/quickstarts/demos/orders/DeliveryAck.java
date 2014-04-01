@@ -16,19 +16,37 @@
 
 package org.overlord.rtgov.quickstarts.demos.orders;
 
+/**
+ * This class represents the delivery acknowledgement.
+ *
+ */
 public class DeliveryAck {
     
     private String _orderId;
     
+    /**
+     * This method returns the order id.
+     * 
+     * @return The order id
+     */
     public String getOrderId() {
         return _orderId;
     }
     
+    /**
+     * This method sets the order id.
+     * 
+     * @param orderId The order id
+     * @return The delivery ack
+     */
     public DeliveryAck setOrderId(String orderId) {
         _orderId = orderId;
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Delivery " + _orderId + " acknowledged";

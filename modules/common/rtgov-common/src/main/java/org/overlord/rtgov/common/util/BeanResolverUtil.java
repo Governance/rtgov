@@ -35,6 +35,7 @@ public final class BeanResolverUtil {
      * This method returns a resolved object for the supplied type.
      * 
      * @param cls The required type
+     * @param <T> The bean type
      * @return The resolved object, or null if not found
      */
     @SuppressWarnings("unchecked")
@@ -76,6 +77,7 @@ public final class BeanResolverUtil {
      * 
      * @param cls The required type
      * @param list The result list
+     * @param <T> The bean type
      */
     public static <T> void getBeans(Class<T> cls, java.util.List<T> list) {
         try {

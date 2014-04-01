@@ -16,24 +16,48 @@
 
 package org.overlord.rtgov.quickstarts.demos.orders;
 
+/**
+ * This class represents a receipt.
+ *
+ */
 public class Receipt {
     
-    private String customer;
-    private double amount=0;
+    private String _customer;
+    private double _amount=0;
 
+    /**
+     * This method sets the customer.
+     * 
+     * @param customer The customer
+     */
     public void setCustomer(String customer) {
-        this.customer = customer;
+        _customer = customer;
     }
     
+    /**
+     * This method returns the customer.
+     * 
+     * @return The customer
+     */
     public String getCustomer() {
-        return customer;
+        return _customer;
     }
 
+    /**
+     * This method sets the amount.
+     * 
+     * @return The amount
+     */
     public double getAmount() {
-        return amount;
+        return _amount;
     }
 
+    /**
+     * This method sets the amount.
+     * 
+     * @param amount The amount
+     */
     public void setAmount(double amount) {
-        this.amount = amount;
+        _amount = amount;
     }
 }

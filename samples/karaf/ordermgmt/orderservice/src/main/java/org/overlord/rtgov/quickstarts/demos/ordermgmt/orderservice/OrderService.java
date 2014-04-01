@@ -21,10 +21,26 @@ import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.OrderAck;
 import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Payment;
 import org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Receipt;
 
+/**
+ * This interface represents the order service.
+ *
+ */
 public interface OrderService {
     
+    /**
+     * This method submits an order.
+     * 
+     * @param order The order
+     * @return The acknowledgement
+     */
     OrderAck submitOrder(Order order);
     
+    /**
+     * This method makes a payment.
+     * 
+     * @param payment The payment
+     * @return The receipt
+     */
     Receipt makePayment(Payment payment);
     
 }

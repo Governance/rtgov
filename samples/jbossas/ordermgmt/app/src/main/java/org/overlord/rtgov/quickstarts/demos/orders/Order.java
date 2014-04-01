@@ -16,42 +16,86 @@
 
 package org.overlord.rtgov.quickstarts.demos.orders;
 
+/**
+ * This class represents an Order.
+ *
+ */
 public class Order {
 
-    private String orderId;
-    private String itemId;
-    private int quantity = 1;
-    private String customer;
+    private String _orderId;
+    private String _itemId;
+    private int _quantity = 1;
+    private String _customer;
 
+    /**
+     * This method returns the order id.
+     * 
+     * @return The order id
+     */
     public String getOrderId() {
-        return orderId;
+        return _orderId;
     }
 
+    /**
+     * This method sets the order id.
+     * 
+     * @param orderId The order id
+     */
     public void setOrderId(String orderId) {
-        this.orderId = orderId;
+        _orderId = orderId;
     }
 
+    /**
+     * This method returns the item id.
+     * 
+     * @return The item id
+     */
     public String getItemId() {
-        return itemId;
+        return _itemId;
     }
 
+    /**
+     * This method sets the item id.
+     * 
+     * @param itemId The item id
+     */
     public void setItemId(String itemId) {
-        this.itemId = itemId;
+        _itemId = itemId;
     }
 
+    /**
+     * This method returns the quantity.
+     * 
+     * @return The quantity
+     */
     public int getQuantity() {
-        return quantity;
+        return _quantity;
     }
 
+    /**
+     * This method sets the quantity.
+     * 
+     * @param quantity The quantity
+     */
     public void setQuantity(int quantity) {
-        this.quantity = quantity;
+        _quantity = quantity;
     }
     
+    /**
+     * This method sets the customer.
+     * 
+     * @param customer The customer
+     */
     public void setCustomer(String customer) {
-        this.customer = customer;
+        _customer = customer;
     }
     
+    /**
+     * This method returns the customer.
+     * 
+     * @return The customer
+     */
     public String getCustomer() {
-        return customer;
+        return _customer;
     }
 }

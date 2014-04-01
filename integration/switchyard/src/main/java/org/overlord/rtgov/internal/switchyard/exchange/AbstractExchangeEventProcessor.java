@@ -343,8 +343,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
             // use request received id if available
             if (relatesTo == null && rr != null) {
                 if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("Exception seems to have occurred, " +
-                    		"so establishing relationship to original request: "+rr.getMessageId());
+                    LOG.finest("Exception seems to have occurred, "
+                            +"so establishing relationship to original request: "+rr.getMessageId());
                 }
                 relatesTo = rr.getMessageId();
             }

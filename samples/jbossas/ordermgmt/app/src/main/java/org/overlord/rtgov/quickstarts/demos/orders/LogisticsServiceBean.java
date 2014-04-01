@@ -20,14 +20,24 @@ import org.overlord.rtgov.client.ActivityReporter;
 import org.overlord.rtgov.client.DefaultActivityReporter;
 import org.switchyard.component.bean.Service;
 
+/**
+ * This class implements the logistics service.
+ *
+ */
 @Service(LogisticsService.class)
 public class LogisticsServiceBean implements LogisticsService {
 
     private ActivityReporter _reporter=new DefaultActivityReporter();
     
+    /**
+     * The constructor.
+     */
     public LogisticsServiceBean() {
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DeliveryAck deliver(Order order) {
         if (_reporter != null) {
