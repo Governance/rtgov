@@ -71,7 +71,7 @@ public class Context implements java.io.Externalizable {
      * 
      * @return The type
      */
-    @Column(name="type")
+    @Column(name="contextType")
     @Enumerated(EnumType.STRING)
     public Type getType() {
         return (_type);
