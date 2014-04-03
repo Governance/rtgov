@@ -68,6 +68,8 @@
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<picketlink.version>2.1.6.Final</picketlink.version>
 		<switchyard.version>1.1.0.CR1</switchyard.version>
+		<elasticsearch.version>1.0.1</elasticsearch.version>
+		<lucene.version>4.6.1</lucene.version>
 
 		<!-- The following properties are required as they are passed to
 		junit tests. They need to be kept in step with the versions in
