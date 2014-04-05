@@ -3,9 +3,9 @@ drop table RTGOV_ACTIVITY_CONTEXT if exists;
 drop table RTGOV_ACTIVITY_PROPERTIES if exists;
 drop table RTGOV_ACTIVITY_UNITS if exists;
 
-create table RTGOV_ACTIVITIES (type varchar(31) not null, unitId varchar(255) not null, unitIndex integer not null, principal varchar(255), timestamp bigint not null, customType varchar(255), level integer, message varchar(255), status integer, instanceId varchar(255), processType varchar(255), version varchar(255), variableName varchar(255), variableType varchar(255), variableValue varchar(255), content clob, messageType varchar(255), destination varchar(255), fault varchar(255), interface varchar(255), operation varchar(255), serviceType varchar(255), replyToId varchar(255), primary key (unitId, unitIndex));
+create table RTGOV_ACTIVITIES (activityType varchar(31) not null, unitId varchar(255) not null, unitIndex integer not null, principal varchar(255), tstamp bigint not null, customType varchar(255), logLevel integer, message varchar(255), status integer, instanceId varchar(255), processType varchar(255), version varchar(255), variableName varchar(255), variableType varchar(255), variableValue varchar(255), content clob, messageType varchar(255), destination varchar(255), fault varchar(255), interface varchar(255), operation varchar(255), serviceType varchar(255), replyToId varchar(255), primary key (unitId, unitIndex));
 
-create table RTGOV_ACTIVITY_CONTEXT (unitId varchar(255) not null, unitIndex integer not null, timeframe bigint, type varchar(255), value varchar(255));
+create table RTGOV_ACTIVITY_CONTEXT (unitId varchar(255) not null, unitIndex integer not null, timeframe bigint, contextType varchar(255), value varchar(255));
 
 create table RTGOV_ACTIVITY_PROPERTIES (unitId varchar(255) not null, unitIndex integer not null, value varchar(255), name varchar(255) not null, primary key (unitId, unitIndex, name));
 
@@ -23,11 +23,11 @@ drop table RTGOV_SITUATION_ACTIVITY_TYPES if exists;
 drop table RTGOV_SITUATION_CONTEXT if exists;
 drop table RTGOV_SITUATION_PROPERTIES if exists;
 
-create table RTGOV_SITUATIONS (id varchar(255) not null, description clob, severity integer, subject varchar(255), timestamp bigint not null, type varchar(255), primary key (id));
+create table RTGOV_SITUATIONS (id varchar(255) not null, description clob, severity integer, subject varchar(255), tstamp bigint not null, situationType varchar(255), primary key (id));
 
 create table RTGOV_SITUATION_ACTIVITY_TYPES (Situation_id varchar(255) not null, unitId varchar(255), unitIndex integer not null);
 
-create table RTGOV_SITUATION_CONTEXT (Situation_id varchar(255) not null, timeframe bigint, type varchar(255), value varchar(255));
+create table RTGOV_SITUATION_CONTEXT (Situation_id varchar(255) not null, timeframe bigint, contextType varchar(255), value varchar(255));
 
 create table RTGOV_SITUATION_PROPERTIES (id varchar(255) not null, value varchar(255), name varchar(255) not null, primary key (id, name));
 

@@ -69,7 +69,7 @@ import org.overlord.rtgov.activity.model.soa.ResponseSent;
 @IdClass(value=ActivityTypeId.class)
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(
-    name="type",
+    name="activityType",
     discriminatorType=DiscriminatorType.STRING
 )
 @Table(name="RTGOV_ACTIVITIES")
@@ -186,6 +186,7 @@ public abstract class ActivityType implements java.io.Externalizable {
      * 
      * @return The timestamp
      */
+    @Column(name="tstamp")
     public long getTimestamp() {
         return (_timestamp);
     }
