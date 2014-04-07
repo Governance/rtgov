@@ -25,6 +25,7 @@
 	<modules>
 		<module>war-server</module>
 		<module>war-client</module>
+		<module>war-elasticsearch</module>
 		<module>tests</module>
 		<module>distribution</module>
 	</modules>
