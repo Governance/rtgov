@@ -19,6 +19,7 @@
 		<module>epn-jee</module>
 		<module>epn-osgi</module>
 		<module>services</module>
+		<module>epn-datastore</module>
 	</modules>
 
 </project>
