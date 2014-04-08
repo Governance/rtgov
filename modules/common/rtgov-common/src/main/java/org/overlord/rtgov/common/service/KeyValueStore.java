@@ -17,13 +17,13 @@ package org.overlord.rtgov.common.service;
 
 /**
  * This abstract class represents a key/value store.
- * 
+ *
  */
 public abstract class KeyValueStore extends Service {
 
     /**
      * This method adds a value, associated with the id.
-     * 
+     *
      * @param id The id
      * @param document The value
      * @param <V> The value type
@@ -34,7 +34,7 @@ public abstract class KeyValueStore extends Service {
     /**
      * This method removes the value associated with the supplied
      * id.
-     * 
+     *
      * @param id The id
      */
     public abstract void remove(String id);
@@ -42,7 +42,7 @@ public abstract class KeyValueStore extends Service {
     /**
      * This method updates the value associated with the supplied
      * id.
-     * 
+     *
      * @param id The id
      * @param document The updated value
      * @param <V> The value type
@@ -52,7 +52,7 @@ public abstract class KeyValueStore extends Service {
     /**
      * This method returns the value associated with the supplied
      * id.
-     * 
+     *
      * @param id The id
      * @param <V> The value type
      * @return The value, or null if not found

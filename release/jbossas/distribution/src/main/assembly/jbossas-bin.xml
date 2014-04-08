@@ -81,7 +81,16 @@
 			</includes>
 			<outputFileNameMapping>overlord-rtgov-epn.war</outputFileNameMapping>
 		</dependencySet>
-		<dependencySet>
+        <dependencySet>
+            <outputDirectory>profiles/server/deployments</outputDirectory>
+            <unpack>false</unpack>
+            <includes>
+                <include>org.overlord.rtgov.content:overlord-rtgov-epn-datastore:war</include>
+            </includes>
+            <outputFileNameMapping>overlord-rtgov-datastore.war</outputFileNameMapping>
+        </dependencySet>
+
+        <dependencySet>
 			<outputDirectory>profiles/server/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
