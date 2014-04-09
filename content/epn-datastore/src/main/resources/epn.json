@@ -1,0 +1,66 @@
+{
+    "name": "DataStoreEPN",
+    "version": "1",
+
+    "subscriptions": [
+        {
+            "nodeName": "ElasticSearchActivityUnitStore",
+            "subject": "ActivityUnits"
+        } ,
+        {
+            "nodeName": "ElasticSearchResponseTimeStore",
+            "subject": "ServiceResponseTimes"
+
+        }   ,
+        {
+            "nodeName": "ElasticSearchSituationStore",
+            "subject": "Situations"
+        }
+    ],
+    "nodes": [
+        {
+            "name": "ElasticSearchActivityUnitStore",
+            "eventProcessor": {
+                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "services": {
+                    "KeyValueStore": {
+                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
+                        "index": "rtgov",
+                        "type": "activity",
+                        "hosts": "${ElasticSearch.hosts}"
+
+                    }
+                }
+            }
+        },
+        {
+            "name": "ElasticSearchResponseTimeStore",
+            "eventProcessor": {
+                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "services": {
+                    "KeyValueStore": {
+                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
+                        "index": "rtgov",
+                        "type": "responsetime",
+                        "hosts": "${ElasticSearch.hosts}"
+                    }
+                }
+            }
+        } ,
+        {
+            "name": "ElasticSearchSituationStore",
+            "eventProcessor": {
+                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "services": {
+                    "KeyValueStore": {
+                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
+                        "index": "rtgov",
+                        "type": "situation",
+                        "hosts": "${ElasticSearch.hosts}"
+                    }
+                }
+            }
+        }
+
+
+    ]}

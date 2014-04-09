@@ -85,6 +85,15 @@
 			<outputDirectory>profiles/server/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
+				<include>org.overlord.rtgov.content:overlord-rtgov-epn-datastore:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-datastore.war</outputFileNameMapping>
+		</dependencySet>
+
+		<dependencySet>
+			<outputDirectory>profiles/server/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
 				<include>org.overlord.rtgov.content:overlord-rtgov-acs-jee:war</include>
 			</includes>
 			<outputFileNameMapping>overlord-rtgov-acs.war</outputFileNameMapping>

@@ -21,6 +21,7 @@ import org.overlord.rtgov.ep.DefaultEPContext;
 import org.overlord.rtgov.ep.EventProcessor;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,49 +33,30 @@ public class ElasticSearchProcessor extends EventProcessor {
     private static final Logger LOG = Logger.getLogger(ElasticSearchProcessor.class.getName());
 
     private static final String KEY_VALUE_STORE = "KeyValueStore";
-    
+
     private DefaultEPContext _context = null;
     private KeyValueStore _keyValueStore = null;
-    private String _script = null;
-    private Object _scriptExpression = null;
-    
-    // TODO
-    //private String correleationScript = null;
+    private String _idScript = null;
+    private Object _idScriptExpression = null;
 
     /**
-     * This method returns the script expression.
-     * 
-     * @return The script expression
+     * This method returns the script responsible for identifying
+     * the id.
+     *
+     * @return The ID script
      */
-    public Object getScriptExpression() {
-        return _scriptExpression;
+    public String getIdScript() {
+        return _idScript;
     }
 
     /**
-     * This method returns the script expression.
-     * 
-     * @param scriptExpression The script expression
+     * This method sets the script responsible for identifying
+     * the id.
+     *
+     * @param script The ID script
      */
-    public void setScriptExpression(Object scriptExpression) {
-        _scriptExpression = scriptExpression;
-    }
-
-    /**
-     * This method returns the script.
-     * 
-     * @return The script
-     */
-    public String getScript() {
-        return _script;
-    }
-
-    /**
-     * This method sets the script.
-     * 
-     * @param script The script
-     */
-    public void setScript(String script) {
-        _script = script;
+    public void setIdScript(String script) {
+        _idScript = script;
     }
 
     /**
@@ -83,33 +65,33 @@ public class ElasticSearchProcessor extends EventProcessor {
     @Override
     public void init() throws Exception {
         super.init();
-        if (_script != null) {
+
+        if (_idScript != null) {
 
             // Load the script
-            java.io.InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(_script);
+            java.io.InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(_idScript);
 
             if (is == null) {
-                throw new Exception("Unable to locate MVEL script '" + _script + "'");
+                throw new Exception("Unable to locate MVEL script '" + _idScript + "'");
             } else {
                 byte[] b = new byte[is.available()];
                 is.read(b);
                 is.close();
 
                 // Compile expression
-                _scriptExpression = MVEL.compileExpression(new String(b));
+                _idScriptExpression = MVEL.compileExpression(new String(b));
 
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Initialized script=" + _script
-                            + " compiled=" + _scriptExpression);
+                    LOG.fine("Initialized script=" + _idScript
+                            + " compiled=" + _idScriptExpression);
                 }
             }
         } else {
-            _scriptExpression = MVEL.compileExpression("java.lang.String t = (java.util.UUID.randomUUID().toString());\n"
-                        + "t;");
+            _idScriptExpression = null;
         }
 
         _context = new DefaultEPContext(getServices());
-        
+
         /**
          * expect type SimpleDocumentRepo;
          */
@@ -121,32 +103,26 @@ public class ElasticSearchProcessor extends EventProcessor {
      */
     @Override
     public Serializable process(String source, Serializable event, int retriesLeft) throws Exception {
-        //   if (!getScript().equals("NONE")) {
-        return process(source, event, retriesLeft, processMvel(source, event, retriesLeft));
-        //   } else {
-        //     return process(source,  event, retriesLeft, getRandom());
-        //   }
-
-
+        return process(source, event, retriesLeft, determineId(source, event, retriesLeft));
     }
 
     /**
      * This method processes the event using the MVEL script.
-     * 
+     *
      * @param source The event source
      * @param event The event
      * @param retriesLeft Number of retries remaining
-     * @return The processed event
+     * @return The id generated from the source event of if no mvel script defined then returns  random id.
      */
-    private String processMvel(String source, Serializable event, int retriesLeft) {
+    private String determineId(String source, Serializable event, int retriesLeft) {
 
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Process event '" + event + " from source '" + source
-                    + "' on MVEL Event Processor '" + getScript()
+                    + "' on MVEL Event Processor '" + getIdScript()
                     + "'");
         }
 
-        if (_scriptExpression != null) {
+        if (_idScriptExpression != null) {
             java.util.Map<String, Object> vars =
                     new java.util.HashMap<String, Object>();
 
@@ -158,17 +134,18 @@ public class ElasticSearchProcessor extends EventProcessor {
             synchronized (this) {
                 _context.handle(null);
 
-                return (String) MVEL.executeExpression(_scriptExpression, vars);
+                return (String) MVEL.executeExpression(_idScriptExpression, vars);
             }
+        } else {
+            return  getRandom();
         }
 
-        return null;
     }
 
     /**
      * This method processes the inbound event and stores it associated with
      * the supplied key (id).
-     * 
+     *
      * @param source The source
      * @param event The event
      * @param retriesLeft The number of retrieves remaining
@@ -178,6 +155,11 @@ public class ElasticSearchProcessor extends EventProcessor {
      */
     public Serializable process(String source, Serializable event, int retriesLeft, String id) throws Exception {
 
+        if (id == null) {
+            throw new Exception(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                        "ep-elasticsearch.Messages").getString("EP-ELASTICSEARCH-1"), event));
+        }
+        
         _keyValueStore.add(id, event);
 
         return event;
@@ -185,7 +167,7 @@ public class ElasticSearchProcessor extends EventProcessor {
 
     /**
      * This method generates a random string.
-     * 
+     *
      * @return The random string
      */
     protected String getRandom() {
