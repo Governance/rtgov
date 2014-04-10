@@ -88,9 +88,12 @@ public class ElasticSearchRESTServer extends HttpServlet {
     protected boolean isSupported(HttpServletRequest servletRequest) {
         if (servletRequest.getMethod().equalsIgnoreCase("get")) {
             return (true);
-        }
-        if (servletRequest.getMethod().equalsIgnoreCase("post")) {
+        } else if (servletRequest.getMethod().equalsIgnoreCase("post")) {
             if (servletRequest.getPathInfo().endsWith("/_search")) {
+                return (true);
+            }
+        } else if (servletRequest.getMethod().equalsIgnoreCase("put")) {
+            if (servletRequest.getPathInfo().startsWith("/kibana-int/dashboard")) {
                 return (true);
             }
         }
