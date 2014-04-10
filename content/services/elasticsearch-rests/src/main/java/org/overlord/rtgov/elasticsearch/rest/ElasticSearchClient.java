@@ -199,9 +199,18 @@ public class ElasticSearchClient {
         StringBuilder uri = new StringBuilder(500);
 
         uri.append(_url);
+        
+        String pathInfo=request.getPathInfo();
+        
+        // Basic support for filtering based on user - just to ensure they have different
+        // (partitioned) custom dashboards. When fine grained authentication supported, might
+        // want to include this as part of a more general mechanism.
+        if (pathInfo.startsWith("/kibana-int/dashboard/")) {
+            pathInfo = pathInfo.replaceFirst("dashboard", "dashboard-"+request.getUserPrincipal().getName());
+        }
 
         // Append path
-        uri.append(request.getPathInfo());
+        uri.append(pathInfo);
 
         // Handle the query string
         java.util.Enumeration<String> iter=request.getParameterNames();
@@ -228,8 +237,12 @@ public class ElasticSearchClient {
                 f_first = false;
             }
         }
-
-        return uri.toString();
+        
+        String ret=uri.toString();
+        
+        ret = ret.replaceAll(" ", "%20");
+        
+        return (ret);
     }
 
     /** These are the "hop-by-hop" headers that should not be copied.
