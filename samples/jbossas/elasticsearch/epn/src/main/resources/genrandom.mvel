@@ -1,2 +1,0 @@
-java.lang.String t = (java.util.UUID.randomUUID().toString());
-t;

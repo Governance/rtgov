@@ -47,7 +47,6 @@
 		<module>ordermgmt</module>
 		<module>policy</module>
 		<module>sla</module>
-		<module>elasticsearch</module>
 	</modules>
 
 	<dependencyManagement>
