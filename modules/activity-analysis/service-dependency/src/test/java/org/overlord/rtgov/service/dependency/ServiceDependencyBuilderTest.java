@@ -42,15 +42,18 @@ import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayout;
 
 public class ServiceDependencyBuilderTest {
 
+    private static final String OP4 = "op4";
     private static final String OP3 = "op3";
     private static final String OP2 = "op2";
     private static final String OP1 = "op1";
     private static final String INTERFACE1 = "intf1";
     private static final String INTERFACE2 = "intf2";
     private static final String INTERFACE3 = "intf3";
+    private static final String INTERFACE4 = "intf4";
     private static final String SERVICE_TYPE1 = "serviceType1";
     private static final String SERVICE_TYPE2 = "serviceType2";
     private static final String SERVICE_TYPE3 = "serviceType3";
+    private static final String SERVICE_TYPE4 = "serviceType4";
     private static final String FAULT2 = "fault2";
 
     @Test
@@ -481,6 +484,251 @@ public class ServiceDependencyBuilderTest {
         } catch (Exception e) {
             e.printStackTrace();
             fail("Failed to test multicast example: "+e);
+        }
+    }
+
+    protected ServiceGraph getServiceGraph() {
+        ServiceDefinition sd1=new ServiceDefinition();
+        sd1.setServiceType(SERVICE_TYPE1);
+        
+        InterfaceDefinition idef1=new InterfaceDefinition();
+        sd1.getInterfaces().add(idef1);
+        idef1.setInterface(INTERFACE1);
+        
+        OperationDefinition op1=new OperationDefinition();
+        op1.setName(OP1);
+        idef1.getOperations().add(op1);
+        
+        RequestResponseDefinition rrd1=new RequestResponseDefinition();
+        op1.setRequestResponse(rrd1);
+        
+        InvocationDefinition id1=new InvocationDefinition();
+        id1.setInterface(INTERFACE2);
+        id1.setOperation(OP2);
+        rrd1.getInvocations().add(id1);
+        
+        InvocationDefinition id4=new InvocationDefinition();
+        id4.setInterface(INTERFACE4);
+        id4.setOperation(OP4);
+        rrd1.getInvocations().add(id4);
+        
+        ServiceDefinition sd2=new ServiceDefinition();
+        sd2.setServiceType(SERVICE_TYPE2);
+        
+        InterfaceDefinition idef2=new InterfaceDefinition();
+        sd2.getInterfaces().add(idef2);
+        idef2.setInterface(INTERFACE2);
+        
+        OperationDefinition op2=new OperationDefinition();
+        op2.setName(OP2);
+        idef2.getOperations().add(op2);
+        
+        RequestResponseDefinition rrd2=new RequestResponseDefinition();
+        op2.setRequestResponse(rrd2);
+        
+        InvocationDefinition id2=new InvocationDefinition();
+        id2.setInterface(INTERFACE3);
+        id2.setOperation(OP3);
+        rrd2.getInvocations().add(id2);
+        
+        ServiceDefinition sd3=new ServiceDefinition();
+        sd3.setServiceType(SERVICE_TYPE3);
+        
+        InterfaceDefinition idef3=new InterfaceDefinition();
+        sd3.getInterfaces().add(idef3);
+        idef3.setInterface(INTERFACE3);
+        
+        OperationDefinition op3=new OperationDefinition();
+        op3.setName(OP3);
+        idef3.getOperations().add(op3);
+        
+        ServiceDefinition sd4=new ServiceDefinition();
+        sd4.setServiceType(SERVICE_TYPE4);
+        
+        InterfaceDefinition idef4=new InterfaceDefinition();
+        sd4.getInterfaces().add(idef4);
+        idef4.setInterface(INTERFACE4);
+        
+        OperationDefinition op4=new OperationDefinition();
+        op4.setName(OP4);
+        idef4.getOperations().add(op4);
+        
+       
+        java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
+        sds.add(sd1);
+        sds.add(sd2);
+        sds.add(sd3);
+        sds.add(sd4);
+        
+        java.util.List<Situation> sits=new java.util.ArrayList<Situation>();
+        
+        ServiceGraph sg=ServiceDependencyBuilder.buildGraph(sds, sits);
+        
+        verifyFullServiceGraph(sg);
+        
+        return (sg);
+    }
+    
+    protected void verifyFullServiceGraph(ServiceGraph sg) {
+        if (sg == null) {
+            fail("Result null");
+        }
+        
+        if (sg.getServiceNodes().size() != 4) {
+            fail("Expecting 4 nodes: "+sg.getServiceNodes().size());
+        }
+        
+        if (sg.getUsageLinks().size() != 3) {
+            fail("Expecting 3 usage links: "+sg.getUsageLinks().size());
+        }
+        
+        if (sg.getInvocationLinks().size() != 3) {
+            fail("Expecting 3 invocation links: "+sg.getInvocationLinks().size());
+        }
+        
+        ServiceNode sn1=sg.getServiceNodeForInterface(INTERFACE1);
+        OperationNode opn1=sn1.getOperation(OP1);
+        ServiceNode sn2=sg.getServiceNodeForInterface(INTERFACE2);
+        OperationNode opn2=sn2.getOperation(OP2);
+        ServiceNode sn3=sg.getServiceNodeForInterface(INTERFACE3);
+        OperationNode opn3=sn3.getOperation(OP3);
+        ServiceNode sn4=sg.getServiceNodeForInterface(INTERFACE4);
+        OperationNode opn4=sn4.getOperation(OP4);
+        
+        if (sg.getUsageLink(sn1, sn2) == null) {
+            fail("UsageLink from s1 to s2 not present");
+        }
+        
+        if (sg.getUsageLink(sn2, sn3) == null) {
+            fail("UsageLink from s2 to s3 not present");
+        }
+        
+        if (sg.getUsageLink(sn1, sn4) == null) {
+            fail("UsageLink from s1 to s4 not present");
+        }
+        
+        
+        if (sg.getInvocationLink(opn1, opn2) == null) {
+            fail("Link from op1 to op2 not present");
+        }
+        
+        if (sg.getInvocationLink(opn1, opn4) == null) {
+            fail("Link from op1 to op4 not present");
+        }
+        
+        if (sg.getInvocationLink(opn2, opn3) == null) {
+            fail("Link from op2 to op3 not present");
+        }
+    }
+        
+    @Test
+    public void testFilterGraphFocusSN1() {
+        ServiceGraph sg=getServiceGraph();
+        
+        // Filtering on service type 1 should not change anything
+        ServiceDependencyBuilder.filter(sg, SERVICE_TYPE1);
+        
+        // Check to see that the service graph has not changed
+        verifyFullServiceGraph(sg);
+    }
+    
+    @Test
+    public void testFilterGraphFocusSN2() {
+        ServiceGraph sg=getServiceGraph();
+        
+        // Filtering on service type 2 should remove service type 4
+        ServiceDependencyBuilder.filter(sg, SERVICE_TYPE2);
+        
+        if (sg == null) {
+            fail("Result null");
+        }
+        
+        if (sg.getServiceNodes().size() != 3) {
+            fail("Expecting 3 nodes: "+sg.getServiceNodes().size());
+        }
+        
+        if (sg.getUsageLinks().size() != 2) {
+            fail("Expecting 2 usage links: "+sg.getUsageLinks().size());
+        }
+        
+        if (sg.getInvocationLinks().size() != 2) {
+            fail("Expecting 2 invocation links: "+sg.getInvocationLinks().size());
+        }
+        
+        ServiceNode sn1=sg.getServiceNodeForInterface(INTERFACE1);
+        OperationNode opn1=sn1.getOperation(OP1);
+        ServiceNode sn2=sg.getServiceNodeForInterface(INTERFACE2);
+        OperationNode opn2=sn2.getOperation(OP2);
+        ServiceNode sn3=sg.getServiceNodeForInterface(INTERFACE3);
+        OperationNode opn3=sn3.getOperation(OP3);
+        ServiceNode sn4=sg.getServiceNodeForInterface(INTERFACE4);
+        
+        if (sg.getUsageLink(sn1, sn2) == null) {
+            fail("UsageLink from s1 to s2 not present");
+        }
+        
+        if (sg.getUsageLink(sn2, sn3) == null) {
+            fail("UsageLink from s2 to s3 not present");
+        }
+        
+        
+        if (sg.getInvocationLink(opn1, opn2) == null) {
+            fail("Link from op1 to op2 not present");
+        }
+        
+        if (sg.getInvocationLink(opn2, opn3) == null) {
+            fail("Link from op2 to op3 not present");
+        }
+        
+        if (sn4 != null) {
+            fail("Service node with interface4 should not be present");
+        }
+    }
+    
+    @Test
+    public void testFilterGraphFocusSN3() {
+        ServiceGraph sg=getServiceGraph();
+        
+        // Filtering on service type 3 should remove service type 4 and 1
+        ServiceDependencyBuilder.filter(sg, SERVICE_TYPE3);
+        
+        if (sg == null) {
+            fail("Result null");
+        }
+        
+        if (sg.getServiceNodes().size() != 2) {
+            fail("Expecting 2 nodes: "+sg.getServiceNodes().size());
+        }
+        
+        if (sg.getUsageLinks().size() != 1) {
+            fail("Expecting 1 usage links: "+sg.getUsageLinks().size());
+        }
+        
+        if (sg.getInvocationLinks().size() != 1) {
+            fail("Expecting 1 invocation links: "+sg.getInvocationLinks().size());
+        }
+        
+        ServiceNode sn1=sg.getServiceNodeForInterface(INTERFACE1);
+        ServiceNode sn2=sg.getServiceNodeForInterface(INTERFACE2);
+        OperationNode opn2=sn2.getOperation(OP2);
+        ServiceNode sn3=sg.getServiceNodeForInterface(INTERFACE3);
+        OperationNode opn3=sn3.getOperation(OP3);
+        ServiceNode sn4=sg.getServiceNodeForInterface(INTERFACE4);
+        
+        if (sg.getUsageLink(sn2, sn3) == null) {
+            fail("UsageLink from s2 to s3 not present");
+        }
+        
+        if (sg.getInvocationLink(opn2, opn3) == null) {
+            fail("Link from op2 to op3 not present");
+        }
+        
+        if (sn1 != null) {
+            fail("Service node with interface1 should not be present");
+        }
+        
+        if (sn4 != null) {
+            fail("Service node with interface4 should not be present");
         }
     }
 }

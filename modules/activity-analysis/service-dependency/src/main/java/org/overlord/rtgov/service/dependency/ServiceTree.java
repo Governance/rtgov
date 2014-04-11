@@ -18,6 +18,7 @@ package org.overlord.rtgov.service.dependency;
 /**
  * This class represents the service call tree.
  *
+ * @deprecated This class is no longer required and will be removed in a subsequent release.
  */
 public class ServiceTree {
 

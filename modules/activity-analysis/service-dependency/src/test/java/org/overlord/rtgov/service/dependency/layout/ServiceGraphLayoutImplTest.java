@@ -206,4 +206,119 @@ public class ServiceGraphLayoutImplTest {
             fail("sn4y incorrect");
         }
     }
+    
+    @Test
+    public void testLayoutGraphMultipleClients() {
+        ServiceDefinition sd1=new ServiceDefinition();
+        sd1.setServiceType(SERVICE_TYPE1);
+        
+        InterfaceDefinition idef1=new InterfaceDefinition();
+        idef1.setInterface(INTERFACE1);
+        sd1.getInterfaces().add(idef1);
+        
+        OperationDefinition op1=new OperationDefinition();
+        op1.setName(OP1);
+        idef1.getOperations().add(op1);
+        
+        RequestResponseDefinition rrd1=new RequestResponseDefinition();
+        op1.setRequestResponse(rrd1);
+        
+        InvocationDefinition id1=new InvocationDefinition();
+        id1.setInterface(INTERFACE3);
+        id1.setOperation(OP3);
+        rrd1.getInvocations().add(id1);
+        
+        ServiceDefinition sd2=new ServiceDefinition();
+        sd2.setServiceType(SERVICE_TYPE2);
+        
+        InterfaceDefinition idef2=new InterfaceDefinition();
+        idef2.setInterface(INTERFACE2);
+        sd2.getInterfaces().add(idef2);
+        
+        OperationDefinition op2=new OperationDefinition();
+        op2.setName(OP2);
+        idef2.getOperations().add(op2);
+        
+        RequestResponseDefinition rrd2=new RequestResponseDefinition();
+        op2.setRequestResponse(rrd2);
+        
+        InvocationDefinition id2c=new InvocationDefinition();
+        id2c.setInterface(INTERFACE3);
+        id2c.setOperation(OP3);
+        rrd2.getInvocations().add(id2c);
+        
+        ServiceDefinition sd3=new ServiceDefinition();
+        sd3.setServiceType(SERVICE_TYPE3);
+        
+        InterfaceDefinition idef3=new InterfaceDefinition();
+        idef3.setInterface(INTERFACE3);
+        sd3.getInterfaces().add(idef3);
+        
+        OperationDefinition op3=new OperationDefinition();
+        op3.setName(OP3);
+        idef3.getOperations().add(op3);
+        
+        
+        java.util.Set<ServiceDefinition> sds=new java.util.HashSet<ServiceDefinition>();
+        sds.add(sd1);
+        sds.add(sd2);
+        sds.add(sd3);
+        
+        ServiceGraph graph=
+                ServiceDependencyBuilder.buildGraph(sds, null);
+        
+        if (graph == null) {
+            fail("Graph is null");
+        }
+        
+        ServiceGraphLayoutImpl layout=new ServiceGraphLayoutImpl();
+        
+        layout.layout(graph);
+        
+        // Check some of the dimensions
+        ServiceNode sn1=graph.getServiceNode(sd1.getServiceType());
+        ServiceNode sn2=graph.getServiceNode(sd2.getServiceType());
+        ServiceNode sn3=graph.getServiceNode(sd3.getServiceType());
+        
+        int sn1x=(Integer)sn1.getProperties().get(ServiceGraphLayout.X_POSITION);
+        int sn1y=(Integer)sn1.getProperties().get(ServiceGraphLayout.Y_POSITION);
+        int sn1h=(Integer)sn1.getProperties().get(ServiceGraphLayout.HEIGHT);
+        
+        int sn2x=(Integer)sn2.getProperties().get(ServiceGraphLayout.X_POSITION);
+        int sn2y=(Integer)sn2.getProperties().get(ServiceGraphLayout.Y_POSITION);
+        
+        int sn3x=(Integer)sn3.getProperties().get(ServiceGraphLayout.X_POSITION);
+        int sn3y=(Integer)sn3.getProperties().get(ServiceGraphLayout.Y_POSITION);
+        
+       if (sn1x != ServiceGraphLayoutImpl.SERVICE_INITIAL_HORIZONTAL_PADDING) {
+            fail("sn1x incorrect");
+        }
+        
+        if (sn1y != ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING) {
+            fail("sn1y incorrect");
+        }
+        
+        if (sn2x != ServiceGraphLayoutImpl.SERVICE_INITIAL_HORIZONTAL_PADDING) {
+            fail("sn2x incorrect");
+        }
+                
+        int val1=(2*ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING
+                +sn1h);
+        
+        if (sn2y != val1) {
+            fail("sn2y incorrect");
+        }
+
+        int val2=(ServiceGraphLayoutImpl.SERVICE_INITIAL_HORIZONTAL_PADDING
+                +ServiceGraphLayoutImpl.SERVICE_HORIZONTAL_PADDING
+                +ServiceGraphLayoutImpl.SERVICE_WIDTH);
+        
+        if (sn3x != val2) {
+            fail("sn3x incorrect");
+        }
+        
+        if (sn3y != ServiceGraphLayoutImpl.SERVICE_VERTICAL_PADDING) {
+            fail("sn3y incorrect");
+        }
+    }
 }
