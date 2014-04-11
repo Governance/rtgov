@@ -130,13 +130,15 @@ public class RESTServiceDependencyServer {
      * This method handles queries.
      * 
      * @param width The optional width
+     * @param serviceType The optional service type to focus the service dependency
      * @return The list of objects
      * @throws Exception Failed to query
      */
     @GET
     @Path("/overview")
     @Produces("image/svg+xml")
-    public String overview(@DefaultValue("0") @QueryParam("width") int width) throws Exception {
+    public String overview(@DefaultValue("0") @QueryParam("width") int width,
+                    @QueryParam("serviceType") String serviceType) throws Exception {
         String ret="";
         
         init();
@@ -176,7 +178,7 @@ public class RESTServiceDependencyServer {
         }
         
         ServiceGraph graph=
-                ServiceDependencyBuilder.buildGraph(sds, situations);
+                ServiceDependencyBuilder.buildGraph(sds, situations, serviceType);
         
         if (graph == null) {
             throw new Exception("Failed to generate service dependency overview");

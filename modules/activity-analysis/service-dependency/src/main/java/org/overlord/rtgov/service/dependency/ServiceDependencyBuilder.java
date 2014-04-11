@@ -117,6 +117,130 @@ public final class ServiceDependencyBuilder {
     
     /**
      * This method builds a service graph from a collection of service
+     * definitions. If specified, the result will focus on a nominated service,
+     * only showing its direct client services, and the services it directly
+     * or indirectly calls.
+     * 
+     * @param sds The service definitions
+     * @param sits The situations
+     * @param focusServiceType The optional service type to focus on
+     * @return The service graph
+     */
+    public static ServiceGraph buildGraph(java.util.Set<ServiceDefinition> sds,
+                        java.util.List<Situation> sits, String focusServiceType) {
+        ServiceGraph ret=buildGraph(sds, sits);
+        
+        if (focusServiceType != null) {
+            filter(ret, focusServiceType);
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method filters out any service node that is not a client, or
+     * direct/indirect service provider, to the supplied service type.
+     * 
+     * @param sg
+     * @param focusServiceType
+     */
+    protected static void filter(ServiceGraph sg, String focusServiceType) {
+        ServiceNode focus=sg.getServiceNode(focusServiceType);
+        
+        // If focus service node is not found, then ignore and return the
+        // complete graph
+        if (focus != null) {
+            
+            // For each service, that is not the focus service, determine if either
+            // a client or direct/indirect service.
+            java.util.Set<ServiceNode> serviceProviders=new java.util.HashSet<ServiceNode>();
+            
+            java.util.Iterator<ServiceNode> serviceNodeIter=sg.getServiceNodes().iterator();
+            
+            while (serviceNodeIter.hasNext()) {
+                ServiceNode node=serviceNodeIter.next();
+            
+                // If node is the focus, or it has already been identified as a service
+                // provider, then just continue
+                if (node == focus || serviceProviders.contains(node)) {
+                    continue;
+                }
+                
+                // Check if service node is a direct client of the focus service
+                if (sg.getUsageLink(node, focus) != null) {
+                    continue;
+                }
+                
+                java.util.Set<ServiceNode> visited=new java.util.HashSet<ServiceNode>();
+                
+                if (!isServiceProvider(sg, node, focus, visited)) {
+                    // Remove invocation links associated with the node
+                    java.util.Iterator<InvocationLink> ilIter=sg.getInvocationLinks().iterator();
+                    
+                    while (ilIter.hasNext()) {
+                        InvocationLink il=ilIter.next();
+                       
+                        if (node.getOperations().contains(il.getSource())
+                                || node.getOperations().contains(il.getTarget())) {
+                            ilIter.remove();
+                        }
+                    }
+                    
+                    // Remove usage links associated with the node
+                    java.util.Iterator<UsageLink> ulIter=sg.getUsageLinks().iterator();
+                    
+                    while (ulIter.hasNext()) {
+                        UsageLink ul=ulIter.next();
+                       
+                        if (ul.getSource() == node
+                                || ul.getTarget() == node) {
+                            ulIter.remove();
+                        }
+                    }
+                    
+                    // Remove node from graph
+                    serviceNodeIter.remove();
+                } else {
+                    serviceProviders.addAll(visited);
+                }
+            }
+        }
+    }
+    
+    /**
+     * This method determines whether the supplied 
+     * 
+     * @param sg The service graph
+     * @param node The node of interest
+     * @param focus The focus service
+     * @param visited The list of nodes already visited
+     * @return Whether the node is a direct or indirect service provider of the focus service
+     */
+    protected static boolean isServiceProvider(ServiceGraph sg, ServiceNode node, ServiceNode focus,
+                                    java.util.Set<ServiceNode> visited) {
+        if (visited.contains(node)) {
+            return (false);
+        }
+        
+        visited.add(node);
+        
+        if (sg.getUsageLink(focus, node) != null) {
+            return (true);
+        }
+        
+        for (UsageLink ul : sg.getUsageLinks()) {
+            if (ul.getTarget() == node) {
+                if (isServiceProvider(sg, ul.getSource(), focus, visited)) {
+                    return (true);
+                }
+            }
+        }
+        
+        return (false);
+    }
+    
+    /**
+     * This method builds a service graph from a collection of service
      * definitions.
      * 
      * @param sds The service definitions
