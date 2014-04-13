@@ -27,7 +27,7 @@
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
                         "index": "rtgov",
                         "type": "activity",
-                        "hosts": "${ElasticSearch.hosts}"
+                        "hosts": "${Elasticsearch.hosts}"
 
                     }
                 }
@@ -42,7 +42,7 @@
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
                         "index": "rtgov",
                         "type": "responsetime",
-                        "hosts": "${ElasticSearch.hosts}"
+                        "hosts": "${Elasticsearch.hosts}"
                     }
                 }
             }
@@ -56,7 +56,7 @@
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
                         "index": "rtgov",
                         "type": "situation",
-                        "hosts": "${ElasticSearch.hosts}"
+                        "hosts": "${Elasticsearch.hosts}"
                     }
                 }
             }

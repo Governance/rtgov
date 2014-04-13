@@ -22,6 +22,8 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
@@ -32,6 +34,11 @@ import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,21 +47,36 @@ import java.util.logging.Logger;
  */
 public class ElasticSearchKeyValueStore extends KeyValueStore {
 
-    protected static final ObjectMapper MAPPER=new ObjectMapper();
+    protected static final ObjectMapper MAPPER = new ObjectMapper();
 
     private Client _client;
-    
+
     private String _index = null;
     private String _type = null;
     private String _hosts = null;
+    /**
+     * bulkRequest. determines how many request should be sent to elastic search in bulk instead of singular requests
+     */
+    private int _bulkSize = 0;
+
+    private BulkRequestBuilder _bulkRequestBuilder;
+
+    private ScheduledFuture<BulkResponse> _scheduledFuture;
+
+    private ScheduledExecutorService _scheduler;
 
     static {
-        SerializationConfig config=MAPPER.getSerializationConfig()
+        SerializationConfig config = MAPPER.getSerializationConfig()
                 .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
                 .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-        
+
         MAPPER.setSerializationConfig(config);
     }
+
+    /**
+     * Default Elasticsearch schedule configuration.
+     */
+    public static final String ELASTICSEARCH_STORE_SCHEDULE = "Elasticsearch.schedule";
 
     /**
      * Settings for the index this store is related to.
@@ -72,12 +94,39 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     public static final String DEFAULT_SETTING = "_default_";
 
     private static final Logger LOG = Logger.getLogger(ElasticSearchKeyValueStore.class.getName());
+    /**
+     * convience flag to show bulk builder should be used.
+     */
+    private boolean _bulkRequestsEnable;
+    /**
+     * schedule to persist the items  to elasticsearch.
+     * A new schedule is created after a item is added.
+     */
+    private long _schedule = RTGovProperties.getPropertyAsLong(ELASTICSEARCH_STORE_SCHEDULE);
+
 
     /**
      * Default constructor.
      */
     public ElasticSearchKeyValueStore() {
 
+    }
+    /**
+     * This method returns the schedule.
+     *
+     * @return The schedule
+     */
+    public long getSchedule() {
+        return _schedule;
+    }
+
+    /**
+     * This method sets the schedule.
+     *
+     * @param schedule the schedule
+     */
+    public void setSchedule(long schedule) {
+        this._schedule = schedule;
     }
 
     /**
@@ -136,6 +185,24 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     }
 
     /**
+     * This method returns the _bulkSize.
+     *
+     * @return Returns _bulkSize
+     */
+    public int getBulkSize() {
+        return _bulkSize;
+    }
+
+    /**
+     * This method sets the _bulkSize.
+     *
+     * @param bulkSize The bulkSize
+     */
+    public void setBulkSize(int bulkSize) {
+        this._bulkSize = bulkSize;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
@@ -151,6 +218,10 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
 
         if (_type == null) {
             throw new IllegalArgumentException("Type property not set ");
+        }
+        if (_bulkSize > 0) {
+            _bulkRequestsEnable = true;
+            _scheduler = Executors.newScheduledThreadPool(1);
         }
 
         determineHostsAsProperty();
@@ -170,7 +241,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("index Mapping settings " + _index + ".json  [" + jsonDefaultUserIndex + "]");
             }
-            //  String jsonDefaultUserIndex = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(index + ".json"));
+
             Map<String, Object> dataMap = XContentFactory.xContent(jsonDefaultUserIndex).createParser(jsonDefaultUserIndex).mapAndClose();
 
             if (prepareIndex((Map<String, Object>) dataMap.get(SETTINGS))) {
@@ -182,7 +253,6 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
             prepareMapping((Map<String, Object>) dataMap.get(MAPPINGS));
         } else {
             LOG.warning("Could not locate " + _index + "-mapping.json  index mapping file. Mapping file require to start elasticsearch store service");
-            //throw new FileNotFoundException("Could not locate " + index + ".json mapping file. Mapping file require to start elasticsearch store service");
         }
     }
 
@@ -202,14 +272,6 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         putMappingRequestBuilder.setType(_type);
         putMappingRequestBuilder.setSource(mapping);
         return putMappingRequestBuilder.execute().actionGet().isAcknowledged();
-        /**   for (Map.Entry<String, Object> mapping : defaultMappings.entrySet()) {
-         PutMappingRequestBuilder putMappingRequestBuilder = client.admin().indices().preparePutMapping().setIndices(index);
-         putMappingRequestBuilder.setType(mapping.getKey());
-         putMappingRequestBuilder.setSource((Map<String, Object>) mapping.getValue());
-         assertTrue(putMappingRequestBuilder.execute().actionGet().isAcknowledged());
-
-         } **/
-
     }
 
     /**
@@ -227,44 +289,107 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
             if (!created) {
                 throw new RuntimeException("Could not create index [" + _index + "]");
             }
-            // todo, possible to update a mapping. it is not possible to change a mapping as this is related to the data that already exists in the index. but possible to add mapping data that does not already set
-            //
-            // DeleteIndexRequestBuilder delIdx = client.admin().indices().prepareDelete(index);
-            //delIdx.execute().actionGet();
-            //  UpdateSettingsRequestBuilder updateSettingsRequestBuilder = client.admin().indices().prepareUpdateSettings(index);
-            //  updateSettingsRequestBuilder.setSettings(defaultSettings);
-            //  updateSettingsRequestBuilder.execute().actionGet().isAcknowledged();
         }
-
-        // just update settings
 
         return created;
 
     }
 
+    /**
+     * @param id
+     * @param document
+     * @param <V>
+     */
+    private synchronized <V> void addBulk(String id, V document) {
+
+        if (_bulkRequestBuilder == null) {
+            _bulkRequestBuilder = _client.prepareBulk();
+        }
+        _bulkRequestBuilder.add(_client.prepareIndex(_index, _type, id).setSource(convertTypeToJson(document)));
+
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(" Document successfully added bulk item to index [" + _index + "/" + _type + "/" + id + "]");
+        }
+
+        /**
+         * check if we need to persist now
+         */
+        if (_bulkRequestBuilder.numberOfActions() >= _bulkSize) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("bulk limit reach. storing " + _bulkSize + " items to  [" + _index + "/" + _type + "]");
+            }
+
+            /**
+             * cancel any scheduler thats running
+             */
+            if (_scheduledFuture != null) {
+               _scheduledFuture.cancel(true);
+            }
+
+            storeBulkItems();
+
+        } else {
+            /**
+             * if we have not exceeded the bulk. we create a task to dump this to elastic search after configured number of seconds
+             */
+            if (_scheduledFuture == null) {
+                _scheduledFuture = _scheduler.schedule(new Callable<BulkResponse>() {
+                    public BulkResponse call() throws Exception {
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Executed scheduled persitence of bulk items " + _index + "/" + _type);
+                        }
+                        return (storeBulkItems());
+                    }
+                },_schedule, TimeUnit.MILLISECONDS);
+            }
+
+        }
+
+
+    }
+
+    private synchronized BulkResponse storeBulkItems() {
+        BulkResponse bulkItemResponses = _bulkRequestBuilder.execute().actionGet();
+        
+        if (bulkItemResponses.hasFailures()) {
+            LOG.severe(" Bulk Documents{" + _bulkSize + "} could not be created for index [" + _index + "/" + _type + "/");
+
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("FAILED MESSAGES. " + bulkItemResponses.buildFailureMessage());
+            }
+        } else {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Success storing " + _bulkSize + " items to  [" + _index + "/" + _type + "]");
+            }
+        }
+        
+        _bulkRequestBuilder = null;
+        _scheduledFuture = null;
+
+        return (bulkItemResponses);
+    }
+
     @Override
     public <V> void add(String id, V document) throws Exception {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Adding " + document.getClass().toString() + ". for id " + id);
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Adding " + document.getClass().toString() + ". for id " + id);
         }
-        try {
-            IndexResponse indexResponse = _client.prepareIndex(_index, _type, id).setSource(convertTypeToJson(document)).execute().actionGet();
-            if (!indexResponse.isCreated()) {
-                LOG.fine(" Document could not be created for index [" + _index + "/" + _type + "/" + id + "]");
-                throw new Exception("Document could not be created for index [" + _index + "/" + _type + "/" + id + "]");
-            }
-            LOG.fine(" Document successfully created for index [" + _index + "/" + _type + "/" + id + "]");
+        if (_bulkRequestsEnable) {
+            addBulk(id, document);
+        } else {
+            try {
+                IndexResponse indexResponse = _client.prepareIndex(_index, _type, id).setSource(convertTypeToJson(document)).execute().actionGet();
+                if (!indexResponse.isCreated()) {
+                    LOG.fine(" Document could not be created for index [" + _index + "/" + _type + "/" + id + "]");
+                    throw new Exception("Document could not be created for index [" + _index + "/" + _type + "/" + id + "]");
+                }
+                LOG.fine(" Document successfully created for index [" + _index + "/" + _type + "/" + id + "]");
 
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, "[/" + _index + "/" + _type + "] Could not store  json document from Type [" + document.getClass().getName() + "] ");
-            throw new Exception("[/" + _index + "/" + _type + "] Could not store  json document from Type [" + document.getClass().getName() + "] ", e);
-        } finally {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine(" Todo. Possibly need to close the connection here. ");
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "[/" + _index + "/" + _type + "] Could not store  json document from Type [" + document.getClass().getName() + "] ");
+                throw new Exception("[/" + _index + "/" + _type + "] Could not store  json document from Type [" + document.getClass().getName() + "] ", e);
             }
-            // client.close();
         }
-
     }
 
     @Override
@@ -319,4 +444,5 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         }
 
     }
+
 }
