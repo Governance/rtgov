@@ -57,7 +57,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     /**
      * bulkRequest. determines how many request should be sent to elastic search in bulk instead of singular requests
      */
-    private int _bulkRequests = 0;
+    private int _bulkSize = 0;
 
     static {
         SerializationConfig config = MAPPER.getSerializationConfig()
@@ -181,21 +181,21 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     }
 
     /**
-     * This method returns the _bulkRequests.
+     * This method returns the _bulkSize.
      *
-     * @return Returns _bulksRequests
+     * @return Returns _bulkSize
      */
-    public int getBulkRequests() {
-        return _bulkRequests;
+    public int getBulkSize() {
+        return _bulkSize;
     }
 
     /**
-     * This method sets the _bulkRequests.
+     * This method sets the _bulkSize.
      *
-     * @param bulkRequests The hosts
+     * @param bulkSize The bulkSize
      */
-    public void setBulkRequests(int bulkRequests) {
-        this._bulkRequests = bulkRequests;
+    public void setBulkSize(int bulkSize) {
+        this._bulkSize = bulkSize;
     }
 
     /**
@@ -215,7 +215,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         if (_type == null) {
             throw new IllegalArgumentException("Type property not set ");
         }
-        if (_bulkRequests > 0) {
+        if (_bulkSize > 0) {
             _bulkRequestsEnable = true;
             _scheduler = Executors.newScheduledThreadPool(1);
         }
@@ -331,9 +331,9 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         /**
          * check if we need to persist now
          */
-        if (_bulkRequestBuilder.numberOfActions() >= _bulkRequests) {
+        if (_bulkRequestBuilder.numberOfActions() >= _bulkSize) {
             if (LOG.isLoggable(Level.INFO)) {
-                LOG.info("bulk limit reach. storing " + _bulkRequests + " items to  [" + _index + "/" + _type + "]");
+                LOG.info("bulk limit reach. storing " + _bulkSize + " items to  [" + _index + "/" + _type + "]");
             }
             storeBulkItems();
             _bulkRequestBuilder = null;
@@ -356,7 +356,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
                         return "Stored Bulk Items!";
 
                     }
-                },_schedule, TimeUnit.SECONDS);
+                },_schedule, TimeUnit.MILLISECONDS);
             }
 
         }
@@ -367,12 +367,12 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     private void storeBulkItems() {
         BulkResponse bulkItemResponses = _bulkRequestBuilder.execute().actionGet();
         if (bulkItemResponses.hasFailures()) {
-            LOG.warning(" Bulk Documents{" + _bulkRequests + "} could not be created for index [" + _index + "/" + _type + "/");
+            LOG.warning(" Bulk Documents{" + _bulkSize + "} could not be created for index [" + _index + "/" + _type + "/");
 
             LOG.info("FAILED MESSAGES. " + bulkItemResponses.buildFailureMessage());
         } else {
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Success storing " + _bulkRequests + " items to  [" + _index + "/" + _type + "]");
+                LOG.fine("Success storing " + _bulkSize + " items to  [" + _index + "/" + _type + "]");
             }
         }
     }
