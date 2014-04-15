@@ -4,7 +4,7 @@
 	<property name="database" value="h2" />
 	<property file="jdbc/${database}.properties" />
 
-	<property name="appserver.id" value="jboss-eap-6.1" />
+	<property name="appserver.id" value="jboss-eap-6" />
 
 	<target name="check-not-soa">
 		<condition property="soa.not.installed">
@@ -27,7 +27,7 @@
 		<ant antfile="build.xml" target="install"
 				dir="overlord-commons" >
 			<property name="overlord-commons.appserver.dir" value="${jboss.home}" />
-			<property name="overlord-commons.idp.file" value="${basedir}/overlord-commons/overlord-commons-idp-eap61.war" />
+			<property name="overlord-commons.idp.file" value="${basedir}/overlord-commons/overlord-commons-idp-eap6.war" />
 			<property name="overlord-commons.services.file" value="${basedir}/overlord-commons/overlord-commons-services.jar" />
 			<property name="overlord-commons.auth.file" value="${basedir}/overlord-commons/overlord-commons-auth.jar" />
 			<property name="overlord-commons.auth.jboss7.file" value="${basedir}/overlord-commons/overlord-commons-auth-jboss7.jar" />
