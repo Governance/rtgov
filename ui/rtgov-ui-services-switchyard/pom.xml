@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overlord.rtgov.ui</groupId>
+	<artifactId>rtgov-ui-services-switchyard</artifactId> 
+	<name>Overlord RTGov::UI::Services::SwitchYard</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>ui</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>
+	    <dependency>
+	        <groupId>org.overlord.rtgov.ui</groupId>
+	        <artifactId>rtgov-ui-core</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+
+	    <!-- RTGov dependencies -->
+	    <dependency>
+	        <groupId>org.overlord.rtgov.common</groupId>
+	        <artifactId>rtgov-common</artifactId>
+	        <version>${project.version}</version>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.overlord.rtgov.activity-management</groupId>
+	        <artifactId>activity</artifactId>
+	        <version>${project.version}</version>
+	        <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
+	        <artifactId>analytics</artifactId>
+	        <version>${project.version}</version>
+	        <scope>provided</scope>
+	    </dependency>
+
+	    <!-- ServiceActivator/dmr -->
+	    <dependency>
+	      <groupId>org.jboss.msc</groupId>
+	      <artifactId>jboss-msc</artifactId>
+	      <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.jboss.as</groupId>
+	      <artifactId>jboss-as-server</artifactId>
+	      <scope>provided</scope>
+	    </dependency>
+    
+	    <!-- SwitchYard dependencies -->
+	    <dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-remote</artifactId>
+			<version>${switchyard.version}</version>
+	    </dependency>
+	    <dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-serial</artifactId>
+			<version>${switchyard.version}</version>
+	    </dependency>
+        
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+</project>

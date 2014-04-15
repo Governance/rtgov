@@ -1,0 +1,275 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overlord.rtgov</groupId>
+    <artifactId>ui</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+  <groupId>org.overlord.rtgov.ui</groupId>
+  <artifactId>overlord-rtgov-ui-war</artifactId>
+  <packaging>war</packaging>
+  <name>Overlord RTGov::UI::WAR</name>
+  
+  <properties>
+  	<kibana.distribution.version>kibana-3.0.0milestone5</kibana.distribution.version>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Overlord Commons Config -->
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-config</artifactId>
+      <version>${overlord-commons.version}</version>
+    </dependency>
+    <!-- Overlord Commons UI Header -->
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-uiheader</artifactId>
+      <version>${overlord-commons.version}</version>
+    </dependency>
+    <!-- Overlord Commons GWT -->
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-gwt</artifactId>
+      <version>${overlord-commons.version}</version>
+    </dependency>
+
+    <!-- Third Party Dependencies -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons.lang3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jsp-api</artifactId>
+      <version>${jsp-api.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.ejb3</groupId>
+      <artifactId>jboss-ejb3-api</artifactId>
+      <scope>provided</scope>
+      <version>${jboss-ejb3-api.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-auth</artifactId>
+      <version>${overlord-commons.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Errai -->
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-bus</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.inject</groupId>
+          <artifactId>javax.inject</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>jsr250-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-ioc</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.inject</groupId>
+          <artifactId>javax.inject</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.annotation</groupId>
+          <artifactId>jsr250-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-data-binding</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-ui</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-navigation</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-tools</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mvel</groupId>
+      <artifactId>mvel2</artifactId>
+    </dependency>
+
+    <!-- CDI Integration Modules -->
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-cdi-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-javax-enterprise</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-weld-integration</artifactId>
+    </dependency>
+
+    <!-- Weld -->
+    <dependency>
+      <groupId>org.jboss.weld.se</groupId>
+      <artifactId>weld-se-core</artifactId>
+      <exclusions>
+        <exclusion>
+          <artifactId>el-api</artifactId>
+          <groupId>javax.el</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.weld.servlet</groupId>
+      <artifactId>weld-servlet</artifactId>
+    </dependency>
+
+    <!-- GWT -->
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-user</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Runtime / Container dependencies -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <outputDirectory>src/main/webapp/WEB-INF/classes</outputDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <attachClasses>true</attachClasses>
+          <classesClassifier>classes</classesClassifier>
+          <warName>${project.artifactId}</warName>
+          <outputFileNameMapping>@{artifactId}@-@{baseVersion}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
+          <packagingExcludes>**/javax/**/*.*,**/client/local/**/*.class,**/rebel.xml</packagingExcludes>
+          <webResources>
+            <resource>
+              <directory>target/kibana-3.0.0milestone5</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>gwt-maven-plugin</artifactId>
+        <configuration>
+          <logLevel>INFO</logLevel>
+          <runTarget>index.html</runTarget>
+          <extraJvmArgs>-Xmx512m</extraJvmArgs>
+          <soyc>false</soyc>
+          <hostedWebapp>src/main/webapp/</hostedWebapp>
+          <server>org.jboss.errai.cdi.server.gwt.JettyLauncher</server>
+        </configuration>
+        <executions>
+          <execution>
+            <id>gwt-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>gwt-compile</id>
+            <goals>
+              <goal>resources</goal>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}</directory>
+              <includes>
+                <include>www-test/**</include>
+                <include>.gwt/**</include>
+                <include>.errai/**</include>
+                <include>src/main/webapp/.errai/**</include>
+                <include>src/main/webapp/app/**</include>
+                <include>src/main/webapp/WEB-INF/deploy/**</include>
+                <include>src/main/webapp/WEB-INF/lib/**</include>
+                <include>src/main/webapp/WEB-INF/classes/**</include>
+                <include>**/gwt-unitCache/**</include>
+                <include>**/*.JUnit/**</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+		<plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-antrun-plugin</artifactId>
+		    <executions>
+		        <execution>
+		            <id>prepare</id>
+		            <phase>validate</phase>
+		            <configuration>
+		                <tasks>
+		                    <echo message="prepare phase" />
+		                    <unzip src="src/main/kibana/${kibana.distribution.version}.zip" dest="target/" />
+		                    <move file="target/${kibana.distribution.version}/index.html"
+		                    					toFile="target/${kibana.distribution.version}/analytics.html" />
+		                    <copy todir="target/${kibana.distribution.version}">
+								<fileset dir="src/main/kibana/config"/>
+							</copy>
+		                </tasks>
+		            </configuration>
+		            <goals>
+		                <goal>run</goal>
+		            </goals>
+		        </execution>
+		    </executions>
+		</plugin>
+    </plugins>
+  </build>
+
+</project>

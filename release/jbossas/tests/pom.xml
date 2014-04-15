@@ -26,6 +26,7 @@
 				<module>activity-management</module>
 				<module>event-processor-network</module>
 				<module>platform</module>
+				<module>ui</module>
 			</modules>
 		</profile>
 	</profiles>

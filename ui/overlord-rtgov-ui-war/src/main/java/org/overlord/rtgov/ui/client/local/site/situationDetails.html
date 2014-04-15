@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title data-role="dummy">Overlord RTGov UI - Situation Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-tree.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui.css" rel="stylesheet"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui-responsive.css" rel="stylesheet"></link>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../../../../../../../../webapp/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-tree.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/ace/ace.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/js/rtgov-ui-responsive.js"></script>
+  </head>
+
+  <body>
+    <div id="page" data-field="page">
+
+      <!-- Content area with footer-->
+      <div id="page-content" class="container-fluid">
+
+        <!-- Breadcrumbs -->
+        <div class="row-fluid">
+          <ul class="breadcrumb">
+            <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span data-i18n-key="breadcrumb.situations">Situations</span> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a data-field="to-services" href="services.html" data-i18n-key="services">Services</a></li>
+                  <li><a data-field="to-situations" href="situations.html" data-i18n-key="situations">Situations</a></li>
+                </ul>
+                <span class="divider">/<span data-role="dummy" /></span>
+            </li>
+            <li class="active" data-i18n-key="breadcrumb.situation-details">Situation Details</li>
+          </ul>
+        </div>
+
+        <!-- Loading spinner -->
+        <div data-field="situation-details-loading-spinner" class="spinner situation-details-loading hide" data-i18n-key="loading-situation">Loading situation, please wait...</div>
+
+        <div id="situation-details-content-wrapper">
+          <!-- Action bar -->
+          <div class="row-fluid overlord-actions overlord-details-actions">
+            <div class="span12">
+              <div data-field="severity" class="icon icon-severity-critical details-icon"></div>
+              <span class="sp4n-label">
+                <span class="details-title" data-field="situationName" data-role="dummy">Rate Limit Exceeded</span>
+              </span>
+              <div class="btn-group" style="visibility:hidden">
+                <button class="btn" disabled="true">Spacer<span data-role="dummy" /></button>
+              </div>
+            </div>
+          </div>
+          <!-- Situation Details -->
+          <div class="row-fluid situation-details">
+            <ul id="myTab" class="nav nav-tabs">
+              <li class="active"><a href="#details" data-toggle="tab" data-i18n-key="details">Details</a></li>
+              <li><a href="#calltrace" data-toggle="tab" data-i18n-key="call-trace">Call Trace</a></li>
+              <li><a href="#message" data-toggle="tab" data-field="messageTab" data-i18n-key="message">Message</a></li>
+            </ul>
+            <div class="tab-content">
+              <!-- Tab: Details -->
+              <div class="container-fluid tab-pane fade in active" id="details">
+                <!-- Situation Properties and Description -->
+                <div class="row-fluid">
+                  <!-- Situation Properties -->
+                  <div class="span10 details-meta-data-section">
+                    <div class="details-meta-data-section-header" data-i18n-key="situation-details">Situation Details</div>
+                    <div class="clearfix"></div>
+                    <div class="details-meta-data-section-label" data-i18n-key="subject">Subject:</div>
+                    <div data-field="subject" class="details-meta-data-section-value" data-role="dummy">{urn:namespace}ImportantService|VeryImportantOperation</div>
+                    <div class="clearfix"></div>
+                    <div class="details-meta-data-section-label" data-i18n-key="resolutionState">Status:</div>
+                    <div data-field="resolutionState" class="details-meta-data-section-value" data-role="dummy">Open</div>
+                    <div class="clearfix"></div>
+                    <div class="details-meta-data-section-label" data-i18n-key="application">Timestamp:</div>
+                    <div data-field="timestamp" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demos:applications</div>
+                    <div class="clearfix"></div>
+                    <div class="divider-20"></div>
+                    <div class="details-meta-data-section-header" data-i18n-key="description">Description</div>
+                    <div class="clearfix"></div>
+                    <div data-field="description" class="details-meta-data-section-value" data-role="dummy">Some description of the Situation goes here in this column so that it can be read by the user.</div>
+                    <div class="clearfix"></div>
+                  </div>
+                </div>
+                <hr />
+                <!-- Properties & Context -->
+                <div class="row-fluid">
+                  <!-- Properties -->
+                  <div class="span6 details-meta-data-section">
+                    <div class="details-meta-data-section-header" data-i18n-key="properties">Properties</div>
+                    <div class="clearfix"></div>
+                    <table data-field="properties-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
+                    <thead>
+                      <tr>
+                        <th data-i18n-key="name">Name</th>
+                        <th data-i18n-key="type">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody data-role="dummy">
+                      <tr>
+                        <td>Property 1</td>
+                        <td>Value of property 1.</td>
+                      </tr>
+                      <tr>
+                        <td>Property 2</td>
+                        <td>Value of property two.</td>
+                      </tr>
+                      <tr>
+                        <td>Property 3</td>
+                        <td>Value of property three.</td>
+                      </tr>
+                      <tr>
+                        <td>Property 4</td>
+                        <td>Value of property 4.</td>
+                      </tr>
+                    </tbody>
+                    </table>
+                  </div>
+                  <!-- /Properties -->
+                  
+                  <!-- Context -->
+                  <div class="span6 details-meta-data-section">
+                    <div class="details-meta-data-section-header" data-i18n-key="context">Context Data</div>
+                    <div class="clearfix"></div>
+                    <table data-field="context-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
+                    <thead>
+                      <tr>
+                        <th data-i18n-key="name">Name</th>
+                        <th data-i18n-key="type">Value</th>
+                      </tr>
+                    </thead>
+                    <tbody data-role="dummy">
+                      <tr>
+                        <td>Context 1</td>
+                        <td>Some context value for context 1.</td>
+                      </tr>
+                      <tr>
+                        <td>Context 2</td>
+                        <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</td>
+                      </tr>
+                    </tbody>
+                    </table>
+                  </div>
+                  <!-- /Context -->
+                </div>
+                <!-- /Properties & Context -->
+                <div class="row-fluid">
+                  <div class="span12">
+                    <button data-field="btn-assign" class="btn" name="Assign" data-i18n-key="assign">Assign</button>
+                    <button data-field="btn-close" class="btn" name="Close" data-i18n-key="close">Close</button>
+                    <button data-field="btn-reopen" class="btn" name="Reopen" data-i18n-key="reopen">Reopen</button>
+                    <button data-field="btn-start" class="btn" name="Start" data-i18n-key="start">Start Progress</button>
+                    <button data-field="btn-stop" class="btn" name="Stop" data-i18n-key="stop">Stop Progress</button>
+                    <button data-field="btn-resolve" class="btn" name="Resolve" data-i18n-key="resolve">Resolve</button>
+                  </div>
+                </div>
+              </div>
+              <!-- /Tab:Details -->
+              
+              <!-- Tab:CallTrace -->
+              <div class="container-fluid tab-pane fade" id="calltrace">
+                <!-- Call Trace Graph -->
+                <div class="row-fluid">
+                  <!-- Left hand side of call trace (master) -->
+                  <div class="span6 details-meta-data-section call-trace">
+                    <!-- tree -->
+                    <div class="tree well" data-toggle="tree">
+                      <ul data-field="call-trace" role="tree" data-role="dummy">
+                        <li class="parent_li" role="treeitem">
+                            <span class="Success"><i class="icon-minus-sign"></i> submitOrder:{urn:switchyard:parent}</span> [47ms] (100%)
+                            <ul role="group">
+                                <li class="parent_li" role="treeitem">
+                                    <span class="Success"><i class="icon-minus-sign"></i> lookupItem:{urn:switchyard:app}</span> [10ms] (55%)
+                                    <ul role="group">
+                                        <li class="leaf_li">
+                                            <span><i class="icon-leaf"></i> Information: Found the item.</span> [4ms] (100%)
+                                        </li>
+                                        <li class="leaf_li">
+                                            <span><i class="icon-leaf"></i> Information: Another info item.</span> [4ms] (100%)
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="parent_li" role="treeitem">
+                                    <span class="Warning"><i class="icon-minus-sign"></i> deliver:{urn:switchyard-q:app-q}</span> [8ms] (44%)
+                                    <ul role="group">
+                                        <li class="leaf_li">
+                                            <span><i class="icon-leaf"></i> Information: Delivering the order</span> [3ms] (100%)
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="parent_li" role="treeitem">
+                                    <span class="Fail"><i class="icon-minus-sign"></i> deliver:{urn:switchyard-q:app-q}</span> [8ms] (44%)
+                                    <ul role="group">
+                                        <li>
+                                            <span><i class="icon-leaf"></i> Information: Delivering the order</span> [3ms] (100%)
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                      </ul>
+                    </div>
+                    <!-- /tree -->
+                  </div>
+                  <!-- /left hand side of call trace (master) -->
+    
+                  <!-- Right hand side of call trace (detail) -->
+                  <div data-field="call-trace-detail" class="span6 details-meta-data-section call-trace-detail" data-role="dummy">
+                    <div class="details-meta-data-section-header">Node</div>
+                    <div class="clearfix"></div>
+                    <div class="details-meta-data-section-value">submitOrder:{urn:switchyard:parent}</div>
+                    <div class="clearfix"></div>
+                    <div class="divider-20"></div>
+    
+                    <div class="details-meta-data-section-header">Summary</div>
+                    <div class="clearfix"></div>
+                    <div class="details-meta-data-section-label">Type:</div>
+                    <div class="details-meta-data-section-value">Task</div>
+                    <div class="clearfix"></div>
+                    <div class="divider-20"></div>
+    
+                    <div class="details-meta-data-section-header">Properties</div>
+                    <div class="clearfix"></div>
+                    <div class="details-meta-data-section-label">Message:</div>
+                    <div class="details-meta-data-section-value">Delivering the goods.</div>
+                    <div class="clearfix"></div>
+                  </div>
+                  <!-- /Right hand side of call trace (detail) -->
+                </div>
+              </div>
+              <!-- /Tab:CallTrace -->
+              
+              <!-- Tab:Message -->
+              <div class="container-fluid tab-pane fade" id="message">
+                <div class="message-meta-data-section-header" data-i18n-key="message-details">Message Details</div>
+                <div id="editor-wrapper" class="source-editor-wrapper">
+                  <div data-role="dummy" data-field="message-editor" id="editor" class="source-editor">
+&lt;assembly
+    xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd"&gt;
+    &lt;id&gt;brms&lt;/id&gt;
+    &lt;formats&gt;
+        &lt;format&gt;zip&lt;/format&gt;
+    &lt;/formats&gt;
+    &lt;includeBaseDirectory&gt;false&lt;/includeBaseDirectory&gt;
+&lt;/assembly&gt;
+                  </div>
+                </div>
+                <button data-field="btn-resubmit" class="btn" name="Resubmit" data-i18n-key="resubmit">Resubmit</button>
+                <div class="clearfix"></div>
+                <div data-field="resubmitDetails" class="message-meta-data-section-value" data-role="dummy">Resubmitted by 'xyz' at 'datetime': Successful</div>
+              </div>
+              <!-- /Tab:Message -->
+              
+            </div>
+            <!-- /tab-content -->
+          </div>  <!-- /situation-details -->
+        </div> <!-- /content-wrapper -->
+        
+        <!-- Footer -->
+        <footer>
+          <hr />
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013-4</p>
+        </footer>
+      </div> <!-- /container -->
+      
+    </div> <!-- /page -->
+
+    <!-- Some scripting to add functionality to the live template -->
+    <script>
+      $(document).ready(function() {
+          var editor = ace.edit("editor");
+          editor.setTheme("ace/theme/eclipse");
+          editor.getSession().setMode("ace/mode/xml");
+      });
+    </script>
+  </body>
+</html>

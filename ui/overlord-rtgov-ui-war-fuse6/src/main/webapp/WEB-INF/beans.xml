@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:weld="http://jboss.org/schema/weld/beans" 
+  xsi:schemaLocation="
+      http://java.sun.com/xml/ns/javaee
+      http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+
+  <weld:scan>
+    <weld:include name="org.overlord.**" />
+  </weld:scan>
+
+  <interceptors>
+    <class>org.overlord.rtgov.ui.server.interceptors.UserContextInterceptor</class>
+  </interceptors>
+
+  <alternatives>
+    <class>org.overlord.rtgov.ui.server.services.impl.MockSituationsServiceImpl</class>
+    <class>org.overlord.rtgov.ui.server.services.impl.MockServicesServiceImpl</class>
+    <class>org.overlord.rtgov.ui.server.services.impl.MockSituationEventGenerator</class>
+  </alternatives>
+
+</beans>

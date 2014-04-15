@@ -1,0 +1,90 @@
+/* collapsible tree */
+
+.tree a {
+  display: inline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 90%;
+}
+.tree li {
+  list-style-type: none;
+  margin: 0px 0;
+  padding: 4px 0px 0px 2px;
+  position: relative;
+}
+.tree li::before, .tree li::after {
+  content: '';
+  left: -20px;
+  position: absolute;
+  right: auto;
+}
+.tree li::before {
+  border-left: 1px solid #999;
+  bottom: 50px;
+  height: 100%;
+  top: 0;
+  width: 1px;
+}
+.tree li::after {
+  border-top: 1px solid #999;
+  height: 20px;
+  top: 13px;
+  width: 23px;
+}
+.tree li span {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  display: inline-block;
+  line-height: 14px;
+  padding: 2px 4px;
+  text-decoration: none;
+  background-color: white;
+  border-color: #444;
+}
+.tree li span.Success {
+  background-color: #349654;
+  color: white;
+  border-color: #444;
+}
+.tree li span.Warning {
+  background-color: #def12f;
+  color: #444;
+}
+.tree li span.Fail {
+  background-color: #db4747;
+  color: white;
+}
+.tree li span.active {
+  background-color: #df8505;
+  border: 1px solid #c67605;
+  color: white;
+}
+.tree li.parent_li > span {
+  cursor: pointer;
+}
+.tree li.leaf_li > span {
+}
+/*Time for some hover effects*/
+.tree li.parent_li > span:hover {
+  background-color: #df8505;
+  border: 1px solid #c67605;
+  color: #fff;
+}
+.tree li.parent_li > span:hover+ul li::after { border-top-color: #c67605; }
+.tree li.parent_li > span:hover+ul li::before { border-left-color: #c67605; }
+.tree li.parent_li > span:hover+ul li span {
+  background: #fddfb3;
+  border: 1px solid #faa937;
+  color: #000;
+}
+/*Remove connectors after last child*/
+.tree li:last-child::before {
+  height: 30px;
+}
+
+/*Remove connectors before root*/
+.tree > ul > li::before, > ul > li::after {
+  border: 0;
+}

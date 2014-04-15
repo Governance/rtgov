@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title data-role="dummy">Overlord RTGov UI - Services</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-fileupload.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui.css" rel="stylesheet"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui-responsive.css" rel="stylesheet"></link>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../../../../../../../../webapp/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-fileupload.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/js/rtgov-ui-responsive.js"></script>
+  </head>
+
+  <body>
+    <div id="page" data-field="page">
+
+      <!-- Content area with footer-->
+      <div id="page-content" class="container-fluid">
+
+        <!-- Breadcrumbs -->
+        <div class="row-fluid">
+          <ul class="breadcrumb">
+            <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
+            <li class="dropdown active">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <span data-i18n-key="breadcrumb.services">Services</span> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a data-field="to-situations" href="situations.html" data-i18n-key="situations">Situations</a></li>
+                </ul>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Page content -->
+        <div class="row-fluid">
+          <!-- The Filter Sidebar -->
+          <div id="filter-sidebar" data-field="filter-sidebar" class="span3 filter-sidebar">
+            <div class="row-fluid filter-header">
+              <a class="span12" data-toggle="slide" data-target="#filters"><span data-i18n-key="deployment-filters">Filters</span> <span class="mobile-only caret pull-right"></span></a>
+            </div>
+            <!-- The Filters -->
+            <div id="filters" class="row-fluid close-on-mobile closed-on-mobile open-on-desktop">
+              <div class="span12">
+                <div class="filter-inner">
+                  <form class="" onSubmit="return false;">
+                    <div class="controls controls-row">
+                      <label class="filter-label" data-i18n-key="application-name">Application Name</label>
+                      <select data-field="applicationName" class="selectpicker span12" data-role="dummy">
+                        <option value="">Any</option>
+                      </select>
+                    </div>
+                    <div class="controls controls-row">
+                      <label class="filter-label" data-i18n-key="service-name">Service Name</label>
+                      <input type="text" data-field="serviceName" class="span12" placeholder="Any" title="Enter the service name (simple wildcards supported)."></input>
+                    </div>
+                    <div class="controls controls-row">
+                      <label class="filter-label" data-i18n-key="processing-state">Processing State</label>
+                      <select data-field="processingState" class="selectpicker span12" data-role="dummy">
+                        <option value="">Any</option>
+                        <option value="with_errors">With Errors</option>
+                        <option value="successful">Successful</option>
+                        <option value="running">Running</option>
+                        <option value="waiting">Waiting</option>
+                      </select>
+                    </div>
+<!--                     <div class="controls controls-row"> -->
+<!--                       <label class="filter-label" data-i18n-key="service-style">Service Style</label> -->
+<!--                       <select data-field="serviceStyle" class="selectpicker span12" data-role="dummy"> -->
+<!--                         <option value="">Any</option> -->
+<!--                         <option value="one_way">OneWay/Request</option> -->
+<!--                         <option value="request_response">RequestResponse</option> -->
+<!--                       </select> -->
+<!--                     </div> -->
+<!--                     <div class="controls controls-row"> -->
+<!--                       <label class="filter-label" data-i18n-key="processing-started">Processing Started</label> -->
+<!--                       <input data-field="processingStartedFrom" class="span5 filter-date" type="text" placeholder="Any" readonly="readonly"></input> -->
+<!--                       <span class="span2 desktop-only" style="padding-top: 4px; text-align: center" data-i18n-key="to">to</span> -->
+<!--                       <input data-field="processingStartedTo" class="span5 filter-date" type="text" placeholder="Any" readonly="readonly"></input> -->
+<!--                     </div> -->
+                    <div class="controls">
+                      <button data-field="clearFilters" class="btn btn-focus btn-clear" data-i18n-key="clear-all-filters">Clear All Filters</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- The tabs -->
+          <div class="span9 pull-right">
+            <div class="row-fluid services">
+              <div class="span12 overlord-actions">
+                <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
+                <button data-field="services-btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
+                <div class="pull-right sp4n-label">
+                  <span data-i18n-key="displaying" class="desktop-only">Displaying</span>
+                  <span data-field="services-range" data-role="dummy">1-11</span>
+                  <span data-i18n-key="of">of</span>
+                  <span data-field="services-total" data-role="dummy">37</span>
+                </div>
+              </div>
+              <div data-field="services-none" style="display:none" class="overlord-none">
+                <span data-i18n-key="no-services-found">No services found.</span>
+              </div>
+              <div data-field="services-searching" style="display:none" class="overlord-searching">
+                <span class="spinner" data-i18n-key="finding-services">Finding services, please wait...</span>
+              </div>
+              <table data-field="services-table" class="overlord-table table table-striped table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th data-i18n-key="service-name">Service Name</th>
+                  <th data-i18n-key="application">Application</th>
+                  <th class="desktop-only" data-i18n-key="interface">Interface</th>
+                  <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
+                </tr>
+              </thead>
+              <tbody data-role="dummy">
+                <tr>
+                  <td><a href="serviceDetails.html">CreateApplicationWebservice</a></td>
+                  <td>Contract</td>
+                  <td class="desktop-only">{urn:jboss:demo:create-application}CreateApplicationPT</td>
+                  <td class="desktop-only">SOAP, JMS</td>
+                </tr>
+                <tr>
+                  <td><a href="serviceDetails.html">CreateQuoteWebservice</a></td>
+                  <td>Contract</td>
+                  <td class="desktop-only">{urn:jboss:demo:create-application}CreateQuotePT</td>
+                  <td class="desktop-only">SOAP</td>
+                </tr>
+                <tr>
+                  <td><a href="serviceDetails.html">SearchContractWebservice</a></td>
+                  <td>Contract</td>
+                  <td class="desktop-only">{urn:jboss:demo:search}SearchContractPT</td>
+                  <td class="desktop-only">SOAP</td>
+                </tr>
+                <tr>
+                  <td><a href="serviceDetails.html">DomainInformationWebservice</a></td>
+                  <td>GGRL</td>
+                  <td class="desktop-only">{urn:jboss:demo:domain-info}DomainInformationPT</td>
+                  <td class="desktop-only">JMS</td>
+                </tr>
+                <tr>
+                  <td><a href="serviceDetails.html">FNOLWebservice</a></td>
+                  <td>Claim</td>
+                  <td class="desktop-only">{urn:jboss:demo:create-application}FNOLPT</td>
+                  <td class="desktop-only">SOAP</td>
+                </tr>
+              </tbody>
+              </table>
+              <div data-field="services-pager" class="pagination overlord-pager" data-role="dummy">
+                <ul>
+                  <li class="disabled"><a>&#x00AB;</a></li>
+                  <li class="active"><a>1</a></li>
+                  <li><a>2</a></li>
+                  <li><a>3</a></li>
+                  <li><a>4</a></li>
+                  <li><a>&#x00BB;</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+          <hr />
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013-4</p>
+        </footer>
+      </div> <!-- /container -->
+      
+    </div> <!-- /page -->
+
+
+    <!-- Some scripting to add functionality to the live template -->
+    <script>
+      $(document).ready(function() {
+          $('.filter-date').datepicker({
+              autoclose: true,
+              todayBtn: true,
+              todayHighlight: true
+          });
+      });
+    </script>
+
+  </body>
+</html>

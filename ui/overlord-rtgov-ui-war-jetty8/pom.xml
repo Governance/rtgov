@@ -1,0 +1,162 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overlord.rtgov</groupId>
+    <artifactId>ui</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+  <groupId>org.overlord.rtgov.ui</groupId>
+  <artifactId>overlord-rtgov-ui-war-jetty8</artifactId>
+  <packaging>war</packaging>
+  <name>Overlord RTGov::UI::Jetty8</name>
+
+  <dependencies>
+    <!-- The UI WAR's classes -->
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <version>${project.version}</version>
+      <classifier>classes</classifier>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- The base WAR being extended -->
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <version>${project.version}</version>
+      <type>war</type>
+    </dependency>
+
+    <!-- Other Jetty-only dependencies -->
+    <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-auth-jetty8</artifactId>
+      <version>${overlord-commons.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.picketlink</groupId>
+      <artifactId>picketlink-core</artifactId>
+      <version>${picketlink.version}</version>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warName>overlord-rtgov-ui-jetty8</warName>
+          <overlays>
+            <overlay>
+              <groupId>${project.groupId}</groupId>
+              <artifactId>overlord-rtgov-ui-war</artifactId>
+              <excludes>
+                <exclude>WEB-INF/lib/jetty-naming-*.jar</exclude>
+                <exclude>WEB-INF/lib/jetty-plus-*.jar</exclude>
+
+                <!-- Don't need these for the mock version -->
+                <exclude>WEB-INF/lib/rtgov-common-*.jar</exclude>
+                <exclude>WEB-INF/lib/rtgov-jbossas-*.jar</exclude>
+                <exclude>WEB-INF/lib/rtgov-ui-services-switchyard-*.jar</exclude>
+                <exclude>WEB-INF/lib/rtgov-ui-situations-*.jar</exclude>
+                <exclude>WEB-INF/lib/situation-store-jpa-*.jar</exclude>
+
+              </excludes>
+            </overlay>
+          </overlays>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>test-jetty</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant</artifactId>
+                <version>1.8.2</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <id>run-jetty8</id>
+                <phase>install</phase>
+                <configuration>
+                  <tasks>
+                    <antversion property="antversion" />
+                    <echo>Ant Version: ${antversion}</echo>
+                    
+                    <property name="appserver.id" value="jetty8" />
+                    <property name="rtgovui.tempdir" value="${project.build.directory}/_tmp" />
+                    <property name="rtgovui.install.dir" value="${project.build.directory}" />
+                    <property name="rtgovui.appserver.dir" location="${rtgovui.install.dir}/jetty-distribution-8.1.14.v20131031" />
+                    <property name="rtgovui.jetty.download.url" value="http://eclipse.org/downloads/download.php?file=/jetty/8.1.14.v20131031/dist/jetty-distribution-8.1.14.v20131031.zip&amp;r=1" />
+                    <property name="rtgovui.jetty.zip" location="${rtgovui.tempdir}/jetty-distribution-8.1.14.v20131031.zip" />
+                    <property name="rtgovui.uiwar-jetty8.war" value="${basedir}/target/overlord-rtgov-ui-jetty8.war" />
+                    <property name="rtgovui.jetty.home" location="${rtgovui.appserver.dir}" />
+                    <property name="rtgovui.jetty.webapps" location="${rtgovui.appserver.dir}/webapps" />
+                    <property name="rtgovui.jetty.logdir" location="${rtgovui.appserver.dir}/logs" />
+                    <property name="rtgovui.main.dir" location="${basedir}/src/main" />
+                    
+                    <echo></echo>
+                    <echo>********************************************************************</echo>
+                    <echo>WAR Path:          ${rtgovui.uiwar-jetty8.war}</echo>
+                    <echo>Jetty Home:        ${rtgovui.jetty.home}</echo>
+                    <echo>********************************************************************</echo>
+                    <echo></echo>
+                    
+                    <mkdir dir="${rtgovui.tempdir}"/>
+                    <delete dir="${rtgovui.jetty.logdir}" />
+                    <mkdir dir="${rtgovui.jetty.logdir}"/>
+
+                    <!-- Download Jetty 8 and Unpack it -->
+                    <get src="${rtgovui.jetty.download.url}" dest="${rtgovui.tempdir}/jetty-distribution-8.1.14.v20131031.zip" usetimestamp="true" />
+                    <unzip src="${rtgovui.jetty.zip}" dest="${rtgovui.install.dir}" overwrite="false" />
+                    <makeurl file="${rtgovui.jetty.home}" property="rtgovui.jetty.home.url"/>
+                    <echo>Jetty Home URL:    ${rtgovui.jetty.home.url}</echo>
+
+                    <!-- Deploy rtgovui to Jetty 8 -->
+                    <copy file="${rtgovui.main.dir}/config/jetty/etc/jetty.xml" todir="${rtgovui.jetty.home}/etc" overwrite="true" /> 
+                    <copy file="${rtgovui.main.dir}/config/jetty/etc/realm.properties" todir="${rtgovui.jetty.home}/etc" overwrite="true" /> 
+                    <copy file="${rtgovui.main.dir}/config/jetty/etc/jetty-logging.xml" todir="${rtgovui.jetty.home}/etc" overwrite="true" /> 
+                    <copy file="${rtgovui.uiwar-jetty8.war}" tofile="${rtgovui.jetty.webapps}/rtgov-ui.war" overwrite="true" /> 
+                    
+                    <!-- Start Jetty 8 -->
+                    <java jar="${rtgovui.jetty.home}/start.jar" fork="true" failonerror="true" dir="${rtgovui.jetty.home}">
+                      <sysproperty key="jetty.home" value="${rtgovui.jetty.home}"/>
+                      <sysproperty key="jetty.home.url" value="${rtgovui.jetty.home.url}"/>
+                      <sysproperty key="java.io.tmpdir" value="${rtgovui.tempdir}"/>
+                      <sysproperty key="org.overlord.apps.config-dir" value="${rtgovui.resources.dir}/config/header"/>
+                      <jvmarg line="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8787" />
+                      <arg value="etc/jetty-logging.xml"/>
+                      <arg value="etc/jetty-started.xml"/>
+                    </java>
+                  </tasks>
+                </configuration>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
