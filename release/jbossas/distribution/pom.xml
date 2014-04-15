@@ -70,7 +70,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord</groupId>
-			<artifactId>overlord-commons-idp-eap61</artifactId>
+			<artifactId>overlord-commons-idp-eap6</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>

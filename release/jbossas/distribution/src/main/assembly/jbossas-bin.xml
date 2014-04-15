@@ -124,7 +124,7 @@
 		<dependencySet>
 			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
 			<includes>
-				<include>org.overlord:overlord-commons-idp-eap61:war</include>
+				<include>org.overlord:overlord-commons-idp-eap6:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
