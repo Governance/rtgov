@@ -37,25 +37,13 @@
 			<property name="overlord-commons.version" value="2.0.1-SNAPSHOT" />
 		</ant>
 
-		<ant antfile="gadget-server/build.xml" target="deploy">
-			<property name="as7.home" value="${jboss.home}" />
-			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
-			<property name="basedir" value="${basedir}/gadget-server" />
-		</ant>
-
 		<!-- Install Runtime Governance -->
 
 		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
 			<fileset dir="deployments" />
 		</copy>
-		<delete file="${jboss.home}/standalone/configuration/overlord-apps/gadget-server-overlordapp.properties"/>
 		<copy todir="${jboss.home}/standalone/configuration" >
 			<fileset dir="configuration" />
-		</copy>
-		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov">
-			<fileset dir="gadget-server">
-				<include name="gadgets.war" />
-			</fileset>
 		</copy>
 
 	</target>
@@ -63,12 +51,6 @@
 	<target name="undeploy" depends="drop.schema" >
 		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
 		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
-
-		<ant antfile="gadget-server/build.xml" target="undeploy">
-			<property name="as7.home" value="${jboss.home}" />
-			<property name="deploy.dir" value="${jboss.home}/standalone/deployments/overlord-rtgov" />
-			<property name="basedir" value="${basedir}/gadget-server" />
-		</ant>
 	</target>
 
 	<!-- ### LOG PROPERTIES ################################################# -->
@@ -76,14 +58,13 @@
 		<echo message="database....... ${database}" />
 		<echo message="jdbc driver.... ${driver}" />
 		<echo message="connection RTGov url....... ${connection.rtgov.url}" />
-		<echo message="connection GadgetServer url....... ${connection.gs.url}" />
 		<echo message="username.. ${username}" />  	
 	</target>
 
 	<!-- ### CREATE SCHEMA ############################################# -->
 	<target name="create.schema"
 			depends="log.properties"
-			description="creates the rtgov and gadget server tables in the database">
+			description="creates the rtgov tables in the database">
 		<sql driver="${driver}"
 				url="${connection.rtgov.url}"
 				userid="${username}"
@@ -96,54 +77,18 @@
 				</fileset>
 			</classpath>
 		</sql>
-		<sql driver="${driver}"
-				url="${connection.gs.url}"
-				userid="${username}"
-				password="${password}"
-				onerror="continue"
-				src="gadget-server/sql/${database}.sql">
-			<classpath>
-				<fileset dir="jdbc/drivers">
-					<include name="*.jar"/>
-				</fileset>
-			</classpath>
-		</sql>
-		<sql driver="${driver}"
-				url="${connection.gs.url}"
-				userid="${username}"
-				password="${password}"
-				onerror="continue"
-				src="import_rtgov.sql">
-			<classpath>
-				<fileset dir="jdbc/drivers">
-					<include name="*.jar"/>
-				</fileset>
-			</classpath>
-		</sql>
 	</target>
 
 	<!-- ### DROP SCHEMA ############################################### -->
 	<target name="drop.schema"
 			depends="log.properties"
-			description="drops the rtgov and gadget server tables from the database">
+			description="drops the rtgov tables from the database">
 		<sql driver="${driver}"
 				url="${connection.rtgov.url}"
 				userid="${username}"
 				password="${password}"
 				onerror="continue"
 				src="sql/${database}.drop.sql">
-			<classpath>
-				<fileset dir="jdbc/drivers">
-					<include name="*.jar"/>
-				</fileset>
-			</classpath>
-		</sql>
-		<sql driver="${driver}"
-				url="${connection.gs.url}"
-				userid="${username}"
-				password="${password}"
-				onerror="continue"
-				src="gadget-server/sql/${database}.drop.sql">
 			<classpath>
 				<fileset dir="jdbc/drivers">
 					<include name="*.jar"/>

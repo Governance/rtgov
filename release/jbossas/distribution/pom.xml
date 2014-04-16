@@ -52,16 +52,10 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.overlord.rtgov</groupId>
-			<artifactId>gadgets</artifactId>
+			<groupId>org.overlord.rtgov.ui</groupId>
+			<artifactId>overlord-rtgov-ui-war-eap61</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
-		</dependency>
-
-		<dependency>
-			<groupId>org.overlord.gadgets.server</groupId>
-			<artifactId>distribution</artifactId>
-			<type>zip</type>
 		</dependency>
 
 		<dependency>

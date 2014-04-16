@@ -1,1 +1,0 @@
-The Service Dependency Overview Gadget, it basically shows the SVG file that gets from the server.

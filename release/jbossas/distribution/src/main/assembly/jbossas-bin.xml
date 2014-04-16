@@ -77,6 +77,14 @@
 			<outputDirectory>profiles/server/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
+				<include>org.overlord.rtgov.ui:overlord-rtgov-ui-war-eap61:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-ui.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>profiles/server/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
 				<include>org.overlord.rtgov.content:overlord-rtgov-epn-jee:war</include>
 			</includes>
 			<outputFileNameMapping>overlord-rtgov-epn.war</outputFileNameMapping>
@@ -105,13 +113,6 @@
 				<include>com.h2database:h2</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>profiles/server</outputDirectory>
-			<unpack>true</unpack>
-			<includes>
-				<include>org.overlord.gadgets.server:distribution:zip</include>
-			</includes>
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
@@ -153,14 +154,6 @@
 			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
 			<includes>
 				<include>org.overlord:overlord-commons-services:jar</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>profiles/server/gadget-server</outputDirectory>
-			<unpack>false</unpack>
-			<includes>
-				<include>org.overlord.rtgov:gadgets:war</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
