@@ -53,23 +53,39 @@
 		    </roles>
 		    <timezone>+1</timezone>
 		</developer>
+		<developer>
+			<name>Eric Wittmann</name>
+			<id>ewittman</id>
+			<email>eric.wittmann@redhat.com</email>
+			<organization>Red Hat</organization>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
 	</developers>
 
 	<properties>
+		<commons.lang3.version>3.1</commons.lang3.version>
 		<drools.version>6.0.0.CR5</drools.version>
 		<elasticsearch.version>1.0.1</elasticsearch.version>
+		<errai.version>2.4.3.Final</errai.version>
 		<felix.version>2.3.7</felix.version>
 		<gadgets.version>2.0.0-SNAPSHOT</gadgets.version>
 		<javaee-api.version>6.0</javaee-api.version>
+		<jboss-ejb3-api.version>3.1.0</jboss-ejb3-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
+		<jsp-api.version>2.0</jsp-api.version>
 		<kie.version>6.0.0.CR5</kie.version>
 		<lucene.version>4.6.1</lucene.version>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<picketlink.version>2.1.6.Final</picketlink.version>
-		<switchyard.version>1.1.0.CR1</switchyard.version>
+		<servlet-api.version>3.0.1</servlet-api.version>
+		<switchyard.version>1.1.0.Final</switchyard.version>
 		<elasticsearch.version>1.0.1</elasticsearch.version>
 		<lucene.version>4.6.1</lucene.version>
+
+		<version.org.jboss.msc.jboss-msc>1.0.4.GA</version.org.jboss.msc.jboss-msc>
 
 		<!-- The following properties are required as they are passed to
 		junit tests. They need to be kept in step with the versions in
@@ -86,6 +102,7 @@
 		<module>integration</module>
 		<module>content</module>
 		<module>samples</module>
+		<module>ui</module>
 		<module>release</module>
 	</modules>
 
@@ -349,6 +366,38 @@
 				<version>${lucene.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${servlet-api.version}</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.msc</groupId>
+				<artifactId>jboss-msc</artifactId>
+				<version>${version.org.jboss.msc.jboss-msc}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.ejb3</groupId>
+				<artifactId>jboss-ejb3-api</artifactId>
+				<scope>provided</scope>
+				<version>${jboss-ejb3-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons.lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>${jsp-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-tools</artifactId>
+				<version>${errai.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

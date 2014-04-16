@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.overlord.rtgov</groupId>
+    <artifactId>ui</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+  </parent>
+  <groupId>org.overlord.rtgov.ui</groupId>
+  <artifactId>overlord-rtgov-ui-dev-server</artifactId>
+  <name>Overlord RTGov::UI::Dev Server</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Overlord Commons Dev -->
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-dev</artifactId>
+      <version>${overlord-commons.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+    </dependency>
+
+    <!-- Overlord Commons UI Header -->
+    <dependency>
+      <groupId>org.overlord</groupId>
+      <artifactId>overlord-commons-uiheader</artifactId>
+      <version>${overlord-commons.version}</version>
+    </dependency>
+
+    <!-- ServiceActivator/dmr -->
+    <dependency>
+      <groupId>org.jboss.msc</groupId>
+      <artifactId>jboss-msc</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.as</groupId>
+      <artifactId>jboss-as-server</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- RTGov -->
+    <dependency>
+      <groupId>org.overlord.rtgov.active-queries</groupId>
+      <artifactId>active-collection</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.activity-analysis</groupId>
+      <artifactId>analytics</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>persistence-api</artifactId>
+      <version>1.0.2</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <version>${project.version}</version>
+      <classifier>classes</classifier>
+      <exclusions>
+        <exclusion>
+          <artifactId>jboss-logging</artifactId>
+          <groupId>org.jboss.logging</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jetty-naming</artifactId>
+          <groupId>org.mortbay.jetty</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>run</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.1</version>
+            <configuration>
+              <source>1.7</source>
+              <target>1.7</target>
+              <showDeprecation>false</showDeprecation>
+              <showWarnings>false</showWarnings>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+              <execution>
+                <id>run</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <mainClass>org.overlord.rtgov.devsvr.RTGovUIDevServer</mainClass>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

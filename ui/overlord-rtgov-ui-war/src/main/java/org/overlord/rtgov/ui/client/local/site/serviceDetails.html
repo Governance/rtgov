@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title data-role="dummy">Overlord RTGov UI - Service Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-fileupload.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui.css" rel="stylesheet"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui-responsive.css" rel="stylesheet"></link>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../../../../../../../../webapp/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-fileupload.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/js/rtgov-ui-responsive.js"></script>
+  </head>
+
+  <body>
+    <div id="page" data-field="page">
+
+      <!-- Content area with footer-->
+      <div id="page-content" class="container-fluid">
+
+        <!-- Breadcrumbs -->
+        <div class="row-fluid">
+          <ul class="breadcrumb">
+            <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span data-i18n-key="breadcrumb.services">Services</span> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a data-field="back-to-services" href="services.html" data-i18n-key="services">Services</a></li>
+                  <li><a data-field="to-situations" href="situations.html" data-i18n-key="situations">Situations</a></li>
+                </ul>
+                <span class="divider">/<span data-role="dummy" /></span>
+            </li>
+            <li class="active" data-i18n-key="breadcrumb.service-details">Service Details</li>
+          </ul>
+        </div>
+
+        <!-- Loading spinner -->
+        <div data-field="service-details-loading-spinner" class="spinner service-details-loading hide" data-i18n-key="loading-service">Loading service, please wait...</div>
+
+        <div id="service-details-content-wrapper">
+        <!-- Action bar -->
+        <div class="row-fluid overlord-actions overlord-details-actions">
+          <div class="span12">
+            <span class="sp4n-label">
+              <span class="details-title" data-field="serviceName" data-role="dummy">CreateApplicationWebService</span>
+            </span>
+            <div class="btn-group" style="visibility:hidden">
+              <button class="btn" disabled="true">Spacer<span data-role="dummy" /></button>
+            </div>
+          </div>
+        </div>
+        <!-- Service Details -->
+        <div class="row-fluid service-details">
+          <div class="container-fluid">
+            <!-- Service Properties and Description -->
+            <div class="row-fluid">
+              <!-- Service Properties -->
+              <div class="span6 details-meta-data-section">
+                <div class="details-meta-data-section-header" data-i18n-key="header.service-properties">Service Properties</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label" data-i18n-key="namespace">Namespace:</div>
+                <div data-field="serviceNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demo:services</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label" data-i18n-key="application">Application:</div>
+                <div data-field="applicationNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demos:applications</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label">&nbsp;<span data-role="dummy" /></div>
+                <div data-field="applicationName" class="details-meta-data-section-value" data-role="dummy">Contract</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label" data-i18n-key="service-interface">Service Interface:</div>
+                <div data-field="serviceInterface" class="details-meta-data-section-value" data-role="dummy">{urn:jboss:demo:create-application}CreateApplicationPT</div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+            <hr />
+            
+            <!-- The References table -->
+            <div class="row-fluid">
+              <div class="span12 details-meta-data-section">
+                <div class="details-meta-data-section-header" data-i18n-key="find-references">References</div>
+                <div class="clearfix"></div>
+                <table data-field="reference-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
+                  <thead>
+                    <tr>
+                      <th data-i18n-key="reference-name">Reference Name</th>
+                      <th class="desktop-only" data-i18n-key="interface">Interface</th>
+                      <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
+                    </tr>
+                  </thead>
+                  <tbody data-role="dummy">
+                    <tr>
+                      <td><a href="referenceDetails.html">CreateApplicationRef</a></td>
+                      <td class="desktop-only">org.jboss.demos.services.ICreateApplication</td>
+                      <td class="desktop-only">JMS,SOAP,REST</td>
+                    </tr>
+                    <tr>
+                      <td><a href="referenceDetails.html">CreateQuoteRef</a></td>
+                      <td class="desktop-only">org.jboss.demos.services.ICreateQuote</td>
+                      <td class="desktop-only">JMS,SOAP</td>
+                    </tr>
+                    <tr>
+                      <td><a href="referenceDetails.html">SearchContractRef</a></td>
+                      <td class="desktop-only">org.jboss.demos.services.ISearchContract</td>
+                      <td class="desktop-only">REST</td>
+                    </tr>
+                    <tr>
+                      <td><a href="referenceDetails.html">DomainInformationRef</a></td>
+                       <td class="desktop-only">org.jboss.demos.services.IDomainInformation</td>
+                      <td class="desktop-only">JMS,REST</td>
+                    </tr>
+                    <tr>
+                      <td><a href="referenceDetails.html">FNOLRef</a></td>
+                      <td class="desktop-only">org.jboss.demos.services.IFNOL</td>
+                      <td class="desktop-only">JMS,SOAP,REST</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>            
+          </div>
+        </div>  <!-- /service-details -->
+        
+        </div> <!-- /content-wrapper -->
+        
+        <!-- Footer -->
+        <footer>
+          <hr />
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013-4</p>
+        </footer>
+      </div> <!-- /container -->
+      
+    </div> <!-- /page -->
+
+    <!-- Some scripting to add functionality to the live template -->
+    <script>
+      $(document).ready(function() {
+      });
+    </script>
+  </body>
+</html>

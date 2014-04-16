@@ -1,0 +1,87 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.overlord.rtgov</groupId>
+	<artifactId>ui</artifactId>
+	<packaging>pom</packaging>
+	<name>Overlord RTGov::UI</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>parent</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>rtgov-ui-core</module>
+		<module>rtgov-ui-services-switchyard</module>
+		<module>rtgov-ui-situations</module>
+		<module>overlord-rtgov-ui-war</module>
+		<module>overlord-rtgov-ui-dev-server</module>
+		<module>overlord-rtgov-ui-war-eap61</module>
+		<module>overlord-rtgov-ui-war-jetty8</module>
+		<module>overlord-rtgov-ui-war-fuse6</module>
+	</modules>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>gwt-maven-plugin</artifactId>
+										<versionRange>[2.3.0,)</versionRange>
+										<goals>
+											<goal>resources</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<configLocation>checkstyle/checkstyle.xml</configLocation>
+					<consoleOutput>false</consoleOutput>
+					<suppressionsLocation>checkstyle/suppressions.xml</suppressionsLocation>
+					<failsOnError>false</failsOnError>
+					<useFile />
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.overlord</groupId>
+						<artifactId>overlord-commons-build</artifactId>
+						<version>${overlord-commons.version}</version>
+					</dependency>
+				</dependencies>
+			<executions>
+			<execution>
+				<id>check-style</id>
+				<phase>site</phase>
+				<goals>
+					<goal>checkstyle</goal>
+				</goals>
+			</execution>
+		</executions>
+	  </plugin>      
+    </plugins>
+  </build>
+</project>

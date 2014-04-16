@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title data-role="dummy">Overlord RTGov UI - Main</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-fileupload.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui.css" rel="stylesheet"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui-responsive.css" rel="stylesheet"></link>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../../../../../../../../webapp/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-fileupload.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/js/rtgov-ui-responsive.js"></script>
+  </head>
+
+  <body>
+
+    <div id="page" data-field="page">
+      <!-- Content area with footer-->
+      <div id="page-content" class="container">
+        <div class="hero-unit desktop-only">
+          <h1 data-i18n-key="hero.title">Runtime Governance</h1>
+          <p data-i18n-key="hero.description">
+            Welcome to the Overlord RTGov (Runtime Governance) dashboard.  This page serves
+            as a jumping off point, providing quick access to frequently used functionality in 
+            the Runtime Governance UI.
+          </p>
+        </div>
+        <div class="row">
+          <div class="span4">
+            <h2 data-i18n-key="nav.services_and_refs">Services</h2>
+            <p data-i18n-key="nav.services_and_refs-description">
+              Go here to get a list of all the public services currently deployed/monitored.
+            </p>
+            <p><a data-field="to-services-page" class="btn" href="services.html"><span data-i18n-key="services">Services</span> &raquo;</a></p>
+          </div>
+          <div class="span4">
+            <h2 data-i18n-key="nav.situations">Situations</h2>
+            <p data-i18n-key="nav.situations-description">
+              Here you'll find a list of all the situations detected by the system.
+            </p>
+            <p><a data-field="to-situations-page" class="btn" href="situations.html"><span data-i18n-key="situations">Situations</span> &raquo;</a></p>
+         </div>
+          <div class="span4">
+            <h2 data-i18n-key="nav.analytics">Analytics</h2>
+            <p data-i18n-key="nav.analytics-description">
+              Here you will find an analytics dashboard to help you analyse your system's activity.
+            </p>
+            <p><a class="btn" href="analytics.html" target="_blank"><span data-i18n-key="analytics">Analytics</span> &raquo;</a></p>
+         </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+          <hr />
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013-4</p>
+        </footer>
+      </div> <!-- /container -->
+      
+    </div> <!-- /page -->
+  </body>
+</html>

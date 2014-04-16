@@ -25,6 +25,7 @@
 		<module>service-dependency</module>
 		<module>service-dependency-svg</module>
 		<module>situation-manager</module>
+		<module>situation-store-jpa</module>
 	</modules>
 
 </project>

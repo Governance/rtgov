@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title data-role="dummy">Overlord RTGov UI - Situations</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-switch.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui.css" rel="stylesheet"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui-responsive.css" rel="stylesheet"></link>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../../../../../../../../webapp/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-switch.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/js/rtgov-ui-responsive.js"></script>
+  </head>
+
+  <body>
+    <div id="page" data-field="page">
+
+      <!-- Content area with footer-->
+      <div id="page-content" class="container-fluid">
+
+        <!-- Breadcrumbs -->
+        <div class="row-fluid">
+          <ul class="breadcrumb span11">
+            <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
+            <li class="dropdown active">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                  <span data-i18n-key="breadcrumb.situations">Situations</span> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a data-field="to-services" href="services.html" data-i18n-key="services">Services</a></li>
+                </ul>
+            </li>
+          </ul>
+          <a data-field="sitwatch-btn" onclick="$(this).blur();" class="btn span1 sitwatch-notification" data-toggle="dropdown"><i class="icon-warning-sign"></i> <span>(3)</span></a>
+          <div data-field="sitwatch-events" class="sitwatch-events" data-role="dummy">
+            <div class="sitwatch-event">
+              <div class="icon icon-severity-critical"></div>
+              <a class="title" href="#">Rate Limit Exceeded</a>
+              <span class="timestamp">9:16 AM</span>
+              <span class="subject">{urn:namespace}ImportantService|VeryImportantOperation</span>
+            </div>
+            <div class="sitwatch-event">
+              <i class="icon icon-severity-high"></i>
+              <span class="title"><a href="#">SLA Violation</a></span>
+              <span class="timestamp">8:53 AM</span>
+              <span class="subject">{urn:namespace}ImportantService|VeryImportantOperation</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Page content -->
+        <div class="row-fluid">
+          <div class="span3">
+	          <!-- The Filter Sidebar -->
+	          <div id="filter-sidebar" data-field="filter-sidebar" class="filter-sidebar">
+	            <div class="row-fluid filter-header">
+	              <a class="span12" data-toggle="slide" data-target="#filters"><span data-i18n-key="deployment-filters">Filters</span> <span class="mobile-only caret pull-right"></span></a>
+	            </div>
+	            <!-- The Filters -->
+	            <div id="filters" class="row-fluid close-on-mobile closed-on-mobile open-on-desktop">
+	              <div class="span12">
+	                <div class="filter-inner">
+	                  <form class="" onSubmit="return false;">
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="severity">Severity</label>
+	                      <select data-field="severity" class="selectpicker span12" data-role="dummy">
+	                        <option value="" data-i18n-key="any">Any</option>
+	                        <option value="" data-i18n-key="low">Low</option>
+	                        <option value="" data-i18n-key="medium">Medium</option>
+	                        <option value="" data-i18n-key="high">High</option>
+	                        <option value="" data-i18n-key="critical">Critical</option>
+	                      </select>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="resolutionState">Status</label>
+	                      <select data-field="resolutionState" class="selectpicker span12" data-role="dummy">
+	                        <option value="" data-i18n-key="resolutionState.any">Any</option>
+	                        <option value="" data-i18n-key="resolutionState.open">Open</option>
+	                        <option value="" data-i18n-key="resolutionState.resolved">Resolved</option>
+	                        <option value="" data-i18n-key="resolutionState.in_progress">In Progress</option>
+	                        <option value="" data-i18n-key="resolutionState.resolved">Resolved</option>
+	                      </select>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="type">Type</label>
+	                      <input data-field="type" class="span12" type="text" placeholder="Any"></input>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="timestamp">Timestamp</label>
+	                      <div class="input-append">
+	                      <input data-field="timestampFrom" class="filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+	                      <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+	                      </div>
+	                      <span class="desktop-only" style="padding-top: 4px; text-align: center" data-i18n-key="to">to</span>
+	                      <div class="input-append">
+	                      <input data-field="timestampTo" class="filter-date" type="text" placeholder="Any" readonly="readonly"></input>
+	                      <span class="add-on"><i data-time-icon="icon-time" data-date-icon="icon-calendar"></i></span>
+	                      </div>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="description">Description</label>
+	                      <input data-field="description" class="span12" type="text" placeholder="Any"></input>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="subject">Subject</label>
+	                      <input data-field="subject" class="span12" type="text" placeholder="Any"></input>
+	                    </div>
+	                    <div class="controls controls-row">
+	                      <label class="filter-label" data-i18n-key="host">Host</label>
+	                      <input data-field="host" class="span12" type="text" placeholder="Any"></input>
+	                    </div>
+	                    <div class="controls">
+	                      <button data-field="clearFilters" class="btn btn-focus btn-clear" data-i18n-key="clear-all-filters">Clear All Filters</button>
+	                    </div>
+	                  </form>
+	                </div>
+	              </div>
+	            </div>
+	          </div>
+	          <!-- The Action Sidebar -->  
+              <div id="action-sidebar" data-field="action-sidebar" class="action-sidebar">
+                  <div class="row-fluid action-header btn-danger">
+                      <a class="span12" data-toggle="slide" data-target="#actions"><span data-i18n-key="situation-actions">Actions</span> <span class="mobile-only caret pull-right"></span></a>
+                  </div>
+                  <div id="actions" class="row-fluid close-on-mobile closed-on-mobile open-on-desktop closed">
+                    <div class="span12">
+                        <div class="filter-inner">
+                            <form class="" onSubmit="return false;">
+                                <div class="controls controls-row">
+                                    <label class="filter-label" data-i18n-key="description">
+                                        apply to <input type="checkbox" data-toggle="switch" checked data-on-label="filtered" data-off-label="all" data-field="toggleFilterSwitch"></input> rows
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <button data-field="retrySituations" class="btn btn-focus btn-large" data-i18n-key="retry-situations" title="Retry"><span class="icon-retweet"></span></button>
+                                    <button data-field="exportSituations" class="btn btn-focus btn-large" data-i18n-key="export-situations" title="Export"><span class="icon-download"></span></button>
+                                    <button data-field="deleteSituations" class="btn btn-focus btn-large" data-i18n-key="delete-situations" title="Delete"><span class="icon-remove"></span></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+          <!-- The Situations table -->
+          <div class="span9">
+            <div class="row-fluid situations">
+              <div class="span12 overlord-actions">
+                <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
+                <button data-field="btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
+                <div class="pull-right sp4n-label">
+                  <span data-i18n-key="displaying">Displaying</span>
+                  <span data-field="situations-range" data-role="dummy">1-11</span>
+                  <span data-i18n-key="of">of</span>
+                  <span data-field="situations-total" data-role="dummy">37</span>
+                </div>
+              </div>
+              <div data-field="situations-none" style="display:none" class="overlord-none">
+                <span data-i18n-key="none-found">No situations found.</span>
+              </div>
+              <div data-field="situations-searching" style="display:none" class="overlord-searching">
+                <span class="spinner" data-i18n-key="finding-situations">Finding situations, please wait...</span>
+              </div>
+              <table data-field="situations-table" class="overlord-table table table-striped table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th data-i18n-key="severity-column"><!-- Severity (icon) -->!</th>
+                  <th data-i18n-key="type">Type</th>
+                  <th data-i18n-key="resolutionState">Status</th>
+                  <th data-i18n-key="subject">Subject</th>
+                  <th data-i18n-key="timestamp">Timestamp</th>
+                  <th data-i18n-key="description">Description</th>
+                  <th style="width: 38px"></th>
+                </tr>
+              </thead>
+              <tbody data-role="dummy">
+                <tr>
+                  <td><div class="icon icon-severity-critical"></div></td>
+                  <td><a href="situationDetails.html">Rate Limit Exceeded</a></td>
+                  <td>Open</td>
+                  <td>{urn:namespace}ImportantService|VeryImportantOperation</td>
+                  <td>08/20/2013 @ 5:22:47</td>
+                  <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                  <td>
+                    <div>
+                      <a href="#" data-toggle="popover" data-placement="left" data-html="true" data-original-title="Properties" data-trigger="hover" data-content="&lt;table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>&lt;tbody>&lt;tr>&lt;td>Property 1:&lt;/td>&lt;td>Property One Value&lt;/td>&lt;/tr>&lt;tr>&lt;td>Property 2:&lt;/td>&lt;td>Property Two Value&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>"><div class="icon icon-properties"></div></a>
+                      <a href="#" data-toggle="popover" data-placement="left" data-html="true" data-original-title="Context" data-trigger="hover" data-content="&lt;table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>&lt;tbody>&lt;tr>&lt;td>Context 1:&lt;/td>&lt;td>Context One Value&lt;/td>&lt;/tr>&lt;tr>&lt;td>Context 2:&lt;/td>&lt;td>Context Two Value&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>"><div class="icon icon-context"></div></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><div class="icon icon-severity-high"></div></td>
+                  <td><a href="situationDetails.html">SLA Violation</a></td>
+                  <td>In Progress</td>
+                  <td>{urn:namespace}ServiceA|OperationB</td>
+                  <td>08/19/2013 @ 14:33:47</td>
+                  <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                </tr>
+                <tr>
+                  <td><div class="icon icon-severity-high"></div></td>
+                  <td><a href="situationDetails.html">SLA Violation</a></td>
+                  <td>Reopened</td>
+                  <td>{urn:namespace}ServiceA|OperationB</td>
+                  <td>08/19/2013 @ 14:35:47</td>
+                  <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                </tr>
+                <tr>
+                  <td><div class="icon icon-severity-low"></div></td>
+                  <td><a href="situationDetails.html">Rate Limit Approaching</a></td>
+                  <td>Closed</td>
+                  <td>{urn:namespace}SomeService|AnotherOperation</td>
+                  <td>08/15/2013 @ 12:11:42</td>
+                  <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                </tr>
+              </tbody>
+              </table>
+              <div data-field="situations-pager" class="pagination overlord-pager" data-role="dummy">
+                <ul>
+                  <li class="disabled"><a>&#x00AB;</a></li>
+                  <li class="active"><a>1</a></li>
+                  <li><a>2</a></li>
+                  <li><a>3</a></li>
+                  <li><a>4</a></li>
+                  <li><a>&#x00BB;</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+          <hr />
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013-4</p>
+        </footer>
+      </div> <!-- /container -->
+      
+    </div> <!-- /page -->
+
+
+    <!-- Some scripting to add functionality to the live template -->
+    <script>
+      $(document).ready(function() {
+          $("[data-toggle='tooltip']").tooltip();
+          $("[data-toggle='popover']").popover();
+          $('.filter-date').datepicker({
+              autoclose: true,
+              todayBtn: true,
+              todayHighlight: true
+          });
+          $("[data-toggle='switch']").bootstrapSwitch();
+      });
+    </script>
+
+  </body>
+</html>

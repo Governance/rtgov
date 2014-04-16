@@ -1,0 +1,92 @@
+/* Global Responsive Styles */
+body.no-fileupload .requires-fileupload {
+  display: none;
+  visibility: hidden;
+}
+
+/* Huge Desktop */
+@media ( min-width : 1900px) {
+}
+
+/* Desktop */
+@media ( min-width : 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+  .no-desktop {
+    display: none !important;
+  }
+  #page .closed-on-desktop {
+    display: none;
+  }
+
+  body {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  
+}
+
+/* Mobile */
+@media ( max-width : 767px) {
+  .desktop-only {
+    display: none !important;
+  }
+  .no-mobile {
+    display: none !important;
+  }
+  #page .closed-on-mobile {
+    display: none;
+  }
+
+  body {
+    padding: 0px;
+  }
+
+  #page-content {
+    padding: 5px;
+  }
+
+  .modal-header .close {
+    display: none;
+  }
+  
+  .details-meta-data-section, .task-form {
+    padding: 10px;
+  }
+
+  .btn-hover {
+    visibility: visible;
+  }
+
+  .deployment-nav-panel {
+    margin-bottom: 5px;
+    border-left: 0px;
+    border-right: 0px;
+  }
+  .deployment-nav-panel:hover {
+    box-shadow: none;
+    border-left: 0px;
+    border-right: 0px;
+  }
+
+}
+
+
+/* Phones */
+@media ( max-width : 480px) {
+  #fileupload-import .uneditable-input {
+    width: 42%;
+  }
+  .growl-dialog {
+    width: 320px;
+  }
+}
+
+
+/* iPhone */
+@media ( max-width : 360px) {
+  .growl-dialog {
+    width: 350px;
+  }
+}

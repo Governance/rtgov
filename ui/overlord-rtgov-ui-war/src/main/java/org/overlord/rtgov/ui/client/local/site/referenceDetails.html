@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title data-role="dummy">Overlord RTGov UI - Reference Details</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-datepicker.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/bootstrap-2.3.1/css/bootstrap-fileupload.min.css" rel="stylesheet" media="screen"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui.css" rel="stylesheet"></link>
+    <link href="../../../../../../../../webapp/css/rtgov-ui-responsive.css" rel="stylesheet"></link>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="../../../../../../../../webapp/jquery-1.8.3/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/bootstrap-2.3.1/js/bootstrap-fileupload.min.js"></script>
+    <script type="text/javascript" src="../../../../../../../../webapp/js/rtgov-ui-responsive.js"></script>
+  </head>
+
+  <body>
+    <div id="page" data-field="page">
+
+      <!-- Content area with footer-->
+      <div id="page-content" class="container-fluid">
+
+        <!-- Breadcrumbs -->
+        <div class="row-fluid">
+          <ul class="breadcrumb">
+            <li><a data-field="back-to-dashboard" href="dashboard.html" data-i18n-key="breadcrumb.dashboard">Dashboard</a> <span class="divider">/<span data-role="dummy" /></span></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span data-i18n-key="breadcrumb.services">Services</span> <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a data-field="back-to-services" href="services.html" data-i18n-key="services">Services</a></li>
+                  <li><a data-field="to-situations" href="situations.html" data-i18n-key="situations">Situations</a></li>
+                </ul>
+                <span class="divider">/<span data-role="dummy" /></span>
+            </li>
+            <li class="active" data-i18n-key="breadcrumb.reference-details">Reference Details</li>
+          </ul>
+        </div>
+
+        <!-- Loading spinner -->
+        <div data-field="reference-details-loading-spinner" class="spinner reference-details-loading hide" data-i18n-key="loading-reference">Loading reference, please wait...</div>
+
+        <div id="reference-details-content-wrapper">
+        <!-- Action bar -->
+        <div class="row-fluid overlord-actions overlord-details-actions">
+          <div class="span12">
+            <span class="sp4n-label">
+              <span class="details-title" data-field="referenceName" data-role="dummy">CreateApplicationRef</span>
+            </span>
+            <div class="btn-group" style="visibility:hidden">
+              <button class="btn" disabled="true">Spacer<span data-role="dummy" /></button>
+            </div>
+          </div>
+        </div>
+        <!-- Reference Details -->
+        <div class="row-fluid reference-details">
+          <div class="container-fluid">
+            <!-- Properties and Description -->
+            <div class="row-fluid">
+              <!-- Properties -->
+              <div class="span6 details-meta-data-section">
+                <div class="details-meta-data-section-header" data-i18n-key="header.reference-properties">Reference Properties</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label" data-i18n-key="namespace">Namespace:</div>
+                <div data-field="referenceNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demo:references</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label" data-i18n-key="application">Application:</div>
+                <div data-field="applicationNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demos:applications</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label">&nbsp;<span data-role="dummy" /></div>
+                <div data-field="applicationName" class="details-meta-data-section-value" data-role="dummy">Contract</div>
+                <div class="clearfix"></div>
+                <div class="details-meta-data-section-label" data-i18n-key="service-interface">Service Interface:</div>
+                <div data-field="referenceInterface" class="details-meta-data-section-value" data-role="dummy">org.jboss.demos.service.ICreateApplication</div>
+                <div class="clearfix"></div>
+              </div>
+            </div>
+            <hr />
+          </div>
+        </div>  <!-- /service-details -->
+        
+        </div> <!-- /content-wrapper -->
+        
+        <!-- Footer -->
+        <footer>
+          <hr />
+          <p data-i18n-key="footer">&copy; JBoss Overlord 2013-4</p>
+        </footer>
+      </div> <!-- /container -->
+      
+    </div> <!-- /page -->
+
+    <!-- Some scripting to add functionality to the live template -->
+    <script>
+      $(document).ready(function() {
+      });
+    </script>
+  </body>
+</html>
