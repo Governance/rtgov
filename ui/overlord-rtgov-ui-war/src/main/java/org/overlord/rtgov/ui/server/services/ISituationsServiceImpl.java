@@ -15,6 +15,8 @@
  */
 package org.overlord.rtgov.ui.server.services;
 
+import java.io.OutputStream;
+
 import org.jboss.errai.bus.server.annotations.Remote;
 import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
@@ -85,5 +87,11 @@ public interface ISituationsServiceImpl {
      * @throws UiException
      */
     BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
+
+    /**
+     * Export the content of all message's matching the given filter criteria.
+     * @param situationsFilterBean
+     */
+    void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream);
 
 }

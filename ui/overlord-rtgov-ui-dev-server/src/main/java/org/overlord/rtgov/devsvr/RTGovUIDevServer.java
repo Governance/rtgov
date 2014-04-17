@@ -43,6 +43,7 @@ import org.overlord.commons.gwt.server.filters.GWTCacheControlFilter;
 import org.overlord.commons.gwt.server.filters.ResourceCacheControlFilter;
 import org.overlord.commons.ui.header.OverlordHeaderDataJS;
 import org.overlord.rtgov.ui.server.RtgovUI;
+import org.overlord.rtgov.ui.server.servlet.SituationsExportServlet;
 
 import com.google.common.collect.Lists;
 
@@ -156,6 +157,9 @@ public class RTGovUIDevServer extends ErraiDevServer {
         for (String fileType : fileTypes) {
             rtgovUI.addServlet(resources, "*." + fileType);
         }
+        ServletHolder servletHolder = new ServletHolder(SituationsExportServlet.class);
+        servletHolder.setInitOrder(2);
+        rtgovUI.addServlet(servletHolder, "/situations/export");
 
         rtgovUI.setSecurityHandler(createSecurityHandler());
         handlers.addHandler(rtgovUI);
