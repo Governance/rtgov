@@ -54,9 +54,7 @@ of the transactions - thus indicating that the Runtime Governance infrastructure
 
 ## Contributing
 
-Before submitting a pull request, please perform the following command from the root folder, to check for style issues:
+Instructions on setting up an Eclipse development environment can be found here: https://github.com/Governance/rtgov/wiki/Setting-Up-Eclipse-Development-Environment
 
-**mvn checkstyle:checkstyle**
-
-If any errors are reported, then they should be fixed before submitting the pull request.
+Please also read the guidelines for contributors: https://github.com/Governance/overlord/wiki/Contributor-Guidelines
 
