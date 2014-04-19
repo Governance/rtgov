@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.overlord.rtgov.event-processor</groupId>
-    <artifactId>ep-elasticsearch</artifactId>
+    <artifactId>ep-keyvaluestore</artifactId>
     <packaging>bundle</packaging>
-    <name>Overlord RTGov::Modules::Event Processor::EP Elasticsearch</name>
+    <name>Overlord RTGov::Modules::Event Processor::EP Keyvalue</name>
 
     <parent>
         <groupId>org.overlord.rtgov</groupId>
@@ -72,7 +72,7 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Export-Package>
-                            org.overlord.rtgov.ep.elasticsearch.*;version=${project.version}
+                            org.overlord.rtgov.ep.keyvaluestore.*;version=${project.version}
                         </Export-Package>
                         <Import-Package>
                             !javax.inject.*,!javax.enterprise.*,!javax.persistence.*,*
