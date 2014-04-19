@@ -16,7 +16,7 @@
 	<modules>
 		<module>ep-core</module>
 		<module>ep-drools</module>
-		<module>ep-elasticsearch</module>
+		<module>ep-keyvaluestore</module>
 		<module>ep-jpa</module>
 		<module>ep-mail</module>
 		<module>ep-mvel</module>

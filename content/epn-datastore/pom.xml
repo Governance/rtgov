@@ -77,7 +77,7 @@
         </dependency>
         <dependency>
             <groupId>org.overlord.rtgov.event-processor</groupId>
-            <artifactId>ep-elasticsearch</artifactId>
+            <artifactId>ep-keyvaluestore</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

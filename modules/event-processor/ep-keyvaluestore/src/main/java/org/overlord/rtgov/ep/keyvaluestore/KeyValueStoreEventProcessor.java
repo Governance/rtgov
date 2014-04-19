@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.ep.elasticsearch;
+package org.overlord.rtgov.ep.keyvaluestore;
 
 import org.mvel2.MVEL;
 import org.overlord.rtgov.common.service.KeyValueStore;
@@ -27,10 +27,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The ElasticSearch event processor implementation.
+ * The generic Keyvalue event processor implementation.
  */
-public class ElasticSearchProcessor extends EventProcessor {
-    private static final Logger LOG = Logger.getLogger(ElasticSearchProcessor.class.getName());
+public class KeyValueStoreEventProcessor extends EventProcessor {
+    private static final Logger LOG = Logger.getLogger(KeyValueStoreEventProcessor.class.getName());
 
     private static final String KEY_VALUE_STORE = "KeyValueStore";
 
@@ -157,7 +157,7 @@ public class ElasticSearchProcessor extends EventProcessor {
 
         if (id == null) {
             throw new Exception(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
-                        "ep-elasticsearch.Messages").getString("EP-ELASTICSEARCH-1"), event));
+                        "ep-keyvaluestore.Messages").getString("EP-KEYVALUE-1"), event));
         }
         
         _keyValueStore.add(id, event);

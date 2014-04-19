@@ -21,7 +21,7 @@
         {
             "name": "ElasticSearchActivityUnitStore",
             "eventProcessor": {
-                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
                 "services": {
                     "KeyValueStore": {
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
@@ -36,7 +36,7 @@
         {
             "name": "ElasticSearchResponseTimeStore",
             "eventProcessor": {
-                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
                 "services": {
                     "KeyValueStore": {
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
@@ -50,7 +50,7 @@
         {
             "name": "ElasticSearchSituationStore",
             "eventProcessor": {
-                "@class": "org.overlord.rtgov.ep.elasticsearch.ElasticSearchProcessor",
+                "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
                 "services": {
                     "KeyValueStore": {
                         "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
