@@ -53,7 +53,7 @@
 
 		<dependency>
 			<groupId>org.overlord.rtgov.ui</groupId>
-			<artifactId>overlord-rtgov-ui-war-eap61</artifactId>
+			<artifactId>overlord-rtgov-ui-war-eap6</artifactId>
 			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>

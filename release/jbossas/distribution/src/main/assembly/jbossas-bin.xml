@@ -77,7 +77,7 @@
 			<outputDirectory>profiles/server/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
-				<include>org.overlord.rtgov.ui:overlord-rtgov-ui-war-eap61:war</include>
+				<include>org.overlord.rtgov.ui:overlord-rtgov-ui-war-eap6:war</include>
 			</includes>
 			<outputFileNameMapping>overlord-rtgov-ui.war</outputFileNameMapping>
 		</dependencySet>

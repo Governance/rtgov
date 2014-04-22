@@ -6,9 +6,9 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
   <groupId>org.overlord.rtgov.ui</groupId>
-  <artifactId>overlord-rtgov-ui-war-eap61</artifactId>
+  <artifactId>overlord-rtgov-ui-war-eap6</artifactId>
   <packaging>war</packaging>
-  <name>Overlord RTGov::UI::EAP61</name>
+  <name>Overlord RTGov::UI::EAP6</name>
 
   <dependencies>
     <dependency>
