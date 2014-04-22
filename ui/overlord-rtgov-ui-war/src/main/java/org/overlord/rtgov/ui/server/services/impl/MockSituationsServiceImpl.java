@@ -23,6 +23,8 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.RESOLVED;
 
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -401,6 +403,22 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         batchRetryResult.setFailedCount(2);
         batchRetryResult.setIgnoredCount(1);
         return batchRetryResult;
+    }
+
+    @Override
+    public void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream) {
+        String situationId = idToSituation.keySet().iterator().next();
+        PrintWriter printWriter = new PrintWriter(outputStream);
+        try {
+            SituationBean situationBean = get(situationId);
+            printWriter.println(situationBean.getMessage().getContent());
+        } catch (UiException e) {
+            e.printStackTrace();
+        } finally {
+            if (null != printWriter) {
+                printWriter.close();
+            }
+        }
     }
 
 

@@ -15,6 +15,8 @@
  */
 package org.overlord.rtgov.ui.provider;
 
+import java.io.OutputStream;
+
 import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
@@ -77,7 +79,16 @@ public interface SituationsProvider {
      * @throws UiException
      */
     public void resubmit(String situationId, MessageBean message) throws UiException;
-    
+
+    /**
+     * This method export all situation's matching the given filter criteria
+     * 
+     * @param situationsFilterBean
+     * @param outputStream
+     *            Failed to search situations
+     */
+    public void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream);
+
     /**
      * This method resubmits all situation's matching the given filter criteria
      * 
