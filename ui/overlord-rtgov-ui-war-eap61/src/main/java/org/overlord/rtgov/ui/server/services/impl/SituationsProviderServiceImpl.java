@@ -15,6 +15,7 @@
  */
 package org.overlord.rtgov.ui.server.services.impl;
 
+import java.io.OutputStream;
 import java.util.Collections;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -192,4 +193,9 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
 			ResolutionState resolutionState) throws UiException {
 		_provider.updateResolutionState(situationId, resolutionState);
 	}
+
+    @Override
+    public void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream) {
+        _provider.export(situationsFilterBean, outputStream);
+    }
 }

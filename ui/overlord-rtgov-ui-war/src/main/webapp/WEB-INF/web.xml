@@ -50,6 +50,15 @@
     <servlet-name>ErraiServlet</servlet-name>
     <url-pattern>*.erraiBus</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>SituationsExportServlet</servlet-name>
+    <servlet-class>org.overlord.rtgov.ui.server.servlet.SituationsExportServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SituationsExportServlet</servlet-name>
+    <url-pattern>/situations/export</url-pattern>
+  </servlet-mapping>
   <resource-env-ref>
     <description>Object factory for the CDI Bean Manager</description>
     <resource-env-ref-name>BeanManager</resource-env-ref-name>
