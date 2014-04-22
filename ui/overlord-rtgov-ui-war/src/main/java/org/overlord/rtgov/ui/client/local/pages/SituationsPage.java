@@ -19,6 +19,8 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.jboss.errai.bus.client.ErraiBus;
+import org.jboss.errai.bus.client.api.base.MessageBuilder;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.bus.client.api.messaging.MessageCallback;
 import org.jboss.errai.ui.nav.client.local.Page;
@@ -55,6 +57,8 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 
@@ -89,6 +93,10 @@ public class SituationsPage extends AbstractPage {
     @Inject
     @DataField
     protected Button retrySituations;
+    @Inject
+    @DataField
+    protected Button exportSituations;
+
     private boolean applyActionToFilteredRowsOnly = true;
 
     @Inject @DataField("btn-refresh")
@@ -360,4 +368,16 @@ public class SituationsPage extends AbstractPage {
                 });
     }
 
+    @EventHandler("exportSituations")
+    public void onExportClick(ClickEvent event) {
+        SituationsFilterBean situationsFilterBean = applyActionToFilteredRowsOnly ? filtersPanel.getValue()
+                : new SituationsFilterBean();
+        String exportKey = String.valueOf(System.currentTimeMillis());
+        MessageBuilder.createMessage().toSubject("situations/export").with("exportKey", exportKey)
+                .with("exportFilter", situationsFilterBean).noErrorHandling().sendNowWith(ErraiBus.get());
+        UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+        String exportLocation = urlBuilder.setPath("rtgov-ui/situations/export")
+                .setParameter("_k", exportKey).buildString();
+        Window.open(exportLocation, "_blank", "");
+    }
 }
