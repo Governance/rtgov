@@ -66,7 +66,7 @@
 
 	<properties>
 		<commons.lang3.version>3.1</commons.lang3.version>
-		<drools.version>6.0.0.CR5</drools.version>
+		<drools.version>6.1.0.Beta2</drools.version>
 		<elasticsearch.version>1.0.1</elasticsearch.version>
 		<errai.version>2.4.3.Final</errai.version>
 		<felix.version>2.3.7</felix.version>
@@ -75,12 +75,12 @@
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jsp-api.version>2.0</jsp-api.version>
-		<kie.version>6.0.0.CR5</kie.version>
+		<kie.version>6.1.0.Beta2</kie.version>
 		<lucene.version>4.6.1</lucene.version>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<picketlink.version>2.1.6.Final</picketlink.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
-		<switchyard.version>1.1.0.Final</switchyard.version>
+		<switchyard.version>2.0.0-SNAPSHOT</switchyard.version>
 		<elasticsearch.version>1.0.1</elasticsearch.version>
 		<lucene.version>4.6.1</lucene.version>
 
