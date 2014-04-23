@@ -324,7 +324,7 @@ public class JBossASCustomEventsResultsTest {
             }
             
             // Wait for events to propagate
-            Thread.sleep(3000);
+            Thread.sleep(4000);
             
             java.util.List<?> events=getEvents();
             

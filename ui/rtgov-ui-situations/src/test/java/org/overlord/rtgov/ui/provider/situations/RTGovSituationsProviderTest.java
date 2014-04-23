@@ -27,10 +27,10 @@ import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.Situation.Severity;
+import org.overlord.rtgov.analytics.situation.store.ResolutionState;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.ui.client.model.MessageBean;
-import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.SituationEventBean;
 import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
@@ -152,11 +152,11 @@ public class RTGovSituationsProviderTest {
 				throw new Exception("Fail");
 			}
 
-			public void recordResubmitFailure(String situationId, String message) {
+			public void recordResubmitFailure(String situationId, String message, String userName) {
 				Assert.fail();
 			};
 
-			public void recordSuccessfulResubmit(String situationId) {
+			public void recordSuccessfulResubmit(String situationId, String userName) {
 				Assert.fail();
 			};
 
@@ -272,11 +272,11 @@ public class RTGovSituationsProviderTest {
 			public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception {
 				throw new Exception("Fail");
 			}
-			public void recordResubmitFailure(String situationId, String message) {
+			public void recordResubmitFailure(String situationId, String message, String userName) {
 				Assert.fail();
 			};
 
-			public void recordSuccessfulResubmit(String situationId) {
+			public void recordSuccessfulResubmit(String situationId, String userName) {
 				Assert.fail();
 			};
 

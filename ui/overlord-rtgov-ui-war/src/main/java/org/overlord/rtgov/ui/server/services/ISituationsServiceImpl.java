@@ -18,8 +18,8 @@ package org.overlord.rtgov.ui.server.services;
 import java.io.OutputStream;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
+import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;

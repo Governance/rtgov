@@ -14,9 +14,9 @@
   </interceptors>
 
   <alternatives>
-    <class>org.overlord.rtgov.ui.server.services.impl.MockSituationsServiceImpl</class>
-    <class>org.overlord.rtgov.ui.server.services.impl.MockServicesServiceImpl</class>
-    <class>org.overlord.rtgov.ui.server.services.impl.MockSituationEventGenerator</class>
+        <class>org.overlord.rtgov.ui.server.services.impl.SituationsProviderServiceImpl</class>
+        <class>org.overlord.rtgov.ui.server.services.impl.ServicesProviderServiceImpl</class>
+        <class>org.overlord.rtgov.ui.server.services.impl.SituationEventGenerator</class>
   </alternatives>
 
 </beans>

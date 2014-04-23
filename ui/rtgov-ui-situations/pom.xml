@@ -33,6 +33,11 @@
 	        <scope>provided</scope>
 	    </dependency>
 	    <dependency>
+	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
+	        <artifactId>situation-store</artifactId>
+	        <scope>provided</scope>
+	    </dependency>
+	    <dependency>
 	        <groupId>org.overlord.rtgov.active-queries</groupId>
 	        <artifactId>active-collection</artifactId>
 	        <scope>provided</scope>
@@ -41,14 +46,6 @@
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
 	        <artifactId>call-trace</artifactId>
 	        <scope>provided</scope>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.overlord.rtgov.activity-management</groupId>
-	        <artifactId>activity-store-jpa</artifactId>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.overlord.rtgov.integration</groupId>
-	        <artifactId>rtgov-jbossas</artifactId>
 	    </dependency>
 
 		<!-- Test only dependencies -->

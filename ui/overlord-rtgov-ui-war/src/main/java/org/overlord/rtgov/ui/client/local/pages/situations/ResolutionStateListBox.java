@@ -17,9 +17,9 @@ package org.overlord.rtgov.ui.client.local.pages.situations;
 
 import javax.inject.Inject;
 
+import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.widgets.common.AbstractFilterListBox;
-import org.overlord.rtgov.ui.client.model.ResolutionState;
 
 public class ResolutionStateListBox extends AbstractFilterListBox {
 

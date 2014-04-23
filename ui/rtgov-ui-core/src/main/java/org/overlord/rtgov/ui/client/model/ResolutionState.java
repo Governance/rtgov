@@ -20,5 +20,39 @@ package org.overlord.rtgov.ui.client.model;
  *
  */
 public enum ResolutionState {
-	ANY, NULL, UNRESOLVED, RESOLVED, IN_PROGRESS, WAITING, REOPENED;
+    
+    /**
+     * Any resolution state.
+     */
+    ANY,
+    
+    /**
+     * Null resolution state.
+     */
+    NULL,
+    
+    /**
+     * Unresolved state.
+     */
+    UNRESOLVED,
+    
+    /**
+     * Resolved state.
+     */
+    RESOLVED,
+    
+    /**
+     * In-progress state.
+     */
+    IN_PROGRESS,
+    
+    /**
+     * Waiting state.
+     */
+    WAITING,
+    
+    /**
+     * Re-opened state.
+     */
+    REOPENED;
 }
