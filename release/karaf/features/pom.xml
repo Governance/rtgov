@@ -467,7 +467,6 @@
 										</feature>
 										<feature>
 											<name>drools-module</name>
-											<version>${drools.version}</version>
 										</feature>
 									</dependsOnFeatures>
 									<includes>

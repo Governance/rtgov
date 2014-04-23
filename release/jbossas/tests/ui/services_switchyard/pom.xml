@@ -44,6 +44,25 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.switchyard.quickstarts.demos</groupId>
+			<artifactId>switchyard-quickstart-demo-multi-artifacts</artifactId>
+			<version>${switchyard.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard.quickstarts.demos</groupId>
+			<artifactId>switchyard-quickstart-demo-multi-order-consumer</artifactId>
+			<version>${switchyard.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard.quickstarts.demos</groupId>
+			<artifactId>switchyard-quickstart-demo-multi-order-service</artifactId>
+			<version>${switchyard.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
