@@ -69,7 +69,6 @@ public class MVELSeverityAnalyzer implements SeverityAnalyzer {
      * 
      * @throws Exception Failed to initialize
      */
-    @SuppressWarnings("resource")
     @PostConstruct
     public void init() throws Exception {
         
