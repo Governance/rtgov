@@ -88,14 +88,17 @@ public class SituationsPage extends AbstractPage {
     @Inject @DataField("filter-sidebar")
     protected SituationFilters filtersPanel;
     @Inject
-    @DataField
+    @DataField("toggleFilterSwitch")
     protected ToggleSwitch toggleFilterSwitch;
     @Inject
-    @DataField
+    @DataField("retrySituations")
     protected Button retrySituations;
     @Inject
-    @DataField
+    @DataField("exportSituations")
     protected Button exportSituations;
+    @Inject
+    @DataField("deleteSituations")
+    protected Button deleteSituations;
 
     private boolean applyActionToFilteredRowsOnly = true;
 
@@ -379,5 +382,36 @@ public class SituationsPage extends AbstractPage {
         String exportLocation = urlBuilder.setPath("rtgov-ui/situations/export")
                 .setParameter("_k", exportKey).buildString();
         Window.open(exportLocation, "_blank", "");
+    }
+
+    @EventHandler("deleteSituations")
+    public void onDeleteClick(ClickEvent event) {
+        SituationsFilterBean situationsFilterBean = applyActionToFilteredRowsOnly ? filtersPanel.getValue()
+                : new SituationsFilterBean();
+        final NotificationBean notificationBean = notificationService.startProgressNotification(
+                i18n.format("situation.delete-message-title"), //$NON-NLS-1$
+                i18n.format("situation.delete-message-msg")); //$NON-NLS-1$
+        situationsService.delete(situationsFilterBean, new RpcServiceInvocationHandlerAdapter<Integer>() {
+            @Override
+            public void doOnReturn(Integer deleteCount) {
+                notificationService.completeProgressNotification(notificationBean.getUuid(),
+                        i18n.format("situation.message-deleted"), //$NON-NLS-1$
+                        i18n.format("situation.delete-result", deleteCount)); //$NON-NLS-1$
+            }
+
+            @Override
+            public void doOnError(Throwable error) {
+                notificationService.completeProgressNotification(notificationBean.getUuid(),
+                        i18n.format("situation.delete-error"), //$NON-NLS-1$
+                        error);
+            }
+            
+            @Override
+            public void doOnComplete(
+                    org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcResult<Integer> result) {
+                doSearch();
+            }
+
+        });
     }
 }

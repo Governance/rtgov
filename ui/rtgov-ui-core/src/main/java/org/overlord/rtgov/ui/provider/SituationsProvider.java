@@ -98,6 +98,16 @@ public interface SituationsProvider {
      *             Failed to search situations
      */
     public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
+
+    /**
+     * This method deletes all situation's matching the given filter criteria
+     * 
+     * @param filters The filters
+     * @return The {@link BatchRetryResult}
+     * @throws UiException
+     *             Failed to delete situations
+     */
+    public int delete(SituationsFilterBean situationsFilterBean) throws UiException;
   
 	public void assign(final String situationId, final String userName) throws UiException;
 	

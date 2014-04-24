@@ -6,6 +6,10 @@ import static org.junit.Assert.assertTrue;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.IN_PROGRESS;
 
 import java.security.Principal;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
@@ -24,6 +28,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
+import org.overlord.rtgov.activity.model.ActivityTypeId;
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
@@ -33,6 +39,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 @ContextConfiguration
 public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringContextTests {
@@ -323,6 +331,23 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 		reload = _situationStore.getSituation(situation.getId());
 		assertFalse(reload.getProperties().containsKey("assignedTo"));
 	}
+    
+    @Test
+    public void deleteSituation() throws Exception {
+        Situation situation = new Situation();
+        situation.setId("deleteSituation");
+        situation.setDescription("deleteSituation");
+        situation.setTimestamp(System.currentTimeMillis());
+        situation.setProperties(Collections.singletonMap("1", "1"));
+        situation.setContext(Sets.newHashSet(new Context(Context.Type.Conversation, "1")));
+        situation.setActivityTypeIds(Sets.newHashSet(new ActivityTypeId("1", 0)));
+        _entityManager.persist(situation);
+        SituationsQuery situationQuery = new SituationsQuery();
+        situationQuery.setDescription(situation.getDescription());
+        _situationStore.delete(situationQuery);
+        List<Situation> situations = _situationStore.getSituations(situationQuery);
+        assertTrue(situations.isEmpty());
+    }
     
 	@Test
 	public void closeSituationResetOpenResolution() throws Exception {
