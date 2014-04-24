@@ -198,4 +198,9 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
     public void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream) {
         _provider.export(situationsFilterBean, outputStream);
     }
+
+    @Override
+    public int delete(SituationsFilterBean situationsFilterBean) throws UiException {
+        return _provider.delete(situationsFilterBean);
+    }
 }

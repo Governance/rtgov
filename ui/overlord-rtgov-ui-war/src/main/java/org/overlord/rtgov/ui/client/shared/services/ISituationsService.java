@@ -80,5 +80,11 @@ public interface ISituationsService {
      * @throws UiException
      */
     public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
+    /**
+     * Deletes all situation's matching the given filter.
+     * @param situationsFilterBean
+     * @throws UiException
+     */
+    public int delete(SituationsFilterBean situationsFilterBean) throws UiException;
 
 }

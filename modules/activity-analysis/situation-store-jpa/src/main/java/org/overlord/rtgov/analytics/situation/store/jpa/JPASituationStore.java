@@ -18,6 +18,7 @@ package org.overlord.rtgov.analytics.situation.store.jpa;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.System.currentTimeMillis;
 
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -130,10 +131,17 @@ public class JPASituationStore implements SituationStore {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public java.util.List<Situation> getSituations(SituationsQuery sitQuery) {
-        java.util.List<Situation> situations=null;
-        EntityManager em=getEntityManager();
+    public List<Situation> getSituations(SituationsQuery sitQuery) {
+        Query query = createQuery("SELECT sit from Situation sit ", sitQuery);
+        List<Situation> situations = query.getResultList();
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest(i18n.format("JPASituationStore.SitResult", situations)); //$NON-NLS-1$
+        }
+        return (situations);
+    }
 
+    private Query createQuery(String selectOrDelete, SituationsQuery sitQuery) {
+        EntityManager em=getEntityManager();
         // Build the query string
         StringBuffer queryString=new StringBuffer();
 
@@ -199,22 +207,12 @@ public class JPASituationStore implements SituationStore {
         if (queryString.length() > 0) {
             queryString.insert(0, "WHERE "); //$NON-NLS-1$
         }
-
-        queryString.insert(0, "SELECT sit from Situation sit "); //$NON-NLS-1$
-        
+        queryString.insert(0, selectOrDelete); //$NON-NLS-1$
         Query query=em.createQuery(queryString.toString());
-
         if (sitQuery.getSeverity() != null) {
             query.setParameter("severity", sitQuery.getSeverity()); //$NON-NLS-1$
         }
-
-        situations = query.getResultList();
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest(i18n.format("JPASituationStore.SitResult", situations)); //$NON-NLS-1$
-        }
-
-        return (situations);
+        return query;
     }
     
     /**
@@ -381,5 +379,11 @@ public class JPASituationStore implements SituationStore {
             }
         });
 
+    }
+
+    @Override
+    public int delete(SituationsQuery situationQuery) {
+        Query query = createQuery("delete from Situation sit ", situationQuery);
+        return query.executeUpdate();
     }
 }

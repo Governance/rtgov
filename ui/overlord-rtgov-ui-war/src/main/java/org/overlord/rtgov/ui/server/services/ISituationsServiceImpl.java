@@ -93,5 +93,11 @@ public interface ISituationsServiceImpl {
      * @param situationsFilterBean
      */
     void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream);
+    /**
+     * Deletes all message matching the given filter criteria.
+     * @param situationsFilterBean
+     * @throws UiException
+     */
+    int delete(SituationsFilterBean situationsFilterBean) throws UiException;
 
 }
