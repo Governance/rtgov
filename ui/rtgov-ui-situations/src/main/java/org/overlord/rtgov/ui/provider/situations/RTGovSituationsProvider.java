@@ -637,6 +637,15 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 			throw new UiException(e);
 		}
 	}
+	
+    @Override
+    public int delete(SituationsFilterBean situationsFilterBean) throws UiException {
+        try {
+            return _situationStore.delete(createQuery(situationsFilterBean));
+        } catch (Exception e) {
+            throw new UiException(e);
+        }
+    }
 
     /**
      * This class provides a simple activity server adapter that passes requests
