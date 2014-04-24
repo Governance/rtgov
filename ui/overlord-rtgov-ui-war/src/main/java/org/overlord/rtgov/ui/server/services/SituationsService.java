@@ -102,4 +102,9 @@ public class SituationsService implements ISituationsService {
         return impl.resubmit(situationsFilterBean);
     }
 
+    @Override
+    public int delete(SituationsFilterBean situationsFilterBean) throws UiException {
+        return impl.delete(situationsFilterBean);
+    }
+
 }
