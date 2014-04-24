@@ -47,5 +47,10 @@
   "situation-details.resubmit-success-msg" : "Successfully resubmitted message for '{0}'.",
   "situation-details.resubmit-error" : "Message Resubmit Failed",
   "situation.batch-retry-message-msg" : "Please wait while retrying failed message's",
-  "situation.batch-retry-result" : "Processed '{0}' /Ignored '{0}' /Failed '{0}'."
+  "situation.batch-retry-result" : "Processed '{0}' /Ignored '{0}' /Failed '{0}'.",
+  "situation.delete-message-title" : "Deleting Situations",
+  "situation.delete-message-msg" : "Please wait while deleting message's",
+  "situation.message-deleted" : "Message deleted successfully",
+  "situation.delete-result" : "Deleted '{0}' situations.",
+  "situation.delete-error" : "Message delete failed"
 }

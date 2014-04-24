@@ -421,5 +421,10 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         }
     }
 
+    @Override
+    public int delete(SituationsFilterBean situationsFilterBean) throws UiException {
+        return 0;
+    }
+
 
 }

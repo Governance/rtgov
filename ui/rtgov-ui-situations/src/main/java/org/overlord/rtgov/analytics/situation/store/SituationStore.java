@@ -99,5 +99,13 @@ public interface SituationStore {
 	 */
 	public void recordResubmitFailure(String situationId, String message);
 
-
+	/**
+     * This method deletes all situations that meet the criteria
+     * specified in the query.
+     * 
+     * @param query The situations query
+     * @return The list of situations
+     * @throws Exception Failed to get situations
+     */
+    public int delete(SituationsQuery query);
 }
