@@ -33,11 +33,9 @@
 	</licenses>
 
 	<properties>
-		<elasticsearch.version>1.0.1</elasticsearch.version>
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.2.0.Final</jbossas.version>
-		<lucene.version>4.6.1</lucene.version>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<switchyard.version>2.0.0-SNAPSHOT</switchyard.version>
 	</properties>
