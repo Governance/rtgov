@@ -12,7 +12,7 @@
   <name>Overlord RTGov::UI::WAR</name>
   
   <properties>
-  	<kibana.distribution.version>kibana-3.0.0milestone5</kibana.distribution.version>
+  	<kibana.distribution.version>kibana-3.0.1</kibana.distribution.version>
   </properties>
   
   <dependencies>
@@ -189,7 +189,7 @@
           <packagingExcludes>**/javax/**/*.*,**/client/local/**/*.class,**/rebel.xml</packagingExcludes>
           <webResources>
             <resource>
-              <directory>target/kibana-3.0.0milestone5</directory>
+              <directory>target/${kibana.distribution.version}</directory>
             </resource>
           </webResources>
         </configuration>
