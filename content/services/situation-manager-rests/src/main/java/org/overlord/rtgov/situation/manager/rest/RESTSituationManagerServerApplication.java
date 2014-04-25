@@ -29,6 +29,7 @@ import java.util.Set;
  *
  */
 @ApplicationPath("/situation/manager")
+@Deprecated
 public class RESTSituationManagerServerApplication extends Application {
 
     private static Set<Object> _singletons = new HashSet<Object>();

@@ -21,6 +21,7 @@ import org.overlord.rtgov.reports.model.Report;
  * This interface represents the component for managing reports.
  *
  */
+@Deprecated
 public interface ReportManager {
     
     /**

@@ -41,6 +41,7 @@ import org.overlord.rtgov.reports.util.ReportsUtil;
 @Singleton
 @Startup
 @ConcurrencyManagement(BEAN)
+@Deprecated
 public class JEEReportsLoader extends AbstractReportsLoader {
     
     private static final Logger LOG=Logger.getLogger(JEEReportsLoader.class.getName());

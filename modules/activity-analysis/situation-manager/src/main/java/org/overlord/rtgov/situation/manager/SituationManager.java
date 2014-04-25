@@ -21,6 +21,7 @@ import org.overlord.rtgov.analytics.situation.IgnoreSubject;
  * This interface represents the component for managing situations.
  *
  */
+@Deprecated
 public interface SituationManager {
 
     /**

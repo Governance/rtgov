@@ -29,6 +29,7 @@ import org.overlord.rtgov.common.service.CacheManager;
  * interface.
  *
  */
+@Deprecated
 public class DefaultSituationManager implements SituationManager {
     
     private static final String CACHE_NAME = "IgnoredSituationSubjects";

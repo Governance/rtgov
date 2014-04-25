@@ -25,6 +25,7 @@ import java.util.logging.Logger;
  * implementation has been independently instantiated.
  *
  */
+@Deprecated
 public final class ReportManagerAccessor {
 
     private static final int DEFAULT_WAIT_TIME = 300000;
