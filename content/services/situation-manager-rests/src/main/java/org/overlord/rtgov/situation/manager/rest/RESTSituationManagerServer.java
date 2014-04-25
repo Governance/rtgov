@@ -38,6 +38,7 @@ import javax.ws.rs.core.SecurityContext;
  */
 @Path("/situation/manager")
 @ApplicationScoped
+@Deprecated
 public class RESTSituationManagerServer {
 
     private static final Logger LOG=Logger.getLogger(RESTSituationManagerServer.class.getName());

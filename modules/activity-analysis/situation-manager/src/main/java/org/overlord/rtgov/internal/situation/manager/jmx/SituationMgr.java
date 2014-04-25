@@ -43,6 +43,7 @@ import org.overlord.rtgov.situation.manager.SituationManager;
 @ApplicationScoped
 @Startup
 @ConcurrencyManagement(BEAN)
+@Deprecated
 public class SituationMgr implements SituationMgrMBean {
 
     private static final String OBJECT_NAME_DOMAIN = "overlord.rtgov.services";    
