@@ -159,6 +159,11 @@ public class RTGovSituationsProviderTest {
 			public void recordSuccessfulResubmit(String situationId) {
 				Assert.fail();
 			};
+
+            public int delete(SituationsQuery query) {
+                return 0;
+            };
+
 		};
 		
 		provider.setSituationStore(sits);
@@ -275,6 +280,9 @@ public class RTGovSituationsProviderTest {
 				Assert.fail();
 			};
 
+            public int delete(SituationsQuery query) {
+                return 0;
+            };
 		};
 		
 		provider.setSituationStore(sits);
