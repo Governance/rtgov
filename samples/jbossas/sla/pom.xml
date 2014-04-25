@@ -16,7 +16,6 @@
 	<modules>
 		<module>epn</module>
 		<module>monitor</module>
-		<module>report</module>
 	</modules>
 
 </project>

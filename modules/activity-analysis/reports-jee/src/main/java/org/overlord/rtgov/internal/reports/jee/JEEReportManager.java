@@ -34,6 +34,7 @@ import org.overlord.rtgov.reports.AbstractReportManager;
 @Singleton
 @Startup
 @ConcurrencyManagement(BEAN)
+@Deprecated
 public class JEEReportManager extends AbstractReportManager
                         implements ReportManager {
 

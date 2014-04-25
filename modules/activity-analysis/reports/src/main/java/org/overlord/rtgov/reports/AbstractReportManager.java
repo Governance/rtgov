@@ -31,6 +31,7 @@ import org.overlord.rtgov.reports.model.Report;
  * interface.
  *
  */
+@Deprecated
 public abstract class AbstractReportManager implements ReportManager {
     
     private static final Logger LOG=Logger.getLogger(AbstractReportManager.class.getName());

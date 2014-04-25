@@ -18,9 +18,7 @@
 		<module>call-trace</module>
 		<module>reports</module>
 		<module>reports-jee</module>
-		<module>reports-loader-osgi</module>
 		<module>reports-loader-jee</module>
-		<module>reports-osgi</module>
 		<module>reports-rests</module>
 		<module>service-dependency</module>
 		<module>service-dependency-svg</module>
