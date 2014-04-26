@@ -37,6 +37,7 @@ import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHand
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameLocalPartConverter;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameNamespaceConverter;
+import org.overlord.rtgov.ui.client.local.widgets.InlineSVG;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 
 import com.google.gwt.dom.client.Element;
@@ -58,6 +59,10 @@ public class ServiceDetailsPage extends AbstractPage {
     protected ServicesRpcService servicesService;
     @Inject
     protected NotificationService notificationService;
+
+    @Inject @DataField("svgPanel") @Bound(property="serviceGraph")
+    private InlineSVG svgPanel;
+
 
     @PageState
     private String id;

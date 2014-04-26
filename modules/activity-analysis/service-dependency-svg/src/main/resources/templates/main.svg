@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
 		contentScriptType="text/ecmascript" contentStyleType="text/css" 
-		onload="Init(evt)" preserveAspectRatio="xMidYMid meet" version="1.0" 
+		onload="Load(evt)" preserveAspectRatio="xMidYMid meet" version="1.0" 
 		zoomAndPan="magnify">
    <title>Service Dependency Overview</title>
 
@@ -10,8 +10,8 @@
    </desc>
 
    <script type="text/ecmascript"><![CDATA[
-      var SVGDocument = null;
-      var SVGRoot = null;
+      var SVGDocument = window.SVGDocument || null;
+      var SVGRoot = window.SVGRoot || null;
       var SVGViewBox = null;
       var svgns = 'http://www.w3.org/2000/svg';
       var xlinkns = 'http://www.w3.org/1999/xlink';
@@ -34,11 +34,13 @@
       var titleText = '';
       var titleDesc = '';
 
-
-      function Init(evt)
-      {
+      function Load(evt) {
          SVGDocument = evt.target.ownerDocument;
          SVGRoot = SVGDocument.documentElement;
+         Init();
+      }
+
+      function Init() {
          TrueCoords = SVGRoot.createSVGPoint();
 
          toolTip = SVGDocument.getElementById('ToolTip');
@@ -280,6 +282,10 @@
             toolTip.setAttributeNS(null, 'visibility', 'visible');
          }
       };
+
+      if (window.SVGRoot) {
+        Init();
+      }
 
    ]]></script>
 

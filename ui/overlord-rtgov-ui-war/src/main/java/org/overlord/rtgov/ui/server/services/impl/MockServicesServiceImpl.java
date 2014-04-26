@@ -99,6 +99,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         service.setName(new QName("urn:jboss:demo:services", "CreateApplicationWebservice")); //$NON-NLS-1$ //$NON-NLS-2$
         service.setApplication(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
         service.setServiceInterface("{urn:jboss:demo:create-application}CreateApplicationPT"); //$NON-NLS-1$
+        service.setServiceGraph("<?xml version='1.0' encoding='UTF-8'?><svg height='30' width='400'><script type='text/javascript'>console.log('SVGRoot='+window.SVGRoot);</script><text x='0' y='15' fill='red'>Service Graph not available in Mock implementation</text>Sorry, your browser does not support inline SVG.</svg>");
         
         ReferenceSummaryBean reference = new ReferenceSummaryBean();
         reference.setReferenceId("1"); //$NON-NLS-1$
