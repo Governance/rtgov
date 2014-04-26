@@ -38,6 +38,7 @@ public class ServiceBean implements Serializable {
     private QName application;
     private String serviceInterface;
     private List<ReferenceSummaryBean> references = new ArrayList<ReferenceSummaryBean>();
+    private String serviceGraph = "...";
 
     /**
      * Constructor.
@@ -81,6 +82,13 @@ public class ServiceBean implements Serializable {
     }
 
     /**
+     * @return the serviceGraph
+     */
+    public String getServiceGraph() {
+        return serviceGraph;
+    }
+
+    /**
      * @param references the references to set
      */
     public void setReferences(List<ReferenceSummaryBean> references) {
@@ -115,4 +123,10 @@ public class ServiceBean implements Serializable {
         this.serviceInterface = serviceInterface;
     }
 
+    /**
+     * @param serviceGraph the serviceGraph to set
+     */
+    public void setServiceGraph(String serviceGraph) {
+        this.serviceGraph = serviceGraph;
+    }
 }

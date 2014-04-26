@@ -15,10 +15,18 @@
  */
 package org.overlord.rtgov.ui.provider.switchyard;
 
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor.getActiveCollectionManager;
+
+import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,7 +41,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.dom.DOMSource;
 
+import org.overlord.rtgov.active.collection.ActiveCollection;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveMap;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.common.util.RTGovProperties;
+import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
+import org.overlord.rtgov.service.dependency.ServiceGraph;
+import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;
+import org.overlord.rtgov.service.dependency.svg.SVGServiceGraphGenerator;
 import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
@@ -46,6 +63,10 @@ import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.switchyard.remote.RemoteInvoker;
 import org.switchyard.remote.RemoteMessage;
 import org.switchyard.remote.http.HttpInvoker;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * This class provides a SwitchYard implementation of the ServicesProvider
@@ -79,7 +100,6 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 
     private static final char ESCAPE_CHAR = '\\';
     private static final char SEPARATOR_CHAR = ':';
-
     /**
      * The constructor.
      */
@@ -231,7 +251,7 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	public String getJMXPassword() {
 		return (_jmxPassword);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -521,7 +541,7 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		        
 		        //ObjectName app=(ObjectName)con.getAttribute(result.getObjectName(), "Application");
 		        //String appName=stripQuotes(app.getKeyProperty("name"));
-		        
+		        serviceResult.setServiceGraph(buildGraph(serviceName));
             } catch (Exception e) {
     			throw new UiException(i18n.format("SwitchYardServicesProvider.GetServiceFailed",
     								applicationName, serviceName), e);
@@ -531,7 +551,39 @@ public class SwitchYardServicesProvider implements ServicesProvider {
         return serviceResult;
     }
 
-	/**
+    private String buildGraph(String serviceName) throws Exception {
+        ActiveCollectionManager activeCollectionManager = getActiveCollectionManager();
+        ActiveCollection activeCollection = activeCollectionManager.getActiveCollection("ServiceDefinitions");
+        ActiveCollection activeSituations = activeCollectionManager.getActiveCollection("Situations");
+        Set<ServiceDefinition> serviceDefinitions = Sets.newHashSet();
+        List<Situation> situations = Lists.newArrayList();
+        for (Object entry : Optional.<Iterable<?>> fromNullable(activeCollection).or(emptySet())) {
+            if (entry instanceof ActiveMap.Entry
+                    && ((ActiveMap.Entry) entry).getValue() instanceof ServiceDefinition) {
+                serviceDefinitions.add((ServiceDefinition) ((ActiveMap.Entry) entry).getValue());
+            }
+        }
+        for (Object obj : Optional.<Iterable<?>> fromNullable(activeSituations).or(emptyList())) {
+            if (obj instanceof Situation) {
+                situations.add((Situation) obj);
+            }
+        }
+        ServiceGraph serviceGraph = ServiceDependencyBuilder.buildGraph(serviceDefinitions, situations,
+                serviceName);
+        if (serviceGraph == null) {
+            throw new Exception("Failed to generate service dependency overview");
+        }
+        serviceGraph.setDescription("Generated: " + new Date());
+        ServiceGraphLayoutImpl serviceGraphLayout = new ServiceGraphLayoutImpl();
+        serviceGraphLayout.layout(serviceGraph);
+        SVGServiceGraphGenerator serviceGraphGenerator = new SVGServiceGraphGenerator();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        serviceGraphGenerator.generate(serviceGraph, 0, byteArrayOutputStream);
+        byteArrayOutputStream.close();
+        return new String(byteArrayOutputStream.toByteArray());
+    }
+
+    /**
 	 * {@inheritDoc}
 	 */
     public ReferenceBean getReference(final String uuid) throws UiException {
