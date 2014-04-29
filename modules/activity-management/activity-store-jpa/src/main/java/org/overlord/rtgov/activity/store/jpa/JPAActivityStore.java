@@ -22,8 +22,6 @@ import java.util.logging.Logger;
 
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -31,6 +29,8 @@ import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
+import org.overlord.rtgov.jpa.JpaStore;
+import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 
 /**
  * This class provides the JPA implementation of the Activity Store.
@@ -39,82 +39,54 @@ import org.overlord.rtgov.activity.util.ActivityUtil;
 @Singleton
 public class JPAActivityStore implements ActivityStore {
     
-    private EntityManager _entityManager;
+	private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
+	
+	private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-activity";
+	
+	private static final String JNDI_PROPERTY = "JPAActivityStore.jndi.datasource";
+	
+	private JpaStore _jpaStore = new JpaStore(OVERLORD_RTGOV_DB, JNDI_PROPERTY);
     
-    private EntityManagerFactory _entityManagerFactory=null;
-        
-    private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
-    
-    /**
-     * This method returns an entity manager.
-     * 
-     * @return The entity manager
-     */
-    protected synchronized EntityManager getEntityManager() {
-        if (_entityManager != null) {
-            return (_entityManager);
-        }
-        
-        if (_entityManagerFactory == null) {
-            _entityManagerFactory = Persistence.createEntityManagerFactory("overlord-rtgov-activity");
-        }
-
-        return (_entityManagerFactory.createEntityManager());
-    }
-    
-    /**
-     * This method closes the supplied entity manager.
-     * 
-     * @param em The entity manager
-     */
-    protected void closeEntityManager(EntityManager em) {
-        if (em != _entityManager) {
-            em.close();
-        }
+    protected void setJpaStore(JpaStore jpaStore) {
+    	_jpaStore = jpaStore;
     }
     
     /**
      * {@inheritDoc}
      */
-    public void store(List<ActivityUnit> activities) throws Exception {
+    public void store(final List<ActivityUnit> activities) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Store="+new String(ActivityUtil.serializeActivityUnitList(activities)));
         }
         
-        EntityManager em=getEntityManager();
-        
-        try {
-            for (int i=0; i < activities.size(); i++) {
-                em.persist(activities.get(i));
-            }
-        } finally {
-            closeEntityManager(em);
-        }
+        _jpaStore.withJpa(new JpaWork<Void>() {
+			public Void perform(EntityManager em) {
+				for (int i=0; i < activities.size(); i++) {
+	                em.persist(activities.get(i));
+	            }
+				return null;
+			}
+		});
     }
 
     /**
      * {@inheritDoc}
      */
-    public ActivityUnit getActivityUnit(String id) throws Exception {
+    public ActivityUnit getActivityUnit(final String id) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Get Activity Unit="+id);
         }
 
-        EntityManager em=getEntityManager();
+        ActivityUnit ret = _jpaStore.withJpa(new JpaWork<ActivityUnit>() {
+			public ActivityUnit perform(EntityManager em) {
+				return (ActivityUnit)em.createQuery("SELECT au FROM ActivityUnit au WHERE au.id = '"+id+"'")
+                        .getSingleResult();
+			}
+		});
         
-        ActivityUnit ret=null;
-        
-        try {
-            ret=(ActivityUnit)em.createQuery("SELECT au FROM ActivityUnit au "
-                                +"WHERE au.id = '"+id+"'")
-                                .getSingleResult();
-            
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("ActivityUnit id="+id+" Result="
-                        +new String(ActivityUtil.serializeActivityUnit(ret)));
-            }
-        } finally {
-            closeEntityManager(em);
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("ActivityUnit id="+id+" Result="
+                    +new String(ActivityUtil.serializeActivityUnit(ret)));
         }
 
         return (ret);
@@ -124,37 +96,39 @@ public class JPAActivityStore implements ActivityStore {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public java.util.List<ActivityType> getActivityTypes(Context context,
-                    long from, long to) throws Exception {
+    public java.util.List<ActivityType> getActivityTypes(final Context context,
+                    final long from, final long to) throws Exception {
         List<ActivityType> ret=null;
         
-        EntityManager em=getEntityManager();
-        
-        try {
-            if (from == 0 && to == 0) {
-                ret = (List<ActivityType>)
-                    em.createQuery("SELECT at from ActivityType at "
-                            +"JOIN at.context ctx "
-                            +"WHERE ctx.value = '"+context.getValue()+"' "
-                            +"AND ctx.type = '"+context.getType().name()+"'")
-                            .getResultList();
-                
-            } else {            
-                ret = (List<ActivityType>)em.createQuery("SELECT at from ActivityType at "
-                        +"JOIN at.context ctx "
-                        +"WHERE ctx.value = '"+context.getValue()+"' "
-                        +"AND ctx.type = '"+context.getType().name()+"' "
-                        +"AND at.timestamp >= "+from+" "
-                        +"AND at.timestamp <= "+to)
-                        .getResultList();
-            }
+        if (from == 0 && to == 0) {
+            ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
+    			public List<ActivityType> perform(EntityManager em) {
+    				return (List<ActivityType>)
+    	                    em.createQuery("SELECT at from ActivityType at "
+    	                            +"JOIN at.context ctx "
+    	                            +"WHERE ctx.value = '"+context.getValue()+"' "
+    	                            +"AND ctx.type = '"+context.getType().name()+"'")
+    	                            .getResultList();
+    			}
+    		});
             
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("ActivityTypes context '"+context+"' from="+from+" to="+to+" Result="
-                        +new String(ActivityUtil.serializeActivityTypeList(ret)));
-            }
-        } finally {
-            closeEntityManager(em);
+        } else {            
+            ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
+    			public List<ActivityType> perform(EntityManager em) {
+    				return (List<ActivityType>)em.createQuery("SELECT at from ActivityType at "
+    	                    +"JOIN at.context ctx "
+    	                    +"WHERE ctx.value = '"+context.getValue()+"' "
+    	                    +"AND ctx.type = '"+context.getType().name()+"' "
+    	                    +"AND at.timestamp >= "+from+" "
+    	                    +"AND at.timestamp <= "+to)
+    	                    .getResultList();
+    			}
+    		});
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("ActivityTypes context '"+context+"' from="+from+" to="+to+" Result="
+                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
         }
 
         return (ret);        
@@ -201,22 +175,17 @@ public class JPAActivityStore implements ActivityStore {
      * @throws Exception Failed to perform query
      */
     @SuppressWarnings("unchecked")
-    public List<ActivityType> query(String query) throws Exception {
+    public List<ActivityType> query(final String query) throws Exception {
 
-        EntityManager em=getEntityManager();
-        
-        List<ActivityType> ret=null;
-        
-        try {
-            ret = (List<ActivityType>)
-                    em.createQuery(query).getResultList();
-        
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Query="+query+" Result="
-                        +new String(ActivityUtil.serializeActivityTypeList(ret)));
-            }
-        } finally {
-            closeEntityManager(em);
+        List<ActivityType> ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
+			public List<ActivityType> perform(EntityManager em) {
+				return (List<ActivityType>)em.createQuery(query).getResultList();
+			}
+		});
+    
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Query="+query+" Result="
+                    +new String(ActivityUtil.serializeActivityTypeList(ret)));
         }
 
         return (ret);
@@ -228,48 +197,25 @@ public class JPAActivityStore implements ActivityStore {
      * @param au The activity unit
      * @throws Exception Failed to remove activity unit
      */
-    public void remove(ActivityUnit au) throws Exception {
-        EntityManager em=getEntityManager();
-        
-        try {
-            // Cascading delete is not working from activity unit to activity types,
-            // so resorting to native SQL for now to delete an activity unit and its
-            // associated components
-            em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_CONTEXT WHERE unitId = '"
-                            +au.getId()+"'").executeUpdate();
-    
-            em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_PROPERTIES WHERE unitId = '"
-                            +au.getId()+"'").executeUpdate();
-    
-            em.createNativeQuery("DELETE FROM RTGOV_ACTIVITIES WHERE unitId = '"
-                            +au.getId()+"'").executeUpdate();
-            
-            em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_UNITS WHERE id = '"
-                            +au.getId()+"'").executeUpdate();
-            
-            em.flush();
-            em.clear();
-        } finally {
-            closeEntityManager(em);
-        }
+    public void remove(final ActivityUnit au) throws Exception {
+        _jpaStore.withJpa(new JpaWork<Void>() {
+			public Void perform(EntityManager em) {
+				// Cascading delete is not working from activity unit to activity types,
+		        // so resorting to native SQL for now to delete an activity unit and its
+		        // associated components
+		        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_CONTEXT WHERE unitId = '"
+		                        +au.getId()+"'").executeUpdate();
+
+		        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_PROPERTIES WHERE unitId = '"
+		                        +au.getId()+"'").executeUpdate();
+
+		        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITIES WHERE unitId = '"
+		                        +au.getId()+"'").executeUpdate();
+		        
+		        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_UNITS WHERE id = '"
+		                        +au.getId()+"'").executeUpdate();
+				return null;
+			}
+		});
     }
-    
-    /**
-     * This method sets the entity manager factory.
-     * 
-     * @param entityManagerFactory The entity manager factory
-     */
-    public void setEntityManagerFactory(EntityManagerFactory entityManagerFactory) {
-        _entityManagerFactory = entityManagerFactory;
-    }
-    
-    /**
-     * This method sets the entity manager.
-     * 
-     * @param entityManager The entity manager
-     */
-    public void setEntityManager(EntityManager entityManager) {
-        _entityManager = entityManager;
-    }
-   
 }

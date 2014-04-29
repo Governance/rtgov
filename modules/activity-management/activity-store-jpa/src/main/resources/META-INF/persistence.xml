@@ -5,7 +5,6 @@
             version="2.0">
 	<persistence-unit name="overlord-rtgov-activity" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<jta-data-source>osgi:service/javax.sql.DataSource/(osgi.jndi.service.name=jdbc/OverlordRTGov)</jta-data-source>
 		<class>org.overlord.rtgov.activity.model.ActivityUnit</class>
 		<class>org.overlord.rtgov.activity.model.ActivityType</class>
 		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>
@@ -25,10 +24,5 @@
 		<class>org.overlord.rtgov.activity.model.soa.RequestReceived</class>
 		<class>org.overlord.rtgov.activity.model.soa.ResponseSent</class>
 		<class>org.overlord.rtgov.activity.model.soa.ResponseReceived</class>
-		<properties>
-		<!--
-			<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform" />
-		-->
-		</properties>
 	</persistence-unit>
 </persistence>

@@ -1,25 +1,30 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.overlord.rtgov.karaf.ds</groupId>
-	<artifactId>activity-store-jpa-h2</artifactId> 
+	<groupId>org.overlord.rtgov.common</groupId>
+	<artifactId>rtgov-jpa</artifactId> 
 	<packaging>bundle</packaging>
-	<name>Overlord RTGov::Karaf::DS::Activity Store JPA H2</name>
+	<name>Overlord RTGov::Modules::Common::RTGov JPA</name>
 
 	<parent>
-		<groupId>org.overlord.rtgov.karaf</groupId>
-		<artifactId>ds</artifactId>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>common</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
-  
- 	<dependencies>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-store-jpa</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+
+	<dependencies>
+        <dependency>
+            <groupId>org.overlord.rtgov.common</groupId>
+            <artifactId>rtgov-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -30,18 +35,12 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Meta-Persistence>META-INF/persistence.xml</Meta-Persistence>
 						<Export-Package>
+							org.overlord.rtgov.common.*;version=${project.version}
 						</Export-Package>
 						<Import-Package>
-							org.overlord.rtgov.activity.model.app,
-							org.overlord.rtgov.activity.model.bpm,
-							org.overlord.rtgov.activity.model.common,
-							org.overlord.rtgov.activity.model.mom,
-							org.overlord.rtgov.activity.model.soa,
 							*
 						</Import-Package>
-						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
 					</instructions>
 				</configuration>
 			</plugin>

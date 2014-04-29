@@ -15,16 +15,14 @@
  */
 package org.overlord.rtgov.ep.jpa;
 
-import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
-import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.ep.EventProcessor;
+import org.overlord.rtgov.jpa.JpaStore;
+import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 
 /**
  * This class represents the JPA implementation of the Event
@@ -35,107 +33,55 @@ public class JPAEventProcessor extends EventProcessor {
 
     private static final Logger LOG=Logger.getLogger(JPAEventProcessor.class.getName());
 
-    private EntityManagerFactory _emf=null;
-    private EntityManager _em=null;
-    private String _entityManager=null;
+    private static final String JNDI_PROPERTY = "JPAEventProcessor.jndi.datasource";
+	
+	private JpaStore _jpaStore;
+	
+	private String _persistenceUnit = null;
     
     /**
-     * This method returns the entity manager name.
+     * This method returns the persistence unit name.
      * 
-     * @return The entity manager name
+     * @return The persistence unit name
      */
-    public String getEntityManager() {
-        return (_entityManager);
+    public String getPersistenceUnit() {
+        return (_persistenceUnit);
     }
     
     /**
-     * This method sets the entity manager name.
+     * This method sets the persistence unit name.
      * 
-     * @param name The entity manager name
+     * @param name The persistence unit name
      */
-    public void setEntityManager(String name) {
-        _entityManager = name;
+    public void setPersistenceUnit(String persistenceUnit) {
+    	_persistenceUnit = persistenceUnit;
     }
     
-    /**
-     * This method returns the entity manager.
-     * 
-     * @return The entity manager
-     */
-    protected EntityManager getEntityMgr() {
-        return (_em == null ? _emf.createEntityManager() : _em);
-    }
-    
-    /**
-     * {@inheritDoc}
-     * 
-     */
-    public void init() throws Exception {
-        
-        if (_emf == null) {
-            java.util.Properties props=RTGovProperties.getProperties();
-            
-            try {
-                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Properties passed to entity manager factory creation: "+props);                
-                }
-                
-                _emf = Persistence.createEntityManagerFactory(getEntityManager(), props);
-        
-            } catch (Throwable e) {
-                LOG.log(Level.SEVERE, MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                                "ep-jpa.Messages").getString("EP-JPA-1"),
-                                getEntityManager()), e);
-            }
-
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("JPAEventProcessor init: entity manager="+_entityManager+" emf="+_emf);
-            }
-        }
+    protected void setJpaStore(JpaStore jpaStore) {
+    	_jpaStore = jpaStore;
     }
     
     /**
      * {@inheritDoc}
      */
     public java.io.Serializable process(String source,
-                java.io.Serializable event, int retriesLeft) throws Exception {
-        java.io.Serializable ret=null;
-        
-        EntityManager em=getEntityMgr();
-        
+                final java.io.Serializable event, int retriesLeft) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Process event '"+event+" from source '"+source
-                    +"' on JPA Event Processor '"+em
-                    +"'");
+                    +"' on JPA Event Processor");
+        }
+        
+        if (_jpaStore == null) {
+        	_jpaStore = new JpaStore(_persistenceUnit, JNDI_PROPERTY);
         }
 
-        try {
-            em.persist(event);
-        } finally {
-            closeEntityManager(em);
-        }
+        _jpaStore.withJpa(new JpaWork<Void>() {
+			public Void perform(EntityManager em) {
+				em.persist(event);
+				return null;
+			}
+		});
 
-        return (ret);
-    }
-
-    /**
-     * This method closes the supplied entity manager.
-     * 
-     * @param em The entity manager
-     */
-    protected void closeEntityManager(EntityManager em) {
-        if (em != _em) {
-            em.close();
-        }
-    }
-    
-    /**
-     * This method sets the entity manager.
-     * 
-     * @param em The entity manager
-     */
-    public void setEntityMgr(EntityManager em) {
-        _em = em;
+        return null;
     }
 }
