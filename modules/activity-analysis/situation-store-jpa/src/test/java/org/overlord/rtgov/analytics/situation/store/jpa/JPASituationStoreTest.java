@@ -7,21 +7,13 @@ import static org.overlord.rtgov.ui.client.model.ResolutionState.IN_PROGRESS;
 
 import java.security.Principal;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.Status;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
+import javax.persistence.Persistence;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,58 +25,28 @@ import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
+import org.overlord.rtgov.jpa.JpaStore;
+import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.server.interceptors.IUserContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-@ContextConfiguration
-public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringContextTests {
+public class JPASituationStoreTest {
     @Rule public TestName name = new TestName();
-
-	private JPASituationStore _situationStore;
     
-	@PersistenceContext
-    private EntityManager _entityManager;
+    private static final String OVERLORD_RTGOV_DB = "JPASituationStoreTest";
+
+    private static JpaStore _jpaStore;
+    private static JPASituationStore _situationStore;
 	
     @Before
     public void init() throws NamingException {
-        this._situationStore = new JPASituationStore();
-        this._situationStore.setEntityManager(this._entityManager);
-        
-        this._situationStore.setUserTransaction(new UserTransaction() {
-			
-			@Override
-			public void setTransactionTimeout(int arg0) throws SystemException {
-			}
-			
-			@Override
-			public void setRollbackOnly() throws IllegalStateException, SystemException {
-			}
-			
-			@Override
-			public void rollback() throws IllegalStateException, SecurityException, SystemException {
-			}
-			
-			@Override
-			public int getStatus() throws SystemException {
-				return Status.STATUS_ACTIVE;
-			}
-			
-			@Override
-			public void commit() throws HeuristicMixedException, HeuristicRollbackException, IllegalStateException,
-					RollbackException, SecurityException, SystemException {
-				
-			}
-			
-			@Override
-			public void begin() throws NotSupportedException, SystemException {
-			}
-		});
+    	final EntityManagerFactory emf = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_DB);
+		_jpaStore = new JpaStore(emf);
+		_situationStore = new JPASituationStore();
+		_situationStore.setJpaStore(_jpaStore);
         IUserContext.Holder.setSecurityContext(new IUserContext() {
 
             @Override
@@ -114,8 +76,8 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         Situation situation = new Situation();
         situation.setId("getSituationNotFound");
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
-        assertEquals(situation, _situationStore.getSituation(situation.getId()));
+        persist(situation);
+        assertEquals(situation.getId(), _situationStore.getSituation(situation.getId()).getId());
     }
 
     @Test
@@ -125,17 +87,17 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         openSituation.setId("openSituation");
         openSituation.setTimestamp(System.currentTimeMillis());
         openSituation.getProperties().put("resolutionState", ResolutionState.REOPENED.name());
-        _entityManager.persist(openSituation);
+        persist(openSituation);
         Situation closedSituation = new Situation();
         closedSituation.setId("closedSituation");
         closedSituation.setTimestamp(System.currentTimeMillis());
         closedSituation.getProperties().put("resolutionState", ResolutionState.RESOLVED.name());
-        _entityManager.persist(closedSituation);
+        persist(closedSituation);
 
         java.util.List<Situation> situations = findSituationsByFilterBean(openSituation);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(openSituation, situations.get(0));
+        Assert.assertEquals(openSituation.getId(), situations.get(0).getId());
     }
     
     @Test
@@ -146,13 +108,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setSubject(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
         situation.getProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setHost(name.getMethodName());
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
     
     
@@ -164,13 +126,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setSubject(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
         situation.getProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setHost(name.getMethodName().substring(3));
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
     
     @Test
@@ -179,13 +141,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setId(name.getMethodName());
         situation.setSubject(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setSubject(name.getMethodName());
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
     
     @Test
@@ -194,13 +156,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setId(name.getMethodName());
         situation.setSubject(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setSubject(name.getMethodName().substring(3));
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
     
     @Test
@@ -209,13 +171,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setId(name.getMethodName());
         situation.setSubject(name.getMethodName().toUpperCase());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setSubject(name.getMethodName().substring(3).toLowerCase());
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
     
     @Test
@@ -224,13 +186,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setId(name.getMethodName());
         situation.setDescription(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setDescription(name.getMethodName());
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
 
     @Test
@@ -239,13 +201,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setId(name.getMethodName());
         situation.setDescription(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setDescription(name.getMethodName().substring(5));
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
 
     @Test
@@ -254,13 +216,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setId(name.getMethodName());
         situation.setDescription(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setDescription(name.getMethodName().substring(0, 5));
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
 
     @Test
@@ -269,13 +231,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setId(name.getMethodName());
         situation.setDescription(name.getMethodName().toLowerCase());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setDescription(name.getMethodName().substring(5).toUpperCase());
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(situation, situations.get(0));
+        Assert.assertEquals(situation.getId(), situations.get(0).getId());
     }
 
     @Test
@@ -284,7 +246,7 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setId(name.getMethodName());
         situation.setDescription(name.getMethodName().toLowerCase());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setDescription("other");
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
@@ -297,13 +259,13 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         Situation unresolvedSituation = new Situation();
         unresolvedSituation.setId("unresolvedSituation");
         unresolvedSituation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(unresolvedSituation);
+        persist(unresolvedSituation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setResolutionState(ResolutionState.UNRESOLVED.name());
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(unresolvedSituation, situations.get(0));
+        Assert.assertEquals(unresolvedSituation.getId(), situations.get(0).getId());
     }
 
 	@Test
@@ -311,9 +273,9 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 		Situation situation = new Situation();
 		situation.setId("assignSituation");
 		situation.setTimestamp(System.currentTimeMillis());
-		_entityManager.persist(situation);
+		persist(situation);
 		Situation reload = _situationStore.getSituation(situation.getId());
-		assertEquals(situation, reload);
+		assertEquals(situation.getId(), reload.getId());
 		assertFalse(reload.getProperties().containsKey("assignedTo"));
 		assertFalse(reload.getProperties().containsKey("resolutionState"));
 		_situationStore.assignSituation(situation.getId(), "junit");
@@ -326,7 +288,7 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 		Situation situation = new Situation();
 		situation.setId("deassignSituation");
 		situation.setTimestamp(System.currentTimeMillis());
-		_entityManager.persist(situation);
+		persist(situation);
 		_situationStore.assignSituation(situation.getId(), "junit");
 		Situation reload = _situationStore.getSituation(situation.getId());
 		assertEquals("junit",reload.getProperties().get("assignedTo"));
@@ -344,7 +306,7 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         situation.setProperties(Collections.singletonMap("1", "1"));
         situation.setContext(Sets.newHashSet(new Context(Context.Type.Conversation, "1")));
         situation.setActivityTypeIds(Sets.newHashSet(new ActivityTypeId("1", 0)));
-        _entityManager.persist(situation);
+        persist(situation);
         SituationsQuery situationQuery = new SituationsQuery();
         situationQuery.setDescription(situation.getDescription());
         _situationStore.delete(situationQuery);
@@ -357,7 +319,7 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 		Situation situation = new Situation();
 		situation.setId("deassignSituation");
 		situation.setTimestamp(System.currentTimeMillis());
-		_entityManager.persist(situation);
+		persist(situation);
 		_situationStore.assignSituation(situation.getId(), "junit");
 		_situationStore.updateResolutionState(situation.getId(),IN_PROGRESS);
 		Situation reload = _situationStore.getSituation(situation.getId());
@@ -373,7 +335,7 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 		Situation situation = new Situation();
 		situation.setId("updateResolutionState");
 		situation.setTimestamp(System.currentTimeMillis());
-		_entityManager.persist(situation);
+		persist(situation);
 		Situation reload = _situationStore.getSituation(situation.getId());
 		assertFalse(reload.getProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY));
 		_situationStore.updateResolutionState(situation.getId(),ResolutionState.IN_PROGRESS);
@@ -394,7 +356,7 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
 		Situation situation = new Situation();
 		situation.setId(name.getMethodName());
 		situation.setTimestamp(System.currentTimeMillis());
-		_entityManager.persist(situation);
+		persist(situation);
 		_situationStore.recordSuccessfulResubmit(situation.getId());
 		Situation reload = _situationStore.getSituation(situation.getId());
 		assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
@@ -408,7 +370,7 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         Situation situation = new Situation();
         situation.setId(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         _situationStore.recordResubmitFailure(situation.getId(), name.getMethodName());
         Situation reload = _situationStore.getSituation(situation.getId());
         assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
@@ -423,7 +385,7 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         Situation situation = new Situation();
         situation.setId(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        _entityManager.persist(situation);
+        persist(situation);
         _situationStore.recordResubmitFailure(situation.getId(), Strings.padEnd(name.getMethodName(), 10000, '*'));
         Situation reload = _situationStore.getSituation(situation.getId());
         assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
@@ -433,4 +395,14 @@ public class JPASituationStoreTest extends AbstractTransactionalJUnit4SpringCont
         assertEquals(SituationStore.RESUBMIT_RESULT_ERROR,
                 reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
     }
+    
+	private void persist(final Situation situation) {
+		_jpaStore.withJpa(new JpaWork<Void>() {
+			public Void perform(EntityManager em) {
+				em.persist(situation);
+				return null;
+			}
+		});
+
+	}
 }
