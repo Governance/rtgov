@@ -21,6 +21,10 @@
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-common</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>org.overlord.rtgov.common</groupId>
+		    <artifactId>rtgov-jpa</artifactId>
+		</dependency>
 		
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -41,18 +45,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>jta</groupId>
-					<artifactId>javax.transaction</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-			<scope>test</scope>
+			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>jta</groupId>
@@ -63,7 +56,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<scope>test</scope>
+			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>jta</groupId>
@@ -75,11 +68,6 @@
 		    <groupId>javax</groupId>
 		    <artifactId>javaee-api</artifactId>
 		    <scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>

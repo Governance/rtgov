@@ -58,8 +58,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.rtgov.ep.jpa.JPAEventProcessor",
-        "entityManager" : "overlord-rtgov-epn"
+        "@class" : "org.overlord.rtgov.ep.jpa.JPAEventProcessor"
       }
     }
   ]

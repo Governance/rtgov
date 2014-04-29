@@ -15,20 +15,21 @@
  */
 package org.overlord.rtgov.jbossas.tests.ep.mail;
 
+import static org.junit.Assert.fail;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.overlord.rtgov.ep.mail.MailEventProcessor;
 
-
-import static org.junit.Assert.*;
-
 @RunWith(Arquillian.class)
+@Ignore
 public class EPMailTest {
 
     private static final String THE_EVENT = "THE EVENT";

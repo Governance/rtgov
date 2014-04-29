@@ -17,9 +17,9 @@ package org.overlord.rtgov.activity.store.jpa;
 
 import static org.junit.Assert.fail;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
+import java.net.URL;
 
+import org.hibernate.Session;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -31,6 +31,8 @@ import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.jpa.JpaStore;
+import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 
 public class JPAActivityStoreTest {
 
@@ -45,14 +47,14 @@ public class JPAActivityStoreTest {
     private static final String OVERLORD_RTGOV_ACTIVITY_ORM = "overlord-rtgov-activity-orm";
     private static final String OVERLORD_RTGOV_ACTIVITY_OGM_M = "overlord-rtgov-activity-ogm-mongodb";
     
-    private static EntityManager em;
+    private static JpaStore jpaStore;
     private static JPAActivityStore activityStore;
     
     @BeforeClass
     public static void initialiseEntityManager() throws Exception{
-    	em = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_ACTIVITY_ORM).createEntityManager();
-    	activityStore = new JPAActivityStore();
-    	activityStore.setEntityManager(em);
+    	final URL configXml = JPAActivityStoreTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
+    	jpaStore = new JpaStore(configXml);
+    	activityStore = new JPAActivityStore(jpaStore);
     }
     
     public ActivityUnit createTestActivityUnit(String id, String convId, String endpointId, long baseTime) {
@@ -112,8 +114,12 @@ public class JPAActivityStoreTest {
         return (act);
     }
     
-    protected void checkTableEmpty(String table) {
-        int rows=em.createNativeQuery("SELECT * FROM "+table).getResultList().size();
+    protected void checkTableEmpty(final String table) {
+    	int rows = jpaStore.withJpa(new JpaWork<Integer>() {
+			public Integer perform(Session s) {
+				return s.createSQLQuery("SELECT * FROM "+table).list().size();
+			}
+		});
         
         if (rows != 0) {
             fail("Table '"+table+"' is not empty: "+rows);
@@ -222,11 +228,7 @@ public class JPAActivityStoreTest {
         activities.add(au2);
         
         try {
-            em.getTransaction().begin();
-            
-        	activityStore.store(activities);
-            
-        	em.getTransaction().commit();
+            activityStore.store(activities);
         } catch(Exception e) {
             fail("Failed to store activities: "+e);
         }
@@ -236,21 +238,13 @@ public class JPAActivityStoreTest {
             query.setType(Type.Conversation);
             query.setValue(CONV_ID_1);
             
-            em.getTransaction().begin();
-            
             results = activityStore.getActivityTypes(query);
-            
-            em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
             try {
-                em.getTransaction().begin();
-                
-            	activityStore.remove(au1);
+                activityStore.remove(au1);
             	activityStore.remove(au2);
-                
-                em.getTransaction().commit();
            } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
            }
@@ -289,9 +283,7 @@ public class JPAActivityStoreTest {
         activities.add(au2);
         
         try {
-            em.getTransaction().begin();
             activityStore.store(activities);
-            em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to store activities: "+e);
         }
@@ -301,17 +293,13 @@ public class JPAActivityStoreTest {
             context.setType(Type.Conversation);
             context.setValue("3");
             
-            em.getTransaction().begin();
             results = activityStore.getActivityTypes(context);
-            em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
             try {
-                em.getTransaction().begin();
                 activityStore.remove(au1);
                 activityStore.remove(au2);
-                em.getTransaction().commit();
             } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
             }
@@ -347,9 +335,7 @@ public class JPAActivityStoreTest {
         activities.add(au2);
         
         try {
-            em.getTransaction().begin();
             activityStore.store(activities);
-            em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to store activities: "+e);
         }
@@ -359,17 +345,13 @@ public class JPAActivityStoreTest {
             context.setType(Type.Endpoint);
             context.setValue("6");
             
-            em.getTransaction().begin();
             results = activityStore.getActivityTypes(context);
-            em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
             try {
-                em.getTransaction().begin();
                 activityStore.remove(au1);
                 activityStore.remove(au2);
-                em.getTransaction().commit();
             } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
             }
@@ -406,16 +388,12 @@ public class JPAActivityStoreTest {
         activities.add(au2);
         
         try {
-            em.getTransaction().begin();
             activityStore.store(activities);
-            em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to store activities: "+e);
         }
         
         try {
-            em.getTransaction().begin();
-
             Context context1=new Context();
             context1.setType(Type.Conversation);
             context1.setValue("C1");
@@ -427,16 +405,12 @@ public class JPAActivityStoreTest {
             context2.setValue("C1");
 
             results2 = activityStore.getActivityTypes(context2, 2500, 7500);
-            
-            em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
             try {
-                em.getTransaction().begin();
                 activityStore.remove(au1);
                 activityStore.remove(au2);
-                em.getTransaction().commit();
             } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
             }
@@ -477,25 +451,19 @@ public class JPAActivityStoreTest {
         activities.add(au2);
         
         try {
-        	em.getTransaction().begin();
         	activityStore.store(activities);
-        	em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to store activities: "+e);
         }
         
         try {
-        	em.getTransaction().begin();
             results = activityStore.query(qs);
-            em.getTransaction().commit();
         } catch(Exception e) {
             fail("Failed to query activities: "+e);
         } finally {
             try {
-            	em.getTransaction().begin();
             	activityStore.remove(au1);
             	activityStore.remove(au2);
-            	em.getTransaction().commit();
             } catch (Exception e) {
                 fail("Failed to remove activity units: "+e);
             }
