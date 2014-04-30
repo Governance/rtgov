@@ -386,6 +386,10 @@ public class SituationsPage extends AbstractPage {
 
     @EventHandler("deleteSituations")
     public void onDeleteClick(ClickEvent event) {
+        if (!Window.confirm("This will delete " + (applyActionToFilteredRowsOnly ? "the selected" : "ALL")
+                + " situation's. Do you wish to proceed?")) {
+            return;
+        }
         SituationsFilterBean situationsFilterBean = applyActionToFilteredRowsOnly ? filtersPanel.getValue()
                 : new SituationsFilterBean();
         final NotificationBean notificationBean = notificationService.startProgressNotification(
