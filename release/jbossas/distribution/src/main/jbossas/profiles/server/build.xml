@@ -17,9 +17,6 @@
 	<target name="non-soa-deploy" depends="check-not-soa" if="soa.not.installed" >
 		<echo message="**** Not a SOA environment, so installing additional modules ****" />
 
-		<copy todir="${jboss.home}/modules" >
-			<fileset dir="../../modules/drools" />
-		</copy>
 	</target>
 
 	<target name="deploy" depends="create.schema, non-soa-deploy" >
