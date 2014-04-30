@@ -36,19 +36,19 @@
 	        <version>${project.version}</version>
 	        <scope>provided</scope>
 	    </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.active-queries</groupId>
+            <artifactId>active-collection</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.activity-analysis</groupId>
+            <artifactId>service-dependency-svg</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
-	    <!-- ServiceActivator/dmr -->
-	    <dependency>
-	      <groupId>org.jboss.msc</groupId>
-	      <artifactId>jboss-msc</artifactId>
-	      <scope>provided</scope>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.jboss.as</groupId>
-	      <artifactId>jboss-as-server</artifactId>
-	      <scope>provided</scope>
-	    </dependency>
-    
 	    <!-- SwitchYard dependencies -->
 	    <dependency>
 			<groupId>org.switchyard</groupId>
@@ -66,20 +66,6 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
-        <dependency>
-            <groupId>org.overlord.rtgov.active-queries</groupId>
-            <artifactId>active-collection</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.overlord.rtgov.activity-analysis</groupId>
-            <artifactId>service-dependency-svg</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
 	</dependencies>
 	
