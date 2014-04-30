@@ -257,11 +257,6 @@
 			<artifactId>samples-karaf-sla-epn</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.samples.karaf.sla</groupId>
-			<artifactId>samples-karaf-sla-report</artifactId>
-			<version>${project.version}</version>
-		</dependency>
 
 		<!-- RTGov Samples Order Management -->
 		<dependency>
@@ -707,7 +702,6 @@
 									<comment>RTGov Samples SLA</comment>
 									<includes>
 										<include>org.overlord.rtgov.samples.karaf.sla:samples-karaf-sla-epn:*</include>
-										<include>org.overlord.rtgov.samples.karaf.sla:samples-karaf-sla-report:*</include>
 									</includes>
 								</feature>
 								<feature>
