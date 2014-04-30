@@ -52,12 +52,6 @@
 			<outputDirectory>/</outputDirectory>
 		</fileSet>
 
-		<!-- Copy soa modules -->
-		<fileSet>
-			<directory>${project.build.directory}/drools-modules/modules/system/layers/soa</directory>
-			<outputDirectory>/modules/drools</outputDirectory>
-		</fileSet>
-
 	</fileSets>
     
 	<dependencySets>
