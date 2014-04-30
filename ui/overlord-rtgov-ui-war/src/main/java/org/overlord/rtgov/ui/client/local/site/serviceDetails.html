@@ -60,73 +60,83 @@
         </div>
         <!-- Service Details -->
         <div class="row-fluid service-details">
-          <div class="container-fluid">
-            <!-- Service Properties and Description -->
-            <div class="row-fluid">
-              <!-- Service Properties -->
-              <div class="span6 details-meta-data-section">
-                <div class="details-meta-data-section-header" data-i18n-key="header.service-properties">Service Properties</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="namespace">Namespace:</div>
-                <div data-field="serviceNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demo:services</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="application">Application:</div>
-                <div data-field="applicationNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demos:applications</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label">&nbsp;<span data-role="dummy" /></div>
-                <div data-field="applicationName" class="details-meta-data-section-value" data-role="dummy">Contract</div>
-                <div class="clearfix"></div>
-                <div class="details-meta-data-section-label" data-i18n-key="service-interface">Service Interface:</div>
-                <div data-field="serviceInterface" class="details-meta-data-section-value" data-role="dummy">{urn:jboss:demo:create-application}CreateApplicationPT</div>
-                <div class="clearfix"></div>
-              </div>
-            </div>
-            <hr />
-            
-            <!-- The References table -->
-            <div class="row-fluid">
-              <div class="span12 details-meta-data-section">
-                <div class="details-meta-data-section-header" data-i18n-key="find-references">References</div>
-                <div class="clearfix"></div>
-                <table data-field="reference-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
-                  <thead>
-                    <tr>
-                      <th data-i18n-key="reference-name">Reference Name</th>
-                      <th class="desktop-only" data-i18n-key="interface">Interface</th>
-                      <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
-                    </tr>
-                  </thead>
-                  <tbody data-role="dummy">
-                    <tr>
-                      <td><a href="referenceDetails.html">CreateApplicationRef</a></td>
-                      <td class="desktop-only">org.jboss.demos.services.ICreateApplication</td>
-                      <td class="desktop-only">JMS,SOAP,REST</td>
-                    </tr>
-                    <tr>
-                      <td><a href="referenceDetails.html">CreateQuoteRef</a></td>
-                      <td class="desktop-only">org.jboss.demos.services.ICreateQuote</td>
-                      <td class="desktop-only">JMS,SOAP</td>
-                    </tr>
-                    <tr>
-                      <td><a href="referenceDetails.html">SearchContractRef</a></td>
-                      <td class="desktop-only">org.jboss.demos.services.ISearchContract</td>
-                      <td class="desktop-only">REST</td>
-                    </tr>
-                    <tr>
-                      <td><a href="referenceDetails.html">DomainInformationRef</a></td>
-                       <td class="desktop-only">org.jboss.demos.services.IDomainInformation</td>
-                      <td class="desktop-only">JMS,REST</td>
-                    </tr>
-                    <tr>
-                      <td><a href="referenceDetails.html">FNOLRef</a></td>
-                      <td class="desktop-only">org.jboss.demos.services.IFNOL</td>
-                      <td class="desktop-only">JMS,SOAP,REST</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>            
+          <ul id="serviceTab" class="nav nav-tabs">
+            <li class="active"><a href="#details" data-toggle="tab" data-i18n-key="details">Details</a></li>
+            <li><a href="#servicegraph" data-toggle="tab" data-i18n-key="service-graph">Dependencies</a></li>
+          </ul>
+          <div class="tab-content">
+	          <div class="container-fluid tab-pane fade in active" id="details">
+	            <!-- Service Properties and Description -->
+	            <div class="row-fluid">
+	              <!-- Service Properties -->
+	              <div class="span6 details-meta-data-section">
+	                <div class="details-meta-data-section-header" data-i18n-key="header.service-properties">Service Properties</div>
+	                <div class="clearfix"></div>
+	                <div class="details-meta-data-section-label" data-i18n-key="namespace">Namespace:</div>
+	                <div data-field="serviceNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demo:services</div>
+	                <div class="clearfix"></div>
+	                <div class="details-meta-data-section-label" data-i18n-key="application">Application:</div>
+	                <div data-field="applicationNamespace" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demos:applications</div>
+	                <div class="clearfix"></div>
+	                <div class="details-meta-data-section-label">&nbsp;<span data-role="dummy" /></div>
+	                <div data-field="applicationName" class="details-meta-data-section-value" data-role="dummy">Contract</div>
+	                <div class="clearfix"></div>
+	                <div class="details-meta-data-section-label" data-i18n-key="service-interface">Service Interface:</div>
+	                <div data-field="serviceInterface" class="details-meta-data-section-value" data-role="dummy">{urn:jboss:demo:create-application}CreateApplicationPT</div>
+	                <div class="clearfix"></div>
+	              </div>
+	            </div>
+	            <hr />
+	            
+	            <!-- The References table -->
+	            <div class="row-fluid">
+	              <div class="span12 details-meta-data-section">
+	                <div class="details-meta-data-section-header" data-i18n-key="find-references">References</div>
+	                <div class="clearfix"></div>
+	                <table data-field="reference-table" class="overlord-table overlord-standalone-table table table-striped table-condensed table-hover">
+	                  <thead>
+	                    <tr>
+	                      <th data-i18n-key="reference-name">Reference Name</th>
+	                      <th class="desktop-only" data-i18n-key="interface">Interface</th>
+	                      <th class="desktop-only" data-i18n-key="bindings">Bindings</th>
+	                    </tr>
+	                  </thead>
+	                  <tbody data-role="dummy">
+	                    <tr>
+	                      <td><a href="referenceDetails.html">CreateApplicationRef</a></td>
+	                      <td class="desktop-only">org.jboss.demos.services.ICreateApplication</td>
+	                      <td class="desktop-only">JMS,SOAP,REST</td>
+	                    </tr>
+	                    <tr>
+	                      <td><a href="referenceDetails.html">CreateQuoteRef</a></td>
+	                      <td class="desktop-only">org.jboss.demos.services.ICreateQuote</td>
+	                      <td class="desktop-only">JMS,SOAP</td>
+	                    </tr>
+	                    <tr>
+	                      <td><a href="referenceDetails.html">SearchContractRef</a></td>
+	                      <td class="desktop-only">org.jboss.demos.services.ISearchContract</td>
+	                      <td class="desktop-only">REST</td>
+	                    </tr>
+	                    <tr>
+	                      <td><a href="referenceDetails.html">DomainInformationRef</a></td>
+	                       <td class="desktop-only">org.jboss.demos.services.IDomainInformation</td>
+	                      <td class="desktop-only">JMS,REST</td>
+	                    </tr>
+	                    <tr>
+	                      <td><a href="referenceDetails.html">FNOLRef</a></td>
+	                      <td class="desktop-only">org.jboss.demos.services.IFNOL</td>
+	                      <td class="desktop-only">JMS,SOAP,REST</td>
+	                    </tr>
+	                  </tbody>
+	                </table>
+	              </div>
+	            </div>            
+	          </div>
+	          <div class="container-fluid tab-pane fade" id="servicegraph">
+                  <span data-field="svgPanel"></span>
+	          </div>
           </div>
+          
         </div>  <!-- /service-details -->
         
         </div> <!-- /content-wrapper -->

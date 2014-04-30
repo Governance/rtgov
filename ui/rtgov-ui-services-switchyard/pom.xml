@@ -66,6 +66,21 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>org.overlord.rtgov.active-queries</groupId>
+            <artifactId>active-collection</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.overlord.rtgov.activity-analysis</groupId>
+            <artifactId>service-dependency-svg</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
 	</dependencies>
 	
 </project>
