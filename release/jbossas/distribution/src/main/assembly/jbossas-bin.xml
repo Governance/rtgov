@@ -151,7 +151,13 @@
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
-
+		<dependencySet>
+			<outputDirectory>profiles/server/overlord-commons</outputDirectory>
+			<includes>
+				<include>org.overlord:overlord-commons-ant:jar</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
 		<!-- client profile -->
 
 		<dependencySet>
@@ -198,7 +204,13 @@
             </includes>
             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
         </dependencySet>
-        
+        <dependencySet>
+            <outputDirectory>profiles/client/overlord-commons</outputDirectory>
+            <includes>
+                <include>org.overlord:overlord-commons-ant:jar</include>
+            </includes>
+            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+        </dependencySet>
 	</dependencySets>
 
 </assembly>

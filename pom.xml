@@ -139,7 +139,11 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-
+			<dependency>
+				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-ant</artifactId>
+				<version>${overlord-commons.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-installer</artifactId>
