@@ -6,8 +6,6 @@
 	<persistence-unit name="overlord-rtgov-epn" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-		<jta-data-source>java:jboss/datasources/OverlordRTGov</jta-data-source>
-
 		<class>org.overlord.rtgov.activity.model.ActivityUnit</class>
 		<class>org.overlord.rtgov.activity.model.ActivityType</class>
 		<class>org.overlord.rtgov.activity.model.ActivityTypeId</class>

@@ -29,21 +29,32 @@ import org.overlord.rtgov.common.util.RTGovProperties;
  * @author Brett Meyer
  */
 public class JpaStore {
-	private static final String JPA_DATASOURCE = "javax.persistence.jtaDataSource";
-	
-	private String _persistenceUnit;
-	
-	private String _jndiProperty;
+    private static final String JPA_DATASOURCE = "javax.persistence.jtaDataSource";
+    
+    private String _persistenceUnit;
+    
+    private String _jndiProperty;
     
     private EntityManagerFactory _entityManagerFactory = null;
     
+    /**
+     * The constructor.
+     *
+     * @param persistenceUnit The persistence unit
+     * @param jndiProperty The jndi name
+     */
     public JpaStore(String persistenceUnit, String jndiProperty) {
-    	_persistenceUnit = persistenceUnit;
-    	_jndiProperty = jndiProperty;
+        _persistenceUnit = persistenceUnit;
+        _jndiProperty = jndiProperty;
     }
     
+    /**
+     * The constructor.
+     *
+     * @param entityManagerFactory The entity manager factory
+     */
     public JpaStore(EntityManagerFactory entityManagerFactory) {
-    	_entityManagerFactory = entityManagerFactory;
+        _entityManagerFactory = entityManagerFactory;
     }
     
     /**
@@ -53,18 +64,25 @@ public class JpaStore {
      */
     private EntityManager getEntityManager() {
         if (_entityManagerFactory == null) {
-        	final Properties properies = RTGovProperties.getProperties();
-        	properies.setProperty(JPA_DATASOURCE, RTGovProperties.getProperty(_jndiProperty));
+            final Properties properies = RTGovProperties.getProperties();
+            properies.setProperty(JPA_DATASOURCE, RTGovProperties.getProperty(_jndiProperty));
             _entityManagerFactory = Persistence.createEntityManagerFactory(_persistenceUnit, properies);
         }
 
         return _entityManagerFactory.createEntityManager();
     }
     
+    /**
+     * This method performs the supplied work in a JTA transaction.
+     *
+     * @param work The unit of work
+     * @param <T> The type if the return value
+     * @return The return value
+     */
     public <T> T withJpa(JpaWork<T> work) {
-		final EntityManager em = getEntityManager();
-    	try {
-        	em.getTransaction().begin();
+        final EntityManager em = getEntityManager();
+        try {
+            em.getTransaction().begin();
             final T result = work.perform(em);
             em.getTransaction().commit();
             return result;
@@ -74,16 +92,17 @@ public class JpaStore {
     }
     
     /**
-     * Perform work using a provided JPA EntityManager
+     * Perform work using a provided JPA EntityManager.
      * 
-     * @param <T>
+     * @param <T> The return type
      */
     public static interface JpaWork<T> {
-		/**
-		 * The work to be performed using the EntityManager
-		 *
-		 * @return The result of the work
-		 */
-		public T perform(EntityManager em);
-	}
+        /**
+         * The work to be performed using the EntityManager.
+         *
+         * @param em The entity manager
+         * @return The result of the work
+         */
+        public T perform(EntityManager em);
+    }
 }

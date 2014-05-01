@@ -39,16 +39,16 @@ import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 @Singleton
 public class JPAActivityStore implements ActivityStore {
     
-	private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
-	
-	private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-activity";
-	
-	private static final String JNDI_PROPERTY = "JPAActivityStore.jndi.datasource";
-	
-	private JpaStore _jpaStore = new JpaStore(OVERLORD_RTGOV_DB, JNDI_PROPERTY);
+    private static final Logger LOG=Logger.getLogger(JPAActivityStore.class.getName());
+    
+    private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-activity";
+    
+    private static final String JNDI_PROPERTY = "JPAActivityStore.jndi.datasource";
+    
+    private JpaStore _jpaStore = new JpaStore(OVERLORD_RTGOV_DB, JNDI_PROPERTY);
     
     protected void setJpaStore(JpaStore jpaStore) {
-    	_jpaStore = jpaStore;
+        _jpaStore = jpaStore;
     }
     
     /**
@@ -60,13 +60,13 @@ public class JPAActivityStore implements ActivityStore {
         }
         
         _jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				for (int i=0; i < activities.size(); i++) {
-	                em.persist(activities.get(i));
-	            }
-				return null;
-			}
-		});
+            public Void perform(EntityManager em) {
+                for (int i=0; i < activities.size(); i++) {
+                    em.persist(activities.get(i));
+                }
+                return null;
+            }
+        });
     }
 
     /**
@@ -78,11 +78,11 @@ public class JPAActivityStore implements ActivityStore {
         }
 
         ActivityUnit ret = _jpaStore.withJpa(new JpaWork<ActivityUnit>() {
-			public ActivityUnit perform(EntityManager em) {
-				return (ActivityUnit)em.createQuery("SELECT au FROM ActivityUnit au WHERE au.id = '"+id+"'")
+            public ActivityUnit perform(EntityManager em) {
+                return (ActivityUnit)em.createQuery("SELECT au FROM ActivityUnit au WHERE au.id = '"+id+"'")
                         .getSingleResult();
-			}
-		});
+            }
+        });
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("ActivityUnit id="+id+" Result="
@@ -102,28 +102,28 @@ public class JPAActivityStore implements ActivityStore {
         
         if (from == 0 && to == 0) {
             ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
-    			public List<ActivityType> perform(EntityManager em) {
-    				return (List<ActivityType>)
-    	                    em.createQuery("SELECT at from ActivityType at "
-    	                            +"JOIN at.context ctx "
-    	                            +"WHERE ctx.value = '"+context.getValue()+"' "
-    	                            +"AND ctx.type = '"+context.getType().name()+"'")
-    	                            .getResultList();
-    			}
-    		});
+                public List<ActivityType> perform(EntityManager em) {
+                    return (List<ActivityType>)
+                            em.createQuery("SELECT at from ActivityType at "
+                                    +"JOIN at.context ctx "
+                                    +"WHERE ctx.value = '"+context.getValue()+"' "
+                                    +"AND ctx.type = '"+context.getType().name()+"'")
+                                    .getResultList();
+                }
+            });
             
         } else {            
             ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
-    			public List<ActivityType> perform(EntityManager em) {
-    				return (List<ActivityType>)em.createQuery("SELECT at from ActivityType at "
-    	                    +"JOIN at.context ctx "
-    	                    +"WHERE ctx.value = '"+context.getValue()+"' "
-    	                    +"AND ctx.type = '"+context.getType().name()+"' "
-    	                    +"AND at.timestamp >= "+from+" "
-    	                    +"AND at.timestamp <= "+to)
-    	                    .getResultList();
-    			}
-    		});
+                public List<ActivityType> perform(EntityManager em) {
+                    return (List<ActivityType>)em.createQuery("SELECT at from ActivityType at "
+                            +"JOIN at.context ctx "
+                            +"WHERE ctx.value = '"+context.getValue()+"' "
+                            +"AND ctx.type = '"+context.getType().name()+"' "
+                            +"AND at.timestamp >= "+from+" "
+                            +"AND at.timestamp <= "+to)
+                            .getResultList();
+                }
+            });
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -178,10 +178,10 @@ public class JPAActivityStore implements ActivityStore {
     public List<ActivityType> query(final String query) throws Exception {
 
         List<ActivityType> ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
-			public List<ActivityType> perform(EntityManager em) {
-				return (List<ActivityType>)em.createQuery(query).getResultList();
-			}
-		});
+            public List<ActivityType> perform(EntityManager em) {
+                return (List<ActivityType>)em.createQuery(query).getResultList();
+            }
+        });
     
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Query="+query+" Result="
@@ -199,23 +199,23 @@ public class JPAActivityStore implements ActivityStore {
      */
     public void remove(final ActivityUnit au) throws Exception {
         _jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				// Cascading delete is not working from activity unit to activity types,
-		        // so resorting to native SQL for now to delete an activity unit and its
-		        // associated components
-		        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_CONTEXT WHERE unitId = '"
-		                        +au.getId()+"'").executeUpdate();
+            public Void perform(EntityManager em) {
+                // Cascading delete is not working from activity unit to activity types,
+                // so resorting to native SQL for now to delete an activity unit and its
+                // associated components
+                em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_CONTEXT WHERE unitId = '"
+                                +au.getId()+"'").executeUpdate();
 
-		        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_PROPERTIES WHERE unitId = '"
-		                        +au.getId()+"'").executeUpdate();
+                em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_PROPERTIES WHERE unitId = '"
+                                +au.getId()+"'").executeUpdate();
 
-		        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITIES WHERE unitId = '"
-		                        +au.getId()+"'").executeUpdate();
-		        
-		        em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_UNITS WHERE id = '"
-		                        +au.getId()+"'").executeUpdate();
-				return null;
-			}
-		});
+                em.createNativeQuery("DELETE FROM RTGOV_ACTIVITIES WHERE unitId = '"
+                                +au.getId()+"'").executeUpdate();
+                
+                em.createNativeQuery("DELETE FROM RTGOV_ACTIVITY_UNITS WHERE id = '"
+                                +au.getId()+"'").executeUpdate();
+                return null;
+            }
+        });
     }
 }

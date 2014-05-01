@@ -26,8 +26,6 @@ import java.util.logging.Logger;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.transaction.Status;
-import javax.transaction.UserTransaction;
 
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
@@ -58,9 +56,9 @@ public class JPASituationStore implements SituationStore {
 
     private JpaStore _jpaStore = new JpaStore(OVERLORD_RTGOV_DB, JNDI_PROPERTY);
         
-	protected void setJpaStore(JpaStore jpaStore) {
-		_jpaStore = jpaStore;
-	}
+    protected void setJpaStore(JpaStore jpaStore) {
+        _jpaStore = jpaStore;
+    }
 
     /**
      * {@inheritDoc}
@@ -70,14 +68,14 @@ public class JPASituationStore implements SituationStore {
             LOG.finest(i18n.format("JPASituationStore.GetSit", id)); //$NON-NLS-1$
         }
 
-		Situation ret = _jpaStore.withJpa(new JpaWork<Situation>() {
-			public Situation perform(EntityManager em) {
-				return (Situation) em.createQuery(
-						"SELECT sit FROM Situation sit " //$NON-NLS-1$
-								+ "WHERE sit.id = '" + id + "'") //$NON-NLS-1$ //$NON-NLS-2$
-						.getSingleResult();
-			}
-		});
+        Situation ret = _jpaStore.withJpa(new JpaWork<Situation>() {
+            public Situation perform(EntityManager em) {
+                return (Situation) em.createQuery(
+                        "SELECT sit FROM Situation sit " //$NON-NLS-1$
+                                + "WHERE sit.id = '" + id + "'") //$NON-NLS-1$ //$NON-NLS-2$
+                        .getSingleResult();
+            }
+        });
 
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.Result", ret)); //$NON-NLS-1$
@@ -92,16 +90,12 @@ public class JPASituationStore implements SituationStore {
     @SuppressWarnings("unchecked")
     public List<Situation> getSituations(final SituationsQuery sitQuery) {
         final String queryString = createQuery("SELECT sit from Situation sit ", sitQuery);
-		List<Situation> situations = _jpaStore.withJpa(new JpaWork<List<Situation>>() {
-			public List<Situation> perform(EntityManager em) {
-				Query query = em.createQuery(queryString);
-				if (sitQuery.getSeverity() != null) {
-					query.setParameter(
-							"severity", sitQuery.getSeverity()); //$NON-NLS-1$
-				}
-				return query.getResultList();
-			}
-		});
+        List<Situation> situations = _jpaStore.withJpa(new JpaWork<List<Situation>>() {
+            public List<Situation> perform(EntityManager em) {
+                Query query = em.createQuery(queryString);
+                return query.getResultList();
+            }
+        });
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.SitResult", situations)); //$NON-NLS-1$
         }
@@ -185,13 +179,13 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.AssSit", situationId)); //$NON-NLS-1$
         }
-		_jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				Situation situation = em.find(Situation.class, situationId);
-				situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
-				return null;
-			}
-		});
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(EntityManager em) {
+                Situation situation = em.find(Situation.class, situationId);
+                situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
+                return null;
+            }
+        });
     }
 
     /**
@@ -201,19 +195,19 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.DeassSit", situationId)); //$NON-NLS-1$
         }
-		_jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				Situation situation = em.find(Situation.class, situationId);
-				java.util.Map<String, String> properties = situation.getProperties();
-				properties.remove(ASSIGNED_TO_PROPERTY);
-				// remove current state if not already resolved
-				String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
-				if (resolutionState != null && ResolutionState.RESOLVED != ResolutionState.valueOf(resolutionState)) {
-					properties.remove(RESOLUTION_STATE_PROPERTY);
-				}
-				return null;
-			}
-		});
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(EntityManager em) {
+                Situation situation = em.find(Situation.class, situationId);
+                java.util.Map<String, String> properties = situation.getProperties();
+                properties.remove(ASSIGNED_TO_PROPERTY);
+                // remove current state if not already resolved
+                String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
+                if (resolutionState != null && ResolutionState.RESOLVED != ResolutionState.valueOf(resolutionState)) {
+                    properties.remove(RESOLUTION_STATE_PROPERTY);
+                }
+                return null;
+            }
+        });
     }
 
     /**
@@ -223,13 +217,13 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.UpdRState", situationId)); //$NON-NLS-1$
         }
-		_jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				Situation situation = em.find(Situation.class, situationId);
-				situation.getProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
-				return null;
-			}
-		});
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(EntityManager em) {
+                Situation situation = em.find(Situation.class, situationId);
+                situation.getProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
+                return null;
+            }
+        });
     }
 
     /**
@@ -277,19 +271,19 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.Resubmit", situationId)); //$NON-NLS-1$
         }
-		_jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				Situation situation = em.find(Situation.class, situationId);
-				Map<String, String> properties = situation.getProperties();
-				if (IUserContext.Holder.getUserPrincipal() != null) {
-					properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
-				}
-				properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
-				properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_SUCCESS);
-				properties.remove(RESUBMIT_ERROR_MESSAGE);
-				return null;
-			}
-		});
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(EntityManager em) {
+                Situation situation = em.find(Situation.class, situationId);
+                Map<String, String> properties = situation.getProperties();
+                if (IUserContext.Holder.getUserPrincipal() != null) {
+                    properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
+                }
+                properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
+                properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_SUCCESS);
+                properties.remove(RESUBMIT_ERROR_MESSAGE);
+                return null;
+            }
+        });
     }
 
     @Override
@@ -297,38 +291,38 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.ResubmitFailure", situationId)); //$NON-NLS-1$
         }
-		_jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				Situation situation = em.find(Situation.class, situationId);
-				Map<String, String> properties = situation.getProperties();
-				if (IUserContext.Holder.getUserPrincipal() != null) {
-					properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
-				}
-				properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
-				properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_ERROR);
-				String message = Strings.nullToEmpty(errorMessage);
-				if (message.length() > PROPERTY_VALUE_MAX_LENGTH) {
-					message = message.substring(0, PROPERTY_VALUE_MAX_LENGTH);
-				}
-				properties.put(RESUBMIT_ERROR_MESSAGE, message);
-				return null;
-			}
-		});
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(EntityManager em) {
+                Situation situation = em.find(Situation.class, situationId);
+                Map<String, String> properties = situation.getProperties();
+                if (IUserContext.Holder.getUserPrincipal() != null) {
+                    properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
+                }
+                properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
+                properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_ERROR);
+                String message = Strings.nullToEmpty(errorMessage);
+                if (message.length() > PROPERTY_VALUE_MAX_LENGTH) {
+                    message = message.substring(0, PROPERTY_VALUE_MAX_LENGTH);
+                }
+                properties.put(RESUBMIT_ERROR_MESSAGE, message);
+                return null;
+            }
+        });
     }
 
     @Override
     public int delete(final SituationsQuery situationQuery) {
-    	final String queryString = createQuery("SELECT sit from Situation sit ", situationQuery);
-		return _jpaStore.withJpa(new JpaWork<Integer>() {
-			public Integer perform(EntityManager em) {
-				Query query = em.createQuery(queryString);
+        final String queryString = createQuery("SELECT sit from Situation sit ", situationQuery);
+        return _jpaStore.withJpa(new JpaWork<Integer>() {
+            public Integer perform(EntityManager em) {
+                Query query = em.createQuery(queryString);
                 @SuppressWarnings("unchecked")
                 List<Situation> situations = query.getResultList();
                 for (Situation situation : situations) {
                     em.remove(situation);
                 }
                 return situations.size();
-			}
-		});
+            }
+        });
     }
 }

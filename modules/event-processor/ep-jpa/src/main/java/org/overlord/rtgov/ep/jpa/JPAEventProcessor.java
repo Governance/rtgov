@@ -34,10 +34,10 @@ public class JPAEventProcessor extends EventProcessor {
     private static final Logger LOG=Logger.getLogger(JPAEventProcessor.class.getName());
 
     private static final String JNDI_PROPERTY = "JPAEventProcessor.jndi.datasource";
-	
-	private JpaStore _jpaStore;
-	
-	private String _persistenceUnit = null;
+    
+    private JpaStore _jpaStore;
+    
+    private String _persistenceUnit = null;
     
     /**
      * This method returns the persistence unit name.
@@ -51,14 +51,34 @@ public class JPAEventProcessor extends EventProcessor {
     /**
      * This method sets the persistence unit name.
      * 
-     * @param name The persistence unit name
+     * @param persistenceUnit The persistence unit name
      */
     public void setPersistenceUnit(String persistenceUnit) {
-    	_persistenceUnit = persistenceUnit;
+        _persistenceUnit = persistenceUnit;
+    }
+    
+    /**
+     * @return The persistence unit name
+     * 
+     * @deprecated Use {@link #getPersistenceUnit()}
+     */
+    @Deprecated
+    public String getEntityManager() {
+        return getPersistenceUnit();
+    }
+    
+    /**
+     * @param persistenceUnit The persistence unit name
+     * 
+     * @deprecated Use {@link #setPersistenceUnit(String)}
+     */
+    @Deprecated
+    public void setEntityManager(String persistenceUnit) {
+        setPersistenceUnit(persistenceUnit);
     }
     
     protected void setJpaStore(JpaStore jpaStore) {
-    	_jpaStore = jpaStore;
+        _jpaStore = jpaStore;
     }
     
     /**
@@ -72,15 +92,15 @@ public class JPAEventProcessor extends EventProcessor {
         }
         
         if (_jpaStore == null) {
-        	_jpaStore = new JpaStore(_persistenceUnit, JNDI_PROPERTY);
+            _jpaStore = new JpaStore(_persistenceUnit, JNDI_PROPERTY);
         }
 
         _jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				em.persist(event);
-				return null;
-			}
-		});
+            public Void perform(EntityManager em) {
+                em.persist(event);
+                return null;
+            }
+        });
 
         return null;
     }
