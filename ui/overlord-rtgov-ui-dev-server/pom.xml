@@ -14,14 +14,12 @@
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
       <artifactId>rtgov-ui-core</artifactId>
-      <version>${project.version}</version>
     </dependency>
 
     <!-- Overlord Commons Dev -->
     <dependency>
       <groupId>org.overlord</groupId>
       <artifactId>overlord-commons-dev</artifactId>
-      <version>${overlord-commons.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.logging</groupId>
@@ -36,7 +34,6 @@
     <dependency>
       <groupId>org.overlord</groupId>
       <artifactId>overlord-commons-uiheader</artifactId>
-      <version>${overlord-commons.version}</version>
     </dependency>
 
     <!-- ServiceActivator/dmr -->
@@ -55,25 +52,21 @@
     <dependency>
       <groupId>org.overlord.rtgov.active-queries</groupId>
       <artifactId>active-collection</artifactId>
-      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.overlord.rtgov.activity-analysis</groupId>
       <artifactId>analytics</artifactId>
-      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>javax.persistence</groupId>
-      <artifactId>persistence-api</artifactId>
-      <version>1.0.2</version>
+	  <groupId>org.hibernate.javax.persistence</groupId>
+	  <artifactId>hibernate-jpa-2.0-api</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
       <artifactId>overlord-rtgov-ui-war</artifactId>
-      <version>${project.version}</version>
       <classifier>classes</classifier>
       <exclusions>
         <exclusion>

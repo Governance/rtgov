@@ -36,21 +36,18 @@
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
 			<artifactId>overlord-rtgov</artifactId>
 			<type>war</type>
-			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
 			<artifactId>overlord-rtgov-epn-jee</artifactId>
 			<type>war</type>
-			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
 			<artifactId>overlord-rtgov-acs-jee</artifactId>
 			<type>war</type>
-			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 

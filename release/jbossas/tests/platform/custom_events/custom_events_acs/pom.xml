@@ -16,23 +16,19 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
-			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>acs-loader-jee</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>acs-epn</artifactId>
-			<version>${project.version}</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
 			<artifactId>tests-jbossas-custom-events-data</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>

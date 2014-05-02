@@ -17,18 +17,15 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-client</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-switchyard</artifactId>
-			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
-			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -123,6 +120,7 @@
 			<plugin>
 				<groupId>org.jboss.as.plugins</groupId>
 				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>7.5.Final</version>
 				<configuration>
 					<skip>false</skip>
 				</configuration>
@@ -130,6 +128,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1.jbossorg-3</version>
 				<configuration>
 					<mainClass>org.overlord.rtgov.quickstarts.demos.orders.OrdersClient</mainClass>
 					<classpathScope>test</classpathScope>

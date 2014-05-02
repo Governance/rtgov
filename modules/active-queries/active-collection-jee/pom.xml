@@ -20,7 +20,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

@@ -17,40 +17,34 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
 			<artifactId>overlord-rtgov</artifactId>
-			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
 			<artifactId>overlord-rtgov-client</artifactId>
-			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
 			<artifactId>overlord-rtgov-epn-jee</artifactId>
-			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
 			<artifactId>overlord-rtgov-epn-datastore</artifactId>
-			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
 			<artifactId>overlord-rtgov-acs-jee</artifactId>
-			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.ui</groupId>
 			<artifactId>overlord-rtgov-ui-war-eap6</artifactId>
-			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 

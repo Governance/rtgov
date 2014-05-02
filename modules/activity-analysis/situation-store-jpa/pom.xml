@@ -15,25 +15,21 @@
 	    <dependency>
 	        <groupId>org.overlord.rtgov.ui</groupId>
 	        <artifactId>rtgov-ui-situations</artifactId>
-	        <version>${project.version}</version>
 	    </dependency>
 
 	    <!-- RTGov dependencies -->
 	    <dependency>
 	        <groupId>org.overlord.rtgov.common</groupId>
 	        <artifactId>rtgov-common</artifactId>
-	        <version>${project.version}</version>
 	    </dependency>
 	    <dependency>
 	        <groupId>org.overlord.rtgov.activity-management</groupId>
 	        <artifactId>activity</artifactId>
-	        <version>${project.version}</version>
 	        <scope>provided</scope>
 	    </dependency>
 	    <dependency>
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
 	        <artifactId>analytics</artifactId>
-	        <version>${project.version}</version>
 	        <scope>provided</scope>
 	    </dependency>
 
@@ -82,9 +78,8 @@
 	        </exclusions>
 	    </dependency>
 	    <dependency>
-	        <groupId>javax.persistence</groupId>
-	        <artifactId>persistence-api</artifactId>
-	        <version>1.0.2</version>
+	        <groupId>org.hibernate.javax.persistence</groupId>
+	        <artifactId>hibernate-jpa-2.0-api</artifactId>
 	        <scope>provided</scope>
 	    </dependency>
 
@@ -92,7 +87,6 @@
 	    <dependency>
 	        <groupId>org.overlord.rtgov.activity-management</groupId>
 	        <artifactId>activity-store-mem</artifactId>
-	        <version>${project.version}</version>
 			<scope>test</scope>
 	    </dependency>
 		<dependency>

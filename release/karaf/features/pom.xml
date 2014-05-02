@@ -16,166 +16,128 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-common</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-infinispan</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Activity -->
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Activity Server -->
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-jee</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Event Processors -->
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-drools</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-jpa</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-mail</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-mvel</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Event Processor Network -->
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-jms</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-jms-activemq</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Active Queries -->
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Active Queries Server -->
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-embedded</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-infinispan</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Services -->
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>call-trace</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>reports-osgi</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>reports-loader-osgi</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>service-dependency</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>service-dependency-svg</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>situation-manager</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>service-dependency-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>situation-manager-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>call-trace-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.karaf</groupId>
 			<artifactId>overlord-rtgov</artifactId>
-			<version>${project.version}</version>
 			<type>war</type>
 		</dependency>
 
@@ -183,116 +145,98 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-store-mem</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
-		<!-- RTGov Activity Store JPA H2 -->
+		<!-- RTGov Activity Store JPA H2
 		<dependency>
 			<groupId>org.overlord.rtgov.karaf.ds</groupId>
 			<artifactId>activity-store-jpa-h2</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+         -->
 
 		<!-- RTGov Server -->
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-epn</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>acs-epn</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-embedded</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>collector-activity-server</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-client</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-osgi</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Server Contents -->
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
 			<artifactId>overlord-rtgov-epn-osgi</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>
 			<artifactId>overlord-rtgov-acs-osgi</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Samples Policy Async -->
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
 			<artifactId>samples-karaf-policy-async</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Samples Policy Sync -->
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
 			<artifactId>samples-karaf-policy-sync</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Samples SLA -->
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.sla</groupId>
 			<artifactId>samples-karaf-sla-epn</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- RTGov Samples Order Management -->
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-model</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-inventoryservice</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-logisticsservice</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-orderservice</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-orderservice-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-epn</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-ip</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- Third party dependencies -->
@@ -569,8 +513,6 @@
 										<include>org.overlord.rtgov.activity-analysis:analytics:*</include>
 										<include>org.overlord.rtgov.activity-analysis:call-trace:*</include>
 										<include>org.overlord.rtgov.activity-analysis:reports:*</include>
-										<include>org.overlord.rtgov.activity-analysis:reports-osgi:*</include>
-										<include>org.overlord.rtgov.activity-analysis:reports-loader-osgi:*</include>
 										<include>org.overlord.rtgov.activity-analysis:reports-rests:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency-svg:*</include>

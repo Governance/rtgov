@@ -16,32 +16,27 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			<artifactId>samples-jbossas-ordermgmt-app</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			<artifactId>samples-jbossas-ordermgmt-ip</artifactId>
 			<type>war</type>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.jbossas.policy</groupId>
 			<artifactId>samples-jbossas-policy-async</artifactId>
 			<type>war</type>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
 			<artifactId>overlord-rtgov</artifactId>
 			<type>war</type>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 

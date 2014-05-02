@@ -73,10 +73,12 @@
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-ejb3-api.version>3.1.0</jboss-ejb3-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
+        <jetty.version>6.1.25</jetty.version>
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jsp-api.version>2.0</jsp-api.version>
 		<kie.version>6.1.0.Beta2</kie.version>
 		<lucene.version>4.7.0</lucene.version>
+        <remoting-jmx>1.1.0.Final</remoting-jmx>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<picketlink.version>2.5.3.SP1</picketlink.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
@@ -130,7 +132,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-
 			<!-- Imported dependencies -->
 			<dependency>
 				<groupId>org.jboss.integration-platform</groupId>
@@ -139,6 +140,470 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+            <!-- Internal dependencies -->
+		    <dependency>
+			    <groupId>org.overlord.rtgov.common</groupId>
+			    <artifactId>rtgov-common</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.common</groupId>
+			    <artifactId>rtgov-infinispan</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.common</groupId>
+                <artifactId>rtgov-elasticsearch</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>active-collection</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>acs-loader-jee</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>acs-loader-osgi</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>acs-epn</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>		
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>active-collection-infinispan</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>active-collection-rests</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>active-collection-jee</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>active-collection-embedded</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>analytics</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>call-trace</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>reports</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>reports-jee</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>reports-rests</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.activity-analysis</groupId>
+                <artifactId>service-dependency</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.activity-analysis</groupId>
+                <artifactId>service-dependency-svg</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>situation-manager</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>situation-store-jpa</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-embedded</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-store-mem</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-store-jpa</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>collector-activity-server</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-server-epn</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-server-restc</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-server-rests</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-client-jee</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-server-jee</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>av-loader-jee</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor</groupId>
+			    <artifactId>ep-core</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor</groupId>
+			    <artifactId>ep-drools</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor</groupId>
+			    <artifactId>ep-mvel</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.event-processor</groupId>
+                <artifactId>ep-keyvaluestore</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor</groupId>
+			    <artifactId>ep-mail</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor</groupId>
+			    <artifactId>ep-jpa</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor-network</groupId>
+			    <artifactId>epn-core</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor-network</groupId>
+			    <artifactId>epn-jms</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor-network</groupId>
+			    <artifactId>epn-jms-activemq</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor-network</groupId>
+			    <artifactId>epn-loader-osgi</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+            <dependency>
+	            <groupId>org.overlord.rtgov.event-processor-network</groupId>
+	            <artifactId>epn-container-embedded</artifactId>
+	            <version>${project.version}</version>
+            </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor-network</groupId>
+			    <artifactId>epn-container-jee</artifactId>
+	            <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.event-processor-network</groupId>
+			    <artifactId>epn-loader-jee</artifactId>
+	            <version>${project.version}</version>
+		    </dependency>
+
+	        <dependency>
+	            <groupId>org.overlord.rtgov.integration</groupId>
+	            <artifactId>rtgov-client</artifactId>
+	            <version>${project.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.overlord.rtgov.integration</groupId>
+	            <artifactId>rtgov-jbossas</artifactId>
+	            <version>${project.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.overlord.rtgov.integration</groupId>
+	            <artifactId>rtgov-switchyard</artifactId>
+	            <version>${project.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.overlord.rtgov.integration</groupId>
+	            <artifactId>rtgov-osgi</artifactId>
+	            <version>${project.version}</version>
+	        </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content.services</groupId>
+			    <artifactId>elasticsearch-rests</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content.services</groupId>
+			    <artifactId>call-trace-rests</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content.services</groupId>
+			    <artifactId>service-dependency-rests</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content.services</groupId>
+			    <artifactId>situation-manager-rests</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+
+            <dependency>
+                <groupId>org.overlord.rtgov.ui</groupId>
+                <artifactId>rtgov-ui-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.ui</groupId>
+                <artifactId>rtgov-ui-situations</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.ui</groupId>
+                <artifactId>rtgov-ui-services-switchyard</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.ui</groupId>
+                <artifactId>overlord-rtgov-ui-war</artifactId>
+                <version>${project.version}</version>
+                <classifier>classes</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.ui</groupId>
+                <artifactId>overlord-rtgov-ui-war</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.ui</groupId>
+                <artifactId>overlord-rtgov-ui-war-jetty8</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.ui</groupId>
+                <artifactId>overlord-rtgov-ui-war-eap6</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
+			    <artifactId>samples-jbossas-ordermgmt-app</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
+			    <artifactId>samples-jbossas-ordermgmt-ip</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.jbossas.policy</groupId>
+			    <artifactId>samples-jbossas-policy-async</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.jbossas.policy</groupId>
+			    <artifactId>samples-jbossas-policy-sync</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.jbossas.sla</groupId>
+			    <artifactId>samples-jbossas-sla-epn</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
+			    <artifactId>samples-karaf-policy-async</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
+			    <artifactId>samples-karaf-policy-sync</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.sla</groupId>
+			    <artifactId>samples-karaf-sla-epn</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
+			    <artifactId>samples-karaf-ordermgmt-model</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
+			    <artifactId>samples-karaf-ordermgmt-inventoryservice</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
+			    <artifactId>samples-karaf-ordermgmt-logisticsservice</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
+			    <artifactId>samples-karaf-ordermgmt-orderservice</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
+			    <artifactId>samples-karaf-ordermgmt-orderservice-rests</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
+			    <artifactId>samples-karaf-ordermgmt-epn</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
+			    <artifactId>samples-karaf-ordermgmt-ip</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
+			    <artifactId>tests-jbossas-custom-events-data</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
+			    <artifactId>tests-jbossas-custom-events-epn</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
+			    <artifactId>tests-jbossas-custom-events-av</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
+			    <artifactId>tests-jbossas-custom-events-monitor</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.karaf</groupId>
+			    <artifactId>overlord-rtgov</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov.release.jbossas</groupId>
+			    <artifactId>overlord-rtgov</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.release.jbossas</groupId>
+			    <artifactId>overlord-rtgov-client</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content</groupId>
+			    <artifactId>overlord-rtgov-epn-jee</artifactId>
+			    <type>war</type>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content</groupId>
+			    <artifactId>overlord-rtgov-acs-jee</artifactId>
+			    <type>war</type>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content</groupId>
+			    <artifactId>overlord-rtgov-epn-datastore</artifactId>
+			    <type>war</type>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content</groupId>
+			    <artifactId>overlord-rtgov-epn-osgi</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content</groupId>
+			    <artifactId>overlord-rtgov-acs-osgi</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+
+			<!-- Other dependencies -->
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-ant</artifactId>
@@ -185,6 +650,36 @@
 				<artifactId>overlord-commons-config</artifactId>
 				<version>${overlord-commons.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-osgi</artifactId>
+				<version>${overlord-commons.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-osgi-weld</artifactId>
+				<version>${overlord-commons.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-errai-fuse-support</artifactId>
+				<version>${overlord-commons.version}</version>
+			</dependency>
+            <dependency>
+                <groupId>org.overlord</groupId>
+                <artifactId>overlord-commons-dev</artifactId>
+                <version>${overlord-commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord</groupId>
+                <artifactId>overlord-commons-gwt</artifactId>
+                <version>${overlord-commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.overlord</groupId>
+                <artifactId>overlord-commons-uiheader</artifactId>
+                <version>${overlord-commons.version}</version>
+            </dependency>
 
 			<dependency>
 				<groupId>javax</groupId>
@@ -332,9 +827,35 @@
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-remote</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-serial</artifactId>
+				<version>${switchyard.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-test</artifactId>
 				<version>${switchyard.version}</version>
 			</dependency>
+
+		    <dependency>
+			    <groupId>org.switchyard.quickstarts.demos</groupId>
+			    <artifactId>switchyard-quickstart-demo-multi-artifacts</artifactId>
+				<version>${switchyard.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.switchyard.quickstarts.demos</groupId>
+			    <artifactId>switchyard-quickstart-demo-multi-order-consumer</artifactId>
+				<version>${switchyard.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.switchyard.quickstarts.demos</groupId>
+			    <artifactId>switchyard-quickstart-demo-multi-order-service</artifactId>
+				<version>${switchyard.version}</version>
+		    </dependency>
 
 			<dependency>
 				<groupId>org.jboss.naming</groupId>
@@ -391,6 +912,24 @@
 				<artifactId>errai-tools</artifactId>
 				<version>${errai.version}</version>
 			</dependency>
+
+            <dependency>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty</artifactId>
+				<version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-util</artifactId>
+				<version>${jetty.version}</version>
+            </dependency>
+
+            <dependency>
+				<groupId>org.jboss.remotingjmx</groupId>
+				<artifactId>remoting-jmx</artifactId>
+				<version>${remoting-jmx}</version>
+            </dependency>
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -464,6 +1003,22 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
+            <!-- Disable 'require plugin versions' for now as switchyard is using snapshot -->
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-plugin-versions</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+			<plugin>
+				<groupId>org.switchyard</groupId>
+				<artifactId>switchyard-plugin</artifactId>
+                <version>${switchyard.version}</version>
+			</plugin>
 			<!-- Specify the compiler options and settings -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
