@@ -16,7 +16,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
@@ -49,13 +48,6 @@
 			<artifactId>hornetq-core-client</artifactId>
 			<scope>provided</scope>
 		</dependency>
-<!--
-		<dependency>
-			<groupId>org.jboss.netty</groupId>
-			<artifactId>netty</artifactId>
-			<scope>provided</scope>
-		</dependency>
--->
 		<dependency>
 			<groupId>org.jboss.naming</groupId>
 			<artifactId>jnp-client</artifactId>

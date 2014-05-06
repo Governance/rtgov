@@ -16,27 +16,23 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			<artifactId>samples-jbossas-ordermgmt-app</artifactId>
 			<type>jar</type>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			<artifactId>samples-jbossas-ordermgmt-ip</artifactId>
 			<type>war</type>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.release.jbossas</groupId>
 			<artifactId>overlord-rtgov</artifactId>
 			<type>war</type>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>

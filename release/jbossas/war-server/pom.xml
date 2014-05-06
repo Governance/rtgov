@@ -17,63 +17,52 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-common</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.overlord.rtgov.event-processor</groupId>
             <artifactId>ep-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.overlord.rtgov.event-processor</groupId>
             <artifactId>ep-keyvaluestore</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-drools</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-mvel</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>acs-epn</artifactId>
-			<version>${project.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>service-dependency</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>service-dependency-svg</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- Overlord Commons -->
@@ -98,7 +87,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>collector-activity-server</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- Activity Server modules -->
@@ -106,31 +94,26 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-jee</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-client-jee</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-epn</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-store-jpa</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<!-- Event Processor Network modules -->
@@ -138,17 +121,14 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-jms</artifactId>
-			<version>${project.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-container-jee</artifactId>
-			<version>${project.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-jpa</artifactId>
-			<version>${project.version}</version>
 		</dependency>	
 		
 		<!-- Active collection modules -->
@@ -156,17 +136,14 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-jee</artifactId>
-			<version>${project.version}</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-infinispan</artifactId>
-			<version>${project.version}</version>
 		</dependency>		
 		
 		<!-- Report modules -->
@@ -174,17 +151,14 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports-jee</artifactId>
-			<version>${project.version}</version>
 		</dependency>		
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>		
 		
 		<!-- Services -->
@@ -192,37 +166,30 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>service-dependency-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>service-dependency</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>service-dependency-svg</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>call-trace-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>call-trace</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>situation-manager-rests</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>situation-manager</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- Overlord commons -->
@@ -277,7 +244,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-client</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		
 		<!-- JBossAS Specific -->
@@ -285,17 +251,14 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-jbossas</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-infinispan</artifactId>
-			<version>${project.version}</version>
 		</dependency>
         <dependency>
             <groupId>org.overlord.rtgov.common</groupId>
             <artifactId>rtgov-elasticsearch</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
 
@@ -304,7 +267,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-switchyard</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
         <!-- Elasticsearch Specific: eventually defined a jboss module -->
@@ -312,12 +274,10 @@
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
-            <version>${elasticsearch.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
-            <version>${lucene.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

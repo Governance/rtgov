@@ -17,23 +17,19 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-model</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-inventoryservice</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.ordermgmt</groupId>
 			<artifactId>samples-karaf-ordermgmt-logisticsservice</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-client</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 

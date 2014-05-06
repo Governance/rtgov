@@ -17,13 +17,11 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.ui</groupId>
 			<artifactId>rtgov-ui-core</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.ui</groupId>
 			<artifactId>rtgov-ui-services-switchyard</artifactId>
-			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -46,19 +44,16 @@
 		<dependency>
 			<groupId>org.switchyard.quickstarts.demos</groupId>
 			<artifactId>switchyard-quickstart-demo-multi-artifacts</artifactId>
-			<version>${switchyard.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.switchyard.quickstarts.demos</groupId>
 			<artifactId>switchyard-quickstart-demo-multi-order-consumer</artifactId>
-			<version>${switchyard.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.switchyard.quickstarts.demos</groupId>
 			<artifactId>switchyard-quickstart-demo-multi-order-service</artifactId>
-			<version>${switchyard.version}</version>
 			<scope>test</scope>
 		</dependency>
 

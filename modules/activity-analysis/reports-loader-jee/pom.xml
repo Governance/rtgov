@@ -20,7 +20,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>reports</artifactId>
-			<version>${project.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
