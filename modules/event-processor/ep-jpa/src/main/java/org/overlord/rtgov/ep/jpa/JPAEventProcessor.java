@@ -15,11 +15,11 @@
  */
 package org.overlord.rtgov.ep.jpa;
 
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-
+import org.hibernate.Session;
 import org.overlord.rtgov.ep.EventProcessor;
 import org.overlord.rtgov.jpa.JpaStore;
 import org.overlord.rtgov.jpa.JpaStore.JpaWork;
@@ -31,54 +31,47 @@ import org.overlord.rtgov.jpa.JpaStore.JpaWork;
  */
 public class JPAEventProcessor extends EventProcessor {
 
-    private static final Logger LOG=Logger.getLogger(JPAEventProcessor.class.getName());
+    private static final Logger LOG = Logger.getLogger(JPAEventProcessor.class.getName());
 
     private static final String JNDI_PROPERTY = "JPAEventProcessor.jndi.datasource";
     
-    private JpaStore _jpaStore;
+    private final JpaStore _jpaStore;
     
-    private String _persistenceUnit = null;
-    
-    /**
-     * This method returns the persistence unit name.
-     * 
-     * @return The persistence unit name
-     */
-    public String getPersistenceUnit() {
-        return (_persistenceUnit);
+    public JPAEventProcessor() {
+    	final URL configXml = this.getClass().getClassLoader().getResource("hibernate.cfg.xml");
+    	_jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
     }
     
-    /**
-     * This method sets the persistence unit name.
-     * 
-     * @param persistenceUnit The persistence unit name
-     */
-    public void setPersistenceUnit(String persistenceUnit) {
-        _persistenceUnit = persistenceUnit;
+    public JPAEventProcessor(JpaStore jpaStore) {
+    	_jpaStore = jpaStore;
+    }
+    
+    public JPAEventProcessor(URL configXml) {
+    	_jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
     }
     
     /**
      * @return The persistence unit name
      * 
-     * @deprecated Use {@link #getPersistenceUnit()}
+     * @deprecated with no replacement
      */
     @Deprecated
     public String getEntityManager() {
-        return getPersistenceUnit();
+    	LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  To customize it, pass the URL of a valid "
+    			+ "hibernate.cfg.xml file through #JPAEventProcessor(URL).");
+        return "";
     }
     
     /**
      * @param persistenceUnit The persistence unit name
      * 
-     * @deprecated Use {@link #setPersistenceUnit(String)}
+     * @deprecated JPAEventProcessor now uses native Hibernate ORM.  To customize it, pass the URL of a valid
+     * hibernate.cfg.xml file through {@link #JPAEventProcessor(URL)}.
      */
     @Deprecated
     public void setEntityManager(String persistenceUnit) {
-        setPersistenceUnit(persistenceUnit);
-    }
-    
-    protected void setJpaStore(JpaStore jpaStore) {
-        _jpaStore = jpaStore;
+    	LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  To customize it, pass the URL of a valid "
+    			+ "hibernate.cfg.xml file through #JPAEventProcessor(URL).");
     }
     
     /**
@@ -91,13 +84,9 @@ public class JPAEventProcessor extends EventProcessor {
                     +"' on JPA Event Processor");
         }
         
-        if (_jpaStore == null) {
-            _jpaStore = new JpaStore(_persistenceUnit, JNDI_PROPERTY);
-        }
-
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(EntityManager em) {
-                em.persist(event);
+            public Void perform(Session s) {
+                s.persist(event);
                 return null;
             }
         });

@@ -5,16 +5,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.IN_PROGRESS;
 
+import java.net.URL;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
 
+import org.hibernate.Session;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,17 +34,14 @@ import com.google.common.collect.Sets;
 public class JPASituationStoreTest {
     @Rule public TestName name = new TestName();
     
-    private static final String OVERLORD_RTGOV_DB = "JPASituationStoreTest";
-
     private static JpaStore _jpaStore;
     private static JPASituationStore _situationStore;
 	
     @Before
     public void init() throws NamingException {
-    	final EntityManagerFactory emf = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_DB);
-		_jpaStore = new JpaStore(emf);
-		_situationStore = new JPASituationStore();
-		_situationStore.setJpaStore(_jpaStore);
+    	final URL configXml = JPASituationStoreTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
+    	_jpaStore = new JpaStore(configXml);
+		_situationStore = new JPASituationStore(_jpaStore);
         IUserContext.Holder.setSecurityContext(new IUserContext() {
 
             @Override
@@ -60,15 +55,6 @@ public class JPASituationStoreTest {
                 };
             }
         });
-    }
-
-    @Test
-    public void getSituationNotFound() throws Exception {
-        try {
-            _situationStore.getSituation("1");
-            Assert.fail("NoResultException expected");
-        } catch (NoResultException noResultException) {
-        }
     }
 
     @Test
@@ -398,8 +384,8 @@ public class JPASituationStoreTest {
     
 	private void persist(final Situation situation) {
 		_jpaStore.withJpa(new JpaWork<Void>() {
-			public Void perform(EntityManager em) {
-				em.persist(situation);
+			public Void perform(Session s) {
+				s.persist(situation);
 				return null;
 			}
 		});

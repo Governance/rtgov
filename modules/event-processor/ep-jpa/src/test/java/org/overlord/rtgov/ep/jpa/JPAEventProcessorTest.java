@@ -17,10 +17,9 @@ package org.overlord.rtgov.ep.jpa;
 
 import static org.junit.Assert.fail;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.net.URL;
 
+import org.hibernate.Session;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overlord.rtgov.jpa.JpaStore;
@@ -28,17 +27,14 @@ import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 
 public class JPAEventProcessorTest {
     
-    private static final String OVERLORD_RTGOV_EP_JPA = "overlord-rtgov-ep-jpa";
-    
     private static JpaStore jpaStore;
     private static JPAEventProcessor eventProcessor=null;
 
     @BeforeClass
     public static void initialiseEntityManager() throws Exception{
-    	final EntityManagerFactory emf = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_EP_JPA);
-    	jpaStore = new JpaStore(emf);
-        eventProcessor = new JPAEventProcessor();
-        eventProcessor.setJpaStore(jpaStore);
+    	final URL configXml = JPAEventProcessorTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
+    	jpaStore = new JpaStore(configXml);
+        eventProcessor = new JPAEventProcessor(jpaStore);
     }
     
     @Test
@@ -66,8 +62,8 @@ public class JPAEventProcessorTest {
 		}
     	
     	TestEvent result = jpaStore.withJpa(new JpaWork<TestEvent>() {
-			public TestEvent perform(EntityManager em) {
-				return em.find(TestEvent.class, "1");
+			public TestEvent perform(Session s) {
+				return (TestEvent) s.get(TestEvent.class, "1");
 			}
 		});
     	

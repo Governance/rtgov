@@ -17,10 +17,9 @@ package org.overlord.rtgov.activity.store.jpa;
 
 import static org.junit.Assert.fail;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import java.net.URL;
 
+import org.hibernate.Session;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -53,10 +52,9 @@ public class JPAActivityStoreTest {
     
     @BeforeClass
     public static void initialiseEntityManager() throws Exception{
-    	final EntityManagerFactory emf = Persistence.createEntityManagerFactory(OVERLORD_RTGOV_ACTIVITY_ORM);
-    	jpaStore = new JpaStore(emf);
-    	activityStore = new JPAActivityStore();
-    	activityStore.setJpaStore(jpaStore);
+    	final URL configXml = JPAActivityStoreTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
+    	jpaStore = new JpaStore(configXml);
+    	activityStore = new JPAActivityStore(jpaStore);
     }
     
     public ActivityUnit createTestActivityUnit(String id, String convId, String endpointId, long baseTime) {
@@ -118,8 +116,8 @@ public class JPAActivityStoreTest {
     
     protected void checkTableEmpty(final String table) {
     	int rows = jpaStore.withJpa(new JpaWork<Integer>() {
-			public Integer perform(EntityManager em) {
-				return em.createNativeQuery("SELECT * FROM "+table).getResultList().size();
+			public Integer perform(Session s) {
+				return s.createSQLQuery("SELECT * FROM "+table).list().size();
 			}
 		});
         

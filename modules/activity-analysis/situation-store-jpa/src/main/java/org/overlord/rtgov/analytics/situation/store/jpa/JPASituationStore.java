@@ -18,15 +18,16 @@ package org.overlord.rtgov.analytics.situation.store.jpa;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.System.currentTimeMillis;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
@@ -46,7 +47,6 @@ import com.google.common.base.Strings;
 public class JPASituationStore implements SituationStore {
 
     private static final int PROPERTY_VALUE_MAX_LENGTH = 250;
-    private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-situations"; //$NON-NLS-1$
     
     private static volatile Messages i18n = new Messages();
 
@@ -54,10 +54,15 @@ public class JPASituationStore implements SituationStore {
     
     private static final String JNDI_PROPERTY = "JPASituationStore.jndi.datasource";
 
-    private JpaStore _jpaStore = new JpaStore(OVERLORD_RTGOV_DB, JNDI_PROPERTY);
-        
-    protected void setJpaStore(JpaStore jpaStore) {
-        _jpaStore = jpaStore;
+    private final JpaStore _jpaStore;
+    
+    public JPASituationStore() {
+    	final URL configXml = this.getClass().getClassLoader().getResource("hibernate.cfg.xml");
+    	_jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
+    }
+    
+    public JPASituationStore(JpaStore jpaStore) {
+    	_jpaStore = jpaStore;
     }
 
     /**
@@ -69,11 +74,11 @@ public class JPASituationStore implements SituationStore {
         }
 
         Situation ret = _jpaStore.withJpa(new JpaWork<Situation>() {
-            public Situation perform(EntityManager em) {
-                return (Situation) em.createQuery(
+            public Situation perform(Session s) {
+                return (Situation) s.createQuery(
                         "SELECT sit FROM Situation sit " //$NON-NLS-1$
                                 + "WHERE sit.id = '" + id + "'") //$NON-NLS-1$ //$NON-NLS-2$
-                        .getSingleResult();
+                        .uniqueResult();
             }
         });
 
@@ -91,9 +96,9 @@ public class JPASituationStore implements SituationStore {
     public List<Situation> getSituations(final SituationsQuery sitQuery) {
         final String queryString = createQuery("SELECT sit from Situation sit ", sitQuery);
         List<Situation> situations = _jpaStore.withJpa(new JpaWork<List<Situation>>() {
-            public List<Situation> perform(EntityManager em) {
-                Query query = em.createQuery(queryString);
-                return query.getResultList();
+            public List<Situation> perform(Session s) {
+                Query query = s.createQuery(queryString);
+                return query.list();
             }
         });
         if (LOG.isLoggable(Level.FINEST)) {
@@ -180,8 +185,8 @@ public class JPASituationStore implements SituationStore {
             LOG.finest(i18n.format("JPASituationStore.AssSit", situationId)); //$NON-NLS-1$
         }
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(EntityManager em) {
-                Situation situation = em.find(Situation.class, situationId);
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
                 situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
                 return null;
             }
@@ -196,8 +201,8 @@ public class JPASituationStore implements SituationStore {
             LOG.finest(i18n.format("JPASituationStore.DeassSit", situationId)); //$NON-NLS-1$
         }
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(EntityManager em) {
-                Situation situation = em.find(Situation.class, situationId);
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
                 java.util.Map<String, String> properties = situation.getProperties();
                 properties.remove(ASSIGNED_TO_PROPERTY);
                 // remove current state if not already resolved
@@ -218,8 +223,8 @@ public class JPASituationStore implements SituationStore {
             LOG.finest(i18n.format("JPASituationStore.UpdRState", situationId)); //$NON-NLS-1$
         }
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(EntityManager em) {
-                Situation situation = em.find(Situation.class, situationId);
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
                 situation.getProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
                 return null;
             }
@@ -272,8 +277,8 @@ public class JPASituationStore implements SituationStore {
             LOG.finest(i18n.format("JPASituationStore.Resubmit", situationId)); //$NON-NLS-1$
         }
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(EntityManager em) {
-                Situation situation = em.find(Situation.class, situationId);
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
                 Map<String, String> properties = situation.getProperties();
                 if (IUserContext.Holder.getUserPrincipal() != null) {
                     properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
@@ -292,8 +297,8 @@ public class JPASituationStore implements SituationStore {
             LOG.finest(i18n.format("JPASituationStore.ResubmitFailure", situationId)); //$NON-NLS-1$
         }
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(EntityManager em) {
-                Situation situation = em.find(Situation.class, situationId);
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
                 Map<String, String> properties = situation.getProperties();
                 if (IUserContext.Holder.getUserPrincipal() != null) {
                     properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
@@ -314,12 +319,12 @@ public class JPASituationStore implements SituationStore {
     public int delete(final SituationsQuery situationQuery) {
         final String queryString = createQuery("SELECT sit from Situation sit ", situationQuery);
         return _jpaStore.withJpa(new JpaWork<Integer>() {
-            public Integer perform(EntityManager em) {
-                Query query = em.createQuery(queryString);
+            public Integer perform(Session s) {
+                Query query = s.createQuery(queryString);
                 @SuppressWarnings("unchecked")
-                List<Situation> situations = query.getResultList();
+                List<Situation> situations = query.list();
                 for (Situation situation : situations) {
-                    em.remove(situation);
+                    s.delete(situation);
                 }
                 return situations.size();
             }

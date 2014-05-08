@@ -15,61 +15,74 @@
  */
 package org.overlord.rtgov.jpa;
 
+import java.net.URL;
 import java.util.Properties;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.cfg.Configuration;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
  * Provides common JPA functionality to all data stores.
  * 
+ * Note: This is actually using native Hibernate ORM, rather than JPA, but I'm keeping the "JPA" name for
+ * consistency's sake.  Since we need to dynamically provide the DataSource, JtaPlatform, etc., we can't include
+ * incomplete persistence.xml files with those values missing.  EE containers grab the files and automatically attempt
+ * to create JPA EntityManagerFactories with them.  There's not an easy, cross-platform way to prevent that.  So
+ * instead, fall back on native ORM.
+ * 
  * @author Brett Meyer
  */
 public class JpaStore {
-    private static final String JPA_DATASOURCE = "javax.persistence.jtaDataSource";
-    
-    private String _persistenceUnit;
+	private static final String JTA_PLATFORM_PROPERTY = "JpaStore.jtaPlatform";
+	
+    private URL _configXml;
     
     private String _jndiProperty;
     
-    private EntityManagerFactory _entityManagerFactory = null;
+    private SessionFactory _sessionFactory = null;
     
     /**
      * The constructor.
      *
-     * @param persistenceUnit The persistence unit
+     * @param configXml The hibernate.cfg.xml URL
      * @param jndiProperty The jndi name
      */
-    public JpaStore(String persistenceUnit, String jndiProperty) {
-        _persistenceUnit = persistenceUnit;
+    public JpaStore(URL configXml, String jndiProperty) {
+    	_configXml = configXml;
         _jndiProperty = jndiProperty;
     }
     
     /**
      * The constructor.
      *
-     * @param entityManagerFactory The entity manager factory
+     * @param configXml The hibernate.cfg.xml URL
+     * @param jndiProperty The jndi name
      */
-    public JpaStore(EntityManagerFactory entityManagerFactory) {
-        _entityManagerFactory = entityManagerFactory;
+    public JpaStore(URL configXml) {
+    	this(configXml, null);
     }
     
     /**
-     * This method returns an entity manager.
+     * This method returns a Session.
      * 
-     * @return The entity manager
+     * @return The Session
      */
-    private EntityManager getEntityManager() {
-        if (_entityManagerFactory == null) {
-            final Properties properies = RTGovProperties.getProperties();
-            properies.setProperty(JPA_DATASOURCE, RTGovProperties.getProperty(_jndiProperty));
-            _entityManagerFactory = Persistence.createEntityManagerFactory(_persistenceUnit, properies);
+    private Session getSession() {
+        if (_sessionFactory == null) {
+        	final Configuration cfg = new Configuration().configure(_configXml);
+            if (_jndiProperty != null) {
+            	cfg.setProperty(AvailableSettings.DATASOURCE, RTGovProperties.getProperty(_jndiProperty));
+            	cfg.setProperty(AvailableSettings.JTA_PLATFORM, RTGovProperties.getProperty(JTA_PLATFORM_PROPERTY));
+            }
+            _sessionFactory = cfg.buildSessionFactory();
         }
 
-        return _entityManagerFactory.createEntityManager();
+        return _sessionFactory.openSession();
     }
     
     /**
@@ -80,29 +93,29 @@ public class JpaStore {
      * @return The return value
      */
     public <T> T withJpa(JpaWork<T> work) {
-        final EntityManager em = getEntityManager();
+        final Session s = getSession();
         try {
-            em.getTransaction().begin();
-            final T result = work.perform(em);
-            em.getTransaction().commit();
+            s.getTransaction().begin();
+            final T result = work.perform(s);
+            s.getTransaction().commit();
             return result;
         } finally {
-            em.close();
+            s.close();
         }
     }
     
     /**
-     * Perform work using a provided JPA EntityManager.
+     * Perform work using a provided Hibernate Session.
      * 
      * @param <T> The return type
      */
     public static interface JpaWork<T> {
         /**
-         * The work to be performed using the EntityManager.
+         * The work to be performed using the Session.
          *
-         * @param em The entity manager
+         * @param s The Session
          * @return The result of the work
          */
-        public T perform(EntityManager em);
+        public T perform(Session s);
     }
 }
