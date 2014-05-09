@@ -67,6 +67,18 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- TEPMORARY - entitymanager usage is deprecated -->
+        <dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>jta</groupId>
+					<artifactId>javax.transaction</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>

@@ -20,26 +20,28 @@ import static org.junit.Assert.fail;
 import java.net.URL;
 
 import org.hibernate.Session;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.overlord.rtgov.jpa.JpaStore;
 import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 
 public class JPAEventProcessorTest {
-    
-    private static JpaStore jpaStore;
-    private static JPAEventProcessor eventProcessor=null;
 
-    @BeforeClass
-    public static void initialiseEntityManager() throws Exception{
-    	final URL configXml = JPAEventProcessorTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
-    	jpaStore = new JpaStore(configXml);
-        eventProcessor = new JPAEventProcessor(jpaStore);
-    }
-    
     @Test
     public void testPersistEvent() {
-    	
+    	URL configXml = JPAEventProcessorTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
+    	JpaStore jpaStore = new JpaStore(configXml);
+    	JPAEventProcessor eventProcessor = new JPAEventProcessor(jpaStore);
+    	doTest(jpaStore, eventProcessor);
+    }
+
+    @Test
+    public void testPersistEventJpa() {
+    	JpaStore jpaStore = new JpaStore("overlord-rtgov-ep-jpa");
+    	JPAEventProcessor eventProcessor = new JPAEventProcessor(jpaStore);
+    	doTest(jpaStore, eventProcessor);
+    }
+    
+    private void doTest(JpaStore jpaStore, JPAEventProcessor eventProcessor) {
     	TestEvent te1=new TestEvent();
     	te1.setId("1");
     	te1.setDescription("Hello");

@@ -35,7 +35,10 @@ public class JPAEventProcessor extends EventProcessor {
 
     private static final String JNDI_PROPERTY = "JPAEventProcessor.jndi.datasource";
     
-    private final JpaStore _jpaStore;
+    private JpaStore _jpaStore;
+    
+    @Deprecated
+    private String _persistenceUnit;
     
     public JPAEventProcessor() {
     	final URL configXml = this.getClass().getClassLoader().getResource("hibernate.cfg.xml");
@@ -46,10 +49,6 @@ public class JPAEventProcessor extends EventProcessor {
     	_jpaStore = jpaStore;
     }
     
-    public JPAEventProcessor(URL configXml) {
-    	_jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
-    }
-    
     /**
      * @return The persistence unit name
      * 
@@ -57,21 +56,23 @@ public class JPAEventProcessor extends EventProcessor {
      */
     @Deprecated
     public String getEntityManager() {
-    	LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  To customize it, pass the URL of a valid "
-    			+ "hibernate.cfg.xml file through #JPAEventProcessor(URL).");
-        return "";
+    	LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your "
+    			+ "src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.");
+        return _persistenceUnit;
     }
     
     /**
      * @param persistenceUnit The persistence unit name
      * 
-     * @deprecated JPAEventProcessor now uses native Hibernate ORM.  To customize it, pass the URL of a valid
-     * hibernate.cfg.xml file through {@link #JPAEventProcessor(URL)}.
+     * @deprecated JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your
+     * src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.
      */
     @Deprecated
     public void setEntityManager(String persistenceUnit) {
-    	LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  To customize it, pass the URL of a valid "
-    			+ "hibernate.cfg.xml file through #JPAEventProcessor(URL).");
+    	LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your "
+    			+ "src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.");
+    	_persistenceUnit = persistenceUnit;
+    	_jpaStore = new JpaStore(persistenceUnit, JNDI_PROPERTY);
     }
     
     /**
