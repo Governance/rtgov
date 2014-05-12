@@ -23,6 +23,7 @@
 		<module>activity-server-jmsc</module>
 		<module>activity-server-epn</module>
 		<module>activity-store-jpa</module>
+		<module>activity-store-elasticsearch</module>
 		<module>activity-store-mem</module>
 		<module>av-loader-jee</module>
 		<module>av-loader-osgi</module>

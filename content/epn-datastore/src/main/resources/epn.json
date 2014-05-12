@@ -24,7 +24,7 @@
                 "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
                 "services": {
                     "KeyValueStore": {
-                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
+                        "@class": "org.overlord.rtgov.activity.store.elasticsearch.ElasticsearchActivityStore",
                         "index": "rtgov",
                         "type": "activity",
                         "hosts": "${Elasticsearch.hosts}"
