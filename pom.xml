@@ -157,6 +157,11 @@
                 <artifactId>rtgov-elasticsearch</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.common</groupId>
+                <artifactId>rtgov-jpa</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 		    <dependency>
 			    <groupId>org.overlord.rtgov.active-queries</groupId>

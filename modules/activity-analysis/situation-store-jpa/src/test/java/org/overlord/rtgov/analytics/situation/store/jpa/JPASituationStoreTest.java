@@ -15,6 +15,7 @@ import javax.naming.NamingException;
 import org.hibernate.Session;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -67,7 +68,7 @@ public class JPASituationStoreTest {
     }
 
     @Test
-    @org.junit.Ignore("RTGOV-450 - failure occurring due to upgrade of hibernate version")
+    @Ignore("RTGOV-450")
     public void getSituationsByResolutionState() throws Exception {
         Situation openSituation = new Situation();
         openSituation.setId("openSituation");
@@ -87,7 +88,7 @@ public class JPASituationStoreTest {
     }
     
     @Test
-    @org.junit.Ignore("RTGOV-450 - failure occurring due to upgrade of hibernate version")
+    @Ignore("RTGOV-450")
     public void findByEqualsHostText() throws Exception {
         Situation situation = new Situation();
         situation.setId(name.getMethodName());
@@ -105,7 +106,7 @@ public class JPASituationStoreTest {
     
     
     @Test
-    @org.junit.Ignore("RTGOV-450 - failure occurring due to upgrade of hibernate version")
+    @Ignore("RTGOV-450")
     public void findLikeHostText() throws Exception {
         Situation situation = new Situation();
         situation.setId(name.getMethodName());

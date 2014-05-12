@@ -40,29 +40,38 @@ import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 import com.google.common.base.Strings;
 
 /**
- * This class provides the JPA based implementation of the SituationsStore interface.
- *
+ * This class provides the JPA based implementation of the SituationsStore
+ * interface.
+ * 
  */
 @Singleton
 public class JPASituationStore implements SituationStore {
 
     private static final int PROPERTY_VALUE_MAX_LENGTH = 250;
-    
+
     private static volatile Messages i18n = new Messages();
 
-    private static final Logger LOG=Logger.getLogger(JPASituationStore.class.getName());
-    
+    private static final Logger LOG = Logger.getLogger(JPASituationStore.class.getName());
+
     private static final String JNDI_PROPERTY = "JPASituationStore.jndi.datasource";
 
     private final JpaStore _jpaStore;
-    
+
+    /**
+     * Constructor.
+     */
     public JPASituationStore() {
-    	final URL configXml = this.getClass().getClassLoader().getResource("hibernate.cfg.xml");
-    	_jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
+        final URL configXml = this.getClass().getClassLoader().getResource("situationstore.hibernate.cfg.xml");
+        _jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
     }
-    
+
+    /**
+     * Constructor.
+     * 
+     * @param jpaStore Explicit JpaStore to use
+     */
     public JPASituationStore(JpaStore jpaStore) {
-    	_jpaStore = jpaStore;
+        _jpaStore = jpaStore;
     }
 
     /**
@@ -75,9 +84,8 @@ public class JPASituationStore implements SituationStore {
 
         Situation ret = _jpaStore.withJpa(new JpaWork<Situation>() {
             public Situation perform(Session s) {
-                return (Situation) s.createQuery(
-                        "SELECT sit FROM Situation sit " //$NON-NLS-1$
-                                + "WHERE sit.id = '" + id + "'") //$NON-NLS-1$ //$NON-NLS-2$
+                return (Situation) s.createQuery("SELECT sit FROM Situation sit " //$NON-NLS-1$
+                        + "WHERE sit.id = '" + id + "'") //$NON-NLS-1$ //$NON-NLS-2$
                         .uniqueResult();
             }
         });
@@ -109,54 +117,57 @@ public class JPASituationStore implements SituationStore {
 
     private String createQuery(String selectOrDelete, SituationsQuery sitQuery) {
         // Build the query string
-        StringBuffer queryString=new StringBuffer();
+        StringBuffer queryString = new StringBuffer();
 
         if (sitQuery.getSeverity() != null) {
             queryString.append("sit.severity = :severity "); //$NON-NLS-1$
         }
-        
+
         if (!isNullOrEmpty(sitQuery.getSubject())) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("upper(sit.subject) like '%"+sitQuery.getSubject().toUpperCase()+"%' ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString.append("upper(sit.subject) like '%" + sitQuery.getSubject().toUpperCase() + "%' "); //$NON-NLS-1$//$NON-NLS-2$
         }
-        
+
         if (!isNullOrEmpty(sitQuery.getHost())) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("upper(sit.properties['host']) like '%" + sitQuery.getHost().toUpperCase() + "%'");
+            queryString.append("upper(sit.properties['host']) like '%" + sitQuery.getHost().toUpperCase()
+                    + "%'");
         }
-        
+
         if (!isNullOrEmpty(sitQuery.getDescription())) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("upper(sit.description) like '%"+sitQuery.getDescription().toUpperCase()+"%' ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString
+                    .append("upper(sit.description) like '%" + sitQuery.getDescription().toUpperCase() + "%' "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         if (sitQuery.getType() != null && sitQuery.getType().trim().length() > 0) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("sit.type = '"+sitQuery.getType()+"' ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString.append("sit.type = '" + sitQuery.getType() + "' "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         if (sitQuery.getFromTimestamp() > 0) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("sit.timestamp >= "+sitQuery.getFromTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString.append("sit.timestamp >= " + sitQuery.getFromTimestamp() + " "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         if (sitQuery.getToTimestamp() > 0) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            // NOTE: As only the day is returned currently, will need to add a day on, so that
+            // NOTE: As only the day is returned currently, will need to add a
+            // day on, so that
             // the 'to' time represents the end of the day.
-            queryString.append("sit.timestamp <= "+sitQuery.getToTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString.append("sit.timestamp <= " + sitQuery.getToTimestamp() + " "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         if (sitQuery.getResolutionState() != null) {
@@ -166,7 +177,8 @@ public class JPASituationStore implements SituationStore {
             if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(sitQuery.getResolutionState())) {
                 queryString.append("'resolutionState' not in indices(sit.properties)");
             } else {
-                queryString.append("sit.properties['resolutionState']='" + sitQuery.getResolutionState() + "'");
+                queryString.append("sit.properties['resolutionState']='" + sitQuery.getResolutionState()
+                        + "'");
             }
         }
 
@@ -176,7 +188,7 @@ public class JPASituationStore implements SituationStore {
         queryString.insert(0, selectOrDelete); //$NON-NLS-1$
         return queryString.toString();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -207,7 +219,8 @@ public class JPASituationStore implements SituationStore {
                 properties.remove(ASSIGNED_TO_PROPERTY);
                 // remove current state if not already resolved
                 String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
-                if (resolutionState != null && ResolutionState.RESOLVED != ResolutionState.valueOf(resolutionState)) {
+                if (resolutionState != null
+                        && ResolutionState.RESOLVED != ResolutionState.valueOf(resolutionState)) {
                     properties.remove(RESOLUTION_STATE_PROPERTY);
                 }
                 return null;
@@ -233,34 +246,35 @@ public class JPASituationStore implements SituationStore {
 
     /**
      * This class provides the situation results.
-     *
+     * 
      */
     public static class SituationsResult {
-        
-        private java.util.List<Situation> _situations=null;
-        private int _totalCount=0;
-        
+
+        private java.util.List<Situation> _situations = null;
+        private int _totalCount = 0;
+
         /**
          * This is the constructor for the situation results.
          * 
-         * @param situations The situations relevant for the requested page
-         * @param total The total number
+         * @param situations
+         *            The situations relevant for the requested page
+         * @param total
+         *            The total number
          */
         public SituationsResult(java.util.List<Situation> situations, int total) {
             _situations = situations;
             _totalCount = total;
         }
-        
+
         /**
-         * This method returns the list of situations for the
-         * selected page.
+         * This method returns the list of situations for the selected page.
          * 
          * @return The situations
          */
         public java.util.List<Situation> getSituations() {
             return (_situations);
         }
-        
+
         /**
          * This method returns the total number of situations available.
          * 

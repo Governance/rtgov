@@ -25,30 +25,37 @@ import org.overlord.rtgov.jpa.JpaStore;
 import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 
 /**
- * This class represents the JPA implementation of the Event
- * Processor.
- *
+ * This class represents the JPA implementation of the Event Processor.
+ * 
  */
 public class JPAEventProcessor extends EventProcessor {
 
     private static final Logger LOG = Logger.getLogger(JPAEventProcessor.class.getName());
 
     private static final String JNDI_PROPERTY = "JPAEventProcessor.jndi.datasource";
-    
+
     private JpaStore _jpaStore;
-    
+
     @Deprecated
     private String _persistenceUnit;
-    
+
+    /**
+     * Constructor.
+     */
     public JPAEventProcessor() {
-    	final URL configXml = this.getClass().getClassLoader().getResource("hibernate.cfg.xml");
-    	_jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
+        final URL configXml = this.getClass().getClassLoader().getResource("hibernate.cfg.xml");
+        _jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
     }
-    
+
+    /**
+     * Constructor.
+     * 
+     * @param jpaStore Explicit JpaStore to use
+     */
     public JPAEventProcessor(JpaStore jpaStore) {
-    	_jpaStore = jpaStore;
+        _jpaStore = jpaStore;
     }
-    
+
     /**
      * @return The persistence unit name
      * 
@@ -56,35 +63,36 @@ public class JPAEventProcessor extends EventProcessor {
      */
     @Deprecated
     public String getEntityManager() {
-    	LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your "
-    			+ "src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.");
+        LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your "
+                + "src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.");
         return _persistenceUnit;
     }
-    
+
     /**
-     * @param persistenceUnit The persistence unit name
+     * @param persistenceUnit
+     *            The persistence unit name
      * 
-     * @deprecated JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your
-     * src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.
+     * @deprecated JPAEventProcessor now uses native Hibernate ORM. Include a
+     *             hibernate.cfg.xml file in your src/main/resources.
+     *             {@link #JPAEventProcessor()} will automatically find it.
      */
     @Deprecated
     public void setEntityManager(String persistenceUnit) {
-    	LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your "
-    			+ "src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.");
-    	_persistenceUnit = persistenceUnit;
-    	_jpaStore = new JpaStore(persistenceUnit, JNDI_PROPERTY);
+        LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your "
+                + "src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.");
+        _persistenceUnit = persistenceUnit;
+        _jpaStore = new JpaStore(persistenceUnit, JNDI_PROPERTY);
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    public java.io.Serializable process(String source,
-                final java.io.Serializable event, int retriesLeft) throws Exception {
+    public java.io.Serializable process(String source, final java.io.Serializable event, int retriesLeft)
+            throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Process event '"+event+" from source '"+source
-                    +"' on JPA Event Processor");
+            LOG.finest("Process event '" + event + " from source '" + source + "' on JPA Event Processor");
         }
-        
+
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
                 s.persist(event);
