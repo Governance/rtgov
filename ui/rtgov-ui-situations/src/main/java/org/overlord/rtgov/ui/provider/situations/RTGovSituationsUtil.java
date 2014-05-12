@@ -50,7 +50,7 @@ public class RTGovSituationsUtil {
     	ret.setSubject(situation.getSubject());
     	ret.setTimestamp(new Date(situation.getTimestamp()));
     	ret.setDescription(situation.getDescription());
-    	ret.getProperties().putAll(situation.getProperties());
+    	ret.getProperties().putAll(situation.getSituationProperties());
 
     	return (ret);
     }

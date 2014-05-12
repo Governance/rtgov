@@ -30,6 +30,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.Context;
@@ -91,7 +92,7 @@ public class Situation implements java.io.Externalizable {
     private Severity _severity=null;
     private java.util.Set<ActivityTypeId> _activityTypeIds=
                         new java.util.LinkedHashSet<ActivityTypeId>();
-    private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
+    private java.util.Map<String,String> _situationProperties=new java.util.HashMap<String,String>();
     private java.util.Set<Context> _contexts=
                         new java.util.LinkedHashSet<Context>();
 
@@ -285,8 +286,8 @@ public class Situation implements java.io.Externalizable {
      * 
      * @param props The properties
      */
-    public void setProperties(java.util.Map<String,String> props) {
-        _properties = props;
+    public void setSituationProperties(java.util.Map<String,String> props) {
+        _situationProperties = props;
     }
 
     /**
@@ -299,8 +300,33 @@ public class Situation implements java.io.Externalizable {
     @Column(name="value")
     @CollectionTable(name="RTGOV_SITUATION_PROPERTIES",joinColumns={
             @JoinColumn(name="id",referencedColumnName="id")})
+    public java.util.Map<String,String> getSituationProperties() {
+        return (_situationProperties);
+    }
+    
+    /**
+     * This method sets the properties.
+     * 
+     * @param props The properties
+     * 
+     * @deprecated Use {@link #setSituationProperties(java.util.Map)}.
+     */
+    @Deprecated
+    public void setProperties(java.util.Map<String,String> props) {
+        _situationProperties = props;
+    }
+
+    /**
+     * This method gets the properties.
+     * 
+     * @return The properties
+     * 
+     * @deprecated Use {@link #getSituationProperties()}.
+     */
+    @Deprecated
+    @Transient
     public java.util.Map<String,String> getProperties() {
-        return (_properties);
+        return (_situationProperties);
     }
 
     /**
@@ -392,7 +418,7 @@ public class Situation implements java.io.Externalizable {
             out.writeObject(iter.next());
         }    
         
-        out.writeObject(_properties);    
+        out.writeObject(_situationProperties);    
         
         out.writeInt(_contexts.size());
         java.util.Iterator<Context> iter2=_contexts.iterator();
@@ -421,7 +447,7 @@ public class Situation implements java.io.Externalizable {
             _activityTypeIds.add((ActivityTypeId)in.readObject());
         }
         
-        _properties = (java.util.Map<String, String>)in.readObject();
+        _situationProperties = (java.util.Map<String, String>)in.readObject();
 
         len = in.readInt();
         for (int i=0; i < len; i++) {
