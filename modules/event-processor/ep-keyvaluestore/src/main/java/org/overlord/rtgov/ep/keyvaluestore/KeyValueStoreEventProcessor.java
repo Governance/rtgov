@@ -154,7 +154,6 @@ public class KeyValueStoreEventProcessor extends EventProcessor {
      * @throws Exception Failed to store the event
      */
     public Serializable process(String source, Serializable event, int retriesLeft, String id) throws Exception {
-
         if (id == null) {
             throw new Exception(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
                         "ep-keyvaluestore.Messages").getString("EP-KEYVALUE-1"), event));

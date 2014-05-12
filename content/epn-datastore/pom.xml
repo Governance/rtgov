@@ -37,6 +37,10 @@
             <artifactId>analytics</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.activity-management</groupId>
+            <artifactId>activity-store-elasticsearch</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
