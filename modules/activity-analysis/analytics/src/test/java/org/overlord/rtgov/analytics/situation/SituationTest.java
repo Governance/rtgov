@@ -67,7 +67,7 @@ public class SituationTest {
 		
 		s1.setContext(ctxt1);
 
-		s1.getProperties().put("Prop1", "Value1");
+		s1.getSituationProperties().put("Prop1", "Value1");
 		
 		s1.setDescription("This is the first situation");
 		s1.setSeverity(Severity.Critical);
@@ -91,8 +91,8 @@ public class SituationTest {
 		
 		s2.setContext(ctxt2);
 		
-		s2.getProperties().put("Prop2", "Value2");
-		s2.getProperties().put("Prop3", "Value3");
+		s2.getSituationProperties().put("Prop2", "Value2");
+		s2.getSituationProperties().put("Prop3", "Value3");
 		
 		s2.setDescription("This is the second situation");
 		s2.setSeverity(Severity.Critical);

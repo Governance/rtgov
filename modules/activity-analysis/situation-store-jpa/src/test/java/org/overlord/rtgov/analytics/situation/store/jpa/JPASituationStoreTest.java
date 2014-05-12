@@ -15,7 +15,6 @@ import javax.naming.NamingException;
 import org.hibernate.Session;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
@@ -68,17 +67,16 @@ public class JPASituationStoreTest {
     }
 
     @Test
-    @Ignore("RTGOV-450")
     public void getSituationsByResolutionState() throws Exception {
         Situation openSituation = new Situation();
         openSituation.setId("openSituation");
         openSituation.setTimestamp(System.currentTimeMillis());
-        openSituation.getProperties().put("resolutionState", ResolutionState.REOPENED.name());
+        openSituation.getSituationProperties().put("resolutionState", ResolutionState.REOPENED.name());
         persist(openSituation);
         Situation closedSituation = new Situation();
         closedSituation.setId("closedSituation");
         closedSituation.setTimestamp(System.currentTimeMillis());
-        closedSituation.getProperties().put("resolutionState", ResolutionState.RESOLVED.name());
+        closedSituation.getSituationProperties().put("resolutionState", ResolutionState.RESOLVED.name());
         persist(closedSituation);
 
         java.util.List<Situation> situations = findSituationsByFilterBean(openSituation);
@@ -88,13 +86,12 @@ public class JPASituationStoreTest {
     }
     
     @Test
-    @Ignore("RTGOV-450")
     public void findByEqualsHostText() throws Exception {
         Situation situation = new Situation();
         situation.setId(name.getMethodName());
         situation.setSubject(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        situation.getProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
+        situation.getSituationProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
         persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setHost(name.getMethodName());
@@ -106,13 +103,12 @@ public class JPASituationStoreTest {
     
     
     @Test
-    @Ignore("RTGOV-450")
     public void findLikeHostText() throws Exception {
         Situation situation = new Situation();
         situation.setId(name.getMethodName());
         situation.setSubject(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
-        situation.getProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
+        situation.getSituationProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
         persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setHost(name.getMethodName().substring(3));
@@ -263,11 +259,11 @@ public class JPASituationStoreTest {
 		persist(situation);
 		Situation reload = _situationStore.getSituation(situation.getId());
 		assertEquals(situation.getId(), reload.getId());
-		assertFalse(reload.getProperties().containsKey("assignedTo"));
-		assertFalse(reload.getProperties().containsKey("resolutionState"));
+		assertFalse(reload.getSituationProperties().containsKey("assignedTo"));
+		assertFalse(reload.getSituationProperties().containsKey("resolutionState"));
 		_situationStore.assignSituation(situation.getId(), "junit");
 		reload = _situationStore.getSituation(situation.getId());
-		assertEquals("junit",reload.getProperties().get("assignedTo"));
+		assertEquals("junit",reload.getSituationProperties().get("assignedTo"));
 	}
 
 	@Test
@@ -278,10 +274,10 @@ public class JPASituationStoreTest {
 		persist(situation);
 		_situationStore.assignSituation(situation.getId(), "junit");
 		Situation reload = _situationStore.getSituation(situation.getId());
-		assertEquals("junit",reload.getProperties().get("assignedTo"));
+		assertEquals("junit",reload.getSituationProperties().get("assignedTo"));
 		_situationStore.closeSituation(situation.getId());
 		reload = _situationStore.getSituation(situation.getId());
-		assertFalse(reload.getProperties().containsKey("assignedTo"));
+		assertFalse(reload.getSituationProperties().containsKey("assignedTo"));
 	}
     
     @Test
@@ -290,7 +286,7 @@ public class JPASituationStoreTest {
         situation.setId("deleteSituation");
         situation.setDescription("deleteSituation");
         situation.setTimestamp(System.currentTimeMillis());
-        situation.setProperties(Collections.singletonMap("1", "1"));
+        situation.setSituationProperties(Collections.singletonMap("1", "1"));
         situation.setContext(Sets.newHashSet(new Context(Context.Type.Conversation, "1")));
         situation.setActivityTypeIds(Sets.newHashSet(new ActivityTypeId("1", 0)));
         persist(situation);
@@ -310,11 +306,11 @@ public class JPASituationStoreTest {
 		_situationStore.assignSituation(situation.getId(), "junit");
 		_situationStore.updateResolutionState(situation.getId(),IN_PROGRESS);
 		Situation reload = _situationStore.getSituation(situation.getId());
-		assertEquals("junit",reload.getProperties().get(SituationStore.ASSIGNED_TO_PROPERTY));
+		assertEquals("junit",reload.getSituationProperties().get(SituationStore.ASSIGNED_TO_PROPERTY));
 		_situationStore.closeSituation(situation.getId());
 		reload = _situationStore.getSituation(situation.getId());
-		assertFalse(reload.getProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY));
-		assertFalse(reload.getProperties().containsKey(SituationStore.ASSIGNED_TO_PROPERTY));
+		assertFalse(reload.getSituationProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY));
+		assertFalse(reload.getSituationProperties().containsKey(SituationStore.ASSIGNED_TO_PROPERTY));
 	}
     
 	@Test
@@ -324,14 +320,14 @@ public class JPASituationStoreTest {
 		situation.setTimestamp(System.currentTimeMillis());
 		persist(situation);
 		Situation reload = _situationStore.getSituation(situation.getId());
-		assertFalse(reload.getProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY));
+		assertFalse(reload.getSituationProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY));
 		_situationStore.updateResolutionState(situation.getId(),ResolutionState.IN_PROGRESS);
 		reload = _situationStore.getSituation(situation.getId());
-		assertEquals(ResolutionState.IN_PROGRESS.name(), reload.getProperties().get(SituationStore.RESOLUTION_STATE_PROPERTY));
+		assertEquals(ResolutionState.IN_PROGRESS.name(), reload.getSituationProperties().get(SituationStore.RESOLUTION_STATE_PROPERTY));
 	}
     
     private java.util.List<Situation> findSituationsByFilterBean(Situation openSituation) throws Exception {
-        String resolutionState = openSituation.getProperties().get("resolutionState");
+        String resolutionState = openSituation.getSituationProperties().get("resolutionState");
         SituationsQuery sitQuery = new SituationsQuery();
         sitQuery.setResolutionState(resolutionState);
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
@@ -346,10 +342,10 @@ public class JPASituationStoreTest {
 		persist(situation);
 		_situationStore.recordSuccessfulResubmit(situation.getId());
 		Situation reload = _situationStore.getSituation(situation.getId());
-		assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
-		assertEquals(SituationStore.RESUBMIT_RESULT_SUCCESS, reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
-		assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
-		assertFalse(reload.getProperties().containsKey(SituationStore.RESUBMIT_ERROR_MESSAGE));
+		assertEquals(name.getMethodName(), reload.getSituationProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
+		assertEquals(SituationStore.RESUBMIT_RESULT_SUCCESS, reload.getSituationProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
+		assertTrue(reload.getSituationProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
+		assertFalse(reload.getSituationProperties().containsKey(SituationStore.RESUBMIT_ERROR_MESSAGE));
 	}
 
     @Test
@@ -360,11 +356,11 @@ public class JPASituationStoreTest {
         persist(situation);
         _situationStore.recordResubmitFailure(situation.getId(), name.getMethodName());
         Situation reload = _situationStore.getSituation(situation.getId());
-        assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
-        assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_ERROR_MESSAGE));
-        assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
+        assertEquals(name.getMethodName(), reload.getSituationProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
+        assertEquals(name.getMethodName(), reload.getSituationProperties().get(SituationStore.RESUBMIT_ERROR_MESSAGE));
+        assertTrue(reload.getSituationProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
         assertEquals(SituationStore.RESUBMIT_RESULT_ERROR,
-                reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
+                reload.getSituationProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
     }
 
     @Test
@@ -375,12 +371,12 @@ public class JPASituationStoreTest {
         persist(situation);
         _situationStore.recordResubmitFailure(situation.getId(), Strings.padEnd(name.getMethodName(), 10000, '*'));
         Situation reload = _situationStore.getSituation(situation.getId());
-        assertEquals(name.getMethodName(), reload.getProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
-        String errorMessage = reload.getProperties().get(SituationStore.RESUBMIT_ERROR_MESSAGE);
+        assertEquals(name.getMethodName(), reload.getSituationProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
+        String errorMessage = reload.getSituationProperties().get(SituationStore.RESUBMIT_ERROR_MESSAGE);
         assertEquals(Strings.padEnd(name.getMethodName(), 250, '*'), errorMessage);
-        assertTrue(reload.getProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
+        assertTrue(reload.getSituationProperties().containsKey(SituationStore.RESUBMIT_AT_PROPERTY));
         assertEquals(SituationStore.RESUBMIT_RESULT_ERROR,
-                reload.getProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
+                reload.getSituationProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
     }
     
 	private void persist(final Situation situation) {

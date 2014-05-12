@@ -134,7 +134,7 @@ public class JPASituationStore implements SituationStore {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("upper(sit.properties['host']) like '%" + sitQuery.getHost().toUpperCase()
+            queryString.append("upper(sit.situationProperties['host']) like '%" + sitQuery.getHost().toUpperCase()
                     + "%'");
         }
 
@@ -175,9 +175,9 @@ public class JPASituationStore implements SituationStore {
                 queryString.append("AND "); //$NON-NLS-1$
             }
             if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(sitQuery.getResolutionState())) {
-                queryString.append("'resolutionState' not in indices(sit.properties)");
+                queryString.append("'resolutionState' not in indices(sit.situationProperties)");
             } else {
-                queryString.append("sit.properties['resolutionState']='" + sitQuery.getResolutionState()
+                queryString.append("sit.situationProperties['resolutionState']='" + sitQuery.getResolutionState()
                         + "'");
             }
         }
@@ -199,7 +199,7 @@ public class JPASituationStore implements SituationStore {
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
                 Situation situation = (Situation) s.get(Situation.class, situationId);
-                situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
+                situation.getSituationProperties().put(ASSIGNED_TO_PROPERTY, userName);
                 return null;
             }
         });
@@ -215,7 +215,7 @@ public class JPASituationStore implements SituationStore {
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
                 Situation situation = (Situation) s.get(Situation.class, situationId);
-                java.util.Map<String, String> properties = situation.getProperties();
+                java.util.Map<String, String> properties = situation.getSituationProperties();
                 properties.remove(ASSIGNED_TO_PROPERTY);
                 // remove current state if not already resolved
                 String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
@@ -238,7 +238,7 @@ public class JPASituationStore implements SituationStore {
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
                 Situation situation = (Situation) s.get(Situation.class, situationId);
-                situation.getProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
+                situation.getSituationProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
                 return null;
             }
         });
@@ -293,7 +293,7 @@ public class JPASituationStore implements SituationStore {
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
                 Situation situation = (Situation) s.get(Situation.class, situationId);
-                Map<String, String> properties = situation.getProperties();
+                Map<String, String> properties = situation.getSituationProperties();
                 if (IUserContext.Holder.getUserPrincipal() != null) {
                     properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
                 }
@@ -313,7 +313,7 @@ public class JPASituationStore implements SituationStore {
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
                 Situation situation = (Situation) s.get(Situation.class, situationId);
-                Map<String, String> properties = situation.getProperties();
+                Map<String, String> properties = situation.getSituationProperties();
                 if (IUserContext.Holder.getUserPrincipal() != null) {
                     properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
                 }
