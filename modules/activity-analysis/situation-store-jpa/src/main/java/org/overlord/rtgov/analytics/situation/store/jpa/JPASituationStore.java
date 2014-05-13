@@ -18,107 +18,77 @@ package org.overlord.rtgov.analytics.situation.store.jpa;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static java.lang.System.currentTimeMillis;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.naming.InitialContext;
-import javax.annotation.Resource;
 import javax.inject.Singleton;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.transaction.Status;
-import javax.transaction.UserTransaction;
 
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.overlord.rtgov.analytics.situation.Situation;
-import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
+import org.overlord.rtgov.jpa.JpaStore;
+import org.overlord.rtgov.jpa.JpaStore.JpaWork;
+import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.provider.situations.Messages;
 import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 
 import com.google.common.base.Strings;
 
 /**
- * This class provides the JPA based implementation of the SituationsStore interface.
- *
+ * This class provides the JPA based implementation of the SituationsStore
+ * interface.
+ * 
  */
 @Singleton
 public class JPASituationStore implements SituationStore {
 
     private static final int PROPERTY_VALUE_MAX_LENGTH = 250;
-    private static final String USER_TRANSACTION = "java:comp/UserTransaction"; //$NON-NLS-1$
-    private static final String OVERLORD_RTGOV_DB = "overlord-rtgov-situations"; //$NON-NLS-1$
-    
+
     private static volatile Messages i18n = new Messages();
 
-    @Resource
-    private UserTransaction _transaction;
+    private static final Logger LOG = Logger.getLogger(JPASituationStore.class.getName());
 
-    @PersistenceContext(unitName=OVERLORD_RTGOV_DB)
-    private EntityManager _entityManager;
+    private static final String JNDI_PROPERTY = "JPASituationStore.jndi.datasource";
 
-    private static final Logger LOG=Logger.getLogger(JPASituationStore.class.getName());
+    private final JpaStore _jpaStore;
 
     /**
-     * The situation repository constructor.
+     * Constructor.
      */
     public JPASituationStore() {
+        final URL configXml = this.getClass().getClassLoader().getResource("situationstore.hibernate.cfg.xml");
+        _jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
     }
-    
+
     /**
-     * This method sets a transaction.
+     * Constructor.
      * 
-     * @param txn The transaction
+     * @param jpaStore Explicit JpaStore to use
      */
-    protected void setUserTransaction(UserTransaction txn) {
-        _transaction = txn;
-    }
-
-    /**
-     * This method returns a transaction.
-     *
-     * @return The transaction
-     */
-    protected UserTransaction getTransaction() throws Exception {
-        return (_transaction != null ? _transaction
-                : (UserTransaction)new InitialContext().lookup(USER_TRANSACTION));
-    }
-
-    /**
-     * This method sets an entity manager. This can be used
-     * for testing purposes.
-     * 
-     * @param em The entity manager
-     */
-    protected void setEntityManager(EntityManager em) {
-        _entityManager = em;
-    }
-
-    /**
-     * This method returns an entity manager.
-     *
-     * @return The entity manager
-     */
-    protected EntityManager getEntityManager() {
-        return (_entityManager);
+    public JPASituationStore(JpaStore jpaStore) {
+        _jpaStore = jpaStore;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Situation getSituation(String id) {
+    public Situation getSituation(final String id) {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.GetSit", id)); //$NON-NLS-1$
         }
 
-        EntityManager em=getEntityManager();
-
-        Situation ret=(Situation)em.createQuery("SELECT sit FROM Situation sit " //$NON-NLS-1$
-                                +"WHERE sit.id = '"+id+"'") //$NON-NLS-1$ //$NON-NLS-2$
-                                .getSingleResult();
+        Situation ret = _jpaStore.withJpa(new JpaWork<Situation>() {
+            public Situation perform(Session s) {
+                return (Situation) s.createQuery("SELECT sit FROM Situation sit " //$NON-NLS-1$
+                        + "WHERE sit.id = '" + id + "'") //$NON-NLS-1$ //$NON-NLS-2$
+                        .uniqueResult();
+            }
+        });
 
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.Result", ret)); //$NON-NLS-1$
@@ -131,65 +101,73 @@ public class JPASituationStore implements SituationStore {
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public List<Situation> getSituations(SituationsQuery sitQuery) {
-        Query query = createQuery("SELECT sit from Situation sit ", sitQuery, getEntityManager());
-        List<Situation> situations = query.getResultList();
+    public List<Situation> getSituations(final SituationsQuery sitQuery) {
+        final String queryString = createQuery("SELECT sit from Situation sit ", sitQuery);
+        List<Situation> situations = _jpaStore.withJpa(new JpaWork<List<Situation>>() {
+            public List<Situation> perform(Session s) {
+                Query query = s.createQuery(queryString);
+                return query.list();
+            }
+        });
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.SitResult", situations)); //$NON-NLS-1$
         }
         return (situations);
     }
 
-    private Query createQuery(String selectOrDelete, SituationsQuery sitQuery, EntityManager entityManager) {
+    private String createQuery(String selectOrDelete, SituationsQuery sitQuery) {
         // Build the query string
-        StringBuffer queryString=new StringBuffer();
+        StringBuffer queryString = new StringBuffer();
 
         if (sitQuery.getSeverity() != null) {
             queryString.append("sit.severity = :severity "); //$NON-NLS-1$
         }
-        
+
         if (!isNullOrEmpty(sitQuery.getSubject())) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("upper(sit.subject) like '%"+sitQuery.getSubject().toUpperCase()+"%' ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString.append("upper(sit.subject) like '%" + sitQuery.getSubject().toUpperCase() + "%' "); //$NON-NLS-1$//$NON-NLS-2$
         }
-        
+
         if (!isNullOrEmpty(sitQuery.getHost())) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("upper(sit.properties['host']) like '%" + sitQuery.getHost().toUpperCase() + "%'");
+            queryString.append("upper(sit.situationProperties['host']) like '%" + sitQuery.getHost().toUpperCase()
+                    + "%'");
         }
-        
+
         if (!isNullOrEmpty(sitQuery.getDescription())) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("upper(sit.description) like '%"+sitQuery.getDescription().toUpperCase()+"%' ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString
+                    .append("upper(sit.description) like '%" + sitQuery.getDescription().toUpperCase() + "%' "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         if (sitQuery.getType() != null && sitQuery.getType().trim().length() > 0) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("sit.type = '"+sitQuery.getType()+"' ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString.append("sit.type = '" + sitQuery.getType() + "' "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         if (sitQuery.getFromTimestamp() > 0) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            queryString.append("sit.timestamp >= "+sitQuery.getFromTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString.append("sit.timestamp >= " + sitQuery.getFromTimestamp() + " "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         if (sitQuery.getToTimestamp() > 0) {
             if (queryString.length() > 0) {
                 queryString.append("AND "); //$NON-NLS-1$
             }
-            // NOTE: As only the day is returned currently, will need to add a day on, so that
+            // NOTE: As only the day is returned currently, will need to add a
+            // day on, so that
             // the 'to' time represents the end of the day.
-            queryString.append("sit.timestamp <= "+sitQuery.getToTimestamp()+" ");  //$NON-NLS-1$//$NON-NLS-2$
+            queryString.append("sit.timestamp <= " + sitQuery.getToTimestamp() + " "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         if (sitQuery.getResolutionState() != null) {
@@ -197,9 +175,10 @@ public class JPASituationStore implements SituationStore {
                 queryString.append("AND "); //$NON-NLS-1$
             }
             if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(sitQuery.getResolutionState())) {
-                queryString.append("'resolutionState' not in indices(sit.properties)");
+                queryString.append("'resolutionState' not in indices(sit.situationProperties)");
             } else {
-                queryString.append("sit.properties['resolutionState']='" + sitQuery.getResolutionState() + "'");
+                queryString.append("sit.situationProperties['resolutionState']='" + sitQuery.getResolutionState()
+                        + "'");
             }
         }
 
@@ -207,13 +186,9 @@ public class JPASituationStore implements SituationStore {
             queryString.insert(0, "WHERE "); //$NON-NLS-1$
         }
         queryString.insert(0, selectOrDelete); //$NON-NLS-1$
-        Query query=entityManager.createQuery(queryString.toString());
-        if (sitQuery.getSeverity() != null) {
-            query.setParameter("severity", sitQuery.getSeverity()); //$NON-NLS-1$
-        }
-        return query;
+        return queryString.toString();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -221,11 +196,11 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.AssSit", situationId)); //$NON-NLS-1$
         }
-        doInTransaction(new EntityManagerCallback.Void() {
-            @Override
-            public void doExecute(EntityManager entityManager) {
-                Situation situation = entityManager.find(Situation.class, situationId);
-                situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
+                situation.getSituationProperties().put(ASSIGNED_TO_PROPERTY, userName);
+                return null;
             }
         });
     }
@@ -237,17 +212,18 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.DeassSit", situationId)); //$NON-NLS-1$
         }
-        doInTransaction(new EntityManagerCallback.Void() {
-            @Override
-            public void doExecute(EntityManager entityManager) {
-                Situation situation = entityManager.find(Situation.class, situationId);
-                java.util.Map<String, String> properties = situation.getProperties();
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
+                java.util.Map<String, String> properties = situation.getSituationProperties();
                 properties.remove(ASSIGNED_TO_PROPERTY);
                 // remove current state if not already resolved
                 String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
-                if (resolutionState != null && ResolutionState.RESOLVED != ResolutionState.valueOf(resolutionState)) {
+                if (resolutionState != null
+                        && ResolutionState.RESOLVED != ResolutionState.valueOf(resolutionState)) {
                     properties.remove(RESOLUTION_STATE_PROPERTY);
                 }
+                return null;
             }
         });
     }
@@ -259,72 +235,46 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.UpdRState", situationId)); //$NON-NLS-1$
         }
-        doInTransaction(new EntityManagerCallback.Void() {
-            @Override
-            public void doExecute(EntityManager entityManager) {
-                Situation situation = entityManager.find(Situation.class, situationId);
-                situation.getProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
+                situation.getSituationProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
+                return null;
             }
         });
-    }
-    
-    private <T> T doInTransaction(EntityManagerCallback<T> callback) {
-        EntityManager entityManager = getEntityManager();
-        UserTransaction userTransaction = null;
-        T result = null;
-        try {
-            userTransaction = getTransaction();
-            boolean handleTransaction = userTransaction.getStatus() != Status.STATUS_ACTIVE;
-            if (handleTransaction) {
-                userTransaction.begin();
-                //entityManager.joinTransaction();
-            }
-            result = callback.execute(entityManager);
-            if (handleTransaction) {
-                userTransaction.commit();
-            }
-        } catch (Exception exception) {
-            try {
-                if (userTransaction != null && userTransaction.getStatus() == Status.STATUS_ACTIVE) {
-                    userTransaction.rollback();
-                }
-            } catch (Exception rollbackException) {
-                rollbackException.printStackTrace();
-            }
-        }
-        return result;
     }
 
     /**
      * This class provides the situation results.
-     *
+     * 
      */
     public static class SituationsResult {
-        
-        private java.util.List<Situation> _situations=null;
-        private int _totalCount=0;
-        
+
+        private java.util.List<Situation> _situations = null;
+        private int _totalCount = 0;
+
         /**
          * This is the constructor for the situation results.
          * 
-         * @param situations The situations relevant for the requested page
-         * @param total The total number
+         * @param situations
+         *            The situations relevant for the requested page
+         * @param total
+         *            The total number
          */
         public SituationsResult(java.util.List<Situation> situations, int total) {
             _situations = situations;
             _totalCount = total;
         }
-        
+
         /**
-         * This method returns the list of situations for the
-         * selected page.
+         * This method returns the list of situations for the selected page.
          * 
          * @return The situations
          */
         public java.util.List<Situation> getSituations() {
             return (_situations);
         }
-        
+
         /**
          * This method returns the total number of situations available.
          * 
@@ -340,17 +290,17 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.Resubmit", situationId)); //$NON-NLS-1$
         }
-        doInTransaction(new EntityManagerCallback.Void() {
-            @Override
-            public void doExecute(EntityManager entityManager) {
-                Situation situation = entityManager.find(Situation.class, situationId);
-                Map<String, String> properties = situation.getProperties();
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
+                Map<String, String> properties = situation.getSituationProperties();
                 if (IUserContext.Holder.getUserPrincipal() != null) {
                     properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
                 }
                 properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
                 properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_SUCCESS);
                 properties.remove(RESUBMIT_ERROR_MESSAGE);
+                return null;
             }
         });
     }
@@ -360,11 +310,10 @@ public class JPASituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(i18n.format("JPASituationStore.ResubmitFailure", situationId)); //$NON-NLS-1$
         }
-        doInTransaction(new EntityManagerCallback.Void() {
-            @Override
-            public void doExecute(EntityManager entityManager) {
-                Situation situation = entityManager.find(Situation.class, situationId);
-                Map<String, String> properties = situation.getProperties();
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(Session s) {
+                Situation situation = (Situation) s.get(Situation.class, situationId);
+                Map<String, String> properties = situation.getSituationProperties();
                 if (IUserContext.Holder.getUserPrincipal() != null) {
                     properties.put(RESUBMIT_BY_PROPERTY, IUserContext.Holder.getUserPrincipal().getName());
                 }
@@ -375,26 +324,24 @@ public class JPASituationStore implements SituationStore {
                     message = message.substring(0, PROPERTY_VALUE_MAX_LENGTH);
                 }
                 properties.put(RESUBMIT_ERROR_MESSAGE, message);
+                return null;
             }
         });
-
     }
 
     @Override
     public int delete(final SituationsQuery situationQuery) {
-        return doInTransaction(new EntityManagerCallback<Integer>() {
-
-            @Override
-            public Integer execute(EntityManager entityManager) {
-                Query query = createQuery("SELECT sit from Situation sit ", situationQuery, entityManager);
+        final String queryString = createQuery("SELECT sit from Situation sit ", situationQuery);
+        return _jpaStore.withJpa(new JpaWork<Integer>() {
+            public Integer perform(Session s) {
+                Query query = s.createQuery(queryString);
                 @SuppressWarnings("unchecked")
-                List<Situation> situations = query.getResultList();
+                List<Situation> situations = query.list();
                 for (Situation situation : situations) {
-                    entityManager.remove(situation);
+                    s.delete(situation);
                 }
                 return situations.size();
             }
-
         });
     }
 }

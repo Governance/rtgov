@@ -15,127 +15,91 @@
  */
 package org.overlord.rtgov.ep.jpa;
 
-import java.text.MessageFormat;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import org.overlord.rtgov.common.util.RTGovProperties;
+import org.hibernate.Session;
 import org.overlord.rtgov.ep.EventProcessor;
+import org.overlord.rtgov.jpa.JpaStore;
+import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 
 /**
- * This class represents the JPA implementation of the Event
- * Processor.
- *
+ * This class represents the JPA implementation of the Event Processor.
+ * 
  */
 public class JPAEventProcessor extends EventProcessor {
 
-    private static final Logger LOG=Logger.getLogger(JPAEventProcessor.class.getName());
+    private static final Logger LOG = Logger.getLogger(JPAEventProcessor.class.getName());
 
-    private EntityManagerFactory _emf=null;
-    private EntityManager _em=null;
-    private String _entityManager=null;
-    
+    private static final String JNDI_PROPERTY = "JPAEventProcessor.jndi.datasource";
+
+    private JpaStore _jpaStore;
+
+    @Deprecated
+    private String _persistenceUnit;
+
     /**
-     * This method returns the entity manager name.
-     * 
-     * @return The entity manager name
+     * Constructor.
      */
+    public JPAEventProcessor() {
+        final URL configXml = this.getClass().getClassLoader().getResource("hibernate.cfg.xml");
+        _jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
+    }
+
+    /**
+     * Constructor.
+     * 
+     * @param jpaStore Explicit JpaStore to use
+     */
+    public JPAEventProcessor(JpaStore jpaStore) {
+        _jpaStore = jpaStore;
+    }
+
+    /**
+     * @return The persistence unit name
+     * 
+     * @deprecated with no replacement
+     */
+    @Deprecated
     public String getEntityManager() {
-        return (_entityManager);
+        LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your "
+                + "src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.");
+        return _persistenceUnit;
     }
-    
-    /**
-     * This method sets the entity manager name.
-     * 
-     * @param name The entity manager name
-     */
-    public void setEntityManager(String name) {
-        _entityManager = name;
-    }
-    
-    /**
-     * This method returns the entity manager.
-     * 
-     * @return The entity manager
-     */
-    protected EntityManager getEntityMgr() {
-        return (_em == null ? _emf.createEntityManager() : _em);
-    }
-    
-    /**
-     * {@inheritDoc}
-     * 
-     */
-    public void init() throws Exception {
-        
-        if (_emf == null) {
-            java.util.Properties props=RTGovProperties.getProperties();
-            
-            try {
-                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Properties passed to entity manager factory creation: "+props);                
-                }
-                
-                _emf = Persistence.createEntityManagerFactory(getEntityManager(), props);
-        
-            } catch (Throwable e) {
-                LOG.log(Level.SEVERE, MessageFormat.format(
-                        java.util.PropertyResourceBundle.getBundle(
-                                "ep-jpa.Messages").getString("EP-JPA-1"),
-                                getEntityManager()), e);
-            }
 
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("JPAEventProcessor init: entity manager="+_entityManager+" emf="+_emf);
-            }
-        }
+    /**
+     * @param persistenceUnit
+     *            The persistence unit name
+     * 
+     * @deprecated JPAEventProcessor now uses native Hibernate ORM. Include a
+     *             hibernate.cfg.xml file in your src/main/resources.
+     *             {@link #JPAEventProcessor()} will automatically find it.
+     */
+    @Deprecated
+    public void setEntityManager(String persistenceUnit) {
+        LOG.warning("JPAEventProcessor now uses native Hibernate ORM.  Include a hibernate.cfg.xml file in your "
+                + "src/main/resources.  {@link #JPAEventProcessor()} will automatically find it.");
+        _persistenceUnit = persistenceUnit;
+        _jpaStore = new JpaStore(persistenceUnit, JNDI_PROPERTY);
     }
-    
+
     /**
      * {@inheritDoc}
      */
-    public java.io.Serializable process(String source,
-                java.io.Serializable event, int retriesLeft) throws Exception {
-        java.io.Serializable ret=null;
-        
-        EntityManager em=getEntityMgr();
-        
+    public java.io.Serializable process(String source, final java.io.Serializable event, int retriesLeft)
+            throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Process event '"+event+" from source '"+source
-                    +"' on JPA Event Processor '"+em
-                    +"'");
+            LOG.finest("Process event '" + event + " from source '" + source + "' on JPA Event Processor");
         }
 
-        try {
-            em.persist(event);
-        } finally {
-            closeEntityManager(em);
-        }
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(Session s) {
+                s.persist(event);
+                return null;
+            }
+        });
 
-        return (ret);
-    }
-
-    /**
-     * This method closes the supplied entity manager.
-     * 
-     * @param em The entity manager
-     */
-    protected void closeEntityManager(EntityManager em) {
-        if (em != _em) {
-            em.close();
-        }
-    }
-    
-    /**
-     * This method sets the entity manager.
-     * 
-     * @param em The entity manager
-     */
-    public void setEntityMgr(EntityManager em) {
-        _em = em;
+        return null;
     }
 }
