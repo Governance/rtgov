@@ -17,35 +17,34 @@ package org.overlord.rtgov.common.service;
 
 /**
  * This abstract class represents a key/value store.
- *
  */
 public abstract class KeyValueStore extends Service {
 
     /**
      * This method adds a value, associated with the id.
      *
-     * @param id The id
+     * @param id       The id
      * @param document The value
-     * @param <V> The value type
+     * @param <V>      The value type
      * @throws Exception Failed to add document
      */
     public abstract <V> void add(String id, V document) throws Exception;
 
     /**
-     * This method removes the value associated with the supplied
-     * id.
+     * This method removes the value associated with the supplied.
      *
-     * @param id The id
+     * @param id  id of object to remove.
+     * @throws Exception when cannot delete.
      */
-    public abstract void remove(String id);
+    public abstract void remove(String id) throws Exception;
 
     /**
      * This method updates the value associated with the supplied
      * id.
      *
-     * @param id The id
+     * @param id       The id
      * @param document The updated value
-     * @param <V> The value type
+     * @param <V>      The value type
      */
     public abstract <V> void update(String id, V document);
 
@@ -53,7 +52,7 @@ public abstract class KeyValueStore extends Service {
      * This method returns the value associated with the supplied
      * id.
      *
-     * @param id The id
+     * @param id  The id
      * @param <V> The value type
      * @return The value, or null if not found
      */

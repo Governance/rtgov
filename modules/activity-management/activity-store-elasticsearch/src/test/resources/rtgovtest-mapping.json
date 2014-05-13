@@ -17,6 +17,8 @@
                 "path": "id"
             },
             "properties": {
+
+
                 "origin": {
                     "type": "nested",
                     "include_in_parent": true,
@@ -193,7 +195,6 @@
                 "format": "yyyy/MM/dd HH:mm:ss"
             },
             "properties": {
-
                 "id": {
                     "type": "string"
                 },
