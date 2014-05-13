@@ -24,7 +24,6 @@ import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRespon
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingResponse;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequestBuilder;
-import org.elasticsearch.action.admin.indices.refresh.RefreshResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -39,7 +38,6 @@ import org.overlord.rtgov.common.service.KeyValueStore;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -271,7 +269,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
                 LOG.info("Index initialized");
                 // refresh index
                 RefreshRequestBuilder refreshRequestBuilder = getClient().admin().indices().prepareRefresh(getIndex());
-                RefreshResponse refreshResponse = getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+                getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
             } else {
                 LOG.info("Index already initialized. Doing nothing.");
             }
@@ -291,10 +289,11 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         //
         // ((HashMap)defaultMappings.get(s)).get("_parent")
         // only prepare the mapping for the configured repo type
-        @SuppressWarnings("unchecked")
 
         Set<String> keys = defaultMappings.keySet();
         boolean success = true;
+        
+        @SuppressWarnings("unchecked")
         Map<String, Object> mapping = (Map<String, Object>) defaultMappings.get(_type);
         if (mapping == null) {
             throw new RuntimeException("type mapping not defined");
@@ -302,8 +301,10 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         PutMappingRequestBuilder putMappingRequestBuilder = _client.admin().indices().preparePutMapping().setIndices(_index);
         putMappingRequestBuilder.setType(_type);
         putMappingRequestBuilder.setSource(mapping);
+        
         LOG.info("******* Creating elasticsearch mapping for [" + _type + "] *********");
         PutMappingResponse resp = putMappingRequestBuilder.execute().actionGet();
+        
         if (resp.isAcknowledged()) {
             LOG.info("******* Successful ACK on elasticsearch mapping for [" + _type + "] *********");
 
@@ -311,7 +312,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
              * now determine if any child relationships exist in the mapping
              */
             for (String s : keys) {
-                HashMap childMap = (HashMap) ((HashMap) defaultMappings.get(s)).get("_parent");
+                Map childMap = (Map) ((Map) defaultMappings.get(s)).get("_parent");
                 if (childMap != null && childMap.get("type") != null && childMap.get("type").equals(_type)) {
 
                     PutMappingRequestBuilder putChildMappingRequestBuilder = _client.admin().indices().preparePutMapping().setIndices(_index);

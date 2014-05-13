@@ -16,7 +16,6 @@
 package org.overlord.rtgov.activity.store.elasticsearch;
 
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequestBuilder;
-import org.elasticsearch.action.admin.indices.refresh.RefreshResponse;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -33,9 +32,11 @@ import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.inject.Singleton;
 
 /**
@@ -69,16 +70,9 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
         if (getType() == null || getIndex().length() == 0) {
             setType(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_TYPE, "activity"));
         }
+        
         super.init();
-
-
     }
-
-    private void splitAU(ActivityUnit au, BulkRequestBuilder bulkRequestBuilder) {
-
-    }
-
-    //todo, override .add implementation
 
     /**
      * @param id       id to store doucment
@@ -91,14 +85,7 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
         if (document instanceof ActivityUnit) {
             BulkRequestBuilder localBulkRequestBuilder = getClient().prepareBulk();
 
-            ActivityUnit activityUnit = (ActivityUnit) document;
-            List<ActivityType> activityTypes = activityUnit.getActivityTypes();
-            activityUnit.setActivityTypes(new ArrayList<ActivityType>());
-            localBulkRequestBuilder.add(getClient().prepareIndex(getIndex(), getType(), id).setSource(convertTypeToJson(activityUnit)));
-            for (int i = 0; i < activityTypes.size(); i++) {
-                ActivityType activityType = activityTypes.get(i);
-                localBulkRequestBuilder.add(getClient().prepareIndex(getIndex(), getType() + "type", id + "-" + i).setParent(id).setSource(convertTypeToJson(activityType)));
-            }
+            persist(localBulkRequestBuilder, id, (ActivityUnit)document);
 
             BulkResponse bulkItemResponses = localBulkRequestBuilder.execute().actionGet();
             if (bulkItemResponses.hasFailures()) {
@@ -117,6 +104,28 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
             throw new IllegalArgumentException("Document to be store not of type " + ActivityUnit.class.toString());
         }
     }
+    
+    /**
+     * This method persists the activity unit in the Elasticsearch repository.
+     * 
+     * @param id The id
+     * @param activityUnit The activity unit
+     * @throws Exception Failed to persist
+     */
+    protected void persist(BulkRequestBuilder localBulkRequestBuilder, String id, ActivityUnit activityUnit) throws Exception {
+        List<ActivityType> activityTypes = activityUnit.getActivityTypes();
+        
+        // Temporarily clear the list of activities, while the activity unit part is stored
+        activityUnit.setActivityTypes(Collections.<ActivityType>emptyList());            
+        localBulkRequestBuilder.add(getClient().prepareIndex(getIndex(), getType(), id).setSource(convertTypeToJson(activityUnit)));
+        activityUnit.setActivityTypes(activityTypes);            
+
+        // Persist activity types
+        for (int i = 0; i < activityTypes.size(); i++) {
+            ActivityType activityType = activityTypes.get(i);
+            localBulkRequestBuilder.add(getClient().prepareIndex(getIndex(), getType() + "type", id + "-" + i).setParent(id).setSource(convertTypeToJson(activityType)));
+        }
+    }
 
     /**
      * @param activities The list of activity events to store
@@ -125,17 +134,11 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
     public void store(List<ActivityUnit> activities) throws Exception {
         BulkRequestBuilder localBulkRequestBuilder = getClient().prepareBulk();
 
-        for (ActivityUnit activityUnit : activities) {
-            List<ActivityType> activityTypes = activityUnit.getActivityTypes();
-            activityUnit.setActivityTypes(null);
-            localBulkRequestBuilder.add(getClient().prepareIndex(getIndex(), getType(), activityUnit.getId()).setSource(convertTypeToJson(activityUnit)));
-
-            for (ActivityType activityType : activityTypes) {
-                localBulkRequestBuilder.add(getClient().prepareIndex(getIndex(), getType() + "type", activityUnit.getId() + "-" + getRandom()).setParent(activityUnit.getId()).setSource(convertTypeToJson(activityType)));
-
-            }
-
+        for (int i=0; i < activities.size(); i++) {
+            ActivityUnit activityUnit=activities.get(i);
+            persist(localBulkRequestBuilder, activityUnit.getId(), activityUnit);
         }
+
         BulkResponse bulkItemResponses = localBulkRequestBuilder.execute().actionGet();
 
         if (bulkItemResponses.hasFailures()) {
@@ -150,8 +153,6 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
                 LOG.finest("Success storing " + activities.size() + " items to  [" + getIndex() + "/" + getType() + "]");
             }
         }
-
-
     }
 
     /**
@@ -182,7 +183,8 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
      */
     public List<ActivityType> getActivityTypes(Context context) throws Exception {
         RefreshRequestBuilder refreshRequestBuilder = getClient().admin().indices().prepareRefresh(getIndex());
-        RefreshResponse refreshResponse = getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+        getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+        
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("getActivityTypes=" + context);
         }
@@ -216,7 +218,8 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
      */
     public List<ActivityType> getActivityTypes(Context context, long from, long to) throws Exception {
         RefreshRequestBuilder refreshRequestBuilder = getClient().admin().indices().prepareRefresh(getIndex());
-        RefreshResponse refreshResponse = getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+        getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+        
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("getActivityTypes=" + context);
         }
