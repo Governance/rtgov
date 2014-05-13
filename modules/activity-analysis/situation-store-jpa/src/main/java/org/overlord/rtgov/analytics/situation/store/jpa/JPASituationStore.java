@@ -29,10 +29,10 @@ import org.hibernate.Session;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
-import org.overlord.rtgov.jpa.JpaStore;
-import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 import org.overlord.rtgov.analytics.situation.store.AbstractSituationStore;
 import org.overlord.rtgov.analytics.situation.store.ResolutionState;
+import org.overlord.rtgov.common.jpa.JpaStore;
+import org.overlord.rtgov.common.jpa.JpaStore.JpaWork;
 
 import com.google.common.base.Strings;
 

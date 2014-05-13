@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.jpa;
+package org.overlord.rtgov.common.jpa;
 
 import java.net.URL;
 import java.util.Properties;
