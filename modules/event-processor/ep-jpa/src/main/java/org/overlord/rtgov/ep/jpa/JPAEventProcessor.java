@@ -30,6 +30,8 @@ import org.overlord.rtgov.ep.EventProcessor;
  */
 public class JPAEventProcessor extends EventProcessor {
 
+    private static final String DEFAULT_HIBERNATE_CFG_XML = "hibernate.cfg.xml";
+
     private static final Logger LOG = Logger.getLogger(JPAEventProcessor.class.getName());
 
     private static final String JNDI_PROPERTY = "JPAEventProcessor.jndi.datasource";
@@ -38,6 +40,8 @@ public class JPAEventProcessor extends EventProcessor {
 
     @Deprecated
     private String _persistenceUnit;
+    
+    private String _configuration;
 
     /**
      * Constructor.
@@ -60,7 +64,13 @@ public class JPAEventProcessor extends EventProcessor {
     public void init() throws Exception {
         super.init();
         
-        final URL configXml = Thread.currentThread().getContextClassLoader().getResource("hibernate.cfg.xml");
+        String config=_configuration;
+        
+        if (config == null || config.trim().length() == 0) {
+            config = DEFAULT_HIBERNATE_CFG_XML;
+        }
+        
+        final URL configXml = Thread.currentThread().getContextClassLoader().getResource(config);
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Hibernate configure: "+configXml);
@@ -69,6 +79,29 @@ public class JPAEventProcessor extends EventProcessor {
         _jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
     }
     
+    /**
+     * This method returns the JPA Store.
+     * 
+     * @return The JPA store
+     */
+    protected JpaStore getJpaStore() {
+        return (_jpaStore);
+    }
+    
+    /**
+     * @return The optional configuration file name
+     */
+    public String getConfiguration() {
+        return _configuration;
+    }
+
+    /**
+     * @param config The optional configuration file name
+     */
+    public void setConfiguration(String config) {
+        _configuration = config;
+    }
+
     /**
      * @return The persistence unit name
      * 

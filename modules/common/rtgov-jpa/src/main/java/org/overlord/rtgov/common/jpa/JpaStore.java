@@ -119,8 +119,10 @@ public class JpaStore {
                 final Configuration cfg = new Configuration().configure(_configXml);
                 final Properties properties = RTGovProperties.getProperties();
                 if (_jndiProperty != null) {
-                    properties.setProperty(AvailableSettings.DATASOURCE,
-                            RTGovProperties.getProperty(_jndiProperty));
+                    String prop=RTGovProperties.getProperty(_jndiProperty);
+                    if (prop != null) {
+                        properties.setProperty(AvailableSettings.DATASOURCE, prop);
+                    }
                 }
                 final String jtaPlatform = RTGovProperties.getProperty(JTA_PLATFORM_PROPERTY);
                 if (jtaPlatform == null) {

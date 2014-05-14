@@ -28,10 +28,29 @@ public class JPAEventProcessorTest {
 
     @Test
     public void testPersistEvent() {
-    	URL configXml = JPAEventProcessorTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
-    	JpaStore jpaStore = new JpaStore(configXml);
-    	JPAEventProcessor eventProcessor = new JPAEventProcessor(jpaStore);
-    	doTest(jpaStore, eventProcessor);
+        URL configXml = JPAEventProcessorTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
+        JpaStore jpaStore = new JpaStore(configXml);
+        JPAEventProcessor eventProcessor = new JPAEventProcessor(jpaStore);
+        doTest(jpaStore, eventProcessor);
+    }
+
+    @Test
+    public void testPersistEventWithConfig() {
+        JPAEventProcessor eventProcessor = new JPAEventProcessor();
+        eventProcessor.setConfiguration("hibernate-test.cfg.xml");
+        
+        ClassLoader cl=Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(JPAEventProcessorTest.class.getClassLoader());
+            eventProcessor.init();
+            
+        } catch (Exception e) {
+            fail("Failed to initialize the JPA event processor: "+e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
+        }
+        
+        doTest(eventProcessor.getJpaStore(), eventProcessor);
     }
 
     @Test
