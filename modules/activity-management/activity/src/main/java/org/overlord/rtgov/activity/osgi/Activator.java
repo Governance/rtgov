@@ -39,12 +39,6 @@ public class Activator implements BundleActivator {
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        ServiceReference actStoreRef=context.getServiceReference(ActivityStore.class.getName());
-        
-        if (actStoreRef != null) {
-            register(context, actStoreRef);
-        }
-
         ServiceListener sl = new ServiceListener() {
             public void serviceChanged(ServiceEvent ev) {
                 ServiceReference sr = ev.getServiceReference();
