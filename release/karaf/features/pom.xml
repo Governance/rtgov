@@ -408,6 +408,9 @@
 						<configuration>
 							<outputFile>${project.build.directory}/features.xml</outputFile>
 							<attach>true</attach>
+							<repositories>
+								<repository>mvn:org.drools/drools-karaf-features/${drools.version}/xml/features</repository>
+							</repositories>
 							<features>
 								<feature>
 									<name>rtgov-dependencies</name>
@@ -419,6 +422,9 @@
 										</feature>
 										<feature>
 											<name>war</name>
+										</feature>
+										<feature>
+											<name>jpa-hibernate</name>
 										</feature>
 									</dependsOnFeatures>
 									<excludes>
@@ -578,21 +584,6 @@
 									</includes>
 								</feature>
 								<feature>
-									<name>rtgov-store-inmemory</name>
-									<version>${project.version}</version>
-									<comment>RTGov Store Inmemory</comment>
-									<dependsOnFeatures>
-										<feature>
-											<name>rtgov-activity</name>
-											<version>${project.version}</version>
-										</feature>
-									</dependsOnFeatures>
-									<includes>
-										<include>org.overlord.rtgov.activity-management:activity-store-mem:*</include>
-										<include>org.overlord.rtgov.activity-analysis:situation-store-mem:*</include>
-									</includes>
-								</feature>
-								<feature>
 									<name>rtgov-server</name>
 									<version>${project.version}</version>
 									<comment>RTGov Server</comment>
@@ -621,6 +612,10 @@
 										<include>org.overlord.rtgov.activity-management:collector-activity-server:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-client:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>
+										<include>org.overlord.rtgov.activity-management:activity-store-mem:*</include>
+										<include>org.overlord.rtgov.activity-analysis:situation-store-mem:*</include>
+										<include>org.overlord.rtgov.activity-management:activity-store-jpa:*</include>
+										<include>org.overlord.rtgov.activity-analysis:situation-store-jpa:*</include>
 									</includes>
 								</feature>
 								<feature>
@@ -651,6 +646,21 @@
 										<include>org.overlord.rtgov.content:overlord-rtgov-epn-osgi:*</include>
 										<include>org.overlord.rtgov.content:overlord-rtgov-acs-osgi:*</include>
 									</includes>
+								</feature>
+								<feature>
+									<name>rtgov-all</name>
+									<version>${project.version}</version>
+									<comment>RTGov All</comment>
+									<dependsOnFeatures>
+										<feature>
+											<name>rtgov-server-contents</name>
+											<version>${project.version}</version>
+										</feature>
+										<feature>
+											<name>rtgov-ui</name>
+											<version>${project.version}</version>
+										</feature>
+									</dependsOnFeatures>
 								</feature>
 								<feature>
 									<name>rtgov-client</name>

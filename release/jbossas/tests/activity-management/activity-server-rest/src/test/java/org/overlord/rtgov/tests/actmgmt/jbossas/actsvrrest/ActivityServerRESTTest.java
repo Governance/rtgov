@@ -17,6 +17,7 @@ package org.overlord.rtgov.tests.actmgmt.jbossas.actsvrrest;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Properties;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -35,6 +36,8 @@ import org.overlord.rtgov.activity.server.ActivityStoreFactory;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.activity.util.ActivityUtil;
+import org.overlord.rtgov.common.util.RTGovProperties;
+import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
 import static org.junit.Assert.*;
 
@@ -78,7 +81,19 @@ public class ActivityServerRESTTest {
     
     @org.junit.Before
     public void init() {
-        ActivityStoreFactory.initialize(new MemActivityStore());
+        final java.util.Properties props=new java.util.Properties();
+        props.put(ActivityStoreFactory.ACTIVITY_STORE_CLASS, MemActivityStore.class.getName());
+        
+        RTGovPropertiesProvider provider=new RTGovPropertiesProvider() {
+            public String getProperty(String name) {
+                return props.getProperty(name);
+            }
+            public Properties getProperties() {
+                return props;
+            }
+        };
+        
+        RTGovProperties.setPropertiesProvider(provider);
     }
     
     @Test

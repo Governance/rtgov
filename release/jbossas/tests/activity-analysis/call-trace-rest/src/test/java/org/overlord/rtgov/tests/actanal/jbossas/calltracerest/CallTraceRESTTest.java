@@ -17,6 +17,7 @@ package org.overlord.rtgov.tests.actanal.jbossas.calltracerest;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Properties;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -40,6 +41,8 @@ import org.overlord.rtgov.activity.server.ActivityStoreFactory;
 import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
+import org.overlord.rtgov.common.util.RTGovProperties;
+import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
 import static org.junit.Assert.*;
 
@@ -98,11 +101,22 @@ public class CallTraceRESTTest {
     
     @org.junit.Before
     public void init() {
-        ActivityStoreFactory.initialize(new MemActivityStore());
+        final java.util.Properties props=new java.util.Properties();
+        props.put(ActivityStoreFactory.ACTIVITY_STORE_CLASS, MemActivityStore.class.getName());
+        
+        RTGovPropertiesProvider provider=new RTGovPropertiesProvider() {
+            public String getProperty(String name) {
+                return props.getProperty(name);
+            }
+            public Properties getProperties() {
+                return props;
+            }
+        };
+        
+        RTGovProperties.setPropertiesProvider(provider);
     }
     
     protected void initActivityStore() {
-        
         org.overlord.rtgov.activity.server.ActivityStore _activityStore=ActivityStoreFactory.getActivityStore();
         
         if (!_initialized) {

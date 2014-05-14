@@ -39,18 +39,34 @@ public final class SituationStoreFactory {
     }
     
     /**
-     * This method will initialize the situation store factory to use the
-     * supplied situation store, if not already initialized with a value.
+     * This method initializes the situation store. If a class name has been
+     * defined in configuration, then the supplied class must match the type,
+     * otherwise it will be ignored. This method is primarily used for testing,
+     * or where classloading is not possible (i.e. OSGi).
      * 
-     * @param sitStore The situation store
+     * @param store The store
      */
-    public static synchronized void initialize(SituationStore sitStore) {
-        if (_instance == null) {
+    public static synchronized void initialize(SituationStore store) {
+        // Only initialize if no instance available
+        if (_instance != null) {
+            return;
+        }
+        
+        String clsName=(String)RTGovProperties.getProperties().get(SITUATION_STORE_CLASS);
+        
+        // Verify the instance is of the correct class
+        if (clsName == null || store.getClass().getName().equals(clsName)) {
+            
             if (LOG.isLoggable(Level.FINER)) {
-                LOG.finer("Situation store initialized="+sitStore);
+                LOG.finer("Initialize situation store instance="+_instance);
             }
             
-            _instance = sitStore;
+            _instance = store;
+            
+        } else if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("Ignoring situation store initialization due to incorrect type ["
+                            +store.getClass().getName()+"], expecting ["
+                            +clsName+"]");
         }
     }
     

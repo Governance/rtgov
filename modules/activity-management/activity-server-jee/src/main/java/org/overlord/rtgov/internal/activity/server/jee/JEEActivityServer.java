@@ -63,7 +63,9 @@ public class JEEActivityServer implements ActivityServer {
     @PostConstruct
     public void init() {
         
-        _store = ActivityStoreFactory.getActivityStore();
+        if (_store == null) {
+            _store = ActivityStoreFactory.getActivityStore();
+        }
         
         if (_injectedNotifiers != null) {
             for (ActivityNotifier notifier : _injectedNotifiers) {
@@ -75,6 +77,20 @@ public class JEEActivityServer implements ActivityServer {
                 _notifiers.add(notifier);
             }
         }       
+    }
+    
+    /**
+     * This method will return the current activity store. If not
+     * explicitly defined, it will obtain it from a centrally configured
+     * factory.
+     * 
+     * @return The activity store
+     */
+    protected ActivityStore retrieveActivityStore() {
+        if (_store == null) {
+            _store = ActivityStoreFactory.getActivityStore();
+        }
+        return (_store);
     }
     
     /**
@@ -199,7 +215,9 @@ public class JEEActivityServer implements ActivityServer {
      */
     public void store(java.util.List<ActivityUnit> activities) throws Exception {        
 
-        if (_store == null) {
+        ActivityStore actStore=retrieveActivityStore();
+        
+        if (actStore == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
@@ -212,7 +230,7 @@ public class JEEActivityServer implements ActivityServer {
             }
             
             // Store the activities
-            _store.store(activities);
+            actStore.store(activities);
              
             // Inform registered notifiers
             for (int i=0; i < _notifiers.size(); i++) {
@@ -263,7 +281,9 @@ public class JEEActivityServer implements ActivityServer {
      */
     public ActivityUnit getActivityUnit(String id) throws Exception {
         
-        if (_store == null) {
+        ActivityStore actStore=retrieveActivityStore();
+        
+        if (actStore == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
@@ -272,7 +292,7 @@ public class JEEActivityServer implements ActivityServer {
         ActivityUnit ret=null;
         
         try {
-            ret = _store.getActivityUnit(id);
+            ret = actStore.getActivityUnit(id);
             
             if (f_txnStarted) {
                 commitTxn();
@@ -293,7 +313,9 @@ public class JEEActivityServer implements ActivityServer {
      */
     public java.util.List<ActivityType> query(QuerySpec query) throws Exception {
         
-        if (_store == null) {
+        ActivityStore actStore=retrieveActivityStore();
+        
+        if (actStore == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
@@ -302,7 +324,7 @@ public class JEEActivityServer implements ActivityServer {
         java.util.List<ActivityType> ret=null;
         
         try {
-            ret = _store.query(query);        
+            ret = actStore.query(query);        
             
             if (f_txnStarted) {
                 commitTxn();
@@ -323,7 +345,9 @@ public class JEEActivityServer implements ActivityServer {
      */
     public List<ActivityType> getActivityTypes(Context context) throws Exception {
         
-        if (_store == null) {
+        ActivityStore actStore=retrieveActivityStore();
+        
+        if (actStore == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
@@ -331,7 +355,7 @@ public class JEEActivityServer implements ActivityServer {
         List<ActivityType> ret=null;
         
         try {
-            ret = _store.getActivityTypes(context);
+            ret = actStore.getActivityTypes(context);
             
             if (f_txnStarted) {
                 commitTxn();
@@ -352,7 +376,9 @@ public class JEEActivityServer implements ActivityServer {
      */
     public List<ActivityType> getActivityTypes(Context context, long from, long to) throws Exception {
         
-        if (_store == null) {
+        ActivityStore actStore=retrieveActivityStore();
+        
+        if (actStore == null) {
             throw new Exception("Activity Store is unavailable");
         }
         
@@ -360,7 +386,7 @@ public class JEEActivityServer implements ActivityServer {
         List<ActivityType> ret=null;
         
         try {
-            ret = _store.getActivityTypes(context, from, to);
+            ret = actStore.getActivityTypes(context, from, to);
             
             if (f_txnStarted) {
                 commitTxn();

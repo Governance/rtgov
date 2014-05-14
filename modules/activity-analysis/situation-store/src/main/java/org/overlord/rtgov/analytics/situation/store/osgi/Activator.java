@@ -38,31 +38,25 @@ public class Activator implements BundleActivator {
     /**
      * {@inheritDoc}
      */
-    public void start(final BundleContext context) throws Exception {
-        ServiceReference actStoreRef=context.getServiceReference(SituationStore.class.getName());
+    public void start(final BundleContext context) throws Exception {        
+        ServiceListener sl = new ServiceListener() {
+            public void serviceChanged(ServiceEvent ev) {
+                ServiceReference sr = ev.getServiceReference();
+                switch(ev.getType()) {
+                case ServiceEvent.REGISTERED:
+                    register(context, sr);
+                    break;
+                default:
+                    break;
+                }
+            }           
+        };
         
-        if (actStoreRef != null) {
-            register(context, actStoreRef);
-        } else {        
-            ServiceListener sl = new ServiceListener() {
-                public void serviceChanged(ServiceEvent ev) {
-                    ServiceReference sr = ev.getServiceReference();
-                    switch(ev.getType()) {
-                    case ServiceEvent.REGISTERED:
-                        register(context, sr);
-                        break;
-                    default:
-                        break;
-                    }
-                }           
-            };
-            
-            String filter = "(objectclass=" + SituationStore.class.getName() + ")";
-            try {
-                context.addServiceListener(sl, filter);
-            } catch (InvalidSyntaxException e) { 
-                LOG.log(Level.SEVERE, "Failed to add service listener for situation store", e);
-            }
+        String filter = "(objectclass=" + SituationStore.class.getName() + ")";
+        try {
+            context.addServiceListener(sl, filter);
+        } catch (InvalidSyntaxException e) { 
+            LOG.log(Level.SEVERE, "Failed to add service listener for situation store", e);
         }
     }
     
