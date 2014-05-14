@@ -15,8 +15,6 @@
  */
 package org.overlord.rtgov.analytics.situation.store.jpa;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,8 +31,6 @@ import org.overlord.rtgov.analytics.situation.store.AbstractSituationStore;
 import org.overlord.rtgov.analytics.situation.store.ResolutionState;
 import org.overlord.rtgov.common.jpa.JpaStore;
 import org.overlord.rtgov.common.jpa.JpaStore.JpaWork;
-
-import com.google.common.base.Strings;
 
 /**
  * This class provides the JPA based implementation of the SituationsStore
@@ -69,6 +65,21 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
         _jpaStore = jpaStore;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void store(final Situation situation) throws Exception {
+        _jpaStore.withJpa(new JpaWork<Void>() {
+            public Void perform(Session s) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Persist situation id["+situation.getId()+"] "+situation); //$NON-NLS-1$
+                }
+                s.persist(situation);
+                return null;
+            }
+        });
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -112,6 +123,17 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
             LOG.finest("Situations="+situations); //$NON-NLS-1$
         }
         return (situations);
+    }
+    
+    /**
+     * Check if the supplied string is null or empty (after removing
+     * whitespaces).
+     * 
+     * @param str The string to test
+     * @return Whether the supplied string is null or empty
+     */
+    protected boolean isNullOrEmpty(String str) {
+        return (str == null || str.trim().length() == 0);
     }
 
     private String createQuery(String selectOrDelete, SituationsQuery sitQuery) {
@@ -238,7 +260,7 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
     public void recordResubmitFailure(final String situationId, final String errorMessage, final String userName) {
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
-                String message = Strings.nullToEmpty(errorMessage);
+                String message = (errorMessage == null ? "" : errorMessage);
                 if (message.length() > PROPERTY_VALUE_MAX_LENGTH) {
                     message = message.substring(0, PROPERTY_VALUE_MAX_LENGTH);
                 }

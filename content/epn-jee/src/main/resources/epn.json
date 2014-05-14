@@ -58,7 +58,7 @@
       "maxRetries" : 3,
       "retryInterval" : 0,
       "eventProcessor" : {
-        "@class" : "org.overlord.rtgov.ep.jpa.JPAEventProcessor"
+        "@class" : "org.overlord.rtgov.content.epn.SituationStoreProcessor"
       }
     }
   ]
