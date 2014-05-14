@@ -62,6 +62,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>service-dependency</artifactId>
 		</dependency>
 		<dependency>

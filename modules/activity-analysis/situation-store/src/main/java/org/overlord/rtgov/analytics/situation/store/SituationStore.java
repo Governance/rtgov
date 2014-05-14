@@ -69,6 +69,13 @@ public interface SituationStore {
     public static final String RESUBMIT_RESULT_SUCCESS = "Success";
 
 
+    /**
+     * This method persists the supplied situation.
+     * 
+     * @param situation The situation
+     * @throws Exception Failed to store situation
+     */
+    public void store(Situation situation) throws Exception;
 
     /**
      * This method returns the situation associated with the supplied id.

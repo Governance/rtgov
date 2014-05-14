@@ -163,7 +163,8 @@ public class RTGovSituationsProviderTest {
             public int delete(SituationsQuery query) {
                 return 0;
             };
-
+            public void store(Situation situation) throws Exception {
+            };
 		};
 		
 		provider.setSituationStore(sits);
@@ -282,6 +283,8 @@ public class RTGovSituationsProviderTest {
 
             public int delete(SituationsQuery query) {
                 return 0;
+            }
+            public void store(Situation situation) throws Exception {
             };
 		};
 		

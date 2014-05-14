@@ -39,6 +39,13 @@ public class MemSituationStore extends AbstractSituationStore implements Situati
     /**
      * {@inheritDoc}
      */
+    public void store(Situation situation) {
+        _situations.add(situation);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public Situation getSituation(String id) {
         for (Situation sit : _situations) {
             if (sit.getId().equals(id)) {
