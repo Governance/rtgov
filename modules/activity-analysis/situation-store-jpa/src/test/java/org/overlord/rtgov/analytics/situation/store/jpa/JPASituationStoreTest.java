@@ -1,12 +1,26 @@
+/*
+ * 2012-3 Red Hat Inc. and/or its affiliates and other contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,  
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.overlord.rtgov.analytics.situation.store.jpa;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.overlord.rtgov.ui.client.model.ResolutionState.IN_PROGRESS;
+import static org.overlord.rtgov.analytics.situation.store.ResolutionState.IN_PROGRESS;
 
 import java.net.URL;
-import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,10 +37,9 @@ import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
-import org.overlord.rtgov.jpa.JpaStore;
-import org.overlord.rtgov.jpa.JpaStore.JpaWork;
-import org.overlord.rtgov.ui.client.model.ResolutionState;
-import org.overlord.rtgov.ui.server.interceptors.IUserContext;
+import org.overlord.rtgov.analytics.situation.store.ResolutionState;
+import org.overlord.rtgov.common.jpa.JpaStore;
+import org.overlord.rtgov.common.jpa.JpaStore.JpaWork;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
@@ -42,19 +55,6 @@ public class JPASituationStoreTest {
     	final URL configXml = JPASituationStoreTest.class.getClassLoader().getResource("hibernate-test.cfg.xml");
     	_jpaStore = new JpaStore(configXml);
 		_situationStore = new JPASituationStore(_jpaStore);
-        IUserContext.Holder.setSecurityContext(new IUserContext() {
-
-            @Override
-            public Principal getUserPrincipal() {
-                return new Principal() {
-
-                    @Override
-                    public String getName() {
-                        return name.getMethodName();
-                    }
-                };
-            }
-        });
     }
 
     @Test
@@ -340,7 +340,7 @@ public class JPASituationStoreTest {
 		situation.setId(name.getMethodName());
 		situation.setTimestamp(System.currentTimeMillis());
 		persist(situation);
-		_situationStore.recordSuccessfulResubmit(situation.getId());
+		_situationStore.recordSuccessfulResubmit(situation.getId(), name.getMethodName());
 		Situation reload = _situationStore.getSituation(situation.getId());
 		assertEquals(name.getMethodName(), reload.getSituationProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
 		assertEquals(SituationStore.RESUBMIT_RESULT_SUCCESS, reload.getSituationProperties().get(SituationStore.RESUBMIT_RESULT_PROPERTY));
@@ -354,7 +354,7 @@ public class JPASituationStoreTest {
         situation.setId(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
         persist(situation);
-        _situationStore.recordResubmitFailure(situation.getId(), name.getMethodName());
+        _situationStore.recordResubmitFailure(situation.getId(), name.getMethodName(), name.getMethodName());
         Situation reload = _situationStore.getSituation(situation.getId());
         assertEquals(name.getMethodName(), reload.getSituationProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
         assertEquals(name.getMethodName(), reload.getSituationProperties().get(SituationStore.RESUBMIT_ERROR_MESSAGE));
@@ -369,7 +369,8 @@ public class JPASituationStoreTest {
         situation.setId(name.getMethodName());
         situation.setTimestamp(System.currentTimeMillis());
         persist(situation);
-        _situationStore.recordResubmitFailure(situation.getId(), Strings.padEnd(name.getMethodName(), 10000, '*'));
+        _situationStore.recordResubmitFailure(situation.getId(),
+                Strings.padEnd(name.getMethodName(), 10000, '*'), name.getMethodName());
         Situation reload = _situationStore.getSituation(situation.getId());
         assertEquals(name.getMethodName(), reload.getSituationProperties().get(SituationStore.RESUBMIT_BY_PROPERTY));
         String errorMessage = reload.getSituationProperties().get(SituationStore.RESUBMIT_ERROR_MESSAGE);

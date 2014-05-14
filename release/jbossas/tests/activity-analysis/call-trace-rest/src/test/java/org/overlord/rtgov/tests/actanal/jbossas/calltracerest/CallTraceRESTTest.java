@@ -37,6 +37,7 @@ import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.server.ActivityStoreFactory;
+import org.overlord.rtgov.activity.store.mem.MemActivityStore;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.util.CallTraceUtil;
 
@@ -93,6 +94,11 @@ public class CallTraceRESTTest {
             ).addAsLibraries(Maven.resolver().resolve("org.overlord:overlord-commons-config:"+commonsversion).withTransitivity().asFile()
             ).addAsLibraries(Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withTransitivity().asFile()
             ).addAsLibraries(Maven.resolver().resolve("commons-lang:commons-lang:"+langversion).withTransitivity().asFile());
+    }
+    
+    @org.junit.Before
+    public void init() {
+        ActivityStoreFactory.initialize(new MemActivityStore());
     }
     
     protected void initActivityStore() {

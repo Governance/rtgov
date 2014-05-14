@@ -33,7 +33,6 @@ import org.overlord.rtgov.active.collection.ActiveCollectionListener;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveList;
-import org.overlord.rtgov.active.collection.predicate.Predicate;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -41,9 +40,12 @@ import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.model.soa.RPCActivityType;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.ActivityStoreFactory;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
+import org.overlord.rtgov.analytics.situation.store.SituationStoreFactory;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.call.trace.CallTraceService;
 import org.overlord.rtgov.call.trace.model.Call;
@@ -53,7 +55,6 @@ import org.overlord.rtgov.call.trace.model.TraceNode;
 import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.CallTraceBean;
 import org.overlord.rtgov.ui.client.model.MessageBean;
-import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.SituationEventBean;
 import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
@@ -63,6 +64,7 @@ import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.overlord.rtgov.ui.provider.SituationEventListener;
 import org.overlord.rtgov.ui.provider.SituationsProvider;
+import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
@@ -83,13 +85,11 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 
 	private static volatile Messages i18n = new Messages();
 	
-	@Inject
+    @Inject
 	private CallTraceService _callTraceService;
 
-	@Inject
 	private ActivityStore _activityStore;
 
-	@Inject
 	private SituationStore _situationStore;
 
 	@Inject
@@ -191,7 +191,15 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 
     @PostConstruct
     public void init() {
-    	
+        
+        if (_activityStore == null) {
+            _activityStore = ActivityStoreFactory.getActivityStore();
+        }
+        
+        if (_situationStore == null) {
+            _situationStore = SituationStoreFactory.getSituationStore();
+        }
+        
     	if (_injectedProviders != null) {
     		// Copy any injected providers into the provider list
     		for (ServicesProvider sp : _injectedProviders) {
@@ -505,13 +513,22 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         if (!serviceProvider.isPresent()) {
             throw new UiException(i18n.format("RTGovSituationsProvider.ResubmitProviderNotFound", situation.getId())); //$NON-NLS-1$
         }
+
+        String userName=null;
+        
+        if (IUserContext.Holder.getUserPrincipal() != null) {
+            userName = IUserContext.Holder.getUserPrincipal().getName();
+        }
+
         try {
             // TODO: Change to specify service, rather than situation - also
             // possibly locate the provider appropriate for the service rather than situation
             serviceProvider.get().resubmit(operationName.getService(), operationName.getOperation(), message);
-            _situationStore.recordSuccessfulResubmit(situation.getId());
+            
+            _situationStore.recordSuccessfulResubmit(situation.getId(), userName);
         } catch (Exception exception) {
-            _situationStore.recordResubmitFailure(situation.getId(), Throwables.getStackTraceAsString(exception));
+            _situationStore.recordResubmitFailure(situation.getId(),
+                    Throwables.getStackTraceAsString(exception), userName);
             throw new UiException(
                     i18n.format(
                             "RTGovSituationsProvider.ResubmitFailed", situation.getId() + ":" + exception.getLocalizedMessage()), exception); //$NON-NLS-1$
@@ -591,26 +608,6 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	public void removed(Object key, Object value) {
 	}
 
-    /**
-     * This method builds a list of situations, associated with the supplied filter,
-     * from the 'situations' active collection.
-     *
-     * @param filters The filter
-     * @param situations The result list
-     * @throws Exception Failed to get situations list
-     */
-    protected void getActiveSituationList(SituationsFilterBean filters, java.util.List<SituationSummaryBean> situations) throws Exception {
-        Predicate predicate=new org.overlord.rtgov.ui.provider.situations.SituationsFilterPredicate(filters);
-
-        ActiveCollection acol=_acmManager.create(filters.toString(), _situations, predicate, null);
-
-        for (Object item : acol) {
-        	if (item instanceof Situation) {
-        		situations.add(RTGovSituationsUtil.getSituationBean((Situation)item));
-        	}
-        }
-    }
-
 	@Override
 	public void assign(String situationId,String userName) throws UiException {
 		try {
@@ -632,7 +629,8 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	@Override
 	public void updateResolutionState(String situationId, ResolutionState resolutionState) throws UiException {
 		try {
-			_situationStore.updateResolutionState(situationId, resolutionState);
+			_situationStore.updateResolutionState(situationId,
+			       org.overlord.rtgov.analytics.situation.store.ResolutionState.valueOf(resolutionState.name()));
 		} catch (Exception e) {
 			throw new UiException(e);
 		}

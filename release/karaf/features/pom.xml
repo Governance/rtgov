@@ -11,6 +11,17 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
+	<dependencyManagement>
+		<dependencies>
+		    <dependency>
+			    <groupId>org.slf4j</groupId>
+			    <artifactId>slf4j-ext</artifactId>
+			    <!-- TODO: Version 1.7.2 requires org.slf4j.impl package -->
+			    <version>1.7.1</version>
+		    </dependency>
+		</dependencies>
+	</dependencyManagement>
+
 	<dependencies>
 		<!-- RTGov Common -->
 		<dependency>
@@ -26,6 +37,14 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>analytics</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store</artifactId>
 		</dependency>
 
 		<!-- RTGov Activity Server -->
@@ -141,19 +160,23 @@
 			<type>war</type>
 		</dependency>
 
-		<!-- RTGov Activity Store Inmemory -->
+		<!-- RTGov UI -->
+
+		<dependency>
+			<groupId>org.overlord.rtgov.ui</groupId>
+			<artifactId>overlord-rtgov-ui-war-fuse6</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<!-- RTGov Store Inmemory -->
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-store-mem</artifactId>
 		</dependency>
-
-		<!-- RTGov Activity Store JPA H2
 		<dependency>
-			<groupId>org.overlord.rtgov.karaf.ds</groupId>
-			<artifactId>activity-store-jpa-h2</artifactId>
-			<version>${project.version}</version>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store-mem</artifactId>
 		</dependency>
-         -->
 
 		<!-- RTGov Server -->
 		<dependency>
@@ -260,6 +283,22 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-ext</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.cal10n</groupId>
+			<artifactId>cal10n-api</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.jdom</groupId>
 			<artifactId>jdom</artifactId>
 		</dependency>
@@ -309,8 +348,17 @@
 
 		<dependency>
 			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-osgi</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-services</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
 			<artifactId>overlord-commons-auth-jetty8</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.picketlink</groupId>
 			<artifactId>picketlink-federation</artifactId>
@@ -369,6 +417,9 @@
 										<feature>
 											<name>http</name>
 										</feature>
+										<feature>
+											<name>war</name>
+										</feature>
 									</dependsOnFeatures>
 									<excludes>
 										<exclude>org.overlord.rtgov.*:*:*</exclude>
@@ -421,9 +472,15 @@
 											<name>rtgov-common</name>
 											<version>${project.version}</version>
 										</feature>
+										<feature>
+											<name>rtgov-event-processor</name>
+											<version>${project.version}</version>
+										</feature>
 									</dependsOnFeatures>
 									<includes>
 										<include>org.overlord.rtgov.activity-management:activity:*</include>
+										<include>org.overlord.rtgov.activity-analysis:analytics:*</include>
+										<include>org.overlord.rtgov.activity-analysis:situation-store:*</include>
 									</includes>
 								</feature>
 								<feature>
@@ -510,10 +567,7 @@
 									<includes>
 										<include>org.overlord.rtgov.activity-management:activity-server-rests:*</include>
 										<include>org.overlord.rtgov.active-queries:active-collection-rests:*</include>
-										<include>org.overlord.rtgov.activity-analysis:analytics:*</include>
 										<include>org.overlord.rtgov.activity-analysis:call-trace:*</include>
-										<include>org.overlord.rtgov.activity-analysis:reports:*</include>
-										<include>org.overlord.rtgov.activity-analysis:reports-rests:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency-svg:*</include>
 										<include>org.overlord.rtgov.activity-analysis:situation-manager:*</include>
@@ -524,9 +578,9 @@
 									</includes>
 								</feature>
 								<feature>
-									<name>rtgov-activity-store-inmemory</name>
+									<name>rtgov-store-inmemory</name>
 									<version>${project.version}</version>
-									<comment>RTGov Activity Store Inmemory</comment>
+									<comment>RTGov Store Inmemory</comment>
 									<dependsOnFeatures>
 										<feature>
 											<name>rtgov-activity</name>
@@ -535,20 +589,7 @@
 									</dependsOnFeatures>
 									<includes>
 										<include>org.overlord.rtgov.activity-management:activity-store-mem:*</include>
-									</includes>
-								</feature>
-								<feature>
-									<name>rtgov-activity-store-jpa-h2</name>
-									<version>${project.version}</version>
-									<comment>RTGov Activity Store JPA H2</comment>
-									<dependsOnFeatures>
-										<feature>
-											<name>rtgov-activity</name>
-											<version>${project.version}</version>
-										</feature>
-									</dependsOnFeatures>
-									<includes>
-										<include>org.overlord.rtgov.karaf.ds:activity-store-jpa-h2:*</include>
+										<include>org.overlord.rtgov.activity-analysis:situation-store-mem:*</include>
 									</includes>
 								</feature>
 								<feature>
@@ -580,6 +621,20 @@
 										<include>org.overlord.rtgov.activity-management:collector-activity-server:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-client:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>
+									</includes>
+								</feature>
+								<feature>
+									<name>rtgov-ui</name>
+									<version>${project.version}</version>
+									<comment>RTGov UI</comment>
+									<dependsOnFeatures>
+										<feature>
+											<name>rtgov-services</name>
+											<version>${project.version}</version>
+										</feature>
+									</dependsOnFeatures>
+									<includes>
+										<include>org.overlord.rtgov.ui:overlord-rtgov-ui-war-fuse6:*</include>
 									</includes>
 								</feature>
 								<feature>

@@ -28,11 +28,6 @@ public final class ActivityStoreFactory {
 
     private static final Logger LOG=Logger.getLogger(ActivityStoreFactory.class.getName());
     
-    private static final String[] DEFAULT_IMPLEMENTATIONS={
-        "org.overlord.rtgov.activity.store.jpa.JPAActivityStore",
-        "org.overlord.rtgov.activity.store.mem.MemActivityStore"
-    };
-    
     private static final String ACTIVITY_STORE_CLASS="ActivityStore.class";
     
     private static ActivityStore _instance;
@@ -41,6 +36,22 @@ public final class ActivityStoreFactory {
      * Private constructor.
      */
     private ActivityStoreFactory() {
+    }
+    
+    /**
+     * This method will initialize the activity store factory to use the
+     * supplied activity store, if not already initialized with a value.
+     * 
+     * @param actStore The activity store
+     */
+    public static synchronized void initialize(ActivityStore actStore) {
+        if (_instance == null) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.finer("Activity store initialized="+actStore);
+            }
+            
+            _instance = actStore;
+        }
     }
     
     /**
@@ -69,22 +80,6 @@ public final class ActivityStoreFactory {
             }
         }
         
-        if (_instance == null) {
-            for (String clsName : DEFAULT_IMPLEMENTATIONS) {
-                try {
-                    @SuppressWarnings("unchecked")
-                    Class<ActivityStore> cls=(Class<ActivityStore>)
-                            Thread.currentThread().getContextClassLoader().loadClass(clsName);
-                    
-                    _instance = (ActivityStore)cls.newInstance();
-                    
-                    break;
-                } catch (Throwable t) {
-                    LOG.log(Level.FINEST, "Failed to find activity store class '"+clsName+"'", t);
-                }
-            }
-        }
-
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Activity store instance="+_instance);
         }

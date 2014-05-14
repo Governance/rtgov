@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
+import org.overlord.rtgov.ui.client.model.ResolutionState;
 
 /**
  * A simple data bean for returning summary information for single deployment.

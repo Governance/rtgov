@@ -35,6 +35,7 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.commons.gwt.client.local.widgets.HtmlSnippet;
+import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceDetails;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceWidget;
@@ -47,7 +48,6 @@ import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
 import org.overlord.rtgov.ui.client.model.NotificationBean;
-import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 

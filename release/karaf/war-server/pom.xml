@@ -67,8 +67,7 @@
                 org.overlord.rtgov.active.collection.rest,
                 org.overlord.rtgov.call.trace.rest,
                 org.overlord.rtgov.service.dependency.rest,
-                org.overlord.rtgov.situation.manager.rest,
-                org.overlord.rtgov.reports.rest
+                org.overlord.rtgov.situation.manager.rest
               </Import-Package>
               <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>
             </manifestEntries>

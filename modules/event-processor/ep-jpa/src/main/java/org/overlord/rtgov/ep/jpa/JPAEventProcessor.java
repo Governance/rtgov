@@ -20,9 +20,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.hibernate.Session;
+import org.overlord.rtgov.common.jpa.JpaStore;
+import org.overlord.rtgov.common.jpa.JpaStore.JpaWork;
 import org.overlord.rtgov.ep.EventProcessor;
-import org.overlord.rtgov.jpa.JpaStore;
-import org.overlord.rtgov.jpa.JpaStore.JpaWork;
 
 /**
  * This class represents the JPA implementation of the Event Processor.
@@ -43,8 +43,6 @@ public class JPAEventProcessor extends EventProcessor {
      * Constructor.
      */
     public JPAEventProcessor() {
-        final URL configXml = this.getClass().getClassLoader().getResource("hibernate.cfg.xml");
-        _jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
     }
 
     /**
@@ -56,6 +54,21 @@ public class JPAEventProcessor extends EventProcessor {
         _jpaStore = jpaStore;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void init() throws Exception {
+        super.init();
+        
+        final URL configXml = Thread.currentThread().getContextClassLoader().getResource("hibernate.cfg.xml");
+        
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Hibernate configure: "+configXml);
+        }
+        
+        _jpaStore = new JpaStore(configXml, JNDI_PROPERTY);
+    }
+    
     /**
      * @return The persistence unit name
      * 

@@ -593,7 +593,7 @@ public class JBossASSLAMonitorTest {
             }
             
             // Wait for events to propagate
-            Thread.sleep(2000);
+            Thread.sleep(4000);
             
             if (tl.getEvents(SITUATIONS_PROCESSED) == null) {
                 fail("Expecting situations processed");

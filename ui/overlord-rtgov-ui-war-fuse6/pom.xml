@@ -12,12 +12,34 @@
   <name>Overlord RTGov::UI::Fuse6</name>
   
   <dependencies>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <classifier>classes</classifier>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- The base WAR being extended -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>overlord-rtgov-ui-war-jetty8</artifactId>
       <type>war</type>
     </dependency>
+
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-situations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.ui</groupId>
+      <artifactId>rtgov-ui-services-switchyard</artifactId>
+    </dependency>
+
+	<dependency>
+	  <groupId>org.overlord.rtgov.content.services</groupId>
+	  <artifactId>elasticsearch-rests</artifactId>
+	</dependency>
+
 
     <!-- Standard servlet dependencies -->
     <dependency>
@@ -78,6 +100,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
+		<version>2.1.1</version>
         <configuration>
           <warName>overlord-rtgov-ui-war-fuse6</warName>
           <overlays>
@@ -121,6 +144,7 @@ javax.ws.rs.ext,
 javax.imageio,
 javax.el,
 javax.imageio.plugins.jpeg,
+javax.management,
 javax.net.ssl,
 org.osgi.framework,
 org.osgi.framework.wiring,
@@ -132,6 +156,25 @@ javax.security.auth.callback,
 org.eclipse.jetty.plus.jaas,
 org.eclipse.jetty.servlet,
 org.eclipse.jetty.server.handler,
+org.overlord.rtgov.activity.collector,
+org.overlord.rtgov.activity.model,
+org.overlord.rtgov.activity.model.app,
+org.overlord.rtgov.activity.model.bpm,
+org.overlord.rtgov.activity.model.common,
+org.overlord.rtgov.activity.model.mom,
+org.overlord.rtgov.activity.model.soa,
+org.overlord.rtgov.activity.server,
+org.overlord.rtgov.analytics.situation,
+org.overlord.rtgov.analytics.situation.store,
+org.overlord.rtgov.active.collection,
+org.overlord.rtgov.active.collection.jmx,
+org.overlord.rtgov.active.collection.predicate,
+org.overlord.rtgov.active.collection.util,
+org.overlord.rtgov.call.trace,
+org.overlord.rtgov.call.trace.descriptors,
+org.overlord.rtgov.call.trace.model,
+org.overlord.rtgov.call.trace.util,
+org.overlord.rtgov.ep,
 org.slf4j,
 org.slf4j.cal10n,
 org.slf4j.ext,
@@ -153,6 +196,7 @@ WEB-INF/lib/commons-lang3-${commons.lang3.version}.jar,
 WEB-INF/lib/commons-logging-${version.commons-logging}.jar,
 WEB-INF/lib/commons-logging-api-1.1.jar,
 WEB-INF/lib/dom4j-${version.dom4j}.jar,
+WEB-INF/lib/elasticsearch-rests-${project.version}.jar,
 WEB-INF/lib/errai-bus-${version.org.jboss.errai}.jar,
 WEB-INF/lib/errai-cdi-client-${version.org.jboss.errai}.jar,
 WEB-INF/lib/errai-cdi-jetty-${version.org.jboss.errai}.jar,
@@ -160,6 +204,7 @@ WEB-INF/lib/errai-codegen-${version.org.jboss.errai}.jar,
 WEB-INF/lib/errai-codegen-gwt-${version.org.jboss.errai}.jar,
 WEB-INF/lib/errai-common-${version.org.jboss.errai}.jar,
 WEB-INF/lib/errai-config-${version.org.jboss.errai}.jar,
+WEB-INF/lib/errai-data-binding-${version.org.jboss.errai}.jar,
 WEB-INF/lib/errai-ioc-${version.org.jboss.errai}.jar,
 WEB-INF/lib/errai-ioc-bus-support-${version.org.jboss.errai}.jar,
 WEB-INF/lib/errai-marshalling-${version.org.jboss.errai}.jar,
@@ -171,16 +216,24 @@ WEB-INF/lib/geronimo-spec-jta-1.0.1B-rc4.jar,
 WEB-INF/lib/guava-${version.com.google.guava}.jar,
 WEB-INF/lib/guice-3.0.jar,
 WEB-INF/lib/hsqldb-1.8.0.7.jar,
+WEB-INF/lib/httpclient-${version.org.apache.httpcomponents}.jar,
+WEB-INF/lib/httpcore-${version.org.apache.httpcomponents}.jar,
+WEB-INF/lib/infinispan-core-${version.org.infinispan}.jar,
 WEB-INF/lib/jackson-core-asl-${version.org.codehaus.jackson}.jar,
 WEB-INF/lib/jackson-mapper-asl-${version.org.codehaus.jackson}.jar,
 WEB-INF/lib/javassist-${version.org.javassist}.jar,
 WEB-INF/lib/javax.inject-${version.javax.inject}.jar,
 WEB-INF/lib/jboss-interceptors-api_1.1_spec-1.0.0.Beta1.jar,
 WEB-INF/lib/jboss-logging-${version.org.jboss.logging}.jar,
+WEB-INF/lib/jboss-marshalling-${version.org.jboss.marshalling}.jar,
+WEB-INF/lib/jboss-marshalling-river-${version.org.jboss.marshalling}.jar,
+WEB-INF/lib/jbossxacml-2.0.8.Final.jar,
+WEB-INF/lib/jgroups-${version.org.jgroups}.jar,
 WEB-INF/lib/jgroups-${version.org.jgroups}.jar,
 WEB-INF/lib/jsoup-1.7.1.jar,
 WEB-INF/lib/jsr250-api-1.0.jar,
 WEB-INF/lib/jsr305-1.3.9.jar,
+WEB-INF/lib/jta-1.1.jar,
 WEB-INF/lib/lesscss-1.3.3.jar,
 WEB-INF/lib/mail-${version.javax.mail}.jar,
 WEB-INF/lib/mvel2-${version.org.mvel}.jar,
@@ -189,30 +242,77 @@ WEB-INF/lib/org.apache.stanbol.enhancer.engines.htmlextractor-0.10.0.jar,
 WEB-INF/lib/overlord-commons-auth-${overlord-commons.version}.jar,
 WEB-INF/lib/overlord-commons-auth-jetty8-${overlord-commons.version}.jar,
 WEB-INF/lib/overlord-commons-config-${overlord-commons.version}.jar,
+WEB-INF/lib/overlord-commons-errai-fuse-support-${overlord-commons.version}.jar,
 WEB-INF/lib/overlord-commons-gwt-${overlord-commons.version}.jar,
+WEB-INF/lib/overlord-commons-osgi-weld-${overlord-commons.version}.jar,
+WEB-INF/lib/overlord-commons-services-${overlord-commons.version}.jar,
 WEB-INF/lib/overlord-commons-uiheader-${overlord-commons.version}.jar,
 WEB-INF/lib/picketbox-4.0.7.Final.jar,
 WEB-INF/lib/picketlink-core-${picketlink.version}.jar,
 WEB-INF/lib/rdf.core-0.12-incubating.jar,
 WEB-INF/lib/reflections-${version.org.jboss.errai}.jar,
 WEB-INF/lib/rhino-${version.rhino.js}.jar,
+WEB-INF/lib/rtgov-common-${project.version}.jar,
+WEB-INF/lib/rtgov-jbossas-${project.version}.jar,
 WEB-INF/lib/rtgov-ui-core-${project.version}.jar,
+WEB-INF/lib/rtgov-ui-services-switchyard-${project.version}.jar,
+WEB-INF/lib/rtgov-ui-situations-${project.version}.jar,
+WEB-INF/lib/slf4j-api-1.7.2.jar,
+WEB-INF/lib/staxmapper-1.1.0.jar,
+WEB-INF/lib/switchyard-api-${switchyard.version}.jar,
+WEB-INF/lib/switchyard-common-${switchyard.version}.jar,
+WEB-INF/lib/switchyard-extensions-java-${switchyard.version}.jar,
+WEB-INF/lib/switchyard-remote-${switchyard.version}.jar,
+WEB-INF/lib/switchyard-runtime-${switchyard.version}.jar,
+WEB-INF/lib/switchyard-security-${switchyard.version}.jar,
+WEB-INF/lib/switchyard-serial-${switchyard.version}.jar,
+WEB-INF/lib/switchyard-serial-jackson-${switchyard.version}.jar,
 WEB-INF/lib/utils-0.1-incubating.jar,
 WEB-INF/lib/weld-api-${version.org.jboss.weld.weld-api}.jar,
 WEB-INF/lib/weld-core-${version.org.jboss.weld.weld}.jar,
 WEB-INF/lib/weld-se-core-${version.org.jboss.weld.weld}.jar,
+WEB-INF/lib/weld-servlet-${version.org.jboss.weld.weld}.jar,
 WEB-INF/lib/weld-servlet-core-${version.org.jboss.weld.weld}.jar,
 WEB-INF/lib/weld-spi-${version.org.jboss.weld.weld-api}.jar,
 WEB-INF/lib/wymiwyg-commons-core-0.7.6.jar,
-WEB-INF/lib/overlord-commons-errai-fuse-support-${overlord-commons.version}.jar,
-WEB-INF/lib/overlord-commons-osgi-weld-${overlord-commons.version}.jar,
-WEB-INF/lib/overlord-commons-auth-${overlord-commons.version}.jar,
-WEB-INF/lib/overlord-commons-auth-jetty8-${overlord-commons.version}.jar
+WEB-INF/lib/xml-apis-1.3.04.jar,
+WEB-INF/lib/xmlsec-1.5.1.jar
               </Bundle-ClassPath>
             </manifestEntries>
           </archive>
         </configuration>
       </plugin>
     </plugins>
+    <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>org.codehaus.mojo</groupId>
+    								<artifactId>
+    									build-helper-maven-plugin
+    								</artifactId>
+    								<versionRange>[1.7,)</versionRange>
+    								<goals>
+    									<goal>regex-property</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
   </build>
 </project>

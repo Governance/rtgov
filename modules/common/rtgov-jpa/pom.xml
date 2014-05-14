@@ -64,10 +64,10 @@
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
 						<Export-Package>
-							org.overlord.rtgov.common.*;version=${project.version}
+							org.overlord.rtgov.common.jpa.*;version=${project.version}
 						</Export-Package>
 						<Import-Package>
-							*
+							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,*
 						</Import-Package>
 					</instructions>
 				</configuration>

@@ -65,6 +65,7 @@
 	</developers>
 
 	<properties>
+		<cal10n-api.version>0.7.4</cal10n-api.version>
 		<commons.lang3.version>3.1</commons.lang3.version>
 		<drools.version>6.1.0.Beta2</drools.version>
 		<elasticsearch.version>1.1.0</elasticsearch.version>
@@ -251,7 +252,17 @@
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>situation-store</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
 			    <artifactId>situation-store-jpa</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+			    <artifactId>situation-store-mem</artifactId>
 			    <version>${project.version}</version>
 		    </dependency>
 
@@ -459,6 +470,12 @@
                 <version>${project.version}</version>
                 <type>war</type>
             </dependency>
+            <dependency>
+                <groupId>org.overlord.rtgov.ui</groupId>
+                <artifactId>overlord-rtgov-ui-war-fuse6</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+            </dependency>
 
 		    <dependency>
 			    <groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
@@ -633,6 +650,11 @@
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-services</artifactId>
+				<version>${overlord-commons.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.overlord</groupId>
+				<artifactId>overlord-commons-osgi</artifactId>
 				<version>${overlord-commons.version}</version>
 			</dependency>
 			<dependency>
@@ -940,6 +962,11 @@
 				<version>${remoting-jmx}</version>
             </dependency>
 
+			<dependency>
+				<groupId>ch.qos.cal10n</groupId>
+				<artifactId>cal10n-api</artifactId>
+				<version>${cal10n-api.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

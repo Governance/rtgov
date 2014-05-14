@@ -76,6 +76,11 @@ public class ActivityServerRESTTest {
              ).addAsLibraries(Maven.resolver().resolve("org.overlord:overlord-commons-config:"+commonsversion).withTransitivity().asFile());
     }
     
+    @org.junit.Before
+    public void init() {
+        ActivityStoreFactory.initialize(new MemActivityStore());
+    }
+    
     @Test
     public void queryAll() {
         

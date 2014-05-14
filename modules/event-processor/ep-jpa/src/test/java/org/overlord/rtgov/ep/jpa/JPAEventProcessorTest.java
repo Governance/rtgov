@@ -21,8 +21,8 @@ import java.net.URL;
 
 import org.hibernate.Session;
 import org.junit.Test;
-import org.overlord.rtgov.jpa.JpaStore;
-import org.overlord.rtgov.jpa.JpaStore.JpaWork;
+import org.overlord.rtgov.common.jpa.JpaStore;
+import org.overlord.rtgov.common.jpa.JpaStore.JpaWork;
 
 public class JPAEventProcessorTest {
 
