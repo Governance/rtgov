@@ -4,15 +4,16 @@
 
     <service interface="org.overlord.rtgov.activity.server.ActivityServer">
         <bean class="org.overlord.rtgov.internal.activity.server.jee.JEEActivityServer" >
-        	<property name="activityStore" ref="activityStoreBean"/>
+        	<!-- >property name="activityStore" ref="activityStoreBean"/ -->
         	<property name="activityNotifiers" ref="activityNotifiersBean"/>
         </bean>
     </service>
 
+<!--
     <reference id="activityStoreBean"
                interface="org.overlord.rtgov.activity.server.ActivityStore">
     </reference>
-
+-->
     <reference-list id="activityNotifiersBean" availability="optional"
                interface="org.overlord.rtgov.activity.server.ActivityNotifier">
     </reference-list>

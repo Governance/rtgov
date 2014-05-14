@@ -43,26 +43,26 @@ public class Activator implements BundleActivator {
         
         if (actStoreRef != null) {
             register(context, actStoreRef);
-        } else {        
-            ServiceListener sl = new ServiceListener() {
-                public void serviceChanged(ServiceEvent ev) {
-                    ServiceReference sr = ev.getServiceReference();
-                    switch(ev.getType()) {
-                    case ServiceEvent.REGISTERED:
-                        register(context, sr);
-                        break;
-                    default:
-                        break;
-                    }
-                }           
-            };
-            
-            String filter = "(objectclass=" + ActivityStore.class.getName() + ")";
-            try {
-                context.addServiceListener(sl, filter);
-            } catch (InvalidSyntaxException e) { 
-                LOG.log(Level.SEVERE, "Failed to add service listener for activity store", e);
-            }
+        }
+
+        ServiceListener sl = new ServiceListener() {
+            public void serviceChanged(ServiceEvent ev) {
+                ServiceReference sr = ev.getServiceReference();
+                switch(ev.getType()) {
+                case ServiceEvent.REGISTERED:
+                    register(context, sr);
+                    break;
+                default:
+                    break;
+                }
+            }           
+        };
+        
+        String filter = "(objectclass=" + ActivityStore.class.getName() + ")";
+        try {
+            context.addServiceListener(sl, filter);
+        } catch (InvalidSyntaxException e) { 
+            LOG.log(Level.SEVERE, "Failed to add service listener for activity store", e);
         }
     }
     

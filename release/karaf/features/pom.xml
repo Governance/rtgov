@@ -420,6 +420,9 @@
 										<feature>
 											<name>war</name>
 										</feature>
+										<feature>
+											<name>jpa-hibernate</name>
+										</feature>
 									</dependsOnFeatures>
 									<excludes>
 										<exclude>org.overlord.rtgov.*:*:*</exclude>
@@ -577,6 +580,7 @@
 										<include>org.overlord.rtgov.karaf:overlord-rtgov:*</include>
 									</includes>
 								</feature>
+<!--
 								<feature>
 									<name>rtgov-store-inmemory</name>
 									<version>${project.version}</version>
@@ -592,6 +596,7 @@
 										<include>org.overlord.rtgov.activity-analysis:situation-store-mem:*</include>
 									</includes>
 								</feature>
+-->
 								<feature>
 									<name>rtgov-server</name>
 									<version>${project.version}</version>
@@ -621,6 +626,10 @@
 										<include>org.overlord.rtgov.activity-management:collector-activity-server:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-client:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>
+										<include>org.overlord.rtgov.activity-management:activity-store-mem:*</include>
+										<include>org.overlord.rtgov.activity-analysis:situation-store-mem:*</include>
+										<include>org.overlord.rtgov.activity-management:activity-store-jpa:*</include>
+										<include>org.overlord.rtgov.activity-analysis:situation-store-jpa:*</include>
 									</includes>
 								</feature>
 								<feature>

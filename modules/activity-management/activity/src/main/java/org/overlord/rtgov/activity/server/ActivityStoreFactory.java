@@ -28,7 +28,10 @@ public final class ActivityStoreFactory {
 
     private static final Logger LOG=Logger.getLogger(ActivityStoreFactory.class.getName());
     
-    private static final String ACTIVITY_STORE_CLASS="ActivityStore.class";
+    /**
+     * Property defining the activity store implementation class.
+     */
+    public static final String ACTIVITY_STORE_CLASS="ActivityStore.class";
     
     private static ActivityStore _instance;
     
@@ -39,18 +42,34 @@ public final class ActivityStoreFactory {
     }
     
     /**
-     * This method will initialize the activity store factory to use the
-     * supplied activity store, if not already initialized with a value.
+     * This method initializes the activity store. If a class name has been
+     * defined in configuration, then the supplied class must match the type,
+     * otherwise it will be ignored. This method is primarily used for testing,
+     * or where classloading is not possible (i.e. OSGi).
      * 
-     * @param actStore The activity store
+     * @param store The store
      */
-    public static synchronized void initialize(ActivityStore actStore) {
-        if (_instance == null) {
+    public static synchronized void initialize(ActivityStore store) {
+        // Only initialize if no instance available
+        if (_instance != null) {
+            return;
+        }
+        
+        String clsName=(String)RTGovProperties.getProperties().get(ACTIVITY_STORE_CLASS);
+        
+        // Verify the instance is of the correct class
+        if (clsName == null || store.getClass().getName().equals(clsName)) {
+            
             if (LOG.isLoggable(Level.FINER)) {
-                LOG.finer("Activity store initialized="+actStore);
+                LOG.finer("Initialize activity store instance="+_instance);
             }
             
-            _instance = actStore;
+            _instance = store;
+            
+        } else if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("Ignoring activity store initialization due to incorrect type ["
+                            +store.getClass().getName()+"], expecting ["
+                            +clsName+"]");
         }
     }
     
