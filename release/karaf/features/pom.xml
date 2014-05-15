@@ -168,14 +168,22 @@
 			<type>war</type>
 		</dependency>
 
-		<!-- RTGov Store Inmemory -->
+		<!-- RTGov Store -->
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-store-mem</artifactId>
+			<artifactId>activity-store-elasticsearch</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>situation-store-mem</artifactId>
+			<artifactId>situation-store-elasticsearch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-store-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store-jpa</artifactId>
 		</dependency>
 
 		<!-- RTGov Server -->
@@ -391,6 +399,82 @@
 			<artifactId>jaxrs-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.overlord.rtgov.karaf.bundles</groupId>
+			<artifactId>rtgov-karaf-bundles-elasticsearch</artifactId>
+		</dependency>
+
+<!--
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+-->
+<!--
+			<exclusions>
+				<exclusion>
+					<artifactId>lucene-core</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-analyzers-common</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-codecs</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-queries</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-memory</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-highlighter</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-queryparser</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-sandbox</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-suggest</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-misc</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-join</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-grouping</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>lucene-spatial</artifactId>
+					<groupId>org.apache.lucene</groupId>
+				</exclusion>
+			</exclusions>
+-->
+<!--
+        </dependency>
+-->
+
+<!--
+        <dependency>
+	        <groupId>org.apache.servicemix.bundles</groupId>
+	        <artifactId>org.apache.servicemix.bundles.lucene</artifactId>
+        </dependency>
+-->
 	</dependencies>
 
 	<build>
@@ -449,6 +533,7 @@
 										</feature>
 									</dependsOnFeatures>
 									<includes>
+										<include>org.overlord.rtgov.karaf.bundles:*:*</include>
 										<include>org.overlord.rtgov.common:*:*</include>
 									</includes>
 								</feature>
@@ -612,10 +697,13 @@
 										<include>org.overlord.rtgov.activity-management:collector-activity-server:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-client:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>
-										<include>org.overlord.rtgov.activity-management:activity-store-mem:*</include>
-										<include>org.overlord.rtgov.activity-analysis:situation-store-mem:*</include>
+										<include>org.overlord.rtgov.activity-management:activity-store-elasticsearch:*</include>
+										<include>org.overlord.rtgov.activity-analysis:situation-store-elasticsearch:*</include>
+
+                                        <!-- Don't currently support JPA in Fuse
 										<include>org.overlord.rtgov.activity-management:activity-store-jpa:*</include>
 										<include>org.overlord.rtgov.activity-analysis:situation-store-jpa:*</include>
+                                        -->
 									</includes>
 								</feature>
 								<feature>
@@ -633,27 +721,12 @@
 									</includes>
 								</feature>
 								<feature>
-									<name>rtgov-server-contents</name>
-									<version>${project.version}</version>
-									<comment>RTGov Server Contents</comment>
-									<dependsOnFeatures>
-										<feature>
-											<name>rtgov-server</name>
-											<version>${project.version}</version>
-										</feature>
-									</dependsOnFeatures>
-									<includes>
-										<include>org.overlord.rtgov.content:overlord-rtgov-epn-osgi:*</include>
-										<include>org.overlord.rtgov.content:overlord-rtgov-acs-osgi:*</include>
-									</includes>
-								</feature>
-								<feature>
 									<name>rtgov-all</name>
 									<version>${project.version}</version>
 									<comment>RTGov All</comment>
 									<dependsOnFeatures>
 										<feature>
-											<name>rtgov-server-contents</name>
+											<name>rtgov-server</name>
 											<version>${project.version}</version>
 										</feature>
 										<feature>
@@ -661,6 +734,10 @@
 											<version>${project.version}</version>
 										</feature>
 									</dependsOnFeatures>
+									<includes>
+										<include>org.overlord.rtgov.content:overlord-rtgov-epn-osgi:*</include>
+										<include>org.overlord.rtgov.content:overlord-rtgov-acs-osgi:*</include>
+									</includes>
 								</feature>
 								<feature>
 									<name>rtgov-client</name>

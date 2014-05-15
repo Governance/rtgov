@@ -19,6 +19,7 @@ import org.elasticsearch.action.admin.indices.refresh.RefreshRequestBuilder;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -27,17 +28,17 @@ import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.server.QuerySpec;
-import org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore;
+import org.overlord.rtgov.activity.util.ActivityUtil;
+import org.overlord.rtgov.common.elasticsearch.ElasticsearchClient;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.inject.Singleton;
 
 /**
  * This class provides the Elasticsearch implementation of the activityStore
@@ -46,65 +47,29 @@ import javax.inject.Singleton;
  * Date: 20/04/14
  * Time: 23:32
  */
-@Singleton
-public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore implements ActivityStore {
+public class ElasticsearchActivityStore implements ActivityStore {
     private static final Logger LOG = Logger.getLogger(ElasticsearchActivityStore.class.getName());
 
     private static String ACTIVITYSTORE_UNIT_INDEX = "ActivityStore.Elasticsearch.index";
     private static String ACTIVITYSTORE_UNIT_TYPE = "ActivityStore.Elasticsearch.type";
-
-    /**
-     * Preset, configures activityunit store index and type from the rtgov properties "ActivityStore.Elasticsearch.index" and "ActivityStore.Elasticsearch.type".
-     * If the properties _hosts, index and type are not set then defaults are loaded. these values can be overriden by setting ACTIVITYSTORE_UNIT_INDEX, ACTIVITYSTORE_UNIT_TYPE defaults in RTgov.properties
-     *
-     * @throws Exception when a connection cannot be established
-     */
-    @Override
-    public void init() throws Exception {
-        if (getHosts() == null) {
-            setHosts(RTGovProperties.getProperty(ELASTICSEARCH_STORE_HOSTS));
-        }
-        if (getIndex() == null || getIndex().length() == 0) {
-            setIndex(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_INDEX, "rtgov"));
-        }
-        if (getType() == null || getIndex().length() == 0) {
-            setType(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_TYPE, "activity"));
-        }
-        
-        super.init();
-    }
-
-    /**
-     * @param id       id to store doucment
-     * @param document Activitiytpype
-     * @param <V>      document to be saved
-     * @throws Exception when document is not of type activityStore
-     */
-    @Override
-    public <V> void add(String id, V document) throws Exception {
-        if (document instanceof ActivityUnit) {
-            BulkRequestBuilder localBulkRequestBuilder = getClient().prepareBulk();
-
-            persist(localBulkRequestBuilder, id, (ActivityUnit)document);
-
-            BulkResponse bulkItemResponses = localBulkRequestBuilder.execute().actionGet();
-            if (bulkItemResponses.hasFailures()) {
-                LOG.severe(" add Documents{" + id + "} could not be created for index [" + getIndex() + "/" + getType() + "/");
-
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("FAILED MESSAGES. " + bulkItemResponses.buildFailureMessage());
-                }
-                throw new Exception(" add Documents{" + id + "} could not be created for index [" + getIndex() + "/" + getType() + "/ \n  " + bulkItemResponses.buildFailureMessage());
-            } else {
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.finest("Success storing " + id + " items to  [" + getIndex() + "/" + getType() + "]");
-                }
-            }
-        } else {
-            throw new IllegalArgumentException("Document to be store not of type " + ActivityUnit.class.toString());
-        }
-    }
     
+    private ElasticsearchClient _client=new ElasticsearchClient();
+
+    /**
+     * The default constructor.
+     */
+    public ElasticsearchActivityStore() {
+        _client.setIndex(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_INDEX, "rtgov"));
+        _client.setType(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_TYPE, "activity"));
+        
+        try {
+            _client.init();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This method persists the activity unit in the Elasticsearch repository.
      * 
@@ -117,13 +82,16 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
         
         // Temporarily clear the list of activities, while the activity unit part is stored
         activityUnit.setActivityTypes(Collections.<ActivityType>emptyList());            
-        localBulkRequestBuilder.add(getClient().prepareIndex(getIndex(), getType(), id).setSource(convertTypeToJson(activityUnit)));
+        localBulkRequestBuilder.add(_client.getElasticsearchClient().prepareIndex(_client.getIndex(), 
+                    _client.getType(), id).setSource(ElasticsearchClient.convertTypeToJson(activityUnit)));
         activityUnit.setActivityTypes(activityTypes);            
 
         // Persist activity types
         for (int i = 0; i < activityTypes.size(); i++) {
             ActivityType activityType = activityTypes.get(i);
-            localBulkRequestBuilder.add(getClient().prepareIndex(getIndex(), getType() + "type", id + "-" + i).setParent(id).setSource(convertTypeToJson(activityType)));
+            localBulkRequestBuilder.add(_client.getElasticsearchClient().prepareIndex(_client.getIndex(), 
+                    _client.getType() + "type", id + "-" + i).setParent(id).setSource(
+                            ElasticsearchClient.convertTypeToJson(activityType)));
         }
     }
 
@@ -132,7 +100,7 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
      * @throws Exception if any activities cannot be stored
      */
     public void store(List<ActivityUnit> activities) throws Exception {
-        BulkRequestBuilder localBulkRequestBuilder = getClient().prepareBulk();
+        BulkRequestBuilder localBulkRequestBuilder = _client.getElasticsearchClient().prepareBulk();
 
         for (int i=0; i < activities.size(); i++) {
             ActivityUnit activityUnit=activities.get(i);
@@ -142,15 +110,15 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
         BulkResponse bulkItemResponses = localBulkRequestBuilder.execute().actionGet();
 
         if (bulkItemResponses.hasFailures()) {
-            LOG.severe(" Bulk Documents{" + activities.size() + "} could not be created for index [" + getIndex() + "/" + getType() + "/");
+            LOG.severe(" Bulk Documents{" + activities.size() + "} could not be created for index [" + _client.getIndex() + "/" + _client.getType() + "/");
 
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("FAILED MESSAGES. " + bulkItemResponses.buildFailureMessage());
             }
-            throw new Exception(" Bulk Documents{" + activities.size() + "} could not be created for index [" + getIndex() + "/" + getType() + "/ \n  " + bulkItemResponses.buildFailureMessage());
+            throw new Exception(" Bulk Documents{" + activities.size() + "} could not be created for index [" + _client.getIndex() + "/" + _client.getType() + "/ \n  " + bulkItemResponses.buildFailureMessage());
         } else {
             if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Success storing " + activities.size() + " items to  [" + getIndex() + "/" + getType() + "]");
+                LOG.finest("Success storing " + activities.size() + " items to  [" + _client.getIndex() + "/" + _client.getType() + "]");
             }
         }
     }
@@ -161,19 +129,50 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
      * @throws Exception when activity unit cannot be got from elastic search.
      */
     public ActivityUnit getActivityUnit(String id) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Get activity unit for id["+id+"]");
+        }
+       
         if (id == null) {
             return null;
 
         } else {
-            String jsonDoc = get(id);
+            String jsonDoc = _client.get(id);
             if (jsonDoc != null) {
-                return MAPPER.readValue(jsonDoc, ActivityUnit.class);
+                ActivityUnit ret=ElasticsearchClient.<ActivityUnit>convertJsonToType(jsonDoc, ActivityUnit.class);
+                
+                // Retrieve the activity types associated with the activity unit
+                SearchResponse response=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
+                        .setTypes(_client.getType()+"type")
+                        .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                        .setQuery(QueryBuilders.matchQuery("unitId", id))
+                        .execute().actionGet();
+        
+                // Using iterator instead of using index, as caused out of range exception,
+                // so not sure if results are unstable
+                for (SearchHit hit : response.getHits()) {
+                    ret.getActivityTypes().add(ElasticsearchClient.convertJsonToType(hit.getSourceAsString(),
+                                            ActivityType.class));
+                }
+                
+                if (ret.getActivityTypes().size() > 0) {
+                    // Sort the entries
+                    Collections.<ActivityType>sort(ret.getActivityTypes(), new Comparator<ActivityType>() {
+                        public int compare(ActivityType at1, ActivityType at2) {
+                            return at1.getUnitIndex()-at2.getUnitIndex();
+                        }                        
+                    });
+                }
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Return reconstructed activity unit for id["+id+"]="+ActivityUtil.objectToJSONString(ret));
+                }
+               
+                return ret;
             } else {
                 return null;
             }
         }
-
-
     }
 
     /**
@@ -182,30 +181,43 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
      * @throws Exception in the event of timeout
      */
     public List<ActivityType> getActivityTypes(Context context) throws Exception {
-        RefreshRequestBuilder refreshRequestBuilder = getClient().admin().indices().prepareRefresh(getIndex());
-        getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+        
+        RefreshRequestBuilder refreshRequestBuilder = _client.getElasticsearchClient().admin().indices().prepareRefresh(_client.getIndex());
+        _client.getElasticsearchClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("getActivityTypes=" + context);
         }
 
-        QueryBuilder b2 = QueryBuilders.nestedQuery("context",               // Path
+        QueryBuilder b2 = QueryBuilders.nestedQuery("context",
                 QueryBuilders.boolQuery()
-                        .must(QueryBuilders.matchQuery("context.value", context.getValue())).must(QueryBuilders.matchQuery("context.type", context.getType()))
+                        .must(QueryBuilders.matchQuery("context.value",
+                                context.getValue())).must(QueryBuilders.matchQuery("context.type", context.getType()))
         );
 
-        SearchResponse response = getClient().prepareSearch(getIndex()).setTypes(getType() + "type").setQuery(b2).execute().actionGet();
+        SearchResponse response = _client.getElasticsearchClient().prepareSearch(
+                _client.getIndex()).setTypes(_client.getType() + "type")
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setQuery(b2).execute().actionGet();
+        
         if (response.isTimedOut()) {
             throw new Exception(MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
                             "activity-store-elasticsearch.Messages").getString("ACTIVITY-STORE-ELASTICSEARCH-3"),
-                    getIndex(), getType(), b2.toString()
+                    _client.getIndex(), _client.getType(), b2.toString()
             ));
         }
         List<ActivityType> list = new ArrayList<ActivityType>();
         for (SearchHit searchHitFields : response.getHits()) {
-            list.add(MAPPER.readValue(searchHitFields.getSourceAsString(), ActivityType.class));
+            list.add(ElasticsearchClient.<ActivityType>convertJsonToType(searchHitFields.getSourceAsString(),
+                                            ActivityType.class));
         }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Returning activity list for context '"+context+"': "
+                        +new String(ActivityUtil.serializeActivityTypeList(list)));
+        }
+        
         return list;
     }
 
@@ -217,8 +229,14 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
      * @throws Exception in the event of timeout.
      */
     public List<ActivityType> getActivityTypes(Context context, long from, long to) throws Exception {
-        RefreshRequestBuilder refreshRequestBuilder = getClient().admin().indices().prepareRefresh(getIndex());
-        getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+        
+        // If default time range, then use the alternate method based on querying just the context
+        if (from == 0 && to == 0) {
+            return getActivityTypes(context);
+        }
+        
+        RefreshRequestBuilder refreshRequestBuilder = _client.getElasticsearchClient().admin().indices().prepareRefresh(_client.getIndex());
+        _client.getElasticsearchClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
         
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("getActivityTypes=" + context);
@@ -235,17 +253,21 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
                         )
                 );
 
-        SearchResponse response = getClient().prepareSearch(getIndex()).setTypes(getType() + "type").setQuery(b2).execute().actionGet();
+        SearchResponse response = _client.getElasticsearchClient().prepareSearch(
+                _client.getIndex()).setTypes(_client.getType() + "type")
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setQuery(b2).execute().actionGet();
         if (response.isTimedOut()) {
             throw new Exception(MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
                             "activity-store-elasticsearch.Messages").getString("ACTIVITY-STORE-ELASTICSEARCH-3"),
-                    getIndex(), getType(), b2.toString()
+                    _client.getIndex(), _client.getType(), b2.toString()
             ));
         }
         List<ActivityType> list = new ArrayList<ActivityType>();
         for (SearchHit searchHitFields : response.getHits()) {
-            list.add(MAPPER.readValue(searchHitFields.getSourceAsString(), ActivityType.class));
+            list.add(ElasticsearchClient.<ActivityType>convertJsonToType(searchHitFields.getSourceAsString(),
+                                ActivityType.class));
         }
         return list;
     }
@@ -262,5 +284,14 @@ public class ElasticsearchActivityStore extends ElasticSearchKeyValueStore imple
     @Deprecated
     public List<ActivityType> query(QuerySpec query) throws Exception {
         throw new UnsupportedOperationException("Query method not support by Elasticsearch Actvitystore");
+    }
+    
+    /**
+     * This method returns the client.
+     * 
+     * @return The client
+     */
+    protected ElasticsearchClient getClient() {
+        return (_client);
     }
 }

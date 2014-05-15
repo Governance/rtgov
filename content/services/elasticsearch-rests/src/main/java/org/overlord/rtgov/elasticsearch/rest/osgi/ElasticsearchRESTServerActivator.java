@@ -20,15 +20,15 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.http.HttpService;
 
-import org.overlord.rtgov.elasticsearch.rest.ElasticSearchRESTServer;
+import org.overlord.rtgov.elasticsearch.rest.ElasticsearchRESTServer;
 
 /**
  * This class represents the activator for the ElasticSearch REST server.
  *
  */
-public class ElasticSearchRESTServerActivator implements BundleActivator {
+public class ElasticsearchRESTServerActivator implements BundleActivator {
     
-    private ElasticSearchRESTServer _elasticSearchServer=null;
+    private ElasticsearchRESTServer _elasticSearchServer=null;
 
     /**
      * {@inheritDoc}
@@ -40,7 +40,7 @@ public class ElasticSearchRESTServerActivator implements BundleActivator {
         if (sRef != null) {
             HttpService service = (HttpService)context.getService(sRef);
             
-            _elasticSearchServer = new ElasticSearchRESTServer();
+            _elasticSearchServer = new ElasticsearchRESTServer();
             
             service.registerServlet("/overlord-rtgov-elasticsearch", _elasticSearchServer, null, null);
         } else {

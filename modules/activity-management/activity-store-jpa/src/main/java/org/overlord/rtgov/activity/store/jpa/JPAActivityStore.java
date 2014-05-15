@@ -123,13 +123,15 @@ public class JPAActivityStore implements ActivityStore {
             });
 
         } else {
+            final long actualTo = (to == 0 ? System.currentTimeMillis() : to);
+            
             ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
                 public List<ActivityType> perform(Session s) {
                     return (List<ActivityType>) s.createQuery(
                             "SELECT at from ActivityType at " + "JOIN at.context ctx "
                                     + "WHERE ctx.value = '" + context.getValue() + "' " + "AND ctx.type = '"
                                     + context.getType().name() + "' " + "AND at.timestamp >= " + from + " "
-                                    + "AND at.timestamp <= " + to).list();
+                                    + "AND at.timestamp <= " + actualTo).list();
                 }
             });
         }

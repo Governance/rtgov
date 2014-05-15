@@ -62,10 +62,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>situation-store-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>service-dependency</artifactId>
 		</dependency>
 		<dependency>
@@ -122,6 +118,19 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-store-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-store-elasticsearch</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store-elasticsearch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store-jpa</artifactId>
 		</dependency>
 
 		<!-- Event Processor Network modules -->

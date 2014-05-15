@@ -59,7 +59,7 @@ public interface ActivityServer {
      * 
      * @param context The context value
      * @param from The 'from' timestamp
-     * @param to The 'to' timestamp
+     * @param to The 'to' timestamp, where 0 represents current time
      * @return The list of activities
      * @throws Exception Failed to retrieve the activities
      */

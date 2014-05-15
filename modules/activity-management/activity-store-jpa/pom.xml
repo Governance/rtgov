@@ -91,6 +91,7 @@
 							org.overlord.rtgov.activity.store.jpa.*;version=${project.version}
 						</Export-Package>
 						<Import-Package>
+							!javax.inject.*,
 							org.overlord.rtgov.activity.model.app,
 							org.overlord.rtgov.activity.model.bpm,
 							org.overlord.rtgov.activity.model.common,

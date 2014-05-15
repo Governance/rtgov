@@ -34,13 +34,11 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.node.NodeBuilder;
-import org.overlord.rtgov.common.service.KeyValueStore;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
@@ -50,27 +48,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * ElasticSearch implementation of the KeyValueStore.
+ * ElasticSearch client.
  */
-public class ElasticSearchKeyValueStore extends KeyValueStore {
+public class ElasticsearchClient {
 
     protected static final ObjectMapper MAPPER = new ObjectMapper();
-
-    private Client _client;
-
-    private String _index = null;
-    private String _type = null;
-    private String _hosts = null;
-    /**
-     * bulkRequest. determines how many request should be sent to elastic search in bulk instead of singular requests
-     */
-    private int _bulkSize = 0;
-
-    private BulkRequestBuilder _bulkRequestBuilder;
-
-    private ScheduledFuture<BulkResponse> _scheduledFuture;
-
-    private ScheduledExecutorService _scheduler;
 
     static {
         SerializationConfig config = MAPPER.getSerializationConfig()
@@ -83,12 +65,12 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     /**
      * Default Elasticsearch hosts configuration.
      */
-    public static final String ELASTICSEARCH_STORE_HOSTS = "Elasticsearch.hosts";
+    public static final String ELASTICSEARCH_HOSTS = "Elasticsearch.hosts";
 
     /**
      * Default Elasticsearch schedule configuration.
      */
-    public static final String ELASTICSEARCH_STORE_SCHEDULE = "Elasticsearch.schedule";
+    public static final String ELASTICSEARCH_SCHEDULE = "Elasticsearch.schedule";
 
     /**
      * Settings for the index this store is related to.
@@ -105,22 +87,37 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
      */
     public static final String DEFAULT_SETTING = "_default_";
 
-    private static final Logger LOG = Logger.getLogger(ElasticSearchKeyValueStore.class.getName());
+    private static final Logger LOG = Logger.getLogger(ElasticsearchClient.class.getName());
+    
+    private Client _client;
+
+    private String _index = null;
+    private String _type = null;
+    
+    private String _hosts = RTGovProperties.getProperty(ELASTICSEARCH_HOSTS);
+    
     /**
-     * convience flag to show bulk builder should be used.
+     * bulkRequest. determines how many request should be sent to elastic search in bulk instead of singular requests
      */
-    private boolean _bulkRequestsEnable;
+    private int _bulkSize = 0;
+
+    private BulkRequestBuilder _bulkRequestBuilder;
+
+    private ScheduledFuture<BulkResponse> _scheduledFuture;
+
+    private ScheduledExecutorService _scheduler;
+
     /**
      * schedule to persist the items  to elasticsearch.
      * A new schedule is created after a item is added.
      */
-    private long _schedule = RTGovProperties.getPropertyAsLong(ELASTICSEARCH_STORE_SCHEDULE);
+    private long _schedule = RTGovProperties.getPropertyAsLong(ELASTICSEARCH_SCHEDULE);
 
 
     /**
      * Default constructor.
      */
-    public ElasticSearchKeyValueStore() {
+    public ElasticsearchClient() {
 
     }
 
@@ -175,7 +172,6 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
      * @param type The type
      */
     public void setType(String type) {
-        //
         this._type = type.toLowerCase();
     }
 
@@ -216,7 +212,9 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     }
 
     /**
-     * {@inheritDoc}
+     * Initialize the client.
+     * 
+     * @throws Exception Failed to initialize the client
      */
     @SuppressWarnings("unchecked")
     public void init() throws Exception {
@@ -233,34 +231,48 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
             throw new IllegalArgumentException("Type property not set ");
         }
         if (_bulkSize > 0) {
-            _bulkRequestsEnable = true;
             _scheduler = Executors.newScheduledThreadPool(1);
         }
 
         determineHostsAsProperty();
+        
         /**
          * quick fix for integration tests. if hosts property set to "embedded" then a local node is start.
          * maven dependencies need to be defined correctly for this to work
          */
-        if (_hosts.equals("embedded")) {
-            _client = NodeBuilder.nodeBuilder().local(true).node().client();
-        } else {
-            String[] hostsArray = _hosts.split(",");
-            TransportClient c = new TransportClient();
-            for (String aHostsArray : hostsArray) {
-                String s = aHostsArray.trim();
-                String[] host = s.split(":");
-                LOG.info(" Connecting to elasticsearch host. [" + host[0] + ":" + host[1] + "]");
-                c = c.addTransportAddress(new InetSocketTransportAddress(host[0], new Integer(host[1])));
+        ClassLoader cl=Thread.currentThread().getContextClassLoader();
+        
+        try {
+            // Need to use the classloader for Elasticsearch to pick up the property files when
+            // running in an OSGi environment
+            Thread.currentThread().setContextClassLoader(TransportClient.class.getClassLoader());
+            
+            if (_hosts.equals("embedded")) {
+                _client = NodeBuilder.nodeBuilder().local(true).node().client();
+            } else {
+                String[] hostsArray = _hosts.split(",");
+                TransportClient c = new TransportClient();
+                for (String aHostsArray : hostsArray) {
+                    String s = aHostsArray.trim();
+                    String[] host = s.split(":");
+                    LOG.info(" Connecting to elasticsearch host. [" + host[0] + ":" + host[1] + "]");
+                    c = c.addTransportAddress(new InetSocketTransportAddress(host[0], new Integer(host[1])));
+                }
+                _client = c;
             }
-            _client = c;
+        } finally {
+            Thread.currentThread().setContextClassLoader(cl);
         }
+        
         InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream(_index + "-mapping.json");
-        if (s != null) {
+        if (s == null) {
+            s = ElasticsearchClient.class.getResourceAsStream("/"+_index + "-mapping.json");
+        }
 
+        if (s != null) {
             String jsonDefaultUserIndex = IOUtils.toString(s);
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("index Mapping settings " + _index + ".json  [" + jsonDefaultUserIndex + "]");
+                LOG.fine("Index mapping settings " + _index + ".json  [" + jsonDefaultUserIndex + "]");
             }
 
             Map<String, Object> dataMap = XContentFactory.xContent(jsonDefaultUserIndex).createParser(jsonDefaultUserIndex).mapAndClose();
@@ -268,15 +280,15 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
             if (prepareIndex((Map<String, Object>) dataMap.get(SETTINGS))) {
                 LOG.info("Index initialized");
                 // refresh index
-                RefreshRequestBuilder refreshRequestBuilder = getClient().admin().indices().prepareRefresh(getIndex());
-                getClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+                RefreshRequestBuilder refreshRequestBuilder = getElasticsearchClient().admin().indices().prepareRefresh(getIndex());
+                getElasticsearchClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
             } else {
                 LOG.info("Index already initialized. Doing nothing.");
             }
 
             prepareMapping((Map<String, Object>) dataMap.get(MAPPINGS));
         } else {
-            LOG.warning("Could not locate " + _index + "-mapping.json  index mapping file. Mapping file require to start elasticsearch store service");
+            LOG.warning("Could not locate " + _index + "-mapping.json index mapping file. Mapping file require to start elasticsearch store service");
         }
     }
 
@@ -284,6 +296,7 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
      * @param defaultMappings
      * @return true if the mapping was successful
      */
+    @SuppressWarnings("unchecked")
     private boolean prepareMapping(Map<String, Object> defaultMappings) {
 
         //
@@ -293,7 +306,6 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         Set<String> keys = defaultMappings.keySet();
         boolean success = true;
         
-        @SuppressWarnings("unchecked")
         Map<String, Object> mapping = (Map<String, Object>) defaultMappings.get(_type);
         if (mapping == null) {
             throw new RuntimeException("type mapping not defined");
@@ -312,13 +324,13 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
              * now determine if any child relationships exist in the mapping
              */
             for (String s : keys) {
-                Map childMap = (Map) ((Map) defaultMappings.get(s)).get("_parent");
+                Map<?,?> childMap = (Map<?,?>) ((Map<?,?>) defaultMappings.get(s)).get("_parent");
                 if (childMap != null && childMap.get("type") != null && childMap.get("type").equals(_type)) {
 
                     PutMappingRequestBuilder putChildMappingRequestBuilder = _client.admin().indices().preparePutMapping().setIndices(_index);
                     putChildMappingRequestBuilder.setType(s);
                     LOG.info("******* Creating elasticsearch mapping for [parent=" + _type + ", child=" + s + "] *********");
-                    putChildMappingRequestBuilder.setSource((Map<String, Map>) defaultMappings.get(s));
+                    putChildMappingRequestBuilder.setSource((Map<String, Map<?,?>>) defaultMappings.get(s));
                     PutMappingResponse respChild = putChildMappingRequestBuilder.execute().actionGet();
                     if (respChild.isAcknowledged()) {
                         LOG.info("******* Successful ACK on elasticsearch mapping for [parent=" + _type + ", child" + s + "] *********");
@@ -363,12 +375,12 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
      * @param document
      * @param <V>
      */
-    private synchronized <V> void addBulk(String id, V document) {
+    protected synchronized <V> void addBulk(String id, String document) {
 
         if (_bulkRequestBuilder == null) {
             _bulkRequestBuilder = _client.prepareBulk();
         }
-        _bulkRequestBuilder.add(_client.prepareIndex(_index, _type, id).setSource(convertTypeToJson(document)));
+        _bulkRequestBuilder.add(_client.prepareIndex(_index, _type, id).setSource(document));
 
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(" Document successfully added bulk item to index [" + _index + "/" + _type + "/" + id + "]");
@@ -432,19 +444,25 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         return (bulkItemResponses);
     }
 
-    @Override
-    public <V> void add(String id, V document) throws Exception {
+    /**
+     * This method adds a new document to ElasticSearch.
+     * 
+     * @param id The id
+     * @param document The document
+     * @throws Exception Failed to add
+     */
+    public void add(String id, String document) throws Exception {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest(" Adding to elastich search id=" + id + ", doc=" + document);
         }
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Adding " + document.getClass().toString() + ". for id " + id);
         }
-        if (_bulkRequestsEnable) {
-            addBulk(id, document);
+        if (getBulkSize() > 0) {
+           addBulk(id, document);
         } else {
             try {
-                IndexResponse indexResponse = _client.prepareIndex(_index, _type, id).setSource(convertTypeToJson(document)).execute().actionGet();
+                IndexResponse indexResponse = _client.prepareIndex(_index, _type, id).setSource(document).execute().actionGet();
                 if (!indexResponse.isCreated()) {
                     LOG.fine(" Document could not be created for index [" + _index + "/" + _type + "/" + id + "]");
                     throw new Exception("Document could not be created for index [" + _index + "/" + _type + "/" + id + "]");
@@ -452,28 +470,43 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
                 LOG.fine(" Document successfully created for index [" + _index + "/" + _type + "/" + id + "]");
 
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "[/" + _index + "/" + _type + "] Could not store  json document from Type [" + document.getClass().getName() + "] ");
-                throw new Exception("[/" + _index + "/" + _type + "] Could not store  json document from Type [" + document.getClass().getName() + "] ", e);
+                LOG.log(Level.SEVERE, "[/" + _index + "/" + _type + "] Could not store json document", e);
+                throw new Exception("[/" + _index + "/" + _type + "] Could not store json document", e);
             }
         }
     }
 
-    @Override
+    /**
+     * This method removes the document with the supplied id.
+     * 
+     * @param id The id
+     * @throws Exception Failed to remove document
+     */
     public void remove(String id) throws Exception {
         DeleteResponse response = _client.prepareDelete(_index, _type, id).setRouting(id)
                 .execute()
                 .actionGet();
 
         if (!response.isFound()) {
-            throw new Exception("Item not found in Elasticsearch. Could not remove");
+            LOG.warning("Unable to find document [" + _index + "/" + _type + "/" + id + "] for removal");
         }
-        //     throw new UnsupportedOperationException("KeyValueStore. Remove not implemented.");
     }
 
-    @Override
-    public <V> void update(String id, V document) {
-        throw new UnsupportedOperationException("KeyValueStore. Update not implemented.");
+    /**
+     * This method updates the supplied document.
+     * 
+     * @param id The id
+     * @param document The document
+     */
+    public void update(String id, String document) {
+        try {
+            _client.prepareIndex(_index, _type, id).setSource(document).execute().actionGet();
+            LOG.fine(" Document successfully updated for index [" + _index + "/" + _type + "/" + id + "]");
 
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "[/" + _index + "/" + _type + "] Could not update json document", e);
+            throw new RuntimeException("[/" + _index + "/" + _type + "] Could not update json document", e);
+        }
     }
 
     /**
@@ -482,9 +515,8 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
      * @param id The id.
      * @return Document as string.
      */
-    @Override
     public String get(String id) {
-        GetResponse response = getClient().prepareGet(getIndex(), getType(), id).setRouting(id)
+        GetResponse response = _client.prepareGet(getIndex(), getType(), id).setRouting(id)
                 .execute()
                 .actionGet();
         if (!response.isSourceEmpty()) {
@@ -500,16 +532,15 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
     }
 
     /**
-     * convert type to String
+     * convert type to String.
      *
-     * @param obj
-     * @param <V> type
-     * @return String
+     * @param obj The object to convert
+     * @return The json document
      */
-    protected <V> String convertTypeToJson(V obj) {
+    public static String convertTypeToJson(Object obj) {
         try {
             if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("[/" + _index.toLowerCase() + "/" + _type + "] Converting to json document from Type [" + obj.getClass().getName() + "] ");
+                LOG.fine("Converting to json document from Type [" + obj.getClass().getName() + "] ");
             }
             return MAPPER.writeValueAsString(obj);
 
@@ -518,9 +549,29 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
         }
     }
 
+    /**
+     * convert type to String.
+     *
+     * @param json The json document
+     * @param type The type of the object to return
+     * @param <V> type The object type
+     * @return The converted object
+     */
+    public static <V> V convertJsonToType(String json, Class<V> type) {
+        try {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Converting from json document to Type [" + type.getName() + "] ");
+            }
+            return MAPPER.readValue(json.getBytes(), type);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to convert to object from json String [class:" + type.getName() + "]", e);
+        }
+    }
+
     @Override
     public String toString() {
-        return "AbstractElasticRepo{"
+        return "ElasticsearchClient{"
                 + "index='" + _index + '\''
                 + ", type='" + _type + '\''
                 + ", hosts='" + _hosts + '\''
@@ -542,11 +593,12 @@ public class ElasticSearchKeyValueStore extends KeyValueStore {
 
     }
 
-    protected Client getClient() {
+    /**
+     * The Elasticsearch client.
+     * 
+     * @return The client
+     */
+    public Client getElasticsearchClient() {
         return _client;
-    }
-
-    protected String getRandom() {
-        return (UUID.randomUUID().toString());
     }
 }

@@ -89,12 +89,12 @@
   </servlet-mapping>
 
     <servlet>
-        <servlet-name>ElasticSearchRESTServer</servlet-name>
-        <servlet-class>org.overlord.rtgov.elasticsearch.rest.ElasticSearchRESTServer</servlet-class>
+        <servlet-name>ElasticsearchRESTServer</servlet-name>
+        <servlet-class>org.overlord.rtgov.elasticsearch.rest.ElasticsearchRESTServer</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ElasticSearchRESTServer</servlet-name>
+        <servlet-name>ElasticsearchRESTServer</servlet-name>
         <url-pattern>/elasticsearch/*</url-pattern>
     </servlet-mapping>
 

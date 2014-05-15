@@ -47,11 +47,11 @@ import org.overlord.rtgov.common.util.RTGovProperties;
  * https://github.com/dsmiley/HTTP-Proxy-Servlet
  *
  */
-public class ElasticSearchClient {
+public class ElasticsearchHttpClient {
 
     private static final String DEFAULT_ELASTIC_SEARCH_URL = "http://localhost:9200";
 
-    private static final Logger LOG=Logger.getLogger(ElasticSearchClient.class.getName());
+    private static final Logger LOG=Logger.getLogger(ElasticsearchHttpClient.class.getName());
 
     private HttpClient _proxyClient;
     private String _url;
@@ -59,12 +59,12 @@ public class ElasticSearchClient {
     /**
      * The default constructor.
      */
-    public ElasticSearchClient() {
+    public ElasticsearchHttpClient() {
         HttpParams hcParams = new BasicHttpParams();
         _proxyClient = new DefaultHttpClient(new PoolingClientConnectionManager(),hcParams);
         
         // Get URL
-        _url = RTGovProperties.getProperties().getProperty("ElasticSearch.server", DEFAULT_ELASTIC_SEARCH_URL);
+        _url = RTGovProperties.getProperties().getProperty("Elasticsearch.server", DEFAULT_ELASTIC_SEARCH_URL);
     }
 
     /**

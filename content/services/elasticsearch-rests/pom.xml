@@ -62,7 +62,7 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Version>${project.version}</Bundle-Version>
-						<Bundle-Activator>org.overlord.rtgov.elasticsearch.rest.osgi.ElasticSearchRESTServerActivator</Bundle-Activator>
+						<Bundle-Activator>org.overlord.rtgov.elasticsearch.rest.osgi.ElasticsearchRESTServerActivator</Bundle-Activator>
 						<Export-Package>
 							org.overlord.rtgov.elasticsearch.rest.*;version=${project.version}
 						</Export-Package>

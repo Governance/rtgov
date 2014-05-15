@@ -35,13 +35,13 @@ import java.util.logging.Logger;
  * Based on the http servlet proxy implemented by David Smiley:
  * https://github.com/dsmiley/HTTP-Proxy-Servlet
  */
-public class ElasticSearchRESTServer extends HttpServlet {
+public class ElasticsearchRESTServer extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     
-    private static final Logger LOG=Logger.getLogger(ElasticSearchRESTServer.class.getName());
+    private static final Logger LOG=Logger.getLogger(ElasticsearchRESTServer.class.getName());
 
-    private ElasticSearchClient _client=new ElasticSearchClient();
+    private ElasticsearchHttpClient _client=new ElasticsearchHttpClient();
 
     /**
      * {@inheritDoc}

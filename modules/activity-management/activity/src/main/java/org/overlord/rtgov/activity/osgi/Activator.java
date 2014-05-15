@@ -58,6 +58,14 @@ public class Activator implements BundleActivator {
         } catch (InvalidSyntaxException e) { 
             LOG.log(Level.SEVERE, "Failed to add service listener for activity store", e);
         }
+
+        ServiceReference[] srefs=context.getServiceReferences(ActivityStore.class.getName(), null);
+        
+        if (srefs != null) {
+            for (int i=0; i < srefs.length; i++) {
+                register(context, srefs[i]);
+            }
+        }        
     }
     
     /**

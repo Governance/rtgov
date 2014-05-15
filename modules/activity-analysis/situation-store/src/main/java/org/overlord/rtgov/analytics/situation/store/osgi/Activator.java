@@ -38,7 +38,7 @@ public class Activator implements BundleActivator {
     /**
      * {@inheritDoc}
      */
-    public void start(final BundleContext context) throws Exception {        
+    public void start(final BundleContext context) throws Exception { 
         ServiceListener sl = new ServiceListener() {
             public void serviceChanged(ServiceEvent ev) {
                 ServiceReference sr = ev.getServiceReference();
@@ -58,6 +58,14 @@ public class Activator implements BundleActivator {
         } catch (InvalidSyntaxException e) { 
             LOG.log(Level.SEVERE, "Failed to add service listener for situation store", e);
         }
+        
+        ServiceReference[] srefs=context.getServiceReferences(SituationStore.class.getName(), null);
+        
+        if (srefs != null) {
+            for (int i=0; i < srefs.length; i++) {
+                register(context, srefs[i]);
+            }
+        }        
     }
     
     /**
