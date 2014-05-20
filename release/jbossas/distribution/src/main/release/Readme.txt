@@ -7,10 +7,12 @@ Maven (http://maven.apache.org/download.html) version 3.0.4 or higher.
 
 JBoss EAP 6.1.0.GA or higher.
 
-SwitchYard 1.0.0.Final or higher. This will need to be installed into JBoss EAP.
+SwitchYard 2.0.0.Final or higher. This will need to be installed into JBoss EAP.
+
+Download Elasticsearch 1.1.1 or higher. Unzip the distribution and start the server from the bin folder using the 'elasticsearch' command. This will need to be running before starting EAP with RTGov server installed.
 
 
-To install the Overlord Runtime Governance system within a JBossEAP environment:
+To install the Overlord Runtime Governance system within a JBoss EAP environment:
 
 1) Set the JBOSS_HOME environment variable to the root folder of your JBossEAP environment
 

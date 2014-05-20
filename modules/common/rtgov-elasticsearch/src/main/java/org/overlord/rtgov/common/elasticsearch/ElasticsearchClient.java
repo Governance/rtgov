@@ -112,6 +112,8 @@ public class ElasticsearchClient {
      * A new schedule is created after a item is added.
      */
     private long _schedule = RTGovProperties.getPropertyAsLong(ELASTICSEARCH_SCHEDULE);
+    
+    private static final Object SYNC=new Object();
 
 
     /**
@@ -270,23 +272,25 @@ public class ElasticsearchClient {
         }
 
         if (s != null) {
-            String jsonDefaultUserIndex = IOUtils.toString(s);
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Index mapping settings " + _index + ".json  [" + jsonDefaultUserIndex + "]");
+            synchronized (SYNC) {
+                String jsonDefaultUserIndex = IOUtils.toString(s);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Index mapping settings " + _index + ".json  [" + jsonDefaultUserIndex + "]");
+                }
+    
+                Map<String, Object> dataMap = XContentFactory.xContent(jsonDefaultUserIndex).createParser(jsonDefaultUserIndex).mapAndClose();
+    
+                if (prepareIndex((Map<String, Object>) dataMap.get(SETTINGS))) {
+                    LOG.info("Index initialized");
+                    // refresh index
+                    RefreshRequestBuilder refreshRequestBuilder = getElasticsearchClient().admin().indices().prepareRefresh(getIndex());
+                    getElasticsearchClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
+                } else {
+                    LOG.info("Index already initialized. Doing nothing.");
+                }
+    
+                prepareMapping((Map<String, Object>) dataMap.get(MAPPINGS));
             }
-
-            Map<String, Object> dataMap = XContentFactory.xContent(jsonDefaultUserIndex).createParser(jsonDefaultUserIndex).mapAndClose();
-
-            if (prepareIndex((Map<String, Object>) dataMap.get(SETTINGS))) {
-                LOG.info("Index initialized");
-                // refresh index
-                RefreshRequestBuilder refreshRequestBuilder = getElasticsearchClient().admin().indices().prepareRefresh(getIndex());
-                getElasticsearchClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
-            } else {
-                LOG.info("Index already initialized. Doing nothing.");
-            }
-
-            prepareMapping((Map<String, Object>) dataMap.get(MAPPINGS));
         } else {
             LOG.warning("Could not locate " + _index + "-mapping.json index mapping file. Mapping file require to start elasticsearch store service");
         }
