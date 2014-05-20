@@ -30,11 +30,6 @@
 			<artifactId>overlord-rtgov-epn-jee</artifactId>
 			<type>war</type>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.content</groupId>
-			<artifactId>overlord-rtgov-epn-datastore</artifactId>
-			<type>war</type>
-		</dependency>
 
 		<dependency>
 			<groupId>org.overlord.rtgov.content</groupId>

@@ -621,12 +621,6 @@
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.content</groupId>
-			    <artifactId>overlord-rtgov-epn-datastore</artifactId>
-			    <type>war</type>
-			    <version>${project.version}</version>
-		    </dependency>
-		    <dependency>
-			    <groupId>org.overlord.rtgov.content</groupId>
 			    <artifactId>overlord-rtgov-epn-osgi</artifactId>
 			    <version>${project.version}</version>
 		    </dependency>
