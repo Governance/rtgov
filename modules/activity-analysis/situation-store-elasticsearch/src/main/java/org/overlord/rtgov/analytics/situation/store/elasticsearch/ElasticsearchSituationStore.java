@@ -55,7 +55,7 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
      */
     public ElasticsearchSituationStore() {
         _client.setIndex(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_INDEX, "rtgov"));
-        _client.setType(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_TYPE, "activity"));
+        _client.setType(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_TYPE, "situation"));
         
         try {
             _client.init();
