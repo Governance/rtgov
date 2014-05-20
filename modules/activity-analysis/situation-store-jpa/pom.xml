@@ -112,6 +112,7 @@
 							org.overlord.rtgov.analytics.situation.store.jpa.*;version=${project.version}
 						</Export-Package>
 						<Import-Package>
+							!javax.inject.*,
 							org.overlord.rtgov.analytics.situation,
 							*
 						</Import-Package>

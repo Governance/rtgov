@@ -53,8 +53,9 @@ public abstract class KeyValueStore extends Service {
      * id.
      *
      * @param id  The id
+     * @param type The type of the value
      * @param <V> The value type
      * @return The value, or null if not found
      */
-    public abstract <V> V get(String id);
+    public abstract <V> V get(String id, Class<V> type);
 }

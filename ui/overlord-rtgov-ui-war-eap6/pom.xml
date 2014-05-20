@@ -43,6 +43,10 @@
     
     	<dependency>
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
+	        <artifactId>analytics</artifactId>
+	    </dependency>
+    	<dependency>
+	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
 	        <artifactId>call-trace</artifactId>
 	    </dependency>
 	    <dependency>

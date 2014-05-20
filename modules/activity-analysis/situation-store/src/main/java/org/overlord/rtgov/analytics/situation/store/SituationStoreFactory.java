@@ -47,6 +47,7 @@ public final class SituationStoreFactory {
      * @param store The store
      */
     public static synchronized void initialize(SituationStore store) {
+        
         // Only initialize if no instance available
         if (_instance != null) {
             return;
@@ -57,11 +58,11 @@ public final class SituationStoreFactory {
         // Verify the instance is of the correct class
         if (clsName == null || store.getClass().getName().equals(clsName)) {
             
+            _instance = store;
+            
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.finer("Initialize situation store instance="+_instance);
             }
-            
-            _instance = store;
             
         } else if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Ignoring situation store initialization due to incorrect type ["

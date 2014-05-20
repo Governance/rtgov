@@ -34,13 +34,11 @@ import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
-import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
-import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 import static org.junit.Assert.fail;
 
@@ -105,61 +103,44 @@ public class ElasticsearchActivityStoreTest {
         if(host.equals("embedded"))
            c= NodeBuilder.nodeBuilder().local(true).node().client();
         else{
-
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
-
         }
         c.admin().indices().prepareDelete(index).execute().actionGet();
-
-
     }
 
     /**
-     * tear down after test.^
+     * Initialize the store before each test.
+     * 
      * @throws Exception
      */
     @BeforeClass
-    public static void initialiseEntityManager() throws Exception {
+    public static void initialiseStore() throws Exception {
         TestPropertiesProvider provider = new TestPropertiesProvider();
         Client c = new TransportClient();
         if(host.equals("embedded"))
             c= NodeBuilder.nodeBuilder().local(true).node().client();
         else{
-
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
-
         }
+        
         // remove index.
         if (c.admin().indices().prepareExists(index).execute().actionGet().isExists()) {
-
             c.admin().indices().prepareDelete(index).execute().actionGet();
         }
+        
         RTGovProperties.setPropertiesProvider(provider);
 
         elasticsearchActivityStore = new ElasticsearchActivityStore();
-        elasticsearchActivityStore.setIndex("rtgovtest");
-        elasticsearchActivityStore.setType("activity");
-        elasticsearchActivityStore.init();
-
-
     }
 
 
     @Test
-    public void testAdd() {
-
-        try {
-            //elasticsearchActivityStore.add(_id, createTestActivityUnit(_id, _conversation, ENDPOINT_ID_1, 0));
-        } catch (Exception e) {
-            fail("Could not store Add activity unit " + e);
-            e.printStackTrace();
-        }
-    }
-
     public void testStoreAndGetActivityUnit() {
 
         try {
-            elasticsearchActivityStore.add(AU_ID_1, createTestActivityUnit(AU_ID_1, CONV_ID_1, ENDPOINT_ID_1, 0));
+            java.util.List<ActivityUnit> list=new java.util.ArrayList<ActivityUnit>();
+            list.add(createTestActivityUnit(AU_ID_1, CONV_ID_1, ENDPOINT_ID_1, 0));
+            elasticsearchActivityStore.store(list);
         } catch (Exception e) {
 
             fail("Could not store Add activity unit " + e);
@@ -177,8 +158,9 @@ public class ElasticsearchActivityStoreTest {
             fail("Could not  get activity unit " + e);
 
         }
+        
         try {
-            elasticsearchActivityStore.remove(AU_ID_1);
+            elasticsearchActivityStore.getClient().remove(AU_ID_1);
         } catch (Exception e) {
             fail("Could not remove activity unit " + e);
         }
@@ -221,8 +203,6 @@ public class ElasticsearchActivityStoreTest {
      */
     @Test
     public void testStoreAndQuery() {
-        java.util.List<ActivityType> results = null;
-
         java.util.List<ActivityUnit> activities = new java.util.ArrayList<ActivityUnit>();
 
         ActivityUnit au1 = createTestActivityUnit(AU_ID_1, CONV_ID_1, ENDPOINT_ID_1, 0);
@@ -233,31 +213,50 @@ public class ElasticsearchActivityStoreTest {
 
         try {
             elasticsearchActivityStore.store(activities);
+            
+            // Delay to enable search index
+            synchronized (this) {
+                wait(2000);
+            }
+            
         } catch (Exception e) {
              fail("Failed to store activities: " + e.getMessage() + ", ");
         }
+
         try {
             ActivityUnit au1r = elasticsearchActivityStore.getActivityUnit(AU_ID_1);
             ActivityUnit au2r = elasticsearchActivityStore.getActivityUnit(AU_ID_2);
             if (au1r != null) {
-                if (!au1r.getId().equals(AU_ID_1))
+                if (!au1r.getId().equals(AU_ID_1)) {
                     fail("Activity unit reterive does not match activity unit stored. Could not get AU");
+                }
 
-            } else
+            } else {
                 fail("Activity unit is null. Could not get AU");
+            }
             if (au2r != null) {
-                if (!au2r.getId().equals(AU_ID_2))
+                if (!au2r.getId().equals(AU_ID_2)) {
                     fail("Activity unit reterive does not match activity unit stored. Could not get AU");
-
-            } else
+                }
+            } else {
                 fail("Activity unit is null. Could not get AU");
+            }
+            
+            // Check activity unit is the same
+            String au1ser=new String(ActivityUtil.serializeActivityUnit(au1));
+            String au1rser=new String(ActivityUtil.serializeActivityUnit(au1r));
+            
+            if (!au1ser.equals(au1rser)) {
+                fail("Serialized versions do not match:\r\n\tWAS: "+au1ser+"\r\n\tIS: "+au1rser);
+            }
+            
         } catch (Exception e) {
             fail("Could not  get activity unit " + e);
 
         }
         try {
-            elasticsearchActivityStore.remove(AU_ID_1);
-            elasticsearchActivityStore.remove(AU_ID_2);
+            elasticsearchActivityStore.getClient().remove(AU_ID_1);
+            elasticsearchActivityStore.getClient().remove(AU_ID_2);
         } catch (Exception e) {
             fail("Could not remove activity unit " + e);
         }
@@ -272,10 +271,15 @@ public class ElasticsearchActivityStoreTest {
 
 
         ActivityUnit au1 = createTestActivityUnit("7", "C1", "E1", 0);
-        ActivityUnit au2 = createTestActivityUnit("8", "C1", "E1", 5000);
+        ActivityUnit au2 = createTestActivityUnit("8", "C1", "E2", 5000);
+
+        // Setting endpoint value to C1 to make sure does not get value and type picked up
+        // from different context objects
+        ActivityUnit au3 = createTestActivityUnit("9", "C2", "C1", 10000);
 
         activities.add(au1);
         activities.add(au2);
+        activities.add(au3);
         try {
             //store both ATs
             elasticsearchActivityStore.store(activities);
@@ -288,7 +292,7 @@ public class ElasticsearchActivityStoreTest {
         Context context1 = new Context();
         context1.setType(Context.Type.Conversation);
         context1.setValue("C1");
-        List<ActivityType> listAT = null;
+
         try {
             results1 = elasticsearchActivityStore.getActivityTypes(context1);
         } catch (Exception e) {
@@ -326,8 +330,8 @@ public class ElasticsearchActivityStoreTest {
             fail("Expecting au 8: " + results2.get(0).getUnitId());
         }
         try {
-            elasticsearchActivityStore.remove("7");
-            elasticsearchActivityStore.remove("8");
+            elasticsearchActivityStore.getClient().remove("7");
+            elasticsearchActivityStore.getClient().remove("8");
         } catch (Exception e) {
             fail("Could not remove activity unit " + e);
         }
@@ -359,8 +363,10 @@ public class ElasticsearchActivityStoreTest {
         me1.getProperties().put("trader", "Joe");
         me1.getProperties().put("sss", "Joe");
         me1.getProperties().put("sss", "Joe");
-        if(baseTime==0)
+        if (baseTime==0) {
             me1.getProperties().put("cccc","ysdasdasdda");
+        }
+        
         Context c1 = new Context();
         c1.setType(Context.Type.Conversation);
         c1.setValue(convId);
@@ -391,15 +397,6 @@ public class ElasticsearchActivityStoreTest {
         act.getActivityTypes().add(me2);
 
         return (act);
-    }
-
-    /**
-     * This method generates a random string.
-     *
-     * @return The random string
-     */
-    protected String getRandom() {
-        return (UUID.randomUUID().toString());
     }
 
 }

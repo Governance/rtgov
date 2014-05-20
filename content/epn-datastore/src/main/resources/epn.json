@@ -4,63 +4,24 @@
 
     "subscriptions": [
         {
-            "nodeName": "ElasticSearchActivityUnitStore",
-            "subject": "ActivityUnits"
-        } ,
-        {
             "nodeName": "ElasticSearchResponseTimeStore",
             "subject": "ServiceResponseTimes"
 
-        }   ,
-        {
-            "nodeName": "ElasticSearchSituationStore",
-            "subject": "Situations"
         }
     ],
     "nodes": [
-        {
-            "name": "ElasticSearchActivityUnitStore",
-            "eventProcessor": {
-                "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
-                "services": {
-                    "KeyValueStore": {
-                        "@class": "org.overlord.rtgov.activity.store.elasticsearch.ElasticsearchActivityStore",
-                        "index": "rtgov",
-                        "type": "activity",
-                        "hosts": "${Elasticsearch.hosts}"
-
-                    }
-                }
-            }
-        },
         {
             "name": "ElasticSearchResponseTimeStore",
             "eventProcessor": {
                 "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
                 "services": {
                     "KeyValueStore": {
-                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
+                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticsearchKeyValueStore",
                         "index": "rtgov",
-                        "type": "responsetime",
-                        "hosts": "${Elasticsearch.hosts}"
-                    }
-                }
-            }
-        } ,
-        {
-            "name": "ElasticSearchSituationStore",
-            "eventProcessor": {
-                "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
-                "services": {
-                    "KeyValueStore": {
-                        "@class": "org.overlord.rtgov.common.elasticsearch.ElasticSearchKeyValueStore",
-                        "index": "rtgov",
-                        "type": "situation",
-                        "hosts": "${Elasticsearch.hosts}"
+                        "type": "responsetime"
                     }
                 }
             }
         }
-
-
-    ]}
+    ]
+}

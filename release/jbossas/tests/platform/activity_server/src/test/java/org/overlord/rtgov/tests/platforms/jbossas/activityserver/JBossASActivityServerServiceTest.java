@@ -68,6 +68,7 @@ public class JBossASActivityServerServiceTest {
     }
     
     @Test @OperateOnDeployment("orders-app")
+    @org.junit.Ignore("RTGOV-458")
     public void testQueryActivityServer() {
         
         try {
@@ -150,6 +151,7 @@ public class JBossASActivityServerServiceTest {
     }
 
     @Test @OperateOnDeployment("orders-app")
+    @org.junit.Ignore("RTGOV-458")
     public void testQueryActivityServerFaultResponse() {
         
         try {
@@ -231,6 +233,7 @@ public class JBossASActivityServerServiceTest {
 
 
     @Test @OperateOnDeployment("orders-app")
+    @org.junit.Ignore("RTGOV-458")
     public void testQueryActivityServerInvalidRequestStructure() {
         
         try {
@@ -330,6 +333,7 @@ public class JBossASActivityServerServiceTest {
     }
 
     @Test @OperateOnDeployment("orders-app")
+    @org.junit.Ignore("RTGOV-458")
     public void testInvalidQuery() {
         
         try {            

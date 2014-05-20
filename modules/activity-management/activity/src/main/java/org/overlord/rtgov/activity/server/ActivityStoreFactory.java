@@ -60,11 +60,11 @@ public final class ActivityStoreFactory {
         // Verify the instance is of the correct class
         if (clsName == null || store.getClass().getName().equals(clsName)) {
             
+            _instance = store;
+            
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.finer("Initialize activity store instance="+_instance);
             }
-            
-            _instance = store;
             
         } else if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Ignoring activity store initialization due to incorrect type ["
