@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>war-server</module>
+		<module>bundles</module>
 		<module>features</module>
 	</modules>
 
