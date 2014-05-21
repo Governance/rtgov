@@ -1,6 +1,6 @@
 {
   "name" : "Overlord-RTGov-EPN",
-  "version" : "1.0.0-SNAPSHOT",
+  "version" : "2",
   "subscriptions" : [ {
     "nodeName" : "SOAEvents",
     "subject" : "ActivityUnits"
@@ -53,6 +53,19 @@
       	"type" : "Results",
       	"subject" : "ServiceResponseTimes"
       } ]
+    },{
+	  "name": "ElasticSearchResponseTimeStore",
+      "sourceNodes" : [ "ServiceResponseTimes" ],
+      "eventProcessor": {
+        "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
+        "services": {
+          "KeyValueStore": {
+            "@class": "org.overlord.rtgov.common.elasticsearch.ElasticsearchKeyValueStore",
+            "index": "rtgov",
+            "type": "responsetime"
+          }
+        }
+      }
     },{
       "name" : "SituationsStore",
       "maxRetries" : 3,

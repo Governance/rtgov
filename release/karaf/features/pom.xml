@@ -32,6 +32,10 @@
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-infinispan</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-elasticsearch</artifactId>
+		</dependency>
 
 		<!-- RTGov Activity -->
 		<dependency>
@@ -78,6 +82,10 @@
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-mvel</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-keyvaluestore</artifactId>
+		</dependency>
 
 		<!-- RTGov Event Processor Network -->
 		<dependency>
@@ -121,14 +129,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>call-trace</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>reports</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>reports-rests</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
