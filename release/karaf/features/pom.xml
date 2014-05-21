@@ -434,10 +434,6 @@
 				</exclusion>
 			</exclusions>
         </dependency>
-      <dependency>
-		<groupId>org.eclipse.jetty.aggregate</groupId>
-		<artifactId>jetty-all</artifactId>
-	  </dependency>   
 	</dependencies>
 
 	<build>
@@ -457,6 +453,7 @@
 							<attach>true</attach>
 							<repositories>
 								<repository>mvn:org.drools/drools-karaf-features/${drools.version}/xml/features</repository>
+								<repository>mvn:org.overlord/overlord-commons-dist-fuse6/${overlord-commons.version}/xml/features</repository>
 							</repositories>
 							<features>
 								<feature>
@@ -488,6 +485,10 @@
 										<feature>
 											<name>rtgov-dependencies</name>
 											<version>${project.version}</version>
+										</feature>
+										<feature>
+											<name>overlord-commons-idp</name>
+ 											<version>${overlord-commons.version}</version>
 										</feature>
 									</dependsOnFeatures>
 									<includes>

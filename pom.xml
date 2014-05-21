@@ -82,6 +82,7 @@
         <org.apache.servicemix.bundles.lucene.version>4.7.0_1</org.apache.servicemix.bundles.lucene.version> <!-- Required for karaf -->
         <remoting-jmx>1.1.0.Final</remoting-jmx>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
+		<picketbox.version>4.0.19.SP4</picketbox.version>
 		<picketlink.version>2.5.3.SP1</picketlink.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
 		<switchyard.version>2.0.0.Alpha1</switchyard.version>
@@ -900,6 +901,12 @@
 				<groupId>org.jboss.naming</groupId>
 				<artifactId>jnp-client</artifactId>
 				<version>${jnp-client.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.picketbox</groupId>
+				<artifactId>picketbox</artifactId>
+				<version>${picketbox.version}</version>
 			</dependency>
 
 			<dependency>
