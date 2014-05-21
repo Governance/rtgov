@@ -48,6 +48,7 @@ import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationStoreFactory;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.call.trace.CallTraceService;
+import org.overlord.rtgov.call.trace.CallTraceServiceImpl;
 import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.Task;
@@ -85,8 +86,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 
 	private static volatile Messages i18n = new Messages();
 	
-    @Inject
-	private CallTraceService _callTraceService;
+	private CallTraceService _callTraceService=new CallTraceServiceImpl();
 
 	private ActivityStore _activityStore;
 
