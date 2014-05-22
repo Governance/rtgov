@@ -134,6 +134,15 @@
 
 	<dependencyManagement>
 		<dependencies>
+            <!-- NOTE: TEMPORARY DEPENDENCIES FOR 2.0.0.Alpha ONLY
+                This is because switchyard alpha will not include bpel component,
+                but the rtgov/switchyard integration refs these classes. -->
+            <dependency>
+                <groupId>org.jboss.soa.bpel</groupId>
+                <artifactId>riftsaw-bpel-api</artifactId>
+                <version>3.1.0.Final</version>
+            </dependency>
+
 			<!-- Imported dependencies -->
 			<dependency>
 				<groupId>org.jboss.integration-platform</groupId>

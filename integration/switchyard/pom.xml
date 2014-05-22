@@ -3,7 +3,7 @@
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.integration</groupId>
 	<artifactId>rtgov-switchyard</artifactId> 
-	<packaging>jar</packaging>
+	<packaging>bundle</packaging>
 	<name>Overlord RTGov::Integration::SwitchYard</name>
 
 	<parent>
@@ -119,6 +119,24 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<compilerArgument>-Djava.endorsed.dirs=${compiler.endorsed}</compilerArgument>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Export-Package>
+							org.overlord.rtgov.switchyard.*;version=${project.version}
+						</Export-Package>
+						<Import-Package>
+							!javax.inject.*,!javax.ejb.*,!javax.enterprise.*,!javax.persistence.*,*
+						</Import-Package>
+					</instructions>
 				</configuration>
 			</plugin>
 		</plugins>
