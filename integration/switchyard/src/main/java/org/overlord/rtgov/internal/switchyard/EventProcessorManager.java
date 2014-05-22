@@ -66,6 +66,24 @@ public class EventProcessorManager {
     };
     
     /**
+     * This method sets the activity collector.
+     * 
+     * @param ac The activity collector
+     */
+    public void setActivityCollector(ActivityCollector ac) {
+        _activityCollector = ac;
+    }
+    
+    /**
+     * This method returns the activity collector.
+     * 
+     * @return The activity collector
+     */
+    public ActivityCollector getActivityCollector() {
+        return (_activityCollector);
+    }
+    
+    /**
      * Initialize the event processors.
      */
     @PostConstruct

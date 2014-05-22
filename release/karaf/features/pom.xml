@@ -222,6 +222,12 @@
 			<artifactId>overlord-rtgov-acs-osgi</artifactId>
 		</dependency>
 
+		<!-- RTGov Switchyard -->
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-switchyard</artifactId>
+		</dependency>
+
 		<!-- RTGov Samples Policy Async -->
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
@@ -404,77 +410,11 @@
 			<artifactId>rtgov-karaf-bundles-elasticsearch</artifactId>
 		</dependency>
 
-<!--
         <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
--->
-<!--
-			<exclusions>
-				<exclusion>
-					<artifactId>lucene-core</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-analyzers-common</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-codecs</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-queries</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-memory</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-highlighter</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-queryparser</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-sandbox</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-suggest</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-misc</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-join</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-grouping</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>lucene-spatial</artifactId>
-					<groupId>org.apache.lucene</groupId>
-				</exclusion>
-			</exclusions>
--->
-<!--
+            <groupId>org.jboss.soa.bpel</groupId>
+            <artifactId>riftsaw-bpel-api</artifactId>
         </dependency>
--->
 
-<!--
-        <dependency>
-	        <groupId>org.apache.servicemix.bundles</groupId>
-	        <artifactId>org.apache.servicemix.bundles.lucene</artifactId>
-        </dependency>
--->
 	</dependencies>
 
 	<build>
@@ -762,6 +702,20 @@
 										<include>org.overlord.rtgov.activity-management:collector-activity-server:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-client:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>
+									</includes>
+								</feature>
+								<feature>
+									<name>rtgov-switchyard</name>
+									<version>${project.version}</version>
+									<comment>RTGov Switchyard</comment>
+									<dependsOnFeatures>
+										<feature>
+											<name>rtgov-activity</name>
+											<version>${project.version}</version>
+										</feature>
+									</dependsOnFeatures>
+									<includes>
+										<include>org.overlord.rtgov.integration:rtgov-switchyard:*</include>
 									</includes>
 								</feature>
 								<feature>

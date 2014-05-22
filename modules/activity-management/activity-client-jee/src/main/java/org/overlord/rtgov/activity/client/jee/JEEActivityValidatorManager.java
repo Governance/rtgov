@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.activity.client.jee;
+package org.overlord.rtgov.activity.client.jee;
 
 import javax.inject.Singleton;
 
-import org.overlord.rtgov.activity.processor.AbstractInformationProcessorManager;
-import org.overlord.rtgov.activity.processor.InformationProcessorManager;
+import org.overlord.rtgov.activity.validator.AbstractActivityValidatorManager;
+import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
 
 /**
- * This class provides a JEE implementation of the information
- * processor manager interface.
+ * This class provides a JEE implementation of the activity
+ * validator manager interface.
  *
  */
 @Singleton
-public class JEEInformationProcessorManager extends AbstractInformationProcessorManager
-                        implements InformationProcessorManager {
+public class JEEActivityValidatorManager extends AbstractActivityValidatorManager
+                        implements ActivityValidatorManager {
 
 }

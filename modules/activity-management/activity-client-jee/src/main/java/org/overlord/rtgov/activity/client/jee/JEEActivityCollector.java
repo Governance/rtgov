@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.activity.client.jee;
+package org.overlord.rtgov.activity.client.jee;
 
 import java.lang.management.ManagementFactory;
 import java.util.logging.Level;
