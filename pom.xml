@@ -88,14 +88,6 @@
 
 		<version.org.jboss.msc.jboss-msc>1.0.4.GA</version.org.jboss.msc.jboss-msc>
 
-		<!-- The following properties are required as they are passed to
-		junit tests. They need to be kept in step with the versions in
-		the imported integration-platform bom -->
-
-		<commons-configuration.version>1.6</commons-configuration.version>
-		<jackson.version>1.9.9</jackson.version>
-		<mvel.version>2.1.7.Final</mvel.version>
-
 	</properties>
 
 	<modules>
@@ -1007,7 +999,6 @@
 				<artifactId>cal10n-api</artifactId>
 				<version>${cal10n-api.version}</version>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 

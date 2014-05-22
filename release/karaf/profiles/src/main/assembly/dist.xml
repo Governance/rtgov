@@ -1,0 +1,51 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>dist</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+   <fileSet>
+      <directory>./src/main/resources/all</directory>
+      <includes>
+      	<include>*</include>
+      </includes>
+      <outputDirectory>overlord/rtgov/all.profile/</outputDirectory>
+      <filtered>true</filtered>
+      <directoryMode>0755</directoryMode>
+      <fileMode>0755</fileMode>
+    </fileSet>
+	<fileSet>
+      <directory>./src/main/resources/client</directory>
+      <includes>
+      	<include>*</include>
+      </includes>
+      <outputDirectory>overlord/rtgov/client.profile/</outputDirectory>
+      <filtered>true</filtered>
+      <directoryMode>0755</directoryMode>
+      <fileMode>0755</fileMode>
+    </fileSet>    
+	<fileSet>
+      <directory>./src/main/resources/base</directory>
+      <includes>
+      	<include>*</include>
+      </includes>
+      <outputDirectory>overlord/rtgov/base.profile/</outputDirectory>
+      <filtered>true</filtered>
+      <directoryMode>0755</directoryMode>
+      <fileMode>0755</fileMode>
+    </fileSet>  
+    <fileSet>
+      <directory>./src/main/resources/switchyard</directory>
+      <includes>
+      	<include>*</include>
+      </includes>
+      <outputDirectory>overlord/rtgov/switchyard.profile/</outputDirectory>
+      <filtered>true</filtered>
+      <directoryMode>0755</directoryMode>
+      <fileMode>0755</fileMode>
+    </fileSet>  
+  </fileSets>
+</assembly>
