@@ -222,6 +222,12 @@
 			<artifactId>overlord-rtgov-acs-osgi</artifactId>
 		</dependency>
 
+		<!-- RTGov Client -->
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-server-restc</artifactId>
+		</dependency>
+
 		<!-- RTGov Switchyard -->
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
@@ -702,6 +708,7 @@
 										<include>org.overlord.rtgov.activity-management:collector-activity-server:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-client:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>
+										<include>org.overlord.rtgov.activity-management:activity-server-restc:*</include>
 									</includes>
 								</feature>
 								<feature>
@@ -752,8 +759,21 @@
 										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-logisticsservice:*</include>
 										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-orderservice:*</include>
 										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-orderservice-rests:*</include>
-										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-epn:*</include>
 										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-ip:*</include>
+									</includes>
+								</feature>
+								<feature>
+									<name>rtgov-samples-ordermgmt-epn</name>
+									<version>${project.version}</version>
+									<comment>RTGov Samples Order Management with Event Processor Network</comment>
+									<dependsOnFeatures>
+										<feature>
+											<name>rtgov-samples-ordermgmt</name>
+											<version>${project.version}</version>
+										</feature>
+									</dependsOnFeatures>
+									<includes>
+										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-epn:*</include>
 									</includes>
 								</feature>
 							</features>
