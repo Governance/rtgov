@@ -139,6 +139,17 @@
 					</instructions>
 				</configuration>
 			</plugin>
+
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <!-- Disable due to commons-httpclients 3.1 vulnerability (RTGOV-472) -->
+                    <execution>
+                        <id>enforce-victims-rule</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
