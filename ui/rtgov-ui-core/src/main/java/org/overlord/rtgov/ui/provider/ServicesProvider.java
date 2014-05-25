@@ -56,8 +56,9 @@ public interface ServicesProvider {
      * @param operation The operation
      * @return Whether this provider support's a resubmit for the given service
      *         and operation
+     * @throws UiException Failed to test if service operation can be resubmitted
      */
-    public boolean isResubmitSupported(String service, String operation);
+    public boolean isResubmitSupported(String service, String operation) throws UiException;
 
 	/**
 	 * This method resubmits the supplied message to the target service

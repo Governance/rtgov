@@ -16,6 +16,7 @@
 package org.overlord.rtgov.ui.provider.switchyard;
 
 
+import static com.google.common.base.Objects.firstNonNull;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor.getActiveCollectionManager;
@@ -75,6 +76,8 @@ import com.google.common.collect.Sets;
  */
 public class SwitchYardServicesProvider implements ServicesProvider {
 	
+	private static final String BINDING_TYPE_SCA = "sca";
+
 	private static final Logger LOG=Logger.getLogger(SwitchYardServicesProvider.class.getName());
 	
     private static volatile Messages i18n = new Messages();
@@ -125,12 +128,28 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		// TODO:
 		return (true);
 	}
-    
+
 	@Override
-	public boolean isResubmitSupported(String service, String operation) {
-	    // TODO: proper determination of isResubmitSupported for service/operation
-	    boolean isResubmitSupported = true;
-	    return isServiceKnown(service) && isResubmitSupported;
+	public boolean isResubmitSupported(String service, String operation) throws UiException {
+		boolean isResubmitSupported = false;
+		try {
+			MBeanServerConnection mBeanServerConnection = getMBeanServerConnection();
+			AttributeList attributeList = mBeanServerConnection.getAttributes(new ObjectName(
+			        "org.switchyard.admin:type=Service,name=\"" + service + "\""), new String[] { "Bindings" });
+			@SuppressWarnings("unchecked")
+			List<ObjectName> bindings = (List<ObjectName>) getAttributeValue(attributeList.get(0));
+			for (ObjectName objectName : firstNonNull(bindings, Collections.<ObjectName> emptyList())) {
+				attributeList = mBeanServerConnection.getAttributes(objectName, new String[] { "Type" });
+				String type = (String) getAttributeValue(attributeList.get(0));
+				if (BINDING_TYPE_SCA.equalsIgnoreCase(type)) {
+					isResubmitSupported = true;
+					break;
+				}
+			}
+		} catch (Exception e) {
+			throw new UiException(i18n.format("SwitchYardServicesProvider.IsResubmitSupported"), e);
+		}
+		return isServiceKnown(service) && isResubmitSupported;
 	}
 
 	/**
