@@ -15,6 +15,10 @@
  */
 package org.overlord.rtgov.analytics.situation.store;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Properties;
+
 import org.overlord.rtgov.analytics.situation.Situation;
 
 /**
@@ -30,7 +34,7 @@ public class SituationsQuery {
     private long _fromTimestamp;
     private long _toTimestamp;
     private String _resolutionState;
-    private String _host;
+    private Properties _properties = new Properties();
     
     /**
      * The default constructor.
@@ -161,17 +165,26 @@ public class SituationsQuery {
     }
 
     /**
-     * @return the host
+     * @return the properties
      */
-    public String getHost() {
-        return _host;
+    public Properties getProperties() {
+        return _properties;
     }
 
     /**
-     * @param host the host to set
+     * @param properties the properties to set
+     * @throws IOException 
      */
-    public void setHost(String host) {
-        this._host = host;
+    public void setProperties(String propertiesString) throws IOException {
+        this._properties = new Properties();
+        this._properties.load(new StringReader(propertiesString.replaceAll(";|,", "\n")));
+    }
+
+    /**
+     * @param properties the properties to set
+     */
+    public void setProperties(Properties properties) {
+        this._properties = properties;
     }
     
     /**

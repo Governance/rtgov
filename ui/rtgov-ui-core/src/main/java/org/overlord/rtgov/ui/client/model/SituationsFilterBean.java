@@ -35,7 +35,7 @@ public class SituationsFilterBean {
     private Date timestampTo;
     private String description;
     private String subject;
-    private String host;
+    private String properties;
 
     /**
      * Constructor.
@@ -95,8 +95,8 @@ public class SituationsFilterBean {
     /**
      * @return the host
      */
-    public String getHost() {
-        return host;
+    public String getProperties() {
+        return properties;
     }
 
     /**
@@ -158,8 +158,8 @@ public class SituationsFilterBean {
     /**
      * @param host the description to set
      */
-    public SituationsFilterBean setHost(String host) {
-        this.host = host;
+    public SituationsFilterBean setProperties(String host) {
+        this.properties = host;
         return this;
     }
 
@@ -173,7 +173,7 @@ public class SituationsFilterBean {
         result = prime * result
                 + ((subject == null) ? 0 : subject.hashCode());
         result = prime * result
-                + ((host == null) ? 0 : host.hashCode());
+                + ((properties == null) ? 0 : properties.hashCode());
 		result = prime * result
                 + ((description == null) ? 0 : description.hashCode());
 		result = prime * result
@@ -210,10 +210,10 @@ public class SituationsFilterBean {
                 return false;
         } else if (!subject.equals(other.subject))
             return false;
-        if (host == null) {
-            if (other.host != null)
+        if (properties == null) {
+            if (other.properties != null)
                 return false;
-        } else if (!host.equals(other.host))
+        } else if (!properties.equals(other.properties))
             return false;
         if (resolutionState == null) {
 			if (other.resolutionState != null)
@@ -250,6 +250,6 @@ public class SituationsFilterBean {
     public String toString() {
         return "SituationsFilterBean [severity=" + severity + ", type=" + type + ", resolutionState="
                 + resolutionState + ", timestampFrom=" + timestampFrom + ", timestampTo=" + timestampTo
-                + ", description=" + description + ", subject=" + subject + ", host=" + host + "]";
+                + ", description=" + description + ", subject=" + subject + ", host=" + properties + "]";
     }
 }
