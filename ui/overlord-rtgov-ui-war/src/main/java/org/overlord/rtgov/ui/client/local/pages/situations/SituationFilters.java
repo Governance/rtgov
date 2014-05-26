@@ -62,8 +62,8 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
     protected TextBox description;
     @Inject @DataField
     protected TextBox subject;
-    @Inject @DataField
-    protected TextBox host;
+    @Inject @DataField("properties")
+    protected TextBox properties;
 
     /**
      * Constructor.
@@ -99,7 +99,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
         timestampTo.addValueChangeHandler(valueChangeHandler);
         description.addValueChangeHandler(valueChangeHandler);
         subject.addValueChangeHandler(valueChangeHandler);
-        host.addValueChangeHandler(valueChangeHandler);
+        properties.addValueChangeHandler(valueChangeHandler);
     }
 
     /**
@@ -112,7 +112,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
             .setResolutionState(resolutionState.getValue())
             .setDescription(description.getValue())
             .setSubject(subject.getValue())
-            .setHost(host.getValue())
+            .setProperties(properties.getValue())
             .setTimestampFrom(timestampFrom.getDateValue())
             .setTimestampTo(timestampTo.getDateValue());
 
@@ -140,7 +140,7 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
         timestampTo.setDateValue(value.getTimestampTo() == null ? null : value.getTimestampTo());
         description.setValue(Strings.nullToEmpty(value.getDescription()));
         subject.setValue(Strings.nullToEmpty(value.getSubject()));
-        host.setValue(Strings.nullToEmpty(value.getHost()));
+        properties.setValue(Strings.nullToEmpty(value.getProperties()));
         onFilterValueChange();
     }
 

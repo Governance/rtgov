@@ -17,6 +17,8 @@ package org.overlord.rtgov.analytics.situation.store.jpa;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -151,12 +153,17 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
             queryString.append("upper(sit.subject) like '%" + sitQuery.getSubject().toUpperCase() + "%' "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
-        if (!isNullOrEmpty(sitQuery.getHost())) {
-            if (queryString.length() > 0) {
-                queryString.append("AND "); //$NON-NLS-1$
+        if (sitQuery.getProperties() != null && !sitQuery.getProperties().isEmpty()) {
+            Set<Entry<Object,Object>> entrySet = sitQuery.getProperties().entrySet();
+            for (Entry<Object, Object> entry : entrySet) {
+                if (queryString.length() > 0) {
+                    queryString.append("AND "); //$NON-NLS-1$
+                }
+                Object key = entry.getKey();
+                Object value = entry.getValue();
+                queryString.append("upper(sit.situationProperties['" + key + "']) like '%"
+                        + value.toString().toUpperCase() + "%'");
             }
-            queryString.append("upper(sit.situationProperties['host']) like '%" + sitQuery.getHost().toUpperCase()
-                    + "%'");
         }
 
         if (!isNullOrEmpty(sitQuery.getDescription())) {

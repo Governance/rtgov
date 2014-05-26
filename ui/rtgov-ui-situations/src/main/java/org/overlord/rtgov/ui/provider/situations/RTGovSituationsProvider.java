@@ -18,6 +18,7 @@ package org.overlord.rtgov.ui.provider.situations;
 import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.tryFind;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -337,7 +338,11 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     	ret.setDescription(filters.getDescription());
         ret.setResolutionState(filters.getResolutionState());
         ret.setSubject(filters.getSubject());
-        ret.setHost(filters.getHost());
+        try {
+            ret.setProperties(filters.getProperties());
+        } catch (IOException ioException) {
+            Throwables.propagate(ioException);
+        }
 
     	return (ret);
     }
