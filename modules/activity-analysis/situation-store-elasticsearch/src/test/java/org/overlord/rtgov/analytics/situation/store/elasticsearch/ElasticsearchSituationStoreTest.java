@@ -305,7 +305,7 @@ public class ElasticsearchSituationStoreTest {
         
         try {
             SituationsQuery query=new SituationsQuery();
-            query.setHost(TEST_HOST);
+            query.setProperties("host="+TEST_HOST);
             
             java.util.List<Situation> sits = elasticsearchSituationStore.getSituations(query);
             if (sits != null) {
@@ -365,7 +365,7 @@ public class ElasticsearchSituationStoreTest {
         
         try {
             SituationsQuery query=new SituationsQuery();
-            query.setHost(TEST_HOST);
+            query.setProperties("host="+TEST_HOST);
             query.setResolutionState(ResolutionState.RESOLVED.name());
            
             java.util.List<Situation> sits = elasticsearchSituationStore.getSituations(query);

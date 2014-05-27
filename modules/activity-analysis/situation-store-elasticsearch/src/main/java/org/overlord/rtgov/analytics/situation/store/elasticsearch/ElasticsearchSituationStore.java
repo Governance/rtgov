@@ -16,6 +16,8 @@
 package org.overlord.rtgov.analytics.situation.store.elasticsearch;
 
 import java.util.List;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -145,8 +147,17 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
                 bool.must(QueryBuilders.matchQuery("situationProperties."+SituationStore.RESOLUTION_STATE_PROPERTY, sitQuery.getResolutionState()));
             }
             
-            if (!isNullOrEmpty(sitQuery.getHost())) {
-                bool.must(QueryBuilders.matchQuery("situationProperties."+SituationStore.HOST_PROPERTY, sitQuery.getHost()));
+            if (sitQuery.getProperties() != null && !sitQuery.getProperties().isEmpty()) {
+                Set<Entry<Object,Object>> entrySet = sitQuery.getProperties().entrySet();
+                for (Entry<Object, Object> entry : entrySet) {
+                    Object key = entry.getKey();
+                    Object value = entry.getValue();
+                    if (value instanceof String) {
+                        bool.must(QueryBuilders.fuzzyLikeThisFieldQuery("situationProperties."+key).likeText((String)value));
+                    } else {
+                        bool.must(QueryBuilders.matchQuery("situationProperties."+key, value));
+                    }
+                }
             }
             
             if (!isNullOrEmpty(sitQuery.getDescription())) {

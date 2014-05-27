@@ -23,13 +23,17 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.lang.System.currentTimeMillis;
 import static org.overlord.rtgov.ui.client.model.ResolutionState.RESOLVED;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
@@ -181,11 +185,23 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
                 }
             });
         }
-        if (!isNullOrEmpty(filter.getHost())) {
+        if (!isNullOrEmpty(filter.getProperties())) {
+            final Properties properties = new Properties();
+            try {
+                properties.load(new StringReader(filter.getProperties().replaceAll(";|,", "\n")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             predicate = and(predicate, new Predicate<SituationSummaryBean>() {
                 @Override
                 public boolean apply(SituationSummaryBean input) {
-                    return nullToEmpty(input.getProperties().get("host")).contains(filter.getHost());
+                    for (Entry<Object, Object> entry : properties.entrySet()) {
+                        if (!nullToEmpty(input.getProperties().get(entry.getKey())).contains(
+                                (String) entry.getValue())) {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
             });
         }

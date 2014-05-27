@@ -23,6 +23,7 @@ import static org.overlord.rtgov.analytics.situation.store.ResolutionState.IN_PR
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 
 import javax.naming.NamingException;
 
@@ -94,7 +95,9 @@ public class JPASituationStoreTest {
         situation.getSituationProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
         persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
-        sitQuery.setHost(name.getMethodName());
+        Properties properties = new Properties();
+        properties.setProperty("host", name.getMethodName());
+        sitQuery.setProperties(properties);
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
@@ -111,7 +114,9 @@ public class JPASituationStoreTest {
         situation.getSituationProperties().put(SituationStore.HOST_PROPERTY, name.getMethodName());
         persist(situation);
         SituationsQuery sitQuery = new SituationsQuery();
-        sitQuery.setHost(name.getMethodName().substring(3));
+        Properties properties = new Properties();
+        properties.setProperty("host", name.getMethodName().substring(3));
+        sitQuery.setProperties(properties);
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(1 == situations.size());
