@@ -92,7 +92,6 @@
 		junit tests. They need to be kept in step with the versions in
 		the imported integration-platform bom -->
 
-		<commons-configuration.version>1.6</commons-configuration.version>
 		<jackson.version>1.9.9</jackson.version>
 		<mvel.version>2.1.7.Final</mvel.version>
 
@@ -1007,7 +1006,6 @@
 				<artifactId>cal10n-api</artifactId>
 				<version>${cal10n-api.version}</version>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 

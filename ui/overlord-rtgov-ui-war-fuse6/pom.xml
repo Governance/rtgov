@@ -179,6 +179,8 @@ org.slf4j,
 org.slf4j.cal10n,
 org.slf4j.ext,
 ch.qos.cal10n,
+org.overlord.commons.config,
+org.overlord.commons.config.configurator,
 org.overlord.commons.osgi.vfs
               </Import-Package>
               <Bundle-ClassPath>

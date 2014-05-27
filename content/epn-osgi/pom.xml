@@ -91,7 +91,7 @@
 						<Bundle-Activator>org.overlord.rtgov.epn.loader.osgi.EPNActivator</Bundle-Activator>
 						<Import-Package>
 							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,
-							org.overlord.rtgov.epn,org.overlord.rtgov.ep.jpa,
+							org.overlord.rtgov.epn,
 							org.overlord.rtgov.common.elasticsearch,
 							org.overlord.rtgov.ep.keyvaluestore,
 							org.overlord.rtgov.activity.model.app,*
