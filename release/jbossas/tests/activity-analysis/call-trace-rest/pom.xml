@@ -147,11 +147,11 @@
 						</property>
 						<property>
 							<name>jackson.version</name>
-							<value>${jackson.version}</value>
+							<value>${version.org.codehaus.jackson}</value>
 						</property>
 						<property>
 							<name>commons-configuration.version</name>
-							<value>${commons-configuration.version}</value>
+							<value>${version.commons-configuration}</value>
 						</property>
 						<property>
 							<name>commons-lang.version</name>

@@ -17,6 +17,7 @@
 		<module>war-server</module>
 		<module>bundles</module>
 		<module>features</module>
+		<module>profiles</module>
 	</modules>
 
 </project>

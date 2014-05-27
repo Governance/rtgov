@@ -11,6 +11,8 @@
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
+
+
 	<dependencyManagement>
 		<dependencies>
 		    <dependency>
@@ -23,6 +25,7 @@
 	</dependencyManagement>
 
 	<dependencies>
+	
 		<!-- RTGov Common -->
 		<dependency>
 			<groupId>org.overlord.rtgov.common</groupId>
@@ -470,14 +473,9 @@
 									</dependsOnFeatures>
 									<excludes>
 										<exclude>org.overlord.rtgov.*:*:*</exclude>
-										<exclude>org.infinispan:infinispan-core:*</exclude>
 										<exclude>log4j:log4j:*</exclude>
+										<exclude>org.ops4j.pax.logging:pax-logging-api:*</exclude>
 									</excludes>
-									<bundles>
-										<!-- Add the infinispan dependency here in order to override its Import-Package spec (which 
-										includes the problematic sun.misc). -->
-										<bundle>wrap:mvn:org.infinispan/infinispan-core/${version.org.infinispan}$Import-Package=javax.management,javax.naming,javax.transaction,javax.transaction.xa,javax.xml.bind,javax.xml.bind.annotation,javax.xml.bind.annotation.adapters,javax.xml.namespace,javax.xml.parsers,javax.xml.stream,javax.xml.transform,javax.xml.transform.dom,javax.xml.transform.sax,javax.xml.transform.stream,javax.xml.validation,net.jcip.annotations;resolution:=optional,org.jboss.logging;version="[3.1,4)",org.jboss.marshalling,org.jboss.marshalling.reflect,org.jboss.marshalling.river,org.jboss.marshalling.util,org.jboss.staxmapper,org.jgroups;version="[3.2,4)",org.jgroups.blocks;version="[3.2,4)",org.jgroups.blocks.mux;version="[3.2,4)",org.jgroups.jmx;version="[3.2,4)",org.jgroups.logging;version="[3.2,4)",org.jgroups.protocols;version="[3.2,4)",org.jgroups.protocols.relay;version="[3.2,4)",org.jgroups.stack;version="[3.2,4)",org.jgroups.util;version="[3.2,4)",org.osgi.framework;version="[1.6,2)";resolution:=optional,org.w3c.dom,org.xml.sax,org.xml.sax.helpers&amp;overwrite=merge</bundle>
-									</bundles>
 								</feature>
 								<feature>
 									<name>rtgov-common</name>
@@ -791,7 +789,7 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin>     
 		</plugins>
 	</build>
 
