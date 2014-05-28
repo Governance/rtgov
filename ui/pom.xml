@@ -24,6 +24,15 @@
 		<module>overlord-rtgov-ui-war-fuse6</module>
 	</modules>
 
+    <profiles>
+        <profile>
+            <id>fsw</id>
+            <modules>
+		        <module>overlord-rtgov-ui-war-fsw60</module>
+            </modules>
+        </profile>
+    </profiles>
+
 	<build>
 		<pluginManagement>
 			<plugins>
