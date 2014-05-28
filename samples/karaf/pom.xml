@@ -37,7 +37,7 @@
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.2.0.Final</jbossas.version>
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
-		<switchyard.version>2.0.0-SNAPSHOT</switchyard.version>
+		<switchyard.version>2.0.0.Alpha1</switchyard.version>
 	</properties>
 
 	<modules>

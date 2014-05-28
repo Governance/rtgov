@@ -71,32 +71,32 @@ public class SwitchYardServicesProviderTest {
     		.addAsLibraries(Maven.resolver().resolve("org.overlord.rtgov.ui:rtgov-ui-core:"+rtgovuiversion).withTransitivity().asFile());
     }
     
-    @Deployment(name="switchyard-quickstart-demo-multi-artifacts", order=2, testable=false)
+    @Deployment(name="switchyard-demo-multiApp-artifacts", order=2, testable=false)
     public static JavaArchive createDeployment2() {
         String version=System.getProperty("switchyard.version");
 
-        java.io.File archiveFile=Maven.resolver().resolve("org.switchyard.quickstarts.demos:switchyard-quickstart-demo-multi-artifacts:"+version)
+        java.io.File archiveFile=Maven.resolver().resolve("org.switchyard.quickstarts.demos:switchyard-demo-multiApp-artifacts:"+version)
                 .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(JavaArchive.class,
         					copyToTmpFile(archiveFile, "OrderService.jar"));
     }
    
-    @Deployment(name="switchyard-quickstart-demo-multi-order-consumer", order=3, testable=false)
+    @Deployment(name="switchyard-demo-multiApp-order-consumer", order=3, testable=false)
     public static JavaArchive createDeployment3() {
         String version=System.getProperty("switchyard.version");
 
-        java.io.File archiveFile=Maven.resolver().resolve("org.switchyard.quickstarts.demos:switchyard-quickstart-demo-multi-order-consumer:"+version)
+        java.io.File archiveFile=Maven.resolver().resolve("org.switchyard.quickstarts.demos:switchyard-demo-multiApp-order-consumer:"+version)
                 .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(JavaArchive.class, archiveFile);
     }
    
-    @Deployment(name="switchyard-quickstart-demo-multi-order-service", order=4, testable=false)
+    @Deployment(name="switchyard-demo-multiApp-order-service", order=4, testable=false)
     public static JavaArchive createDeployment4() {
         String version=System.getProperty("switchyard.version");
 
-        java.io.File archiveFile=Maven.resolver().resolve("org.switchyard.quickstarts.demos:switchyard-quickstart-demo-multi-order-service:"+version)
+        java.io.File archiveFile=Maven.resolver().resolve("org.switchyard.quickstarts.demos:switchyard-demo-multiApp-order-service:"+version)
                 .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(JavaArchive.class, archiveFile);

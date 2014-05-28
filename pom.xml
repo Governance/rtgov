@@ -84,7 +84,7 @@
 		<overlord-commons.version>2.0.1-SNAPSHOT</overlord-commons.version>
 		<picketlink.version>2.5.3.SP1</picketlink.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
-		<switchyard.version>2.0.0-SNAPSHOT</switchyard.version>
+		<switchyard.version>2.0.0.Alpha1</switchyard.version>
 
 		<version.org.jboss.msc.jboss-msc>1.0.4.GA</version.org.jboss.msc.jboss-msc>
 
@@ -882,17 +882,17 @@
 
 		    <dependency>
 			    <groupId>org.switchyard.quickstarts.demos</groupId>
-			    <artifactId>switchyard-quickstart-demo-multi-artifacts</artifactId>
+			    <artifactId>switchyard-demo-multiApp-artifacts</artifactId>
 				<version>${switchyard.version}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.switchyard.quickstarts.demos</groupId>
-			    <artifactId>switchyard-quickstart-demo-multi-order-consumer</artifactId>
+			    <artifactId>switchyard-demo-multiApp-order-consumer</artifactId>
 				<version>${switchyard.version}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.switchyard.quickstarts.demos</groupId>
-			    <artifactId>switchyard-quickstart-demo-multi-order-service</artifactId>
+			    <artifactId>switchyard-demo-multiApp-order-service</artifactId>
 				<version>${switchyard.version}</version>
 		    </dependency>
 
