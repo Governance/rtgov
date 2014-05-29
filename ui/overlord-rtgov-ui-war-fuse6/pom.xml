@@ -114,6 +114,7 @@
                 <exclude>WEB-INF/lib/slf4j-log4j12-*.jar</exclude>
                 <exclude>WEB-INF/lib/cal10n-api-*.jar</exclude>
                 <exclude>WEB-INF/lib/overlord-commons-auth-*.jar</exclude>
+                <exclude>WEB-INF/lib/commons-configuration-*.jar,</exclude>
               </excludes>
             </overlay>
           </overlays>
@@ -152,6 +153,8 @@ org.xml.sax,
 org.xml.sax.helpers,
 org.w3c.dom,
 org.apache.karaf.jaas.boot.principal,
+org.apache.commons.configuration,
+org.apache.commons.configuration.interpol,
 javax.security.auth.callback,
 org.eclipse.jetty.plus.jaas,
 org.eclipse.jetty.servlet,
@@ -191,7 +194,6 @@ WEB-INF/lib/aopalliance-1.0.jar,
 WEB-INF/lib/cdi-api-${version.javax.enterprise.cdi}.jar,
 WEB-INF/lib/commons-codec-${version.commons-codec}.jar,
 WEB-INF/lib/commons-collections-${version.commons-collections}.jar,
-WEB-INF/lib/commons-configuration-${version.commons-configuration}.jar,
 WEB-INF/lib/commons-io-${version.commons-io}.jar,
 WEB-INF/lib/commons-lang-${version.commons-lang}.jar,
 WEB-INF/lib/commons-lang3-${commons.lang3.version}.jar,

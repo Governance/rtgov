@@ -157,12 +157,14 @@
 			<groupId>org.overlord.rtgov.content.services</groupId>
 			<artifactId>call-trace-rests</artifactId>
 		</dependency>
+
+<!--
 		<dependency>
 			<groupId>org.overlord.rtgov.karaf</groupId>
 			<artifactId>overlord-rtgov</artifactId>
 			<type>war</type>
 		</dependency>
-
+-->
 		<!-- RTGov UI -->
 
 		<dependency>
