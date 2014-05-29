@@ -8,44 +8,11 @@
 
   <fileSets>
    <fileSet>
-      <directory>./src/main/resources/all</directory>
-      <includes>
-      	<include>*</include>
-      </includes>
-      <outputDirectory>overlord/rtgov/all.profile/</outputDirectory>
+      <directory>./src/main/resources</directory>
+      <outputDirectory>overlord/rtgov/</outputDirectory>
       <filtered>true</filtered>
       <directoryMode>0755</directoryMode>
       <fileMode>0755</fileMode>
     </fileSet>
-	<fileSet>
-      <directory>./src/main/resources/client</directory>
-      <includes>
-      	<include>*</include>
-      </includes>
-      <outputDirectory>overlord/rtgov/client.profile/</outputDirectory>
-      <filtered>true</filtered>
-      <directoryMode>0755</directoryMode>
-      <fileMode>0755</fileMode>
-    </fileSet>    
-	<fileSet>
-      <directory>./src/main/resources/base</directory>
-      <includes>
-      	<include>*</include>
-      </includes>
-      <outputDirectory>overlord/rtgov/base.profile/</outputDirectory>
-      <filtered>true</filtered>
-      <directoryMode>0755</directoryMode>
-      <fileMode>0755</fileMode>
-    </fileSet>  
-    <fileSet>
-      <directory>./src/main/resources/switchyard</directory>
-      <includes>
-      	<include>*</include>
-      </includes>
-      <outputDirectory>overlord/rtgov/switchyard.profile/</outputDirectory>
-      <filtered>true</filtered>
-      <directoryMode>0755</directoryMode>
-      <fileMode>0755</fileMode>
-    </fileSet>  
   </fileSets>
 </assembly>
