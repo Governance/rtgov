@@ -53,6 +53,13 @@
 			<artifactId>switchyard-serial</artifactId>
 	    </dependency>
         
+        <!-- Dependency required due to jdk bug when built in hudson -->
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
