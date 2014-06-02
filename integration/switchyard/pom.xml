@@ -67,6 +67,12 @@
 			<groupId>org.switchyard.components</groupId>
 			<artifactId>switchyard-component-bpel</artifactId>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-httpclient</groupId>
+					<artifactId>commons-httpclient</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.switchyard.components</groupId>
@@ -76,6 +82,10 @@
 				<exclusion>
 					<groupId>org.apache.lucene</groupId>
 					<artifactId>*</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-httpclient</groupId>
+					<artifactId>commons-httpclient</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -139,17 +149,6 @@
 					</instructions>
 				</configuration>
 			</plugin>
-
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <!-- Disable due to commons-httpclients 3.1 vulnerability (RTGOV-472) -->
-                    <execution>
-                        <id>enforce-victims-rule</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>

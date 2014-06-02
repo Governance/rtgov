@@ -422,23 +422,18 @@
         <dependency>
             <groupId>org.jboss.soa.bpel</groupId>
             <artifactId>riftsaw-bpel-api</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-httpclient</groupId>
+					<artifactId>commons-httpclient</artifactId>
+				</exclusion>
+			</exclusions>
         </dependency>
 
 	</dependencies>
 
 	<build>
 		<plugins>
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <executions>
-                    <!-- Disable due to commons-httpclients 3.1 vulnerability (RTGOV-472) -->
-                    <execution>
-                        <id>enforce-victims-rule</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
 			<plugin>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-maven-plugin</artifactId>
