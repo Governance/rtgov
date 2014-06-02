@@ -50,13 +50,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Dependency required due to jdk bug when built in hudson -->
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
 		<!-- Test only dependencies -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -71,6 +64,17 @@
 	</dependencies>
 	
     <profiles>
+        <profile>
+            <id>hudson</id>
+            <dependencies>
+                <!-- Dependency required due to jdk bug when built in hudson -->
+                <dependency>
+                    <groupId>javax</groupId>
+                    <artifactId>javaee-api</artifactId>
+                    <scope>provided</scope>
+                </dependency>       
+            </dependencies>
+        </profile>
         <profile>
             <id>noelasticsearch</id>
             <build>
