@@ -8,15 +8,6 @@
     <listener-class>org.overlord.rtgov.ui.server.fuse6.Listener</listener-class>
   </listener>
 
-  <filter>
-    <filter-name>HttpRequestThreadLocalFilter</filter-name>
-    <filter-class>org.overlord.commons.auth.filters.HttpRequestThreadLocalFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>HttpRequestThreadLocalFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  
   <error-page>
     <error-code>403</error-code>
     <location>/403.html</location>
@@ -52,9 +43,20 @@
     <url-pattern>/js/*</url-pattern>
   </filter-mapping>
   <filter-mapping>
-    <filter-name>LocaleFilter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <filter-name>ResourceCacheControl</filter-name>
+    <url-pattern>*.html</url-pattern>
   </filter-mapping>
+  <filter-mapping>
+    <filter-name>LocaleFilter</filter-name>
+    <url-pattern>*.erraiBus</url-pattern>
+  </filter-mapping>
+
+  <!-- TODO: NOT SURE IF THIS ONE IS REQUIRED?? /app/services is sramp specific, how to deal with rtgov?
+  <filter-mapping>
+    <filter-name>LocaleFilter</filter-name>
+    <url-pattern>/app/services/*</url-pattern>
+  </filter-mapping>
+  -->
 
   <filter>
     <filter-name>OverlordHeaderResources</filter-name>
@@ -65,6 +67,75 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <filter>
+    <filter-name>AuthenticationFilter</filter-name>
+    <filter-class>org.picketlink.identity.federation.web.filters.SPFilter</filter-class>
+    <init-param>
+      <param-name>ROLES</param-name>
+      <param-value>overlorduser</param-value>
+    </init-param>
+    <init-param>
+      <param-name>IGNORE_SIGNATURES</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>/</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>*.html</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>PicketLinkAuthWrapperFilter</filter-name>
+    <filter-class>org.overlord.commons.auth.filters.PicketLinkAuthWrapperFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>PicketLinkAuthWrapperFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>HttpRequestThreadLocalFilter</filter-name>
+    <filter-class>org.overlord.commons.auth.filters.HttpRequestThreadLocalFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>HttpRequestThreadLocalFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>BusAuthFilter</filter-name>
+    <filter-class>org.overlord.commons.gwt.server.filters.BusAuthenticationFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>BusAuthFilter</filter-name>
+    <url-pattern>*.erraiBus</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>BusAuthFilter</filter-name>
+    <url-pattern>/situations/export</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>BusAuthFilter</filter-name>
+    <url-pattern>/elasticsearch/*</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>WelcomeFileFilter</filter-name>
+    <filter-class>org.overlord.commons.gwt.server.filters.WelcomeFileFilter</filter-class>
+    <init-param>
+      <param-name>welcomeFiles</param-name>
+      <param-value>index.html</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>WelcomeFileFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
   <!-- Servlets -->
   <servlet>
     <servlet-name>ErraiServlet</servlet-name>
@@ -84,6 +155,18 @@
     <servlet-name>ErraiServlet</servlet-name>
     <url-pattern>*.erraiBus</url-pattern>
   </servlet-mapping>
+  <context-param>
+    <param-name>errai.properties</param-name>
+    <param-value>/WEB-INF/errai.properties</param-value>
+  </context-param>
+  <context-param>
+    <param-name>login.config</param-name>
+    <param-value>/WEB-INF/login.config</param-value>
+  </context-param>
+  <context-param>
+    <param-name>users.properties</param-name>
+    <param-value>/WEB-INF/users.properties</param-value>
+  </context-param>
 
     <servlet>
         <servlet-name>ElasticsearchRESTServer</servlet-name>
@@ -113,41 +196,5 @@
     <resource-env-ref-name>BeanManager</resource-env-ref-name>
     <resource-env-ref-type>javax.enterprise.inject.spi.BeanManager</resource-env-ref-type>
   </resource-env-ref>
-
-  <context-param>
-    <param-name>errai.properties</param-name>
-    <param-value>/WEB-INF/errai.properties</param-value>
-  </context-param>
-  <context-param>
-    <param-name>login.config</param-name>
-    <param-value>/WEB-INF/login.config</param-value>
-  </context-param>
-  <context-param>
-    <param-name>users.properties</param-name>
-    <param-value>/WEB-INF/users.properties</param-value>
-  </context-param>
-  
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>RuntimeGovernance</web-resource-name>
-      <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>overlorduser</role-name>
-    </auth-constraint>
-  </security-constraint>
-
-  <login-config>
-    <auth-method>BASIC</auth-method>
-    <realm-name>karaf</realm-name>
-  </login-config>
-
-  <security-role>
-    <role-name>overlorduser</role-name>
-  </security-role>
-
-  <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
-  </welcome-file-list>
   
 </web-app>
