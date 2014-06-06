@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RTGovClient">
 
-	<target name="check-not-soa">
-		<condition property="soa.not.installed">
-			<not>
-				<available file="${jboss.home}/modules/system/layers/soa"/>
-			</not>
+	<property name="bpms.layer" value="kie-eap-distributions-bpms-layer.zip" />
+
+	<target name="check-install-bpms">
+		<condition property="install.bpms">
+            <and>
+			    <not>
+				    <available file="${jboss.home}/modules/system/layers/bpms"/>
+			    </not>
+				<available file="${basedir}/../../modules/${bpms.layer}"/>
+            </and>
 		</condition>
 	</target>
 
-	<target name="non-soa-deploy" depends="check-not-soa" if="soa.not.installed" >
-		<echo message="**** Not a SOA environment, so installing additional modules ****" />
-
-		<copy todir="${jboss.home}/modules" >
-			<fileset dir="../../modules/drools" />
-		</copy>
+	<target name="bpms-layer-deploy" depends="check-install-bpms" if="install.bpms" >
+		<echo message="**** Installing BPMS dependencies ****" />
+        <unzip src="${basedir}/../../modules/${bpms.layer}" dest="${jboss.home}"/>
 	</target>
 
-	<target name="deploy" depends="non-soa-deploy" >
+	<target name="deploy" depends="bpms-layer-deploy" >
 		<ant antfile="build.xml" target="install-vault"
 				dir="overlord-commons" >
 			<property name="overlord-commons.appserver.dir" value="${jboss.home}" />
