@@ -56,6 +56,17 @@
     
 	<dependencySets>
 
+		<!-- Modules -->
+
+		<dependencySet>
+			<outputDirectory>modules</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.kie:kie-eap-distributions-bpms-layer:zip</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+
 		<!-- server profile -->
 
 		<dependencySet>
@@ -150,6 +161,7 @@
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
+
 		<!-- client profile -->
 
 		<dependencySet>

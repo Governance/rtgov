@@ -1006,6 +1006,13 @@
 				<artifactId>cal10n-api</artifactId>
 				<version>${cal10n-api.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.kie</groupId>
+				<artifactId>kie-eap-distributions-bpms-layer</artifactId>
+				<version>${kie.version}</version>
+				<type>zip</type>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
