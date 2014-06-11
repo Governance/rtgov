@@ -136,18 +136,20 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 			MBeanServerConnection mBeanServerConnection = getMBeanServerConnection();
 			AttributeList attributeList = mBeanServerConnection.getAttributes(new ObjectName(
 			        "org.switchyard.admin:type=Service,name=\"" + service + "\""), new String[] { "Bindings" });
-			@SuppressWarnings("unchecked")
-			List<ObjectName> bindings = (List<ObjectName>) getAttributeValue(attributeList.get(0));
-			for (ObjectName objectName : firstNonNull(bindings, Collections.<ObjectName> emptyList())) {
-				attributeList = mBeanServerConnection.getAttributes(objectName, new String[] { "Type" });
-				String type = (String) getAttributeValue(attributeList.get(0));
-				if (BINDING_TYPE_SCA.equalsIgnoreCase(type)) {
-					isResubmitSupported = true;
-					break;
-				}
+			ObjectName[] bindings = (ObjectName[])getAttributeValue(attributeList.get(0));
+			if (bindings != null && bindings.length > 0) {
+			    for (int i=0; i < bindings.length; i++) {
+			        ObjectName objectName=bindings[i];
+    				attributeList = mBeanServerConnection.getAttributes(objectName, new String[] { "Type" });
+    				String type = (String) getAttributeValue(attributeList.get(0));
+    				if (BINDING_TYPE_SCA.equalsIgnoreCase(type)) {
+    					isResubmitSupported = true;
+    					break;
+    				}
+			    }
 			}
 		} catch (Exception e) {
-			throw new UiException(i18n.format("SwitchYardServicesProvider.IsResubmitSupported"), e);
+			throw new UiException(i18n.format("SwitchYardServicesProvider.IsResubmitSupported", service, operation), e);
 		}
 		return isServiceKnown(service) && isResubmitSupported;
 	}
