@@ -727,10 +727,15 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
             this.operationName = operationName;
         }
 
-        @Override
-        public boolean apply(ServicesProvider input) {
-            return input.isResubmitSupported(operationName.getService(), operationName.getOperation());
-        }
+		@Override
+		public boolean apply(ServicesProvider input) {
+			try {
+				return input.isResubmitSupported(operationName.getService(), operationName.getOperation());
+			} catch (UiException e) {
+				Throwables.propagate(e);
+			}
+			return false;
+		}
     }
     
     /**
