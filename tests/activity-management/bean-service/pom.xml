@@ -1,0 +1,209 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>tests-actmgmt-jbossas-bean-service</artifactId>
+	<packaging>war</packaging>
+	<name>Overlord RTGov::Tests::Activity Management::Bean Service</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov.tests</groupId>
+		<artifactId>tests-activity-management</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>collector-activity-server</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-plugin</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard.components</groupId>
+			<artifactId>switchyard-component-bean</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard.components</groupId>
+			<artifactId>switchyard-component-soap</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-bus-camel</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.switchyard</groupId>
+			<artifactId>switchyard-test</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-api</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.as</groupId>
+			<artifactId>jboss-as-arquillian-container-managed</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<debug>true</debug>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+					<systemProperties>
+						<property>
+							<name>rtgov.version</name>
+							<value>${project.version}</value>
+						</property>
+						<property>
+							<name>commons-configuration.version</name>
+							<value>${commons-configuration.version}</value>
+						</property>
+					</systemProperties>
+					<includes>
+						<include>**/*TestCase.java</include>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+
+            <plugin>
+                <groupId>org.switchyard</groupId>
+                <artifactId>switchyard-plugin</artifactId>
+                <configuration>
+                    <scannerClassNames>
+                        <param>org.switchyard.component.bean.config.model.BeanSwitchYardScanner</param>
+                        <param>org.switchyard.transform.config.model.TransformSwitchYardScanner</param>
+                        ...
+                    </scannerClassNames>
+                    <!--
+                        Specify specific scan directories to reflect the new location of the
+                        base switchyard.xml ...
+                    -->
+                    <scanDirectories>
+                        <param>target/classes</param>
+                        <param>src/main/webResources</param>
+                    </scanDirectories>
+                    <!--
+                        Specify different output directory for the generated switchyard.xml because we don't
+                        want it ending up in WEB-INF/classes/META-INF.  The maven-war-plugin is configured to
+                        pick up the generated switchyard.xml from this new location...
+                    -->
+                    <outputDirectory>target/switchyard_xml</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>configure</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <!-- Java EE 6 doesn't require web.xml, Maven needs to catch up! -->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <webResources>
+                        <resource>
+                            <!--
+                                Pick up the generated switchyard.xml from location specified by
+                                the switchyard-plugin...
+                            -->
+                            <directory>target/switchyard_xml</directory>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.switchyard
+										</groupId>
+										<artifactId>
+											switchyard-plugin
+										</artifactId>
+										<versionRange>
+											[2.0.0-SNAPSHOT,)
+										</versionRange>
+										<goals>
+											<goal>configure</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>

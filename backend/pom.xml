@@ -1,0 +1,22 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>backend</artifactId>
+	<packaging>pom</packaging>
+	<name>Overlord RTGov::Backend</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>parent</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>overlord-rtgov-war-all-eap6</module>
+		<module>overlord-rtgov-war-all-fuse6</module>
+		<module>overlord-rtgov-war-client-eap6</module>
+	</modules>
+
+</project>
+

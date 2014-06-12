@@ -81,6 +81,7 @@
         <lucene.version>4.7.0</lucene.version> <!-- Required to override parent bom version -->
         <org.apache.servicemix.bundles.lucene.version>4.7.0_1</org.apache.servicemix.bundles.lucene.version> <!-- Required for karaf -->
         <remoting-jmx>1.1.0.Final</remoting-jmx>
+		<rtgov-docs.version>2.0.0-SNAPSHOT</rtgov-docs.version>
 		<overlord-commons.version>2.0.1.Final</overlord-commons.version>
 		<picketbox.version>4.0.19.SP4</picketbox.version>
 		<picketlink.version>2.5.3.SP1</picketlink.version>
@@ -92,12 +93,14 @@
 	</properties>
 
 	<modules>
-		<module>modules</module>
-		<module>integration</module>
+		<module>backend</module>
 		<module>content</module>
+		<module>distribution</module>
+		<module>integration</module>
+		<module>modules</module>
 		<module>samples</module>
+		<module>tests</module>
 		<module>ui</module>
-		<module>release</module>
 	</modules>
 
 	<profiles>
@@ -567,45 +570,45 @@
 		    </dependency>
 
 		    <dependency>
-			    <groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
-			    <artifactId>tests-jbossas-custom-events-data</artifactId>
+			    <groupId>org.overlord.rtgov.tests</groupId>
+			    <artifactId>tests-custom-events-data</artifactId>
                 <version>${project.version}</version>
 		    </dependency>
 		    <dependency>
-			    <groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
-			    <artifactId>tests-jbossas-custom-events-epn</artifactId>
-                <version>${project.version}</version>
-			    <type>war</type>
-		    </dependency>
-		    <dependency>
-			    <groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
-			    <artifactId>tests-jbossas-custom-events-av</artifactId>
+			    <groupId>org.overlord.rtgov.tests</groupId>
+			    <artifactId>tests-custom-events-epn</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
 		    <dependency>
-			    <groupId>org.overlord.rtgov.release.jbossas.tests.platform.custom_events</groupId>
-			    <artifactId>tests-jbossas-custom-events-monitor</artifactId>
+			    <groupId>org.overlord.rtgov.tests</groupId>
+			    <artifactId>tests-custom-events-av</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
-
 		    <dependency>
-			    <groupId>org.overlord.rtgov.karaf</groupId>
-			    <artifactId>overlord-rtgov</artifactId>
+			    <groupId>org.overlord.rtgov.tests</groupId>
+			    <artifactId>tests-custom-events-monitor</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
 
 		    <dependency>
-			    <groupId>org.overlord.rtgov.release.jbossas</groupId>
-			    <artifactId>overlord-rtgov</artifactId>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-war-all-fuse6</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+
+		    <dependency>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-war-all-eap6</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
 		    <dependency>
-			    <groupId>org.overlord.rtgov.release.jbossas</groupId>
-			    <artifactId>overlord-rtgov-client</artifactId>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-war-client-eap6</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
@@ -633,9 +636,23 @@
 		    </dependency>
 
 		    <dependency>
-			    <groupId>org.overlord.rtgov.karaf.bundles</groupId>
-			    <artifactId>rtgov-karaf-bundles-elasticsearch</artifactId>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-bundles-elasticsearch</artifactId>
 			    <version>${project.version}</version>
+		    </dependency>
+
+            <!-- Documentation -->
+		    <dependency>
+			    <groupId>org.overlord.rtgov.docs</groupId>
+			    <artifactId>developerguide</artifactId>
+                <type>jdocbook</type>
+			    <version>${rtgov-docs.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.docs</groupId>
+			    <artifactId>userguide</artifactId>
+                <type>jdocbook</type>
+			    <version>${rtgov-docs.version}</version>
 		    </dependency>
 
 			<!-- Other dependencies -->

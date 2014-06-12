@@ -1,0 +1,337 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<artifactId>overlord-rtgov-war-all-eap6</artifactId>
+	<packaging>war</packaging>
+	<version>2.0.0-SNAPSHOT</version>
+	<name>Overlord RTGov::Backend::WAR All EAP6</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>backend</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>		
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor-network</groupId>
+			<artifactId>epn-core</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-keyvaluestore</artifactId>
+        </dependency>
+
+        <dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-drools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mvel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>acs-epn</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>analytics</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>service-dependency</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>service-dependency-svg</artifactId>
+		</dependency>
+
+		<!-- Overlord Commons -->
+
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-configuration</groupId>
+					<artifactId>commons-configuration</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Collector modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>collector-activity-server</artifactId>
+		</dependency>
+		
+		<!-- Activity Server modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-server-jee</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-client-jee</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-server-rests</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-server-epn</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-store-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-store-elasticsearch</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store-elasticsearch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-store-jpa</artifactId>
+		</dependency>
+
+		<!-- Event Processor Network modules -->
+			
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor-network</groupId>
+			<artifactId>epn-jms</artifactId>
+		</dependency>	
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor-network</groupId>
+			<artifactId>epn-container-jee</artifactId>
+		</dependency>	
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-jpa</artifactId>
+		</dependency>	
+		
+		<!-- Active collection modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-jee</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-rests</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-infinispan</artifactId>
+		</dependency>		
+		
+		<!-- Report modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-jee</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-rests</artifactId>
+		</dependency>		
+		
+		<!-- Services -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.content.services</groupId>
+			<artifactId>service-dependency-rests</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>service-dependency</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>service-dependency-svg</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.content.services</groupId>
+			<artifactId>call-trace-rests</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>call-trace</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.content.services</groupId>
+			<artifactId>situation-manager-rests</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>situation-manager</artifactId>
+		</dependency>
+		
+		<!-- Overlord commons -->
+		
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth-jboss7</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth-tomcat7</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-codec</groupId>
+					<artifactId>commons-codec</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-configuration</groupId>
+					<artifactId>commons-configuration</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Client -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-client</artifactId>
+		</dependency>
+		
+		<!-- JBossAS Specific -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-jbossas</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-infinispan</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.common</groupId>
+            <artifactId>rtgov-elasticsearch</artifactId>
+        </dependency>
+
+
+        <!-- Switchyard Specific -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-switchyard</artifactId>
+		</dependency>
+
+        <!-- Elasticsearch Specific: eventually defined a jboss module -->
+
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+
+        <!-- Test dependencies -->
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+ 					<archive>
+						<manifestEntries>
+							<!-- NOTE: Dependency on org.apache.commons.codec added
+							as a runtime dependency for overlord-commons-auth. If
+							this is changed to a module dependency, then the
+							direct dependency on codec can be removed -->
+							<Dependencies>org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel optional, org.switchyard.api optional, org.switchyard.config optional, org.apache.camel.core optional, org.switchyard.api.extensions.java optional, org.switchyard.api.extensions.wsdl optional, org.switchyard.security optional, org.switchyard.runtime optional, org.switchyard.component.bpel optional, org.drools export, org.apache.commons.codec, javaee.api export, org.apache.commons.configuration export, org.apache.commons.lang export, org.codehaus.jackson.jackson-core-asl export, org.codehaus.jackson.jackson-mapper-asl export, org.kie export, org.jbpm export, org.mvel export, org.hibernate export, org.infinispan export, org.jaxen, org.javassist, org.osgi.core</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+
+</project>

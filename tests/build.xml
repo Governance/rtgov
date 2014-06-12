@@ -1,0 +1,65 @@
+<project default="setup" name="rtgovtests" >
+
+	<property name="database" value="h2" />
+	<property file="${ant.file.rtgovtests}/../../distribution/overlord-rtgov-assembly/src/main/resources/platforms/eap6/all/jdbc/${database}.properties" />
+
+	<target name="setup">
+		<echo message="Setting up Overlord Runtime Governance deployments"/>
+
+		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov" />
+
+		<!-- Copy data source definitions -->
+		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
+			<fileset dir="${ant.file.rtgovtests}/../../distribution/overlord-rtgov-assembly/src/main/resources/platforms/eap6/all/deployments" />
+		</copy>
+
+		<echo message="Setting up Overlord Runtime Governance configuration"/>
+
+		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties" />
+
+		<copy todir="${jboss.home}/standalone/configuration" >
+			<fileset file="${ant.file.rtgovtests}/../../distribution/overlord-rtgov-assembly/src/main/resources/platforms/eap6/all/configuration/overlord-rtgov.properties" />
+		</copy>
+
+		<!-- Security related configuration -->
+
+		<copy todir="${jboss.home}/standalone/configuration" >
+			<fileset file="${ant.file.rtgovtests}/../configuration/overlord-*.properties" />
+			<fileset file="${ant.file.rtgovtests}/../configuration/overlord-*.xml" />
+		</copy>
+	</target>
+
+	<target name="setupFull" depends="setup" >
+		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov.war"
+			file="${org.overlord.rtgov:overlord-rtgov-war-all-eap6:war}" />
+		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-epn.war"
+			file="${org.overlord.rtgov.content:overlord-rtgov-epn-jee:war}" />
+		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-acs.war"
+			file="${org.overlord.rtgov.content:overlord-rtgov-acs-jee:war}" />
+
+		<!-- Create database -->
+		<sql driver="${driver}"
+				url="${connection.rtgov.url}"
+				userid="${username}"
+				password="${password}"
+				onerror="continue"
+				src="${ant.file.rtgovtests}/../../distribution/overlord-rtgov-assembly/src/main/resources/platforms/eap6/all/sql/${database}.sql">
+			<classpath>
+				<pathelement location="${com.h2database:h2:jar}"/>
+			</classpath>
+		</sql>
+		
+	</target>
+
+	<target name="clean">
+		<echo message="Cleaning up Overlord Runtime Governance deployments"/>
+		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov" />
+
+		<echo message="Cleaning up Overlord Runtime Governance configuration"/>
+		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties" />
+
+		<echo message="Cleaning up Overlord Runtime Governance database"/>
+		<delete file="${jboss.home}/standalone/data/${database}/rtgov.*" />
+	</target>
+
+</project>

@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<artifactId>overlord-rtgov-war-client-eap6</artifactId>
+	<packaging>war</packaging>
+	<version>2.0.0-SNAPSHOT</version>
+	<name>Overlord RTGov::Backend::WAR Client EAP6</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>backend</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>		
+		<!-- Collector modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-client-jee</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>collector-activity-server</artifactId>
+		</dependency>
+		
+		<!-- Activity Server modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-server-restc</artifactId>
+		</dependency>
+
+		<!-- Active collection modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-jee</artifactId>
+		</dependency>
+
+		<!-- Overlord commons -->
+		
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+		</dependency>
+
+		<!-- Client -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-client</artifactId>
+		</dependency>
+	
+		<!-- JBossAS Specific -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-jbossas</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-infinispan</artifactId>
+		</dependency>
+		
+		<!-- Overlord commons -->
+		
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-configuration</groupId>
+					<artifactId>commons-configuration</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Switchyard Specific -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-switchyard</artifactId>
+		</dependency>
+
+		<!-- Apache Commons Codec - included to override EAP version due to RTGOV-237 -->
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		
+		<!-- Test dependencies -->
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+ 					<archive>
+						<manifestEntries>
+							<Dependencies>org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel optional, org.switchyard.api optional, org.switchyard.config optional, org.apache.camel.core optional, org.switchyard.api.extensions.java optional, org.switchyard.api.extensions.wsdl optional, org.switchyard.security optional, org.switchyard.runtime optional, org.switchyard.component.bpel optional, org.drools export, org.apache.commons.codec, javaee.api export, org.apache.commons.configuration export, org.apache.commons.lang export, org.codehaus.jackson.jackson-core-asl export, org.codehaus.jackson.jackson-mapper-asl export, org.kie export, org.jbpm export, org.mvel export, org.hibernate export, org.infinispan export, org.jaxen, org.javassist</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
