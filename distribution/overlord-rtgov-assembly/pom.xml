@@ -1,0 +1,171 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>overlord-rtgov-distribution-assembly</artifactId>
+	<packaging>pom</packaging>
+	<name>Overlord RTGov::Distribution::Assembly</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>distribution</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-war-all-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-war-client-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.content</groupId>
+			<artifactId>overlord-rtgov-epn-jee</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.content</groupId>
+			<artifactId>overlord-rtgov-acs-jee</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.ui</groupId>
+			<artifactId>overlord-rtgov-ui-war-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-installer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-idp-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-services</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth-jboss7</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-auth-tomcat7</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-ant</artifactId>
+		</dependency>
+
+		<!-- Database drivers -->
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+
+        <!-- Documentation -->
+		<dependency>
+			<groupId>org.overlord.rtgov.docs</groupId>
+			<artifactId>developerguide</artifactId>
+            <type>jdocbook</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.docs</groupId>
+			<artifactId>userguide</artifactId>
+            <type>jdocbook</type>
+		</dependency>
+
+	</dependencies> 
+
+    <profiles>
+        <profile>
+            <id>overlord-rtgov-community</id>
+            <activation>
+                <property>
+                    <name>!overlord.product</name>
+                </property>
+            </activation>
+	        <dependencies> 
+                <dependency>
+                    <groupId>org.kie</groupId>
+                    <artifactId>kie-eap-distributions-bpms-layer</artifactId>
+                    <type>zip</type>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>commons-httpclient</groupId>
+                            <artifactId>commons-httpclient</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+	        </dependencies> 
+        </profile>
+    </profiles>
+
+	<build>
+		<resources>
+			<resource>
+ 				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <!-- Entry needed to enable jdocbook unzipping -->
+                        <groupId>org.jboss.maven.plugins</groupId>
+                        <artifactId>maven-jdocbook-plugin</artifactId>
+                        <version>2.3.8</version>
+                    </dependency>
+                </dependencies>
+				<executions>
+					<execution>
+						<id>bin</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<finalName>overlord-rtgov-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptors>
+								<descriptor>src/main/assembly/bin.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+</project>
