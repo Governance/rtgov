@@ -52,6 +52,11 @@ public class ElasticsearchActivityStore implements ActivityStore {
 
     private static String ACTIVITYSTORE_UNIT_INDEX = "ActivityStore.Elasticsearch.index";
     private static String ACTIVITYSTORE_UNIT_TYPE = "ActivityStore.Elasticsearch.type";
+    private static String ACTIVITYSTORE_RESPONSE_SIZE = "ActivityStore.Elasticsearch.responseSize";
+    
+    private static int DEFAULT_RESPONSE_SIZE = 100000;
+    
+    private int _responseSize;
     
     private ElasticsearchClient _client=new ElasticsearchClient();
 
@@ -61,6 +66,8 @@ public class ElasticsearchActivityStore implements ActivityStore {
     public ElasticsearchActivityStore() {
         _client.setIndex(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_INDEX, "rtgov"));
         _client.setType(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_TYPE, "activity"));
+        
+        _responseSize = RTGovProperties.getPropertyAsInteger(ACTIVITYSTORE_RESPONSE_SIZE, DEFAULT_RESPONSE_SIZE);
         
         try {
             _client.init();
@@ -145,6 +152,7 @@ public class ElasticsearchActivityStore implements ActivityStore {
                 SearchResponse response=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
                         .setTypes(_client.getType()+"type")
                         .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                        .setSize(_responseSize)
                         .setQuery(QueryBuilders.matchQuery("unitId", id))
                         .execute().actionGet();
         
@@ -198,6 +206,7 @@ public class ElasticsearchActivityStore implements ActivityStore {
         SearchResponse response = _client.getElasticsearchClient().prepareSearch(
                 _client.getIndex()).setTypes(_client.getType() + "type")
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setSize(_responseSize)
                 .setQuery(b2).execute().actionGet();
         
         if (response.isTimedOut()) {
@@ -256,6 +265,7 @@ public class ElasticsearchActivityStore implements ActivityStore {
         SearchResponse response = _client.getElasticsearchClient().prepareSearch(
                 _client.getIndex()).setTypes(_client.getType() + "type")
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setSize(_responseSize)
                 .setQuery(b2).execute().actionGet();
         if (response.isTimedOut()) {
             throw new Exception(MessageFormat.format(

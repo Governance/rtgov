@@ -47,9 +47,14 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
 
     private static String SITUATIONSTORE_UNIT_INDEX = "SituationStore.Elasticsearch.index";
     private static String SITUATIONSTORE_UNIT_TYPE = "SituationStore.Elasticsearch.type";
+    private static String SITUATIONSTORE_RESPONSE_SIZE = "SituationStore.Elasticsearch.responseSize";
 
     private static final int PROPERTY_VALUE_MAX_LENGTH = 250;
 
+    private static int DEFAULT_RESPONSE_SIZE = 100000;
+    
+    private int _responseSize;
+    
     private ElasticsearchClient _client=new ElasticsearchClient();
     
     /**
@@ -59,12 +64,32 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
         _client.setIndex(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_INDEX, "rtgov"));
         _client.setType(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_TYPE, "situation"));
         
+        _responseSize = RTGovProperties.getPropertyAsInteger(SITUATIONSTORE_RESPONSE_SIZE, DEFAULT_RESPONSE_SIZE);
+        
         try {
             _client.init();
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle
                         .getBundle("situation-store-elasticsearch.Messages").getString("SITUATION-STORE-ELASTICSEARCH-1"), e);
         }
+    }
+    
+    /**
+     * This method sets the response size.
+     * 
+     * @param size The size
+     */
+    protected void setResponseSize(int size) {
+        _responseSize = size;
+    }
+
+    /**
+     * This method sets the response size.
+     * 
+     * @param size The size
+     */
+    protected int getResponseSize() {
+        return (_responseSize);
     }
 
     /**
@@ -116,10 +141,17 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
         SearchResponse response=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
                         .setTypes(_client.getType())
                         .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                        .setSize(_responseSize)
                         .setQuery(getQueryBuilder(sitQuery))
                         .execute().actionGet();
         
-        for (int i=0; i < response.getHits().getTotalHits(); i++) {
+        long num=response.getHits().getTotalHits();
+        
+        if (num > _responseSize) {
+            num = _responseSize;
+        }
+        
+        for (int i=0; i < num; i++) {
             SearchHit hit=response.getHits().getAt(i);
             
             try {

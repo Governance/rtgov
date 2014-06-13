@@ -229,6 +229,58 @@ public class ElasticsearchSituationStoreTest {
     }
 
     @Test
+    public void testQueryAllSituationsWithSizeLimit() {
+        try {
+            Situation s1=new Situation();
+            s1.setId(SITUATION_ID_1);
+            s1.setTimestamp(System.currentTimeMillis());
+            elasticsearchSituationStore.store(s1);
+
+            Situation s2=new Situation();
+            s2.setId(SITUATION_ID_2);
+            s2.setTimestamp(System.currentTimeMillis()+100);
+            elasticsearchSituationStore.store(s2);
+            
+            // Need to delay to allow situations to be index, and therefore become searchable
+            synchronized (this) {
+                wait(2000);                
+            }
+        } catch (Exception e) {
+
+            fail("Could not store situation " + e);
+        }
+        
+        int size=elasticsearchSituationStore.getResponseSize();
+
+        elasticsearchSituationStore.setResponseSize(1);
+
+        try {
+            
+            java.util.List<Situation> sits = elasticsearchSituationStore.getSituations(null);
+            if (sits != null) {
+                if (sits.size() != 1) {
+                    fail("Expecting 1 situation: "+sits.size());
+                }
+                
+            } else {
+                fail("Situations list is null");
+            }
+        } catch (Exception e) {
+            fail("Failed to get situation: " + e);
+
+        } finally {
+            elasticsearchSituationStore.setResponseSize(size);
+        }
+        
+        try {
+            elasticsearchSituationStore.getClient().remove(SITUATION_ID_1);
+            elasticsearchSituationStore.getClient().remove(SITUATION_ID_2);
+        } catch (Exception e) {
+            fail("Could not remove situation" + e);
+        }
+    }
+
+    @Test
     public void testQuerySituationsResolutionStateResolved() {
         try {
             Situation s1=new Situation();
