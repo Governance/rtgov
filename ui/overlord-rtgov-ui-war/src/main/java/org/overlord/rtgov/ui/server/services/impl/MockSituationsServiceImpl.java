@@ -40,6 +40,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
+import org.overlord.rtgov.ui.client.model.NameValuePairBean;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.CallTraceBean;
@@ -269,8 +270,8 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         situation.setDescription(situationSummaryBean.getDescription()); //$NON-NLS-1$
         Map<String, String> properties = situationSummaryBean.getProperties();
 		situation.setProperties(properties); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getContext().put("Context-1", "This is the value of the context 1 property."); //$NON-NLS-1$ //$NON-NLS-2$
-        situation.getContext().put("Context-2", "This is the value of the context 2 property."); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getContext().add(new NameValuePairBean("Context-1", "This is the value of the context 1 property.")); //$NON-NLS-1$ //$NON-NLS-2$
+        situation.getContext().add(new NameValuePairBean("Context-2", "This is the value of the context 2 property.")); //$NON-NLS-1$ //$NON-NLS-2$
 
 		MessageBean message = createMockMessage();
 		situation.setMessage(message);

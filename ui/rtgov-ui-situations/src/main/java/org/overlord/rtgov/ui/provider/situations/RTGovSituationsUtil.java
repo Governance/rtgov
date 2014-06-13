@@ -17,7 +17,9 @@ package org.overlord.rtgov.ui.provider.situations;
 
 import java.util.Date;
 
+import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.ui.client.model.NameValuePairBean;
 import org.overlord.rtgov.ui.client.model.SituationBean;
 import org.overlord.rtgov.ui.client.model.SituationEventBean;
 
@@ -51,6 +53,13 @@ public class RTGovSituationsUtil {
     	ret.setTimestamp(new Date(situation.getTimestamp()));
     	ret.setDescription(situation.getDescription());
     	ret.getProperties().putAll(situation.getSituationProperties());
+    	
+    	for (Context context : situation.getContext()) {
+    	    if (context.getType() != Context.Type.Message) {
+    	        ret.getContext().add(new NameValuePairBean(context.getType().name(),
+    	                        context.getValue()));
+    	    }
+    	}
 
     	return (ret);
     }
