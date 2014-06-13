@@ -39,6 +39,7 @@ import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceDetails;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceWidget;
+import org.overlord.rtgov.ui.client.local.pages.situations.SituationContextTable;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationPropertiesTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.SituationsRpcService;
@@ -113,7 +114,7 @@ public class SituationDetailsPage extends AbstractPage {
     @Inject @DataField("properties-table") @Bound(property="properties")
     SituationPropertiesTable propertiesTable;
     @Inject @DataField("context-table") @Bound(property="context")
-    SituationPropertiesTable contextTable;
+    SituationContextTable contextTable;
 
     @Inject @DataField("call-trace") @Bound(property="callTrace")
     CallTraceWidget callTrace;

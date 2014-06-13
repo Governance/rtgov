@@ -19,8 +19,6 @@ import static com.google.gwt.i18n.shared.DateTimeFormat.PredefinedFormat.DATE_TI
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -38,7 +36,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
 
 	private static final long serialVersionUID = SituationBean.class.hashCode();
 
-    private Map<String, String> context = new HashMap<String, String>();
+    private java.util.List<NameValuePairBean> context = new java.util.ArrayList<NameValuePairBean>();
     private MessageBean message;
     private CallTraceBean callTrace;
     private boolean isAssignedToCurrentUser;
@@ -54,14 +52,14 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     /**
      * @return the context
      */
-    public Map<String, String> getContext() {
+    public java.util.List<NameValuePairBean> getContext() {
         return context;
     }
 
     /**
      * @param context the context to set
      */
-    public void setContext(Map<String, String> context) {
+    public void setContext(java.util.List<NameValuePairBean> context) {
         this.context = context;
     }
     
