@@ -8,7 +8,7 @@
 
   <fileSets>
    <fileSet>
-      <directory>${project.build.outputDirectory}/profiles</directory>
+      <directory>src/main/resources</directory>
       <outputDirectory>overlord/rtgov/</outputDirectory>
       <filtered>true</filtered>
       <directoryMode>0755</directoryMode>
