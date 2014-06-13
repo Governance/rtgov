@@ -125,7 +125,13 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	 * {@inheritDoc}
 	 */
 	public boolean isServiceKnown(String service) {
-		// TODO:
+	    try {
+            MBeanServerConnection mBeanServerConnection = getMBeanServerConnection();
+            mBeanServerConnection.getAttributes(new ObjectName(
+                "org.switchyard.admin:type=Service,name=\"" + service + "\""), new String[] { "Bindings" });
+	    } catch (Exception e) {
+	        return (false);
+	    }
 		return (true);
 	}
 
@@ -148,10 +154,13 @@ public class SwitchYardServicesProvider implements ServicesProvider {
     				}
 			    }
 			}
+			
+		} catch (javax.management.InstanceNotFoundException infe) {
+		    isResubmitSupported = false;
 		} catch (Exception e) {
 			throw new UiException(i18n.format("SwitchYardServicesProvider.IsResubmitSupported", service, operation), e);
 		}
-		return isServiceKnown(service) && isResubmitSupported;
+		return isResubmitSupported;
 	}
 
 	/**
