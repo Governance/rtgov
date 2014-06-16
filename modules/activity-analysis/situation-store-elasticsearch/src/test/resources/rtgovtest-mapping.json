@@ -84,7 +84,8 @@
 
                         },
                         "value": {
-                            "type": "string"
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "timeframe": {
                             "type": "long"
@@ -169,7 +170,8 @@
 
                         },
                         "value": {
-                            "type": "string"
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "timeframe": {
                             "type": "long"
@@ -242,7 +244,8 @@
 
                         },
                         "value": {
-                            "type": "string"
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "timeframe": {
                             "type": "long"

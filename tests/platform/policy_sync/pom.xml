@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.overlord.rtgov.tests</groupId>
 		<artifactId>tests-platform</artifactId>
-		<version>2.0.0-SNAPSHOT</version>
+		<version>2.0.0.Alpha1_1</version>
 	</parent>
 	
 	<dependencies>
