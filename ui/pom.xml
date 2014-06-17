@@ -22,16 +22,8 @@
 		<module>overlord-rtgov-ui-war-eap6</module>
 		<module>overlord-rtgov-ui-war-jetty8</module>
 		<module>overlord-rtgov-ui-war-fuse6</module>
+		<module>overlord-rtgov-ui-war-fsw60</module>
 	</modules>
-
-    <profiles>
-        <profile>
-            <id>fsw</id>
-            <modules>
-		        <module>overlord-rtgov-ui-war-fsw60</module>
-            </modules>
-        </profile>
-    </profiles>
 
 	<build>
 		<pluginManagement>
