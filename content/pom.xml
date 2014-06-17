@@ -16,6 +16,7 @@
 	<modules>
 		<module>acs-jee</module>
 		<module>acs-osgi</module>
+		<module>epn-fsw60</module>
 		<module>epn-jee</module>
 		<module>epn-osgi</module>
 		<module>services</module>

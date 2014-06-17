@@ -1,0 +1,23 @@
+{
+  "name" : "Overlord-RTGov-EPN-FSW60",
+  "version" : "1",
+  "subscriptions" : [ {
+    "nodeName" : "ElasticSearchResponseTimeStore",
+    "subject" : "ServiceResponseTimes"
+  } ],
+  "nodes" : [
+    {
+	  "name": "ElasticSearchResponseTimeStore",
+      "eventProcessor": {
+        "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
+        "services": {
+          "KeyValueStore": {
+            "@class": "org.overlord.rtgov.common.elasticsearch.ElasticsearchKeyValueStore",
+            "index": "rtgov",
+            "type": "responsetime"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -15,28 +15,31 @@
  */
 package org.overlord.rtgov.ep;
 
-import org.overlord.rtgov.common.service.Service;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 /**
- * This class provides services to the EventProcessor
- * implementations that process the events.
+ * This class represents the predicate applied to an
+ * event being processed.
  *
  */
-public class DefaultEPContext extends org.overlord.rtgov.internal.ep.DefaultEPContext {
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, include=JsonTypeInfo.As.PROPERTY, property="@class")
+public abstract class Predicate {
 
     /**
-     * The default constructor.
+     * This method initializes the predicate.
+     * 
+     * @throws Exception Failed to initialize the predicate
      */
-    public DefaultEPContext() {
+    public void init() throws Exception {
     }
     
     /**
-     * This constructor initializes the service map.
+     * This method evaluates the predicate against the supplied
+     * event to determine if it should be processed.
      * 
-     * @param services The map of services available
+     * @param event The event
+     * @return Whether the event should be processed
      */
-    public DefaultEPContext(java.util.Map<String,Service> services) {
-        super(services);
-    }
-    
+    public abstract boolean evaluate(Object event);
+
 }
