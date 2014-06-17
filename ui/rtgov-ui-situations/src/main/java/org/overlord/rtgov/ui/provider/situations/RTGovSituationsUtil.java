@@ -52,7 +52,9 @@ public class RTGovSituationsUtil {
     	ret.setSubject(situation.getSubject());
     	ret.setTimestamp(new Date(situation.getTimestamp()));
     	ret.setDescription(situation.getDescription());
-    	ret.getProperties().putAll(situation.getSituationProperties());
+    	
+        // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
+    	ret.getProperties().putAll(situation.getProperties());
     	
     	for (Context context : situation.getContext()) {
     	    if (context.getType() != Context.Type.Message) {
