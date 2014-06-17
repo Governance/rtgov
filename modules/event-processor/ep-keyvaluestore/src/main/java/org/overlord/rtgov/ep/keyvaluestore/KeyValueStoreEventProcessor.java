@@ -17,8 +17,8 @@ package org.overlord.rtgov.ep.keyvaluestore;
 
 import org.mvel2.MVEL;
 import org.overlord.rtgov.common.service.KeyValueStore;
-import org.overlord.rtgov.ep.DefaultEPContext;
 import org.overlord.rtgov.ep.EventProcessor;
+import org.overlord.rtgov.internal.ep.DefaultEPContext;
 
 import java.io.Serializable;
 import java.text.MessageFormat;

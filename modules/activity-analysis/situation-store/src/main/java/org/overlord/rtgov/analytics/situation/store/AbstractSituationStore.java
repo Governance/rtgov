@@ -54,7 +54,8 @@ public abstract class AbstractSituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Assign situation '"+situation.getId()+"' for userName: "+userName); //$NON-NLS-1$
         }
-        situation.getSituationProperties().put(ASSIGNED_TO_PROPERTY, userName);
+        // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
+        situation.getProperties().put(ASSIGNED_TO_PROPERTY, userName);
     }
 
     /**
@@ -70,7 +71,8 @@ public abstract class AbstractSituationStore implements SituationStore {
      * @param situationId Id
      */
     protected void doCloseSituation(final Situation situation) {
-        java.util.Map<String, String> properties = situation.getSituationProperties();
+        // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
+        java.util.Map<String, String> properties = situation.getProperties();
         properties.remove(ASSIGNED_TO_PROPERTY);
         // remove current state if not already resolved
         String resolutionState = properties.get(RESOLUTION_STATE_PROPERTY);
@@ -93,7 +95,8 @@ public abstract class AbstractSituationStore implements SituationStore {
      * @param resolutionState The state
      */
     protected void doUpdateResolutionState(final Situation situation, final ResolutionState resolutionState) {
-        situation.getSituationProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
+        // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
+        situation.getProperties().put(RESOLUTION_STATE_PROPERTY, resolutionState.name());
     }
 
     @Override
@@ -110,7 +113,8 @@ public abstract class AbstractSituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Record successful resubmit: situationId="+situation.getId()+" userName="+userName); //$NON-NLS-1$
         }
-        Map<String, String> properties = situation.getSituationProperties();
+        // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
+        Map<String, String> properties = situation.getProperties();
         properties.put(RESUBMIT_BY_PROPERTY, userName);
         properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
         properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_SUCCESS);
@@ -135,7 +139,8 @@ public abstract class AbstractSituationStore implements SituationStore {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Record unsuccessful resubmit: situationId="+situation.getId()+" userName="+userName); //$NON-NLS-1$
         }
-        Map<String, String> properties = situation.getSituationProperties();
+        // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
+        Map<String, String> properties = situation.getProperties();
         properties.put(RESUBMIT_BY_PROPERTY, userName);
         properties.put(RESUBMIT_AT_PROPERTY, Long.toString(currentTimeMillis()));
         properties.put(RESUBMIT_RESULT_PROPERTY, RESUBMIT_RESULT_ERROR);

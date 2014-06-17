@@ -37,6 +37,7 @@ import org.elasticsearch.node.NodeBuilder;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.io.InputStream;
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
@@ -53,7 +54,7 @@ import java.util.logging.Logger;
 public class ElasticsearchClient {
 
     protected static final ObjectMapper MAPPER = new ObjectMapper();
-
+    
     static {
         SerializationConfig config = MAPPER.getSerializationConfig()
                 .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
@@ -71,7 +72,7 @@ public class ElasticsearchClient {
      * Default Elasticsearch schedule configuration.
      */
     public static final String ELASTICSEARCH_SCHEDULE = "Elasticsearch.schedule";
-
+    
     /**
      * Settings for the index this store is related to.
      */
@@ -94,7 +95,9 @@ public class ElasticsearchClient {
     private String _index = null;
     private String _type = null;
     
-    private String _hosts = RTGovProperties.getProperty(ELASTICSEARCH_HOSTS);
+    private static final String ELASTICSEARCH_HOSTS_DEFAULT="localhost:9300";
+    
+    private String _hosts = ELASTICSEARCH_HOSTS_DEFAULT;
     
     /**
      * bulkRequest. determines how many request should be sent to elastic search in bulk instead of singular requests
@@ -107,11 +110,13 @@ public class ElasticsearchClient {
 
     private ScheduledExecutorService _scheduler;
 
+    private static final long ELASTICSEARCH_SCHEDULE_DEFAULT=30000;
+    
     /**
      * schedule to persist the items  to elasticsearch.
      * A new schedule is created after a item is added.
      */
-    private long _schedule = RTGovProperties.getPropertyAsLong(ELASTICSEARCH_SCHEDULE);
+    private long _schedule=ELASTICSEARCH_SCHEDULE_DEFAULT;
     
     private static final Object SYNC=new Object();
 
@@ -120,7 +125,29 @@ public class ElasticsearchClient {
      * Default constructor.
      */
     public ElasticsearchClient() {
-
+        
+        // NOTE: Using rtgov 1.0.0.Final API for RTGovProperties, to enable deployment into
+        // FSW6.0
+        
+        String hosts=RTGovProperties.getProperty(ELASTICSEARCH_HOSTS);
+        
+        if (hosts != null) {
+            _hosts = hosts;
+        }
+        
+        String schedule=RTGovProperties.getProperty(ELASTICSEARCH_SCHEDULE);
+        
+        if (schedule != null) {
+            try {
+                _schedule = Long.parseLong(schedule);
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, MessageFormat.format(
+                        java.util.PropertyResourceBundle.getBundle(
+                                "rtgov-elasticsearch.Messages").getString("RTGOV-ELASTICSEARCH-2"),
+                                schedule), e);
+                _schedule = ELASTICSEARCH_SCHEDULE_DEFAULT;
+            }
+        }
     }
 
     /**

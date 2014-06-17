@@ -47,25 +47,44 @@
       <artifactId>situation-store</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.overlord.rtgov.activity-analysis</groupId>
-      <artifactId>situation-store-jpa</artifactId>
+      <groupId>org.overlord.rtgov.common</groupId>
+      <artifactId>rtgov-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.activity-management</groupId>
+      <artifactId>activity</artifactId>
+      <scope>provided</scope>
     </dependency>
     
     	<dependency>
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
 	        <artifactId>analytics</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-management</groupId>
+                    <artifactId>activity</artifactId>
+                </exclusion>
+            </exclusions>
 	    </dependency>
     	<dependency>
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
 	        <artifactId>call-trace</artifactId>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.overlord.rtgov.activity-management</groupId>
-	        <artifactId>activity-store-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-management</groupId>
+                    <artifactId>activity</artifactId>
+                </exclusion>
+            </exclusions>
 	    </dependency>
 	    <dependency>
 	        <groupId>org.overlord.rtgov.integration</groupId>
 	        <artifactId>rtgov-jbossas</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-management</groupId>
+                    <artifactId>activity</artifactId>
+                </exclusion>
+            </exclusions>
 	    </dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.content.services</groupId>
