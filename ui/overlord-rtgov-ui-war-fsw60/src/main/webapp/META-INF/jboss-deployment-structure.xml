@@ -24,7 +24,7 @@
       <module name="org.jboss.resteasy.resteasy-jaxrs" />
       <module name="org.apache.httpcomponents" />
       <module name="org.jboss.as.controller" />
-      <module name="deployment.overlord-rtgov.war" />
+      <module name="org.overlord.rtgov" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>
