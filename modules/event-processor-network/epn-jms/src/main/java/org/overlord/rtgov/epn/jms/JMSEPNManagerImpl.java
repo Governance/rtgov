@@ -17,7 +17,6 @@ package org.overlord.rtgov.epn.jms;
 
 import java.text.MessageFormat;
 import java.util.List;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +34,7 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
 
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.epn.AbstractEPNManager;
 import org.overlord.rtgov.epn.Channel;
 import org.overlord.rtgov.epn.EPNContainer;
@@ -78,8 +78,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     private String _epnEventsDestinationName=null;
     private String _epnNotificationsDestinationName=null;
     
-    private String _username=null;
-    private String _password=null;
+    private String _username=RTGovProperties.getProperty("JMSEPNManager.username");
+    private String _password=RTGovProperties.getProperty("JMSEPNManager.password");
     
     private Connection _connection=null;
     private Session _session=null;
