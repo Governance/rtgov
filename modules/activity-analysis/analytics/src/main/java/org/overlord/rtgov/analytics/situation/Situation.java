@@ -32,6 +32,8 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.Context;
 
@@ -300,6 +302,7 @@ public class Situation implements java.io.Externalizable {
     @Column(name="value")
     @CollectionTable(name="RTGOV_SITUATION_PROPERTIES",joinColumns={
             @JoinColumn(name="id",referencedColumnName="id")})
+    @JsonProperty("properties")
     public java.util.Map<String,String> getSituationProperties() {
         return (_situationProperties);
     }
@@ -325,6 +328,7 @@ public class Situation implements java.io.Externalizable {
      */
     @Deprecated
     @Transient
+    @JsonIgnore
     public java.util.Map<String,String> getProperties() {
         return (_situationProperties);
     }

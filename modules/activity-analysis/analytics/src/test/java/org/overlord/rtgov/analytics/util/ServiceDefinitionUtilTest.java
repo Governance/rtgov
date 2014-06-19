@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.analytics.service.util;
+package org.overlord.rtgov.analytics.util;
 
 import static org.junit.Assert.*;
 
