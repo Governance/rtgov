@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Install RTGov from distro" default="install">
+
+  <property name="type" value="all" />
+  <property name="platform" value="eap6" />
+
+  <target name="get-platform-path" unless="path" >
+    <echo message=" " />
+    <echo message=" Please tell us where platform ${platform} is located (full path)." />
+    <echo message=" " />
+    <input message="Path to ${platform}: " addproperty="path" />
+  </target>
+
+  <target name="setup" depends="get-platform-path" >
+
+    <condition property="platform.valid">
+      <or>
+        <equals arg1="${platform}" arg2="eap6" />
+      </or>
+    </condition>
+    <fail message="Supported platforms are 'eap6'" 
+              unless="platform.valid" />
+
+    <condition property="path.valid">
+      <available file="jboss-modules.jar" filepath="${path}" />
+    </condition>
+    <fail message="Failed to find platform ${platform} at: ${path}" 
+              unless="path.valid" />
+
+    <condition property="type.valid">
+      <or>
+        <equals arg1="${type}" arg2="all" />
+        <equals arg1="${type}" arg2="client" />
+      </or>
+    </condition>
+    <fail message="Install type must be 'all' or 'client'" 
+              unless="type.valid" />
+
+  </target>
+
+  <!-- Install RTGov -->
+  <target name="install" depends="setup" >
+    <echo message="Installing [${type}] into: ${path} " />
+    
+	<ant antfile="build.xml" target="install" dir="platforms/${platform}/${type}" >
+		<property name="basedir" value="${abs.basedir}/platforms/${platform}/${type}" />
+	</ant>
+  </target>
+
+  <!-- Uninstall RTGov -->
+  <target name="uninstall" depends="setup" >
+    <echo message="Uninstalling [${type}] from: ${path} " />
+    
+	<ant antfile="build.xml" target="uninstall" dir="platforms/${platform}/${type}" >
+		<property name="basedir" value="${abs.basedir}/platforms/${platform}/${type}" />
+	</ant>
+  </target>
+
+</project>
+

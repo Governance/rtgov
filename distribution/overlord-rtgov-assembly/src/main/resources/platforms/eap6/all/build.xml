@@ -12,7 +12,7 @@
 		<condition property="install.bpms">
             <and>
 			    <not>
-				    <available file="${jboss.home}/modules/system/layers/bpms"/>
+				    <available file="${path}/modules/system/layers/bpms"/>
 			    </not>
 				<available file="${basedir}/../../modules/${bpms.layer}"/>
             </and>
@@ -21,13 +21,13 @@
 
 	<target name="bpms-layer-deploy" depends="check-install-bpms" if="install.bpms" >
 		<echo message="**** Installing BPMS dependencies ****" />
-        <unzip src="${basedir}/../../modules/${bpms.layer}" dest="${jboss.home}"/>
+        <unzip src="${basedir}/../../modules/${bpms.layer}" dest="${path}"/>
 	</target>
 
-	<target name="deploy" depends="create.schema, bpms-layer-deploy" >
+	<target name="install" depends="create.schema, bpms-layer-deploy" >
 		<ant antfile="build.xml" target="install"
 				dir="overlord-commons" >
-			<property name="overlord-commons.appserver.dir" value="${jboss.home}" />
+			<property name="overlord-commons.appserver.dir" value="${path}" />
 			<property name="overlord-commons.idp.file" value="${basedir}/overlord-commons/overlord-commons-idp-eap6.war" />
 			<property name="overlord-commons.services.file" value="${basedir}/overlord-commons/overlord-commons-services.jar" />
 			<property name="overlord-commons.auth.file" value="${basedir}/overlord-commons/overlord-commons-auth.jar" />
@@ -41,18 +41,18 @@
 
 		<!-- Install Runtime Governance -->
 
-		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
+		<copy todir="${path}/standalone/deployments/overlord-rtgov" >
 			<fileset dir="deployments" />
 		</copy>
-		<copy todir="${jboss.home}/standalone/configuration" >
+		<copy todir="${path}/standalone/configuration" >
 			<fileset dir="configuration" />
 		</copy>
 
 	</target>
 	
-	<target name="undeploy" depends="drop.schema" >
-		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov"/>
-		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties"/>
+	<target name="uninstall" depends="drop.schema" >
+		<delete dir="${path}/standalone/deployments/overlord-rtgov"/>
+		<delete file="${path}/standalone/configuration/overlord-rtgov.properties"/>
 	</target>
 
 	<!-- ### LOG PROPERTIES ################################################# -->
