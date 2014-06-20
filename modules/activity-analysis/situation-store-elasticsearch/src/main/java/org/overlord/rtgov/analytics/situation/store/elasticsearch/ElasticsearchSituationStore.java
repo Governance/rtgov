@@ -176,7 +176,7 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
             BoolQueryBuilder bool=QueryBuilders.boolQuery();
             
             if (!isNullOrEmpty(sitQuery.getResolutionState())) {
-                bool.must(QueryBuilders.matchQuery("situationProperties."+SituationStore.RESOLUTION_STATE_PROPERTY, sitQuery.getResolutionState()));
+                bool.must(QueryBuilders.matchQuery("properties."+SituationStore.RESOLUTION_STATE_PROPERTY, sitQuery.getResolutionState()));
             }
             
             if (sitQuery.getProperties() != null && !sitQuery.getProperties().isEmpty()) {
@@ -185,9 +185,9 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
                     Object key = entry.getKey();
                     Object value = entry.getValue();
                     if (value instanceof String) {
-                        bool.must(QueryBuilders.fuzzyLikeThisFieldQuery("situationProperties."+key).likeText((String)value));
+                        bool.must(QueryBuilders.fuzzyLikeThisFieldQuery("properties."+key).likeText((String)value));
                     } else {
-                        bool.must(QueryBuilders.matchQuery("situationProperties."+key, value));
+                        bool.must(QueryBuilders.matchQuery("properties."+key, value));
                     }
                 }
             }
