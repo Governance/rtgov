@@ -6,35 +6,35 @@
 	<target name="setup">
 		<echo message="Setting up Overlord Runtime Governance deployments"/>
 
-		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov" />
+		<delete dir="${path}/standalone/deployments/overlord-rtgov" />
 
 		<!-- Copy data source definitions -->
-		<copy todir="${jboss.home}/standalone/deployments/overlord-rtgov" >
+		<copy todir="${path}/standalone/deployments/overlord-rtgov" >
 			<fileset dir="${ant.file.rtgovtests}/../../distribution/overlord-rtgov-assembly/src/main/resources/platforms/eap6/all/deployments" />
 		</copy>
 
 		<echo message="Setting up Overlord Runtime Governance configuration"/>
 
-		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties" />
+		<delete file="${path}/standalone/configuration/overlord-rtgov.properties" />
 
-		<copy todir="${jboss.home}/standalone/configuration" >
+		<copy todir="${path}/standalone/configuration" >
 			<fileset file="${ant.file.rtgovtests}/../../distribution/overlord-rtgov-assembly/src/main/resources/platforms/eap6/all/configuration/overlord-rtgov.properties" />
 		</copy>
 
 		<!-- Security related configuration -->
 
-		<copy todir="${jboss.home}/standalone/configuration" >
+		<copy todir="${path}/standalone/configuration" >
 			<fileset file="${ant.file.rtgovtests}/../configuration/overlord-*.properties" />
 			<fileset file="${ant.file.rtgovtests}/../configuration/overlord-*.xml" />
 		</copy>
 	</target>
 
 	<target name="setupFull" depends="setup" >
-		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov.war"
+		<copy tofile="${path}/standalone/deployments/overlord-rtgov/overlord-rtgov.war"
 			file="${org.overlord.rtgov:overlord-rtgov-war-all-eap6:war}" />
-		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-epn.war"
+		<copy tofile="${path}/standalone/deployments/overlord-rtgov/overlord-rtgov-epn.war"
 			file="${org.overlord.rtgov.content:overlord-rtgov-epn-jee:war}" />
-		<copy tofile="${jboss.home}/standalone/deployments/overlord-rtgov/overlord-rtgov-acs.war"
+		<copy tofile="${path}/standalone/deployments/overlord-rtgov/overlord-rtgov-acs.war"
 			file="${org.overlord.rtgov.content:overlord-rtgov-acs-jee:war}" />
 
 		<!-- Create database -->
@@ -53,13 +53,13 @@
 
 	<target name="clean">
 		<echo message="Cleaning up Overlord Runtime Governance deployments"/>
-		<delete dir="${jboss.home}/standalone/deployments/overlord-rtgov" />
+		<delete dir="${path}/standalone/deployments/overlord-rtgov" />
 
 		<echo message="Cleaning up Overlord Runtime Governance configuration"/>
-		<delete file="${jboss.home}/standalone/configuration/overlord-rtgov.properties" />
+		<delete file="${path}/standalone/configuration/overlord-rtgov.properties" />
 
 		<echo message="Cleaning up Overlord Runtime Governance database"/>
-		<delete file="${jboss.home}/standalone/data/${database}/rtgov.*" />
+		<delete file="${path}/standalone/data/${database}/rtgov.*" />
 	</target>
 
 </project>
