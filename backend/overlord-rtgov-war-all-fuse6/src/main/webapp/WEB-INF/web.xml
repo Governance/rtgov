@@ -72,13 +72,13 @@
     </servlet-mapping>
 
     <!-- Security -->
-    
     <filter>
         <filter-name>AuthFilter</filter-name>
-        <filter-class>org.overlord.commons.auth.jetty8.Jetty8SamlBearerTokenAuthFilter</filter-class>
+        <filter-class>org.overlord.commons.auth.filters.SamlBearerTokenAuthFilter</filter-class>
+        <description>This filter provides support for BASIC authentication that works with both standard user/password auth as well as SAML Bearer Token auth.</description>
         <init-param>
             <param-name>allowedIssuers</param-name>
-            <param-value>/overlord-rtgov</param-value>
+            <param-value>/rtgov-ui</param-value>
         </init-param>
     </filter>
     <filter-mapping>
@@ -97,5 +97,10 @@
         <filter-name>AuthFilter</filter-name>
         <servlet-name>CallTrace</servlet-name>
     </filter-mapping>
+    
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>Overlord</realm-name>
+    </login-config>
 
 </web-app>

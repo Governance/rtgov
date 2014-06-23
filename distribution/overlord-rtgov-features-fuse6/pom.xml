@@ -160,6 +160,12 @@
 			<artifactId>call-trace-rests</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-war-all-fuse6</artifactId>
+			<type>war</type>
+		</dependency>
+
 		<!-- RTGov UI -->
 
 		<dependency>
@@ -616,7 +622,7 @@
 										<include>org.overlord.rtgov.content.services:call-trace-rests:*</include>
 										<include>org.overlord.rtgov.content.services:service-dependency-rests:*</include>
 										<include>org.overlord.rtgov.content.services:situation-manager-rests:*</include>
-										<include>org.overlord.rtgov.karaf:overlord-rtgov:*</include>
+										<include>org.overlord.rtgov:overlord-rtgov-war-all-fuse6:*</include>
 									</includes>
 								</feature>
 								<feature>
