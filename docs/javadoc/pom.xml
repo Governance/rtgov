@@ -1,0 +1,163 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>rtgov-javadoc</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>Overlord RTGov::Docs::Javadoc</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov.docs</groupId>
+		<artifactId>parent</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+    <build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<configuration>
+						<excludePackageNames>org.overlord.rtgov.tests.*:*.internal.*:*.quickstarts.*:*.samples.*:*.loader.*:org.overlord.rtgov.activity.server.jms.client:org.overlord.rtgov.active.collection.rest:org.overlord.rtgov.activity.server.rest:org.overlord.rtgov.call.trace.rest:org.overlord.rtgov.content.epn:org.overlord.rtgov.epn.jms:org.overlord.rtgov.reports.rest:org.overlord.rtgov.service.dependency.rest:org.overlord.rtgov.situation.manager.rest:org.overlord.rtgov.switchyard.exchange</excludePackageNames>
+						<groups>
+							<group>
+								<title>Activity Model</title>
+								<packages>org.overlord.rtgov.activity.model*:org.overlord.rtgov.activity.util</packages>
+							</group>
+							<group>
+								<title>Activity Collection</title>
+								<packages>org.overlord.rtgov.activity.collector*:org.overlord.rtgov.activity.processor*:org.overlord.rtgov.activity.validator*:org.overlord.rtgov.activity.embedded*</packages>
+							</group>
+							<group>
+								<title>Activity Server</title>
+						<packages>org.overlord.rtgov.activity.server:org.overlord.rtgov.activity.server.epn:org.overlord.rtgov.activity.server.rest.client:org.overlord.rtgov.activity.store*</packages>
+							</group>
+							<group>
+								<title>Event Processing</title>
+								<packages>org.overlord.rtgov.ep:org.overlord.rtgov.ep.*:org.overlord.rtgov.epn:org.overlord.rtgov.epn.embedded:org.overlord.rtgov.epn.util:org.overlord.rtgov.epn.validation</packages>
+							</group>
+							<group>
+								<title>Active Collections</title>
+								<packages>org.overlord.rtgov.active.collection:org.overlord.rtgov.active.collection.embedded:org.overlord.rtgov.active.collection.epn:org.overlord.rtgov.active.collection.infinispan:org.overlord.rtgov.active.collection.jmx:org.overlord.rtgov.active.collection.predicate:org.overlord.rtgov.active.collection.util</packages>
+							</group>
+							<group>
+								<title>Services</title>
+								<packages>org.overlord.rtgov.call.trace:org.overlord.rtgov.call.trace.descriptors:org.overlord.rtgov.call.trace.model:org.overlord.rtgov.call.trace.util:org.overlord.rtgov.reports:org.overlord.rtgov.reports.model:org.overlord.rtgov.reports.util:org.overlord.rtgov.service.dependency:org.overlord.rtgov.service.dependency.layout:org.overlord.rtgov.service.dependency.presentation:org.overlord.rtgov.service.dependency.svg:org.overlord.rtgov.situation.manager</packages>
+							</group>
+							<group>
+								<title>Integration Support</title>
+								<packages>org.overlord.rtgov.client*</packages>
+							</group>
+						</groups>
+					</configuration>
+					<executions>
+						<execution>
+							<id>aggregate</id>
+							<goals>
+								<goal>aggregate</goal>
+							</goals>
+							<phase>package</phase>
+							<configuration>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${project.build.directory}/sources" />
+                                <copy todir="${project.build.directory}/sources">
+                                    <fileset dir="../../modules">
+                                        <include name="**/src/main/java/**/*.java" />
+                                        <exclude name="**/internal/**" />
+                                    </fileset>
+                                </copy>                                
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <sourcepath>${project.build.directory}/sources</sourcepath>
+                            <notimestamp>true</notimestamp>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>rtgov-javadoc</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <sourcepath>${project.build.directory}/sources</sourcepath>
+                            <outputDirectory>${project.build.directory}/api</outputDirectory>
+                            <finalName>rtgov-javadoc</finalName>
+                            <attach>false</attach>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <minmemory>128m</minmemory>
+                    <maxmemory>768m</maxmemory>
+                    <header>Overlord RTGov</header>
+                    <footer>Overlord RTGov</footer>
+                    <doctitle>Overlord RTGov ${project.version} API</doctitle>
+                    <notimestamp>true</notimestamp>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+<!--
+	<profiles>
+		<profile>
+			<id>javadoc</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>aggregate</id>
+								<goals>
+									<goal>aggregate-jar</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+-->
+  
+</project>
