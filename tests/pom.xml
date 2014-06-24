@@ -25,6 +25,7 @@
 				<module>activity-analysis</module>
 				<module>activity-management</module>
 				<module>event-processor-network</module>
+                <!-- module>performance</module -->
 				<module>platform</module>
 				<module>ui</module>
 			</modules>
