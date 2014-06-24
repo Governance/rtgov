@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>javadoc</module>
+		<module>restapi</module>
 	</modules>
 
 </project>

@@ -103,6 +103,15 @@
 		<module>ui</module>
 	</modules>
 
+    <profiles>
+        <profile>
+            <id>docs</id>
+            <modules>
+                <module>docs</module>
+            </modules>
+        </profile>
+    </profiles>
+
 	<dependencyManagement>
 		<dependencies>
             <!-- NOTE: TEMPORARY DEPENDENCIES FOR 2.0.0.Alpha ONLY
@@ -174,6 +183,12 @@
 			    <groupId>org.overlord.rtgov.active-queries</groupId>
 			    <artifactId>active-collection-rests</artifactId>
 			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>active-collection-rests</artifactId>
+			    <version>${project.version}</version>
+                <classifier>sources</classifier>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.active-queries</groupId>
@@ -292,6 +307,12 @@
 			    <artifactId>activity-server-rests</artifactId>
 			    <version>${project.version}</version>
 		    </dependency>
+            <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-server-rests</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.activity-management</groupId>
 			    <artifactId>activity-client-jee</artifactId>
@@ -408,8 +429,20 @@
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.content.services</groupId>
+			    <artifactId>call-trace-rests</artifactId>
+			    <version>${project.version}</version>
+                <classifier>sources</classifier>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content.services</groupId>
 			    <artifactId>service-dependency-rests</artifactId>
 			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content.services</groupId>
+			    <artifactId>service-dependency-rests</artifactId>
+			    <version>${project.version}</version>
+                <classifier>sources</classifier>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.content.services</groupId>
@@ -619,14 +652,26 @@
             <!-- Documentation -->
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
-			    <artifactId>developerguide</artifactId>
+			    <artifactId>rtgov-developerguide</artifactId>
                 <type>jdocbook</type>
 			    <version>${rtgov-docs.version}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
-			    <artifactId>userguide</artifactId>
+			    <artifactId>rtgov-userguide</artifactId>
                 <type>jdocbook</type>
+			    <version>${rtgov-docs.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.docs</groupId>
+			    <artifactId>rtgov-javadoc</artifactId>
+                <type>javadoc</type>
+			    <version>${rtgov-docs.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.docs</groupId>
+			    <artifactId>rtgov-restapi</artifactId>
+                <type>zip</type>
 			    <version>${rtgov-docs.version}</version>
 		    </dependency>
 
