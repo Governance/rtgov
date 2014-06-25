@@ -103,30 +103,14 @@
 		<module>ui</module>
 	</modules>
 
-	<profiles>
-		<profile>
-			<id>javadoc</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>aggregate</id>
-								<goals>
-									<goal>aggregate-jar</goal>
-								</goals>
-								<phase>package</phase>
-								<configuration>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+    <profiles>
+        <profile>
+            <id>docs</id>
+            <modules>
+                <module>docs</module>
+            </modules>
+        </profile>
+    </profiles>
 
 	<dependencyManagement>
 		<dependencies>
@@ -199,6 +183,12 @@
 			    <groupId>org.overlord.rtgov.active-queries</groupId>
 			    <artifactId>active-collection-rests</artifactId>
 			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.active-queries</groupId>
+			    <artifactId>active-collection-rests</artifactId>
+			    <version>${project.version}</version>
+                <classifier>sources</classifier>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.active-queries</groupId>
@@ -317,6 +307,12 @@
 			    <artifactId>activity-server-rests</artifactId>
 			    <version>${project.version}</version>
 		    </dependency>
+            <dependency>
+			    <groupId>org.overlord.rtgov.activity-management</groupId>
+			    <artifactId>activity-server-rests</artifactId>
+                <version>${project.version}</version>
+                <classifier>sources</classifier>
+		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.activity-management</groupId>
 			    <artifactId>activity-client-jee</artifactId>
@@ -433,8 +429,20 @@
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.content.services</groupId>
+			    <artifactId>call-trace-rests</artifactId>
+			    <version>${project.version}</version>
+                <classifier>sources</classifier>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content.services</groupId>
 			    <artifactId>service-dependency-rests</artifactId>
 			    <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.content.services</groupId>
+			    <artifactId>service-dependency-rests</artifactId>
+			    <version>${project.version}</version>
+                <classifier>sources</classifier>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.content.services</groupId>
@@ -644,14 +652,26 @@
             <!-- Documentation -->
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
-			    <artifactId>developerguide</artifactId>
+			    <artifactId>rtgov-developerguide</artifactId>
                 <type>jdocbook</type>
 			    <version>${rtgov-docs.version}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
-			    <artifactId>userguide</artifactId>
+			    <artifactId>rtgov-userguide</artifactId>
                 <type>jdocbook</type>
+			    <version>${rtgov-docs.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.docs</groupId>
+			    <artifactId>rtgov-javadoc</artifactId>
+                <type>javadoc</type>
+			    <version>${rtgov-docs.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.docs</groupId>
+			    <artifactId>rtgov-restapi</artifactId>
+                <type>zip</type>
 			    <version>${rtgov-docs.version}</version>
 		    </dependency>
 
@@ -1041,54 +1061,6 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<configuration>
-						<excludePackageNames>org.overlord.rtgov.tests.*:*.internal.*:*.quickstarts.*:*.samples.*:*.loader.*:org.overlord.rtgov.activity.server.jms.client:org.overlord.rtgov.active.collection.rest:org.overlord.rtgov.activity.server.rest:org.overlord.rtgov.call.trace.rest:org.overlord.rtgov.content.epn:org.overlord.rtgov.epn.jms:org.overlord.rtgov.reports.rest:org.overlord.rtgov.service.dependency.rest:org.overlord.rtgov.situation.manager.rest:org.overlord.rtgov.switchyard.exchange</excludePackageNames>
-						<groups>
-							<group>
-								<title>Activity Model</title>
-								<packages>org.overlord.rtgov.activity.model*:org.overlord.rtgov.activity.util</packages>
-							</group>
-							<group>
-								<title>Activity Collection</title>
-								<packages>org.overlord.rtgov.activity.collector*:org.overlord.rtgov.activity.processor*:org.overlord.rtgov.activity.validator*:org.overlord.rtgov.activity.embedded*</packages>
-							</group>
-							<group>
-								<title>Activity Server</title>
-						<packages>org.overlord.rtgov.activity.server:org.overlord.rtgov.activity.server.epn:org.overlord.rtgov.activity.server.rest.client:org.overlord.rtgov.activity.store*</packages>
-							</group>
-							<group>
-								<title>Event Processing</title>
-								<packages>org.overlord.rtgov.ep:org.overlord.rtgov.ep.*:org.overlord.rtgov.epn:org.overlord.rtgov.epn.embedded:org.overlord.rtgov.epn.util:org.overlord.rtgov.epn.validation</packages>
-							</group>
-							<group>
-								<title>Active Collections</title>
-								<packages>org.overlord.rtgov.active.collection:org.overlord.rtgov.active.collection.embedded:org.overlord.rtgov.active.collection.epn:org.overlord.rtgov.active.collection.infinispan:org.overlord.rtgov.active.collection.jmx:org.overlord.rtgov.active.collection.predicate:org.overlord.rtgov.active.collection.util</packages>
-							</group>
-							<group>
-								<title>Services</title>
-								<packages>org.overlord.rtgov.call.trace:org.overlord.rtgov.call.trace.descriptors:org.overlord.rtgov.call.trace.model:org.overlord.rtgov.call.trace.util:org.overlord.rtgov.reports:org.overlord.rtgov.reports.model:org.overlord.rtgov.reports.util:org.overlord.rtgov.service.dependency:org.overlord.rtgov.service.dependency.layout:org.overlord.rtgov.service.dependency.presentation:org.overlord.rtgov.service.dependency.svg:org.overlord.rtgov.situation.manager</packages>
-							</group>
-							<group>
-								<title>Integration Support</title>
-								<packages>org.overlord.rtgov.client*</packages>
-							</group>
-						</groups>
-					</configuration>
-					<executions>
-						<execution>
-							<id>aggregate</id>
-							<goals>
-								<goal>aggregate</goal>
-							</goals>
-							<phase>package</phase>
-							<configuration>
-							</configuration>
-						</execution>
-					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.switchyard</groupId>

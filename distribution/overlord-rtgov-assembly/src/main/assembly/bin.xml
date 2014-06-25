@@ -60,39 +60,75 @@
         <!-- Documentation -->
         <dependencySet>
             <outputDirectory>docs/developerguide</outputDirectory>
-                <includes>
-                    <include>org.overlord.rtgov.docs:developerguide:jdocbook</include>
-                </includes>
-                <useProjectArtifact>false</useProjectArtifact>
-                <useProjectAttachments>false</useProjectAttachments>
-                <useTransitiveDependencies>false</useTransitiveDependencies>
-                <useTransitiveFiltering>false</useTransitiveFiltering>
-                <directoryMode>0755</directoryMode>
-                <fileMode>0755</fileMode>
-                <unpack>true</unpack>
-                <unpackOptions>
-                    <excludes>
-                        <exclude>**/META-INF/**</exclude>
-                    </excludes>
-                </unpackOptions>
+            <includes>
+                <include>org.overlord.rtgov.docs:rtgov-developerguide:jdocbook</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
         </dependencySet>
         <dependencySet>
             <outputDirectory>docs/userguide</outputDirectory>
-                <includes>
-                    <include>org.overlord.rtgov.docs:userguide:jdocbook</include>
-                </includes>
-                <useProjectArtifact>false</useProjectArtifact>
-                <useProjectAttachments>false</useProjectAttachments>
-                <useTransitiveDependencies>false</useTransitiveDependencies>
-                <useTransitiveFiltering>false</useTransitiveFiltering>
-                <directoryMode>0755</directoryMode>
-                <fileMode>0755</fileMode>
-                <unpack>true</unpack>
-                <unpackOptions>
-                    <excludes>
-                        <exclude>**/META-INF/**</exclude>
-                    </excludes>
-                </unpackOptions>
+            <includes>
+                <include>org.overlord.rtgov.docs:rtgov-userguide:jdocbook</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>docs/javadoc</outputDirectory>
+            <includes>
+                <include>org.overlord.rtgov.docs:rtgov-javadoc:javadoc</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>docs/restapi</outputDirectory>
+            <includes>
+                <include>org.overlord.rtgov.docs:rtgov-restapi:zip</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
         </dependencySet>
 
 		<!-- EAP6 'all' profile -->

@@ -82,13 +82,23 @@
         <!-- Documentation -->
 		<dependency>
 			<groupId>org.overlord.rtgov.docs</groupId>
-			<artifactId>developerguide</artifactId>
+			<artifactId>rtgov-developerguide</artifactId>
             <type>jdocbook</type>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.docs</groupId>
-			<artifactId>userguide</artifactId>
+			<artifactId>rtgov-userguide</artifactId>
             <type>jdocbook</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.docs</groupId>
+			<artifactId>rtgov-javadoc</artifactId>
+            <type>javadoc</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.docs</groupId>
+			<artifactId>rtgov-restapi</artifactId>
+            <type>zip</type>
 		</dependency>
 
 	</dependencies> 

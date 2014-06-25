@@ -1,0 +1,6 @@
+<enunciate>
+    <api-import pattern="org.overlord.rtgov.activity.server.rest.RESTActivityServer" />
+    <api-import pattern="org.overlord.rtgov.active.collection.rest.RESTActiveCollectionServer" />
+    <api-import pattern="org.overlord.rtgov.call.trace.rest.RESTCallTraceServer" />
+    <api-import pattern="org.overlord.rtgov.service.dependency.rest.RESTServiceDependencyServer" />
+</enunciate>
