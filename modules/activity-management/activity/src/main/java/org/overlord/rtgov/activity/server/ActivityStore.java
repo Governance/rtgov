@@ -73,6 +73,7 @@ public interface ActivityStore {
      * @param query The query
      * @return The list of activities that satisfy the query
      * @throws Exception Failed to query events
+     * @deprecated No longer supported as it introduces a dependency between clients and the ActivityStore implementation
      */
     public java.util.List<ActivityType> query(QuerySpec query) throws Exception;
     
