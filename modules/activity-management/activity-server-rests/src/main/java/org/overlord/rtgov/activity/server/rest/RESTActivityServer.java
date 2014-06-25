@@ -189,6 +189,7 @@ public class RESTActivityServer {
      * @param qspec The query spec
      * @return The list of activity events
      * @throws Exception Failed to query activity events
+     * @deprecated No longer supported as it introduces a dependency between clients and the ActivityStore implementation
      */
     @POST
     @Path("/query")

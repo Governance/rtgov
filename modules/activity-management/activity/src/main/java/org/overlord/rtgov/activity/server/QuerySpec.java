@@ -22,6 +22,7 @@ import java.io.ObjectOutput;
 /**
  * This class represents a query specification.
  *
+ * @deprecated No longer supported as it introduces a dependency between clients and the ActivityStore implementation
  */
 public class QuerySpec implements java.io.Externalizable {
 
