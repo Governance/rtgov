@@ -22,6 +22,8 @@ import java.io.ObjectOutput;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * This activity type represents a received request.
  *
@@ -53,6 +55,7 @@ public class ResponseReceived extends RPCActivityType implements java.io.Externa
      * {@inheritDoc}
      */
     @Transient
+    @JsonIgnore
     public boolean isRequest() {
         return (false);
     }
@@ -61,6 +64,7 @@ public class ResponseReceived extends RPCActivityType implements java.io.Externa
      * {@inheritDoc}
      */
     @Transient
+    @JsonIgnore
     public boolean isServiceProvider() {
         return (false);
     }

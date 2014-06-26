@@ -27,6 +27,7 @@ import org.overlord.rtgov.active.collection.predicate.Predicate;
  * collection name and predicate.
  *
  */
+@org.codehaus.enunciate.json.JsonRootType
 public class QuerySpec {
 
     private String _collection=null;

@@ -39,6 +39,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="RTGOV_ACTIVITY_UNITS")
+@org.codehaus.enunciate.json.JsonRootType
 public class ActivityUnit implements java.io.Externalizable {
 
     private static final int VERSION = 1;

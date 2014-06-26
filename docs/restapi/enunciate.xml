@@ -3,4 +3,25 @@
     <api-import pattern="org.overlord.rtgov.active.collection.rest.RESTActiveCollectionServer" />
     <api-import pattern="org.overlord.rtgov.call.trace.rest.RESTCallTraceServer" />
     <api-import pattern="org.overlord.rtgov.service.dependency.rest.RESTServiceDependencyServer" />
+
+    <modules>
+        <!-- docs splashPackage="myservice.service"
+            includeDefaultDownloads="false" disableRestMountpoint="true"
+            applyWsdlFilter="false" docsDir="api" title="My Service API"
+            copyright="ME Inc" / -->
+        <docs disableRestMountpoint="true" title="Overlord RTGov"
+                        copyright="Red Hat, Inc" includeExampleXml="false" />
+
+        <services>
+            <rest defaultRestSubcontext="/" />
+        </services>
+
+        <csharp disabled="true"/>
+        <c disabled="true"/>
+        <obj-c disabled="true"/>
+        <cxf disabled="true"/>
+        <jaxws-ri disabled="true"/>
+        <xfire disabled="true"/>
+        <jersey disabled="true"/>
+    </modules>
 </enunciate>

@@ -20,6 +20,7 @@ package org.overlord.rtgov.call.trace.model;
  * call trace.
  *
  */
+@org.codehaus.enunciate.json.JsonType
 public abstract class ParentNode extends TraceNode {
 
     private java.util.List<TraceNode> _tasks=new java.util.ArrayList<TraceNode>();

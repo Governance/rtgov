@@ -127,11 +127,12 @@ public class RESTServiceDependencyServer {
     }
     
     /**
-     * This method handles queries.
+     * This method returns the service dependency graph, optionally constrained
+     * to the supplied service type.
      * 
      * @param width The optional width
      * @param serviceType The optional service type to focus the service dependency
-     * @return The list of objects
+     * @return The SVG representation of the service dependency graph
      * @throws Exception Failed to query
      */
     @GET
