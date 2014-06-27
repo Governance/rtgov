@@ -27,6 +27,7 @@ import org.codehaus.jackson.annotate.JsonSubTypes.Type;
 @JsonTypeInfo(use=JsonTypeInfo.Id.NAME, include=JsonTypeInfo.As.PROPERTY, property="type")
 @JsonSubTypes({@Type(value=Call.class),
     @Type(value=Task.class) })
+@org.codehaus.enunciate.json.JsonType
 public abstract class TraceNode {
 
     private long _duration=0;

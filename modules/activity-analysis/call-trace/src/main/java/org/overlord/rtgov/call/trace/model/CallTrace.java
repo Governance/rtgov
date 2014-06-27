@@ -19,6 +19,7 @@ package org.overlord.rtgov.call.trace.model;
  * This class represents the call trace.
  *
  */
+@org.codehaus.enunciate.json.JsonRootType
 public class CallTrace {
 
     private java.util.List<TraceNode> _tasks=new java.util.ArrayList<TraceNode>();

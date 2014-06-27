@@ -80,27 +80,27 @@ public class RESTCallTraceServer {
     @GET
     @Path("/instance")
     @Produces("application/json")
-    public String instance(@DefaultValue("Conversation") @QueryParam("type") String type,
+    public CallTrace instance(@DefaultValue("Conversation") @QueryParam("type") String type,
                     @QueryParam("value") String value) throws Exception {
-        String ret="";
-        
         init();
         
         CallTrace ct=getCallTrace(type, value);
         
-        if (ct != null) {
-            byte[] b=CallTraceUtil.serializeCallTrace(ct);
-            
-            if (b != null) {
-                ret = new String(b);
-            }
-        }
-        
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Instance="+ret);        
+            String text="";
+            
+            if (ct != null) {
+                byte[] b=CallTraceUtil.serializeCallTrace(ct);
+                
+                if (b != null) {
+                    text = new String(b);
+                }
+            }
+            
+            LOG.finest("Instance="+text);        
         }
 
-        return (ret);
+        return (ct);
     }
     
     /**

@@ -20,6 +20,7 @@ package org.overlord.rtgov.call.trace.model;
  * service operation invocation.
  *
  */
+@org.codehaus.enunciate.json.JsonType
 public class Call extends ParentNode {
 
     private String _interface=null;

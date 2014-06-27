@@ -73,6 +73,7 @@ import org.overlord.rtgov.activity.model.soa.ResponseSent;
     discriminatorType=DiscriminatorType.STRING
 )
 @Table(name="RTGOV_ACTIVITIES")
+@org.codehaus.enunciate.json.JsonRootType
 public abstract class ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;

@@ -20,6 +20,7 @@ package org.overlord.rtgov.call.trace.model;
  * call trace tree.
  *
  */
+@org.codehaus.enunciate.json.JsonType
 public class Task extends TraceNode {
 
     private String _description=null;

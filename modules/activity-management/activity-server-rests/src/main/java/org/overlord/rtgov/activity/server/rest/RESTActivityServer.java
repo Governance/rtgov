@@ -28,6 +28,7 @@ import org.overlord.rtgov.common.util.BeanResolverUtil;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -96,9 +97,7 @@ public class RESTActivityServer {
     @GET
     @Path("/unit")
     @Produces("application/json")
-    public String getActivityUnit(@QueryParam("id") String id) throws Exception {
-        String ret="";
-        
+    public ActivityUnit getActivityUnit(@QueryParam("id") String id) throws Exception {
         init();
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -110,40 +109,40 @@ public class RESTActivityServer {
         }
         
         ActivityUnit au=_activityServer.getActivityUnit(id);
-        
-        if (au != null) {
-            byte[] b=ActivityUtil.serializeActivityUnit(au);
-            
-            ret = new String(b);
-        }
-        
+               
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Activity Server Query Result="+ret);        
+            String text=null;
+            
+            if (au != null) {
+                byte[] b=ActivityUtil.serializeActivityUnit(au);
+                
+                text = new String(b);
+            }
+            
+            LOG.finest("Activity Server: Activity Unit for id '"+id+"': "+text);        
         }
 
-        return (ret);
+        return (au);
     }
 
     /**
-     * This method returns activity types (events) associated with
-     * the supplied context value.
+     * This method returns a list of ActivityType (activity event) objects associated with
+     * the supplied context type and value.
      * 
      * @param type The type
      * @param value The value
      * @param from The optional 'from' timestamp
      * @param to The optional 'to' timestamp
-     * @return The list of activity types
+     * @return The list of ActivityType event objects
      * @throws Exception Failed to obtain activity types
      */
     @GET
     @Path("/events")
     @Produces("application/json")
-    public String getActivityTypes(@QueryParam("type") String type,
+    public java.util.List<ActivityType> getActivityTypes(@QueryParam("type") String type,
             @QueryParam("value") String value,
             @DefaultValue("0") @QueryParam("from") long from,
             @DefaultValue("0") @QueryParam("to") long to) throws Exception {
-        String ret="";
-        
         init();
         
         Context context=new Context();
@@ -170,17 +169,20 @@ public class RESTActivityServer {
             list = _activityServer.getActivityTypes(context);
         }
         
-        if (list != null) {
-            byte[] b=ActivityUtil.serializeActivityTypeList(list);
-            
-            ret = new String(b);
-        }
-        
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Activity Server: Get Activity Types Result="+ret);        
+            String text=null;
+            
+            if (list != null) {
+                byte[] b=ActivityUtil.serializeActivityTypeList(list);
+                
+                text = new String(b);
+            }
+            
+            LOG.finest("Activity Server: Get ActivityTypes for type='"+type+"' value='"
+                            +value+"' from="+from+" to="+to+": "+text);        
         }
 
-        return (ret);
+        return (list);
     }
     
     /**
@@ -229,26 +231,22 @@ public class RESTActivityServer {
     }
 
     /**
-     * This method stores the supplied list of activity events.
+     * This method stores the supplied list of ActivityUnit objects.
      * 
-     * @param acts The list of activity events
+     * @param acts The list of ActivityUnit objects
      * @return A response indicating success or failure
      * @throws Exception Failed to perform store operation
      */
     @POST
     @Path("/store")
-    public Response store(String acts) throws Exception {
+    @Consumes("application/json")
+    @Produces("text/plain")
+    public Response store(java.util.List<ActivityUnit> acts) throws Exception {
         init();
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Store activities="+acts);        
-        }
-        
-        java.util.List<ActivityUnit> activities=
-                    ActivityUtil.deserializeActivityUnitList(acts.getBytes());
-        
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Store "+activities.size()+" activities");        
+            byte[] b=ActivityUtil.serializeActivityUnitList(acts);
+            LOG.finest("Store "+acts.size()+" activities: "+new String(b));        
         }
         
         if (_activityServer == null) {
@@ -256,7 +254,7 @@ public class RESTActivityServer {
         }
 
         try {
-            _activityServer.store(activities);
+            _activityServer.store(acts);
             
             return Response.status(Status.OK).entity("Activities stored").build();
         } catch (Exception e) {

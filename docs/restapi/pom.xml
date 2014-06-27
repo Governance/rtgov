@@ -64,6 +64,17 @@
 			<artifactId>jboss-javaee-6.0</artifactId>
 			<type>pom</type>
 		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.enunciate</groupId>
+			<artifactId>enunciate-core</artifactId>
+            <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.enunciate</groupId>
+			<artifactId>enunciate-core-annotations</artifactId>
+            <scope>provided</scope>
+		</dependency>
     </dependencies>
 
     <build>
