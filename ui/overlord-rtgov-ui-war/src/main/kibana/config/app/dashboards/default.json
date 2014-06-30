@@ -263,7 +263,7 @@
             "value_type": "individual",
             "query_as_alias": true
           },
-          "title": "Service distribution over Time",
+          "title": "Distribution over Time",
           "scale": 1,
           "y_format": "none",
           "grid": {
