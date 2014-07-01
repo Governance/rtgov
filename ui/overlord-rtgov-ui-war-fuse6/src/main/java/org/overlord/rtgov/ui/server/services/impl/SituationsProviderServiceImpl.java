@@ -42,7 +42,7 @@ import org.overlord.rtgov.ui.server.services.ISituationsServiceImpl;
 @Alternative
 public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
 
-	private static final int SITUATIONS_PER_PAGE=5;
+	private static final int SITUATIONS_PER_PAGE=10;
 	
 	@Inject
 	private SituationsProvider _provider;
