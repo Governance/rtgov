@@ -16,7 +16,7 @@
 package org.overlord.rtgov.ui.provider.switchyard;
 
 
-import static com.google.common.base.Objects.firstNonNull;
+import static com.google.common.base.Strings.nullToEmpty;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor.getActiveCollectionManager;
@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +53,7 @@ import org.overlord.rtgov.service.dependency.ServiceDependencyBuilder;
 import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;
 import org.overlord.rtgov.service.dependency.svg.SVGServiceGraphGenerator;
+import org.overlord.rtgov.ui.client.model.BindingBean;
 import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
@@ -67,6 +69,7 @@ import org.switchyard.remote.http.HttpInvoker;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
@@ -137,30 +140,36 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 
 	@Override
 	public boolean isResubmitSupported(String service, String operation) throws UiException {
-		boolean isResubmitSupported = false;
 		try {
-			MBeanServerConnection mBeanServerConnection = getMBeanServerConnection();
-			AttributeList attributeList = mBeanServerConnection.getAttributes(new ObjectName(
-			        "org.switchyard.admin:type=Service,name=\"" + service + "\""), new String[] { "Bindings" });
-			ObjectName[] bindings = (ObjectName[])getAttributeValue(attributeList.get(0));
-			if (bindings != null && bindings.length > 0) {
-			    for (int i=0; i < bindings.length; i++) {
-			        ObjectName objectName=bindings[i];
-    				attributeList = mBeanServerConnection.getAttributes(objectName, new String[] { "Type" });
-    				String type = (String) getAttributeValue(attributeList.get(0));
-    				if (BINDING_TYPE_SCA.equalsIgnoreCase(type)) {
-    					isResubmitSupported = true;
-    					break;
-    				}
-			    }
-			}
-			
-		} catch (javax.management.InstanceNotFoundException infe) {
-		    isResubmitSupported = false;
+			Map<String, BindingBean> serviceBindings = getServiceBindings(service);
+			return serviceBindings.containsKey(BINDING_TYPE_SCA);
 		} catch (Exception e) {
 			throw new UiException(i18n.format("SwitchYardServicesProvider.IsResubmitSupported", service, operation), e);
 		}
-		return isResubmitSupported;
+	}
+
+
+	private Map<String, BindingBean> getServiceBindings(String service) throws Exception {
+		return getBindings("Service", service);
+	}
+
+	private Map<String, BindingBean> getBindings(String type, String service) throws Exception {
+		Map<String, BindingBean> result = Maps.newHashMapWithExpectedSize(2);
+		MBeanServerConnection mBeanServerConnection = getMBeanServerConnection();
+		AttributeList attributeList = mBeanServerConnection.getAttributes(new ObjectName("org.switchyard.admin:type="
+		        + type + ",name=\"" + service + "\""), new String[] { "Bindings" });
+		ObjectName[] bindings = (ObjectName[]) getAttributeValue(attributeList.get(0));
+		if (bindings != null && bindings.length > 0) {
+			for (int i = 0; i < bindings.length; i++) {
+				ObjectName objectName = bindings[i];
+				attributeList = mBeanServerConnection.getAttributes(objectName, new String[] { "Type", "State" });
+				BindingBean bindingBean = new BindingBean();
+				bindingBean.setType(nullToEmpty((String) getAttributeValue(attributeList.get(0))).toUpperCase());
+				bindingBean.setState(nullToEmpty((String) getAttributeValue(attributeList.get(1))).toUpperCase());
+				result.put(bindingBean.getType(), bindingBean);
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -435,35 +444,30 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	        
             // TODO: Request all attributes in one operation
             
-	        for (ObjectInstance result : results) {
-	        	java.util.Map<String,String> map=result.getObjectName().getKeyPropertyList();
-	        			
-	        	if (map.containsKey("name")) {
-			        AttributeList attrs=con.getAttributes(result.getObjectName(),
-			        				new String[] {"Name", "Application", "Interface"});
-			        String name=(String)getAttributeValue(attrs.get(0));
+			for (ObjectInstance result : results) {
+				java.util.Map<String, String> map = result.getObjectName().getKeyPropertyList();
 
-			        if (!isSet(filters.getServiceName()) ||
-		        			filters.getServiceName().equals(name)) {
-				        ObjectName app=(ObjectName)getAttributeValue(attrs.get(1));
-				        String appName=stripQuotes(app.getKeyProperty("name"));
-				        
-				        if (!isSet(filters.getApplicationName()) ||
-				        			filters.getApplicationName().equals(appName)) {
-					        ServiceSummaryBean ssb=new ServiceSummaryBean();
-					        ssb.setName(name);				        
-					        ssb.setApplication(appName);
-				        	
-					        ssb.setBindings("");
-					        ssb.setIface((String)getAttributeValue(attrs.get(2)));
-					        
-					        ssb.setServiceId(generateId(appName, name));
-					        
-				        	services.add(ssb);
-				        }
-			        }
-	        	}
-	        }
+				if (map.containsKey("name")) {
+					AttributeList attrs = con.getAttributes(result.getObjectName(), new String[] { "Name",
+					        "Application", "Interface" });
+					String name = (String) getAttributeValue(attrs.get(0));
+
+					if (!isSet(filters.getServiceName()) || filters.getServiceName().equals(name)) {
+						ObjectName app = (ObjectName) getAttributeValue(attrs.get(1));
+						String appName = stripQuotes(app.getKeyProperty("name"));
+
+						if (!isSet(filters.getApplicationName()) || filters.getApplicationName().equals(appName)) {
+							ServiceSummaryBean ssb = new ServiceSummaryBean();
+							ssb.setName(name);
+							ssb.setApplication(appName);
+							ssb.setIface((String) getAttributeValue(attrs.get(2)));
+							ssb.setBindings(Sets.newHashSet(getServiceBindings(name).values()));
+							ssb.setServiceId(generateId(appName, name));
+							services.add(ssb);
+						}
+					}
+				}
+			}
         } catch (Exception e) {
 			throw new UiException(i18n.format("SwitchYardServicesProvider.GetServicesFailed"), e);
         }
