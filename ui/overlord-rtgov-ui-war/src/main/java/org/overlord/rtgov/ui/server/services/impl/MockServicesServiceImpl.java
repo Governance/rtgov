@@ -21,6 +21,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
+import org.overlord.rtgov.ui.client.model.BindingBean;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
@@ -30,6 +31,8 @@ import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.server.services.IServicesServiceImpl;
+
+import com.google.common.collect.Sets;
 
 /**
  * Concrete implementation of the services service. :)
@@ -75,7 +78,11 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         service.setName("CreateApplicationWebservice"); //$NON-NLS-1$
         service.setApplication("Contract"); //$NON-NLS-1$
         service.setIface("{urn:jboss:demo:create-application}CreateApplicationPT"); //$NON-NLS-1$
-        service.setBindings("SOAP, JMS"); //$NON-NLS-1$
+        BindingBean soapBinding = new BindingBean();
+        soapBinding.setType("SOAP").setState("STARTED");
+        BindingBean jmsBinding = new BindingBean();
+        jmsBinding.setType("JMS").setState("STOPPED");
+        service.setBindings(Sets.newHashSet(soapBinding, jmsBinding)); //$NON-NLS-1$
         services.add(service);
 
         service = new ServiceSummaryBean();
@@ -83,7 +90,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         service.setName("CreateQuoteWebservice"); //$NON-NLS-1$
         service.setApplication("Contract"); //$NON-NLS-1$
         service.setIface("{urn:jboss:demo:create-application}CreateQuotePT"); //$NON-NLS-1$
-        service.setBindings("SOAP"); //$NON-NLS-1$
+        service.setBindings(Sets.newHashSet(soapBinding)); //$NON-NLS-1$
         services.add(service);
 
         return rval;
