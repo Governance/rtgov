@@ -28,7 +28,6 @@ public class ServicesFilterBean {
 
     private String applicationName;
     private String serviceName;
-    private String processingState;
 
     /**
      * Constructor.
@@ -41,13 +40,6 @@ public class ServicesFilterBean {
      */
     public String getServiceName() {
         return serviceName;
-    }
-
-    /**
-     * @return the processingState
-     */
-    public String getProcessingState() {
-        return processingState;
     }
 
     /**
@@ -74,14 +66,6 @@ public class ServicesFilterBean {
     }
 
     /**
-     * @param processingState the processingState to set
-     */
-    public ServicesFilterBean setProcessingState(String processingState) {
-        this.processingState = processingState;
-        return this;
-    }
-
-    /**
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -89,7 +73,6 @@ public class ServicesFilterBean {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((applicationName == null) ? 0 : applicationName.hashCode());
-        result = prime * result + ((processingState == null) ? 0 : processingState.hashCode());
         result = prime * result + ((serviceName == null) ? 0 : serviceName.hashCode());
         return result;
     }
@@ -110,11 +93,6 @@ public class ServicesFilterBean {
             if (other.applicationName != null)
                 return false;
         } else if (!applicationName.equals(other.applicationName))
-            return false;
-        if (processingState == null) {
-            if (other.processingState != null)
-                return false;
-        } else if (!processingState.equals(other.processingState))
             return false;
         if (serviceName == null) {
             if (other.serviceName != null)
