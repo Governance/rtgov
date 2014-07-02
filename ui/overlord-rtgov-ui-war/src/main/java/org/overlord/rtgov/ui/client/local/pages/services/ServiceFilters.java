@@ -52,8 +52,6 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
     protected ApplicationNameListBox applicationName;
     @Inject @DataField
     protected TextBox serviceName;
-    @Inject @DataField
-    protected ProcessingStateListBox processingState;
 
     @Inject @DataField
     protected Anchor clearFilters;
@@ -87,7 +85,6 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
         };
         applicationName.addValueChangeHandler(valueChangeHandler);
         serviceName.addValueChangeHandler(valueChangeHandler);
-        processingState.addValueChangeHandler(valueChangeHandler);
     }
 
     /**
@@ -96,8 +93,7 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
     protected void onFilterValueChange() {
         ServicesFilterBean newState = new ServicesFilterBean();
         newState.setServiceName(serviceName.getValue())
-            .setApplicationName(applicationName.getValue())
-            .setProcessingState(processingState.getValue());
+            .setApplicationName(applicationName.getValue());
 
         ServicesFilterBean oldState = this.currentState;
         this.currentState = newState;
@@ -118,7 +114,6 @@ public class ServiceFilters extends Composite implements HasValueChangeHandlers<
     public void setValue(ServicesFilterBean value) {
         applicationName.setValue(value.getApplicationName() == null ? "" : value.getApplicationName()); //$NON-NLS-1$
         serviceName.setValue(value.getServiceName() == null ? "" : value.getServiceName()); //$NON-NLS-1$
-        processingState.setValue(value.getProcessingState() == null ? "" : value.getProcessingState()); //$NON-NLS-1$
         onFilterValueChange();
     }
 
