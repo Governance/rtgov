@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.0.0.Beta1</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Overlord RTGov</name>
 	<url>http://www.jboss.org/overlord</url>
@@ -82,7 +82,7 @@
         <lucene.version>4.7.0</lucene.version> <!-- Required to override parent bom version -->
         <org.apache.servicemix.bundles.lucene.version>4.7.0_1</org.apache.servicemix.bundles.lucene.version> <!-- Required for karaf -->
         <remoting-jmx>1.1.0.Final</remoting-jmx>
-		<rtgov-docs.version>2.0.0.Beta1</rtgov-docs.version>
+		<rtgov-docs.version>2.0.0-SNAPSHOT</rtgov-docs.version>
 		<overlord-commons.version>2.0.2.Final</overlord-commons.version>
 		<picketbox.version>4.0.19.SP4</picketbox.version>
 		<picketlink.version>2.5.3.SP1</picketlink.version>
