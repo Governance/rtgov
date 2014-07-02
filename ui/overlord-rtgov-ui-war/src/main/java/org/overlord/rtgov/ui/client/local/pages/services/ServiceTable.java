@@ -15,6 +15,8 @@
  */
 package org.overlord.rtgov.ui.client.local.pages.services;
 
+import java.util.Set;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -22,11 +24,13 @@ import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.ServiceDetailsPage;
 import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable;
+import org.overlord.rtgov.ui.client.model.BindingBean;
 import org.overlord.rtgov.ui.client.model.Constants;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * A table of services.
@@ -71,19 +75,23 @@ public class ServiceTable extends SortableTemplatedWidgetTable {
      * Adds a single row to the table.
      * @param serviceSummaryBean
      */
-    public void addRow(final ServiceSummaryBean serviceSummaryBean) {
-        int rowIdx = this.rowElements.size();
+	public void addRow(final ServiceSummaryBean serviceSummaryBean) {
+		int rowIdx = this.rowElements.size();
 
-        Anchor name = toDetailsPageLinkFactory.get("id", serviceSummaryBean.getServiceId()); //$NON-NLS-1$
-        name.setText(serviceSummaryBean.getName());
-        InlineLabel application = new InlineLabel(serviceSummaryBean.getApplication());
-        InlineLabel interf4ce = new InlineLabel(serviceSummaryBean.getIface());
-        InlineLabel bindings = new InlineLabel(serviceSummaryBean.getBindings());
+		Anchor name = toDetailsPageLinkFactory.get("id", serviceSummaryBean.getServiceId()); //$NON-NLS-1$
+		name.setText(serviceSummaryBean.getName());
+		InlineLabel application = new InlineLabel(serviceSummaryBean.getApplication());
+		InlineLabel interf4ce = new InlineLabel(serviceSummaryBean.getIface());
 
-        add(rowIdx, 0, name);
-        add(rowIdx, 1, application);
-        add(rowIdx, 2, interf4ce);
-        add(rowIdx, 3, bindings);
-    }
+		add(rowIdx, 0, name);
+		add(rowIdx, 1, application);
+		add(rowIdx, 2, interf4ce);
+		Set<BindingBean> bindings = serviceSummaryBean.getBindings();
+		for (BindingBean bindingBean : bindings) {
+			Label bindingLabel = new Label(bindingBean.getType());
+			bindingLabel.setStyleName(!bindingBean.isActive() ? "alert-danger" : "alert-success");
+			add(rowIdx, 3, bindingLabel);
+		}
+	}
 
 }
