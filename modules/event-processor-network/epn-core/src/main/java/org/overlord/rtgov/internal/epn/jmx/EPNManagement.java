@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.epn.jee.jmx;
-
-import static javax.ejb.ConcurrencyManagementType.BEAN;
+package org.overlord.rtgov.internal.epn.jmx;
 
 import java.lang.management.ManagementFactory;
 import java.text.MessageFormat;
@@ -24,11 +22,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -40,10 +33,6 @@ import org.overlord.rtgov.epn.NetworkListener;
  * This class provides the capability to manage the EPN Manager.
  *
  */
-@Singleton(name="EPNManagement")
-@ApplicationScoped
-@Startup
-@ConcurrencyManagement(BEAN)
 public class EPNManagement extends javax.management.NotificationBroadcasterSupport
                         implements EPNManagementMBean, NetworkListener {
     
@@ -52,15 +41,17 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
     
     private static final Logger LOG=Logger.getLogger(EPNManagement.class.getName());
     
-    @Inject
     private EPNManager _epnManager;
     
     private int _numOfNetworks=0;
 
     /**
      * The constructor.
+     * 
+     * @param epnManager The EPN Manager
      */
-    public EPNManagement() {
+    public EPNManagement(EPNManager epnManager) {
+        _epnManager = epnManager;
     }
     
     /**
@@ -77,7 +68,7 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             mbs.registerMBean(this, objname); 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-1"), e);
+                    "epn-core.Messages").getString("EPN-CORE-15"), e);
         }
         
         _epnManager.addNetworkListener(this);
@@ -105,7 +96,7 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-2"), e);
+                    "epn-container-jee.Messages").getString("EPN-CORE-16"), e);
         }
     }
 
@@ -120,7 +111,7 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
         } catch (Exception e) {
             LOG.log(Level.SEVERE, MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
-                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-3"),
+                    "epn-container-jee.Messages").getString("EPN-CORE-17"),
                     network.getName(), network.getVersion()), e);
         }   
         
@@ -152,7 +143,7 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.log(Level.FINER, MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
-                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-4"),
+                    "epn-container-jee.Messages").getString("EPN-CORE-18"),
                     network.getName(), network.getVersion()), t);
             }
         }
