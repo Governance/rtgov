@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import org.overlord.rtgov.common.util.VersionUtil;
 import org.overlord.rtgov.epn.validation.EPNValidationListener;
 import org.overlord.rtgov.epn.validation.EPNValidator;
+import org.overlord.rtgov.internal.epn.jmx.EPNManagement;
 
 /**
  * This class represents the abstract Event Process Network Manager
@@ -41,12 +42,20 @@ public abstract class AbstractEPNManager implements EPNManager {
                         new java.util.ArrayList<NetworkListener>();
     private boolean _usePrePostEventListProcessing=false;
     
+    private EPNManagement _epnManagement=null;
+    
     /**
      * This is the default constructor.
      */
     public AbstractEPNManager() {
         // Register this EPNManager with the factory
         EPNManagerAccessor.setEPNManager(this);
+        
+        // Check if managed
+        if (isManaged()) {
+            _epnManagement = new EPNManagement(this);
+            _epnManagement.init();
+        }
     }
     
     /**
@@ -55,6 +64,17 @@ public abstract class AbstractEPNManager implements EPNManager {
      * @return The container
      */
     protected abstract EPNContainer getContainer();
+    
+    /**
+     * This method determines whether the EPNManager is managed. If managed,
+     * then its MBean will be registered with the MBeanServer and available
+     * to JMX compliant management systems.
+     * 
+     * @return Whether the EPNManager is managed
+     */
+    protected boolean isManaged() {
+        return (false);
+    }
     
     /**
      * {@inheritDoc}
@@ -527,6 +547,10 @@ public abstract class AbstractEPNManager implements EPNManager {
      * {@inheritDoc}
      */
     public void close() throws Exception {
+        if (_epnManagement != null) {
+            _epnManagement.close();
+            _epnManagement = null;
+        }
     }
 
     /**

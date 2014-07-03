@@ -115,7 +115,7 @@
 		<!-- RTGov Active Queries Server -->
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
-			<artifactId>active-collection-embedded</artifactId>
+			<artifactId>active-collection-jee</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
@@ -203,7 +203,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-embedded</artifactId>
+			<artifactId>activity-client-jee</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
@@ -600,7 +600,7 @@
 										</feature>
 									</dependsOnFeatures>
 									<includes>
-										<include>org.overlord.rtgov.active-queries:active-collection-embedded:*</include>
+										<include>org.overlord.rtgov.active-queries:active-collection-jee:*</include>
 										<include>org.overlord.rtgov.active-queries:active-collection-infinispan:*</include>
 									</includes>
 								</feature>
@@ -660,7 +660,7 @@
 									<includes>
 										<include>org.overlord.rtgov.activity-management:activity-server-epn:*</include>
 										<include>org.overlord.rtgov.active-queries:acs-epn:*</include>
-										<include>org.overlord.rtgov.activity-management:activity-embedded:*</include>
+										<include>org.overlord.rtgov.activity-management:activity-client-jee:*</include>
 										<include>org.overlord.rtgov.activity-management:collector-activity-server:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-client:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>
@@ -725,7 +725,7 @@
 										</feature>
 									</dependsOnFeatures>
 									<includes>
-										<include>org.overlord.rtgov.activity-management:activity-embedded:*</include>
+										<include>org.overlord.rtgov.activity-management:activity-client-jee:*</include>
 										<include>org.overlord.rtgov.activity-management:collector-activity-server:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-client:*</include>
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>

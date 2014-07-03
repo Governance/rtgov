@@ -15,12 +15,15 @@
  */
 package org.overlord.rtgov.activity.collector;
 
+import java.lang.management.ManagementFactory;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.common.util.RTGovProperties;
@@ -38,6 +41,9 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
     private static final int MAX_UNIT_COUNT = 1000;
     private static final long MAX_TIME_INTERVAL = 500;
     
+    private static final String OBJECT_NAME_DOMAIN = "overlord.rtgov.collector";    
+    private static final String OBJECT_NAME_LOGGER = OBJECT_NAME_DOMAIN+":name=ActivityLogger";
+    
     private int _messageCounter=0;
     private java.util.Timer _timer;
     private java.util.TimerTask _timerTask;
@@ -45,15 +51,38 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
     private Long _maxTimeInterval;
     private Integer _maxUnitCount;
     
+    private boolean _initialized=false;
+    
     /**
      * This method initializes the activity logger.
      */
     @PostConstruct
-    public void init() {
-        _timer = new java.util.Timer();
+    public synchronized void init() {
         
-        _maxTimeInterval = RTGovProperties.getPropertyAsLong("BatchedActivityUnitLogger.maxTimeInterval", MAX_TIME_INTERVAL);
-        _maxUnitCount = RTGovProperties.getPropertyAsInteger("BatchedActivityUnitLogger.maxUnitCount", MAX_UNIT_COUNT);
+        if (!_initialized) {
+            _timer = new java.util.Timer();
+            
+            _maxTimeInterval = RTGovProperties.getPropertyAsLong("BatchedActivityUnitLogger.maxTimeInterval", MAX_TIME_INTERVAL);
+            _maxUnitCount = RTGovProperties.getPropertyAsInteger("BatchedActivityUnitLogger.maxUnitCount", MAX_UNIT_COUNT);
+    
+            try {
+                MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+                
+               if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Register the ActivityUnitLogger MBean["
+                                +OBJECT_NAME_LOGGER+"]: "+this);
+                }
+                
+                ObjectName objname2=new ObjectName(OBJECT_NAME_LOGGER);            
+                mbs.registerMBean(this, objname2);
+    
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "activity.Messages").getString("ACTIVITY-18"), e);
+            }
+            
+            _initialized = true;
+        }
     }
     
     /**
@@ -185,5 +214,23 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
     @PreDestroy
     public void close() {
         _timer.cancel();
+        
+        try {
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Unregister the ActivityUnitLogger MBean["
+                            +OBJECT_NAME_LOGGER+"]: "+this);
+            }
+
+            ObjectName objname2=new ObjectName(OBJECT_NAME_LOGGER);            
+            mbs.unregisterMBean(objname2);
+            
+        } catch (Throwable t) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
+                    "activity.Messages").getString("ACTIVITY-19"), t);
+            }
+        }
     }
 }

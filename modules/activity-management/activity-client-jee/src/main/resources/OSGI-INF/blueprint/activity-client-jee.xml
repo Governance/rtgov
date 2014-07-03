@@ -1,0 +1,35 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <service interface="org.overlord.rtgov.activity.processor.InformationProcessorManager"
+    					ref="infoProcessManagerBean" />
+
+    <bean id="infoProcessManagerBean" class="org.overlord.rtgov.activity.client.jee.JEEInformationProcessorManager" >
+    </bean>
+    
+    <service interface="org.overlord.rtgov.activity.validator.ActivityValidatorManager"
+    					ref="activityValidatorManagerBean" />
+
+    <bean id="activityValidatorManagerBean" class="org.overlord.rtgov.activity.client.jee.JEEActivityValidatorManager" >
+    </bean>
+
+    <service interface="org.overlord.rtgov.activity.collector.ActivityCollector" ref="activityCollectorBean" />
+
+    <bean id="activityCollectorBean" class="org.overlord.rtgov.activity.client.jee.JEEActivityCollector" 
+        	init-method="init" destroy-method="close" >
+    	<property name="collectorContext" ref="collectorContextImpl"/>
+    	<property name="activityUnitLogger" ref="activityUnitLoggerImpl"/>
+    	<property name="informationProcessorManager" ref="infoProcessManagerBean"/>
+    	<property name="activityValidatorManager" ref="activityValidatorManagerBean"/>
+    </bean>
+
+    <reference id="collectorContextImpl"
+               interface="org.overlord.rtgov.activity.collector.CollectorContext">
+    </reference>
+
+    <reference id="activityUnitLoggerImpl"
+               interface="org.overlord.rtgov.activity.collector.ActivityUnitLogger">
+    </reference>
+
+</blueprint>

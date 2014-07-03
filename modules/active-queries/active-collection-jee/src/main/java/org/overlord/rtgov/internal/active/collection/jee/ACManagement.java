@@ -64,6 +64,24 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
     }
     
     /**
+     * This method sets the active collection manager.
+     * 
+     * @param acm The active collection manager
+     */
+    public void setActiveCollectionManager(ActiveCollectionManager acm) {
+        _acManager = acm;
+    }
+    
+    /**
+     * This method returns the active collection manager.
+     * 
+     * @return The active collection manager
+     */
+    public ActiveCollectionManager getActiveCollectionManager() {
+        return (_acManager);
+    }
+    
+    /**
      * The initialize method.
      */
     @PostConstruct

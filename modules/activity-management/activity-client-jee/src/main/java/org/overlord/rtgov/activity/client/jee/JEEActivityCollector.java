@@ -41,7 +41,6 @@ public class JEEActivityCollector extends AbstractActivityCollector
 
     private static final String OBJECT_NAME_DOMAIN = "overlord.rtgov.collector";    
     private static final String OBJECT_NAME_COLLECTOR = OBJECT_NAME_DOMAIN+":name=ActivityCollector";
-    private static final String OBJECT_NAME_LOGGER = OBJECT_NAME_DOMAIN+":name=ActivityLogger";
     
     /**
      * The initialize method.
@@ -58,14 +57,6 @@ public class JEEActivityCollector extends AbstractActivityCollector
             
             ObjectName objname1=new ObjectName(OBJECT_NAME_COLLECTOR);            
             mbs.registerMBean(this, objname1);
-
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Register the ActivityUnitLogger MBean["
-                            +OBJECT_NAME_LOGGER+"]: "+getActivityUnitLogger());
-            }
-            
-            ObjectName objname2=new ObjectName(OBJECT_NAME_LOGGER);            
-            mbs.registerMBean(getActivityUnitLogger(), objname2);
 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
@@ -90,14 +81,6 @@ public class JEEActivityCollector extends AbstractActivityCollector
 
             ObjectName objname1=new ObjectName(OBJECT_NAME_COLLECTOR);            
             mbs.unregisterMBean(objname1);
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Unregister the ActivityUnitLogger MBean["
-                            +OBJECT_NAME_LOGGER+"]: "+getActivityUnitLogger());
-            }
-
-            ObjectName objname2=new ObjectName(OBJECT_NAME_LOGGER);            
-            mbs.unregisterMBean(objname2);
             
         } catch (Throwable t) {
             if (LOG.isLoggable(Level.FINER)) {

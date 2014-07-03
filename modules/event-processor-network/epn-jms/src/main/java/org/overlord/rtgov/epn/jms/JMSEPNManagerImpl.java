@@ -95,6 +95,13 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     /**
      * {@inheritDoc}
      */
+    protected boolean isManaged() {
+        return (true);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     protected EPNContainer getContainer() {
         return (_container);
     }
