@@ -18,6 +18,7 @@ package org.overlord.rtgov.activity.server.rest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
@@ -42,6 +43,7 @@ import javax.ws.rs.core.Response.Status;
  * This class represents the RESTful interface to the activity server.
  *
  */
+@SuppressWarnings("deprecation")
 @Path("/activity")
 @ApplicationScoped
 public class RESTActivityServer {
@@ -97,7 +99,8 @@ public class RESTActivityServer {
     @GET
     @Path("/unit")
     @Produces("application/json")
-    public ActivityUnit getActivityUnit(@QueryParam("id") String id) throws Exception {
+    @TypeHint(ActivityUnit.class)
+    public Response getActivityUnit(@QueryParam("id") String id) throws Exception {
         init();
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -110,27 +113,28 @@ public class RESTActivityServer {
         
         ActivityUnit au=_activityServer.getActivityUnit(id);
                
+        String text=null;
+        
+        if (au != null) {
+            byte[] b=ActivityUtil.serializeActivityUnit(au);
+            
+            text = new String(b);
+        }
+        
         if (LOG.isLoggable(Level.FINEST)) {
-            String text=null;
-            
-            if (au != null) {
-                byte[] b=ActivityUtil.serializeActivityUnit(au);
-                
-                text = new String(b);
-            }
-            
             LOG.finest("Activity Server: Activity Unit for id '"+id+"': "+text);        
         }
 
-        return (au);
+        return (Response.ok(text).build());
     }
 
     /**
      * This method returns a list of ActivityType (activity event) objects associated with
-     * the supplied context type and value.
+     * the optional context type and value and optional time range. If a context is not provided
+     * then at time range must be supplied, otherwise an error will be reported.
      * 
-     * @param type The type
-     * @param value The value
+     * @param type The optional type
+     * @param value The optional value
      * @param from The optional 'from' timestamp
      * @param to The optional 'to' timestamp
      * @return The list of ActivityType event objects
@@ -139,22 +143,27 @@ public class RESTActivityServer {
     @GET
     @Path("/events")
     @Produces("application/json")
-    public java.util.List<ActivityType> getActivityTypes(@QueryParam("type") String type,
+    @TypeHint(ActivityType.class)
+    public Response getActivityTypes(@QueryParam("type") String type,
             @QueryParam("value") String value,
             @DefaultValue("0") @QueryParam("from") long from,
             @DefaultValue("0") @QueryParam("to") long to) throws Exception {
         init();
         
-        Context context=new Context();
+        Context context=null;
         
-        if (type != null) {
-            context.setType(Context.Type.valueOf(type));
+        if (type != null || value != null) {
+            context = new Context();
+            
+            if (type != null) {
+                context.setType(Context.Type.valueOf(type));
+            }
+            
+            context.setValue(value);
         }
         
-        context.setValue(value);
-        
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Activity Server: Get Activity Types for Context="+context);        
+            LOG.finest("Activity Server: Get Activity Types for Context="+context+" from="+from+" to="+to);        
         }
         
         if (_activityServer == null) {
@@ -163,26 +172,30 @@ public class RESTActivityServer {
         
         java.util.List<ActivityType> list=null;
         
-        if (from > 0 || to > 0) {
-            list = _activityServer.getActivityTypes(context, from, to);
-        } else {
-            list = _activityServer.getActivityTypes(context);
+        try {
+            if (from > 0 || to > 0) {
+                list = _activityServer.getActivityTypes(context, from, to);
+            } else {
+                list = _activityServer.getActivityTypes(context);
+            }
+        } catch (Exception e) {
+            return (Response.serverError().entity(e.getMessage()).build());
         }
         
-        if (LOG.isLoggable(Level.FINEST)) {
-            String text=null;
+        String text=null;
+        
+        if (list != null) {
+            byte[] b=ActivityUtil.serializeActivityTypeList(list);
             
-            if (list != null) {
-                byte[] b=ActivityUtil.serializeActivityTypeList(list);
-                
-                text = new String(b);
-            }
-            
+            text = new String(b);
+        }
+
+        if (LOG.isLoggable(Level.FINEST)) {            
             LOG.finest("Activity Server: Get ActivityTypes for type='"+type+"' value='"
                             +value+"' from="+from+" to="+to+": "+text);        
         }
 
-        return (list);
+        return (Response.ok(text).build());
     }
     
     /**

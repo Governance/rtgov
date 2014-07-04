@@ -37,6 +37,7 @@ import org.overlord.rtgov.common.jpa.JpaStore.JpaWork;
  * This class provides the JPA implementation of the Activity Store.
  * 
  */
+@SuppressWarnings("deprecation")
 @Singleton
 public class JPAActivityStore implements ActivityStore {
 
@@ -113,6 +114,12 @@ public class JPAActivityStore implements ActivityStore {
         List<ActivityType> ret = null;
 
         if (from == 0 && to == 0) {
+            
+            if (context == null) {
+                throw new Exception(java.util.PropertyResourceBundle.getBundle(
+                        "activity-store-jpa.Messages").getString("ACTIVITY-STORE-JPA-3"));
+            }
+            
             ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
                 public List<ActivityType> perform(Session s) {
                     return (List<ActivityType>) s.createQuery(
@@ -125,15 +132,26 @@ public class JPAActivityStore implements ActivityStore {
         } else {
             final long actualTo = (to == 0 ? System.currentTimeMillis() : to);
             
-            ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
-                public List<ActivityType> perform(Session s) {
-                    return (List<ActivityType>) s.createQuery(
-                            "SELECT at from ActivityType at " + "JOIN at.context ctx "
-                                    + "WHERE ctx.value = '" + context.getValue() + "' " + "AND ctx.type = '"
-                                    + context.getType().name() + "' " + "AND at.timestamp >= " + from + " "
-                                    + "AND at.timestamp <= " + actualTo).list();
-                }
-            });
+            if (context == null) {
+                ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
+                    public List<ActivityType> perform(Session s) {
+                        return (List<ActivityType>) s.createQuery(
+                                "SELECT at from ActivityType at "
+                                        + "WHERE at.timestamp >= " + from + " "
+                                        + "AND at.timestamp <= " + actualTo).list();
+                    }
+                });
+            } else {
+                ret = _jpaStore.withJpa(new JpaWork<List<ActivityType>>() {
+                    public List<ActivityType> perform(Session s) {
+                        return (List<ActivityType>) s.createQuery(
+                                "SELECT at from ActivityType at " + "JOIN at.context ctx "
+                                        + "WHERE ctx.value = '" + context.getValue() + "' " + "AND ctx.type = '"
+                                        + context.getType().name() + "' " + "AND at.timestamp >= " + from + " "
+                                        + "AND at.timestamp <= " + actualTo).list();
+                    }
+                });
+            }
         }
 
         if (LOG.isLoggable(Level.FINEST)) {

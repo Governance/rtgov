@@ -37,7 +37,6 @@ import org.junit.runner.RunWith;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
-import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
 
 import static org.junit.Assert.*;
@@ -68,7 +67,6 @@ public class JBossASActivityServerServiceTest {
     }
     
     @Test @OperateOnDeployment("orders-app")
-    @org.junit.Ignore("RTGOV-458")
     public void testQueryActivityServer() {
         
         try {
@@ -90,7 +88,7 @@ public class JBossASActivityServerServiceTest {
                         "    </soap:Body>"+
                         "</soap:Envelope>";
             
-            java.util.List<ActivityType> initialActivities = getActivityEvents();
+            long startTime=System.currentTimeMillis();
             
             java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
             
@@ -109,7 +107,7 @@ public class JBossASActivityServerServiceTest {
             // Wait for events to propagate
             Thread.sleep(4000);
             
-            java.util.List<ActivityType> acts = getActivityEvents();
+            java.util.List<ActivityType> acts = getActivityEvents(startTime, System.currentTimeMillis());
             
             if (acts == null) {
                 fail("Activity event list is null");
@@ -119,12 +117,12 @@ public class JBossASActivityServerServiceTest {
             
             System.out.println("LIST="+acts);
             
-            if ((acts.size()-initialActivities.size()) != 12) {
-                fail("Expecting 12 activity events: "+(acts.size()-initialActivities.size()));
+            if (acts.size() != 12) {
+                fail("Expecting 12 activity events: "+acts.size());
             }
             
             // RTGOV-256 Check that first activity type has header value extracted as a property
-            ActivityType at=acts.get(initialActivities.size());
+            ActivityType at=acts.get(0);
             
             if (!at.getProperties().containsKey("contentType")) {
                 fail("Property 'contentType' not found");
@@ -151,12 +149,29 @@ public class JBossASActivityServerServiceTest {
     }
 
     @Test @OperateOnDeployment("orders-app")
-    @org.junit.Ignore("RTGOV-458")
+    public void testQueryActivityServerNoContextOrTimeframe() {
+        
+        try {
+            getActivityEvents(0, 0);
+            
+            fail("Should have thrown exception due to no context or time frame");
+            
+        } catch (java.io.IOException ioe) {
+            // Expected
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Failed to invoke service: "+e);
+        }
+    }
+
+    @Test @OperateOnDeployment("orders-app")
     public void testQueryActivityServerFaultResponse() {
         
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
+            
+            long startTime=System.currentTimeMillis();
             
             java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
             
@@ -172,8 +187,6 @@ public class JBossASActivityServerServiceTest {
                         "        </orders:submitOrder>"+
                         "    </soap:Body>"+
                         "</soap:Envelope>";
-            
-            java.util.List<ActivityType> initialActivities = getActivityEvents();
             
             java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
             
@@ -192,7 +205,7 @@ public class JBossASActivityServerServiceTest {
             // Wait for events to propagate
             Thread.sleep(4000);
             
-            java.util.List<ActivityType> acts = getActivityEvents();
+            java.util.List<ActivityType> acts = getActivityEvents(startTime, System.currentTimeMillis());
             
             if (acts == null) {
                 fail("Activity event list is null");
@@ -202,11 +215,11 @@ public class JBossASActivityServerServiceTest {
             
             System.out.println("LIST="+acts);
             
-            if ((acts.size()-initialActivities.size()) != 7) {
-                fail("Expecting 7 activity events: "+(acts.size()-initialActivities.size()));
+            if (acts.size() != 7) {
+                fail("Expecting 7 activity events: "+acts.size());
             }
             
-            ActivityType at1=acts.get(initialActivities.size()+4);
+            ActivityType at1=acts.get(4);
             
              if ((at1 instanceof ResponseSent) == false) {
                 fail("Expecting a 'response sent' event");
@@ -233,12 +246,13 @@ public class JBossASActivityServerServiceTest {
 
 
     @Test @OperateOnDeployment("orders-app")
-    @org.junit.Ignore("RTGOV-458")
     public void testQueryActivityServerInvalidRequestStructure() {
         
         try {
             SOAPConnectionFactory factory=SOAPConnectionFactory.newInstance();
             SOAPConnection con=factory.createConnection();
+            
+            long startTime=System.currentTimeMillis();
             
             java.net.URL url=new java.net.URL(ORDER_SERVICE_URL);
             
@@ -254,8 +268,6 @@ public class JBossASActivityServerServiceTest {
                         "        </orders:submitOrder>"+
                         "    </soap:Body>"+
                         "</soap:Envelope>";
-            
-            java.util.List<ActivityType> initialActivities = getActivityEvents();
             
             java.io.InputStream is=new java.io.ByteArrayInputStream(mesg.getBytes());
             
@@ -274,7 +286,7 @@ public class JBossASActivityServerServiceTest {
             // Wait for events to propagate
             Thread.sleep(4000);
             
-            java.util.List<ActivityType> acts = getActivityEvents();
+            java.util.List<ActivityType> acts = getActivityEvents(startTime, System.currentTimeMillis());
             
             if (acts == null) {
                 fail("Activity event list is null");
@@ -284,13 +296,13 @@ public class JBossASActivityServerServiceTest {
             
             System.out.println("LIST="+acts);
             
-            if ((acts.size()-initialActivities.size()) != 2) {
-                fail("Expecting 2 activity events: "+(acts.size()-initialActivities.size()));
+            if (acts.size() != 2) {
+                fail("Expecting 2 activity events: "+acts.size());
             }
             
             // RTGOV-262 Check response has replyTo id
-            ActivityType at1=acts.get(initialActivities.size());
-            ActivityType at2=acts.get(initialActivities.size()+1);
+            ActivityType at1=acts.get(0);
+            ActivityType at2=acts.get(1);
             
             if ((at1 instanceof RequestReceived) == false) {
                 fail("Expecting a 'request received' event");
@@ -332,33 +344,14 @@ public class JBossASActivityServerServiceTest {
         }
     }
 
-    @Test @OperateOnDeployment("orders-app")
-    @org.junit.Ignore("RTGOV-458")
-    public void testInvalidQuery() {
+    public static java.util.List<ActivityType> getActivityEvents(long from, long to) throws Exception {
         
-        try {            
-            sendRequest("NotASelect");
-
-            fail("Server should not return a response");
-            
-        } catch (java.io.IOException ioe) {
-            // Ignore as expected to fail
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Failed to invoke service: "+e);
-        }
-    }
-
-    public static byte[] sendRequest(String expression) throws Exception {
         Authenticator.setDefault(new DefaultAuthenticator());
         
-        QuerySpec query=new QuerySpec().setFormat("jpql").setExpression(expression);
+        URL eventsUrl = new URL("http://localhost:8080/overlord-rtgov/activity/events?from="+from+"&to="+to);
         
-        URL queryUrl = new URL("http://localhost:8080/overlord-rtgov/activity/query");
-        
-        HttpURLConnection connection = (HttpURLConnection) queryUrl.openConnection();
-        connection.setRequestMethod("POST");
+        HttpURLConnection connection = (HttpURLConnection) eventsUrl.openConnection();
+        connection.setRequestMethod("GET");
 
         connection.setDoOutput(true);
         connection.setDoInput(true);
@@ -367,20 +360,12 @@ public class JBossASActivityServerServiceTest {
         connection.setRequestProperty("Content-Type",
                     "application/json");
 
-        java.io.OutputStream os=connection.getOutputStream();
-        
-        byte[] b=ActivityUtil.serializeQuerySpec(query);
-        os.write(b);
-        
-        os.flush();
-        os.close();
-        
         java.io.InputStream is=connection.getInputStream();
 
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
         
         while (is.available() > 0) {
-            b = new byte[is.available()];
+            byte[] b = new byte[is.available()];
             is.read(b);
             baos.write(b);
         }
@@ -388,14 +373,10 @@ public class JBossASActivityServerServiceTest {
         is.close();
         baos.close();
         
-        System.out.println(">>>> JSON="+new String(baos.toByteArray()));
+        byte[] b=baos.toByteArray();
         
-        return (b);
-    }
-    
-    public static java.util.List<ActivityType> getActivityEvents() throws Exception {
-        byte[] b=sendRequest("SELECT at FROM ActivityType at");
-        
+        System.out.println("THE JSON="+new String(b));
+
         return (ActivityUtil.deserializeActivityTypeList(b));
     }
     

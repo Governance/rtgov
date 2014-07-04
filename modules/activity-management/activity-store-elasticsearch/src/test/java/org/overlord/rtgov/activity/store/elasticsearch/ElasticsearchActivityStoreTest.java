@@ -263,19 +263,19 @@ public class ElasticsearchActivityStoreTest {
     }
 
     @Test
-    public void testGetActivityTypes() {
+    public void testGetActivityTypesWithContextAndTimeframe() {
         java.util.List<ActivityType> results1 = null;
         java.util.List<ActivityType> results2 = null;
 
         java.util.List<ActivityUnit> activities = new java.util.ArrayList<ActivityUnit>();
 
 
-        ActivityUnit au1 = createTestActivityUnit("7", "C1", "E1", 0);
-        ActivityUnit au2 = createTestActivityUnit("8", "C1", "E2", 5000);
+        ActivityUnit au1 = createTestActivityUnit("7", "C1", "E1", 10000);
+        ActivityUnit au2 = createTestActivityUnit("8", "C1", "E2", 15000);
 
         // Setting endpoint value to C1 to make sure does not get value and type picked up
         // from different context objects
-        ActivityUnit au3 = createTestActivityUnit("9", "C2", "C1", 10000);
+        ActivityUnit au3 = createTestActivityUnit("9", "C2", "C1", 20000);
 
         activities.add(au1);
         activities.add(au2);
@@ -304,7 +304,7 @@ public class ElasticsearchActivityStoreTest {
         context2.setType(Context.Type.Conversation);
         context2.setValue("C1");
         try {
-            results2 = elasticsearchActivityStore.getActivityTypes(context2, 2500, 7500);
+            results2 = elasticsearchActivityStore.getActivityTypes(context2, 12500, 17500);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Could not  get activity units " + e);
@@ -332,8 +332,70 @@ public class ElasticsearchActivityStoreTest {
         try {
             elasticsearchActivityStore.getClient().remove("7");
             elasticsearchActivityStore.getClient().remove("8");
+            elasticsearchActivityStore.getClient().remove("9");
         } catch (Exception e) {
             fail("Could not remove activity unit " + e);
+        }
+    }
+
+
+    @Test
+    public void testGetActivityTypesWithNoContextAndTimeframe() {
+        java.util.List<ActivityType> results1 = null;
+
+        java.util.List<ActivityUnit> activities = new java.util.ArrayList<ActivityUnit>();
+
+
+        ActivityUnit au1 = createTestActivityUnit("7", "C1", "E1", 30000);
+        ActivityUnit au2 = createTestActivityUnit("8", "C1", "E2", 35000);
+
+        // Setting endpoint value to C1 to make sure does not get value and type picked up
+        // from different context objects
+        ActivityUnit au3 = createTestActivityUnit("9", "C2", "C1", 40000);
+
+        activities.add(au1);
+        activities.add(au2);
+        activities.add(au3);
+        try {
+            //store both ATs
+            elasticsearchActivityStore.store(activities);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Could not  store activity units " + e);
+
+        }
+
+        try {
+            results1 = elasticsearchActivityStore.getActivityTypes(null, 32500, 37500);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Could not  get activity units " + e);
+
+        }
+        if (results1 == null) {
+            fail("Results1 is null");
+        }
+
+        if (results1.size() != 2) {
+            fail("Expecting 2 results: " + results1.size());
+        }
+
+        try {
+            elasticsearchActivityStore.getClient().remove("7");
+            elasticsearchActivityStore.getClient().remove("8");
+            elasticsearchActivityStore.getClient().remove("9");
+        } catch (Exception e) {
+            fail("Could not remove activity unit " + e);
+        }
+    }
+
+    @Test
+    public void testGetActivityTypesWithNoContextAndNoTimeframe() {
+        try {
+            elasticsearchActivityStore.getActivityTypes(null, 0, 0);
+            
+            fail("Should have reported exception");
+        } catch (Exception e) {
         }
     }
 
