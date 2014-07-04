@@ -20,6 +20,7 @@ import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -47,6 +48,7 @@ import java.util.logging.Logger;
  * Date: 20/04/14
  * Time: 23:32
  */
+@SuppressWarnings("deprecation")
 public class ElasticsearchActivityStore implements ActivityStore {
     private static final Logger LOG = Logger.getLogger(ElasticsearchActivityStore.class.getName());
 
@@ -186,9 +188,14 @@ public class ElasticsearchActivityStore implements ActivityStore {
     /**
      * @param context The context value
      * @return List of activityTypes
-     * @throws Exception in the event of timeout
+     * @throws Exception in the event of a failure
      */
     public List<ActivityType> getActivityTypes(Context context) throws Exception {
+        
+        if (context == null) {
+            throw new Exception(java.util.PropertyResourceBundle.getBundle(
+                            "activity-store-elasticsearch.Messages").getString("ACTIVITY-STORE-ELASTICSEARCH-4"));
+        }
         
         RefreshRequestBuilder refreshRequestBuilder = _client.getElasticsearchClient().admin().indices().prepareRefresh(_client.getIndex());
         _client.getElasticsearchClient().admin().indices().refresh(refreshRequestBuilder.request()).actionGet();
@@ -231,7 +238,7 @@ public class ElasticsearchActivityStore implements ActivityStore {
     }
 
     /**
-     * @param context The context value
+     * @param context The optional context value
      * @param from    The 'from' timestamp
      * @param to      The 'to' timestamp
      * @return List of actvitiyTypes
@@ -251,16 +258,22 @@ public class ElasticsearchActivityStore implements ActivityStore {
             LOG.finest("getActivityTypes=" + context);
         }
 
-        QueryBuilder b2 = QueryBuilders.boolQuery()
-                .must(
-                        QueryBuilders.rangeQuery("timestamp").from(from).to(to))
-                .must(
+        if (to == 0) {
+            to = System.currentTimeMillis();
+        }
+        
+        BoolQueryBuilder b2 = QueryBuilders.boolQuery()
+                .must(QueryBuilders.rangeQuery("timestamp").from(from).to(to));
+        
+        if (context != null) {
+                b2 = b2.must(
                         QueryBuilders.nestedQuery("context",               // Path
                                 QueryBuilders.boolQuery()
                                         .must(QueryBuilders.matchQuery("context.value", context.getValue()))
                                         .must(QueryBuilders.matchQuery("context.type", context.getType()))
                         )
                 );
+        }
 
         SearchResponse response = _client.getElasticsearchClient().prepareSearch(
                 _client.getIndex()).setTypes(_client.getType() + "type")

@@ -25,7 +25,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Response;
 
+import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.call.trace.CallTraceService;
@@ -80,27 +82,28 @@ public class RESTCallTraceServer {
     @GET
     @Path("/instance")
     @Produces("application/json")
-    public CallTrace instance(@DefaultValue("Conversation") @QueryParam("type") String type,
+    @TypeHint(CallTrace.class)
+    public Response instance(@DefaultValue("Conversation") @QueryParam("type") String type,
                     @QueryParam("value") String value) throws Exception {
         init();
         
         CallTrace ct=getCallTrace(type, value);
         
-        if (LOG.isLoggable(Level.FINEST)) {
-            String text="";
+        String text="";
+        
+        if (ct != null) {
+            byte[] b=CallTraceUtil.serializeCallTrace(ct);
             
-            if (ct != null) {
-                byte[] b=CallTraceUtil.serializeCallTrace(ct);
-                
-                if (b != null) {
-                    text = new String(b);
-                }
+            if (b != null) {
+                text = new String(b);
             }
-            
+        }
+        
+        if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Instance="+text);        
         }
 
-        return (ct);
+        return (Response.ok(text).build());
     }
     
     /**

@@ -439,6 +439,86 @@ public class JPAActivityStoreTest {
         checkAllTablesEmpty();
     }
     
+    @Test
+    public void testGetActivityTypesNoContextTimeframe() {
+        java.util.List<ActivityType> results1=null;
+        
+        java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
+        
+        checkAllTablesEmpty();
+
+        ActivityUnit au1=createTestActivityUnit("7", "C1", "E1", 0);
+        ActivityUnit au2=createTestActivityUnit("8", "C1", "E1", 5000);
+        
+        activities.add(au1);
+        activities.add(au2);
+        
+        try {
+            activityStore.store(activities);
+        } catch(Exception e) {
+            fail("Failed to store activities: "+e);
+        }
+        
+        try {
+            results1 = activityStore.getActivityTypes(null, 2500, 7500);
+        } catch(Exception e) {
+            fail("Failed to query activities: "+e);
+        } finally {
+            try {
+                activityStore.remove(au1);
+                activityStore.remove(au2);
+            } catch (Exception e) {
+                fail("Failed to remove activity units: "+e);
+            }
+        }
+        
+        if (results1 == null) {
+            fail("Results1 is null");
+        }
+        
+        if (results1.size() != 2) {
+            fail("Expecting 2 results: "+results1.size());
+        }
+
+        checkAllTablesEmpty();
+    }
+    
+    
+    @Test
+    public void testGetActivityTypesNoContextNoTimeframe() {
+        java.util.List<ActivityUnit> activities=new java.util.ArrayList<ActivityUnit>();
+        
+        checkAllTablesEmpty();
+
+        ActivityUnit au1=createTestActivityUnit("7", "C1", "E1", 0);
+        ActivityUnit au2=createTestActivityUnit("8", "C1", "E1", 5000);
+        
+        activities.add(au1);
+        activities.add(au2);
+        
+        try {
+            activityStore.store(activities);
+        } catch(Exception e) {
+            fail("Failed to store activities: "+e);
+        }
+        
+        try {
+            activityStore.getActivityTypes(null, 0, 0);
+            
+            fail("Should have thrown exception");
+        } catch(Exception e) {
+        } finally {
+            try {
+                activityStore.remove(au1);
+                activityStore.remove(au2);
+            } catch (Exception e) {
+                fail("Failed to remove activity units: "+e);
+            }
+        }
+
+        checkAllTablesEmpty();
+    }
+    
     protected java.util.List<ActivityType> testStoreAndQuery(String emname, QuerySpec qs) {
         java.util.List<ActivityType> results=null;
         
