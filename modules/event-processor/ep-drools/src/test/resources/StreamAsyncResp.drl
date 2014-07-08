@@ -1,0 +1,16 @@
+import org.overlord.rtgov.activity.model.soa.RequestReceived
+
+global org.overlord.rtgov.ep.EPContext epc
+
+declare RequestReceived
+    @role( event )
+    @expires( 20s )
+end
+
+rule "Sliding window rule"
+when
+        $r: RequestReceived() over window:time( 20s ) from entry-point "Event"
+then
+    	epc.handle($r.getProperties().get("customer"));
+
+end

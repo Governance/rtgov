@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import org.overlord.rtgov.common.service.Service;
 import org.overlord.rtgov.ep.EPContext;
+import org.overlord.rtgov.ep.ResultHandler;
 
 /**
  * This class provides services to the EventProcessor
@@ -35,6 +36,7 @@ public class DefaultEPContext implements EPContext {
     private static final ThreadLocal<Object> RESULT=new ThreadLocal<Object>();
     
     private java.util.Map<String,Service> _services=null;
+    private ResultHandler _handler=null;
     
     /**
      * The default constructor.
@@ -49,6 +51,17 @@ public class DefaultEPContext implements EPContext {
      */
     public DefaultEPContext(java.util.Map<String,Service> services) {
         _services = services;
+    }
+    
+    /**
+     * This method sets the result handler.
+     * 
+     * @param handler The asynchronous result handler
+     * 
+     * NOTE: This mechanism is experimental, so may change in the future.
+     */
+    public void setResultHandler(ResultHandler handler) {
+        _handler = handler;
     }
     
     /**
@@ -92,7 +105,16 @@ public class DefaultEPContext implements EPContext {
             LOG.finest(">>> "+this+": Handle result="+result);
         }
         
-        RESULT.set(result);
+        if (_handler != null) {
+            
+            if (result instanceof java.io.Serializable) {
+                _handler.handle((java.io.Serializable)result);
+            } else {
+                LOG.severe("Result from event processor is not serializable: "+result);
+            }
+        } else {
+            RESULT.set(result);
+        }
     }
 
     /**

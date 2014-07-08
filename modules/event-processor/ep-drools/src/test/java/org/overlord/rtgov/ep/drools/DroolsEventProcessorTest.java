@@ -17,10 +17,13 @@ package org.overlord.rtgov.ep.drools;
 
 import static org.junit.Assert.*;
 
+import java.io.Serializable;
+
 import org.junit.Test;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
+import org.overlord.rtgov.ep.ResultHandler;
 import org.overlord.rtgov.ep.drools.DroolsEventProcessor;
 
 public class DroolsEventProcessorTest {
@@ -267,4 +270,138 @@ public class DroolsEventProcessorTest {
         }
     }
 
+    @Test
+    public void testStreamEventProcessingMode() {
+        DroolsEventProcessor ep=new DroolsEventProcessor();
+        ep.setRuleName("StreamAsyncResp");
+        ep.setEventProcessingMode("stream");
+        ep.setAsynchronous(true);
+        
+        try {            
+            ep.init();
+            
+            TestResultHandler handler=new TestResultHandler();
+            
+            ep.setResultHandler(handler);
+            
+            RequestReceived me1=new RequestReceived();
+            me1.setTimestamp(System.currentTimeMillis());
+            me1.getProperties().put("customer", "Ivan");
+            me1.setMessageId("me1");
+            
+            Object result1=ep.process("Event", me1, 0);
+            
+            if (result1 != null) {
+                fail("Should be no result 1: "+result1);
+            }
+            
+            synchronized (this) {
+                wait(1000);
+            }
+            
+            if (handler.getResults().size() != 1 ||
+                    !handler.getResults().get(0).equals("Ivan")) {
+                fail("Unexpected results: "+handler.getResults());
+            }
+            
+            handler.clear();
+            
+            RequestReceived me2=new RequestReceived();
+            me2.setTimestamp(System.currentTimeMillis()); //+2000);
+            me2.getProperties().put("customer", "Jeff");
+            me2.setMessageId("me2");
+
+            Object result2=ep.process("Event", me2, 0);
+            
+            if (result2 != null) {
+                fail("Should be no result 2: "+result2);
+            }
+            
+            synchronized (this) {
+                wait(1000);
+            }
+            
+            if (handler.getResults().size() != 1 ||
+                    !handler.getResults().get(0).equals("Jeff")) {
+                fail("Unexpected results: "+handler.getResults());
+            }
+            
+            handler.clear();
+            
+            RequestReceived me3=new RequestReceived();
+            me3.setTimestamp(System.currentTimeMillis()); //+4000);
+            me3.getProperties().put("customer", "Ivan");
+            me3.setMessageId("me3");
+
+            Object result3=ep.process("Event", me3, 0);
+            
+            if (result3 != null) {
+                fail("Result 3 is null");
+            }
+            
+            synchronized (this) {
+                wait(1000);
+            }
+            
+            if (handler.getResults().size() != 1 ||
+                    !handler.getResults().get(0).equals("Ivan")) {
+                fail("Unexpected results: "+handler.getResults());
+            }
+            
+            handler.clear();
+            
+        } catch(Exception e) {
+            e.printStackTrace();
+            fail("Exception: "+e);
+        }
+    }
+
+    @Test
+    public void testStreamEventProcessingModeNotAsync() {
+        DroolsEventProcessor ep=new DroolsEventProcessor();
+        ep.setRuleName("StreamAsyncResp");
+        ep.setEventProcessingMode("stream");
+        
+        try {            
+            ep.init();           
+            
+            fail("Should have thrown exception");
+        } catch(Exception e) {
+            // Exception expected
+        }
+    }
+
+    @Test
+    public void testCloudEventProcessingModeAsync() {
+        DroolsEventProcessor ep=new DroolsEventProcessor();
+        ep.setRuleName("StreamAsyncResp");
+        ep.setAsynchronous(true);
+        
+        try {            
+            ep.init();           
+            
+            fail("Should have thrown exception");
+        } catch(Exception e) {
+            // Exception expected
+        }
+    }
+
+    public class TestResultHandler implements ResultHandler {
+        
+        private java.util.List<Serializable> _results=new java.util.ArrayList<Serializable>();
+
+        public void clear() {
+            _results.clear();
+        }
+        
+        public java.util.List<Serializable> getResults() {
+            return (_results);
+        }
+        
+        @Override
+        public void handle(Serializable result) {
+            _results.add(result);
+        }
+        
+    }
 }
