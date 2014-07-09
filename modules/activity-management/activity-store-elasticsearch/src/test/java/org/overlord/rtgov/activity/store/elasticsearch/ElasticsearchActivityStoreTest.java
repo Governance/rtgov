@@ -24,7 +24,6 @@ package org.overlord.rtgov.activity.store.elasticsearch;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.node.NodeBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,6 +34,7 @@ import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.util.ActivityUtil;
+import org.overlord.rtgov.common.elasticsearch.ElasticsearchNode;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
@@ -58,7 +58,7 @@ public class ElasticsearchActivityStoreTest {
     /**
      * elastich search host
      */
-    private static String host = "localhost";
+    private static String host = "embedded";
     /**
      * elasticsearch port
      */
@@ -73,12 +73,14 @@ public class ElasticsearchActivityStoreTest {
         private java.util.Properties _properties = new java.util.Properties();
 
         public TestPropertiesProvider() {
+            System.setProperty("elasticsearch.config", "ElasticsearchActivityStoreTest-es.properties");
             _properties = new Properties();
             _properties.setProperty("Elasticsearch.hosts", host + ":" + 9300);
             //_properties.setProperty("Elasticsearch.hosts", host);
             _properties.setProperty("Elasticsearch.schedule", "3000");
             _properties.setProperty("ActivityStore.Elasticsearch.type", type);
             _properties.setProperty("ActivityStore.Elasticsearch.index", index);
+            _properties.setProperty("elasticsearch.config", "ElasticsearchActivityStoreTest-es.properties");
 
 
         }
@@ -100,9 +102,9 @@ public class ElasticsearchActivityStoreTest {
     @AfterClass
     public static void tearDown() throws Exception {
         Client c = new TransportClient();
-        if(host.equals("embedded"))
-           c= NodeBuilder.nodeBuilder().local(true).node().client();
-        else{
+        if (host.equals("embedded")) {
+            c = ElasticsearchNode.getInstance().getClient();
+        } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
         }
         c.admin().indices().prepareDelete(index).execute().actionGet();
@@ -116,10 +118,10 @@ public class ElasticsearchActivityStoreTest {
     @BeforeClass
     public static void initialiseStore() throws Exception {
         TestPropertiesProvider provider = new TestPropertiesProvider();
-        Client c = new TransportClient();
-        if(host.equals("embedded"))
-            c= NodeBuilder.nodeBuilder().local(true).node().client();
-        else{
+        Client c = null;
+        if (host.equals("embedded")) {
+            c = ElasticsearchNode.getInstance().getClient();
+        } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
         }
         
@@ -158,7 +160,7 @@ public class ElasticsearchActivityStoreTest {
             fail("Could not  get activity unit " + e);
 
         }
-        
+
         try {
             elasticsearchActivityStore.getClient().remove(AU_ID_1);
         } catch (Exception e) {
@@ -460,5 +462,6 @@ public class ElasticsearchActivityStoreTest {
 
         return (act);
     }
+
 
 }

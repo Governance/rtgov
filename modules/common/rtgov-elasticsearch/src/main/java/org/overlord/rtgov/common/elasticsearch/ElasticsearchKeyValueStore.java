@@ -88,7 +88,9 @@ public class ElasticsearchKeyValueStore extends KeyValueStore {
     /**
      * This method sets the hosts.
      *
+     *
      * @return The hosts
+     * @deprecated not required
      */
     public String getHosts() {
         return _client.getHosts();
@@ -98,6 +100,7 @@ public class ElasticsearchKeyValueStore extends KeyValueStore {
      * This method returns the hosts.
      *
      * @param hosts The hosts
+     * @deprecated should not be used. only used if need to connect directly to specific nodes over tcp. Use elasticsearch-es.properties instead
      */
     public void setHosts(String hosts) {
         _client.setHosts(hosts);

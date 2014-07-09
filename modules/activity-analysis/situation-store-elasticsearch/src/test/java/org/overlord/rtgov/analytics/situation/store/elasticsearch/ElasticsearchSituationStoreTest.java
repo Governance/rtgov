@@ -18,7 +18,6 @@ package org.overlord.rtgov.analytics.situation.store.elasticsearch;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.node.NodeBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,6 +26,7 @@ import org.overlord.rtgov.analytics.situation.Situation.Severity;
 import org.overlord.rtgov.analytics.situation.store.ResolutionState;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
+import org.overlord.rtgov.common.elasticsearch.ElasticsearchNode;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
@@ -58,7 +58,7 @@ public class ElasticsearchSituationStoreTest {
     /**
      * elastich search host
      */
-    private static String host = "localhost";
+    private static String host = "embedded";
     
     /**
      * elasticsearch port
@@ -75,9 +75,11 @@ public class ElasticsearchSituationStoreTest {
         private java.util.Properties _properties = new java.util.Properties();
 
         public TestPropertiesProvider() {
+            System.setProperty("elasticsearch.config", "ElasticsearchSituationStoreTest-es.properties");
+
             _properties = new Properties();
             _properties.setProperty("Elasticsearch.hosts", host + ":" + 9300);
-            //_properties.setProperty("Elasticsearch.hosts", host);
+            _properties.setProperty("Elasticsearch.hosts", "embedded");
             _properties.setProperty("Elasticsearch.schedule", "3000");
             _properties.setProperty("SituationStore.Elasticsearch.type", type);
             _properties.setProperty("SituationStore.Elasticsearch.index", index);
@@ -102,12 +104,10 @@ public class ElasticsearchSituationStoreTest {
     @AfterClass
     public static void tearDown() throws Exception {
         Client c = new TransportClient();
-        if(host.equals("embedded"))
-           c= NodeBuilder.nodeBuilder().local(true).node().client();
-        else{
-
+        if (host.equals("embedded")) {
+            c = ElasticsearchNode.getInstance().getClient();
+        } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
-
         }
         c.admin().indices().prepareDelete(index).execute().actionGet();
     }
@@ -120,12 +120,10 @@ public class ElasticsearchSituationStoreTest {
     public static void initialiseStore() throws Exception {
         TestPropertiesProvider provider = new TestPropertiesProvider();
         Client c = new TransportClient();
-        if(host.equals("embedded"))
-            c= NodeBuilder.nodeBuilder().local(true).node().client();
-        else{
-
+        if (host.equals("embedded")) {
+            c = ElasticsearchNode.getInstance().getClient();
+        } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
-
         }
         // remove index.
         if (c.admin().indices().prepareExists(index).execute().actionGet().isExists()) {

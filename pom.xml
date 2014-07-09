@@ -79,8 +79,7 @@
 		<jnp-client.version>5.0.3.GA</jnp-client.version>
 		<jsp-api.version>2.0</jsp-api.version>
 		<kie.version>6.1.0.Beta4</kie.version>
-        <lucene.version>4.7.0</lucene.version> <!-- Required to override parent bom version -->
-        <org.apache.servicemix.bundles.lucene.version>4.7.0_1</org.apache.servicemix.bundles.lucene.version> <!-- Required for karaf -->
+        <lucene.version>4.7.2</lucene.version> <!-- Required to override parent bom version -->
         <remoting-jmx>1.1.0.Final</remoting-jmx>
 		<rtgov-docs.version>2.0.0-SNAPSHOT</rtgov-docs.version>
 		<overlord-commons.version>2.0.2.Final</overlord-commons.version>
@@ -958,35 +957,71 @@
 				<artifactId>elasticsearch</artifactId>
 				<version>${elasticsearch.version}</version>
 			</dependency>
+
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-core</artifactId>
                 <version>${lucene.version}</version>
             </dependency>
             <dependency>
-	            <groupId>org.apache.servicemix.bundles</groupId>
-	            <artifactId>org.apache.servicemix.bundles.lucene</artifactId>
-	            <version>${org.apache.servicemix.bundles.lucene.version}</version>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-analyzers-common</artifactId>
+                <version>${lucene.version}</version>
             </dependency>
             <dependency>
-	            <groupId>org.apache.servicemix.bundles</groupId>
-	            <artifactId>org.apache.servicemix.bundles.lucene-analyzers-common</artifactId>
-	            <version>${org.apache.servicemix.bundles.lucene.version}</version>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-codecs</artifactId>
+                <version>${lucene.version}</version>
             </dependency>
             <dependency>
-	            <groupId>org.apache.servicemix.bundles</groupId>
-	            <artifactId>org.apache.servicemix.bundles.lucene-queries</artifactId>
-	            <version>${org.apache.servicemix.bundles.lucene.version}</version>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-queries</artifactId>
+                <version>${lucene.version}</version>
             </dependency>
             <dependency>
-	            <groupId>org.apache.servicemix.bundles</groupId>
-	            <artifactId>org.apache.servicemix.bundles.lucene-queryparser</artifactId>
-	            <version>${org.apache.servicemix.bundles.lucene.version}</version>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-memory</artifactId>
+                <version>${lucene.version}</version>
             </dependency>
             <dependency>
-	            <groupId>org.apache.servicemix.bundles</groupId>
-	            <artifactId>org.apache.servicemix.bundles.lucene-sandbox</artifactId>
-	            <version>${org.apache.servicemix.bundles.lucene.version}</version>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-highlighter</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-queryparser</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-sandbox</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-suggest</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-misc</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-join</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-grouping</artifactId>
+                <version>${lucene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-spatial</artifactId>
+                <version>${lucene.version}</version>
             </dependency>
 
 			<dependency>

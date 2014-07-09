@@ -20,11 +20,9 @@
               <goal>shade</goal>
             </goals>
             <configuration>
-              <artifactSet>
-                <excludes>
-                  <exclude>org.apache.lucene:lucene-queryparser:jar:</exclude>
-                </excludes>
-              </artifactSet>
+              <transformers>
+                <transformer />
+              </transformers>
             </configuration>
           </execution>
         </executions>
