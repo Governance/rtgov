@@ -143,8 +143,7 @@ public class ElasticsearchClient {
                 LOG.log(Level.SEVERE, MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
                                 "rtgov-elasticsearch.Messages").getString("RTGOV-ELASTICSEARCH-2"),
-                        schedule
-                ), e);
+                                schedule), e);
                 _schedule = ELASTICSEARCH_SCHEDULE_DEFAULT;
             }
         }
@@ -263,7 +262,6 @@ public class ElasticsearchClient {
             _scheduler = Executors.newScheduledThreadPool(1);
         }
 
-
         determineHostsAsProperty();
 
         /**
@@ -279,25 +277,27 @@ public class ElasticsearchClient {
 
             if (_hosts.startsWith("embedded")) {
                 try {
-                    // lookup the counter bean
-              _client =  ElasticSearchNode.NODE.getClient();
-
-                } catch (Exception e) {
+                    // Obtain the Elasticsearch client
+                    _client =  ElasticsearchNode.getInstance().getClient();
+                } catch (Throwable e) {
                     LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                             "rtgov-elasticsearch.Messages").getString("RTGOV-ELASTICSEARCH-3"), e);
-                } catch (NoClassDefFoundError e) {
-                    System.out.println("sss "+e.getMessage());
-
                 }
             } else {
                 String[] hostsArray = _hosts.split(",");
                 TransportClient c = new TransportClient();
+                
                 for (String aHostsArray : hostsArray) {
                     String s = aHostsArray.trim();
                     String[] host = s.split(":");
-                    LOG.info(" Connecting to elasticsearch host. [" + host[0] + ":" + host[1] + "]");
+                    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine(" Connecting to elasticsearch host. [" + host[0] + ":" + host[1] + "]");
+                    }
+                    
                     c = c.addTransportAddress(new InetSocketTransportAddress(host[0], new Integer(host[1])));
                 }
+                
                 _client = c;
             }
         } finally {
@@ -340,11 +340,7 @@ public class ElasticsearchClient {
      */
     @SuppressWarnings("unchecked")
     private boolean prepareMapping(Map<String, Object> defaultMappings) {
-
-        //
-        // ((HashMap)defaultMappings.get(s)).get("_parent")
         // only prepare the mapping for the configured repo type
-
         Set<String> keys = defaultMappings.keySet();
         boolean success = true;
 
@@ -356,34 +352,45 @@ public class ElasticsearchClient {
         putMappingRequestBuilder.setType(_type);
         putMappingRequestBuilder.setSource(mapping);
 
-        LOG.info("******* Creating elasticsearch mapping for [" + _type + "] *********");
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("******* Creating elasticsearch mapping for [" + _type + "] *********");
+        }
+        
         PutMappingResponse resp = putMappingRequestBuilder.execute().actionGet();
 
         if (resp.isAcknowledged()) {
-            LOG.info("******* Successful ACK on elasticsearch mapping for [" + _type + "] *********");
-
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("******* Successful ACK on elasticsearch mapping for [" + _type + "] *********");
+            }
+            
             /**
              * now determine if any child relationships exist in the mapping
              */
             for (String s : keys) {
-                Map<?, ?> childMap = (Map<?, ?>) ((Map<?, ?>) defaultMappings.get(s)).get("_parent");
+                Map<?, ?> childMap = (Map<?,?>) ((Map<?,?>) defaultMappings.get(s)).get("_parent");
                 if (childMap != null && childMap.get("type") != null && childMap.get("type").equals(_type)) {
 
                     PutMappingRequestBuilder putChildMappingRequestBuilder = _client.admin().indices().preparePutMapping().setIndices(_index);
                     putChildMappingRequestBuilder.setType(s);
-                    LOG.info("******* Creating elasticsearch mapping for [parent=" + _type + ", child=" + s + "] *********");
-                    putChildMappingRequestBuilder.setSource((Map<String, Map<?, ?>>) defaultMappings.get(s));
+                    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("******* Creating elasticsearch mapping for [parent="
+                                    + _type + ", child=" + s + "] *********");
+                    }
+                    
+                    putChildMappingRequestBuilder.setSource((Map<String, Map<?,?>>) defaultMappings.get(s));
                     PutMappingResponse respChild = putChildMappingRequestBuilder.execute().actionGet();
                     if (respChild.isAcknowledged()) {
-                        LOG.info("******* Successful ACK on elasticsearch mapping for [parent=" + _type + ", child" + s + "] *********");
+                        if (LOG.isLoggable(Level.FINE)) {
+                            LOG.fine("******* Successful ACK on elasticsearch mapping for [parent="
+                                    + _type + ", child" + s + "] *********");
+                        }
                     } else {
                         success = false;
                         LOG.warning("******* Child Mapping creation was not acknowledged for elasticsearch mapping [parent=" + _type + ", child=" + s + "] *********");
                     }
                 }
             }
-
-
         } else {
             success = false;
             LOG.warning("******* Mapping creation was not acknowledged for elasticsearch mapping [" + _type + "] *********");
@@ -461,8 +468,6 @@ public class ElasticsearchClient {
             }
 
         }
-
-
     }
 
     private synchronized BulkResponse storeBulkItems() {
@@ -506,10 +511,16 @@ public class ElasticsearchClient {
             try {
                 IndexResponse indexResponse = _client.prepareIndex(_index, _type, id).setSource(document).execute().actionGet();
                 if (!indexResponse.isCreated()) {
-                    LOG.fine(" Document could not be created for index [" + _index + "/" + _type + "/" + id + "]");
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine(" Document could not be created for index ["
+                                + _index + "/" + _type + "/" + id + "]");
+                    }
                     throw new Exception("Document could not be created for index [" + _index + "/" + _type + "/" + id + "]");
                 }
-                LOG.fine(" Document successfully created for index [" + _index + "/" + _type + "/" + id + "]");
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine(" Document successfully created for index [" + _index + "/" + _type + "/" + id + "]");
+                }
 
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "[/" + _index + "/" + _type + "] Could not store json document", e);
@@ -537,14 +548,16 @@ public class ElasticsearchClient {
     /**
      * This method updates the supplied document.
      *
-     * @param id       The id
+     * @param id The id
      * @param document The document
      */
     public void update(String id, String document) {
         try {
             _client.prepareIndex(_index, _type, id).setSource(document).execute().actionGet();
-            LOG.fine(" Document successfully updated for index [" + _index + "/" + _type + "/" + id + "]");
-
+            
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine(" Document successfully updated for index [" + _index + "/" + _type + "/" + id + "]");
+            }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "[/" + _index + "/" + _type + "] Could not update json document", e);
             throw new RuntimeException("[/" + _index + "/" + _type + "] Could not update json document", e);
@@ -629,7 +642,8 @@ public class ElasticsearchClient {
             String _hostsProperty = _hosts.substring(2, _hosts.length() - 1);
             _hosts = RTGovProperties.getProperty(_hostsProperty);
             if (_hosts == null) {
-                throw new IllegalArgumentException("Could not find property " + _hostsProperty + " in Rtgov.properties");
+                throw new IllegalArgumentException("Could not find property "
+                                + _hostsProperty + " in overlord-rtgov.properties");
             }
         }
 

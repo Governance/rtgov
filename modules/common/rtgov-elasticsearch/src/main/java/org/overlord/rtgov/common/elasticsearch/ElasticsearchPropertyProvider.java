@@ -1,4 +1,3 @@
-package org.overlord.rtgov.common.elasticsearch;
 /*
  * 2012-4 Red Hat Inc. and/or its affiliates and other contributors.
  *
@@ -14,10 +13,10 @@ package org.overlord.rtgov.common.elasticsearch;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.overlord.rtgov.common.elasticsearch;
 
 import org.apache.commons.configuration.Configuration;
 import org.overlord.commons.config.ConfigurationFactory;
-import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -26,8 +25,7 @@ import java.util.Properties;
  * Date: 07/07/14.
  * Time: 15:33.
  */
-public class ElasticSearchPropertyProvider implements RTGovPropertiesProvider {
-
+class ElasticsearchPropertyProvider {
 
     /**
      * location of elasticsearch property file
@@ -37,7 +35,8 @@ public class ElasticSearchPropertyProvider implements RTGovPropertiesProvider {
     /**
      * DEFAULT configuration of elastic search bundled with the deployment
      */
-    private static final String ELASTICSEARCH_CONFIG_DEFAULT = "rtgov-es.properties";
+    private static final String ELASTICSEARCH_CONFIG_DEFAULT = "overlord-rtgov-elasticsearch.properties";
+
     /**
      * Refresh delay
      */
@@ -47,7 +46,7 @@ public class ElasticSearchPropertyProvider implements RTGovPropertiesProvider {
     /**
      * This is the default constructor.
      */
-    public ElasticSearchPropertyProvider() {
+    public ElasticsearchPropertyProvider() {
     }
 
     /**
@@ -60,13 +59,12 @@ public class ElasticSearchPropertyProvider implements RTGovPropertiesProvider {
         if (_configuration == null) {
             String configFile = System.getProperty(ELASTICSEARCH_CONFIG);
 
-
             _configuration = ConfigurationFactory.createConfig(
                     configFile,
                     ELASTICSEARCH_CONFIG_DEFAULT,
                     ELASTICSEARCH_CONFIG_REFRESH,
                     null,
-                    ElasticSearchPropertyProvider.class);
+                    ElasticsearchPropertyProvider.class);
         }
 
         Properties properties = new Properties();
@@ -78,20 +76,7 @@ public class ElasticSearchPropertyProvider implements RTGovPropertiesProvider {
                 properties.setProperty(key, value);
             }
         }
+
         return properties;
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getProperty(String name) {
-        java.util.Properties props=getProperties();
-
-        if (props != null) {
-            return (props.getProperty(name));
-        }
-
-        return (null);
-    }
-
 }

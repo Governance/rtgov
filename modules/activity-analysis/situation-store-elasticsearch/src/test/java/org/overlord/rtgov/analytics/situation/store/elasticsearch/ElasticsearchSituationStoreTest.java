@@ -18,7 +18,6 @@ package org.overlord.rtgov.analytics.situation.store.elasticsearch;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.node.NodeBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +26,7 @@ import org.overlord.rtgov.analytics.situation.Situation.Severity;
 import org.overlord.rtgov.analytics.situation.store.ResolutionState;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
-import org.overlord.rtgov.common.elasticsearch.ElasticSearchNode;
+import org.overlord.rtgov.common.elasticsearch.ElasticsearchNode;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
@@ -105,12 +104,10 @@ public class ElasticsearchSituationStoreTest {
     @AfterClass
     public static void tearDown() throws Exception {
         Client c = new TransportClient();
-        if(host.equals("embedded"))
-           c= ElasticSearchNode.NODE.getClient();
-        else{
-
+        if (host.equals("embedded")) {
+            c = ElasticsearchNode.getInstance().getClient();
+        } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
-
         }
         c.admin().indices().prepareDelete(index).execute().actionGet();
     }
@@ -123,12 +120,10 @@ public class ElasticsearchSituationStoreTest {
     public static void initialiseStore() throws Exception {
         TestPropertiesProvider provider = new TestPropertiesProvider();
         Client c = new TransportClient();
-        if(host.equals("embedded"))
-            c= ElasticSearchNode.NODE.getClient();
-        else{
-
+        if (host.equals("embedded")) {
+            c = ElasticsearchNode.getInstance().getClient();
+        } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
-
         }
         // remove index.
         if (c.admin().indices().prepareExists(index).execute().actionGet().isExists()) {

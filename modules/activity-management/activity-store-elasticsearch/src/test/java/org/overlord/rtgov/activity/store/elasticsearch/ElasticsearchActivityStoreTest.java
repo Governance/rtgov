@@ -34,7 +34,7 @@ import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.util.ActivityUtil;
-import org.overlord.rtgov.common.elasticsearch.ElasticSearchNode;
+import org.overlord.rtgov.common.elasticsearch.ElasticsearchNode;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
 
@@ -102,9 +102,9 @@ public class ElasticsearchActivityStoreTest {
     @AfterClass
     public static void tearDown() throws Exception {
         Client c = new TransportClient();
-        if(host.equals("embedded"))
-           c= ElasticSearchNode.NODE.getClient();
-        else{
+        if (host.equals("embedded")) {
+            c = ElasticsearchNode.getInstance().getClient();
+        } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
         }
         c.admin().indices().prepareDelete(index).execute().actionGet();
@@ -119,10 +119,9 @@ public class ElasticsearchActivityStoreTest {
     public static void initialiseStore() throws Exception {
         TestPropertiesProvider provider = new TestPropertiesProvider();
         Client c = null;
-        if(host.equals("embedded"))
-            c= ElasticSearchNode.NODE.getClient();
-
-        else{
+        if (host.equals("embedded")) {
+            c = ElasticsearchNode.getInstance().getClient();
+        } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
         }
         

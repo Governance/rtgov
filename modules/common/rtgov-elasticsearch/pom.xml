@@ -62,6 +62,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.overlord</groupId>
             <artifactId>overlord-commons-config</artifactId>
             <scope>provided</scope>
@@ -71,14 +77,8 @@
             <groupId>org.overlord.rtgov.common</groupId>
             <artifactId>rtgov-common</artifactId>
             <scope>provided</scope>
-
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-queryparser</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
