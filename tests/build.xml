@@ -16,12 +16,13 @@
 		<echo message="Setting up Overlord Runtime Governance configuration"/>
 
 		<delete file="${path}/standalone/configuration/overlord-rtgov.properties" />
+		<delete file="${path}/standalone/configuration/overlord-rtgov-elasticsearch.properties" />
 
 		<copy todir="${path}/standalone/configuration" >
 			<fileset file="${ant.file.rtgovtests}/../../distribution/overlord-rtgov-assembly/src/main/resources/platforms/eap6/all/configuration/overlord-rtgov.properties" />
 		</copy>
 
-		<!-- Security related configuration -->
+		<!-- Security and elasticsearch related configuration -->
 
 		<copy todir="${path}/standalone/configuration" >
 			<fileset file="${ant.file.rtgovtests}/../configuration/overlord-*.properties" />
