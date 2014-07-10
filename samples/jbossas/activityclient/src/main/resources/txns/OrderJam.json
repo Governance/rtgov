@@ -8,7 +8,8 @@
 		"value":"{ID}-1",
 		"type":"Message"
 	},{
-		"value":"{ID}"
+		"value":"{ID}",
+		"type": "Conversation"
 	}],
 	"properties":{
 		"item":"JAM",
@@ -72,7 +73,8 @@
 		"value":"{ID}-4",
 		"type":"Message"
 	},{
-		"value":"{ID}"
+		"value":"{ID}",
+		"type": "Conversation"
 	}],
 	"properties":{
 		"itemId":"JAM",
@@ -89,7 +91,8 @@
 		"value":"{ID}-4",
 		"type":"Message"
 	},{
-		"value":"{ID}"
+		"value":"{ID}",
+		"type": "Conversation"
 	}],
 	"properties":{
 		"itemId":"JAM",
@@ -133,7 +136,8 @@
 		"value":"{ID}-6",
 		"type":"Message"
 	},{
-		"value":"{ID}"
+		"value":"{ID}",
+		"type": "Conversation"
 	}],
 	"properties":{
 		"total":"125.0",
