@@ -57,7 +57,10 @@ public class RTGovSituationsUtil {
     	ret.getProperties().putAll(situation.getProperties());
     	
     	for (Context context : situation.getContext()) {
-    	    if (context.getType() != null && context.getType() != Context.Type.Message) {
+            if (context.getType() == null) {
+                context.setType(Context.Type.Conversation);
+            }
+    	    if (context.getType() != Context.Type.Message) {
     	        ret.getContext().add(new NameValuePairBean(context.getType().name(),
     	                        context.getValue()));
     	    }
