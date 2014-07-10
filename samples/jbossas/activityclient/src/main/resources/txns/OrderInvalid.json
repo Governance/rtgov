@@ -7,8 +7,6 @@
 	"context":[{
 		"value":"{ID}-1",
 		"type":"Message"
-	},{
-		"value":"{ID}"
 	}],
 	"properties":{
 		"item":"JAM",
@@ -24,7 +22,5 @@
 	"context":[{
 		"value":"{ID}-6",
 		"type":"Message"
-	},{
-		"value":"{ID}"
 	}]
 }]
