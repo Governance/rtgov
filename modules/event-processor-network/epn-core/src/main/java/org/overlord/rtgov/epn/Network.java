@@ -277,7 +277,7 @@ public class Network implements NetworkMBean {
             
             if (!_preinitialized) {
                 // Initialize the node
-                node.init();
+                node.init(container);
             }
         }
         
