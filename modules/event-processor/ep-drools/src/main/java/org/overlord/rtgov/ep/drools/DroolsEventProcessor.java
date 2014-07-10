@@ -19,7 +19,9 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -28,8 +30,11 @@ import org.kie.api.builder.ReleaseId;
 import org.kie.api.builder.Results;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.KieSessionConfiguration;
+import org.kie.api.runtime.conf.ClockTypeOption;
 import org.kie.api.runtime.rule.EntryPoint;
 import org.overlord.rtgov.ep.EventProcessor;
+import org.overlord.rtgov.ep.ResultHandler;
 import org.overlord.rtgov.internal.ep.DefaultEPContext;
 
 /**
@@ -39,25 +44,64 @@ import org.overlord.rtgov.internal.ep.DefaultEPContext;
  */
 public class DroolsEventProcessor extends EventProcessor {
 
+    /**
+     * Event processing mode: stream.
+     */
+    public static final String EVENT_PROCESSING_MODE_STREAM = "stream";
+
+    /**
+     * Event processing mode: cloud (default).
+     */
+    public static final String EVENT_PROCESSING_MODE_CLOUD = "cloud";
+
+    private static final String DROOLS_EVENT_PROCESSING_MODE = "drools.eventProcessingMode";
+
     private static final Logger LOG=Logger.getLogger(DroolsEventProcessor.class.getName());
 
     private DefaultEPContext _context=null;
 
     private KieSession _session=null;
     private String _ruleName=null;
+    private String _eventProcessingMode=null;
+    private String _clockType=null;
+    
+    private boolean _streamMode=false;
+    private Thread _streamThread=null;
+    
     private static java.util.concurrent.atomic.AtomicInteger _count=new java.util.concurrent.atomic.AtomicInteger();
 
     /**
      * {@inheritDoc}
      */
     public void init() throws Exception {
+        _streamMode = (_eventProcessingMode != null
+                && _eventProcessingMode.equalsIgnoreCase(EVENT_PROCESSING_MODE_STREAM));
+        
+        if (_streamMode && !getAsynchronous()) {
+            throw new IllegalArgumentException("DroolsEventProcessor for ruleName '"+_ruleName
+                    +"' must be configured as 'asynchronous' when using 'stream' eventProcessingMode");
+        } else if (!_streamMode && getAsynchronous()) {
+            throw new IllegalArgumentException("DroolsEventProcessor for ruleName '"+_ruleName
+                    +"' must NOT be configured as 'asynchronous' when using 'cloud' eventProcessingMode");
+        }
+        
         _context = new DefaultEPContext(getServices());
         
         _session = createSession();
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("DroolsEventProcessor init: ruleName="+_ruleName+" session="+_session);
+            LOG.finest("DroolsEventProcessor init: ruleName="+_ruleName+" session="+_session
+                    +" streamMode="+_streamMode);
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @JsonIgnore
+    public void setResultHandler(ResultHandler handler) {
+        super.setResultHandler(handler);
+        _context.setResultHandler(handler);
     }
     
     /**
@@ -79,6 +123,55 @@ public class DroolsEventProcessor extends EventProcessor {
     }
     
     /**
+     * This method returns the event processing mode (default
+     * is cloud mode).
+     * 
+     * @return The event processing mode
+     */
+    public String getEventProcessingMode() {
+        return (_eventProcessingMode);
+    }
+    
+    /**
+     * This method sets the event processing mode (default
+     * is cloud mode).
+     * 
+     * @param eventProcessingMode The event processing mode
+     */
+    public void setEventProcessingMode(String eventProcessingMode) {
+        _eventProcessingMode = eventProcessingMode;
+    }
+    
+    /**
+     * This method determines whether stream processing is being used.
+     * 
+     * @return Whether stream processing mode is being used
+     */
+    protected boolean isStreamEventProcessingMode() {
+        return (_streamMode);
+    }
+    
+    /**
+     * This method returns the clock type (default
+     * is realtime).
+     * 
+     * @return The clock type
+     */
+    public String getClockType() {
+        return (_clockType);
+    }
+    
+    /**
+     * This method sets the clock type (default
+     * is realtime).
+     * 
+     * @param clockType The clock type
+     */
+    public void setClockType(String clockType) {
+        _clockType = clockType;
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public java.io.Serializable process(String source,
@@ -92,7 +185,9 @@ public class DroolsEventProcessor extends EventProcessor {
                         +"'");
             }
 
-            _context.handle(null);
+            if (!getAsynchronous()) {
+                _context.handle(null);
+            }
 
             // Get entry point
             // TODO: If not simple lookup, then may want to cache this
@@ -110,7 +205,10 @@ public class DroolsEventProcessor extends EventProcessor {
                 // TODO: Not sure if possible to delay evaluation, until after
                 // all events in batch have been processed/inserted - but then
                 // how to trace the individual results??
-                _session.fireAllRules();
+                
+                if (!getAsynchronous()) {
+                    _session.fireAllRules();
+                }
 
             } else {
                 String mesg=MessageFormat.format(
@@ -123,7 +221,9 @@ public class DroolsEventProcessor extends EventProcessor {
                 throw new Exception(mesg);
             }
 
-            ret = (java.io.Serializable)_context.getResult();
+            if (!getAsynchronous()) {
+                ret = (java.io.Serializable)_context.getResult();
+            }
 
             if (ret instanceof Exception) {
                 throw (Exception)ret;
@@ -141,16 +241,43 @@ public class DroolsEventProcessor extends EventProcessor {
      * @throws Exception Failed to create session
      */
     private KieSession createSession() throws Exception {
-        KieSession ret=null;
-        
         KieBase kbase = loadRuleBase();
         
         if (kbase != null) {
-            ret = kbase.newKieSession();
+            KieSessionConfiguration config = KieServices.Factory.get().newKieSessionConfiguration();
+
+            if (getClockType() != null) {
+                config.setOption(ClockTypeOption.get(getClockType()));
+            }
+            
+            final KieSession ret = kbase.newKieSession(config, null);
 
             if (ret != null) {
                 ret.setGlobal("epc", _context);
-                ret.fireAllRules();
+                
+                if (isStreamEventProcessingMode()) {
+                    _streamThread = new Thread(new Runnable() {
+                        public void run() {
+                            if (LOG.isLoggable(Level.FINE)) {
+                                LOG.fine("Starting stream session thread for rule: "+getRuleName());
+                            }
+                            
+                            ret.fireUntilHalt();
+                        }
+                    });
+                    
+                    _streamThread.start();
+
+                    try {
+                        synchronized (this) {
+                            wait(2000);
+                        }
+                    } catch (Exception e) {
+                        LOG.log(Level.SEVERE, "Failed to wait for session thread to start", e);
+                    }
+                } else {
+                    ret.fireAllRules();
+                }
             } else {
                 String mesg=MessageFormat.format(
                         java.util.PropertyResourceBundle.getBundle(
@@ -161,9 +288,11 @@ public class DroolsEventProcessor extends EventProcessor {
                 
                 throw new Exception(mesg);
             }
+                
+            return (ret);
         }
 
-        return (ret);
+        return (null);
     }
     
     /**
@@ -196,6 +325,15 @@ public class DroolsEventProcessor extends EventProcessor {
             }
 
             KieContainer kieContainer = kieServices.newKieContainer(releaseId);
+            
+            if (isStreamEventProcessingMode()) {
+                java.util.Properties properties=new java.util.Properties();
+                properties.setProperty(DROOLS_EVENT_PROCESSING_MODE, EVENT_PROCESSING_MODE_STREAM);
+                
+                KieBaseConfiguration kieBaseConfiguration = KieServices.Factory.get().newKieBaseConfiguration(properties);
+                return (kieContainer.newKieBase(kieBaseConfiguration));
+            }
+            
             return kieContainer.getKieBase();
 
         } catch (Throwable e) {
@@ -210,4 +348,18 @@ public class DroolsEventProcessor extends EventProcessor {
         }
     }
 
-}
+    /**
+     * {@inheritDoc}
+     */
+    public void close() throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("DroolsEventProcessor close: ruleName="+_ruleName+" session="+_session
+                    +" streamMode="+_streamMode);
+        }
+        
+        if (_session != null) {
+            _session.dispose();
+        }
+    }
+    
+ }

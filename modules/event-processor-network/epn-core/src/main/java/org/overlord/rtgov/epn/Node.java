@@ -16,11 +16,13 @@
 package org.overlord.rtgov.epn;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.overlord.rtgov.ep.EventProcessor;
 import org.overlord.rtgov.ep.Predicate;
+import org.overlord.rtgov.ep.ResultHandler;
 
 
 /**
@@ -41,6 +43,9 @@ public class Node {
     private java.util.List<Notification> _notifications=new java.util.ArrayList<Notification>();
     
     private java.util.List<Channel> _channels=new java.util.Vector<Channel>();
+    
+    private ResultHandler _handler=null;
+    private EPNContainer _container=null;
     
     /**
      * The default constructor for the event processor node.
@@ -217,7 +222,17 @@ public class Node {
      * @throws Exception Failed to initialize the node
      */
     protected void init() throws Exception {
+        init(null);
+    }
         
+    /**
+     * This method initializes the node.
+     * 
+     * @throws Exception Failed to initialize the node
+     */
+    protected void init(EPNContainer container) throws Exception {
+        _container = container;
+            
         if (getPredicate() != null) {
             getPredicate().init();
         }
@@ -227,6 +242,11 @@ public class Node {
         }
         
         getEventProcessor().init();
+        
+        if (getEventProcessor().getAsynchronous()) {
+            _handler = new NodeResultHandler();
+            getEventProcessor().setResultHandler(_handler);
+        }
     }
     
     /**
@@ -317,6 +337,38 @@ public class Node {
         for (Channel ch : _channels) {
             ch.close();
         }
+        
+        _container = null;
+        _handler = null;
+        
+        getEventProcessor().setResultHandler(null);
+        
+        getEventProcessor().close();
     }
     
+    /**
+     * This class implements the result handler for this node.
+     * 
+     * NOTE: This mechanism is experimental, so may change in the future.
+     */
+    class NodeResultHandler implements ResultHandler {
+
+        /**
+         * {@inheritDoc}
+         */
+        public void handle(java.io.Serializable result) {
+            if (result != null) {
+                java.util.List<java.io.Serializable> results=new java.util.ArrayList<java.io.Serializable>();
+                results.add(result);
+                
+                try {
+                    forward(_container, new EventList(results));
+                } catch (Exception e) {
+                    LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                            "epn-core.Messages").getString("EPN-CORE-19"),
+                            getName(), e.toString()));
+                }
+            }
+        }       
+    }
 }

@@ -16,6 +16,7 @@
 package org.overlord.rtgov.common.service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
@@ -34,6 +35,15 @@ public abstract class Service {
      */
     @PostConstruct
     public void init() throws Exception {
+    }
+    
+    /**
+     * This method closes the service.
+     * 
+     * @throws Exception Failed to close
+     */
+    @PreDestroy
+    public void close() throws Exception {
     }
     
 }
