@@ -143,7 +143,12 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 	public boolean isResubmitSupported(String service, String operation) throws UiException {
 		try {
 			Map<String, BindingBean> serviceBindings = getServiceBindings(service);
-			return serviceBindings.containsKey(BINDING_TYPE_SCA);
+			for (String btype : serviceBindings.keySet()) {
+			    if (btype.equalsIgnoreCase(BINDING_TYPE_SCA)) {
+			        return (true);
+			    }
+			}
+			return (false);
 		} catch (InstanceNotFoundException infe) {
 		    return (false);
 		} catch (Exception e) {
