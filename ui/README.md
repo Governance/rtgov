@@ -2,10 +2,9 @@
 
 ## Running UI
 
-The Runtime Governance UI project builds as a WAR which can be deployed to a Java application server such as JBoss EAP.
-In fact, a specific EAP 6.x version of the WAR is created during the build process.
+The Runtime Governance UI module builds as a WAR which can be deployed to a variety of Java containers, such as JBoss EAP, Fuse, etc.
 
-Another (even easier) way to run the rtgov-ui project is to simply do this:
+Another (even easier) way to run (and test) the rtgov/ui project, against mock backend services, is to simply do this:
 
     $ mvn -Prun clean install
 

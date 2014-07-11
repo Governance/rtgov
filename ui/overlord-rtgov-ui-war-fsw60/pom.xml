@@ -209,6 +209,7 @@
                 <exclude>WEB-INF/lib/xercesImpl*.jar</exclude>
                 <exclude>WEB-INF/lib/picketlink*.jar</exclude>
                 <exclude>WEB-INF/lib/picketbox*.jar</exclude>
+                <exclude>WEB-INF/classes/org/overlord/rtgov/ui/server/services/mock/*</exclude>
               </excludes>
             </overlay>
           </overlays>

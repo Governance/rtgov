@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.ui.server.services.impl;
+package org.overlord.rtgov.ui.server.services.mock;
 
 import static com.google.common.base.Predicates.and;
 import static com.google.common.base.Predicates.notNull;

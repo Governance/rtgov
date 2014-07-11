@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.management.AttributeList;
+import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
@@ -143,6 +144,8 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		try {
 			Map<String, BindingBean> serviceBindings = getServiceBindings(service);
 			return serviceBindings.containsKey(BINDING_TYPE_SCA);
+		} catch (InstanceNotFoundException infe) {
+		    return (false);
 		} catch (Exception e) {
 			throw new UiException(i18n.format("SwitchYardServicesProvider.IsResubmitSupported", service, operation), e);
 		}
