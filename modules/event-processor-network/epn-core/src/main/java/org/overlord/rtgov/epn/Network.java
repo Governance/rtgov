@@ -277,8 +277,11 @@ public class Network implements NetworkMBean {
             
             if (!_preinitialized) {
                 // Initialize the node
-                node.init(container);
+                node.init();
             }
+            
+            // Associate the container with the node
+            node.setContainer(container);
         }
         
         // Initialize subject/node mapping
@@ -311,10 +314,22 @@ public class Network implements NetworkMBean {
      * 
      * @param container The container
      * @throws Exception Failed to close the network
+     * 
+     * @deprecated Use the 'close' method without the container parameter
      */
     protected void close(EPNContainer container) throws Exception {
+        close();
+    }
+    
+    /**
+     * This method closes the network.
+     * 
+     * @param container The container
+     * @throws Exception Failed to close the network
+     */
+    protected void close() throws Exception {
         for (Node node : _nodes) {
-            node.close(container);
+            node.close();
         }
     }
     

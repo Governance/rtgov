@@ -222,17 +222,6 @@ public class Node {
      * @throws Exception Failed to initialize the node
      */
     protected void init() throws Exception {
-        init(null);
-    }
-        
-    /**
-     * This method initializes the node.
-     * 
-     * @throws Exception Failed to initialize the node
-     */
-    protected void init(EPNContainer container) throws Exception {
-        _container = container;
-            
         if (getPredicate() != null) {
             getPredicate().init();
         }
@@ -250,6 +239,15 @@ public class Node {
     }
     
     /**
+     * This method sets the EPN container.
+     * 
+     * @param container The container
+     */
+    protected void setContainer(EPNContainer container) {
+        _container = container;
+    }
+    
+    /**
      * This method processes the supplied list of events against the
      * event processor configured with the node, to determine
      * which transformed events should be forwarded, and which need
@@ -261,9 +259,31 @@ public class Node {
      * @param retriesLeft The number of remaining retries
      * @return The events to retry, or null if no retries necessary
      * @throws Exception Failed to process events, and should result in transaction rollback
+     * 
+     * @deprecated The container should be associated with the node using the 'setContainer' method
+     */
+    protected EventList process(EPNContainer container, String source,
+                      EventList events, int retriesLeft) throws Exception {
+        if (_container == null) {
+            _container = container;
+        }
+        return (process(source, events, retriesLeft));
+    }
+    
+    /**
+     * This method processes the supplied list of events against the
+     * event processor configured with the node, to determine
+     * which transformed events should be forwarded, and which need
+     * to be returned to be retried.
+     * 
+     * @param source The source node/subject that generated the event
+     * @param events The list of events to be processed
+     * @param retriesLeft The number of remaining retries
+     * @return The events to retry, or null if no retries necessary
+     * @throws Exception Failed to process events, and should result in transaction rollback
      */
     @SuppressWarnings("unchecked")
-    protected EventList process(EPNContainer container, String source,
+    protected EventList process(String source,
                       EventList events, int retriesLeft) throws Exception {
         java.util.List<Serializable> retries=null;
         java.util.List<Serializable> results=null;
@@ -308,7 +328,7 @@ public class Node {
         }
         
         if (results != null) {
-            forward(container, new EventList(results));
+            forward(new EventList(results));
         }
         
         return (retries != null ? new EventList(retries) : null);
@@ -321,9 +341,29 @@ public class Node {
      * @param container The container
      * @param results The results
      * @throws Exception Failed to forward results
+     * 
+     * @deprecated Use the alternative 'forward' method that does not require the container to be provided
      */
     protected void forward(EPNContainer container, EventList results) throws Exception {
-        container.send(results, _channels);
+        if (_container == null) {
+            _container = container;
+        }
+        forward(results);
+    }
+    
+    /**
+     * This method forwards the results to any destinations that have been
+     * defined.
+     * 
+     * @param results The results
+     * @throws Exception Failed to forward results
+     */
+    protected void forward(EventList results) throws Exception {
+        if (_container != null) {
+            _container.send(results, _channels);
+        } else {
+            throw new Exception("Cannot forward results as container has not been initialized");
+        }
     }
 
     /**
@@ -331,9 +371,20 @@ public class Node {
      * 
      * @param container The container
      * @throws Exception Failed to close the node
+     * 
+     * @deprecated Use the alternative 'close' method without the container parameter
      */
     protected void close(EPNContainer container) throws Exception {
-        
+        close();
+    }
+    
+    /**
+     * This method closes the node.
+     * 
+     * @throws Exception Failed to close the node
+     */
+    protected void close() throws Exception {
+
         for (Channel ch : _channels) {
             ch.close();
         }
