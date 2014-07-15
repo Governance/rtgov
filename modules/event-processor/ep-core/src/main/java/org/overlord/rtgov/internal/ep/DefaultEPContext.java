@@ -36,6 +36,7 @@ public class DefaultEPContext implements EPContext {
     private static final ThreadLocal<Object> RESULT=new ThreadLocal<Object>();
     
     private java.util.Map<String,Service> _services=null;
+    private java.util.Map<String,Object> _parameters=null;
     private ResultHandler _handler=null;
     
     /**
@@ -51,6 +52,17 @@ public class DefaultEPContext implements EPContext {
      */
     public DefaultEPContext(java.util.Map<String,Service> services) {
         _services = services;
+    }
+    
+    /**
+     * This constructor initializes the service map.
+     * 
+     * @param services The map of services available
+     * @param parameters The map of parameters avaiable
+     */
+    public DefaultEPContext(java.util.Map<String,Service> services, java.util.Map<String,Object> parameters) {
+        _services = services;
+        _parameters = parameters;
     }
     
     /**
@@ -140,6 +152,19 @@ public class DefaultEPContext implements EPContext {
         
         if (_services != null) {
             ret = _services.get(name);
+        }
+
+        return (ret);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object getParameter(String name) {
+        Object ret=null;
+        
+        if (_parameters != null) {
+            ret = _parameters.get(name);
         }
 
         return (ret);

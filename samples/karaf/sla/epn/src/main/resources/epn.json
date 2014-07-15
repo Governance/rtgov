@@ -1,5 +1,6 @@
 {
   "name" : "SLAMonitorEPN",
+  "version" : "${project.version}",
   "subscriptions" : [ {
     "nodeName" : "SLAViolations",
     "subject" : "ServiceResponseTimes"
@@ -24,6 +25,5 @@
       	 "subject" : "Situations"
       } ]
     }
-  ],
-  "version" : "1"
+  ]
 }

@@ -1,6 +1,6 @@
 [{
   "name" : "RestrictUsage",
-  "version" : "1",
+  "version" : "${project.version}",
   "predicate" : {
     "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
     "expression" : "event instanceof org.overlord.rtgov.activity.model.soa.RequestReceived && event.serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\""

@@ -386,6 +386,35 @@ public class DroolsEventProcessorTest {
         }
     }
 
+    @Test
+    public void testAccessParameter() {
+        DroolsEventProcessor ep=new DroolsEventProcessor();
+        ep.setRuleName("AccessParameter");
+        ep.getParameters().put("param", "testParamValue");
+        
+        try {            
+            ep.init();
+            
+            RequestReceived me1=new RequestReceived();
+            me1.setTimestamp(System.currentTimeMillis());
+            me1.getProperties().put("customer", "Ivan");
+            me1.setMessageId("me1");
+            
+            Object result1=ep.process("Event", me1, 0);
+            
+            if (result1 == null) {
+                fail("Result 1 is null");
+            }
+            
+            if (!result1.equals("testParamValue")) {
+                fail("Paramater value incorrect: "+result1);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            fail("Exception: "+e);
+        }
+    }
+
     public class TestResultHandler implements ResultHandler {
         
         private java.util.List<Serializable> _results=new java.util.ArrayList<Serializable>();

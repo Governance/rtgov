@@ -1,5 +1,6 @@
 {
   "name" : "OrderManagementEPN",
+  "version" : "${project.version}",
   "subscriptions" : [ {
     "nodeName" : "CheckForException",
     "subject" : "ActivityUnits"
@@ -23,6 +24,5 @@
       	 "subject" : "Situations"
       } ]
     }
-  ],
-  "version" : "1"
+  ]
 }

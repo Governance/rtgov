@@ -1,6 +1,6 @@
 [{
 	"name":"OrderManagementIP",
-	"version":"1",
+	"version":"${project.version}",
 	"typeProcessors":{
 		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrder":{
 			"contexts":[{

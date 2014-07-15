@@ -6,6 +6,8 @@ if (customer == null) {
 
 cm = epc.getService("CacheManager");
 
+creditLimit = epc.getParameter("creditLimit");
+
 // Attempt to lock the entry
 if (!cm.lock("Principals", customer)) {
 	epc.handle(new Exception("Unable to lock entry for principal '"+customer+"'"));
@@ -34,7 +36,7 @@ if (event.operation == "submitOrder") {
 	
 	int newtotal=current+total;
 	
-	if (newtotal > 150 && current <= 150) {
+	if (newtotal > creditLimit && current <= creditLimit) {
 		principal.put("suspended", Boolean.TRUE);
 	}
 	
@@ -46,7 +48,7 @@ if (event.operation == "submitOrder") {
 		
 	int newamount=current-amount;
 	
-	if (newamount <= 150 && current > 150) {
+	if (newamount <= creditLimit && current > creditLimit) {
 		principal.put("suspended", Boolean.FALSE);
 	}
 

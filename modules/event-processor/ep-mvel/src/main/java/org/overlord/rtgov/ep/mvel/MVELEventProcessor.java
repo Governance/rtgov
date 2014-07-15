@@ -61,7 +61,7 @@ public class MVELEventProcessor extends EventProcessor {
             }
         }
         
-        _context = new DefaultEPContext(getServices());
+        _context = new DefaultEPContext(getServices(), getParameters());
     }
     
     /**

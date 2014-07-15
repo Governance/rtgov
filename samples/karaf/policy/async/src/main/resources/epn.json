@@ -1,6 +1,6 @@
 {
   "name" : "AssessCreditPolicyEPN",
-  "version" : "1",
+  "version" : "${project.version}",
   "subscriptions" : [ {
     "nodeName" : "AssessCredit",
     "subject" : "SOAEvents"
@@ -23,6 +23,9 @@
           "CacheManager" : {
             "@class" : "org.overlord.rtgov.common.infinispan.service.InfinispanCacheManager"
           }
+        },
+        "parameters" : {
+        	"creditLimit" : 150
         }
       }
     }
