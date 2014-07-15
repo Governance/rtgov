@@ -1,6 +1,6 @@
 [{
 	"name":"OrderManagementIP",
-	"version":"1",
+	"version":"${project.version}",
 	"typeProcessors":{
 		"org.overlord.rtgov.quickstarts.demos.ordermgmt.model.Order":{
 			"contexts":[{

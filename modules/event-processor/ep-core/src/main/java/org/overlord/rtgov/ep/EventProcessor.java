@@ -31,7 +31,9 @@ public abstract class EventProcessor {
     private java.util.Map<String,Service> _services=
                             new java.util.HashMap<String,Service>();
     private boolean _async=false;
-    
+    private java.util.Map<String,Object> _parameters=
+            new java.util.HashMap<String,Object>();
+
     private ResultHandler _handler=null;
     
     /**
@@ -50,6 +52,24 @@ public abstract class EventProcessor {
      */
     public void setServices(java.util.Map<String,Service> services) {
         _services = services;
+    }
+    
+    /**
+     * This method returns the map of names to parameters.
+     * 
+     * @return The parameters
+     */
+    public java.util.Map<String,Object> getParameters() {
+        return (_parameters);
+    }
+    
+    /**
+     * This method sets the map of names to parameters.
+     * 
+     * @param parameters The parameters
+     */
+    public void setParameters(java.util.Map<String,Object> parameters) {
+        _parameters = parameters;
     }
     
     /**

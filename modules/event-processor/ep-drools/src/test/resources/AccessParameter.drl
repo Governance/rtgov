@@ -1,0 +1,15 @@
+import org.overlord.rtgov.activity.model.soa.RequestReceived
+
+global org.overlord.rtgov.ep.EPContext epc
+
+declare RequestReceived
+    @role( event )
+    @expires( 20s )
+end
+
+rule "Access parameter rule"
+when
+        $r: RequestReceived() from entry-point "Event"
+then
+    	epc.handle(epc.getParameter("param"));
+end

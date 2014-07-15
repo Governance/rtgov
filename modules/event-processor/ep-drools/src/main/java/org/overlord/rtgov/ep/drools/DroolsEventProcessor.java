@@ -85,7 +85,7 @@ public class DroolsEventProcessor extends EventProcessor {
                     +"' must NOT be configured as 'asynchronous' when using 'cloud' eventProcessingMode");
         }
         
-        _context = new DefaultEPContext(getServices());
+        _context = new DefaultEPContext(getServices(), getParameters());
         
         _session = createSession();
         

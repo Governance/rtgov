@@ -90,7 +90,7 @@ public class KeyValueStoreEventProcessor extends EventProcessor {
             _idScriptExpression = null;
         }
 
-        _context = new DefaultEPContext(getServices());
+        _context = new DefaultEPContext(getServices(), getParameters());
 
         /**
          * expect type SimpleDocumentRepo;

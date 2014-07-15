@@ -62,4 +62,12 @@ public interface EPContext {
      */
     public Service getService(String name);
     
+    /**
+     * This method returns the named parameter if available.
+     * 
+     * @param name The parameter name
+     * @return The parameter value, or null if not found
+     */
+    public Object getParameter(String name);
+    
 }
