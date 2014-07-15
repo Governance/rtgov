@@ -15,6 +15,9 @@
  */
 package org.overlord.rtgov.ui.client.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 
@@ -31,7 +34,7 @@ public class ReferenceSummaryBean {
     private String name;
     private String application;
     private String iface;
-    private String bindings;
+    private Set<BindingBean> bindings = new HashSet<BindingBean>();
 
     /**
      * Constructor.
@@ -61,9 +64,9 @@ public class ReferenceSummaryBean {
     }
 
     /**
-     * @return the address
+     * @return the bindings
      */
-    public String getBindings() {
+    public Set<BindingBean>  getBindings() {
         return bindings;
     }
 
@@ -92,10 +95,10 @@ public class ReferenceSummaryBean {
     }
 
     /**
-     * @param address the address to set
+     * @param bindings the bindings to set
      */
-    public ReferenceSummaryBean setBindings(String address) {
-        this.bindings = address;
+    public ReferenceSummaryBean setBindings(Set<BindingBean> bindings) {
+        this.bindings = bindings;
         return this;
     }
 
