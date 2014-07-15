@@ -113,7 +113,11 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         reference.setName("CreateApplicationService"); //$NON-NLS-1$
         reference.setApplication("Contract"); //$NON-NLS-1$
         reference.setIface("org.jboss.demos.services.ICreateApplication"); //$NON-NLS-1$
-        reference.setBindings("SOAP, JMS"); //$NON-NLS-1$
+        BindingBean soapBinding = new BindingBean();
+        soapBinding.setType("SOAP").setState("STARTED");
+        BindingBean jmsBinding = new BindingBean();
+        jmsBinding.setType("SCA").setState("STOPPED");
+        reference.setBindings(Sets.newHashSet(soapBinding, jmsBinding)); //$NON-NLS-1$
         service.getReferences().add(reference);
 
         reference = new ReferenceSummaryBean();
@@ -121,7 +125,7 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
         reference.setName("CreateQuoteService"); //$NON-NLS-1$
         reference.setApplication("Contract"); //$NON-NLS-1$
         reference.setIface("org.jboss.demos.services.ICreateQuote"); //$NON-NLS-1$
-        reference.setBindings("SOAP"); //$NON-NLS-1$
+        reference.setBindings(Sets.newHashSet(soapBinding)); //$NON-NLS-1$
         service.getReferences().add(reference);
 
         return service;

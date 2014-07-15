@@ -156,6 +156,9 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		}
 	}
 
+	private Map<String, BindingBean> getReferenceBindings(String service) throws Exception {
+		return getBindings("Reference", service);
+	}
 
 	private Map<String, BindingBean> getServiceBindings(String service) throws Exception {
 		return getBindings("Service", service);
@@ -534,7 +537,7 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		        					applicationName.equals(appName)) {
 			        rsb.setApplication(appName);
 		        	
-			        rsb.setBindings("");
+			        rsb.setBindings(Sets.newHashSet(getReferenceBindings(name).values()));
 			        rsb.setIface((String)getAttributeValue(attrs.get(2)));
 			        
 			        rsb.setReferenceId(generateId(appName, name));
