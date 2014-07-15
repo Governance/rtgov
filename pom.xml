@@ -82,7 +82,7 @@
         <lucene.version>4.7.2</lucene.version> <!-- Required to override parent bom version -->
         <remoting-jmx>1.1.0.Final</remoting-jmx>
 		<rtgov-docs.version>2.0.0-SNAPSHOT</rtgov-docs.version>
-		<overlord-commons.version>2.0.2.Final</overlord-commons.version>
+		<overlord-commons.version>2.0.3-SNAPSHOT</overlord-commons.version>
 		<picketbox.version>4.0.19.SP4</picketbox.version>
 		<picketlink.version>2.5.3.SP1</picketlink.version>
 		<servlet-api.version>3.0.1</servlet-api.version>
