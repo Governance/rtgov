@@ -71,6 +71,10 @@ public final class ActiveCollectionManagerAccessor {
         
         // Avoid unnecessary sync once set (runs in 1/4 to 1/3 of the time)
         if (_acManager == null) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Wait for activity collection manager to be created ...");
+            }
+
             synchronized (SYNC) {
                 if (_acManager == null) {
                     try {

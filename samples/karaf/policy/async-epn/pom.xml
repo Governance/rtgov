@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
-	<artifactId>samples-karaf-policy-async</artifactId> 
+	<artifactId>samples-karaf-policy-async-epn</artifactId> 
 	<packaging>bundle</packaging>
-	<name>Overlord RTGov::Samples::Karaf::Policy::Async</name>
+	<name>Overlord RTGov::Samples::Karaf::Policy::Async EPN</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov.samples.karaf</groupId>
@@ -115,7 +115,7 @@
 	</dependencies>
 	
 	<build>
-		<finalName>policy-async</finalName>
+		<finalName>policy-async-epn</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>

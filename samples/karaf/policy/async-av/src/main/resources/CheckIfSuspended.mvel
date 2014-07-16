@@ -1,0 +1,20 @@
+String customer=event.properties.get("customer");
+
+if (customer == null) {
+	return;
+}
+
+cm = epc.getService("ActiveCollectionService");
+	
+// Access the collection of principals
+principals = cm.getMap("Principals");
+
+principal = principals.get(customer);
+
+if (principal != null && principal.get("suspended") == true) {
+	epc.handle(new java.lang.RuntimeException("Customer '"+customer+"' has been suspended"));
+	
+	return;
+}
+	
+epc.logDebug("Principal '"+customer+"' has not been suspended: "+principals.get(customer));

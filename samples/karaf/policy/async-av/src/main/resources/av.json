@@ -1,0 +1,17 @@
+[{
+  "name" : "CheckIfSuspended",
+  "version" : "${project.version}",
+  "predicate" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
+    "expression" : "event instanceof org.overlord.rtgov.activity.model.soa.RequestReceived && event.operation == \"submitOrder\""
+  },
+  "eventProcessor" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
+    "script" : "CheckIfSuspended.mvel",
+    "services" : {
+      "ActiveCollectionService" : {
+        "@class" : "org.overlord.rtgov.active.collection.service.ActiveCollectionService"
+      }
+    }
+  }
+}]
