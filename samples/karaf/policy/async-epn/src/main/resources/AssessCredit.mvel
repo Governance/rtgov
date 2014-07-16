@@ -29,6 +29,8 @@ int current=principal.get("exposure");
 if (current == null) {
 	current = 0;
 }
+	
+epc.logDebug("Checking credit level for principal '"+customer+"' and operation '"+event.operation+"'");	
 		
 if (event.operation == "submitOrder") {
 	

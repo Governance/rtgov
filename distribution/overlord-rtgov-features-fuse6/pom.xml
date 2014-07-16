@@ -253,7 +253,11 @@
 		<!-- RTGov Samples Policy Async -->
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
-			<artifactId>samples-karaf-policy-async</artifactId>
+			<artifactId>samples-karaf-policy-async-av</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
+			<artifactId>samples-karaf-policy-async-epn</artifactId>
 		</dependency>
 
 		<!-- RTGov Samples Policy Sync -->
@@ -761,7 +765,8 @@
 									<version>${project.version}</version>
 									<comment>RTGov Samples Policy Async</comment>
 									<includes>
-										<include>org.overlord.rtgov.samples.karaf.policy:samples-karaf-policy-async:*</include>
+										<include>org.overlord.rtgov.samples.karaf.policy:samples-karaf-policy-async-av:*</include>
+										<include>org.overlord.rtgov.samples.karaf.policy:samples-karaf-policy-async-epn:*</include>
 									</includes>
 								</feature>
 								<feature>

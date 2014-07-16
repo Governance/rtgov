@@ -109,6 +109,10 @@ public class ElasticsearchActivityStore implements ActivityStore {
      * @throws Exception if any activities cannot be stored
      */
     public void store(List<ActivityUnit> activities) throws Exception {
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Store=" + new String(ActivityUtil.serializeActivityUnitList(activities)));
+        }
+
         BulkRequestBuilder localBulkRequestBuilder = _client.getElasticsearchClient().prepareBulk();
 
         for (int i=0; i < activities.size(); i++) {

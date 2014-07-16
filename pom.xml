@@ -528,7 +528,12 @@
 
 		    <dependency>
 			    <groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
-			    <artifactId>samples-karaf-policy-async</artifactId>
+			    <artifactId>samples-karaf-policy-async-av</artifactId>
+                <version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.karaf.policy</groupId>
+			    <artifactId>samples-karaf-policy-async-epn</artifactId>
                 <version>${project.version}</version>
 		    </dependency>
 		    <dependency>
