@@ -14,7 +14,27 @@
       "retryInterval" : 0,
       "eventProcessor" : {
         "@class" : "org.overlord.rtgov.ep.drools.DroolsEventProcessor",
-        "ruleName" : "SLAViolation"
+        "ruleName" : "SLAViolation",
+        "parameters" : {
+        	"levels" : [
+        		{
+        			"threshold" : 400,
+        			"severity" : "Critical"
+        		},
+        		{
+        			"threshold" : 320,
+        			"severity" : "High"
+        		},
+        		{
+        			"threshold" : 260,
+        			"severity" : "Medium"
+        		},
+        		{
+        			"threshold" : 200,
+        			"severity" : "Low"
+        		}
+        	]
+        }
       },
       "predicate" : null,
       "notifications" : [ {
