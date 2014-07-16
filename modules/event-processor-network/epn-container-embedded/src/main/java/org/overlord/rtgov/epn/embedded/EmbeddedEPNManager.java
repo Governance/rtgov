@@ -126,7 +126,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
                 
                 if (nodes != null) {
                     for (Node node : nodes) {
-                        channels.add(new EmbeddedChannel(network, node, null));                        
+                        channels.add(new EmbeddedChannel(network, node, subject));                        
                     }
                 }
             }
@@ -228,7 +228,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         private boolean _notification=false;
         
         /**
-         * The constructor.
+         * The constructor for publishing events between nodes in a network.
          * 
          * @param network The network
          * @param node The node
@@ -255,7 +255,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
         }
         
         /**
-         * The constructor.
+         * The constructor for publishing on a subject between networks.
          * 
          * @param subject The subject
          */
@@ -309,7 +309,7 @@ public class EmbeddedEPNManager extends AbstractEPNManager {
             if (isNotificationChannel()) {
                 notifyListeners(_subject, events);
             } else {
-                send(events, _node.getMaxRetries());
+                send(events, -1);
             }
         }
 
