@@ -24,14 +24,17 @@ import org.jboss.errai.ui.nav.client.local.TransitionAnchorFactory;
 import org.overlord.commons.gwt.client.local.widgets.TemplatedWidgetTable;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.ReferenceDetailsPage;
+import org.overlord.rtgov.ui.client.model.BindingBean;
 import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.InlineLabel;
+import com.google.gwt.user.client.ui.Label;
 
 /**
  * A table of reference.
@@ -56,18 +59,22 @@ public class ReferenceTable extends TemplatedWidgetTable implements HasValue<Lis
      * Adds a single row to the table.
      * @param summaryBean
      */
-    public void addRow(final ReferenceSummaryBean summaryBean) {
-        int rowIdx = this.rowElements.size();
+	public void addRow(final ReferenceSummaryBean summaryBean) {
+		int rowIdx = this.rowElements.size();
 
-        Anchor name = toDetailsPageLinkFactory.get("id", summaryBean.getReferenceId()); //$NON-NLS-1$
-        name.setText(summaryBean.getName());
-        InlineLabel interf4ce = new InlineLabel(summaryBean.getIface());
-        InlineLabel bindings = new InlineLabel(summaryBean.getBindings());
-
-        add(rowIdx, 0, name);
-        add(rowIdx, 1, interf4ce);
-        add(rowIdx, 2, bindings);
-    }
+		Anchor name = toDetailsPageLinkFactory.get("id", summaryBean.getReferenceId()); //$NON-NLS-1$
+		name.setText(summaryBean.getName());
+		InlineLabel interf4ce = new InlineLabel(summaryBean.getIface());
+		FlowPanel div = new FlowPanel();
+		add(rowIdx, 0, name);
+		add(rowIdx, 1, interf4ce);
+		add(rowIdx, 2, div);
+		for (BindingBean bindingBean : summaryBean.getBindings()) {
+			Label bindingLabel = new Label(bindingBean.getType());
+			bindingLabel.setStyleName(!bindingBean.isActive() ? "alert-danger" : "alert-success");
+			div.add(bindingLabel);
+		}
+	}
 
 	@Override
 	public HandlerRegistration addValueChangeHandler(

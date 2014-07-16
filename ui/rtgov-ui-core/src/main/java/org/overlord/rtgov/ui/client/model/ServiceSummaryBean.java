@@ -15,6 +15,7 @@
  */
 package org.overlord.rtgov.ui.client.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -33,7 +34,7 @@ public class ServiceSummaryBean {
     private String name;
     private String application;
     private String iface;
-    private Set<BindingBean> bindings;
+    private Set<BindingBean> bindings = new HashSet<BindingBean>();
 
     /**
      * Constructor.

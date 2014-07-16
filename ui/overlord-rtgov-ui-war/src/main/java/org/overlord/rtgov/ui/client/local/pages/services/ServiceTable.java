@@ -15,8 +15,6 @@
  */
 package org.overlord.rtgov.ui.client.local.pages.services;
 
-import java.util.Set;
-
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -86,8 +84,7 @@ public class ServiceTable extends SortableTemplatedWidgetTable {
 		add(rowIdx, 0, name);
 		add(rowIdx, 1, application);
 		add(rowIdx, 2, interf4ce);
-		Set<BindingBean> bindings = serviceSummaryBean.getBindings();
-		for (BindingBean bindingBean : bindings) {
+		for (BindingBean bindingBean : serviceSummaryBean.getBindings()) {
 			Label bindingLabel = new Label(bindingBean.getType());
 			bindingLabel.setStyleName(!bindingBean.isActive() ? "alert-danger" : "alert-success");
 			add(rowIdx, 3, bindingLabel);
