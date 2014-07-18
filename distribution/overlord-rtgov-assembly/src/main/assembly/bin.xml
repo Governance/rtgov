@@ -184,42 +184,14 @@
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>platforms/eap6/all/overlord-commons</outputDirectory>
+            <unpack>false</unpack>
 			<includes>
-				<include>org.overlord:overlord-commons-idp-eap6:war</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>platforms/eap6/all/overlord-commons</outputDirectory>
-			<includes>
+                <include>org.overlord:overlord-commons-idp-eap6:war</include>
+                <include>org.overlord:overlord-commons-dist-eap6:zip</include>
 				<include>org.overlord:overlord-commons-auth:jar</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>platforms/eap6/all/overlord-commons</outputDirectory>
-			<includes>
 				<include>org.overlord:overlord-commons-auth-jboss7:jar</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>platforms/eap6/all/overlord-commons</outputDirectory>
-			<includes>
 				<include>org.overlord:overlord-commons-auth-tomcat7:jar</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>platforms/eap6/all/overlord-commons</outputDirectory>
-			<includes>
 				<include>org.overlord:overlord-commons-services:jar</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-		<dependencySet>
-			<outputDirectory>platforms/eap6/all/overlord-commons</outputDirectory>
-			<includes>
 				<include>org.overlord:overlord-commons-ant:jar</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
@@ -245,35 +217,12 @@
 		</dependencySet>
         <dependencySet>
             <outputDirectory>platforms/eap6/client/overlord-commons</outputDirectory>
+            <unpack>false</unpack>
             <includes>
                 <include>org.overlord:overlord-commons-auth:jar</include>
-            </includes>
-            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>platforms/eap6/client/overlord-commons</outputDirectory>
-            <includes>
                 <include>org.overlord:overlord-commons-auth-jboss7:jar</include>
-            </includes>
-            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>platforms/eap6/client/overlord-commons</outputDirectory>
-            <includes>
                 <include>org.overlord:overlord-commons-auth-tomcat7:jar</include>
-            </includes>
-            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>platforms/eap6/client/overlord-commons</outputDirectory>
-            <includes>
                 <include>org.overlord:overlord-commons-services:jar</include>
-            </includes>
-            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>platforms/eap6/client/overlord-commons</outputDirectory>
-            <includes>
                 <include>org.overlord:overlord-commons-ant:jar</include>
             </includes>
             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>

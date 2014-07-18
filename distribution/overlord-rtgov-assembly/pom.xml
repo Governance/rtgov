@@ -46,6 +46,11 @@
 			<groupId>org.overlord</groupId>
 			<artifactId>overlord-commons-installer</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.overlord</groupId>
+            <artifactId>overlord-commons-dist-eap6</artifactId>
+            <type>zip</type>
+        </dependency>
 		<dependency>
 			<groupId>org.overlord</groupId>
 			<artifactId>overlord-commons-idp-eap6</artifactId>
