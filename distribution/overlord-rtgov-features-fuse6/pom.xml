@@ -41,6 +41,10 @@
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-elasticsearch</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-bundles-elasticsearch</artifactId>
+		</dependency>
 
 		<!-- RTGov Activity -->
 		<dependency>
@@ -494,6 +498,7 @@
 										</feature>
 									</dependsOnFeatures>
 									<excludes>
+										<exclude>org.overlord.rtgov:*:*</exclude>
 										<exclude>org.overlord.rtgov.*:*:*</exclude>
 										<exclude>log4j:log4j:*</exclude>
 										<exclude>org.ops4j.pax.logging:pax-logging-api:*</exclude>
@@ -516,6 +521,7 @@
 									<includes>
 										<include>org.overlord.rtgov.karaf.bundles:*:*</include>
 										<include>org.overlord.rtgov.common:*:*</include>
+										<include>org.overlord.rtgov:overlord-rtgov-bundles-elasticsearch:*</include>
 									</includes>
 								</feature>
 								<feature>
