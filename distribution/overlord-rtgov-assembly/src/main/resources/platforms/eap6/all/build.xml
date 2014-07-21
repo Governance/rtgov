@@ -14,14 +14,14 @@
 			    <not>
 				    <available file="${path}/modules/system/layers/bpms"/>
 			    </not>
-				<available file="${basedir}/../../modules/${bpms.layer}"/>
+				<available file="${basedir}/../../../extras/${bpms.layer}"/>
             </and>
 		</condition>
 	</target>
 
 	<target name="bpms-layer-deploy" depends="check-install-bpms" if="install.bpms" >
 		<echo message="**** Installing BPMS dependencies ****" />
-        <unzip src="${basedir}/../../modules/${bpms.layer}" dest="${path}"/>
+        <unzip src="${basedir}/../../../extras/${bpms.layer}" dest="${path}"/>
 	</target>
 
 	<target name="install" depends="create.schema, bpms-layer-deploy" >
