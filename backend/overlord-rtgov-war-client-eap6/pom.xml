@@ -94,6 +94,13 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		
+        <!-- PicketLink -->
+
+        <dependency>
+            <groupId>org.picketlink</groupId>
+            <artifactId>picketlink-federation</artifactId>
+        </dependency>
+
 		<!-- Test dependencies -->
 		
 		<dependency>
@@ -112,11 +119,6 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
- 					<archive>
-						<manifestEntries>
-							<Dependencies>org.picketbox, org.picketlink, org.jboss.as.web, org.switchyard.bus.camel optional, org.switchyard.api optional, org.switchyard.config optional, org.apache.camel.core optional, org.switchyard.api.extensions.java optional, org.switchyard.api.extensions.wsdl optional, org.switchyard.security optional, org.switchyard.runtime optional, org.switchyard.component.bpel optional, org.drools export, org.apache.commons.codec, javaee.api export, org.apache.commons.configuration export, org.apache.commons.lang export, org.codehaus.jackson.jackson-core-asl export, org.codehaus.jackson.jackson-mapper-asl export, org.kie export, org.jbpm export, org.mvel export, org.hibernate export, org.infinispan export, org.jaxen, org.javassist</Dependencies>
-						</manifestEntries>
-					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
