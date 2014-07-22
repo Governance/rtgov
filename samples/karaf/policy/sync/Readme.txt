@@ -9,7 +9,14 @@ requests too quickly, the requests will be rejected, so providing a crude form o
 For this quickstart to function correctly, you must also deploy the Order Management Application and
 Information Processor.
 
+To deploy the quickstart, after the console has been started, run:
 
-NOTE: This quickstart can be deployed with the profile(s): client or server (needs to be co-located with
-switchyard execution environment)
+	features:install rtgov-samples-policy-sync
+
+To undeploy the quickstart, run:
+
+	features:uninstall rtgov-samples-policy-sync
+
+
+NOTE: This quickstart can be deployed with the feature(s): rtgov-client or rtgov-all
 

@@ -41,6 +41,13 @@ public interface EPContext {
     public void logInfo(String info);
 
     /**
+     * This method logs the warning.
+     * 
+     * @param warning The warning
+     */
+    public void logWarning(String warning);
+
+    /**
      * This method logs an error.
      * 
      * @param error The error
