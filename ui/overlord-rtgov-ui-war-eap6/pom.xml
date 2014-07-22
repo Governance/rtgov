@@ -194,7 +194,6 @@
                 <exclude>WEB-INF/lib/jaxb-*.jar</exclude>
                 <exclude>WEB-INF/lib/netty*.jar</exclude>
                 <exclude>WEB-INF/lib/xercesImpl*.jar</exclude>
-                <exclude>WEB-INF/lib/picket*.jar</exclude>
                 <exclude>WEB-INF/classes/org/overlord/rtgov/ui/server/services/mock/*</exclude>
               </excludes>
             </overlay>
