@@ -95,6 +95,13 @@ public class DefaultEPContext implements EPContext {
     /**
      * {@inheritDoc}
      */
+    public void logWarning(String warning) {
+        LOG.warning(warning);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public void logError(String error) {
         LOG.severe(error);
     }

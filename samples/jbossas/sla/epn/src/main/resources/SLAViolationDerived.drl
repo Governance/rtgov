@@ -1,0 +1,40 @@
+import org.overlord.rtgov.analytics.service.ResponseTime
+import org.overlord.rtgov.analytics.situation.Situation
+
+global org.overlord.rtgov.ep.EPContext epc
+
+declare ResponseTime
+    @role( event )
+end
+
+rule " Handler Low"
+when
+    $rt : ResponseTime(average > 200 && average < 260) from entry-point "ServiceResponseTimes"
+
+then
+     epc.logWarning("DERIVED - Low severity : response time "+$rt.getAverage());
+end
+
+rule " Handler Medium"
+when
+         $rt : ResponseTime(average >= 260 && average < 320) from entry-point "ServiceResponseTimes"
+
+then
+     epc.logWarning("DERIVED - Medium severity : response time "+$rt.getAverage());
+end
+
+rule " Handler High"
+when
+         $rt : ResponseTime(average >= 320 && average < 400) from entry-point "ServiceResponseTimes"
+
+then
+     epc.logError("DERIVED - High severity : response time "+$rt.getAverage());
+end
+
+rule " Handler Critical"
+when
+         $rt : ResponseTime(average >= 400) from entry-point "ServiceResponseTimes"
+
+then
+     epc.logError("DERIVED - Critical severity : response time "+$rt.getAverage());
+end
