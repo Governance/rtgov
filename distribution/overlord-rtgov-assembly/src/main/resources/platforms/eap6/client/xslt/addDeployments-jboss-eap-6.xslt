@@ -7,7 +7,7 @@
   <xsl:output xmlns:xalan="http://xml.apache.org/xalan" method="xml" encoding="UTF-8" indent="yes"
     xalan:indent-amount="2" />
 
-  <xsl:template match="/*[name()='server']/*[name()='profile']/od:subsystem/od:deployments">
+  <xsl:template match="/*[name()='server' or name()='domain']//*[name()='profile']/od:subsystem/od:deployments">
     <xsl:variable name="currentNS" select="namespace-uri(.)" />
     <xsl:element name="deployments" namespace="{$currentNS}">
       <xsl:apply-templates select="./node()|./text()" />

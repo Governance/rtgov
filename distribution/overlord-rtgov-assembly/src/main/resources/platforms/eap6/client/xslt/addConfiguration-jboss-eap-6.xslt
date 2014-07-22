@@ -8,7 +8,7 @@
     xalan:indent-amount="2" />
 
 
-  <xsl:template match="/*[name()='server']/*[name()='profile']/oc:subsystem/oc:configurations">
+  <xsl:template match="/*[name()='server' or name()='domain']//*[name()='profile']/oc:subsystem/oc:configurations">
     <xsl:variable name="currentNS" select="namespace-uri(.)" />
     <xsl:element name="configurations" namespace="{$currentNS}">
       <xsl:apply-templates select="./node()|./text()" />
