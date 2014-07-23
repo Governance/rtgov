@@ -137,7 +137,7 @@
 			<outputDirectory>platforms/eap6/all/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
-				<include>org.overlord.rtgov:overlord-rtgov-war-all-eap6:war</include>
+				<include>org.overlord.rtgov:overlord-rtgov-all-eap6:war</include>
 			</includes>
 			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
 		</dependencySet>
@@ -149,6 +149,15 @@
 			</includes>
 			<outputFileNameMapping>overlord-rtgov-ui.war</outputFileNameMapping>
 		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/eap6/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
+		</dependencySet>
+
 		<dependencySet>
 			<outputDirectory>platforms/eap6/all/deployments</outputDirectory>
 			<unpack>false</unpack>
@@ -203,9 +212,17 @@
 			<outputDirectory>platforms/eap6/client/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
-				<include>org.overlord.rtgov:overlord-rtgov-war-client-eap6:war</include>
+				<include>org.overlord.rtgov:overlord-rtgov-client-eap6:war</include>
 			</includes>
 			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/eap6/client/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
 			<outputDirectory>platforms/eap6/client/overlord-commons</outputDirectory>

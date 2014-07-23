@@ -15,12 +15,17 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov</groupId>
-			<artifactId>overlord-rtgov-war-all-eap6</artifactId>
+			<artifactId>overlord-rtgov-all-eap6</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov</groupId>
-			<artifactId>overlord-rtgov-war-client-eap6</artifactId>
+			<artifactId>overlord-rtgov-client-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-switchyard-eap6</artifactId>
 			<type>war</type>
 		</dependency>
 

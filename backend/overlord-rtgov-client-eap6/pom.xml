@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
-	<artifactId>overlord-rtgov-war-client-eap6</artifactId>
+	<artifactId>overlord-rtgov-client-eap6</artifactId>
 	<packaging>war</packaging>
 	<version>2.0.0-SNAPSHOT</version>
-	<name>Overlord RTGov::Backend::WAR Client EAP6</name>
+	<name>Overlord RTGov::Backend::Client EAP6</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
@@ -78,13 +78,6 @@
 					<artifactId>commons-configuration</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-
-		<!-- Switchyard Specific -->
-		
-		<dependency>
-			<groupId>org.overlord.rtgov.integration</groupId>
-			<artifactId>rtgov-switchyard</artifactId>
 		</dependency>
 
 		<!-- Apache Commons Codec - included to override EAP version due to RTGOV-237 -->

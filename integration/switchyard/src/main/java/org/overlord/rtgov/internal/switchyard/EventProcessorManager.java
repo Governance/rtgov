@@ -27,11 +27,11 @@ import javax.ejb.ConcurrencyManagement;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
 import org.overlord.rtgov.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 
 /**
  * This class is responsible for registering the configured set of
@@ -48,7 +48,6 @@ public class EventProcessorManager {
 
     private static final Logger LOG=Logger.getLogger(EventProcessorManager.class.getName());
 
-    @Inject
     private ActivityCollector _activityCollector=null;
 
     private java.util.List<EventProcessor> _eventProcessors=new java.util.ArrayList<EventProcessor>();
@@ -88,6 +87,14 @@ public class EventProcessorManager {
      */
     @PostConstruct
     public void init() {
+        
+        if (_activityCollector == null) {
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("SwitchYard EventProcessorManager retrieving activity collector");
+            }
+
+            _activityCollector = ActivityCollectorAccessor.getActivityCollector();
+        }
         
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("SwitchYard EventProcessorManager Initialized with collector="+_activityCollector);

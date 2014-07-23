@@ -608,23 +608,30 @@
 
 		    <dependency>
 			    <groupId>org.overlord.rtgov</groupId>
-			    <artifactId>overlord-rtgov-war-all-fuse6</artifactId>
+			    <artifactId>overlord-rtgov-all-fuse6</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
 
 		    <dependency>
 			    <groupId>org.overlord.rtgov</groupId>
-			    <artifactId>overlord-rtgov-war-all-eap6</artifactId>
+			    <artifactId>overlord-rtgov-all-eap6</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov</groupId>
-			    <artifactId>overlord-rtgov-war-client-eap6</artifactId>
+			    <artifactId>overlord-rtgov-client-eap6</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-switchyard-eap6</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+
 		    <dependency>
 			    <groupId>org.overlord.rtgov.content</groupId>
 			    <artifactId>overlord-rtgov-epn-jee</artifactId>
