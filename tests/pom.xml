@@ -35,7 +35,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov</groupId>
-			<artifactId>overlord-rtgov-war-all-eap6</artifactId>
+			<artifactId>overlord-rtgov-all-eap6</artifactId>
 			<type>war</type>
 			<scope>provided</scope>
 		</dependency>

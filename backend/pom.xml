@@ -13,9 +13,10 @@
 	</parent>
 
 	<modules>
-		<module>overlord-rtgov-war-all-eap6</module>
-		<module>overlord-rtgov-war-all-fuse6</module>
-		<module>overlord-rtgov-war-client-eap6</module>
+		<module>overlord-rtgov-all-eap6</module>
+		<module>overlord-rtgov-all-fuse6</module>
+		<module>overlord-rtgov-client-eap6</module>
+		<module>overlord-rtgov-switchyard-eap6</module>
 	</modules>
 
 </project>
