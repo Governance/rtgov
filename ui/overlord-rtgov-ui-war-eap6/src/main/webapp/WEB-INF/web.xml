@@ -98,33 +98,44 @@
         <url-pattern>/elasticsearch/*</url-pattern>
     </servlet-mapping>
 
-  <!-- Define a Security Constraint on this Application -->
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>RTGov UI</web-resource-name>
-      <url-pattern>/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>overlorduser</role-name>
-    </auth-constraint>
-  </security-constraint>
+  <filter>
+    <filter-name>AuthenticationFilter</filter-name>
+    <filter-class>org.picketlink.identity.federation.web.filters.SamlSPFilter</filter-class>
+    <init-param>
+      <param-name>ROLES</param-name>
+      <param-value>overlorduser</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuthenticationFilter</filter-name>
+    <url-pattern>*.html</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+    <filter-name>PicketLinkAuthWrapperFilter</filter-name>
+    <filter-class>org.overlord.commons.auth.filters.PicketLinkAuthWrapperFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>PicketLinkAuthWrapperFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
 
-  <!-- Define the Login Configuration for this Application -->
-  <login-config>
-    <auth-method>FORM</auth-method>
-    <realm-name>Overlord</realm-name>
-    <form-login-config>
-      <form-login-page>/login.html</form-login-page>
-      <form-error-page>/loginerror.html</form-error-page>
-    </form-login-config>
-  </login-config>
+  <filter>
+    <filter-name>PostAuthenticationRedirectFilter</filter-name>
+    <filter-class>org.overlord.commons.gwt.server.filters.PostAuthenticationRedirectFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>PostAuthenticationRedirectFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
 
-  <!-- Security roles referenced by this web application -->
-  <security-role>
-    <description>
-        The role that is required to log in to the RTGov UI.
-    </description>
-    <role-name>overlorduser</role-name>
-  </security-role>
+  <filter>
+    <filter-name>HttpRequestThreadLocalFilter</filter-name>
+    <filter-class>org.overlord.commons.auth.filters.HttpRequestThreadLocalFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>HttpRequestThreadLocalFilter</filter-name>
+    <url-pattern>*</url-pattern>
+  </filter-mapping>
 
 </web-app>
