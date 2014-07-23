@@ -51,6 +51,7 @@
         <transformConfig config="${path}/standalone/configuration/standalone-full.xml" stylesDir="${overlord-rtgov.dir.xslt}" />
         <transformConfig config="${path}/standalone/configuration/standalone-full-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" />
         <transformConfig config="${path}/standalone/configuration/standalone-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" />
+        <transformConfig config="${path}/domain/configuration/domain.xml" stylesDir="${overlord-rtgov.dir.xslt}" />
 
 	</target>
 	
