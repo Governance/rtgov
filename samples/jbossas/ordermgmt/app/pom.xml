@@ -112,7 +112,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Dependencies>deployment.overlord-rtgov.war, org.switchyard.api.extensions.wsdl</Dependencies>
+                            <Dependencies>deployment.overlord-rtgov-switchyard.war, org.switchyard.api.extensions.wsdl</Dependencies>
                         </manifestEntries>
                     </archive>
                 </configuration>

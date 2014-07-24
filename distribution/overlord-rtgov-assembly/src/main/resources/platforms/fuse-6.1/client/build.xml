@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="RTGovClient">
+
+    <property name="overlord-commons.path" location="../../overlord-commons" />
+
+	<target name="install" >
+
+		<!-- Prompt the user for rtgov client credentials -->
+	    <echo message="" />
+	    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+	    <echo message="!    User Input Required    !" />
+	    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
+	    <echo message="" />
+		<input message="Please enter a valid RTGov (server) username: "
+			   addproperty="rtgov.users.client.username">
+			<handler type="secure" />
+		</input>
+		<input message="Please enter user ${rtgov.users.client.username}'s password: "
+			   addproperty="rtgov.users.client.password">
+			<handler type="secure" />
+		</input>
+
+	    <propertyfile file="${path}/etc/overlord-rtgov.properties">
+			<entry key="RESTActivityServer.serverUsername" value="${rtgov.users.client.username}" />
+			<entry key="RESTActivityServer.serverPassword" value="${rtgov.users.client.password}" />
+	    </propertyfile>
+	</target>
+
+	<target name="uninstall" >
+		<delete file="${path}/etc/overlord-rtgov.properties"/>
+	</target>
+
+</project>
+ 

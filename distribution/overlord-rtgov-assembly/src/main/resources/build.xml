@@ -2,29 +2,39 @@
 <project name="Install RTGov from distro" default="install">
 
   <property name="type" value="all" />
-  <property name="platform" value="eap6" />
+  <property name="appserver.id" value="jboss-eap-6" />
 
-  <target name="get-platform-path" unless="path" >
+  <target name="get-appserver.id-path" unless="path" >
     <echo message=" " />
-    <echo message=" Please tell us where platform ${platform} is located (full path)." />
+    <echo message=" Please tell us where appserver.id ${appserver.id} is located (full path)." />
     <echo message=" " />
-    <input message="Path to ${platform}: " addproperty="path" />
+    <input message="Path to ${appserver.id}: " addproperty="path" />
   </target>
 
-  <target name="setup" depends="get-platform-path" >
+  <target name="setup" depends="get-appserver.id-path" >
 
-    <condition property="platform.valid">
+    <condition property="appserver.id.valid">
       <or>
-        <equals arg1="${platform}" arg2="eap6" />
+        <equals arg1="${appserver.id}" arg2="jboss-eap-6" />
+        <equals arg1="${appserver.id}" arg2="fuse-6.1" />
       </or>
     </condition>
-    <fail message="Supported platforms are 'eap6'" 
-              unless="platform.valid" />
+    <fail message="Supported appserver ids are 'jboss-eap-6', 'fuse-6.1'" 
+              unless="appserver.id.valid" />
 
     <condition property="path.valid">
-      <available file="jboss-modules.jar" filepath="${path}" />
+      <or>
+        <and>
+          <available file="jboss-modules.jar" filepath="${path}" />
+          <equals arg1="${appserver.id}" arg2="jboss-eap-6" />
+        </and>
+        <and>
+          <available file="fuse" filepath="${path}/bin" />
+          <equals arg1="${appserver.id}" arg2="fuse-6.1" />
+        </and>
+      </or>
     </condition>
-    <fail message="Failed to find platform ${platform} at: ${path}" 
+    <fail message="Failed to find appserver.id ${appserver.id} at: ${path}" 
               unless="path.valid" />
 
     <condition property="type.valid">
@@ -42,8 +52,10 @@
   <target name="install" depends="setup" >
     <echo message="Installing [${type}] into: ${path} " />
     
-	<ant antfile="build.xml" target="install" dir="platforms/${platform}/${type}" >
-		<property name="basedir" value="${abs.basedir}/platforms/${platform}/${type}" />
+	<ant antfile="build.xml" target="install" dir="platforms/${appserver.id}/${type}" >
+		<property name="basedir" value="${abs.basedir}/platforms/${appserver.id}/${type}" />
+        <property name="path" location="${path}" />
+        <property name="appserver.id" location="${appserver.id}" />
 	</ant>
   </target>
 
@@ -51,8 +63,10 @@
   <target name="uninstall" depends="setup" >
     <echo message="Uninstalling [${type}] from: ${path} " />
     
-	<ant antfile="build.xml" target="uninstall" dir="platforms/${platform}/${type}" >
-		<property name="basedir" value="${abs.basedir}/platforms/${platform}/${type}" />
+	<ant antfile="build.xml" target="uninstall" dir="platforms/${appserver.id}/${type}" >
+		<property name="basedir" value="${abs.basedir}/platforms/${appserver.id}/${type}" />
+        <property name="path" location="${path}" />
+        <property name="appserver.id" location="${appserver.id}" />
 	</ant>
   </target>
 

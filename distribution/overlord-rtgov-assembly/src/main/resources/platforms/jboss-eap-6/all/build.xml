@@ -3,8 +3,7 @@
 
 	<property name="database" value="h2" />
 	<property file="jdbc/${database}.properties" />
-
-	<property name="appserver.id" value="jboss-eap-6" />
+    <property name="overlord-commons.path" location="../../overlord-commons" />
 
 	<property name="bpms.layer" value="kie-eap-distributions-bpms-layer.zip" />
 
@@ -14,29 +13,30 @@
 			    <not>
 				    <available file="${path}/modules/system/layers/bpms"/>
 			    </not>
-				<available file="${basedir}/../../../extras/${bpms.layer}"/>
+				<available file="${basedir}/../../extras/${bpms.layer}"/>
             </and>
 		</condition>
 	</target>
 
 	<target name="bpms-layer-deploy" depends="check-install-bpms" if="install.bpms" >
 		<echo message="**** Installing BPMS dependencies ****" />
-        <unzip src="${basedir}/../../../extras/${bpms.layer}" dest="${path}"/>
+        <unzip src="${basedir}/../../extras/${bpms.layer}" dest="${path}"/>
 	</target>
 
 	<target name="install" depends="create.schema, bpms-layer-deploy" >
 		<ant antfile="build.xml" target="install"
-				dir="overlord-commons" >
+				dir="${overlord-commons.path}" >
+			<property name="appserver.id" location="${appserver.id}" />
 			<property name="overlord-commons.appserver.dir" location="${path}" />
-			<property name="overlord-commons.idp.file" value="${basedir}/overlord-commons/overlord-commons-idp-eap6.war" />
-            <property name="overlord-commons.eap-dist.file" value="${basedir}/overlord-commons/overlord-commons-dist-eap6.zip" />
-			<property name="overlord-commons.services.file" value="${basedir}/overlord-commons/overlord-commons-services.jar" />
-			<property name="overlord-commons.auth.file" value="${basedir}/overlord-commons/overlord-commons-auth.jar" />
-			<property name="overlord-commons.auth.jboss7.file" value="${basedir}/overlord-commons/overlord-commons-auth-jboss7.jar" />
-			<property name="overlord-commons.auth.tomcat7.file" value="${basedir}/overlord-commons/overlord-commons-auth-tomcat7.jar" />
-		    <property name="overlord-commons.ant.jar" value="${basedir}/overlord-commons/overlord-commons-ant.jar" />
+			<property name="overlord-commons.idp.file" value="${overlord-commons.path}/overlord-commons-idp-eap6.war" />
+            <property name="overlord-commons.eap-dist.file" value="${overlord-commons.path}/overlord-commons-dist-eap6.zip" />
+			<property name="overlord-commons.services.file" value="${overlord-commons.path}/overlord-commons-services.jar" />
+			<property name="overlord-commons.auth.file" value="${overlord-commons.path}/overlord-commons-auth.jar" />
+			<property name="overlord-commons.auth.jboss7.file" value="${overlord-commons.path}/overlord-commons-auth-jboss7.jar" />
+			<property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.path}/overlord-commons-auth-tomcat7.jar" />
+		    <property name="overlord-commons.ant.jar" value="${overlord-commons.path}/overlord-commons-ant.jar" />
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
-			<property name="overlord-commons.version" value="2.0.3-SNAPSHOT" />
+			<property name="overlord-commons.version" value="2.0.3.Final" />
 			
 		</ant>
 
@@ -56,6 +56,21 @@
 	</target>
 	
 	<target name="uninstall" depends="drop.schema" >
+		<ant antfile="build.xml" target="uninstall"
+				dir="${overlord-commons.path}" >
+			<property name="overlord-commons.appserver.dir" location="${path}" />
+			<property name="overlord-commons.idp.file" value="${overlord-commons.path}/overlord-commons-idp-eap6.war" />
+            <property name="overlord-commons.eap-dist.file" value="${overlord-commons.path}/overlord-commons-dist-eap6.zip" />
+			<property name="overlord-commons.services.file" value="${overlord-commons.path}/overlord-commons-services.jar" />
+			<property name="overlord-commons.auth.file" value="${overlord-commons.path}/overlord-commons-auth.jar" />
+			<property name="overlord-commons.auth.jboss7.file" value="${overlord-commons.path}/overlord-commons-auth-jboss7.jar" />
+			<property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.path}/overlord-commons-auth-tomcat7.jar" />
+		    <property name="overlord-commons.ant.jar" value="${overlord-commons.path}/overlord-commons-ant.jar" />
+			<!-- Temporary workaround - version needs to be correct in the called ant script -->
+			<property name="overlord-commons.version" value="2.0.4.Final" />
+			
+		</ant>
+
 		<delete dir="${path}/modules/org/overlord/rtgov/eap/deployments"/>
 	    <!-- Deprecated, but harmless -->
 		<delete file="${path}/standalone/configuration/overlord-rtgov.properties"/>
