@@ -36,8 +36,7 @@
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.2.0.Final</jbossas.version>
-		<overlord-commons.version>2.0.3-SNAPSHOT</overlord-commons.version>
-		<switchyard.version>2.0.0.Alpha1</switchyard.version>
+		<overlord-commons.version>2.0.3.Final</overlord-commons.version>
 	</properties>
 
 	<modules>
@@ -158,47 +157,6 @@
 				<version>${javaee-api.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.switchyard</groupId>
-				<artifactId>switchyard-api</artifactId>
-				<version>${switchyard.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.switchyard</groupId>
-				<artifactId>switchyard-plugin</artifactId>
-				<version>${switchyard.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.switchyard</groupId>
-				<artifactId>switchyard-extensions-wsdl</artifactId>
-				<version>${switchyard.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.switchyard.components</groupId>
-				<artifactId>switchyard-component-bean</artifactId>
-				<version>${switchyard.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.switchyard.components</groupId>
-				<artifactId>switchyard-component-soap</artifactId>
-				<version>${switchyard.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.switchyard</groupId>
-				<artifactId>switchyard-test</artifactId>
-				<version>${switchyard.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.switchyard.components</groupId>
-				<artifactId>switchyard-component-test-mixin-http</artifactId>
-				<version>${switchyard.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.switchyard</groupId>
-				<artifactId>switchyard-remote</artifactId>
-				<version>${switchyard.version}</version>
-			</dependency>
-
-			<dependency>
 				<groupId>org.jboss.spec</groupId>
 				<artifactId>jboss-javaee-6.0</artifactId>
 				<version>${jboss-javaee.version}</version>
@@ -213,12 +171,6 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.switchyard</groupId>
-					<artifactId>switchyard-plugin</artifactId>
-					<version>${switchyard.version}</version>
-				</plugin>
-
-				<plugin>
 					<groupId>org.jboss.as.plugins</groupId>
 					<artifactId>jboss-as-maven-plugin</artifactId>
 					<configuration>
@@ -231,11 +183,6 @@
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
-                    <!-- Disable 'require plugin versions' for now as switchyard is using snapshot -->
-                    <execution>
-                        <id>enforce-plugin-versions</id>
-                        <phase>none</phase>
-                    </execution>
                     <execution>
                         <id>enforce-victims-rule</id>
                         <goals>
