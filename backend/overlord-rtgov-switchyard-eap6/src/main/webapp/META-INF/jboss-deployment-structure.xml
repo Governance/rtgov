@@ -25,7 +25,7 @@
       <module name="org.switchyard.security" optional="true" />
       <module name="org.switchyard.runtime" optional="true" />
       <module name="org.switchyard.component.bpel" optional="true" />
-      <module name="deployment.overlord-rtgov.war" />
+      <module name="deployment.overlord-rtgov.war" export="true" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>

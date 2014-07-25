@@ -66,6 +66,8 @@ public class DefaultCollectionManager implements CollectionManager {
         
         if (ac instanceof ActiveList) {
             return ((ActiveList)ac);
+        } else {
+            LOG.warning("Active collection '"+name+"' is not a list: "+ac);
         }
         
         return null;
@@ -83,6 +85,8 @@ public class DefaultCollectionManager implements CollectionManager {
         
         if (ac instanceof ActiveMap) {
             return ((ActiveMap)ac);
+        } else {
+            LOG.warning("Active collection '"+name+"' is not a map: "+ac);
         }
         
         return null;
