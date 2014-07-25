@@ -26,7 +26,6 @@
 	<target name="install" depends="create.schema, bpms-layer-deploy" >
 		<ant antfile="build.xml" target="install"
 				dir="${overlord-commons.path}" >
-			<property name="appserver.id" location="${appserver.id}" />
 			<property name="overlord-commons.appserver.dir" location="${path}" />
 			<property name="overlord-commons.idp.file" value="${overlord-commons.path}/overlord-commons-idp-eap6.war" />
             <property name="overlord-commons.eap-dist.file" value="${overlord-commons.path}/overlord-commons-dist-eap6.zip" />

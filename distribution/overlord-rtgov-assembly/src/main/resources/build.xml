@@ -55,7 +55,7 @@
 	<ant antfile="build.xml" target="install" dir="platforms/${appserver.id}/${type}" >
 		<property name="basedir" value="${abs.basedir}/platforms/${appserver.id}/${type}" />
         <property name="path" location="${path}" />
-        <property name="appserver.id" location="${appserver.id}" />
+        <property name="appserver.id" value="${appserver.id}" />
 	</ant>
   </target>
 
@@ -66,7 +66,7 @@
 	<ant antfile="build.xml" target="uninstall" dir="platforms/${appserver.id}/${type}" >
 		<property name="basedir" value="${abs.basedir}/platforms/${appserver.id}/${type}" />
         <property name="path" location="${path}" />
-        <property name="appserver.id" location="${appserver.id}" />
+        <property name="appserver.id" value="${appserver.id}" />
 	</ant>
   </target>
 
