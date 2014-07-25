@@ -406,6 +406,12 @@
 		<dependency>
 			<groupId>org.picketlink</groupId>
 			<artifactId>picketlink-federation</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.santuario</groupId>
+					<artifactId>xmlsec</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -502,6 +508,7 @@
 										<exclude>org.overlord.rtgov.*:*:*</exclude>
 										<exclude>log4j:log4j:*</exclude>
 										<exclude>org.ops4j.pax.logging:pax-logging-api:*</exclude>
+										<exclude>org.apache.santuario:xmlsec:*</exclude>
 									</excludes>
 								</feature>
 								<feature>

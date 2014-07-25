@@ -4,9 +4,11 @@
     xmlns:oc="urn:jboss:domain:overlord-configuration:1.0"
     exclude-result-prefixes="oc">
 
+  <xsl:param name="serverUsername" />
+  <xsl:param name="serverPassword" />
+  
   <xsl:output xmlns:xalan="http://xml.apache.org/xalan" method="xml" encoding="UTF-8" indent="yes"
     xalan:indent-amount="2" />
-
 
   <xsl:template match="/*[name()='server' or name()='domain']//*[name()='profile']/oc:subsystem/oc:configurations">
     <xsl:variable name="currentNS" select="namespace-uri(.)" />
@@ -47,6 +49,18 @@
           <xsl:element name="property" namespace="urn:jboss:domain:overlord-configuration:1.0">
             <xsl:attribute name="name">RESTActivityServer.serverURL</xsl:attribute>
             <xsl:attribute name="value">https://rtgovserver.com:8443</xsl:attribute>
+          </xsl:element>
+          <xsl:element name="property" namespace="urn:jboss:domain:overlord-configuration:1.0">
+            <xsl:attribute name="name">RESTActivityServer.serverUsername</xsl:attribute>
+            <xsl:attribute name="value">
+              <xsl:value-of select="$serverUsername"></xsl:value-of>
+            </xsl:attribute>
+          </xsl:element>
+          <xsl:element name="property" namespace="urn:jboss:domain:overlord-configuration:1.0">
+            <xsl:attribute name="name">RESTActivityServer.serverPassword</xsl:attribute>
+            <xsl:attribute name="value">
+              <xsl:value-of select="$serverPassword"></xsl:value-of>
+            </xsl:attribute>
           </xsl:element>
         </xsl:element>
       </xsl:element>
