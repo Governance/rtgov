@@ -13,7 +13,86 @@
 	</parent>
 
 	<dependencies>		
-
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-server-rests</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.common</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-management</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-rests</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.common</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-management</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.active-queries</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.content.services</groupId>
+			<artifactId>service-dependency-rests</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.common</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-management</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.active-queries</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.content.services</groupId>
+			<artifactId>call-trace-rests</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.common</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-management</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-analysis</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -63,11 +142,22 @@
                 org.apache.karaf.jaas.boot.principal,
                 org.overlord.commons.auth.util,
                 org.overlord.commons.auth.filters,
-                org.overlord.rtgov.activity.server.rest,
-                org.overlord.rtgov.active.collection.rest,
-                org.overlord.rtgov.call.trace.rest,
-                org.overlord.rtgov.service.dependency.rest,
-                org.overlord.rtgov.situation.manager.rest,
+                org.overlord.rtgov.active.collection,
+                org.overlord.rtgov.active.collection.predicate,
+                org.overlord.rtgov.active.collection.util,
+                org.overlord.rtgov.activity.model,
+                org.overlord.rtgov.activity.server,
+                org.overlord.rtgov.activity.util,
+                org.overlord.rtgov.common.util,
+                org.overlord.rtgov.call.trace,
+                org.overlord.rtgov.call.trace.model,
+                org.overlord.rtgov.call.trace.util,
+                org.overlord.rtgov.analytics.service,
+                org.overlord.rtgov.analytics.situation,
+                org.overlord.rtgov.service.dependency,
+                org.overlord.rtgov.service.dependency.layout,
+                org.overlord.rtgov.service.dependency.presentation,
+                org.overlord.rtgov.service.dependency.svg,
                 org.codehaus.enunciate.json
               </Import-Package>
               <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>

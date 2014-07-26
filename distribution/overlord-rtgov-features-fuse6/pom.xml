@@ -65,10 +65,6 @@
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity-server-jee</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity-server-rests</artifactId>
-		</dependency>
 
 		<!-- RTGov Event Processors -->
 		<dependency>
@@ -138,10 +134,6 @@
 
 		<!-- RTGov Services -->
 		<dependency>
-			<groupId>org.overlord.rtgov.active-queries</groupId>
-			<artifactId>active-collection-rests</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>analytics</artifactId>
 		</dependency>
@@ -160,18 +152,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>situation-manager</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.content.services</groupId>
-			<artifactId>service-dependency-rests</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.content.services</groupId>
-			<artifactId>situation-manager-rests</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.content.services</groupId>
-			<artifactId>call-trace-rests</artifactId>
 		</dependency>
 
 		<dependency>
@@ -650,15 +630,10 @@
 										</feature>
 									</dependsOnFeatures>
 									<includes>
-										<include>org.overlord.rtgov.activity-management:activity-server-rests:*</include>
-										<include>org.overlord.rtgov.active-queries:active-collection-rests:*</include>
 										<include>org.overlord.rtgov.activity-analysis:call-trace:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency:*</include>
 										<include>org.overlord.rtgov.activity-analysis:service-dependency-svg:*</include>
 										<include>org.overlord.rtgov.activity-analysis:situation-manager:*</include>
-										<include>org.overlord.rtgov.content.services:call-trace-rests:*</include>
-										<include>org.overlord.rtgov.content.services:service-dependency-rests:*</include>
-										<include>org.overlord.rtgov.content.services:situation-manager-rests:*</include>
 										<include>org.overlord.rtgov:overlord-rtgov-all-fuse6:*</include>
 									</includes>
 								</feature>
