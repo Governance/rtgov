@@ -36,7 +36,7 @@
 		<javaee-api.version>6.0</javaee-api.version>
 		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
 		<jbossas.version>7.2.0.Final</jbossas.version>
-		<overlord-commons.version>2.0.5-SNAPSHOT</overlord-commons.version>
+		<overlord-commons.version>2.0.6.Final</overlord-commons.version>
 		<switchyard.version>2.0.0-SNAPSHOT</switchyard.version>
 	</properties>
 
@@ -293,15 +293,15 @@
 	    <repository>
 	        <id>jboss-public-repository-group</id>
 	        <name>JBoss Public Maven Repository Group</name>
-		<url>https://repository.jboss.org/nexus/content/groups/public/</url>
-		<releases>
-		  <enabled>true</enabled>
-		  <updatePolicy>never</updatePolicy>
-		</releases>
-		<snapshots>
-		  <enabled>true</enabled>
-		  <updatePolicy>never</updatePolicy>
-		</snapshots>
+	        <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+	        <releases>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	        </releases>
+	        <snapshots>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	        </snapshots>
 	    </repository>
 	</repositories>
 
