@@ -140,6 +140,7 @@
                 org.eclipse.jetty.security,
                 org.eclipse.jetty.jndi,
                 org.apache.karaf.jaas.boot.principal,
+                org.codehaus.jackson.map,
                 org.overlord.commons.auth.util,
                 org.overlord.commons.auth.filters,
                 org.overlord.rtgov.active.collection,
@@ -160,7 +161,7 @@
                 org.overlord.rtgov.service.dependency.svg,
                 org.codehaus.enunciate.json
               </Import-Package>
-              <Bundle-ClassPath>.,WEB-INF/classes</Bundle-ClassPath>
+              <Bundle-ClassPath>.,WEB-INF/classes,WEB-INF/lib/service-dependency-rests-${project.version}.jar,WEB-INF/lib/call-trace-rests-${project.version}.jar,WEB-INF/lib/activity-server-rests-${project.version}.jar,WEB-INF/lib/active-collection-rests-${project.version}.jar</Bundle-ClassPath>
             </manifestEntries>
           </archive>
         </configuration>
