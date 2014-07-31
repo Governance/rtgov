@@ -453,7 +453,7 @@
 			<plugin>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-maven-plugin</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 				<executions>
 					<execution>
 						<phase>generate-resources</phase>
@@ -464,8 +464,8 @@
 							<outputFile>${project.build.directory}/features.xml</outputFile>
 							<attach>true</attach>
 							<repositories>
-								<repository>mvn:org.drools/drools-karaf-features/${drools.version}/xml/features</repository>
-								<repository>mvn:org.overlord/overlord-commons-dist-fuse6/${overlord-commons.version}/xml/features</repository>
+								<repository>mvn:org.drools/drools-karaf-features/${version.org.drools}/xml/features</repository>
+								<repository>mvn:org.overlord/overlord-commons-dist-fuse6/${version.org.overlord.overlord-commons}/xml/features</repository>
 							</repositories>
 							<features>
 								<feature>
@@ -502,7 +502,7 @@
 										</feature>
 										<feature>
 											<name>overlord-commons-idp</name>
- 											<version>${overlord-commons.version}</version>
+ 											<version>${version.org.overlord.overlord-commons}</version>
 										</feature>
 									</dependsOnFeatures>
 									<includes>

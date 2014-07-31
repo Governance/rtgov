@@ -33,10 +33,10 @@
 	</licenses>
 
 	<properties>
-		<javaee-api.version>6.0</javaee-api.version>
-		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
+		<version.javax.javaee-api>6.0</version.javax.javaee-api>
+		<version.org.jboss.spec.jboss-javaee-6.0>1.0.0.Final</version.org.jboss.spec.jboss-javaee-6.0>
 		<jbossas.version>7.2.0.Final</jbossas.version>
-		<overlord-commons.version>2.0.6.Final</overlord-commons.version>
+		<version.org.overlord.overlord-commons>2.0.6.Final</version.org.overlord.overlord-commons>
 	</properties>
 
 	<modules>
@@ -154,12 +154,12 @@
 			<dependency>
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>
-				<version>${javaee-api.version}</version>
+				<version>${version.javax.javaee-api}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.spec</groupId>
 				<artifactId>jboss-javaee-6.0</artifactId>
-				<version>${jboss-javaee.version}</version>
+				<version>${version.org.jboss.spec.jboss-javaee-6.0}</version>
 				<type>pom</type>
 			</dependency>
 
@@ -215,7 +215,7 @@
 					<dependency>
 						<groupId>org.overlord</groupId>
 						<artifactId>overlord-commons-build</artifactId>
-						<version>${overlord-commons.version}</version>
+						<version>${version.org.overlord.overlord-commons}</version>
 					</dependency>
 				</dependencies>
 				<executions>
