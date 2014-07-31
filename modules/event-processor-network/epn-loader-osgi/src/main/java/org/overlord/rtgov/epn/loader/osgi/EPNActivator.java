@@ -20,9 +20,9 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.epn.AbstractEPNLoader;
 import org.overlord.rtgov.epn.EPNManager;
-import org.overlord.rtgov.epn.EPNManagerAccessor;
 import org.overlord.rtgov.epn.Network;
 import org.overlord.rtgov.epn.util.NetworkUtil;
 
@@ -37,56 +37,52 @@ public class EPNActivator extends AbstractEPNLoader implements BundleActivator {
     
     private static final String EPN_JSON = "/epn.json";
 
-    private EPNManager _epnManager=null;
- 
     private Network _network=null;
+    
+    private org.overlord.commons.services.ServiceListener<EPNManager> _listener;
     
     /**
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        init();
+        _listener = new org.overlord.commons.services.ServiceListener<EPNManager>() {
+
+            @Override
+            public void registered(EPNManager service) {
+                registerEPN(service);
+            }
+
+            @Override
+            public void unregistered(EPNManager service) {
+                unregisterEPN(service);
+            }
+        };
+        
+        ServiceRegistryUtil.addServiceListener(EPNManager.class, _listener);
     }
 
     /**
      * {@inheritDoc}
      */
     public void stop(BundleContext context) throws Exception {
-        close();
+        if (_network != null) {
+            EPNManager epnManager=ServiceRegistryUtil.getSingleService(EPNManager.class);
+            
+            if (epnManager != null) {
+                unregisterEPN(epnManager);
+            }
+        }       
+
+        ServiceRegistryUtil.removeServiceListener(_listener);
+        _listener = null;
     }
 
     /**
-     * This method sets the EPN manager.
+     * This method registers the EPN with the EPNManager.
      * 
-     * @param manager The EPN manager
+     * @param epnManager The EPN manager
      */
-    public void setManager(EPNManager manager) {
-        _epnManager = manager;
-    }
-    
-    /**
-     * This method returns the EPN manager.
-     * 
-     * @return The EPN manager
-     */
-    public EPNManager getManager() {
-        return (_epnManager);
-    }
-    
-    /**
-     * This method initializes the EPN loader.
-     */
-    public void init() {
-        
-        if (_epnManager == null) {
-            _epnManager = EPNManagerAccessor.getEPNManager();
-        }
-        
-        if (_epnManager == null) {
-            LOG.severe("Failed to obtain reference to EPNManager");
-            throw new java.lang.IllegalStateException("Failed to obtain reference to EPNManager");
-        }
-        
+    protected void registerEPN(EPNManager epnManager) {
         java.lang.ClassLoader cl=Thread.currentThread().getContextClassLoader();
         
         try {
@@ -113,7 +109,7 @@ public class EPNActivator extends AbstractEPNLoader implements BundleActivator {
                 preInit(_network);
                 
                 // TODO: Do we need to halt the deployment due to failures? (RTGOV-199)
-                _epnManager.register(_network);
+                epnManager.register(_network);
             }
         } catch (Exception e) {
             String mesg=java.util.PropertyResourceBundle.getBundle(
@@ -130,13 +126,20 @@ public class EPNActivator extends AbstractEPNLoader implements BundleActivator {
     }
     
     /**
-     * This method closes the EPN loader.
+     * This method unregisters the EPN.
+     * 
+     * @param context The context
      */
-    public void close() {
+    protected void unregisterEPN(EPNManager epnManager) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Unregister EPN");
+        }
         
-        if (_epnManager != null && _network != null) {
+        if (_network != null) {
             try {
-                _epnManager.unregister(_network.getName(), _network.getVersion());
+                epnManager.unregister(_network.getName(), _network.getVersion());
+                
+                _network = null;
             } catch (Throwable t) {
                 if (LOG.isLoggable(Level.FINER)) {
                     LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(

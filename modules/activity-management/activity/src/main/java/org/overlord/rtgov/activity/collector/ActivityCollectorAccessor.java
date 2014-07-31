@@ -20,6 +20,8 @@ package org.overlord.rtgov.activity.collector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
+
 /**
  * This class provides access to the Activity Collector once an appropriate
  * implementation has been independently instantiated.
@@ -27,13 +29,7 @@ import java.util.logging.Logger;
  */
 public final class ActivityCollectorAccessor {
 
-    private static final int DEFAULT_WAIT_TIME = 300000;
-
     private static final Logger LOG=Logger.getLogger(ActivityCollectorAccessor.class.getName());
-    
-    private static ActivityCollector _activityCollector=null;
-    
-    private static final Object SYNC=new Object();
     
     /**
      * The default constructor.
@@ -46,20 +42,8 @@ public final class ActivityCollectorAccessor {
      * 
      * @param collector The collector
      */
-    protected static void setActivityCollector(ActivityCollector collector) {
-        synchronized (SYNC) {
-            if (_activityCollector != null) {
-                LOG.severe("Activity collector already set");
-            }
-            
-            _activityCollector = collector;
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Set activity collector="+collector);
-            }
-            
-            SYNC.notifyAll();
-        }
+    public static void setActivityCollector(ActivityCollector collector) {
+        LOG.warning("Setting the active collector - no longer required");
     }
     
     /**
@@ -68,41 +52,12 @@ public final class ActivityCollectorAccessor {
      * @return The activity collector
      */
     public static ActivityCollector getActivityCollector() {
+        ActivityCollector ret=ServiceRegistryUtil.getSingleService(ActivityCollector.class);
         
-        // Avoid unnecessary sync once set (runs in 1/4 to 1/3 of the time)
-        if (_activityCollector == null) {
-            synchronized (SYNC) {
-                if (_activityCollector == null) {
-                    try {
-                        SYNC.wait(getWaitTime());
-                    } catch (Exception e) {
-                        LOG.log(Level.SEVERE, "Failed to wait for ActivityCollector to become available", e);
-                    }
-                    
-                    if (_activityCollector == null) {
-                        LOG.severe("ActivityCollector is not available");
-                    }
-                }
-            }
-        }
-
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Get activity collector="+_activityCollector);
+            LOG.finest("Get activity collector="+ret);
         }
 
-        return (_activityCollector);
-    }
-    
-    private static long getWaitTime() {
-        final String waitTimeVal = System.getProperty("org.overlord.ServiceWaitTime");
-        long waitTime = DEFAULT_WAIT_TIME;
-        if (waitTimeVal != null) {
-            try {
-                waitTime = Long.parseLong(waitTimeVal);
-            } catch (final NumberFormatException nfe) {
-                LOG.warning("Failed to parse ServiceWaitTime " + waitTimeVal + ", using default value of " + waitTime);
-            }
-        }
-        return waitTime;
+        return (ret);
     }
 }

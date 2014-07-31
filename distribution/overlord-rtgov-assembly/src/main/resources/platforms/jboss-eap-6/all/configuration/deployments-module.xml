@@ -2,4 +2,7 @@
   <resources>
     <resource-root path="." />
   </resources>
+  <dependencies>
+    <module name="org.jboss.as.messaging"/>
+  </dependencies>
 </module>

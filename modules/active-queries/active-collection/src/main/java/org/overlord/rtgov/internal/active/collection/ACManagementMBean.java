@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.active.collection.jee;
+package org.overlord.rtgov.internal.active.collection;
 
 /**
  * This interface represents the JMX management interface

@@ -2,9 +2,16 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-    <service interface="org.overlord.rtgov.activity.server.ActivityStore">
-        <bean class="org.overlord.rtgov.activity.store.elasticsearch.ElasticsearchActivityStore" >
-        </bean>
-    </service>
+    <service interface="org.overlord.rtgov.activity.server.ActivityStore"
+    			ref="activityStore" />
+
+    <bean id="activityStore"
+    		class="org.overlord.rtgov.activity.store.elasticsearch.ElasticsearchActivityStore"
+        	init-method="init" destroy-method="close" />
+
+	<!-- Required to establish dependency between the bundles -->
+    <reference id="elasticsearchNodeBean"
+               interface="org.overlord.rtgov.common.elasticsearch.ElasticsearchNode">
+    </reference>
 
 </blueprint>

@@ -27,10 +27,10 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.util.ActivityValidatorUtil;
 import org.overlord.rtgov.activity.validator.ActivityValidator;
 import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
-import org.overlord.rtgov.activity.validator.ActivityValidatorManagerAccessor;
 
 /**
  * This class provides the capability to load Activity Validators from a
@@ -47,10 +47,10 @@ public class JEEAVLoader {
     
     private static final String AV_JSON = "av.json";
     
-    private ActivityValidatorManager _avManager=null;
-
     private java.util.List<ActivityValidator> _activityValidators=null;
     
+    private org.overlord.commons.services.ServiceListener<ActivityValidatorManager> _listener;
+
     /**
      * The constructor.
      */
@@ -62,14 +62,32 @@ public class JEEAVLoader {
      */
     @PostConstruct
     public void init() {
+        _listener = new org.overlord.commons.services.ServiceListener<ActivityValidatorManager>() {
+
+            @Override
+            public void registered(ActivityValidatorManager service) {
+                registerActivityValidator(service);
+            }
+
+            @Override
+            public void unregistered(ActivityValidatorManager service) {
+                unregisterActivityValidator(service);
+            }
+        };
         
-        _avManager = ActivityValidatorManagerAccessor.getActivityValidatorManager();
-        
-        if (_avManager == null) {
-            LOG.severe(java.util.PropertyResourceBundle.getBundle(
-                "av-loader-jee.Messages").getString("AV-LOADER-JEE-5"));
+        ServiceRegistryUtil.addServiceListener(ActivityValidatorManager.class, _listener);
+    }
+    
+    /**
+     * This method registers the activity validator with the manager.
+     * 
+     * @param avManager Activity validator manager
+     */
+    protected void registerActivityValidator(ActivityValidatorManager avManager) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Register ActivityValidatorManager");
         }
-        
+            
         try {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(AV_JSON);
             
@@ -90,7 +108,7 @@ public class JEEAVLoader {
                     for (ActivityValidator ai : _activityValidators) {
                         ai.init();
 
-                        _avManager.register(ai);
+                        avManager.register(ai);
                     }
                 }
             }
@@ -101,22 +119,43 @@ public class JEEAVLoader {
     }
     
     /**
+     * This method unregisters the activity validator.
+     * 
+     * @param avManager The activity validator manager
+     */
+    protected void unregisterActivityValidator(ActivityValidatorManager avManager) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Unregister ActivityValidatorManager");
+        }
+        
+        if (avManager != null && _activityValidators != null) {
+            try {
+                for (ActivityValidator ai : _activityValidators) {
+                    avManager.unregister(ai);
+                }
+                
+                _activityValidators = null;
+            } catch (Exception e) {
+                LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
+                        "av-loader-jee.Messages").getString("AV-LOADER-JEE-4"), e);
+           }
+        }
+    }
+
+    /**
      * This method closes the AI loader.
      */
     @PreDestroy
     public void close() {
-        
-        if (_avManager != null && _activityValidators != null) {
-            try {
-                for (ActivityValidator ai : _activityValidators) {
-                    _avManager.unregister(ai);
-                }
-            } catch (Throwable t) {
-                if (LOG.isLoggable(Level.FINER)) {
-                    LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
-                        "av-loader-jee.Messages").getString("AV-LOADER-JEE-4"), t);
-                }
+        if (_listener != null) {
+            ActivityValidatorManager acManager=ServiceRegistryUtil.getSingleService(ActivityValidatorManager.class);
+            
+            if (acManager != null) {
+                unregisterActivityValidator(acManager);
             }
         }
+        
+        ServiceRegistryUtil.removeServiceListener(_listener);
+        _listener = null;
     }       
 }

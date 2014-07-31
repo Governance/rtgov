@@ -18,11 +18,11 @@ package org.overlord.rtgov.active.collection.epn;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
 import org.overlord.rtgov.epn.ContextualNotificationListener;
 import org.overlord.rtgov.epn.EPNManager;
-import org.overlord.rtgov.epn.EPNManagerAccessor;
 import org.overlord.rtgov.epn.EventList;
 
 /**
@@ -34,22 +34,14 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
 
     private static final Logger LOG=Logger.getLogger(EPNActiveCollectionSource.class.getName());
 
-    private EPNManager _epnManager=null;
     private String _subject=null;    
     
     private ClassLoader _contextClassLoader=null;
     private boolean _preinitialized=false;
 
-    private EPNACSNotificationListener _listener=new EPNACSNotificationListener();
+    private EPNACSNotificationListener _listener=null;
     
-    /**
-     * This method sets the EPN manager.
-     * 
-     * @param mgr The EPN Manager
-     */
-    protected void setEPNManager(EPNManager mgr) {
-        _epnManager = mgr;
-    }
+    private org.overlord.commons.services.ServiceListener<EPNManager> _epnManagerListener;
     
     /**
      * This method sets the subject.
@@ -80,24 +72,34 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
             LOG.fine("Initializing EPN Active Collection Source");
         }
 
-        if (_epnManager == null) {
-            _epnManager = EPNManagerAccessor.getEPNManager();
-        }
+        _epnManagerListener = new org.overlord.commons.services.ServiceListener<EPNManager>() {
 
-        if (_epnManager == null) {
+            @Override
+            public void registered(EPNManager service) {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Register notification listener on EPNManagr ("+service+") for subject="+_subject);
+                }
                 
-            LOG.severe(java.util.PropertyResourceBundle.getBundle(
-                       "acs-epn.Messages").getString("ACS-EPN-1"));
-                
-            throw new IllegalStateException(java.util.PropertyResourceBundle.getBundle(
-                    "acs-epn.Messages").getString("ACS-EPN-1"));
-        }
+                _listener = new EPNACSNotificationListener();
+
+                service.addNotificationListener(_subject, _listener);
+            }
+
+            @Override
+            public void unregistered(EPNManager service) {
+                if (_listener != null) {
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Unregister notification listener for subject="+_subject);
+                    }
+    
+                    service.removeNotificationListener(_subject, _listener);
+                    
+                    _listener = null;
+                }
+            }
+        };
         
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Register notification listener on EPNManagr ("+_epnManager+") for subject="+_subject);
-        }
-
-        _epnManager.addNotificationListener(_subject, _listener);
+        ServiceRegistryUtil.addServiceListener(EPNManager.class, _epnManagerListener);
     }
     
     /**
@@ -153,8 +155,18 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Closing EPN Active Collection Source");
         }
-
-        _epnManager.removeNotificationListener(_subject, _listener);
+        
+        if (_listener != null) {
+            EPNManager epnManager=ServiceRegistryUtil.getSingleService(EPNManager.class);
+            
+            if (epnManager != null) {
+                epnManager.removeNotificationListener(_subject, _listener);
+                    
+                _listener = null;
+            }
+        }
+        
+        ServiceRegistryUtil.removeServiceListener(_epnManagerListener);
     }
 
     /**

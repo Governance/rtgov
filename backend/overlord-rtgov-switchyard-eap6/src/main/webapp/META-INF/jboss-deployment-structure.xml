@@ -16,6 +16,7 @@
 <jboss-deployment-structure>
   <deployment>
     <dependencies>
+      <module name="deployment.overlord-rtgov.war" export="true" services="export" />    <!-- Needs to be before switchyard bpel, to override overlord-commons-services -->
       <module name="org.switchyard.bus.camel" optional="true" />
       <module name="org.switchyard.api" optional="true" />
       <module name="org.switchyard.config" optional="true" />
@@ -25,7 +26,6 @@
       <module name="org.switchyard.security" optional="true" />
       <module name="org.switchyard.runtime" optional="true" />
       <module name="org.switchyard.component.bpel" optional="true" />
-      <module name="deployment.overlord-rtgov.war" export="true" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>

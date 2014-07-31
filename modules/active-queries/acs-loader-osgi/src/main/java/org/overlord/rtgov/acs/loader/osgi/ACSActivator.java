@@ -20,9 +20,9 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.AbstractACSLoader;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
-import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
 
@@ -35,55 +35,39 @@ public class ACSActivator extends AbstractACSLoader implements BundleActivator {
     private static final Logger LOG=Logger.getLogger(ACSActivator.class.getName());
     
     private static final String ACS_JSON = "/acs.json";
-
-    private ActiveCollectionManager _acmManager=null;
     
     private java.util.List<ActiveCollectionSource> _activeCollectionSources=null;
+
+    private org.overlord.commons.services.ServiceListener<ActiveCollectionManager> _listener;
     
     /**
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        init();
-    }
+        _listener = new org.overlord.commons.services.ServiceListener<ActiveCollectionManager>() {
 
-    /**
-     * {@inheritDoc}
-     */
-    public void stop(BundleContext context) throws Exception {
-        close();
-    }
+            @Override
+            public void registered(ActiveCollectionManager service) {
+                registerActiveCollectionSource(service);
+            }
 
-    /**
-     * This method sets the active collection manager.
-     * 
-     * @param manager The active collection manager
-     */
-    public void setManager(ActiveCollectionManager manager) {
-        _acmManager = manager;
+            @Override
+            public void unregistered(ActiveCollectionManager service) {
+                unregisterActiveCollectionSource(service);
+            }
+        };
+        
+        ServiceRegistryUtil.addServiceListener(ActiveCollectionManager.class, _listener);
     }
     
     /**
-     * This method returns the active collection manager.
+     * This method registers the activity collection sources with the manager.
      * 
-     * @return The active collection manager
+     * @param acmManager The active collection manager
      */
-    public ActiveCollectionManager getManager() {
-        return (_acmManager);
-    }
-    
-    /**
-     * This method initializes the EPN loader.
-     */
-    public void init() {
-        
-        if (_acmManager == null) {
-            _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
-        }
-        
-        if (_acmManager == null) {
-            LOG.severe("Failed to obtain reference to ActiveCollectionManager");
-            throw new java.lang.IllegalStateException("Failed to obtain reference to ActiveCollectionManager");
+    protected void registerActiveCollectionSource(ActiveCollectionManager acmManager) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Register ActiveCollectionSource");
         }
         
         java.lang.ClassLoader cl=Thread.currentThread().getContextClassLoader();
@@ -116,7 +100,7 @@ public class ACSActivator extends AbstractACSLoader implements BundleActivator {
                         // with the ActiveCollectionSource deployment.
                         preInit(acs);
                         
-                        _acmManager.register(acs);
+                        acmManager.register(acs);
                     }
                 }
             }
@@ -130,15 +114,22 @@ public class ACSActivator extends AbstractACSLoader implements BundleActivator {
     }
     
     /**
-     * This method closes the EPN loader.
+     * This method unregisters the active collection manager.
+     * 
+     * @param acmManager Active collection manager
      */
-    public void close() {
+    protected void unregisterActiveCollectionSource(ActiveCollectionManager acmManager) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Unregister ActiveCollectionSource");
+        }
         
-        if (_acmManager != null && _activeCollectionSources != null) {
+        if (acmManager != null && _activeCollectionSources != null) {
             try {
                 for (ActiveCollectionSource acs : _activeCollectionSources) {
-                    _acmManager.unregister(acs);
+                    acmManager.unregister(acs);
                 }
+                
+                _activeCollectionSources = null;
             } catch (Throwable t) {
                 if (LOG.isLoggable(Level.FINER)) {
                     LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
@@ -147,4 +138,20 @@ public class ACSActivator extends AbstractACSLoader implements BundleActivator {
             }
         }
     }       
+
+    /**
+    * {@inheritDoc}
+    */
+   public void stop(BundleContext context) throws Exception {
+       if (_activeCollectionSources != null) {
+           ActiveCollectionManager acManager=ServiceRegistryUtil.getSingleService(ActiveCollectionManager.class);
+           
+           if (acManager != null) {
+               unregisterActiveCollectionSource(acManager);
+           }
+       }
+       
+       ServiceRegistryUtil.removeServiceListener(_listener);
+       _listener = null;
+   }       
 }

@@ -18,6 +18,7 @@ package org.overlord.rtgov.activity.server;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
@@ -42,35 +43,10 @@ public final class ActivityStoreFactory {
     }
     
     /**
-     * This method initializes the activity store. If a class name has been
-     * defined in configuration, then the supplied class must match the type,
-     * otherwise it will be ignored. This method is primarily used for testing,
-     * or where classloading is not possible (i.e. OSGi).
-     * 
-     * @param store The store
+     * This method resets the factory.
      */
-    public static synchronized void initialize(ActivityStore store) {
-        // Only initialize if no instance available
-        if (_instance != null) {
-            return;
-        }
-        
-        String clsName=(String)RTGovProperties.getProperties().get(ACTIVITY_STORE_CLASS);
-        
-        // Verify the instance is of the correct class
-        if (clsName == null || store.getClass().getName().equals(clsName)) {
-            
-            _instance = store;
-            
-            if (LOG.isLoggable(Level.FINER)) {
-                LOG.finer("Initialize activity store instance="+_instance);
-            }
-            
-        } else if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("Ignoring activity store initialization due to incorrect type ["
-                            +store.getClass().getName()+"], expecting ["
-                            +clsName+"]");
-        }
+    public static void clear() {
+        _instance = null;
     }
     
     /**
@@ -80,22 +56,20 @@ public final class ActivityStoreFactory {
      */
     public static synchronized ActivityStore getActivityStore() {
         if (_instance == null) {
-            try {
-                String clsName=(String)RTGovProperties.getProperties().get(ACTIVITY_STORE_CLASS);
-                
-                if (clsName != null) {
-                    try {
-                        @SuppressWarnings("unchecked")
-                        Class<ActivityStore> cls=(Class<ActivityStore>)
-                                Thread.currentThread().getContextClassLoader().loadClass(clsName);
-                        
-                        _instance = (ActivityStore)cls.newInstance();
-                    } catch (Throwable t) {
-                        LOG.log(Level.FINEST, "Failed to find activity store class '"+clsName+"'", t);
-                    }
+            java.util.Set<ActivityStore> services=ServiceRegistryUtil.getServices(ActivityStore.class);
+            String clsName=(String)RTGovProperties.getProperties().get(ACTIVITY_STORE_CLASS);
+            
+            for (ActivityStore as : services) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Checking activity store impl="+as);
                 }
-            } catch (Throwable t) {
-                LOG.log(Level.FINEST, "Failed to get activity store class property", t);
+                if (as.getClass().getName().equals(clsName)) {
+                    _instance = as;
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Found activity store impl="+as);
+                    }
+                    break;
+                }
             }
         }
         

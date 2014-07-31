@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.internal.active.collection.jee;
-
-import static javax.ejb.ConcurrencyManagementType.BEAN;
+package org.overlord.rtgov.internal.active.collection;
 
 import java.lang.management.ManagementFactory;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -42,10 +33,6 @@ import org.overlord.rtgov.active.collection.jmx.JMXNotifier;
  * This class provides the capability to manage the Active Collection Manager.
  *
  */
-@Singleton(name="ACManagement")
-@ApplicationScoped
-@Startup
-@ConcurrencyManagement(BEAN)
 public class ACManagement extends javax.management.NotificationBroadcasterSupport
                         implements ACManagementMBean, ActiveCollectionListener {
     
@@ -54,37 +41,20 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
     
     private static final Logger LOG=Logger.getLogger(ACManagement.class.getName());
     
-    @Inject
     private ActiveCollectionManager _acManager;
     
     /**
      * The constructor.
-     */
-    public ACManagement() {
-    }
-    
-    /**
-     * This method sets the active collection manager.
      * 
      * @param acm The active collection manager
      */
-    public void setActiveCollectionManager(ActiveCollectionManager acm) {
+    public ACManagement(ActiveCollectionManager acm) {
         _acManager = acm;
-    }
-    
-    /**
-     * This method returns the active collection manager.
-     * 
-     * @return The active collection manager
-     */
-    public ActiveCollectionManager getActiveCollectionManager() {
-        return (_acManager);
     }
     
     /**
      * The initialize method.
      */
-    @PostConstruct
     public void init() {
         LOG.info("Register the ACManagement MBean: "+_acManager);
         
@@ -95,7 +65,7 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             mbs.registerMBean(this, objname); 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-1"), e);
+                    "active-collection.Messages").getString("ACTIVE-COLLECTION-16"), e);
         }
         
         _acManager.addActiveCollectionListener(this);
@@ -105,8 +75,7 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
     /**
      * {@inheritDoc}
      */
-    @PreDestroy
-    public void close() throws Exception {
+    public void close() {
         LOG.info("Unregister the ACManagement MBean");
 
         /* BAM-22 - comment out for now, as only an issue on shutdown
@@ -114,7 +83,7 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             _acManager.removeActiveCollectionListener(this);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                        "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-2"), e);
+                        "active-collection.Messages").getString("ACTIVE-COLLECTION-17"), e);
         }
         */
         
@@ -125,7 +94,7 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-3"), e);
+                    "active-collection.Messages").getString("ACTIVE-COLLECTION-18"), e);
         }
     }
 
@@ -149,9 +118,9 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
         } catch (Exception e) {
             LOG.log(Level.SEVERE, MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
-                    "active-collection-jee.Messages").getString("ACTIVE-COLLECTION-JEE-4"),
+                    "active-collection.Messages").getString("ACTIVE-COLLECTION-19"),
                     ac.getName()), e);
-        }   
+        }  
     }
 
     /**
@@ -187,7 +156,7 @@ public class ACManagement extends javax.management.NotificationBroadcasterSuppor
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.log(Level.FINER, MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
-                    "active-collection.Messages").getString("ACTIVE-COLLECTION-JEE-5"),
+                    "active-collection.Messages").getString("ACTIVE-COLLECTION-20"),
                     ac.getName()), t);
             }
         }

@@ -20,6 +20,8 @@ package org.overlord.rtgov.activity.processor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
+
 /**
  * This class provides access to the Information Processor Manager once an appropriate
  * implementation has been independently instantiated.
@@ -27,13 +29,7 @@ import java.util.logging.Logger;
  */
 public final class InformationProcessorManagerAccessor {
 
-    private static final int DEFAULT_WAIT_TIME = 300000;
-
     private static final Logger LOG=Logger.getLogger(InformationProcessorManagerAccessor.class.getName());
-    
-    private static InformationProcessorManager _informationProcessorManager=null;
-    
-    private static final Object SYNC=new Object();
     
     /**
      * The default constructor.
@@ -46,20 +42,8 @@ public final class InformationProcessorManagerAccessor {
      * 
      * @param ipm The information processor manager
      */
-    protected static void setInformationProcessorManager(InformationProcessorManager ipm) {
-        synchronized (SYNC) {
-            if (_informationProcessorManager != null) {
-                LOG.severe("Information processor manager already set");
-            }
-            
-            _informationProcessorManager = ipm;
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Set information processor manager="+ipm);
-            }
-            
-            SYNC.notifyAll();
-        }
+    public static void setInformationProcessorManager(InformationProcessorManager ipm) {
+        LOG.warning("Setting the information processor manager - no longer required");
     }
     
     /**
@@ -68,41 +52,12 @@ public final class InformationProcessorManagerAccessor {
      * @return The information processor manager
      */
     public static InformationProcessorManager getInformationProcessorManager() {
-        
-        // Avoid unnecessary sync once set (runs in 1/4 to 1/3 of the time)
-        if (_informationProcessorManager == null) {
-            synchronized (SYNC) {
-                if (_informationProcessorManager == null) {
-                    try {
-                        SYNC.wait(getWaitTime());
-                    } catch (Exception e) {
-                        LOG.log(Level.SEVERE, "Failed to wait for InformationProcessorManager to become available", e);
-                    }
-                    
-                    if (_informationProcessorManager == null) {
-                        LOG.severe("InformationProcessorManager is not available");
-                    }
-                }
-            }
-        }
+        InformationProcessorManager ret=ServiceRegistryUtil.getSingleService(InformationProcessorManager.class);
 
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Get information processor manager="+_informationProcessorManager);
+            LOG.finest("Get information processor manager="+ret);
         }
 
-        return (_informationProcessorManager);
-    }
-    
-    private static long getWaitTime() {
-        final String waitTimeVal = System.getProperty("org.overlord.ServiceWaitTime");
-        long waitTime = DEFAULT_WAIT_TIME;
-        if (waitTimeVal != null) {
-            try {
-                waitTime = Long.parseLong(waitTimeVal);
-            } catch (final NumberFormatException nfe) {
-                LOG.warning("Failed to parse ServiceWaitTime " + waitTimeVal + ", using default value of " + waitTime);
-            }
-        }
-        return waitTime;
+        return (ret);
     }
 }

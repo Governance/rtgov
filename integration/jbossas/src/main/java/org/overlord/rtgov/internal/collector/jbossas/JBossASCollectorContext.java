@@ -18,10 +18,10 @@ package org.overlord.rtgov.internal.collector.jbossas;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
 import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
 
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.collector.CollectorContext;
 
 /**
@@ -35,13 +35,12 @@ public class JBossASCollectorContext implements CollectorContext {
 
     private static final Logger LOG=Logger.getLogger(JBossASCollectorContext.class.getName());
 
-    //@Resource(lookup=TRANSACTION_MANAGER)
     private TransactionManager _transactionManager=null;
 
     /**
      * This method initializes the collector context.
      */
-    @PostConstruct
+    @ServiceInit
     public void init() {
         try {
             InitialContext ctx=new InitialContext();

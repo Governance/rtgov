@@ -19,11 +19,14 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
 import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Origin;
@@ -44,16 +47,12 @@ public abstract class AbstractActivityCollector implements ActivityCollector, Ab
     
     private Boolean _enabled;
     
-    @Inject
     private CollectorContext _collectorContext=null;
     
-    @Inject
     private ActivityUnitLogger _activityLogger=null;
     
-    @Inject
     private InformationProcessorManager _infoProcessorManager=null;
     
-    @Inject
     private ActivityValidatorManager _activityValidatorManager=null;
     
     private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();
@@ -62,9 +61,77 @@ public abstract class AbstractActivityCollector implements ActivityCollector, Ab
      * The default constructor.
      */
     public AbstractActivityCollector() {
-        ActivityCollectorAccessor.setActivityCollector(this);
-        
         _enabled = RTGovProperties.getPropertyAsBoolean("ActivityCollector.enabled", DEFAULT_COLLECTION_ENABLED);
+    }
+    
+    /**
+     * Initialize the activity collector.
+     */
+    @ServiceInit
+    public void init() {
+        if (_infoProcessorManager == null) {
+            ServiceRegistryUtil.addServiceListener(InformationProcessorManager.class, new ServiceListener<InformationProcessorManager>() {
+    
+                @Override
+                public void registered(InformationProcessorManager service) {
+                    setInformationProcessorManager(service);
+                }
+    
+                @Override
+                public void unregistered(InformationProcessorManager service) {
+                    setInformationProcessorManager(null);
+                }
+                
+            });
+        }
+        
+        if (_activityValidatorManager == null) {
+            ServiceRegistryUtil.addServiceListener(ActivityValidatorManager.class, new ServiceListener<ActivityValidatorManager>() {
+    
+                @Override
+                public void registered(ActivityValidatorManager service) {
+                    setActivityValidatorManager(service);
+                }
+    
+                @Override
+                public void unregistered(ActivityValidatorManager service) {
+                    setActivityValidatorManager(null);
+                }
+                
+            });
+        }
+        
+        if (_collectorContext == null) {
+            ServiceRegistryUtil.addServiceListener(CollectorContext.class, new ServiceListener<CollectorContext>() {
+    
+                @Override
+                public void registered(CollectorContext service) {
+                    setCollectorContext(service);
+                }
+    
+                @Override
+                public void unregistered(CollectorContext service) {
+                    setCollectorContext(null);
+                }
+                
+            });
+        }
+
+        if (_activityLogger == null) {
+            ServiceRegistryUtil.addServiceListener(ActivityUnitLogger.class, new ServiceListener<ActivityUnitLogger>() {
+    
+                @Override
+                public void registered(ActivityUnitLogger service) {
+                    setActivityUnitLogger(service);
+                }
+    
+                @Override
+                public void unregistered(ActivityUnitLogger service) {
+                    setActivityUnitLogger(null);
+                }
+                
+            });
+        }
     }
     
     /**
@@ -361,4 +428,10 @@ public abstract class AbstractActivityCollector implements ActivityCollector, Ab
         }
     }
 
+    /**
+     * This method closes the activity collector.
+     */
+    @ServiceClose
+    public void close() {
+    }
 }

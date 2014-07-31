@@ -20,6 +20,8 @@ package org.overlord.rtgov.active.collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
+
 /**
  * This class provides access to the Active Collection Manager once an appropriate
  * implementation has been independently instantiated.
@@ -27,13 +29,7 @@ import java.util.logging.Logger;
  */
 public final class ActiveCollectionManagerAccessor {
 
-    private static final int DEFAULT_WAIT_TIME = 300000;
-
     private static final Logger LOG=Logger.getLogger(ActiveCollectionManagerAccessor.class.getName());
-    
-    private static ActiveCollectionManager _acManager=null;
-    
-    private static final Object SYNC=new Object();
     
     /**
      * The default constructor.
@@ -46,20 +42,8 @@ public final class ActiveCollectionManagerAccessor {
      * 
      * @param manager The manager
      */
-    protected static void setActiveCollectionManager(ActiveCollectionManager manager) {
-        synchronized (SYNC) {
-            if (_acManager != null) {
-                LOG.severe("Active collection manager already set");
-            }
-            
-            _acManager = manager;
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Set activity collection manager="+manager);
-            }
-            
-            SYNC.notifyAll();
-        }
+    public static void setActiveCollectionManager(ActiveCollectionManager manager) {
+        LOG.warning("Setting the active collection manager - no longer required");
     }
     
     /**
@@ -68,45 +52,12 @@ public final class ActiveCollectionManagerAccessor {
      * @return The active collection manager
      */
     public static ActiveCollectionManager getActiveCollectionManager() {
-        
-        // Avoid unnecessary sync once set (runs in 1/4 to 1/3 of the time)
-        if (_acManager == null) {
-            if (LOG.isLoggable(Level.FINEST)) {
-                LOG.finest("Wait for activity collection manager to be created ...");
-            }
-
-            synchronized (SYNC) {
-                if (_acManager == null) {
-                    try {
-                        SYNC.wait(getWaitTime());
-                    } catch (Exception e) {
-                        LOG.log(Level.SEVERE, "Failed to wait for ActiveCollectionManager to become available", e);
-                    }
-                    
-                    if (_acManager == null) {
-                        LOG.severe("ActiveCollectionManager is not available");
-                    }
-                }
-            }
-        }
+        ActiveCollectionManager ret=ServiceRegistryUtil.getSingleService(ActiveCollectionManager.class);
 
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Get activity collection manager="+_acManager);
+            LOG.finest("Get activity collection manager="+ret);
         }
 
-        return (_acManager);
-    }
-    
-    private static long getWaitTime() {
-        final String waitTimeVal = System.getProperty("org.overlord.ServiceWaitTime");
-        long waitTime = DEFAULT_WAIT_TIME;
-        if (waitTimeVal != null) {
-            try {
-                waitTime = Long.parseLong(waitTimeVal);
-            } catch (final NumberFormatException nfe) {
-                LOG.warning("Failed to parse ServiceWaitTime " + waitTimeVal + ", using default value of " + waitTime);
-            }
-        }
-        return waitTime;
+        return (ret);
     }
 }

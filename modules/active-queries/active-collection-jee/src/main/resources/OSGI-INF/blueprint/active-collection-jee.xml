@@ -9,10 +9,4 @@
     		class="org.overlord.rtgov.internal.active.collection.jee.JEEActiveCollectionManager"
         	init-method="init" destroy-method="close" />
 
-    <bean id="activeCollectionManagementMBean"
-    		class="org.overlord.rtgov.internal.active.collection.jee.ACManagement"
-    		init-method="init" destroy-method="close" >
-    	<property name="activeCollectionManager" ref="activeCollectionManager"/>
-    </bean>
-
 </blueprint>

@@ -20,9 +20,9 @@ package org.overlord.rtgov.active.collection.service;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
-import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.common.service.Service;
@@ -47,7 +47,7 @@ public class ActiveCollectionService extends Service {
         super.init();
         
         if (_activeCollectionManager == null) {
-            _activeCollectionManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+            _activeCollectionManager = ServiceRegistryUtil.getSingleService(ActiveCollectionManager.class);
         }
     }
     

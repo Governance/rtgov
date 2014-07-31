@@ -18,7 +18,25 @@
             <artifactId>rtgov-common</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.overlord</groupId>
+            <artifactId>overlord-commons-services</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
+<!-- GPB TEMP DEPENDENCY ON OSGI -->
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.core</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.compendium</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>

@@ -15,15 +15,9 @@
  */
 package org.overlord.rtgov.analytics.situation.store.osgi;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceEvent;
-import org.osgi.framework.ServiceListener;
-import org.osgi.framework.ServiceReference;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationStoreFactory;
 
@@ -33,57 +27,38 @@ import org.overlord.rtgov.analytics.situation.store.SituationStoreFactory;
  */
 public class Activator implements BundleActivator {
     
-    private static final Logger LOG=Logger.getLogger(Activator.class.getName());
-
+    private org.overlord.commons.services.ServiceListener<SituationStore> _listener;
+    
     /**
      * {@inheritDoc}
      */
-    public void start(final BundleContext context) throws Exception { 
-        ServiceListener sl = new ServiceListener() {
-            public void serviceChanged(ServiceEvent ev) {
-                ServiceReference sr = ev.getServiceReference();
-                switch(ev.getType()) {
-                case ServiceEvent.REGISTERED:
-                    register(context, sr);
-                    break;
-                default:
-                    break;
-                }
-            }           
+    public void start(final BundleContext context) throws Exception {
+        _listener = new org.overlord.commons.services.ServiceListener<SituationStore>() {
+
+            @Override
+            public void registered(SituationStore service) {
+                //SituationStoreFactory.initialize(service);
+            }
+
+            @Override
+            public void unregistered(SituationStore service) {
+                SituationStoreFactory.clear();
+            }
+            
         };
         
-        String filter = "(objectclass=" + SituationStore.class.getName() + ")";
-        try {
-            context.addServiceListener(sl, filter);
-        } catch (InvalidSyntaxException e) { 
-            LOG.log(Level.SEVERE, "Failed to add service listener for situation store", e);
-        }
-        
-        ServiceReference[] srefs=context.getServiceReferences(SituationStore.class.getName(), null);
-        
-        if (srefs != null) {
-            for (int i=0; i < srefs.length; i++) {
-                register(context, srefs[i]);
-            }
-        }        
+        ServiceRegistryUtil.addServiceListener(SituationStore.class, _listener);
     }
     
-    /**
-     * This method registers the situation store associated with the
-     * supplied service reference.
-     * 
-     * @param context The context
-     * @param actStoreRef The service ref
-     */
-    protected void register(final BundleContext context, ServiceReference actStoreRef) {
-        SituationStore sitStore=(SituationStore)context.getService(actStoreRef);            
-        SituationStoreFactory.initialize(sitStore);
-    }
-
     /**
      * {@inheritDoc}
      */
     public void stop(BundleContext context) throws Exception {
+        /*
+        if (_listener != null) {
+            ServiceRegistryUtil.removeServiceListener(_listener);
+        }
+        */
     }
 
 }

@@ -19,9 +19,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
-import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveCollectionVisibility;
 import org.overlord.rtgov.active.collection.QuerySpec;
 import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
@@ -47,6 +47,8 @@ public class RESTActiveCollectionServer {
 
     private ActiveCollectionManager _acmManager=null;
     
+    private org.overlord.commons.services.ServiceListener<ActiveCollectionManager> _listener;
+
     /**
      * This is the default constructor.
      */
@@ -58,13 +60,28 @@ public class RESTActiveCollectionServer {
      */
     @PostConstruct
     public void init() {
-        if (_acmManager == null) {
-            _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Active collection manager="+_acmManager);
+        _listener = new org.overlord.commons.services.ServiceListener<ActiveCollectionManager>() {
+
+            @Override
+            public void registered(ActiveCollectionManager service) {
+                _acmManager = service;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Active collection manager="+_acmManager);
+                }
             }
-        }
+
+            @Override
+            public void unregistered(ActiveCollectionManager service) {
+                _acmManager = null;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Unset active collection manager");
+                }
+            }
+        };
+        
+        ServiceRegistryUtil.addServiceListener(ActiveCollectionManager.class, _listener);
     }
     
     /**

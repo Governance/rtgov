@@ -20,16 +20,14 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.enterprise.inject.Any;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
+import org.overlord.commons.services.ServiceInit;
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
@@ -43,40 +41,59 @@ import org.overlord.rtgov.activity.server.QuerySpec;
  * This class represents the JEE implementation of the activity server.
  *
  */
-@Singleton
 public class JEEActivityServer implements ActivityServer {
 
     private static final Logger LOG=Logger.getLogger(JEEActivityServer.class.getName());
     
-    @Resource
     private UserTransaction _tx;
         
     private ActivityStore _store;
     
     private java.util.List<ActivityNotifier> _notifiers=new java.util.Vector<ActivityNotifier>();
     
-    private @Inject @Any Instance<ActivityNotifier> _injectedNotifiers=null;
-    
     /**
      * Initialize the activity server implementation.
      */
-    @PostConstruct
+    @ServiceInit
     public void init() {
         
         if (_store == null) {
             _store = ActivityStoreFactory.getActivityStore();
         }
         
-        if (_injectedNotifiers != null) {
-            for (ActivityNotifier notifier : _injectedNotifiers) {
-
+        if (_tx == null) {
+            try {
+                InitialContext context = new InitialContext();
+                _tx = (UserTransaction)context.lookup("java:comp/UserTransaction");
+                
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Injecting activity notifier="+notifier);
+                    LOG.fine("User transaction="+_tx);
+                }
+            } catch (NamingException e) {
+                LOG.log(Level.SEVERE, "Failed to get UserTransaction", e);
+            }
+        }
+        
+        ServiceRegistryUtil.addServiceListener(ActivityNotifier.class, new ServiceListener<ActivityNotifier>() {
+
+            @Override
+            public void registered(ActivityNotifier service) {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Adding activity notifier="+service);
                 }
                 
-                _notifiers.add(notifier);
+                _notifiers.add(service);
             }
-        }       
+
+            @Override
+            public void unregistered(ActivityNotifier service) {
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Removing activity notifier="+service);
+                }
+                
+                _notifiers.remove(service);                
+            }            
+        });
     }
     
     /**
@@ -91,18 +108,6 @@ public class JEEActivityServer implements ActivityServer {
             _store = ActivityStoreFactory.getActivityStore();
         }
         return (_store);
-    }
-    
-    /**
-     * Close the activity server implementation.
-     */
-    @PreDestroy
-    public void close() {
-        if (_injectedNotifiers != null) {
-            for (ActivityNotifier notifier : _injectedNotifiers) {
-                _notifiers.remove(notifier);
-            }
-        }       
     }
     
     /**
@@ -139,6 +144,24 @@ public class JEEActivityServer implements ActivityServer {
      */
     public void setActivityNotifiers(java.util.List<ActivityNotifier> notifiers) {
         _notifiers = notifiers;
+    }
+    
+    /**
+     * This method sets the user transaction.
+     * 
+     * @param tx The user transaction
+     */
+    public void setUserTransaction(UserTransaction tx) {
+        _tx = tx;
+    }
+    
+    /**
+     * This method gets the user transaction.
+     * 
+     * @return The user transaction
+     */
+    public UserTransaction getUserTransaction() {
+        return (_tx);
     }
     
     /**

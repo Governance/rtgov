@@ -18,9 +18,9 @@ package org.overlord.rtgov.service.dependency.rest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
-import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
@@ -70,7 +70,7 @@ public class RESTServiceDependencyServer {
         
         // Only access CDI if service not set, to support both OSGi and CDI
         if (_acmManager == null) {
-            _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+            _acmManager = ServiceRegistryUtil.getSingleService(ActiveCollectionManager.class);
                 
             if (_acmManager == null) {
                 LOG.severe(java.util.PropertyResourceBundle.getBundle(

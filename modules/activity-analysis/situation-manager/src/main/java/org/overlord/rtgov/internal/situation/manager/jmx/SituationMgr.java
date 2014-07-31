@@ -15,19 +15,10 @@
  */
 package org.overlord.rtgov.internal.situation.manager.jmx;
 
-import static javax.ejb.ConcurrencyManagementType.BEAN;
-
 import java.lang.management.ManagementFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.ejb.ConcurrencyManagement;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -39,10 +30,6 @@ import org.overlord.rtgov.situation.manager.SituationManager;
  * manager.
  *
  */
-@Singleton(name="SituationManager")
-@ApplicationScoped
-@Startup
-@ConcurrencyManagement(BEAN)
 @Deprecated
 public class SituationMgr implements SituationMgrMBean {
 
@@ -51,13 +38,20 @@ public class SituationMgr implements SituationMgrMBean {
 
     private static final Logger LOG=Logger.getLogger(SituationMgr.class.getName());
     
-    @Inject
     private SituationManager _situationManager=null;
+    
+    /**
+     * Constructor.
+     * 
+     * @param sm The situation manager
+     */
+    public SituationMgr(SituationManager sm) {
+        _situationManager = sm;
+    }
     
     /**
      * The initialize method.
      */
-    @PostConstruct
     public void init() {
         LOG.info("Register the Situation Manager MBean: "+_situationManager);
 
@@ -75,7 +69,6 @@ public class SituationMgr implements SituationMgrMBean {
     /**
      * {@inheritDoc}
      */
-    @PreDestroy
     public void close() throws Exception {
         LOG.info("Unregister the Situation Manager MBean");
 

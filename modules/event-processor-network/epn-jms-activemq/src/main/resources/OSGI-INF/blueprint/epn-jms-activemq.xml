@@ -2,18 +2,17 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
 
-    <service interface="org.overlord.rtgov.epn.EPNManager">
-    
-    	<!-- TODO: 'destroy-method' does not seem to be supported -->
-    	
-        <bean class="org.overlord.rtgov.epn.jms.JMSEPNManagerImpl" init-method="init" >
-        	<property name="connectionFactory" ref="connectionFactoryBean"/>
-        	<property name="eventsDestinationName" value="EPNEvents"/>
-        	<property name="notificationsDestinationName" value="EPNNotifications"/>
-        	<property name="initConsumers" value="true" />        	
-        </bean>
-    </service>
+    <service interface="org.overlord.rtgov.epn.EPNManager"
+    					ref="epnManagerBean" />
 
+    <bean id="epnManagerBean" class="org.overlord.rtgov.epn.jms.JMSEPNManagerImpl"
+    					init-method="init" destroy-method="close" >
+    	<property name="connectionFactory" ref="connectionFactoryBean"/>
+    	<property name="eventsDestinationName" value="EPNEvents"/>
+    	<property name="notificationsDestinationName" value="EPNNotifications"/>
+    	<property name="initConsumers" value="true" />        	
+    </bean>
+    
     <bean id="connectionFactoryBean"
                class="org.apache.activemq.ActiveMQConnectionFactory">
 		<argument value="vm://localhost"/>

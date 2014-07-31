@@ -18,10 +18,9 @@ package org.overlord.rtgov.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
@@ -40,17 +39,29 @@ public class DefaultActivityValidator implements ActivityValidator {
     /**
      * This method initializes the auditor.
      */
-    @PostConstruct
     protected void init() {
-        _activityCollector = ActivityCollectorAccessor.getActivityCollector();
+        ServiceRegistryUtil.addServiceListener(ActivityCollector.class, new ServiceListener<ActivityCollector>() {
+
+            @Override
+            public void registered(ActivityCollector service) {
+                _activityCollector = service;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Default Activity Validator collector="+_activityCollector);
+                }
+            }
+
+            @Override
+            public void unregistered(ActivityCollector service) {
+                _activityCollector = null;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Default Activity Validator collector unset");
+                }
+            }            
+        });
         
-        if (_activityCollector == null) {
-            LOG.severe("Unable to obtain activity collector from Client Manager");
-        }
-        
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("*********** Default Activity Validator initialized with collector="+_activityCollector);
-        }
+        _initialized = true;
     }
 
     /**
@@ -61,7 +72,13 @@ public class DefaultActivityValidator implements ActivityValidator {
             init();
         }
         
-        _activityCollector.validate(actType);
+        if (_activityCollector != null) {
+            _activityCollector.validate(actType);
+        } else {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Default Activity Validator unable to validate '"+actType+"' as not collector available");
+            }
+        }
     }
     
 }

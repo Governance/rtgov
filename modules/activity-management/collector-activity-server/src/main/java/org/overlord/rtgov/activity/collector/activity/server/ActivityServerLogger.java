@@ -20,16 +20,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.management.ListenerNotFoundException;
 import javax.management.MBeanNotificationInfo;
 import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.collector.BatchedActivityUnitLogger;
@@ -41,7 +40,6 @@ import org.overlord.rtgov.common.util.RTGovProperties;
  * configured activity server.
  *
  */
-@Singleton
 public class ActivityServerLogger extends BatchedActivityUnitLogger
             implements ActivityServerLoggerMBean, javax.management.NotificationEmitter {
 
@@ -64,7 +62,6 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
     private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _queue=null;    
     private java.util.concurrent.BlockingQueue<java.util.List<ActivityUnit>> _freeActivityLists=null;
 
-    @Inject
     private ActivityServer _activityServer=null;
     
     private java.util.List<ActivityUnit> _activities=null;
@@ -82,8 +79,14 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
     /**
      * This method initializes the Activity Server Logger.
      */
-    @PostConstruct
+    @ServiceInit
     public void init() {
+        
+        // Obtain the Activity Server
+        if (_activityServer == null) {
+            _activityServer = ServiceRegistryUtil.getSingleService(ActivityServer.class);
+        }
+        
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Initialize Logger for Activity Server (max threads "+_maxThreads+"): "+_activityServer);
         }
@@ -230,10 +233,10 @@ public class ActivityServerLogger extends BatchedActivityUnitLogger
     /**
      * This method closes the Activity Server Logger.
      */
-    @PreDestroy
+    @ServiceClose
     public void close() {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Close Logger for Activity Server: "+_activityServer);
+            LOG.fine("Close Logger for Activity Server");
         }
         super.close();
     }

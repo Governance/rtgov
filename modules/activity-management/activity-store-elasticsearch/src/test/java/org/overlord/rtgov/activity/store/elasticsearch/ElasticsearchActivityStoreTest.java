@@ -27,6 +27,7 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
@@ -37,6 +38,7 @@ import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.common.elasticsearch.ElasticsearchNode;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.common.util.RTGovPropertiesProvider;
+import org.overlord.rtgov.internal.common.elasticsearch.ElasticsearchNodeImpl;
 
 import java.util.Properties;
 
@@ -49,24 +51,29 @@ public class ElasticsearchActivityStoreTest {
     private static final String AU_ID_1 = "au1";
     private static final String CONV_ID_2 = "2";
     private static final String CONV_ID_1 = "1";
-    private static ElasticsearchActivityStore elasticsearchActivityStore;
+    private static ElasticsearchActivityStore _elasticsearchActivityStore;
 
+    private static ElasticsearchNodeImpl _node=null;
+    
     /**
      * elastic search index to test against
      */
-    private static String index = "rtgovtest";
+    private final static String INDEX = "rtgovtest";
+    
     /**
      * elastich search host
      */
-    private static String host = "embedded";
+    private final static String HOST = "embedded";
+    
     /**
      * elasticsearch port
      */
-    private static int port = 9300;
+    private final static int PORT = 9300;
+
     /**
      * elasticsearch type to test
      */
-    private static String type = "activity";
+    private final static String TYPE = "activity";
 
     public static class TestPropertiesProvider implements RTGovPropertiesProvider {
 
@@ -75,14 +82,12 @@ public class ElasticsearchActivityStoreTest {
         public TestPropertiesProvider() {
             System.setProperty("elasticsearch.config", "ElasticsearchActivityStoreTest-es.properties");
             _properties = new Properties();
-            _properties.setProperty("Elasticsearch.hosts", host + ":" + 9300);
+            _properties.setProperty("Elasticsearch.hosts", HOST + ":" + 9300);
             //_properties.setProperty("Elasticsearch.hosts", host);
             _properties.setProperty("Elasticsearch.schedule", "3000");
-            _properties.setProperty("ActivityStore.Elasticsearch.type", type);
-            _properties.setProperty("ActivityStore.Elasticsearch.index", index);
+            _properties.setProperty("ActivityStore.Elasticsearch.type", TYPE);
+            _properties.setProperty("ActivityStore.Elasticsearch.index", INDEX);
             _properties.setProperty("elasticsearch.config", "ElasticsearchActivityStoreTest-es.properties");
-
-
         }
 
         public String getProperty(String name) {
@@ -102,12 +107,20 @@ public class ElasticsearchActivityStoreTest {
     @AfterClass
     public static void tearDown() throws Exception {
         Client c = new TransportClient();
-        if (host.equals("embedded")) {
-            c = ElasticsearchNode.getInstance().getClient();
+        if (HOST.equals("embedded")) {
+            c = _node.getClient();
         } else {
-            c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
+            c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(HOST, PORT));
+        }        
+        c.admin().indices().prepareDelete(INDEX).execute().actionGet();
+        
+        if (_node != null) {
+            _node.close();
         }
-        c.admin().indices().prepareDelete(index).execute().actionGet();
+        
+        if (_elasticsearchActivityStore != null) {
+            _elasticsearchActivityStore.close();
+        }
     }
 
     /**
@@ -119,20 +132,23 @@ public class ElasticsearchActivityStoreTest {
     public static void initialiseStore() throws Exception {
         TestPropertiesProvider provider = new TestPropertiesProvider();
         Client c = null;
-        if (host.equals("embedded")) {
-            c = ElasticsearchNode.getInstance().getClient();
+        if (HOST.equals("embedded")) {
+            _node = (ElasticsearchNodeImpl)ServiceRegistryUtil.getSingleService(ElasticsearchNode.class);
+            _node.init();
+            c = _node.getClient();
         } else {
-            c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(host, port));
+            c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(HOST, PORT));
         }
         
         // remove index.
-        if (c.admin().indices().prepareExists(index).execute().actionGet().isExists()) {
-            c.admin().indices().prepareDelete(index).execute().actionGet();
+        if (c.admin().indices().prepareExists(INDEX).execute().actionGet().isExists()) {
+            c.admin().indices().prepareDelete(INDEX).execute().actionGet();
         }
         
         RTGovProperties.setPropertiesProvider(provider);
 
-        elasticsearchActivityStore = new ElasticsearchActivityStore();
+        _elasticsearchActivityStore = new ElasticsearchActivityStore();
+        _elasticsearchActivityStore.init();
     }
 
 
@@ -142,13 +158,13 @@ public class ElasticsearchActivityStoreTest {
         try {
             java.util.List<ActivityUnit> list=new java.util.ArrayList<ActivityUnit>();
             list.add(createTestActivityUnit(AU_ID_1, CONV_ID_1, ENDPOINT_ID_1, 0));
-            elasticsearchActivityStore.store(list);
+            _elasticsearchActivityStore.store(list);
         } catch (Exception e) {
 
             fail("Could not store Add activity unit " + e);
         }
         try {
-            ActivityUnit au = elasticsearchActivityStore.getActivityUnit(AU_ID_1);
+            ActivityUnit au = _elasticsearchActivityStore.getActivityUnit(AU_ID_1);
             if (au != null) {
                 if (!au.getId().equals(AU_ID_1))
                     fail("Activity unit reterive does not match activity unit stored. Could not get AU");
@@ -162,7 +178,7 @@ public class ElasticsearchActivityStoreTest {
         }
 
         try {
-            elasticsearchActivityStore.getClient().remove(AU_ID_1);
+            _elasticsearchActivityStore.getClient().remove(AU_ID_1);
         } catch (Exception e) {
             fail("Could not remove activity unit " + e);
         }
@@ -214,7 +230,7 @@ public class ElasticsearchActivityStoreTest {
         activities.add(au2);
 
         try {
-            elasticsearchActivityStore.store(activities);
+            _elasticsearchActivityStore.store(activities);
             
             // Delay to enable search index
             synchronized (this) {
@@ -226,8 +242,8 @@ public class ElasticsearchActivityStoreTest {
         }
 
         try {
-            ActivityUnit au1r = elasticsearchActivityStore.getActivityUnit(AU_ID_1);
-            ActivityUnit au2r = elasticsearchActivityStore.getActivityUnit(AU_ID_2);
+            ActivityUnit au1r = _elasticsearchActivityStore.getActivityUnit(AU_ID_1);
+            ActivityUnit au2r = _elasticsearchActivityStore.getActivityUnit(AU_ID_2);
             if (au1r != null) {
                 if (!au1r.getId().equals(AU_ID_1)) {
                     fail("Activity unit reterive does not match activity unit stored. Could not get AU");
@@ -257,8 +273,8 @@ public class ElasticsearchActivityStoreTest {
 
         }
         try {
-            elasticsearchActivityStore.getClient().remove(AU_ID_1);
-            elasticsearchActivityStore.getClient().remove(AU_ID_2);
+            _elasticsearchActivityStore.getClient().remove(AU_ID_1);
+            _elasticsearchActivityStore.getClient().remove(AU_ID_2);
         } catch (Exception e) {
             fail("Could not remove activity unit " + e);
         }
@@ -284,7 +300,7 @@ public class ElasticsearchActivityStoreTest {
         activities.add(au3);
         try {
             //store both ATs
-            elasticsearchActivityStore.store(activities);
+            _elasticsearchActivityStore.store(activities);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Could not  store activity units " + e);
@@ -296,7 +312,7 @@ public class ElasticsearchActivityStoreTest {
         context1.setValue("C1");
 
         try {
-            results1 = elasticsearchActivityStore.getActivityTypes(context1);
+            results1 = _elasticsearchActivityStore.getActivityTypes(context1);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Could not  get activity units " + e);
@@ -306,7 +322,7 @@ public class ElasticsearchActivityStoreTest {
         context2.setType(Context.Type.Conversation);
         context2.setValue("C1");
         try {
-            results2 = elasticsearchActivityStore.getActivityTypes(context2, 12500, 17500);
+            results2 = _elasticsearchActivityStore.getActivityTypes(context2, 12500, 17500);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Could not  get activity units " + e);
@@ -332,9 +348,9 @@ public class ElasticsearchActivityStoreTest {
             fail("Expecting au 8: " + results2.get(0).getUnitId());
         }
         try {
-            elasticsearchActivityStore.getClient().remove("7");
-            elasticsearchActivityStore.getClient().remove("8");
-            elasticsearchActivityStore.getClient().remove("9");
+            _elasticsearchActivityStore.getClient().remove("7");
+            _elasticsearchActivityStore.getClient().remove("8");
+            _elasticsearchActivityStore.getClient().remove("9");
         } catch (Exception e) {
             fail("Could not remove activity unit " + e);
         }
@@ -360,7 +376,7 @@ public class ElasticsearchActivityStoreTest {
         activities.add(au3);
         try {
             //store both ATs
-            elasticsearchActivityStore.store(activities);
+            _elasticsearchActivityStore.store(activities);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Could not  store activity units " + e);
@@ -368,7 +384,7 @@ public class ElasticsearchActivityStoreTest {
         }
 
         try {
-            results1 = elasticsearchActivityStore.getActivityTypes(null, 32500, 37500);
+            results1 = _elasticsearchActivityStore.getActivityTypes(null, 32500, 37500);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Could not  get activity units " + e);
@@ -383,9 +399,9 @@ public class ElasticsearchActivityStoreTest {
         }
 
         try {
-            elasticsearchActivityStore.getClient().remove("7");
-            elasticsearchActivityStore.getClient().remove("8");
-            elasticsearchActivityStore.getClient().remove("9");
+            _elasticsearchActivityStore.getClient().remove("7");
+            _elasticsearchActivityStore.getClient().remove("8");
+            _elasticsearchActivityStore.getClient().remove("9");
         } catch (Exception e) {
             fail("Could not remove activity unit " + e);
         }
@@ -394,7 +410,7 @@ public class ElasticsearchActivityStoreTest {
     @Test
     public void testGetActivityTypesWithNoContextAndNoTimeframe() {
         try {
-            elasticsearchActivityStore.getActivityTypes(null, 0, 0);
+            _elasticsearchActivityStore.getActivityTypes(null, 0, 0);
             
             fail("Should have reported exception");
         } catch (Exception e) {

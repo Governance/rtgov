@@ -24,6 +24,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
@@ -66,6 +68,13 @@ public class ElasticsearchActivityStore implements ActivityStore {
      * The default constructor.
      */
     public ElasticsearchActivityStore() {
+    }
+    
+    /**
+     * Initialize the situation store.
+     */
+    @ServiceInit
+    public void init() {
         _client.setIndex(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_INDEX, "rtgov"));
         _client.setType(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_TYPE, "activity"));
         
@@ -320,5 +329,16 @@ public class ElasticsearchActivityStore implements ActivityStore {
      */
     protected ElasticsearchClient getClient() {
         return (_client);
+    }
+    
+    /**
+     * Close the situation store.
+     */
+    @ServiceClose
+    public void close() {
+        if (_client != null) {
+            _client.close();
+            _client = null;
+        }
     }
 }

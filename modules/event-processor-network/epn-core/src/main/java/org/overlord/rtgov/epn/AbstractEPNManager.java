@@ -48,9 +48,12 @@ public abstract class AbstractEPNManager implements EPNManager {
      * This is the default constructor.
      */
     public AbstractEPNManager() {
-        // Register this EPNManager with the factory
-        EPNManagerAccessor.setEPNManager(this);
-        
+    }
+    
+    /**
+     * Initialize the EPNManager.
+     */
+    public void init() {
         // Check if managed
         if (isManaged()) {
             _epnManagement = new EPNManagement(this);

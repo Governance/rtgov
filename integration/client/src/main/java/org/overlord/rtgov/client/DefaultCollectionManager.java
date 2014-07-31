@@ -18,11 +18,10 @@ package org.overlord.rtgov.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
-import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.ActiveMap;
 
@@ -38,18 +37,27 @@ public class DefaultCollectionManager implements CollectionManager {
     
     private boolean _initialized=false;
 
-    @PostConstruct
     protected void init() {
-        _activeCollectionManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
-        
-        if (_activeCollectionManager == null) {
-            LOG.severe("Failed to initialize active collection manager");
-        }
-        
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("*********** DefaultCollectionManager Initialized with acm="
-                        +_activeCollectionManager);
-        }
+        ServiceRegistryUtil.addServiceListener(ActiveCollectionManager.class, new ServiceListener<ActiveCollectionManager>() {
+
+            @Override
+            public void registered(ActiveCollectionManager service) {
+                _activeCollectionManager = service;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Default Collection Manager ="+_activeCollectionManager);
+                }
+            }
+
+            @Override
+            public void unregistered(ActiveCollectionManager service) {
+                _activeCollectionManager = null;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Default Collection Manager unset");
+                }
+            }            
+        });
         
         _initialized = true;
     }
