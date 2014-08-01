@@ -46,6 +46,19 @@
     
 	<dependencySets>
 
+        <dependencySet>
+              <outputDirectory>lib</outputDirectory>
+	      <includes>    
+		<include>commons-codec:commons-codec:jar</include>
+	      </includes>
+	      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+	      <useProjectArtifact>false</useProjectArtifact>
+	      <useProjectAttachments>false</useProjectAttachments>
+	      <useTransitiveDependencies>false</useTransitiveDependencies>
+	      <useTransitiveFiltering>false</useTransitiveFiltering>
+	      <directoryMode>0755</directoryMode>
+	      <fileMode>0755</fileMode>
+        </dependencySet>
         <!-- Documentation -->
         <dependencySet>
             <outputDirectory>docs/developerguide</outputDirectory>

@@ -8,15 +8,16 @@
 				dir="${overlord-commons.path}" >
 			<property name="overlord-commons.appserver.dir" location="${path}" />
 			<property name="overlord-commons.idp.file" value="${overlord-commons.path}/overlord-commons-idp-eap6.war" />
-            <property name="overlord-commons.eap-dist.file" value="${overlord-commons.path}/overlord-commons-dist-eap6.zip" />
+            		<property name="overlord-commons.eap-dist.file" value="${overlord-commons.path}/overlord-commons-dist-eap6.zip" />
 			<property name="overlord-commons.services.file" value="${overlord-commons.path}/overlord-commons-services.jar" />
 			<property name="overlord-commons.auth.file" value="${overlord-commons.path}/overlord-commons-auth.jar" />
 			<property name="overlord-commons.auth.jboss7.file" value="${overlord-commons.path}/overlord-commons-auth-jboss7.jar" />
 			<property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.path}/overlord-commons-auth-tomcat7.jar" />
-		    <property name="overlord-commons.ant.jar" value="${overlord-commons.path}/overlord-commons-ant.jar" />
+		    	<property name="overlord-commons.ant.jar" value="${overlord-commons.path}/overlord-commons-ant.jar" />
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
-			<property name="version.org.overlord.overlord-commons" value="2.0.6.Final" />
+			<property name="version.org.overlord.overlord-commons" value="2.0.7-SNAPSHOT" />
 			
+			<property name="commons-codec.jar" location="../../../lib/commons-codec.jar" />   		
 		</ant>
 
 		<!-- Install Runtime Governance -->
