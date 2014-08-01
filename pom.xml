@@ -65,28 +65,28 @@
 	</developers>
 
 	<properties>
-		<cal10n-api.version>0.7.4</cal10n-api.version>
-		<commons.lang3.version>3.1</commons.lang3.version>
-		<drools.version>6.1.0.Beta4</drools.version>
-		<elasticsearch.version>1.1.0</elasticsearch.version>
-        <enunciate.version>1.28</enunciate.version>
-		<errai.version>2.4.3.Final</errai.version>
-		<felix.version>2.3.7</felix.version>
-		<javaee-api.version>6.0</javaee-api.version>
-		<jboss-ejb3-api.version>3.1.0</jboss-ejb3-api.version>
-		<jboss-javaee.version>1.0.0.Final</jboss-javaee.version>
-        <jetty.version>6.1.25</jetty.version>
-		<jnp-client.version>5.0.3.GA</jnp-client.version>
-		<jsp-api.version>2.0</jsp-api.version>
-		<kie.version>6.1.0.Beta4</kie.version>
-        <lucene.version>4.7.2</lucene.version> <!-- Required to override parent bom version -->
-        <remoting-jmx>1.1.0.Final</remoting-jmx>
-		<rtgov-docs.version>2.0.0-SNAPSHOT</rtgov-docs.version>
-		<overlord-commons.version>2.0.6.Final</overlord-commons.version>
-		<picketbox.version>4.0.19.SP4</picketbox.version>
-		<picketlink.version>2.5.3.SP4</picketlink.version>
-		<servlet-api.version>3.0.1</servlet-api.version>
-		<switchyard.version>2.0.0.Alpha2</switchyard.version>
+		<version.ch.qos.cal10n>0.7.4</version.ch.qos.cal10n>
+		<version.org.apache.commons.commons-lang3>3.1</version.org.apache.commons.commons-lang3>
+		<version.org.drools>6.1.0.Beta4</version.org.drools>
+		<version.org.elasticsearch>1.1.0</version.org.elasticsearch>
+        <version.org.codehaus.enunciate>1.28</version.org.codehaus.enunciate>
+		<version.org.jboss.errai>2.4.3.Final</version.org.jboss.errai>
+		<version.org.apache.felix>2.3.7</version.org.apache.felix>
+		<version.javax.javaee-api>6.0</version.javax.javaee-api>
+		<version.org.jboss.ejb3>3.1.0</version.org.jboss.ejb3>
+		<version.org.jboss.spec.jboss-javaee-6.0>1.0.0.Final</version.org.jboss.spec.jboss-javaee-6.0>
+        <version.org.eclipse.jetty>6.1.25</version.org.eclipse.jetty>
+		<version.org.jboss.naming>5.0.3.GA</version.org.jboss.naming>
+		<version.javax.servlet.jsp-api>2.0</version.javax.servlet.jsp-api>
+		<version.org.kie>6.1.0.Beta4</version.org.kie>
+        <version.org.apache.lucene>4.7.2</version.org.apache.lucene> <!-- Required to override parent bom version -->
+        <version.org.jboss.remotingjmx>1.1.0.Final</version.org.jboss.remotingjmx>
+		<version.org.overlord.rtgov.docs>2.0.0-SNAPSHOT</version.org.overlord.rtgov.docs>
+		<version.org.overlord.overlord-commons>2.0.6.Final</version.org.overlord.overlord-commons>
+		<version.org.picketbox>4.0.19.SP4</version.org.picketbox>
+		<version.org.picketlink>2.5.3.SP4</version.org.picketlink>
+		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>
+		<version.org.switchyard>2.0.0.Alpha2</version.org.switchyard>
 
 		<version.org.jboss.msc.jboss-msc>1.0.4.GA</version.org.jboss.msc.jboss-msc>
 
@@ -666,386 +666,386 @@
 			    <groupId>org.overlord.rtgov.docs</groupId>
 			    <artifactId>rtgov-developerguide</artifactId>
                 <type>jdocbook</type>
-			    <version>${rtgov-docs.version}</version>
+			    <version>${version.org.overlord.rtgov.docs}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
 			    <artifactId>rtgov-userguide</artifactId>
                 <type>jdocbook</type>
-			    <version>${rtgov-docs.version}</version>
+			    <version>${version.org.overlord.rtgov.docs}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
 			    <artifactId>rtgov-javadoc</artifactId>
                 <type>javadoc</type>
-			    <version>${rtgov-docs.version}</version>
+			    <version>${version.org.overlord.rtgov.docs}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
 			    <artifactId>rtgov-restapi</artifactId>
                 <type>zip</type>
-			    <version>${rtgov-docs.version}</version>
+			    <version>${version.org.overlord.rtgov.docs}</version>
 		    </dependency>
 
 			<!-- Other dependencies -->
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-ant</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
             <dependency>
                 <groupId>org.overlord</groupId>
                 <artifactId>overlord-commons-installer</artifactId>
-                <version>${overlord-commons.version}</version>
+                <version>${version.org.overlord.overlord-commons}</version>
             </dependency>
             <dependency>
                 <groupId>org.overlord</groupId>
                 <artifactId>overlord-commons-dist-eap6</artifactId>
-                <version>${overlord-commons.version}</version>
+                <version>${version.org.overlord.overlord-commons}</version>
                 <type>zip</type>
             </dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-idp-eap6</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 				<type>war</type>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-services</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-osgi</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth-jboss7</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth-jetty8</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth-tomcat7</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-config</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-osgi</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-osgi-weld</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-errai-fuse-support</artifactId>
-				<version>${overlord-commons.version}</version>
+				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
             <dependency>
                 <groupId>org.overlord</groupId>
                 <artifactId>overlord-commons-dev</artifactId>
-                <version>${overlord-commons.version}</version>
+                <version>${version.org.overlord.overlord-commons}</version>
             </dependency>
             <dependency>
                 <groupId>org.overlord</groupId>
                 <artifactId>overlord-commons-gwt</artifactId>
-                <version>${overlord-commons.version}</version>
+                <version>${version.org.overlord.overlord-commons}</version>
             </dependency>
             <dependency>
                 <groupId>org.overlord</groupId>
                 <artifactId>overlord-commons-uiheader</artifactId>
-                <version>${overlord-commons.version}</version>
+                <version>${version.org.overlord.overlord-commons}</version>
             </dependency>
 
 			<dependency>
 				<groupId>javax</groupId>
 				<artifactId>javaee-api</artifactId>
-				<version>${javaee-api.version}</version>
+				<version>${version.javax.javaee-api}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.spec</groupId>
 				<artifactId>jboss-javaee-6.0</artifactId>
-				<version>${jboss-javaee.version}</version>
+				<version>${version.org.jboss.spec.jboss-javaee-6.0}</version>
 				<type>pom</type>
 			</dependency>
 
 			<dependency>
 				<groupId>org.kie</groupId>
 				<artifactId>kie-api</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie</groupId>
 				<artifactId>kie-ci</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie</groupId>
 				<artifactId>kie-internal</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-commons-cdi</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-commons-data</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-commons-io</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-commons-regex</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-commons-validation</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-nio2-api</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-nio2-fs</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-nio2-jgit</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.kie.commons</groupId>
 				<artifactId>kie-nio2-model</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-core</artifactId>
-				<version>${drools.version}</version>
+				<version>${version.org.drools}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-compiler</artifactId>
-				<version>${drools.version}</version>
+				<version>${version.org.drools}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-decisiontables</artifactId>
-				<version>${drools.version}</version>
+				<version>${version.org.drools}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-persistence-jpa</artifactId>
-				<version>${drools.version}</version>
+				<version>${version.org.drools}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-templates</artifactId>
-				<version>${drools.version}</version>
+				<version>${version.org.drools}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-api</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-plugin</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-bus-camel</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-extensions-java</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-extensions-wsdl</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard.components</groupId>
 				<artifactId>switchyard-component-bean</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard.components</groupId>
 				<artifactId>switchyard-component-bpel</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard.components</groupId>
 				<artifactId>switchyard-component-bpm</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard.components</groupId>
 				<artifactId>switchyard-component-soap</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-remote</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-serial</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-test</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 			</dependency>
 
 		    <dependency>
 			    <groupId>org.switchyard.quickstarts.demos</groupId>
 			    <artifactId>switchyard-demo-multiApp-artifacts</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.switchyard.quickstarts.demos</groupId>
 			    <artifactId>switchyard-demo-multiApp-order-consumer</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.switchyard.quickstarts.demos</groupId>
 			    <artifactId>switchyard-demo-multiApp-order-service</artifactId>
-				<version>${switchyard.version}</version>
+				<version>${version.org.switchyard}</version>
 		    </dependency>
 
 			<dependency>
 				<groupId>org.jboss.naming</groupId>
 				<artifactId>jnp-client</artifactId>
-				<version>${jnp-client.version}</version>
+				<version>${version.org.jboss.naming}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.picketbox</groupId>
 				<artifactId>picketbox</artifactId>
-				<version>${picketbox.version}</version>
+				<version>${version.org.picketbox}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink-federation</artifactId>
-				<version>${picketlink.version}</version>
+				<version>${version.org.picketlink}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.elasticsearch</groupId>
 				<artifactId>elasticsearch</artifactId>
-				<version>${elasticsearch.version}</version>
+				<version>${version.org.elasticsearch}</version>
 			</dependency>
 
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-core</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-analyzers-common</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-codecs</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-queries</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-memory</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-highlighter</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-queryparser</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-sandbox</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-suggest</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-misc</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-join</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-grouping</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-spatial</artifactId>
-                <version>${lucene.version}</version>
+                <version>${version.org.apache.lucene}</version>
             </dependency>
 
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
-				<version>${servlet-api.version}</version>
+				<version>${version.javax.servlet.javax.servlet-api}</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
@@ -1057,63 +1057,63 @@
 				<groupId>org.jboss.ejb3</groupId>
 				<artifactId>jboss-ejb3-api</artifactId>
 				<scope>provided</scope>
-				<version>${jboss-ejb3-api.version}</version>
+				<version>${version.org.jboss.ejb3}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
-				<version>${commons.lang3.version}</version>
+				<version>${version.org.apache.commons.commons-lang3}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>jsp-api</artifactId>
-				<version>${jsp-api.version}</version>
+				<version>${version.javax.servlet.jsp-api}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.jboss.errai</groupId>
 				<artifactId>errai-tools</artifactId>
-				<version>${errai.version}</version>
+				<version>${version.org.jboss.errai}</version>
 			</dependency>
 
             <dependency>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty</artifactId>
-				<version>${jetty.version}</version>
+				<version>${version.org.eclipse.jetty}</version>
             </dependency>
             <dependency>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-util</artifactId>
-				<version>${jetty.version}</version>
+				<version>${version.org.eclipse.jetty}</version>
             </dependency>
 
             <dependency>
 				<groupId>org.jboss.remotingjmx</groupId>
 				<artifactId>remoting-jmx</artifactId>
-				<version>${remoting-jmx}</version>
+				<version>${version.org.jboss.remotingjmx}</version>
             </dependency>
 
 			<dependency>
 				<groupId>ch.qos.cal10n</groupId>
 				<artifactId>cal10n-api</artifactId>
-				<version>${cal10n-api.version}</version>
+				<version>${version.ch.qos.cal10n}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.kie</groupId>
 				<artifactId>kie-eap-distributions-bpms-layer</artifactId>
-				<version>${kie.version}</version>
+				<version>${version.org.kie}</version>
 				<type>zip</type>
 			</dependency>
 
 		    <dependency>
 			    <groupId>org.codehaus.enunciate</groupId>
 			    <artifactId>enunciate-core</artifactId>
-				<version>${enunciate.version}</version>
+				<version>${version.org.codehaus.enunciate}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.codehaus.enunciate</groupId>
 			    <artifactId>enunciate-core-annotations</artifactId>
-				<version>${enunciate.version}</version>
+				<version>${version.org.codehaus.enunciate}</version>
 		    </dependency>
 
 		</dependencies>
@@ -1131,12 +1131,12 @@
 				<plugin>
 					<groupId>org.switchyard</groupId>
 					<artifactId>switchyard-plugin</artifactId>
-					<version>${switchyard.version}</version>
+					<version>${version.org.switchyard}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
-					<version>${felix.version}</version>
+					<version>${version.org.apache.felix}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -1170,7 +1170,7 @@
 			<plugin>
 				<groupId>org.switchyard</groupId>
 				<artifactId>switchyard-plugin</artifactId>
-                <version>${switchyard.version}</version>
+                <version>${version.org.switchyard}</version>
 			</plugin>
 			<!-- Specify the compiler options and settings -->
 			<plugin>
@@ -1220,7 +1220,7 @@
 					<dependency>
 						<groupId>org.overlord</groupId>
 						<artifactId>overlord-commons-build</artifactId>
-						<version>${overlord-commons.version}</version>
+						<version>${version.org.overlord.overlord-commons}</version>
 					</dependency>
 				</dependencies>
 				<executions>

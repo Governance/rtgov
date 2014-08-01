@@ -125,8 +125,8 @@
 							<value>${version.commons-configuration}</value>
 						</property>
 						<property>
-							<name>overlord-commons.version</name>
-							<value>${overlord-commons.version}</value>
+							<name>version.org.overlord.overlord-commons</name>
+							<value>${version.org.overlord.overlord-commons}</value>
 						</property>
 					</systemProperties>
 					<includes>

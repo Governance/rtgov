@@ -97,8 +97,8 @@
 							<value>${rtgov.version}</value>
 						</property>
 						<property>
-							<name>switchyard.version</name>
-							<value>${switchyard.version}</value>
+							<name>version.org.switchyard</name>
+							<value>${version.org.switchyard}</value>
 						</property>
 <!--
 						<property>
@@ -106,8 +106,8 @@
 							<value>${version.org.codehaus.jackson}</value>
 						</property>
 						<property>
-							<name>overlord-commons.version</name>
-							<value>${overlord-commons.version}</value>
+							<name>version.org.overlord.overlord-commons</name>
+							<value>${version.org.overlord.overlord-commons}</value>
 						</property>
 						<property>
 							<name>commons-configuration.version</name>
