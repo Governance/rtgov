@@ -497,6 +497,13 @@
             </dependency>
 
 		    <dependency>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-distribution-assembly</artifactId>
+                <version>${project.version}</version>
+			    <type>zip</type>
+		    </dependency>
+
+		    <dependency>
 			    <groupId>org.overlord.rtgov.samples.jbossas.ordermgmt</groupId>
 			    <artifactId>samples-jbossas-ordermgmt-app</artifactId>
                 <version>${project.version}</version>
