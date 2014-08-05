@@ -1,0 +1,63 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>tests-with-rtgov</artifactId>
+	<packaging>pom</packaging>
+	<name>Overlord RTGov::Tests::With RTGov</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov.tests</groupId>
+		<artifactId>parent</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>activity_server</module>
+		<module>calltrace</module>
+		<module>custom_events</module>
+		<module>policy_async</module>
+		<module>policy_sync</module>
+		<module>service_dependency</module>
+		<module>situation_manager</module>
+		<module>sla_monitor</module>
+	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-distribution-assembly</artifactId>
+			<type>zip</type>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+                <inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>compile</id>
+						<phase>compile</phase>
+						<configuration>
+							<target>
+								<property name="eap.dist" value="${env.EAP_DIST}"/>
+								<property name="switchyard.dist" value="${env.SWITCHYARD_DIST}"/>
+								<property name="path" value="${env.JBOSS_HOME}"/>
+								<property name="rtgov.version" value="${project.version}"/>
+								<ant antfile="${basedir}/build.xml" target="install" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+

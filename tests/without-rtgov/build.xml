@@ -1,0 +1,19 @@
+<project default="install" name="rtgovtests" >
+
+	<target name="install" >
+        <echo message="Remove existing EAP environment" />
+        <delete dir="${path}" />
+
+        <echo message="Setup EAP environment" />
+        <unzip src="${eap.dist}" dest="${path}/.." />
+
+        <echo message="Install Switchyard (${switchyard.dist}) into EAP (${eap.dist})" />
+        <unzip src="${switchyard.dist}" dest="${path}" />
+
+        <ant antfile="${path}/switchyard-installer-2.0/build.xml" dir="${path}/switchyard-installer-2.0" >
+            <property name="EAP_PATH_CHECK" value="${path}"/>
+            <property name="EAP_PATH" value="${path}"/>
+        </ant>
+    </target>
+
+</project>

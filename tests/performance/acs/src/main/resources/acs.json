@@ -1,8 +1,0 @@
-[
-  {
-    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
-    "name" : "ResponseTimesProcessed",
-    "type" : "List",
-    "subject" : "ResponseTimesProcessed"
-  }
-]
