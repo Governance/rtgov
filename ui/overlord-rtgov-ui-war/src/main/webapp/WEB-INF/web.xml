@@ -22,6 +22,10 @@
     <filter-name>GWTCacheControl</filter-name>
     <url-pattern>/app/*</url-pattern>
   </filter-mapping>
+  <filter-mapping>
+    <filter-name>GWTCacheControl</filter-name>
+    <url-pattern>*.html</url-pattern>
+  </filter-mapping>
 
   <filter>
     <filter-name>ResourceCacheControl</filter-name>
@@ -38,10 +42,6 @@
   <filter-mapping>
     <filter-name>ResourceCacheControl</filter-name>
     <url-pattern>/js/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>ResourceCacheControl</filter-name>
-    <url-pattern>*.html</url-pattern>
   </filter-mapping>
 
   <filter>
