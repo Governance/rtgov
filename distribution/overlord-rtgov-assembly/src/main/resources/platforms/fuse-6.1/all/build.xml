@@ -15,7 +15,7 @@
 			<property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.path}/overlord-commons-auth-tomcat7.jar" />
 		    	<property name="overlord-commons.ant.jar" value="${overlord-commons.path}/overlord-commons-ant.jar" />
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
-			<property name="version.org.overlord.overlord-commons" value="2.0.7-SNAPSHOT" />
+			<property name="version.org.overlord.overlord-commons" value="2.0.8-SNAPSHOT" />
 			<property name="overlord-commons.codec.jar" value="${overlord-commons.path}/overlord-commons-codec.jar" />
 			<property name="commons-codec.jar" location="../../../lib/commons-codec.jar" />   		
 		</ant>
