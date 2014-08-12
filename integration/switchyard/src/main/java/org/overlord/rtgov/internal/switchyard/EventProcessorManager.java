@@ -30,8 +30,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 
 /**
  * This class is responsible for registering the configured set of
@@ -93,7 +94,26 @@ public class EventProcessorManager {
                 LOG.fine("SwitchYard EventProcessorManager retrieving activity collector");
             }
 
-            _activityCollector = ActivityCollectorAccessor.getActivityCollector();
+            ServiceRegistryUtil.addServiceListener(ActivityCollector.class, new ServiceListener<ActivityCollector>() {
+
+                @Override
+                public void registered(ActivityCollector service) {
+                    _activityCollector = service;
+                    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Event processor manager: collector="+_activityCollector);
+                    }
+                }
+
+                @Override
+                public void unregistered(ActivityCollector service) {
+                    _activityCollector = null;
+                    
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Event processor manager: collector unset");
+                    }
+                }            
+            });
         }
         
         if (LOG.isLoggable(Level.FINE)) {

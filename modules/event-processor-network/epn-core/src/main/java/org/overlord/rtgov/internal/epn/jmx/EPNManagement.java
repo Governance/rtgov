@@ -20,8 +20,6 @@ import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -57,7 +55,6 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
     /**
      * The initialize method.
      */
-    @PostConstruct
     public void init() {
         LOG.info("Register the EPNManagement MBean: "+_epnManager);
         
@@ -65,6 +62,10 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             ObjectName objname=new ObjectName(OBJECT_NAME_DOMAIN+OBJECT_NAME_MANAGER);
             
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Register EPNManagement mbean="+objname);
+            }
+
             mbs.registerMBean(this, objname); 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
@@ -77,7 +78,6 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
     /**
      * {@inheritDoc}
      */
-    @PreDestroy
     public void close() throws Exception {
         LOG.info("Unregister the EPNManagement MBean");
 
@@ -93,10 +93,14 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             ObjectName objname=new ObjectName(OBJECT_NAME_DOMAIN+OBJECT_NAME_MANAGER);
             
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Unregister EPNManagement mbean="+objname);
+            }
+
             mbs.unregisterMBean(objname); 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "epn-container-jee.Messages").getString("EPN-CORE-16"), e);
+                    "epn-core.Messages").getString("EPN-CORE-16"), e);
         }
     }
 
@@ -105,13 +109,18 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
      */
     public void registered(Network network) {
         try {
-            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();             
+            ObjectName objname=getObjectName(network);
             
-            mbs.registerMBean(network, getObjectName(network)); 
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Register EPN mbean="+objname);
+            }
+
+            mbs.registerMBean(network, objname); 
         } catch (Exception e) {
             LOG.log(Level.SEVERE, MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
-                    "epn-container-jee.Messages").getString("EPN-CORE-17"),
+                    "epn-core.Messages").getString("EPN-CORE-17"),
                     network.getName(), network.getVersion()), e);
         }   
         
@@ -137,13 +146,18 @@ public class EPNManagement extends javax.management.NotificationBroadcasterSuppo
     public void unregistered(Network network) {
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
+            ObjectName objname=getObjectName(network);
             
-            mbs.unregisterMBean(getObjectName(network)); 
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Unregister EPN mbean="+objname);
+            }
+            
+            mbs.unregisterMBean(objname); 
         } catch (Throwable t) {
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.log(Level.FINER, MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
-                    "epn-container-jee.Messages").getString("EPN-CORE-18"),
+                    "epn-core.Messages").getString("EPN-CORE-18"),
                     network.getName(), network.getVersion()), t);
             }
         }

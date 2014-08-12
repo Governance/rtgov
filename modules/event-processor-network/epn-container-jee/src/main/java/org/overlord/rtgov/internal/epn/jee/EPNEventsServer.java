@@ -23,13 +23,14 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
+import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.jms.JMSEPNManager;
 
-
+import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,7 +51,6 @@ public class EPNEventsServer implements MessageListener {
 
     private static final Logger LOG=Logger.getLogger(EPNEventsServer.class.getName());
     
-    @Inject
     private JMSEPNManager _epnManager;
     
     /**
@@ -63,7 +63,16 @@ public class EPNEventsServer implements MessageListener {
      * The initialize method.
      */
     @PostConstruct
-    public void init() {
+    public void init() {       
+        EPNManager epnManager=ServiceRegistryUtil.getSingleService(EPNManager.class);
+        
+        if (epnManager instanceof JMSEPNManager) {
+            _epnManager = (JMSEPNManager)epnManager;
+        } else {
+            LOG.severe(MessageFormat.format(java.util.PropertyResourceBundle.getBundle(
+                    "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-7"), epnManager));
+        }
+        
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Initialize EPN Events Server with EPN Manager="+_epnManager);
         }
@@ -92,7 +101,7 @@ public class EPNEventsServer implements MessageListener {
                 _epnManager.handleEventsMessage(message);
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                        "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-5"), e);
+                        "epn-container-jee.Messages").getString("EPN-CONTAINER-JEE-1"), e);
             }
         }
     }

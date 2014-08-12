@@ -18,6 +18,7 @@ package org.overlord.rtgov.analytics.situation.store;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**
@@ -39,36 +40,10 @@ public final class SituationStoreFactory {
     }
     
     /**
-     * This method initializes the situation store. If a class name has been
-     * defined in configuration, then the supplied class must match the type,
-     * otherwise it will be ignored. This method is primarily used for testing,
-     * or where classloading is not possible (i.e. OSGi).
-     * 
-     * @param store The store
+     * This method resets the factory.
      */
-    public static synchronized void initialize(SituationStore store) {
-        
-        // Only initialize if no instance available
-        if (_instance != null) {
-            return;
-        }
-        
-        String clsName=(String)RTGovProperties.getProperties().get(SITUATION_STORE_CLASS);
-        
-        // Verify the instance is of the correct class
-        if (clsName == null || store.getClass().getName().equals(clsName)) {
-            
-            _instance = store;
-            
-            if (LOG.isLoggable(Level.FINER)) {
-                LOG.finer("Initialize situation store instance="+_instance);
-            }
-            
-        } else if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("Ignoring situation store initialization due to incorrect type ["
-                            +store.getClass().getName()+"], expecting ["
-                            +clsName+"]");
-        }
+    public static void clear() {
+        _instance = null;
     }
     
     /**
@@ -78,22 +53,20 @@ public final class SituationStoreFactory {
      */
     public static synchronized SituationStore getSituationStore() {
         if (_instance == null) {
-            try {
-                String clsName=(String)RTGovProperties.getProperties().get(SITUATION_STORE_CLASS);
-                
-                if (clsName != null) {
-                    try {
-                        @SuppressWarnings("unchecked")
-                        Class<SituationStore> cls=(Class<SituationStore>)
-                                Thread.currentThread().getContextClassLoader().loadClass(clsName);
-                        
-                        _instance = (SituationStore)cls.newInstance();
-                    } catch (Throwable t) {
-                        LOG.log(Level.FINEST, "Failed to find situation store class '"+clsName+"'", t);
-                    }
+            java.util.Set<SituationStore> services=ServiceRegistryUtil.getServices(SituationStore.class);
+            String clsName=(String)RTGovProperties.getProperties().get(SITUATION_STORE_CLASS);
+            
+            for (SituationStore sits : services) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Checking situation store impl="+sits);
                 }
-            } catch (Throwable t) {
-                LOG.log(Level.FINEST, "Failed to get situation store class property", t);
+                if (sits.getClass().getName().equals(clsName)) {
+                    _instance = sits;
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Found situation store impl="+sits);
+                    }
+                    break;
+                }
             }
         }
         

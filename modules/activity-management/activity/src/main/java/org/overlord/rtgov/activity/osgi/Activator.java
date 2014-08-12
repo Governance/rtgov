@@ -15,75 +15,48 @@
  */
 package org.overlord.rtgov.activity.osgi;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceEvent;
-import org.osgi.framework.ServiceListener;
-import org.osgi.framework.ServiceReference;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.server.ActivityStoreFactory;
 
 /**
- * This class provides the activator capability for the activity bundle.
+ * This class provides the activator capability for the analytics bundle.
  *
  */
 public class Activator implements BundleActivator {
     
-    private static final Logger LOG=Logger.getLogger(Activator.class.getName());
-
+    private org.overlord.commons.services.ServiceListener<ActivityStore> _listener;
+    
     /**
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        ServiceListener sl = new ServiceListener() {
-            public void serviceChanged(ServiceEvent ev) {
-                ServiceReference sr = ev.getServiceReference();
-                switch(ev.getType()) {
-                case ServiceEvent.REGISTERED:
-                    register(context, sr);
-                    break;
-                default:
-                    break;
-                }
-            }           
+        _listener = new org.overlord.commons.services.ServiceListener<ActivityStore>() {
+
+            @Override
+            public void registered(ActivityStore service) {
+                //ActivityStoreFactory.initialize(service);
+            }
+
+            @Override
+            public void unregistered(ActivityStore service) {
+                ActivityStoreFactory.clear();
+            }
+            
         };
         
-        String filter = "(objectclass=" + ActivityStore.class.getName() + ")";
-        try {
-            context.addServiceListener(sl, filter);
-        } catch (InvalidSyntaxException e) { 
-            LOG.log(Level.SEVERE, "Failed to add service listener for activity store", e);
-        }
-
-        ServiceReference[] srefs=context.getServiceReferences(ActivityStore.class.getName(), null);
-        
-        if (srefs != null) {
-            for (int i=0; i < srefs.length; i++) {
-                register(context, srefs[i]);
-            }
-        }        
+        ServiceRegistryUtil.addServiceListener(ActivityStore.class, _listener);        
     }
     
-    /**
-     * This method registers the activity store associated with the
-     * supplied service reference.
-     * 
-     * @param context The context
-     * @param actStoreRef The service ref
-     */
-    protected void register(final BundleContext context, ServiceReference actStoreRef) {
-        ActivityStore actStore=(ActivityStore)context.getService(actStoreRef);            
-        ActivityStoreFactory.initialize(actStore);
-    }
-
     /**
      * {@inheritDoc}
      */
     public void stop(BundleContext context) throws Exception {
+        if (_listener != null) {
+            ServiceRegistryUtil.removeServiceListener(_listener);
+        }
     }
 
 }

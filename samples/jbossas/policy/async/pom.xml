@@ -129,7 +129,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>deployment.overlord-rtgov.war</Dependencies>
+							<Dependencies>deployment.overlord-rtgov.war  export services</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>

@@ -20,8 +20,11 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
 import org.overlord.rtgov.common.util.RTGovProperties;
+import org.overlord.rtgov.internal.active.collection.ACManagement;
 
 /**
  * This class provides the abstract base implementation of the ActiveCollectionManager
@@ -51,12 +54,12 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     private HouseKeeper _houseKeeper=null;
     private ActiveCollectionContext _context=new DefaultActiveCollectionContext(this);
     
+    private ACManagement _management;
+    
     /**
      * The default constructor.
      */
     public AbstractActiveCollectionManager() {
-        ActiveCollectionManagerAccessor.setActiveCollectionManager(this);
-        
         _houseKeepingInterval = RTGovProperties.getPropertyAsLong("ActiveCollectionManager.houseKeepingInterval",
                                     HOUSE_KEEPING_INTERVAL);
     }
@@ -64,23 +67,15 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     /**
      * This method initializes the Active Collection Manager.
      */
+    @ServiceInit
     public void init() {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Initialize active collection manager");
         }
         _houseKeeper = new HouseKeeper();
-    }
-    
-    /**
-     * This method closes the Active Collection Manager.
-     */
-    public void close() {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Close active collection manager");
-        }
-        if (_houseKeeper != null) {
-            _houseKeeper.cancel();
-        }
+        
+        _management = new ACManagement(this);
+        _management.init();
     }
     
     /**
@@ -387,6 +382,49 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
         }
     }
 
+    /**
+     * This method closes the Active Collection Manager.
+     */
+    @ServiceClose
+    public void close() {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Close active collection manager");
+        }
+        if (_houseKeeper != null) {
+            _houseKeeper.cancel();
+        }
+        
+        if (_management != null) {
+            _management.close();
+            _management = null;
+        }
+        
+        synchronized (_activeCollectionListeners) {
+            for (int i=_activeCollectionListeners.size()-1; i >= 0; i--) {
+                removeActiveCollectionListener(_activeCollectionListeners.get(i));
+            }
+            _activeCollectionListeners.clear();
+        }
+        
+        synchronized (_activeCollectionSources) {
+            for (int i=_activeCollectionSources.size()-1; i >= 0; i--) {
+                ActiveCollectionSource acs=_activeCollectionSources.get(i);
+                try {
+                    unregister(acs);
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, "Failed to unregister active collection source '"
+                                    +acs.getName()+"'", e);
+                }
+            }
+            _activeCollectionSources.clear();
+            _activeCollections.clear();
+        }
+
+        // Clear derived collections
+        _derivedActiveCollections.clear();
+        _derivedActiveCollectionsRetain.clear();
+    }
+    
     /**
      * This class implements the housekeeping functionality to
      * cleanup the top level active collections periodically.

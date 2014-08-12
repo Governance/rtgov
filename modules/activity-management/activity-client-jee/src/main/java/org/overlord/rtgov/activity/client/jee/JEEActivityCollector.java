@@ -19,12 +19,11 @@ import java.lang.management.ManagementFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Singleton;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.collector.AbstractActivityCollector;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 
@@ -33,7 +32,6 @@ import org.overlord.rtgov.activity.collector.ActivityCollector;
  * collector interface.
  *
  */
-@Singleton
 public class JEEActivityCollector extends AbstractActivityCollector
                         implements ActivityCollector {
 
@@ -45,8 +43,10 @@ public class JEEActivityCollector extends AbstractActivityCollector
     /**
      * The initialize method.
      */
-    @PostConstruct
+    @ServiceInit
     public void init() {
+        super.init();
+        
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 
             
@@ -68,8 +68,9 @@ public class JEEActivityCollector extends AbstractActivityCollector
     /**
      * {@inheritDoc}
      */
-    @PreDestroy
-    public void close() throws Exception {
+    @ServiceClose
+    public void close() {
+        super.close();
         
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer(); 

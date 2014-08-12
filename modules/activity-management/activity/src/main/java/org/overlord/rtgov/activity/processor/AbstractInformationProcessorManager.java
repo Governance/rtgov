@@ -18,6 +18,8 @@ package org.overlord.rtgov.activity.processor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.common.util.VersionUtil;
 
@@ -39,7 +41,13 @@ public abstract class AbstractInformationProcessorManager implements Information
      * The default constructor.
      */
     public AbstractInformationProcessorManager() {
-        InformationProcessorManagerAccessor.setInformationProcessorManager(this);
+    }
+    
+    /**
+     * This method initializes the information processor manager.
+     */
+    @ServiceInit
+    public void init() {
     }
     
     /**
@@ -171,4 +179,17 @@ public abstract class AbstractInformationProcessorManager implements Information
         }
     }
     
+    /**
+     * This metohd closes the information processor manager.
+     * 
+     * @throws Exception Failed to close
+     */
+    @ServiceClose
+    public void close() throws Exception {
+        synchronized (_informationProcessorIndex) {
+            for (int i=_informationProcessors.size()-1; i >= 0; i--) {
+                unregister(_informationProcessors.get(i));
+            }
+        }
+    }
 }

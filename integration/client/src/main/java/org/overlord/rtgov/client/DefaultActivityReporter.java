@@ -18,10 +18,9 @@ package org.overlord.rtgov.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.app.CustomActivity;
 import org.overlord.rtgov.activity.model.app.LogMessage;
@@ -42,19 +41,27 @@ public class DefaultActivityReporter implements ActivityReporter {
     /**
      * This method initializes the auditor.
      */
-    @PostConstruct
     protected void init() {
-        if (_activityCollector == null) {
-            _activityCollector = ActivityCollectorAccessor.getActivityCollector();
-            
-            if (_activityCollector == null) {
-                LOG.severe("Failed to obtain Activity Collector from Client Manager");
-            }
-        }
+        ServiceRegistryUtil.addServiceListener(ActivityCollector.class, new ServiceListener<ActivityCollector>() {
 
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("*********** Default Activity Reporter initialized with collector="+_activityCollector);
-        }
+            @Override
+            public void registered(ActivityCollector service) {
+                _activityCollector = service;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Default Activity Reporter collector="+_activityCollector);
+                }
+            }
+
+            @Override
+            public void unregistered(ActivityCollector service) {
+                _activityCollector = null;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Default Activity Reporter collector unset");
+                }
+            }            
+        });
         
         _initialized = true;
     }

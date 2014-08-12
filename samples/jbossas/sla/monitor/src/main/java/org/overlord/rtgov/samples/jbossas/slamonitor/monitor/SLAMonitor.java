@@ -24,8 +24,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
-import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.predicate.MVEL;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
@@ -57,7 +57,7 @@ public class SLAMonitor {
     public SLAMonitor() {
         
         try {
-            _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+            _acmManager = ServiceRegistryUtil.getSingleService(ActiveCollectionManager.class);
 
             _serviceResponseTime = (ActiveList)
                     _acmManager.getActiveCollection(SERVICE_RESPONSE_TIMES);

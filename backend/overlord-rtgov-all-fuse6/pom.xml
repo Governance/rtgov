@@ -143,6 +143,7 @@
                 org.codehaus.jackson.map,
                 org.overlord.commons.auth.util,
                 org.overlord.commons.auth.filters,
+                org.overlord.commons.services,
                 org.overlord.rtgov.active.collection,
                 org.overlord.rtgov.active.collection.predicate,
                 org.overlord.rtgov.active.collection.util,

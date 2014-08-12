@@ -27,9 +27,9 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.processor.InformationProcessor;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
-import org.overlord.rtgov.activity.processor.InformationProcessorManagerAccessor;
 import org.overlord.rtgov.activity.processor.validation.IPValidationListener;
 import org.overlord.rtgov.activity.processor.validation.IPValidator;
 import org.overlord.rtgov.activity.util.InformationProcessorUtil;
@@ -49,9 +49,10 @@ public class JEEIPLoader {
     
     private static final String IP_JSON = "ip.json";
     
-    private InformationProcessorManager _ipManager=null;
     private java.util.List<InformationProcessor> _informationProcessors=null;
     
+    private org.overlord.commons.services.ServiceListener<InformationProcessorManager> _listener;
+
     /**
      * The constructor.
      */
@@ -64,13 +65,32 @@ public class JEEIPLoader {
     @PostConstruct
     public void init() {
         
-        _ipManager = InformationProcessorManagerAccessor.getInformationProcessorManager();
-        
-        if (_ipManager == null) {
-            LOG.severe(java.util.PropertyResourceBundle.getBundle(
-                "ip-loader-jee.Messages").getString("IP-LOADER-JEE-5"));
-        }
+        _listener = new org.overlord.commons.services.ServiceListener<InformationProcessorManager>() {
 
+            @Override
+            public void registered(InformationProcessorManager service) {
+                registerInformationProcessor(service);
+            }
+
+            @Override
+            public void unregistered(InformationProcessorManager service) {
+                unregisterInformationProcessor(service);
+            }
+        };
+        
+        ServiceRegistryUtil.addServiceListener(InformationProcessorManager.class, _listener);
+    }
+    
+    /**
+     * This method registers the information processor with the manager.
+     * 
+     * @param ipManager The information processor manager
+     */
+    protected void registerInformationProcessor(InformationProcessorManager ipManager) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Register InformationProcessorManager");
+        }
+        
         try {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(IP_JSON);
             
@@ -92,7 +112,7 @@ public class JEEIPLoader {
                         ip.init();
                         
                         if (IPValidator.validate(ip, getValidationListener())) {
-                            _ipManager.register(ip);
+                            ipManager.register(ip);
                         } else {
                             ip.close();
                             
@@ -107,6 +127,30 @@ public class JEEIPLoader {
         }
     }
     
+    /**
+     * This method unregisters the information processor.
+     * 
+     * @param ipManager Information processor manager
+     */
+    protected void unregisterInformationProcessor(InformationProcessorManager ipManager) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Unregister InformationProcessor");
+        }
+        
+        if (ipManager != null && _informationProcessors != null) {
+            try {
+                for (InformationProcessor ip : _informationProcessors) {
+                    ipManager.unregister(ip);
+                }
+                
+                _informationProcessors = null;
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "ip-loader-jee.Messages").getString("IP-LOADER-JEE-4"), e);
+            }
+        }
+    }       
+
     /**
      * This method returns the validation listener.
      * 
@@ -127,16 +171,15 @@ public class JEEIPLoader {
      */
     @PreDestroy
     public void close() {
-        
-        if (_ipManager != null && _informationProcessors != null) {
-            try {
-                for (InformationProcessor ip : _informationProcessors) {
-                    _ipManager.unregister(ip);
-                }
-            } catch (Exception e) {
-                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                        "ip-loader-jee.Messages").getString("IP-LOADER-JEE-4"), e);
+        if (_informationProcessors != null) {
+            InformationProcessorManager ipManager=ServiceRegistryUtil.getSingleService(InformationProcessorManager.class);
+            
+            if (ipManager != null) {
+                unregisterInformationProcessor(ipManager);
             }
         }
+        
+        ServiceRegistryUtil.removeServiceListener(_listener);
+        _listener = null;
     }       
 }

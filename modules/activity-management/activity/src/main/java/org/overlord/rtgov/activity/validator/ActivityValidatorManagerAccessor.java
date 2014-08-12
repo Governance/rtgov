@@ -20,6 +20,10 @@ package org.overlord.rtgov.activity.validator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
+
+//import org.overlord.commons.services.ServiceRegistryUtil;
+
 /**
  * This class provides access to the Activity Validator Manager once an appropriate
  * implementation has been independently instantiated.
@@ -27,13 +31,7 @@ import java.util.logging.Logger;
  */
 public final class ActivityValidatorManagerAccessor {
 
-    private static final int DEFAULT_WAIT_TIME = 300000;
-
     private static final Logger LOG=Logger.getLogger(ActivityValidatorManagerAccessor.class.getName());
-    
-    private static ActivityValidatorManager _activityValidatorManager=null;
-    
-    private static final Object SYNC=new Object();
     
     /**
      * The default constructor.
@@ -46,20 +44,8 @@ public final class ActivityValidatorManagerAccessor {
      * 
      * @param avm The activity validator manager
      */
-    protected static void setActivityValidatorManager(ActivityValidatorManager avm) {
-        synchronized (SYNC) {
-            if (_activityValidatorManager != null) {
-                LOG.severe("Activity validator manager already set");
-            }
-            
-            _activityValidatorManager = avm;
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Set activity validator manager="+avm);
-            }
-            
-            SYNC.notifyAll();
-        }
+    public static void setActivityValidatorManager(ActivityValidatorManager avm) {
+        LOG.warning("Setting the activity validator manager - no longer required");
     }
     
     /**
@@ -68,41 +54,12 @@ public final class ActivityValidatorManagerAccessor {
      * @return The activity validator manager
      */
     public static ActivityValidatorManager getActivityValidatorManager() {
+        ActivityValidatorManager ret=ServiceRegistryUtil.getSingleService(ActivityValidatorManager.class);
         
-        // Avoid unnecessary sync once set (runs in 1/4 to 1/3 of the time)
-        if (_activityValidatorManager == null) {
-            synchronized (SYNC) {
-                if (_activityValidatorManager == null) {
-                    try {
-                        SYNC.wait(getWaitTime());
-                    } catch (Exception e) {
-                        LOG.log(Level.SEVERE, "Failed to wait for ActivityValidatorManager to become available", e);
-                    }
-                    
-                    if (_activityValidatorManager == null) {
-                        LOG.severe("ActivityValidatorManager is not available");
-                    }
-                }
-            }
-        }
-
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Get activity validator manager="+_activityValidatorManager);
+            LOG.finest("Get activity validator manager="+ret);
         }
 
-        return (_activityValidatorManager);
-    }
-    
-    private static long getWaitTime() {
-        final String waitTimeVal = System.getProperty("org.overlord.ServiceWaitTime");
-        long waitTime = DEFAULT_WAIT_TIME;
-        if (waitTimeVal != null) {
-            try {
-                waitTime = Long.parseLong(waitTimeVal);
-            } catch (final NumberFormatException nfe) {
-                LOG.warning("Failed to parse ServiceWaitTime " + waitTimeVal + ", using default value of " + waitTime);
-            }
-        }
-        return waitTime;
+        return (ret);
     }
 }

@@ -164,6 +164,16 @@ public class ElasticsearchKeyValueStore extends KeyValueStore {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void close() throws Exception {
+        if (_client != null) {
+            _client.close();
+            _client = null;
+        }
+    }
+
     @Override
     public String toString() {
         return "ElasticsearchKeyValueStore{"+_client+"}";

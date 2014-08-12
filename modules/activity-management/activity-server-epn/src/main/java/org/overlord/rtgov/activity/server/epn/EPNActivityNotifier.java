@@ -19,10 +19,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Inject;
-
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.server.ActivityNotifier;
 import org.overlord.rtgov.epn.EPNManager;
@@ -40,7 +39,6 @@ public class EPNActivityNotifier implements ActivityNotifier {
 
     private static final Logger LOG=Logger.getLogger(EPNActivityNotifier.class.getName());
     
-    @Inject
     private EPNManager _epnManager=null;
     
     /**
@@ -64,8 +62,12 @@ public class EPNActivityNotifier implements ActivityNotifier {
     /**
      * This method initializes the Activity Server to EPN bridge.
      */
-    @PostConstruct
+    @ServiceInit
     public void init() {
+        if (_epnManager == null) {
+            _epnManager = ServiceRegistryUtil.getSingleService(EPNManager.class);
+        }
+        
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Initialize Activity Server to EPN bridge");
         }
@@ -81,7 +83,7 @@ public class EPNActivityNotifier implements ActivityNotifier {
     /**
      * This method closes the Activity Server to EPN bridge.
      */
-    @PreDestroy
+    @ServiceClose
     public void close() {
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("Initialize Activity Server to EPN (via JMS) bridge");

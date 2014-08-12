@@ -23,13 +23,14 @@ import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
 import javax.xml.namespace.QName;
 
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.soa.RPCActivityType;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.internal.switchyard.exchange.PropertyAccessor;
 import org.switchyard.Exchange;
@@ -69,15 +70,26 @@ public class AbstractExchangeValidator {
     @PostConstruct
     protected void init() {
         
-        _activityCollector = ActivityCollectorAccessor.getActivityCollector();
-        
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("*********** Exchange Interceptor Initialized with collector="+_activityCollector);
-        }
+        ServiceRegistryUtil.addServiceListener(ActivityCollector.class, new ServiceListener<ActivityCollector>() {
 
-        if (_activityCollector == null) {
-            LOG.severe("Failed to get activity collector");
-        }
+            @Override
+            public void registered(ActivityCollector service) {
+                _activityCollector = service;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Exchange Validator: collector="+_activityCollector);
+                }
+            }
+
+            @Override
+            public void unregistered(ActivityCollector service) {
+                _activityCollector = null;
+                
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Exchange Validator: collector unset");
+                }
+            }            
+        });
         
         try {
             String txnMgr=RTGovProperties.getProperty(JAVAX_TRANSACTION_MANAGER);

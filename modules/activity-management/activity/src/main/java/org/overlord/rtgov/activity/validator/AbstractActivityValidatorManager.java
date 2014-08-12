@@ -18,6 +18,8 @@ package org.overlord.rtgov.activity.validator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.common.util.VersionUtil;
 
@@ -39,7 +41,13 @@ public abstract class AbstractActivityValidatorManager implements ActivityValida
      * The default constructor.
      */
     public AbstractActivityValidatorManager() {
-        ActivityValidatorManagerAccessor.setActivityValidatorManager(this);
+    }
+    
+    /**
+     * This method initializes the activity validator manager.
+     */
+    @ServiceInit
+    public void init() {
     }
     
     /**
@@ -56,7 +64,7 @@ public abstract class AbstractActivityValidatorManager implements ActivityValida
         // Initialize the activity validator
         ai.init();
         
-        synchronized (_activityValidators) {
+        synchronized (_activityValidatorIndex) {
             boolean f_add=false;
             
             // Check if activity validator for same name already exists
@@ -144,4 +152,17 @@ public abstract class AbstractActivityValidatorManager implements ActivityValida
         }
     }
     
+    /**
+     * This metohd closes the activity validator manager.
+     * 
+     * @throws Exception Failed to close
+     */
+    @ServiceClose
+    public void close() throws Exception {
+        synchronized (_activityValidatorIndex) {
+            for (int i=_activityValidators.size()-1; i >= 0; i--) {
+                unregister(_activityValidators.get(i));
+            }
+        }
+    }
 }

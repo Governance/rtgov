@@ -5,14 +5,14 @@
     <service interface="org.overlord.rtgov.activity.processor.InformationProcessorManager"
     					ref="infoProcessManagerBean" />
 
-    <bean id="infoProcessManagerBean" class="org.overlord.rtgov.activity.client.jee.JEEInformationProcessorManager" >
-    </bean>
+    <bean id="infoProcessManagerBean" class="org.overlord.rtgov.activity.client.jee.JEEInformationProcessorManager"  
+        	init-method="init" destroy-method="close" />
     
     <service interface="org.overlord.rtgov.activity.validator.ActivityValidatorManager"
     					ref="activityValidatorManagerBean" />
 
-    <bean id="activityValidatorManagerBean" class="org.overlord.rtgov.activity.client.jee.JEEActivityValidatorManager" >
-    </bean>
+    <bean id="activityValidatorManagerBean" class="org.overlord.rtgov.activity.client.jee.JEEActivityValidatorManager"  
+        	init-method="init" destroy-method="close" />
 
     <service interface="org.overlord.rtgov.activity.collector.ActivityCollector" ref="activityCollectorBean" />
 

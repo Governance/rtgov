@@ -15,8 +15,6 @@
  */
 package org.overlord.rtgov.activity.client.jee;
 
-import javax.inject.Singleton;
-
 import org.overlord.rtgov.activity.processor.AbstractInformationProcessorManager;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 
@@ -25,7 +23,6 @@ import org.overlord.rtgov.activity.processor.InformationProcessorManager;
  * processor manager interface.
  *
  */
-@Singleton
 public class JEEInformationProcessorManager extends AbstractInformationProcessorManager
                         implements InformationProcessorManager {
 

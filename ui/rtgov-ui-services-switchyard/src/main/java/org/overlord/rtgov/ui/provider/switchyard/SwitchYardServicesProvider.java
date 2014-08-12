@@ -19,7 +19,6 @@ package org.overlord.rtgov.ui.provider.switchyard;
 import static com.google.common.base.Strings.nullToEmpty;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
-import static org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor.getActiveCollectionManager;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.management.ManagementFactory;
@@ -46,6 +45,7 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
 import org.overlord.rtgov.active.collection.ActiveMap;
 import org.overlord.rtgov.analytics.service.ServiceDefinition;
 import org.overlord.rtgov.analytics.situation.Situation;
@@ -597,7 +597,7 @@ public class SwitchYardServicesProvider implements ServicesProvider {
     }
 
     private String buildGraph(String serviceName) throws Exception {
-        ActiveCollectionManager activeCollectionManager = getActiveCollectionManager();
+        ActiveCollectionManager activeCollectionManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
         ActiveCollection activeCollection = activeCollectionManager.getActiveCollection("ServiceDefinitions");
         ActiveCollection activeSituations = activeCollectionManager.getActiveCollection("Situations");
         Set<ServiceDefinition> serviceDefinitions = Sets.newHashSet();

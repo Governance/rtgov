@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.overlord.rtgov.common.elasticsearch;
+package org.overlord.rtgov.internal.common.elasticsearch;
 
 import org.apache.commons.configuration.Configuration;
 import org.overlord.commons.config.ConfigurationFactory;

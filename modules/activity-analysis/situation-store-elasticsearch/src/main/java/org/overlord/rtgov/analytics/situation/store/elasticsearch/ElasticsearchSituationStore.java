@@ -27,6 +27,8 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
@@ -61,6 +63,13 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
      * Constructor.
      */
     public ElasticsearchSituationStore() {
+    }
+    
+    /**
+     * Initialize the situation store.
+     */
+    @ServiceInit
+    public void init() {
         _client.setIndex(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_INDEX, "rtgov"));
         _client.setType(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_TYPE, "situation"));
         
@@ -326,5 +335,16 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
      */
     protected ElasticsearchClient getClient() {
         return (_client);
+    }
+    
+    /**
+     * Close the situation store.
+     */
+    @ServiceClose
+    public void close() {
+        if (_client != null) {
+            _client.close();
+            _client = null;
+        }
     }
 }

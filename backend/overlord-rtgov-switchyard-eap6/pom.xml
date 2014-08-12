@@ -19,6 +19,24 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-switchyard</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.activity-management</groupId>
+                    <artifactId>activity</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.active-queries</groupId>
+                    <artifactId>active-collection</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.common</groupId>
+                    <artifactId>rtgov-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.overlord.rtgov.integration</groupId>
+                    <artifactId>rtgov-client</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 
         <!-- Test dependencies -->

@@ -33,6 +33,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.io.InputStream;
@@ -110,6 +111,8 @@ public class ElasticsearchClient {
     private ScheduledExecutorService _scheduler;
 
     private static final long ELASTICSEARCH_SCHEDULE_DEFAULT = 30000;
+    
+    private org.overlord.commons.services.ServiceListener<ElasticsearchNode> _listener=null;
 
     /**
      * schedule to persist the items  to elasticsearch.
@@ -244,7 +247,6 @@ public class ElasticsearchClient {
      *
      * @throws Exception Failed to initialize the client
      */
-    @SuppressWarnings("unchecked")
     public void init() throws Exception {
 
         if (_hosts == null) {
@@ -269,6 +271,8 @@ public class ElasticsearchClient {
          * maven dependencies need to be defined correctly for this to work
          */
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        
+        Client client=null;
 
         try {
             // Need to use the classloader for Elasticsearch to pick up the property files when
@@ -277,9 +281,34 @@ public class ElasticsearchClient {
 
             if (_hosts.startsWith("embedded")) {
                 try {
-                    // Obtain the Elasticsearch client
-                    _client =  ElasticsearchNode.getInstance().getClient();
-                } catch (Throwable e) {
+                    // Obtain the Elasticsearch client                    
+                    _listener = new org.overlord.commons.services.ServiceListener<ElasticsearchNode>() {
+
+                        @Override
+                        public void registered(ElasticsearchNode service) {
+                            if (LOG.isLoggable(Level.FINE)) {
+                                LOG.fine("*********** Register embedded ElasticsearchNode");
+                            }
+                            try {
+                                initClient(service.getClient());
+                            } catch (Exception e) {
+                                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                                        "rtgov-elasticsearch.Messages").getString("RTGOV-ELASTICSEARCH-3"), e);
+                            }
+                        }
+
+                        @Override
+                        public void unregistered(ElasticsearchNode service) {
+                            if (LOG.isLoggable(Level.FINE)) {
+                                LOG.fine("*********** Unregister embedded ElasticsearchNode");
+                            }
+                            _client = null;
+                        }                        
+                    };
+                    
+                    ServiceRegistryUtil.addServiceListener(ElasticsearchNode.class, _listener);
+                    
+                 } catch (Throwable e) {
                     LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                             "rtgov-elasticsearch.Messages").getString("RTGOV-ELASTICSEARCH-3"), e);
                 }
@@ -298,12 +327,22 @@ public class ElasticsearchClient {
                     c = c.addTransportAddress(new InetSocketTransportAddress(host[0], new Integer(host[1])));
                 }
                 
-                _client = c;
+                client = c;
             }
         } finally {
             Thread.currentThread().setContextClassLoader(cl);
         }
-
+        
+        // Initialize outside temporary context classloader scope
+        if (client != null) {
+            initClient(client);
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected void initClient(Client client) throws Exception {
+        _client = client;
+        
         InputStream s = Thread.currentThread().getContextClassLoader().getResourceAsStream(_index + "-mapping.json");
         if (s == null) {
             s = ElasticsearchClient.class.getResourceAsStream("/" + _index + "-mapping.json");
@@ -624,15 +663,6 @@ public class ElasticsearchClient {
         }
     }
 
-    @Override
-    public String toString() {
-        return "ElasticsearchClient{"
-                + "index='" + _index + '\''
-                + ", type='" + _type + '\''
-                + ", hosts='" + _hosts + '\''
-                + '}';
-    }
-
     /**
      * sets hosts if the _hosts propertey is determined to be a property placeholder
      * Throws IllegalArgumentException argument exception when nothing found
@@ -656,5 +686,29 @@ public class ElasticsearchClient {
      */
     public Client getElasticsearchClient() {
         return _client;
+    }
+
+    /**
+     * This method closes the Elasticsearch client.
+     * 
+     */
+    public void close() {
+        if (_listener != null) {
+            ServiceRegistryUtil.removeServiceListener(_listener);
+            _listener = null;
+        }
+        if (_client != null) {
+            _client.close();
+            _client = null;
+        }
+    }
+    
+    @Override
+    public String toString() {
+        return "ElasticsearchClient{"
+                + "index='" + _index + '\''
+                + ", type='" + _type + '\''
+                + ", hosts='" + _hosts + '\''
+                + '}';
     }
 }

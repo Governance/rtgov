@@ -18,19 +18,14 @@ package org.overlord.rtgov.active.collection.epn;
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.junit.Test;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollectionType;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource;
-import org.overlord.rtgov.epn.AbstractEPNManager;
-import org.overlord.rtgov.epn.EPNContainer;
 import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.EventList;
-import org.overlord.rtgov.epn.Network;
-import org.overlord.rtgov.epn.NetworkListener;
-import org.overlord.rtgov.epn.NotificationListener;
 
 public class EPNActiveCollectionSourceTest {
 
@@ -53,14 +48,13 @@ public class EPNActiveCollectionSourceTest {
         
         acs.setType(ActiveCollectionType.List);
         
-        TestEPNManager mgr=new TestEPNManager();
-        acs.setEPNManager(mgr);
-        
         try {
             acs.init(null);
         } catch(Exception e) {
             fail("Failed to initialize active collection source: "+e);
         }
+        
+        TestEPNManager mgr=(TestEPNManager)ServiceRegistryUtil.getSingleService(EPNManager.class);
         
         java.util.List<Serializable> resultList=new java.util.ArrayList<Serializable>();
         
@@ -121,50 +115,4 @@ public class EPNActiveCollectionSourceTest {
         
     }
 
-    public class TestEPNManager extends AbstractEPNManager implements EPNManager {
-        
-        private java.util.List<NotificationListener> _nodeListeners=new java.util.ArrayList<NotificationListener>();
-        private java.util.List<NetworkListener> _networkListeners=new java.util.ArrayList<NetworkListener>();
-
-        public void register(Network network) throws Exception {
-        }
-
-        public void unregister(String networkName, String version)
-                throws Exception {
-        }
-
-        public void addNotificationListener(String network, NotificationListener l) {
-            _nodeListeners.add(l);
-        }
-
-        public void removeNotificationListener(String network, NotificationListener l) {
-            _nodeListeners.remove(l);
-        }
-        
-        public void addNetworkListener(NetworkListener l) {
-            _networkListeners.add(l);
-        }
-
-        public void removeNetworkListener(NetworkListener l) {
-            _networkListeners.remove(l);
-        }
-        
-        public void publish(String subject, EventList events) {
-            for (NotificationListener l : _nodeListeners) {
-                l.notify(subject, events);
-            }
-        }
-
-        public void publish(String subject, List<? extends Serializable> events)
-                throws Exception {
-        }
-
-        public void close() throws Exception {
-        }
-
-        protected EPNContainer getContainer() {
-            return null;
-        }
-        
-    }
 }

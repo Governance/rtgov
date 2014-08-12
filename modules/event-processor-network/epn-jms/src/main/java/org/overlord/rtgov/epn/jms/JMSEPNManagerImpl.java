@@ -20,10 +20,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.annotation.Resource;
-import javax.inject.Singleton;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -33,7 +29,10 @@ import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import javax.naming.InitialContext;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.epn.AbstractEPNManager;
 import org.overlord.rtgov.epn.Channel;
@@ -47,16 +46,10 @@ import org.overlord.rtgov.epn.Node;
  * the EPN Manager.
  *
  */
-@Singleton
 public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManager {
     
-    @Resource(mappedName = "java:/JmsXA")
     private ConnectionFactory _connectionFactory;
-    
-    @Resource(mappedName = "java:/EPNEvents")
     private Destination _epnEventsDestination;
-    
-    @Resource(mappedName = "java:/EPNNotifications")
     private Destination _epnNotificationsDestination;
     
     /** The subscription subjects. **/
@@ -257,69 +250,108 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     /**
      * The initialize method.
      */
-    @PostConstruct
+    @ServiceInit
     public void init() {
+        super.init();
+        
         LOG.info("Initialize JMS EPN Manager");
         
-        try {
-            if (_username != null) {
-                _connection = _connectionFactory.createConnection(_username, _password);
-            } else {
-                _connection = _connectionFactory.createConnection();
+        // Check if connection factory initialized
+        if (_connectionFactory == null) {
+            try {
+                // Attempt to retrieve from JNDI
+                InitialContext context=new InitialContext();
+                _connectionFactory = (ConnectionFactory)context.lookup("java:/JmsXA");
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Failed to initialize JMS connection factory", e);
             }
-            
-            // TODO: Issue - must be non-transacted, to enable arquillian test
-            // to work, but ideally needs to be transacted in production to
-            // ensure transactional consistency
-            _session = _connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            
-            // Check if destinations have been supplied
-            if (_epnEventsDestination == null && _epnEventsDestinationName != null) {
-                _epnEventsDestination = _session.createQueue(_epnEventsDestinationName);
-            }
-            
-            if (_epnNotificationsDestination == null && _epnNotificationsDestinationName != null) {
-                _epnNotificationsDestination = _session.createTopic(_epnNotificationsDestinationName);
-            }
-            
-            _eventsProducer = _session.createProducer(_epnEventsDestination);
-            _notificationsProducer = _session.createProducer(_epnNotificationsDestination);
-            
-            if (_initConsumers) {
-                _eventsConsumer = _session.createConsumer(_epnEventsDestination);
-                _notificationsConsumer = _session.createConsumer(_epnNotificationsDestination);
-                
-                _eventsConsumer.setMessageListener(new MessageListener() {
-                    public void onMessage(Message message) {
-                        try {
-                            handleEventsMessage(message);
-                        } catch (Exception e) {
-                            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                                    "epn-jms.Messages").getString("EPN-JMS-7"), e);
-                        }
-                    }
-                });
-                
-                _notificationsConsumer.setMessageListener(new MessageListener() {
-                    public void onMessage(Message message) {
-                        try {
-                            handleNotificationsMessage(message);
-                        } catch (Exception e) {
-                            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                                    "epn-jms.Messages").getString("EPN-JMS-8"), e);
-                        }
-                    }
-                });
-            }
-            
-            _connection.start();
-            
-        } catch (Exception e) {
-            LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                    "epn-jms.Messages").getString("EPN-JMS-1"), e);
         }
         
-        setUsePrePostEventListProcessing(true);
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Initialise with connection factory "+_connectionFactory+" (connection currently="+_connection+")");
+        }
+            
+        if (_connectionFactory != null && _connection == null) {
+            
+            try {
+                
+                if (_username != null) {
+                    _connection = _connectionFactory.createConnection(_username, _password);
+                } else {
+                    _connection = _connectionFactory.createConnection();
+                }
+                
+                // TODO: Issue - must be non-transacted, to enable arquillian test
+                // to work, but ideally needs to be transacted in production to
+                // ensure transactional consistency
+                _session = _connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                
+                // Check if destinations have been supplied
+                if (_epnEventsDestination == null && _epnEventsDestinationName != null) {
+                    _epnEventsDestination = _session.createQueue(_epnEventsDestinationName);
+                }
+                
+                if (_epnNotificationsDestination == null && _epnNotificationsDestinationName != null) {
+                    _epnNotificationsDestination = _session.createTopic(_epnNotificationsDestinationName);
+                }
+                
+                try {
+                    if (_epnEventsDestination == null) {
+                        // Attempt to retrieve from JNDI
+                        InitialContext context=new InitialContext();
+                        
+                        _epnEventsDestination = (Destination)context.lookup("java:/EPNEvents");
+                    }
+                    
+                    if (_epnNotificationsDestination == null) {
+                        // Attempt to retrieve from JNDI
+                        InitialContext context=new InitialContext();
+                        
+                        _epnNotificationsDestination = (Destination)context.lookup("java:/EPNNotifications");
+                    }
+                } catch (Exception e) {
+                    LOG.log(Level.SEVERE, "Failed to initialize JMS destinations", e);
+                }
+                
+                _eventsProducer = _session.createProducer(_epnEventsDestination);
+                _notificationsProducer = _session.createProducer(_epnNotificationsDestination);
+                
+                if (_initConsumers) {
+                    _eventsConsumer = _session.createConsumer(_epnEventsDestination);
+                    _notificationsConsumer = _session.createConsumer(_epnNotificationsDestination);
+                    
+                    _eventsConsumer.setMessageListener(new MessageListener() {
+                        public void onMessage(Message message) {
+                            try {
+                                handleEventsMessage(message);
+                            } catch (Exception e) {
+                                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                                        "epn-jms.Messages").getString("EPN-JMS-7"), e);
+                            }
+                        }
+                    });
+                    
+                    _notificationsConsumer.setMessageListener(new MessageListener() {
+                        public void onMessage(Message message) {
+                            try {
+                                handleNotificationsMessage(message);
+                            } catch (Exception e) {
+                                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                                        "epn-jms.Messages").getString("EPN-JMS-8"), e);
+                            }
+                        }
+                    });
+                }
+                
+                _connection.start();
+                
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                        "epn-jms.Messages").getString("EPN-JMS-1"), e);
+            }
+            
+            setUsePrePostEventListProcessing(true);
+        }
     }   
 
     /**
@@ -574,12 +606,18 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     /**
      * {@inheritDoc}
      */
-    @PreDestroy
+    @ServiceClose
     public void close() throws Exception {
+        super.close();
+        
         LOG.info("Closing JMS EPN Manager");
         try {
             _session.close();
             _connection.close();
+            
+            _session = null;
+            _connection = null;
+            
         } catch (Exception e) {
             LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                     "epn-jms.Messages").getString("EPN-JMS-5"), e);

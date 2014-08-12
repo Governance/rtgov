@@ -27,9 +27,9 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.epn.AbstractEPNLoader;
 import org.overlord.rtgov.epn.EPNManager;
-import org.overlord.rtgov.epn.EPNManagerAccessor;
 import org.overlord.rtgov.epn.Network;
 import org.overlord.rtgov.epn.util.NetworkUtil;
 
@@ -48,10 +48,10 @@ public class JEEEPNLoader extends AbstractEPNLoader {
     
     private static final String EPN_JSON = "epn.json";
 
-    private EPNManager _epnManager=null;
- 
     private Network _network=null;
     
+    private org.overlord.commons.services.ServiceListener<EPNManager> _listener;
+
     /**
      * The constructor.
      */
@@ -63,13 +63,28 @@ public class JEEEPNLoader extends AbstractEPNLoader {
      */
     @PostConstruct
     public void init() {
+        _listener = new org.overlord.commons.services.ServiceListener<EPNManager>() {
+
+            @Override
+            public void registered(EPNManager service) {
+                registerEPN(service);
+            }
+
+            @Override
+            public void unregistered(EPNManager service) {
+                unregisterEPN(service);
+            }
+        };
         
-        _epnManager = EPNManagerAccessor.getEPNManager();
-        
-        if (_epnManager == null) {
-            LOG.severe("Failed to obtain reference to EPNManager");
-            throw new java.lang.IllegalStateException("Failed to obtain reference to EPNManager");
-        }
+        ServiceRegistryUtil.addServiceListener(EPNManager.class, _listener);
+    }
+
+    /**
+     * This method registers the EPN with the EPNManager.
+     * 
+     * @param epnManager The EPN manager
+     */
+    protected void registerEPN(EPNManager epnManager) {
         
         try {
             java.io.InputStream is=Thread.currentThread().getContextClassLoader().getResourceAsStream(EPN_JSON);
@@ -92,7 +107,7 @@ public class JEEEPNLoader extends AbstractEPNLoader {
                 preInit(_network);
                 
                 // TODO: Do we need to halt the deployment due to failures? (RTGOV-199)
-                _epnManager.register(_network);
+                epnManager.register(_network);
             }
         } catch (Exception e) {
             String mesg=java.util.PropertyResourceBundle.getBundle(
@@ -106,20 +121,43 @@ public class JEEEPNLoader extends AbstractEPNLoader {
     }
     
     /**
+     * This method unregisters the EPN.
+     * 
+     * @param context The context
+     */
+    protected void unregisterEPN(EPNManager epnManager) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Unregister EPN");
+        }
+        
+        if (_network != null) {
+            try {
+                epnManager.unregister(_network.getName(), _network.getVersion());
+                
+                _network = null;
+            } catch (Throwable t) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
+                            "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-3"), t);
+                }
+            }
+        }
+    }       
+
+    /**
      * This method closes the EPN loader.
      */
     @PreDestroy
     public void close() {
-        
-        if (_epnManager != null && _network != null) {
-            try {
-                _epnManager.unregister(_network.getName(), _network.getVersion());
-            } catch (Throwable t) {
-                if (LOG.isLoggable(Level.FINER)) {
-                    LOG.log(Level.FINER, java.util.PropertyResourceBundle.getBundle(
-                        "epn-loader-jee.Messages").getString("EPN-LOADER-JEE-3"), t);
-                }
+        if (_network != null) {
+            EPNManager epnManager=ServiceRegistryUtil.getSingleService(EPNManager.class);
+            
+            if (epnManager != null) {
+                unregisterEPN(epnManager);
             }
         }
+        
+        ServiceRegistryUtil.removeServiceListener(_listener);
+        _listener = null;
     }       
 }

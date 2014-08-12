@@ -20,8 +20,6 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
@@ -56,7 +54,6 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
     /**
      * This method initializes the activity logger.
      */
-    @PostConstruct
     public synchronized void init() {
         
         if (!_initialized) {
@@ -211,7 +208,6 @@ public abstract class BatchedActivityUnitLogger implements ActivityUnitLogger,
     /**
      * This method closes the activity logger.
      */
-    @PreDestroy
     public void close() {
         _timer.cancel();
         

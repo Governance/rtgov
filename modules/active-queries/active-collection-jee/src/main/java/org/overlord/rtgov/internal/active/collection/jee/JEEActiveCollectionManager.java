@@ -15,10 +15,6 @@
  */
 package org.overlord.rtgov.internal.active.collection.jee;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.inject.Singleton;
-
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.AbstractActiveCollectionManager;
 
@@ -28,24 +24,7 @@ import org.overlord.rtgov.active.collection.AbstractActiveCollectionManager;
  * interface.
  *
  */
-@Singleton
 public class JEEActiveCollectionManager extends AbstractActiveCollectionManager
                     implements ActiveCollectionManager {
-    
-    /**
-     * This method initializes the Active Collection Manager.
-     */
-    @PostConstruct
-    public void init() {
-       super.init();
-    }
-    
-    /**
-     * This method closes the Active Collection Manager.
-     */
-    @PreDestroy
-    public void close() {
-        super.close();
-    }
     
 }

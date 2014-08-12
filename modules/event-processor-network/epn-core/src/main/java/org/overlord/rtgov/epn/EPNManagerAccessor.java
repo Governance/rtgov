@@ -20,6 +20,10 @@ package org.overlord.rtgov.epn;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
+
+//import org.overlord.commons.services.ServiceRegistryUtil;
+
 /**
  * This class provides access to the EPN Manager once an appropriate
  * implementation has been independently instantiated.
@@ -27,13 +31,7 @@ import java.util.logging.Logger;
  */
 public final class EPNManagerAccessor {
 
-    private static final int DEFAULT_WAIT_TIME = 300000;
-
     private static final Logger LOG=Logger.getLogger(EPNManagerAccessor.class.getName());
-    
-    private static EPNManager _epnManager=null;
-    
-    private static final Object SYNC=new Object();
     
     /**
      * The default constructor.
@@ -46,20 +44,8 @@ public final class EPNManagerAccessor {
      * 
      * @param manager The manager
      */
-    protected static void setEPNManager(EPNManager manager) {
-        synchronized (SYNC) {
-            if (_epnManager != null) {
-                LOG.severe("EPN manager already set");
-            }
-            
-            _epnManager = manager;
-            
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Set EPN manager="+manager);
-            }
-
-            SYNC.notifyAll();
-        }
+    public static void setEPNManager(EPNManager manager) {
+        LOG.warning("Setting the event processor manager - no longer required");
     }
     
     /**
@@ -68,41 +54,12 @@ public final class EPNManagerAccessor {
      * @return The EPN manager
      */
     public static EPNManager getEPNManager() {
-
-        // Avoid unnecessary sync once set (runs in 1/4 to 1/3 of the time)
-        if (_epnManager == null) {
-            synchronized (SYNC) {
-                if (_epnManager == null) {
-                    try {
-                        SYNC.wait(getWaitTime());
-                    } catch (Exception e) {
-                        LOG.log(Level.SEVERE, "Failed to wait for EPNManager to become available", e);
-                    }
-                    
-                    if (_epnManager == null) {
-                        LOG.severe("EPNManager is not available");
-                    }
-                }
-            }
-        }
-
+        EPNManager ret=ServiceRegistryUtil.getSingleService(EPNManager.class);
+        
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Get event process network manager="+_epnManager);
+            LOG.finest("Get event process network manager="+ret);
         }
 
-        return (_epnManager);
-    }
-    
-    private static long getWaitTime() {
-        final String waitTimeVal = System.getProperty("org.overlord.ServiceWaitTime");
-        long waitTime = DEFAULT_WAIT_TIME;
-        if (waitTimeVal != null) {
-            try {
-                waitTime = Long.parseLong(waitTimeVal);
-            } catch (final NumberFormatException nfe) {
-                LOG.warning("Failed to parse ServiceWaitTime " + waitTimeVal + ", using default value of " + waitTime);
-            }
-        }
-        return waitTime;
+        return (ret);
     }
 }
