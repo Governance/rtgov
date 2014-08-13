@@ -9,7 +9,7 @@
     {
 	  "name": "ElasticSearchResponseTimeStore",
       "eventProcessor": {
-        "@class": "org.overlord.rtgov.ep.keyvaluestore.KeyValueStoreEventProcessor",
+        "@class": "org.overlord.rtgov.ep.keyvaluestore.fsw60.FSW60KeyValueStoreEventProcessor",
         "services": {
           "KeyValueStore": {
             "@class": "org.overlord.rtgov.common.elasticsearch.ElasticsearchKeyValueStore",

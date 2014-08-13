@@ -338,9 +338,20 @@ public final class ServiceDependencyBuilder {
         for (InvocationDefinition id : ids) {
             ServiceNode tsn=null;
             
-            if (id.getServiceType() != null) {
-                tsn = sg.getServiceNode(id.getServiceType());
-            } else {
+            // Workaround to support FSW6.0 with RTGov 1, which did not have
+            // the getServiceType() method.
+            try {
+                if (id.getServiceType() != null) {
+                    tsn = sg.getServiceNode(id.getServiceType());
+                }
+            } catch (Throwable t) {
+                // Ignore
+                if (LOG.isLoggable(java.util.logging.Level.FINEST)) {
+                    LOG.log(java.util.logging.Level.FINEST, "Failed to get service type (assume running in FSW6.0)", t);
+                }
+            }
+            
+            if (tsn == null && id.getInterface() != null) {
                 tsn = sg.getServiceNodeForInterface(id.getInterface());
             }
             
