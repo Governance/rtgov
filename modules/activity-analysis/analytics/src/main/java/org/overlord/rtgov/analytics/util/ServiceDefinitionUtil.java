@@ -181,7 +181,9 @@ public final class ServiceDefinitionUtil {
                             
                             // Check if any invocations are performed in the
                             // scope of this req/resp
-                            checkForExternalInvocations(sdefs, actUnit, resp, i+1, j);
+                            if (resp != null) {
+                                checkForExternalInvocations(sdefs, actUnit, resp, i+1, j);
+                            }
                             
                             // Advance 'i' so only checks after the sent
                             // response
@@ -263,6 +265,22 @@ public final class ServiceDefinitionUtil {
     protected static MEPDefinition processServiceInvoked(java.util.Map<String,ServiceDefinition> sdefs,
                 ActivityUnit actUnit, RequestReceived rqr, ResponseSent rps) {
         MEPDefinition ret=null;
+        
+        if (rqr.getServiceType() == null) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Can't process service invocation with missing service type and interface '"
+                            +rqr.getInterface()+"'");
+            }
+            return null;
+        }
+        
+        if (rqr.getInterface() == null) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Can't process service invocation for service type '"
+                            +rqr.getServiceType()+"' due to missing interface");
+            }
+            return null;
+        }
         
         // Get service definition associated with the service type
         ServiceDefinition sd=sdefs.get(rqr.getServiceType());

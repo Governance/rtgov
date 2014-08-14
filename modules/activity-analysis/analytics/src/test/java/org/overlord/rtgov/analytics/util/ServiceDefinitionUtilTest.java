@@ -1414,4 +1414,20 @@ public class ServiceDefinitionUtilTest {
         }
         
     }
+
+    // RTGOV-557
+    @Test
+    public void testSeviceDefinitionInterfaceNull() {
+
+        RequestReceived rqr=new RequestReceived();
+        rqr.setServiceType(SERVICE_TYPE_1);
+        
+        try {
+            ServiceDefinitionUtil.processServiceInvoked(new java.util.HashMap<String,ServiceDefinition>(),
+                                null, rqr, null);
+        } catch (Exception e) {
+            fail("Failed to process request received");
+        }
+    }
+    
 }
