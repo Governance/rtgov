@@ -19,5 +19,14 @@
 		<module>overlord-rtgov-switchyard-eap6</module>
 	</modules>
 
+    <profiles>
+        <profile>
+            <id>fsw60</id>
+            <modules>
+                <module>overlord-rtgov-fsw60</module>
+            </modules>
+        </profile>
+    </profiles>
+
 </project>
 
