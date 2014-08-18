@@ -43,7 +43,7 @@
 
 		<dependency>
 			<groupId>org.overlord.rtgov.ui</groupId>
-			<artifactId>overlord-rtgov-ui-war-eap6</artifactId>
+			<artifactId>overlord-rtgov-ui-eap6</artifactId>
 			<type>war</type>
 		</dependency>
 

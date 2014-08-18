@@ -164,7 +164,7 @@
 
 		<dependency>
 			<groupId>org.overlord.rtgov.ui</groupId>
-			<artifactId>overlord-rtgov-ui-war-fuse6</artifactId>
+			<artifactId>overlord-rtgov-ui-fuse6</artifactId>
 			<type>war</type>
 		</dependency>
 
@@ -688,7 +688,7 @@
 										</feature>
 									</dependsOnFeatures>
 									<includes>
-										<include>org.overlord.rtgov.ui:overlord-rtgov-ui-war-fuse6:*</include>
+										<include>org.overlord.rtgov.ui:overlord-rtgov-ui-fuse6:*</include>
 									</includes>
 								</feature>
 								<feature>

@@ -7,7 +7,7 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
   <groupId>org.overlord.rtgov.ui</groupId>
-  <artifactId>overlord-rtgov-ui-war-jetty8</artifactId>
+  <artifactId>overlord-rtgov-ui-jetty8</artifactId>
   <packaging>war</packaging>
   <name>Overlord RTGov::UI::Jetty8</name>
 
@@ -15,7 +15,7 @@
     <!-- The UI WAR's classes -->
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
-      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <artifactId>overlord-rtgov-ui-base</artifactId>
       <classifier>classes</classifier>
       <scope>provided</scope>
     </dependency>
@@ -23,7 +23,7 @@
     <!-- The base WAR being extended -->
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
-      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <artifactId>overlord-rtgov-ui-base</artifactId>
       <type>war</type>
     </dependency>
 
@@ -44,7 +44,7 @@
           <overlays>
             <overlay>
               <groupId>${project.groupId}</groupId>
-              <artifactId>overlord-rtgov-ui-war</artifactId>
+              <artifactId>overlord-rtgov-ui-base</artifactId>
               <excludes>
                 <exclude>WEB-INF/lib/jetty-naming-*.jar</exclude>
                 <exclude>WEB-INF/lib/jetty-plus-*.jar</exclude>
