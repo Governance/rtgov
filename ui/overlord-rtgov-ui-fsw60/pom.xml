@@ -6,14 +6,14 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
   <groupId>org.overlord.rtgov.ui</groupId>
-  <artifactId>overlord-rtgov-ui-war-eap6</artifactId>
+  <artifactId>overlord-rtgov-ui-fsw60</artifactId>
   <packaging>war</packaging>
-  <name>Overlord RTGov::UI::EAP6</name>
+  <name>Overlord RTGov::UI::FSW60</name>
 
   <dependencies>
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
-      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <artifactId>overlord-rtgov-ui-base</artifactId>
       <classifier>classes</classifier>
       <scope>provided</scope>
       <exclusions>
@@ -26,7 +26,7 @@
     <!-- The base WAR being extended -->
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
-      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <artifactId>overlord-rtgov-ui-base</artifactId>
       <type>war</type>
     </dependency>
     
@@ -43,37 +43,52 @@
       <artifactId>rtgov-ui-services-switchyard</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.overlord.rtgov.activity-management</groupId>
+      <artifactId>activity</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.activity-analysis</groupId>
+      <artifactId>analytics</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.activity-analysis</groupId>
+      <artifactId>situation-store</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.activity-analysis</groupId>
+      <artifactId>service-dependency</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.activity-analysis</groupId>
+      <artifactId>service-dependency-svg</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.common</groupId>
+      <artifactId>rtgov-jpa</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.activity-management</groupId>
+      <artifactId>activity-store-jpa</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.overlord.rtgov.activity-analysis</groupId>
       <artifactId>situation-store-jpa</artifactId>
     </dependency>
     
-    	<dependency>
-	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
-	        <artifactId>analytics</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.overlord</groupId>
-                    <artifactId>overlord-commons-services</artifactId>
-                </exclusion>
-            </exclusions>
-	    </dependency>
-    	<dependency>
-	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
-	        <artifactId>call-trace</artifactId>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.overlord.rtgov.activity-management</groupId>
-	        <artifactId>activity-store-jpa</artifactId>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.overlord.rtgov.integration</groupId>
-	        <artifactId>rtgov-jbossas</artifactId>
-	    </dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.content.services</groupId>
-			<artifactId>elasticsearch-rests</artifactId>
-		</dependency>
-    
+   	<dependency>
+      <groupId>org.overlord.rtgov.activity-analysis</groupId>
+      <artifactId>call-trace</artifactId>
+	</dependency>
+	<dependency>
+      <groupId>org.overlord.rtgov.integration</groupId>
+      <artifactId>rtgov-jbossas</artifactId>
+    </dependency>
+	<dependency>
+      <groupId>org.overlord.rtgov.content.services</groupId>
+	  <artifactId>elasticsearch-rests</artifactId>
+	</dependency>
     
     <!-- Third Party libs -->
 	<dependency>
@@ -94,7 +109,6 @@
     <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
-		<scope>provided</scope>
         <exclusions>
             <exclusion>
                 <groupId>jta</groupId>
@@ -105,7 +119,6 @@
     <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-entitymanager</artifactId>
-        <scope>provided</scope>
         <exclusions>
             <exclusion>
                 <groupId>jta</groupId>
@@ -116,7 +129,6 @@
     <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-validator</artifactId>
-        <scope>provided</scope>
         <exclusions>
             <exclusion>
                 <groupId>jta</groupId>
@@ -186,7 +198,7 @@
           <overlays>
             <overlay>
               <groupId>${project.groupId}</groupId>
-              <artifactId>overlord-rtgov-ui-war</artifactId>
+              <artifactId>overlord-rtgov-ui-base</artifactId>
               <excludes>
                 <exclude>WEB-INF/jetty-env.xml</exclude>
                 <exclude>WEB-INF/lib/jetty*.jar</exclude>
@@ -206,8 +218,8 @@
                 <exclude>WEB-INF/lib/jaxb-*.jar</exclude>
                 <exclude>WEB-INF/lib/netty*.jar</exclude>
                 <exclude>WEB-INF/lib/xercesImpl*.jar</exclude>
-                <exclude>WEB-INF/lib/overlord-commons-services-*.jar</exclude>
-                <exclude>WEB-INF/lib/xercesImpl*.jar</exclude>
+                <exclude>WEB-INF/lib/picketlink*.jar</exclude>
+                <exclude>WEB-INF/lib/picketbox*.jar</exclude>
                 <exclude>WEB-INF/classes/org/overlord/rtgov/ui/server/services/mock/*</exclude>
               </excludes>
             </overlay>

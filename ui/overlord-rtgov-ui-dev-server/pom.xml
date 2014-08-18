@@ -66,7 +66,7 @@
 
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
-      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <artifactId>overlord-rtgov-ui-base</artifactId>
       <classifier>classes</classifier>
       <exclusions>
         <exclusion>

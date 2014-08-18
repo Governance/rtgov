@@ -7,9 +7,9 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
   <groupId>org.overlord.rtgov.ui</groupId>
-  <artifactId>overlord-rtgov-ui-war</artifactId>
+  <artifactId>overlord-rtgov-ui-base</artifactId>
   <packaging>war</packaging>
-  <name>Overlord RTGov::UI::WAR</name>
+  <name>Overlord RTGov::UI::Base</name>
   
   <properties>
   	<kibana.distribution.version>kibana-3.0.1</kibana.distribution.version>

@@ -7,14 +7,14 @@
     <version>2.0.0-SNAPSHOT</version>
   </parent>
   <groupId>org.overlord.rtgov.ui</groupId>
-  <artifactId>overlord-rtgov-ui-war-fuse6</artifactId>
+  <artifactId>overlord-rtgov-ui-fuse6</artifactId>
   <packaging>war</packaging>
   <name>Overlord RTGov::UI::Fuse6</name>
   
   <dependencies>
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
-      <artifactId>overlord-rtgov-ui-war</artifactId>
+      <artifactId>overlord-rtgov-ui-base</artifactId>
       <classifier>classes</classifier>
       <scope>provided</scope>
       <exclusions>
@@ -28,7 +28,7 @@
     <!-- The base WAR being extended -->
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>overlord-rtgov-ui-war-jetty8</artifactId>
+      <artifactId>overlord-rtgov-ui-jetty8</artifactId>
       <type>war</type>
     </dependency>
 
@@ -114,12 +114,12 @@
         <artifactId>maven-war-plugin</artifactId>
 		<version>2.4</version>
         <configuration>
-          <warName>overlord-rtgov-ui-war-fuse6</warName>
+          <warName>overlord-rtgov-ui-fuse6</warName>
           <useUniqueVersions>false</useUniqueVersions>
           <overlays>
             <overlay>
               <groupId>${project.groupId}</groupId>
-              <artifactId>overlord-rtgov-ui-war-jetty8</artifactId>
+              <artifactId>overlord-rtgov-ui-jetty8</artifactId>
               <excludes>
                 <exclude>WEB-INF/lib/log4j-*.jar</exclude>
                 <exclude>WEB-INF/lib/slf4j-api-*.jar</exclude>
