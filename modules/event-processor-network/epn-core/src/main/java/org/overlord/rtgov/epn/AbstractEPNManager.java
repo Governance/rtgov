@@ -55,7 +55,7 @@ public abstract class AbstractEPNManager implements EPNManager {
      */
     public void init() {
         // Check if managed
-        if (isManaged()) {
+        if (isManaged() && _epnManagement == null) {
             _epnManagement = new EPNManagement(this);
             _epnManagement.init();
         }
