@@ -254,7 +254,15 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     public void init() {
         super.init();
         
-        LOG.info("Initialize JMS EPN Manager");
+        initJMS(true);
+    }
+    
+    /**
+     * This method initializes the JMS connection and destinations.
+     * 
+     * @param onInit Whether being called on service initializatipn
+     */
+    protected synchronized void initJMS(boolean onInit) {
         
         // Check if connection factory initialized
         if (_connectionFactory == null) {
@@ -263,7 +271,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                 InitialContext context=new InitialContext();
                 _connectionFactory = (ConnectionFactory)context.lookup("java:/JmsXA");
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, "Failed to initialize JMS connection factory", e);
+                Level level=(onInit ? Level.FINEST : Level.SEVERE);
+                LOG.log(level, "Failed to initialize JMS connection factory", e);
             }
         }
         
@@ -272,6 +281,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         }
             
         if (_connectionFactory != null && _connection == null) {
+            
+            LOG.info("Initialize JMS EPN Manager");
             
             try {
                 
@@ -358,6 +369,12 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * {@inheritDoc}
      */
     public void publish(String subject, java.util.List<? extends java.io.Serializable> events) throws Exception {
+        
+        // Check if need to explicitly initialize
+        if (_connectionFactory == null) {
+            initJMS(false);
+        }
+        
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Publish "+events+" to subject '"+subject+"'");
         }
@@ -375,6 +392,11 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * @throws Exception Failed to handle message
      */
     public void handleEventsMessage(Message message) throws Exception {
+        // Check if need to explicitly initialize
+        if (_connectionFactory == null) {
+            initJMS(false);
+        }
+        
         if (message instanceof ObjectMessage) {            
             
             if (LOG.isLoggable(Level.FINEST)) {
@@ -502,6 +524,11 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * @throws Exception Failed to handle notification
      */
     public void handleNotificationsMessage(Message message) throws Exception {
+        // Check if need to explicitly initialize
+        if (_connectionFactory == null) {
+            initJMS(false);
+        }
+        
         if (message instanceof ObjectMessage) {
             
             if (LOG.isLoggable(Level.FINEST)) {
@@ -612,8 +639,13 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         
         LOG.info("Closing JMS EPN Manager");
         try {
-            _session.close();
-            _connection.close();
+            if (_session != null) {
+                _session.close();
+            }
+            
+            if (_connection != null) {
+                _connection.close();
+            }
             
             _session = null;
             _connection = null;
