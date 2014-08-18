@@ -44,6 +44,11 @@
 		<!-- Load the Overlord Vault Keys -->
 		<property file="${path}/standalone/configuration/overlord-vault-keys.properties" />
 
+		<antcall target="storeclientpassword" />
+	</target>
+
+	<target name="getclientpassword" unless="rtgov.users.client.password" >
+
 		<!-- Prompt the user for rtgov client credentials -->
 	    <echo message="" />
 	    <echo message="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" />
@@ -59,6 +64,9 @@
 			<handler type="secure" />
 		</input>
 
+	</target>
+
+	<target name="storeclientpassword" depends="getclientpassword" >
 	    <!-- Store rtgov client user's password in vault -->
 	    <property name="rtgov.tmp.file" location="_tmp_vault.properties" />
 	    <java jar="${path}/jboss-modules.jar"
