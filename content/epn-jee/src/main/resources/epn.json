@@ -1,6 +1,6 @@
 {
   "name" : "Overlord-RTGov-EPN",
-  "version" : "2",
+  "version" : "${project.version}",
   "subscriptions" : [ {
     "nodeName" : "SOAEvents",
     "subject" : "ActivityUnits"

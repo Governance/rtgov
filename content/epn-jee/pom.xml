@@ -67,6 +67,12 @@
 	
 	<build>
 		<finalName>overlord-rtgov-epn</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
@@ -74,7 +80,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>deployment.overlord-rtgov.war  export services</Dependencies>
+							<Dependencies>deployment.overlord-rtgov.war export services</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>
