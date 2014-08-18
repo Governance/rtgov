@@ -4,6 +4,16 @@
     <property name="overlord-commons.path" location="../../overlord-commons" />
 
 	<target name="install" >
+		<!-- Install Runtime Governance -->
+
+		<copy todir="${path}/etc" >
+			<fileset dir="configuration" />
+		</copy>
+
+		<antcall target="storeclientpassword" />
+	</target>
+
+	<target name="getclientpassword" unless="rtgov.users.client.password" >
 
 		<!-- Prompt the user for rtgov client credentials -->
 	    <echo message="" />
@@ -20,6 +30,9 @@
 			<handler type="secure" />
 		</input>
 
+	</target>
+
+	<target name="storeclientpassword" depends="getclientpassword" >
 	    <propertyfile file="${path}/etc/overlord-rtgov.properties">
 			<entry key="RESTActivityServer.serverUsername" value="${rtgov.users.client.username}" />
 			<entry key="RESTActivityServer.serverPassword" value="${rtgov.users.client.password}" />
