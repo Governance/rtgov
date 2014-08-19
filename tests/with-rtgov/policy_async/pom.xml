@@ -23,7 +23,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.samples.jbossas.policy</groupId>
-			<artifactId>samples-jbossas-policy-async</artifactId>
+			<artifactId>samples-jbossas-policy-async-av</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.samples.jbossas.policy</groupId>
+			<artifactId>samples-jbossas-policy-async-epn</artifactId>
 			<type>war</type>
 		</dependency>
 
