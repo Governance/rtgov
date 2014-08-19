@@ -14,7 +14,8 @@
 	</parent>
 
 	<modules>
-		<module>async</module>
+		<module>async-av</module>
+		<module>async-epn</module>
 		<module>sync</module>
 	</modules>
 

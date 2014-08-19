@@ -57,11 +57,21 @@ public class JBossASPolicyAsyncTest {
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFile);
     }
     
-    @Deployment(name="policy-async", order=3)
+    @Deployment(name="policy-async-av", order=3)
     public static WebArchive createDeployment3() {
         String version=System.getProperty("rtgov.version");
 
-        java.io.File archiveFile=Maven.resolver().resolve("org.overlord.rtgov.samples.jbossas.policy:samples-jbossas-policy-async:war:"+version)
+        java.io.File archiveFile=Maven.resolver().resolve("org.overlord.rtgov.samples.jbossas.policy:samples-jbossas-policy-async-av:war:"+version)
+                .withoutTransitivity().asSingleFile();
+        
+        return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFile);
+    }
+    
+    @Deployment(name="policy-async-epn", order=4)
+    public static WebArchive createDeployment4() {
+        String version=System.getProperty("rtgov.version");
+
+        java.io.File archiveFile=Maven.resolver().resolve("org.overlord.rtgov.samples.jbossas.policy:samples-jbossas-policy-async-epn:war:"+version)
                 .withoutTransitivity().asSingleFile();
         
         return ShrinkWrap.createFromZipFile(WebArchive.class, archiveFile);

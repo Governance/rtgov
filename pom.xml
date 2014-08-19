@@ -516,8 +516,14 @@
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.samples.jbossas.policy</groupId>
-			    <artifactId>samples-jbossas-policy-async</artifactId>
-                <version>${project.version}</version>
+			    <artifactId>samples-jbossas-policy-async-av</artifactId>
+			    <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov.samples.jbossas.policy</groupId>
+			    <artifactId>samples-jbossas-policy-async-epn</artifactId>
+			    <version>${project.version}</version>
 			    <type>war</type>
 		    </dependency>
 		    <dependency>

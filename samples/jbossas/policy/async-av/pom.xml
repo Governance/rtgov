@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.samples.jbossas.policy</groupId>
-	<artifactId>samples-jbossas-policy-async</artifactId> 
+	<artifactId>samples-jbossas-policy-async-av</artifactId> 
 	<packaging>war</packaging>
-	<name>Overlord RTGov::Samples::JBossAS::Policy::Async</name>
+	<name>Overlord RTGov::Samples::JBossAS::Policy::Async AV</name>
 
 	<parent>
 		<groupId>org.overlord.rtgov.samples.jbossas</groupId>
@@ -14,18 +14,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-core</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.event-processor</groupId>
-			<artifactId>ep-core</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-loader-jee</artifactId>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>av-loader-jee</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
@@ -52,23 +42,13 @@
 		<!-- The following dependencies are only required for testing the EPN -->
 
 		<dependency>
-			<groupId>org.overlord.rtgov.event-processor-network</groupId>
-			<artifactId>epn-container-embedded</artifactId>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-mvel</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -97,6 +77,16 @@
 			<scope>test</scope>
 		</dependency>		
 		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.mvel</groupId>
 			<artifactId>mvel2</artifactId>
 			<scope>test</scope>
@@ -115,7 +105,7 @@
 	</dependencies>
 	
 	<build>
-		<finalName>policy-async</finalName>
+		<finalName>policy-async-av</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -129,7 +119,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
  					<archive>
 						<manifestEntries>
-							<Dependencies>deployment.overlord-rtgov.war  export services</Dependencies>
+							<Dependencies>deployment.overlord-rtgov.war export services</Dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>
