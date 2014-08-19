@@ -83,6 +83,8 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     
     private EPNContainer _container=new JMSEPNContainer();
     
+    private boolean _initialized=false;
+    
     private static final Logger LOG=Logger.getLogger(JMSEPNManagerImpl.class.getName());
 
     /**
@@ -262,71 +264,110 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      * 
      * @param onInit Whether being called on service initializatipn
      */
-    protected synchronized void initJMS(boolean onInit) {
-        
+    protected synchronized void initJMS(boolean onInit) {        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Initialise JMS (onInit="+onInit+")");
+        }
+            
         // Check if connection factory initialized
         if (_connectionFactory == null) {
             try {
-                // Attempt to retrieve from JNDI
                 InitialContext context=new InitialContext();
                 _connectionFactory = (ConnectionFactory)context.lookup("java:/JmsXA");
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Initialised connection factory="+_connectionFactory);
+                }
             } catch (Exception e) {
-                Level level=(onInit ? Level.FINEST : Level.SEVERE);
-                LOG.log(level, "Failed to initialize JMS connection factory", e);
+                LOG.log((onInit ? Level.FINEST : Level.SEVERE), "Failed to initialize JMS connection factory", e);
+                return;
             }
         }
         
-        if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Initialise with connection factory "+_connectionFactory+" (connection currently="+_connection+")");
-        }
-            
         if (_connectionFactory != null && _connection == null) {
-            
-            LOG.info("Initialize JMS EPN Manager");
-            
-            try {
-                
+            try {                
                 if (_username != null) {
                     _connection = _connectionFactory.createConnection(_username, _password);
                 } else {
                     _connection = _connectionFactory.createConnection();
                 }
                 
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Initialised connection="+_connection);
+                }
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Failed to create connection", e);
+            }
+        }
+        
+        if (_connection != null && _session == null) {
+            try {
                 // TODO: Issue - must be non-transacted, to enable arquillian test
                 // to work, but ideally needs to be transacted in production to
                 // ensure transactional consistency
                 _session = _connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
                 
-                // Check if destinations have been supplied
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Initialised session="+_session);
+                }
+
                 if (_epnEventsDestination == null && _epnEventsDestinationName != null) {
-                    _epnEventsDestination = _session.createQueue(_epnEventsDestinationName);
+                    _epnEventsDestination = _session.createQueue(_epnEventsDestinationName);                    
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Initialised events destination("+_epnEventsDestinationName+")="
+                                                +_epnEventsDestination);
+                    }
                 }
                 
                 if (_epnNotificationsDestination == null && _epnNotificationsDestinationName != null) {
-                    _epnNotificationsDestination = _session.createTopic(_epnNotificationsDestinationName);
-                }
-                
-                try {
-                    if (_epnEventsDestination == null) {
-                        // Attempt to retrieve from JNDI
-                        InitialContext context=new InitialContext();
-                        
-                        _epnEventsDestination = (Destination)context.lookup("java:/EPNEvents");
+                    _epnNotificationsDestination = _session.createTopic(_epnNotificationsDestinationName);                    
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Initialised notifications destination("+_epnNotificationsDestinationName+")="
+                                                +_epnNotificationsDestination);
                     }
+                }   
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Failed to create session or destinations", e);
+            }
+        }
+        
+        if (_epnEventsDestination == null) {
+            try {                    
+                InitialContext context=new InitialContext();                
+                _epnEventsDestination = (Destination)context.lookup("java:/EPNEvents");
+                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Initialised events destination="+_epnEventsDestination);
+                }
+            } catch (Exception e) {
+                LOG.log((onInit ? Level.FINEST : Level.SEVERE), "Failed to initialize JMS events destination", e);
+                return;
+            }
+        }
                     
-                    if (_epnNotificationsDestination == null) {
-                        // Attempt to retrieve from JNDI
-                        InitialContext context=new InitialContext();
-                        
-                        _epnNotificationsDestination = (Destination)context.lookup("java:/EPNNotifications");
-                    }
-                } catch (Exception e) {
-                    LOG.log(Level.SEVERE, "Failed to initialize JMS destinations", e);
-                }
+        if (_epnNotificationsDestination == null) {
+            try {                    
+                InitialContext context=new InitialContext();                
+                _epnNotificationsDestination = (Destination)context.lookup("java:/EPNNotifications");
                 
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Initialised notifications destination="+_epnNotificationsDestination);
+                }
+            } catch (Exception e) {
+                LOG.log((onInit ? Level.FINEST : Level.SEVERE), "Failed to initialize JMS notifications destination", e);
+                return;
+            }
+        }
+        
+        if (_session != null && _epnEventsDestination != null && _epnNotificationsDestination != null) {
+            try {
                 _eventsProducer = _session.createProducer(_epnEventsDestination);
                 _notificationsProducer = _session.createProducer(_epnNotificationsDestination);
                 
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Initialised producers, events="+_eventsProducer+" notifications="+_notificationsProducer);
+                }
+
                 if (_initConsumers) {
                     _eventsConsumer = _session.createConsumer(_epnEventsDestination);
                     _notificationsConsumer = _session.createConsumer(_epnNotificationsDestination);
@@ -352,10 +393,18 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                             }
                         }
                     });
+                    
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Initialised consumers, events="+_eventsConsumer+" notifications="+_notificationsConsumer);
+                    }
                 }
+                    
+                _connection.start();                
+                _initialized = true;
                 
-                _connection.start();
-                
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Connection started");
+                }
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                         "epn-jms.Messages").getString("EPN-JMS-1"), e);
@@ -371,7 +420,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
     public void publish(String subject, java.util.List<? extends java.io.Serializable> events) throws Exception {
         
         // Check if need to explicitly initialize
-        if (_connectionFactory == null) {
+        if (!_initialized) {
             initJMS(false);
         }
         
@@ -393,7 +442,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      */
     public void handleEventsMessage(Message message) throws Exception {
         // Check if need to explicitly initialize
-        if (_connectionFactory == null) {
+        if (!_initialized) {
             initJMS(false);
         }
         
@@ -525,7 +574,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      */
     public void handleNotificationsMessage(Message message) throws Exception {
         // Check if need to explicitly initialize
-        if (_connectionFactory == null) {
+        if (!_initialized) {
             initJMS(false);
         }
         
