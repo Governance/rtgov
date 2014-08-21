@@ -67,7 +67,7 @@
 	<properties>
 		<version.ch.qos.cal10n>0.7.4</version.ch.qos.cal10n>
 		<version.org.apache.commons.commons-lang3>3.1</version.org.apache.commons.commons-lang3>
-		<version.org.drools>6.1.0.CR1</version.org.drools>
+		<version.org.drools>6.1.0.Beta4</version.org.drools>
 		<version.org.elasticsearch>1.1.0</version.org.elasticsearch>
         <version.org.codehaus.enunciate>1.28</version.org.codehaus.enunciate>
 		<version.org.jboss.errai>2.4.3.Final</version.org.jboss.errai>
@@ -78,11 +78,11 @@
         <version.org.eclipse.jetty>6.1.25</version.org.eclipse.jetty>
 		<version.org.jboss.naming>5.0.3.GA</version.org.jboss.naming>
 		<version.javax.servlet.jsp-api>2.0</version.javax.servlet.jsp-api>
-		<version.org.kie>6.1.0.CR1</version.org.kie>
+		<version.org.kie>6.1.0.Beta4</version.org.kie>
         <version.org.apache.lucene>4.7.2</version.org.apache.lucene> <!-- Required to override parent bom version -->
         <version.org.jboss.remotingjmx>1.1.0.Final</version.org.jboss.remotingjmx>
 		<version.org.overlord.rtgov.docs>2.0.0-SNAPSHOT</version.org.overlord.rtgov.docs>
-		<version.org.overlord.overlord-commons>2.0.8-SNAPSHOT</version.org.overlord.overlord-commons>
+		<version.org.overlord.overlord-commons>2.0.8.Final</version.org.overlord.overlord-commons>
 		<version.org.picketbox>4.0.19.SP4</version.org.picketbox>
 		<version.org.picketlink>2.5.3.SP4</version.org.picketlink>
 		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>
