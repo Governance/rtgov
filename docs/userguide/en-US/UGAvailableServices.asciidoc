@@ -1,0 +1,256 @@
+== Available Services
+
+This section describes the "out of the box" additional services that are provided.
+
+=== Call Trace
+
+The "Call Trace" service is used to return a tree structure tracing the path of a business transaction (as a call/invocation stack) through a Service Oriented Architecture.
+
+The URL for the service's REST GET request is: +<host>/overlord-rtgov/call/trace/instance?type=<type>&value=<value>+
+
+The service uses basic authentication, with a default username +admin+ and password +overlord+.
+
+This service has the following query parameters:
+
+[options="header"]
+|=======================
+| Parameter | Description
+| type | The type of the identify value, e.g. Conversation, Endpoint, Message or Link
+| value | The identifier value, e.g. if type is Conversation, then the value would be a globally unique identifier for the business transaction
+|=======================
+
+The call trace is returned as a JSON representation of the call trace object model. The top level class is +org.overlord.rtgov.call.trace.model.CallTrace+, details can be found in the API documentation.
+
+=== Report Server
+
+NOTE: As of version 2.0, the report server is deprecated, indicating that it will be removed from the project in a future release. Therefore we suggest that you should not start using it, and if already using it, plan to migrate off this capability in the new future. The capability is being deprecated as more sophisticated analysis and reporting can be achieved through the Kibana/Elasticsearch tools, which are now integrated from RTGov 2.0.
+
+The "Report Server" service is used to generate instances of a report whose definition has previously been deployed to the server. This section will explain how to configure and deploy a report definition, and then how to generate the report instances.
+
+==== Creating and deploying a report definition
+
+The first step is to specify a JSON representation of the +org.overlord.rtgov.reports.ReportDefinition+ class (see API documentation for details).
+
+----
+[
+  {
+    "name" : "SLAReport",
+    "generator" : {
+      "@class" : "org.overlord.rtgov.reports.MVELReportGenerator",
+       "scriptLocation" : "SLAReport.mvel"
+    }
+  }
+]
+----
+
+The report definition only contains the +name+ of the report, and the definition of the +generator+. In this case, the +org.overlord.rtgov.reports.MVELReportGenerator+ implementation of the report generator has been used, which also includes a property to define the location of the report script (e.g. +SLAReport.mvel+). This MVEL SLA report script can be found in the +samples/sla/report+ folder.
+
+
+===== Registering the Report
+
+
+*JEE Container*
+
+The Report Definition is deployed within the JEE container as a WAR file with the following structure:
+
+----
+warfile
+|
+|-META-INF
+|    |- beans.xml
+|
+|-WEB-INF
+|    |-classes
+|    |    |-reports.json
+|    |    |-<custom classes/resources>
+|    |
+|    |-lib
+|       |-reports-loader-jee.jar
+|       |-<additional libraries>
+----
+
+As described above, the +reports.json+ file contains the JSON representation of the report definition configuration.
+
+The +reports-loader-jee.jar+ acts as a bootstrapper to load and register the Report Definition.
+
+If custom report generators or scripts are defined, then the associated classes and resources can be defined in the +WEB-INF/classes+ folder or within additional libraries located in the +WEB-INF/lib+ folder.
+
+A maven pom.xml that will create this structure is:
+
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>....</groupId>
+	<artifactId>....</artifactId>
+	<version>....</version>
+	<packaging>war</packaging>
+	<name>....</name>
+
+	<properties>
+		<rtgov.version>....</rtgov.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports-loader-jee</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>reports</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		....
+	</dependencies>
+
+</project>
+----
+
+If deploying in JBoss Application Server, then the following fragment also needs to be included, to define the dependency on the core Overlord Runtime Governance modules:
+
+----
+.....
+	<build>
+		<finalName>slamonitor-epn</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+ 					<archive>
+						<manifestEntries>
+							<Dependencies>deployment.overlord-rtgov.war</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	.....
+----
+
+
+
+==== Generating an instance of the report
+
+The URL for the service's REST GET request is: +<host>/overlord-rtgov/report/generate?<parameters>+
+
+The service uses basic authentication, with a default username +admin+ and password +overlord+.
+
+This service has the following query parameters:
+
+[options="header"]
+|=======================
+| Parameter | Description
+| report | The name of the report to be generated. This must match the previously deployed report definition name.
+| startDay/Month/Year | The optional start date for the report. If not defined, then the report will use all activities stored up until the end date.
+| endDay/Month/Year | The optional end date for the report. If not defined, then the report will use all activities up until the current date.
+| timezone | The optional timezone.
+| calendar | The optional business calendar name. A default called exists called 'Default' which represents a working week of Monday to Friday, 9am to 5pm, excluding Christmas Day.
+|=======================
+
+All other query parameters that may be provided will be specific to the report definition being generated.
+
+The operation returns a JSON representation of the +org.overlord.rtgov.reports.model.Report+ class. See the API documentation for further details of the object model.
+
+
+==== Providing a custom Business Calendar
+
+A custom Business Calendar can be defined as a JSON representation of the +org.overlord.rtgov.reports.mode.Calendar+ class (see API documentation for details). This should be stored in a file whose location is referenced using a property called "calendar.<CalendarName>" in the +overlord-rtgov.properties+ file.
+
+
+=== Service Dependency
+
+The "Service Dependency" service is used to return a service dependency graph as a SVG image. The graph represents the invocation and usage links between services (and their operations), and provides a color-coded indication of areas that require attention. Where 'situations' have been detected against services or their operations, this will be flagged on the service dependency graph with an appropriate colour reflecting their severity.
+
+The URL for the service's REST GET request is: +<host>/overlord-rtgov/service/dependency/overview?width=<value>+
+
+The service uses basic authentication, with a default username +admin+ and password +overlord+.
+
+This service has the following query parameters:
+
+[options="header"]
+|=======================
+| Parameter | Description
+| width | Represents the optional image width. If the width is below a certain threshold, then a summary version of the dependency graph will be provided without text or tooltips (used to display metrics).
+|=======================
+
+==== How to customize the severity levels
+
+The severity levels used for the graph nodes and links can be customized by creating a MVEL script. A default script is provided within the +overlord-rtgov.war+, which can be used as a template. The script is called +SeverityAnalyzer.mvel+ and is located within the +/WEB-INF/classes+ folder of the +overlord-rtgov.war+ archive.
+
+An example of the contents of this script is:
+
+----
+Severity severity=Severity.Normal;
+
+if (summary != null && latest != null && summary.getAverage() > 0) {
+	double change=latest.getAverage()/summary.getAverage();
+	
+	if (change > 0) {
+
+	    if (change > 3.0) {
+	        severity = Severity.Critical;
+	    } else if (change > 2.2) {
+	        severity = Severity.Serious;
+	    } else if (change > 1.8) {
+	        severity = Severity.Error;
+	    } else if (change > 1.4) {
+	        severity = Severity.Warning;
+	    } else if (change > 1.2) {
+	        severity = Severity.Minor;
+	    }
+	}
+}
+
+return (severity);
+----
+
+The script returns a value of type +org.overlord.rtgov.service.dependency.presentation.Severity+, which is automatically available as an imported class for use by the script.
+
+The script takes four variables:
+
+[options="header"]
+|=======================
+| Variable | Description
+| summary | The summary metric to be evaluated.
+| history | The list of recent metrics, merged to produce the summary metric.
+| latest | The latest metric.
+| component | The service definition component associated with the metric. This variable is not used within the example script above.
+|=======================
+
+If a customized script is created, then its location can be specified in the +MVELSeverityAnalyzer.scriptLocation+ property in the +overlord-rtgov.properties+ configuration file.
+
+
+=== Situation Manager
+
+The "Situation Manager" service is used to determine whether situations associated with a particular subject (i.e. service) should be displayed to users via the Situations gadget. The service supports two operations.
+
+The service uses basic authentication, with a default username +admin+ and password +overlord+.
+
+==== Ignoring situations related to a subject
+
+The +ignore+ operation is used to indicate that situations for a particular subject (i.e. generally a service type) should not be presented to users via the REST service (and therefore the Situations gadget).
+
+The URL for the +ignore+ operation's POST request is: +<host>/overlord-rtgov/situation/manager/ignore+
+
+This request supplies a JSON representation of the +org.overlord.rtgov.analytics.situation.IgnoreSubject+ class. See the API documentation for more information.
+
+The operation responds with a status message indicating whether the operation was successful.
+
+NOTE: Currently wildcards are not supported for subjects.
+
+==== Observing situations related to a subject
+
+The +observe+ operation is used to essentially reverse the actions performed by a previous +ignore+ operation, to make situations for a particular subject (i.e. generally a service type) visible again to users via the REST service (and therefore the Situations gadget).
+
+The URL for the +observe+ operation's POST request is: +<host>/overlord-rtgov/situation/manager/observe+
+
+This request supplies a JSON representation of the +org.overlord.rtgov.analytics.situation.IgnoreSubject+ class. See the API documentation for more information.
+
+The operation responds with a status message indicating whether the operation was successful.
+
+

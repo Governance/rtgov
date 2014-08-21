@@ -1,0 +1,14 @@
+Runtime Governance: Developer Guide
+===================================
+:doctype: book
+
+include::DGArchitectureOverview.asciidoc[]
+
+include::DGReportingActivity.asciidoc[]
+
+include::DGEventProcessing.asciidoc[]
+
+include::DGActiveCollections.asciidoc[]
+
+
+

@@ -1,0 +1,595 @@
+== Reporting Activity
+
+
+=== Activity Model
+
+The section provides an overview of the Activity Model. This model defines the set of events (or situations) that can be reported to identify what is happening during the execution of a business transaction.
+
+
+==== Activity Unit
+
+The main (top level) model component is the Activity Unit. This component is a grouping capability to aggregate a set of activities (or situations) that relate to a particular transaction.
+
+The Activity Unit has the following parts:
+
+* id - this uniquely identifies the activity unit for historical retrieval purposes
+* origin - this information identifies the environment in which the activities were recorded
+* a set of contexts - provides contextual information to help relate the activities with other activities recorded in other units
+* a group of activity types - the actual activities (or situations) that occurred
+
+With the exception of the id field, these parts will be discussed in more detail below.
+
+
+==== Origin
+
+The Origin represents information about the source of the activities associated with the Activity Unit.
+
+The information currently stored includes:
+
+* principal - the user associated with the activities being performed, if available
+* thread - can be useful in diagnostic situations in conjunction with the host information
+* host - the host name
+* node - the node name, for when the server is part of a cluster
+
+
+==== Context
+
+The context items represent information that can be used to correlate the activities within the unit against other Activity Units, as well as identify information information that may be useful when attempting to retrieve the unit.
+
+The context has the following three pieces of information:
+
+* type - the context type, explained below
+* value - the value of the context information
+* timeframe - optional value used with a _Link_ context type, to identify the time period in which the context is valid
+
+The different context types that can be defined are:
+
+[options="header"]
+|=======================
+| Type Constant | Description
+| Context.Type.Conversation | The conversation id, which can be used to correlate activities across service boundaries and is unique to a particular business transaction instance.
+| Context.Type.Endpoint | The endpoint id, which can be used to correlate activities within a service boundary (e.g. BPM process instance id), and which is also unique to a particular business transaction instance.
+| Context.Type.Message | The unique id for a message being sent and/or received. The message id may only be valid within the scope of an endpoint, as its value may not be carried with the message contents to the recipient. A common usage will be to correlate a response against the originating request within the same endpoint.
+| Context.Type.Link | This type represents a correlation between two activity events based on identify information that is only valid (i.e. unique) for a limited time period.
+|=======================
+
+
+==== Activity Type
+
+All activity events are derived from an Activity Type superclass. This class has the following information:
+
+* activity unit id
+* activity unit index
+* timestamp
+* principal
+* a set of contexts
+* a set of properties
+
+The only piece of information that needs to be provided by the reporting component is the timestamp, and optionally some activity type specific contexts. The other information will be initialized by the infrastructure prior to persisting the Activity Unit, as a way to enable the specific Activity Type instance to be located. This may be required during the analysis of Activity Units.
+
+===== BPM
+
+The BPM (Business Process Management) specific activity events are used to record the lifecycle and state transitions that occur when a business process (associated with a description language such as BPMN2 or WS-BPEL) is executed within a runtime engine, in support of a business transaction.
+
+These business processes tend to be "long running", in that they handle multiple requests and responses over a period of time, all being correlated to the same process instance. This means that activities generated as a result of this execution must also be correlated to \(i) the specific XA transaction in which they are performed, (ii) the process instance that holds their state information in the BPM engine, and (iii) the conversation associated with the particular business transaction.
+
+This does not mean that all Activity Units the contain activity information from the BPM engine need to have all three types of correlation information. For example, the initial Activity Unit for a business process instance may identify (i) and (ii), which will establish a unique process instance id. A subsequent Activity Unit may then define the same process id for (ii), as well as a conversation id (iii) that can then be used to tie any Activity Unit relates with the process instance id to that conversation - i.e. all Activity Units with the same process instance id become directly or indirectly correlated to the conversation id that may only be declared in some of the Activity Units.
+
+[options="header"]
+|=======================
+| Activity Type | Description
+| ProcessStarted | This activity type will be recorded when a process instance is initially started.
+
+Attributes include: process type, instance id and version
+| ProcessCompleted | This activity type will be recorded when a process instance completes.
+
+Attributes include: process type, instance id and status (either success or fail)
+| ProcessVariableSet | This activity type will be recorded when a process variable's value is set or modified.
+
+Attributes include: process type, instance id and variable name/type/value
+|=======================
+
+
+===== SOA
+
+[options="header"]
+|=======================
+| Activity Type | Description
+| RequestReceived and RequestSent | This activity type will be recorded when a service invocation (request) is received or sent.
+
+Attributes include: service type (generally a fully qualified name in the form "﻿﻿{namespace}localpart", operation, fault (optional fault name)
+message type, content and message id
+| ResponseReceived and ResponseSent | This activity type will be recorded when a service invocation returns.
+
+Attributes include: service type (generally a fully qualified name in the form "﻿﻿{namespace}localpart", operation, fault (optional fault name)
+message type, content, message id and replyTo id (used to correlate the response to the original request)
+|=======================
+
+
+=== Activity Collector
+
+The _Activity Collector_ is an embedded component that can be used to accumulate activity information from the infrastructure used in the execution of a business transaction. The activity information is then reported to the Activity Server (described in the following section) implicitly, using an appropriate Activity Logger implementation. The default Activity Logger implementation operates efficiently by providing a batching capability to send activity information to the server based either on a regular time interval, or a maximum number of activity units, whichever occurs first.
+
+
+==== Finding the Activity Collector
+
+Locating the Activity Collector will be dependent upon the environment. This section outlines the different approaches that may be used.
+
+===== JEE Environment
+
+In a JEE environment, the Activity Collector is obtained using the following code:
+
+----
+import org.overlord.rtgov.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
+
+....
+
+ActivityCollector activityCollector = ActivityCollectorAccessor.getActivityCollector();
+----
+
+The accessor is initialized with an instance of the ActivityCollector when it is instantiated by the system (e.g. CDI). If an instance has not been initialized when this method is invoked, then the client will be blocked for a short period of time, waiting for the instance. If the instance has not been initialized after this period, then a null will be returned.
+
+
+==== Pre-Processing Activity Information
+
+The ActivityCollector API provides a method to enable information associated with the activity event to be
+pre-processed, using configured information processors (see User Guide), to extract relevant properties that can be associated
+with the activity event.
+
+These extracted properties can subsequently be used in further event analysis, to correlate the events and
+enable business relevant queries to be performed. The signature for this method is,
+
+----
+public String processInformation(String processor, String type,
+        Object info, java.util.Map<String, Object> headers,
+		ActivityType actType);
+----
+
+The 'processor' parameter is an optional value that can be used to explicitly name the information processor
+to be used. If not specified, then all registered information processors will be checked to determine if they
+are relevant for the supplied information type.
+
+The 'type' parameter represents the information type. This can be in any form, as long as it matches the registered
+type defined in the information processor configuration.
+
+The 'info' parameter represents the actual information that will be processed.
+
+The 'headers' parameter represents any header information that may have accompanied the information (e.g. if
+the information was a message exchanged between two interacting parties).
+
+The 'actType' parameter represents the activity event that any extracted properties should be recorded
+against.
+
+
+==== Validating the Activity Event
+
+The activity collector provides a +validate+ method that can be used to pre-process the activity event,
+using configured Activity Validators (see User Guide), before it is submitted to the activity server.
+
+This mechanism can be used to process activity events in the execution environment, prior to it being distributed
+to the activity server which may be located on a separate server. It can also be used to identify invalid situations,
+resulting in an exception being thrown, which can be handled by the execution environment and used to block
+the business transaction associated with the activity event. An example of this usecase can be found in the
+"policy sync" quickstart.
+
+
+==== Managing the Activity Scope
+
+An Activity Scope is a way of grouping a range of different activity types, that will be reported to the activity
+server, into a single logical unit. It should generally represent the same scope as a XA transaction, to emcompass all of the work that was achieved within that transaction - and equally be discarded if the transaction is rolled back.
+
+When the first activity is reported within the scope of a XA transaction, then the scope will automatically be started. When that transaction subsequently commits, the Activity Unit (i.e. the collection of activities accumulated during that scope) will be reported to the Activity Server.
+
+However if activities are performed outside the scope of a XA transaction, then the component reporting the activity information can either explicitly start a scope, or just report the activity information.
+
+If no scope exists, and an activity type is reported, then it will simply be reported to the activity server as a single event. The disadvantage of this approach is that it is less efficient, both in terms of reporting due to the duplication of certain header information, and for subsequent analysis. Having multiple activity events defined in a single unit, related to the transaction, provides added value to inter-relating the different events - providing some implied correlation that would not exist if the events were independently reported to the Activity Server.
+
+===== Starting the Scope
+
+To start the scope, simply invoke the +startScope+ method on the Activity Collector:
+
+----
+activityCollector.startScope();
+----
+
+If the application does not know whether a scope has already been started, and only wishes to start a single scope (i.e. as nested scopes are not supported), then the following guard can be used:
+
+----
+boolean started=false;
+if (!activityCollector.isScopeActive()) {
+    activityCollector.startScope();
+    started = true;
+}
+----
+
+The +isScopeActive+ method returns a boolean value to indicate whether the scope was previously started. If _true_ is returned, then this component is also responsible for stopping the scope. If _false_ is returned, then it means the scope has already been started, and therefore the component should *NOT* invoke the +endScope+ method.
+
+===== Ending the Scope
+
+To stop the scope, simply invoke the +endScope+ method on the Activity Collector:
+
+----
+if (started) {
+    activityCollector.endScope();
+}
+----
+
+==== Reporting an Activity Type
+
+As described above, activity information is reported to the server as an Activity Unit, containing one or more actual activity events. The activity event is generically known as an Activity Type.
+
+The Activity Collector mechanism removes the need for each component to report general information associated with the Activity Unit, and instead is only responsible for reporting the specific details associated with the situation that has occurred.
+
+The set of different Activity Types that may be reported is outside the scope of this section of the documentation, and so for the purpose of illustration we will only be using a subset of the SOA related activity events. For more informaton on the available event types, please refer to the javadocs.
+
+To report an event, simply create the specific Activity Type and invoke the +record+ method:
+
+----
+org.overlord.rtgov.activity.model.RequestSent sentreq=new org.overlord.rtgov.activity.model.soa.RequestSent();
+
+sentreq.setServiceType(serviceType);
+sentreq.setOperation(opName);
+sentreq.setContent(content);
+sentreq.setMessageType(mesgType);
+sentreq.setMessageId(messageId);
+
+activityCollector.record(sentreq);
+----
+
+For certain types of event, it may also be appropriate to invoke an information processor(s) to extract relevant context and property information, that can then be associated with the activity event. This is achieved using the following:
+
+----
+Object modifiedContent=_activityCollector.processInformation(null,
+          mesgType, content, headers, sentreq);
+
+sentreq.setContent(modifiedContent);
+----
+
+The activity collector can be used to process relevant information, supplying the activity type to enable context and property information to be defined. The result of processing the information may be a modified version of the content, suitably obsfucated to hide any potentially sensitive information from being distributed by the governance infrastructure.
+
+The first parameter to the _processInformation()_ method is an optional information processor name - which can be used to more efficiently locate the relevant processor if the name is known.
+
+
+==== Configuring an Activity Unit Logger
+
+The Activity Unit Logger is the component responsible for logging the activity unit that is generated when the +endScope+ method is invoked on the collector (either explicitly or implicitly by the XA resource manager).
+
+This interface has three methods:
+
+* init - this method initializes the activity unit logger implementation
+* log - supplied the Activity Unit to be logged
+* close - this method closes the activity unit logger implementation
+
+===== Batched Activity Unit Logger (Abstract)
+
+The Batched Activity Unit Logger is an abstract base class implementing the Activity Unit Logger interface. It provides the functionality to batch Activity Unit instances, and then forwarding them based on two properties:
+
+* Maximum Time Interval - If the time interval expires, then the set of Activity Units will be sent.
+* Maximum Unit Count - if the number of Activity Units reaches this max value, then the batch will be sent.
+
+This implementation can be explicitly initialized when used in an embedded environment. If used within a JEE environment, then the +PostConstruct+ and +PreDestroy+ annotations enable it to be implicit initialized and tidied up when the concrete component's lifecycle is managed.
+
+
+===== Activity Server Logger
+
+This implementation of the Activity Unit Logger interface is derived from the Batched Activity Unit Logger, and therefore will send activity information in a batch periodically based on the configured properties. When the batch of Activity Units are sent, this implementation forwards them to an implementation of the Activity Server interface, injected explicitly or implicitly into the logger.
+
+
+The Activity Server will be discussed in a subsequent section of this document. However, this can be used to either send the events directly to the Activity Server component, if co-located within the same server, or via a remote binding. For example,
+
+----
+import org.overlord.rtgov.activity.collector.ActivityCollector;
+import org.overlord.rtgov.activity.collector.activity.server.ActivityServerLogger;
+import org.overlord.rtgov.activity.server.rest.client.RESTActivityServer;
+
+.....
+
+        RESTActivityServer restc=new RESTActivityServer();
+        restc.setServerURL(_activityServerURL);
+
+        ActivityServerLogger activityUnitLogger=new ActivityServerLogger();
+        activityUnitLogger.setActivityServer(restc);
+
+        activityUnitLogger.init();
+
+        _collector.setActivityUnitLogger(activityUnitLogger);
+----
+
+This shows a situation where an embedded Activity Collector is being initialized with an Activity Server Logger, which uses the REST Activity Server client implementation.
+
+
+==== Configuring a Collector Context
+
+The final component within the Collector architecture is the Collector Context. This interface provides the Activity Collector with information about the environment (e.g. principal, host, node, port), which can be used to complete the Origin information within an Activity Unit, as well as providing access to capabilities required from the environment (e.g. the Transaction Manager).
+
+Each type of environment in which the collector may be used will provide an implementation of this interface. Depending upon the environment, this will either be implicitly injected into the Activity Collector, or be set explicitly using the setter method.
+
+
+==== Simplified Activity Reporter for use by application components
+
+Although the general Activity Collector mechanism can be used, as described in the previous sections, an injectable ActivityRecorder component is provided to enable applications to perform simple activity reporting tasks. Where injection is not possible, then a default implementation of the interface can be instantiated.
+
+For example, the sample SwitchYard order management application uses this approach:
+
+----
+@Service(InventoryService.class)
+public class InventoryServiceBean implements InventoryService {
+
+    private final Map<String, Item> _inventory = new HashMap<String, Item>();
+
+    private org.overlord.rtgov.client.ActivityReporter _reporter=
+		new org.overlord.rtgov.client.DefaultActivityReporter();
+
+    public InventoryServiceBean() {
+        ....
+    }
+
+    @Override
+    public Item lookupItem(String itemId) throws ItemNotFoundException {
+        Item item = _inventory.get(itemId);
+
+        if (item == null) {
+
+            if (_reporter != null) {
+                _reporter.logError("No item found for id '"+itemId+"'");
+            }
+
+            throw new ItemNotFoundException("We don't got any " + itemId);
+        }
+
+        ....
+
+        return item;
+    }
+}
+----
+
+The ActivityReporter enables the application to perform the following tasks:
+
+[options="header"]
+|=======================
+| Method | Description
+| logInfo(String mesg) | Log some information
+| logWarning(String meg) | Log a warning
+| logError(String mesg) | Log an error
+| report(String type, Map<String,String> props) | Record a custom activity with a particular type and associated properties
+| report(ActivityType activity) | Record an activity
+|=======================
+
+
+However this API cannot be used to control the scope of an ActivityUnit. It is expected that this would be handled by other parts of the infrastructure, so this API is purely intended to simplify the approach used for reporting additional incidental activities from within an application.
+
+The maven dependency required to access the ActivityReporter is:
+
+----
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-client</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+----
+
+
+=== Activity Server
+
+The Activity Server is responsible for:
+
+* Recording Activity Units describing the activities that occur during the execution of business transactions in a distributed environment.
+* Query suport to retrieve previously recorded Activity Units
+
+==== Recording Activity Units
+
+The Activity Server can be used to record a list of Activity Units generated from activity that occurs durig the execution of a business transaction. The Activity Units represent the logical grouping of individual situations that occur within a transaction (e.g. XA) boundary.
+
+This section will show the different ways this information can be recorded, using a variety of bindings.
+
+TIP: Where possible, the Activity Collector mechanism described in the previous section should be used to aggregate and record the activity information, as this is more efficient that each system individually reporting events to the server.
+
+
+===== Direct Injection
+
+The simpliest approach is to leverage CDI or OSGi (blueprint) to directly inject the Activity Server implementation.
+
+----
+import org.overlord.rtgov.activity.server.ActivityServer;
+
+....
+
+@Inject
+private ActivityServer _activityServer=null;
+----
+
+Once the reference to the Activity Server has been obtained, then call the +store+ method to record a list of Activity Units.
+
+----
+import org.overlord.rtgov.activity.model.soa.RequestSent;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+
+....
+
+java.util.List<ActivityUnit> list=new .....;
+
+RequestSent act=new RequestSent();
+act.setServiceType(...);
+...
+
+list.add(act);
+
+_activityServer.store(list);
+----
+
+===== REST Service
+
+The Activity Server can be accessed as RESTful service, e.g.
+
+----
+import org.codehaus.jackson.map.ObjectMapper;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+
+
+.....
+
+        java.util.List<ActivityUnit> activities=........
+        java.net.URL storeUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/store
+
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) storeUrl.openConnection();
+
+        String userPassword = username + ":" + password;
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        connection.setRequestProperty("Authorization", "Basic " + encoding);
+
+        connection.setRequestMethod("POST");
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setUseCaches(false);
+        connection.setAllowUserInteraction(false);
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        java.io.OutputStream os=connection.getOutputStream();
+
+        ObjectMapper mapper=new ObjectMapper();    // Use jackson to serialize the activity units
+        mapper.writeValue(os, activities);
+
+        os.flush();
+        os.close();
+
+        java.io.InputStream is=connection.getInputStream();
+
+        byte[] result=new byte[is.available()];
+
+        is.read(result);
+        is.close();
+----
+
+See the REST API information in the docs folder of the distribution.
+
+
+==== Retrieve an Activity Unit
+
+The Activity Server can be used to retrieve a specific Activity Unit from the Activity Server. The Activity Unit represents
+a grouping of Activity Events that occurred within the same business transaction scope. This section will show the different
+ways this information can be queried, using a variety of bindings.
+
+
+===== Direct Injection
+
+The simpliest approach is to leverage CDI or OSGi (blueprint) to obtain a reference to the Activity Server. Once the reference to the Activity Server has been obtained, then invoke the +getActivityUnit+ method to retrieve the required information.
+
+----
+import org.overlord.rtgov.activity.model.ActivityUnit;
+
+....
+String id="....";
+
+ActivityUnit au=_activityServer.getActivityUnit(id);
+----
+
+===== REST Service
+
+The Activity Server can be accessed as RESTful service, e.g.
+
+----
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+import org.overlord.rtgov.activity.model.ActivityUnit;
+
+
+.....
+        java.net.URL queryUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/unit?id=<id>
+
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) queryUrl.openConnection();
+
+        String userPassword = username + ":" + password;
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        connection.setRequestProperty("Authorization", "Basic " + encoding);
+
+        connection.setRequestMethod("GET");
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setUseCaches(false);
+        connection.setAllowUserInteraction(false);
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        java.io.InputStream is=connection.getInputStream();
+
+        ActivityUnit au = mapper.readValue(is, ActivityUnit.class);
+
+        is.close();
+----
+
+See the REST API documentation in the docs folder of the distribution.
+
+
+==== Retrieve a list of Activity Events
+
+The Activity Server can be used to query a list of Activity Type (events) from the Activity Server.
+This section will show the different ways this information can be queried, using a variety of bindings.
+
+
+===== Direct Injection
+
+The simpliest approach is to leverage CDI or OSGi (blueprint) to obtain a reference to the Activity Server.
+Once the reference to the Activity Server has been obtained, then the +getActivityTypes+ method can be invoked to
+obtain the list of events.
+
+----
+import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.activity.model.Context;
+
+....
+String value="...."; // Conversation id
+Context context=new Context(Context.Type.Conversation, value);
+
+java.util.List<ActivityType> list=_activityServer.getActivityTypes(context);
+
+// or, if wanting to define a time range
+
+long startTime=...;
+long endTime=...;
+
+java.util.List<ActivityType> list=_activityServer.getActivityTypes(context, startTime, endTime);
+
+----
+
+===== REST Service
+
+The Activity Server can be accessed as RESTful service, e.g.
+
+----
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+import org.overlord.rtgov.activity.model.ActivityType;
+
+
+.....
+        java.net.URL queryUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/events?type=<type>&value=<value>
+
+        // Note: add optional query parameters &from=<fromTimestamp>&to=<toTimestamp> to define a time frame
+
+        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) queryUrl.openConnection();
+
+        String userPassword = username + ":" + password;
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        connection.setRequestProperty("Authorization", "Basic " + encoding);
+
+        connection.setRequestMethod("GET");
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setUseCaches(false);
+        connection.setAllowUserInteraction(false);
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        java.io.InputStream is=connection.getInputStream();
+
+        java.util.List<ActivityType> activities = mapper.readValue(is, new TypeReference<java.util.List<ActivityType>>() {});
+
+        is.close();
+----
+
+See the REST API documentation in the docs folder of the distribution.
+
+

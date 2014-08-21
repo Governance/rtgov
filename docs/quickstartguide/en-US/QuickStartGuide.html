@@ -1,0 +1,1803 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.6.8" />
+<title>Runtime Governance: Quick Start Guide</title>
+<style type="text/css">
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
+h1, h2, h3, h4, h5, h6,
+div.title, caption.title,
+thead, p.table.header,
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
+  font-family: Arial,Helvetica,sans-serif;
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+h5 {
+  font-size: 1.0em;
+}
+
+div.sectionbody {
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+ul > li     { color: #aaa; }
+ul > li > * { color: black; }
+
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
+  padding: 0;
+  margin: 0;
+}
+
+
+#author {
+  color: #527bbd;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+#email {
+}
+#revnumber, #revdate, #revremark {
+}
+
+#footer {
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid #dddddd;
+  border-left: 4px solid #f0f0f0;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid #dddddd;
+  border-left: 5px solid #f0f0f0;
+  background: #f8f8f8;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #f0f0f0;
+  color: #888;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > pre.content {
+  font-family: inherit;
+  font-size: inherit;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+div.colist td {
+  padding-right: 0.5em;
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+div.colist td img {
+  margin-top: 0.3em;
+}
+
+@media print {
+  #footer-badges { display: none; }
+}
+
+#toc {
+  margin-bottom: 2.5em;
+}
+
+#toctitle {
+  color: #527bbd;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+
+span.aqua { color: aqua; }
+span.black { color: black; }
+span.blue { color: blue; }
+span.fuchsia { color: fuchsia; }
+span.gray { color: gray; }
+span.green { color: green; }
+span.lime { color: lime; }
+span.maroon { color: maroon; }
+span.navy { color: navy; }
+span.olive { color: olive; }
+span.purple { color: purple; }
+span.red { color: red; }
+span.silver { color: silver; }
+span.teal { color: teal; }
+span.white { color: white; }
+span.yellow { color: yellow; }
+
+span.aqua-background { background: aqua; }
+span.black-background { background: black; }
+span.blue-background { background: blue; }
+span.fuchsia-background { background: fuchsia; }
+span.gray-background { background: gray; }
+span.green-background { background: green; }
+span.lime-background { background: lime; }
+span.maroon-background { background: maroon; }
+span.navy-background { background: navy; }
+span.olive-background { background: olive; }
+span.purple-background { background: purple; }
+span.red-background { background: red; }
+span.silver-background { background: silver; }
+span.teal-background { background: teal; }
+span.white-background { background: white; }
+span.yellow-background { background: yellow; }
+
+span.big { font-size: 2em; }
+span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
+  var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
+}
+
+}
+asciidoc.install();
+/*]]>*/
+</script>
+</head>
+<body class="book">
+<div id="header">
+<h1>Runtime Governance: Quick Start Guide</h1>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="_introduction">Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This guide provides an introduction to the quickstarts that are distributed with the Overlord Runtime Governance project.</p></div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_policy_enforcement">Policy Enforcement</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This example, located in the <code>samples/policy</code> folder, demonstrates two approaches that can be used to provide "policy enforcement". This example makes uses of the example Switchyard application located in the <code>samples/ordermgmt</code> folder.</p></div>
+<div class="sect2">
+<h3 id="_synchronous_enforcement">Synchronous Enforcement</h3>
+<div class="paragraph"><p>The first approach shows how a business policy can be implemented in a synchronous (or inline) manner, where the decision is taken immediate, and can therefore be used to influence the current business transaction. The benefit of this approach is that it can ensure only valid transactions are permitted, as decisions can be immediately enforced, however the disadvantage is the potential performance impact this may have on the business transaction.</p></div>
+<div class="paragraph"><p>This example will show how:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+activity event analysis, using the Activity Validator mechanism, to implement the business policy
+</p>
+</li>
+</ul></div>
+<div class="sect3">
+<h4 id="_the_policy">The Policy</h4>
+<div class="paragraph"><p>The runtime governance infrastructure analyses the activity events generated by an executing business transaction using one or more Activity Validators. By default, Activity Validators are not invoked from within the SwitchYard environment. The specific SwitchYard applications need to be configured to include an auditor that will invoke the validation. In the Order Management quickstart, this is achieved using the class <code>org.overlord.rtgov.quickstarts.demos.orders.auditors.ExchangeValidator</code>. This class is derived from an abstract base class that provides most of the required functionality for converting an Exchange message into an activity event. For example,</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@Audit({Processors.TRANSFORMATION})
+@Named("ExchangeValidator")
+public class ExchangeValidator extends AbstractExchangeValidator implements Auditor {
+
+    /**
+     * {@inheritDoc}
+     */
+    public void afterCall(Processors processor, org.apache.camel.Exchange exch) {
+
+        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);
+
+        if (phase == ExchangePhase.OUT) {
+            handleExchange(exch, phase);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void beforeCall(Processors processor, org.apache.camel.Exchange exch) {
+
+        ExchangePhase phase=exch.getProperty("org.switchyard.bus.camel.phase", ExchangePhase.class);
+
+        if (phase == ExchangePhase.IN) {
+            handleExchange(exch, phase);
+        }
+    }
+}</code></pre>
+</div></div>
+<div class="paragraph"><p>The following Activity Validator configuration is deployed in the environment responsible for executing the business transaction, and gets registered with the Activity Collector mechanism:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>[{
+  "name" : "RestrictUsage",
+  "version" : "1",
+  "predicate" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
+    "expression" : "event instanceof org.overlord.rtgov.activity.model.soa.RequestReceived &amp;&amp; event.serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\""
+  },
+  "eventProcessor" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
+    "script" : "VerifyLastUsage.mvel",
+    "services" : {
+      "CacheManager" : {
+        "@class" : "org.overlord.rtgov.common.infinispan.service.InfinispanCacheManager"
+      }
+    }
+  }
+}]</code></pre>
+</div></div>
+<div class="paragraph"><p>This Activity Validator receives activity events generated from the executing environment and applies the optional predicate to determine if they are of interest to the defined event processor. In this case, the predicate is checking for received requests for the <code>OrderService</code> service.</p></div>
+<div class="paragraph"><p>For events that pass this predicate, they are submitted to the <em>business policy</em>, defined using the MVEL script <code>VerifyLastUsage.mvel</code>, which is:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>String customer=event.properties.get("customer");
+
+if (customer == null) {
+        return;
+}
+
+cm = epc.getService("CacheManager");
+
+// Attempt to lock the entry
+if (!cm.lock("Principals", customer)) {
+        epc.handle(new java.lang.RuntimeException("Unable to lock entry for principal '"+customer+"'"));
+
+        return;
+}
+
+// Access the cache of principals
+principals = cm.getCache("Principals");
+
+principal = principals.get(customer);
+
+if (principal == null) {
+        principal = new java.util.HashMap();
+}
+
+java.util.Date current=principal.get(event.serviceType+"-lastaccess");
+java.util.Date now=new java.util.Date();
+
+if (current != null &amp;&amp; (now.getTime()-current.getTime()) &lt; 2000) {
+        epc.handle(new java.lang.RuntimeException("Customer '"+customer+"' cannot perform more than one request every 2 seconds"));
+
+        return;
+}
+
+principal.put(event.serviceType+"-lastaccess", now);
+principals.put(customer, principal);
+
+epc.logDebug("Updated principal '"+customer+"': "+principals.get(customer));</code></pre>
+</div></div>
+<div class="paragraph"><p>This script uses the <em>CacheManager</em> service, configured within the EventProcessor component, to obtain a cache called "Principals". This cache is used to store information about Principals as a map of properties. The implementation uses Infinispan, to enable the cache to be shared between other applications, as well as in a distributed/cluster environment (based on the infinispan configuration).</p></div>
+<div class="paragraph"><p>If a policy violation is detected, the script returns an exception using the <em>handle()</em> method on the EventProcessor context. This results in the exception being thrown back to the execution environment, interrupting the execution of the business transaction.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_installation">Installation</h4>
+<div class="paragraph"><p>To install the example, the first step is to start the Switchyard server using the following command from the <code>bin</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    ./standalone.sh -c standalone-full.xml</code></pre>
+</div></div>
+<div class="paragraph"><p>The next step is to install the example Switchyard application, achieved by running the following command from the <code>${rtgov}/samples/ordermgmt</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    mvn jboss-as:deploy</code></pre>
+</div></div>
+<div class="paragraph"><p>Then change to the <code>${rtgov}/samples/policy/sync</code> folder and run the same command again.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_running_the_example">Running the Example</h4>
+<div class="paragraph"><p>To demonstrate the synchronous policy, we will send the following message twice in less than 2 seconds, to the example Switchyard application at the following URL: <a href="http://localhost:8080/demo-orders/OrderService">http://localhost:8080/demo-orders/OrderService</a></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+    &lt;soap:Body&gt;
+        &lt;orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"&gt;
+            &lt;order&gt;
+                &lt;orderId&gt;1&lt;/orderId&gt;
+                &lt;itemId&gt;BUTTER&lt;/itemId&gt;
+                &lt;quantity&gt;100&lt;/quantity&gt;
+                 &lt;customer&gt;Fred&lt;/customer&gt;
+            &lt;/order&gt;
+        &lt;/orders:submitOrder&gt;
+    &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div></div>
+<div class="paragraph"><p>The messages can be sent using an appropriate SOAP client (e.g. SOAP-UI) or by running the test client available with the Switchyard application, by running the following command from the <code>${rtgov}/samples/ordermgmt/app</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mvn exec:java -Dreq=order1 -Dcount=2</code></pre>
+</div></div>
+<div class="paragraph"><p>If the two requests are received within two seconds of each other, this will result in the following response:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+   &lt;soap:Body&gt;
+      &lt;soap:Fault&gt;
+         &lt;faultcode&gt;soap:Server&lt;/faultcode&gt;
+         &lt;faultstring&gt;org.switchyard.exception.SwitchYardException: Customer 'Fred' cannot perform more than one request every 2 seconds&lt;/faultstring&gt;
+      &lt;/soap:Fault&gt;
+   &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div></div>
+</div>
+<div class="sect3">
+<h4 id="_summary">Summary</h4>
+<div class="paragraph"><p>This quickstart example demonstrates how a policy enforcement mechanism can be provided using the Activity Validator mechanism, to immediately evaluate the business policy and (if appropriate) block the business transaction.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_asynchronous_enforcement">Asynchronous Enforcement</h3>
+<div class="paragraph"><p>The second approach shows how a business policy can be implemented in an asynchronous (or out-of-band) manner, where the decision is taken after the fact, and can therefore only be used to influence future business transactions. The benefit of this approach is that the decision making process does not have to occur immediately and therefore avoids potentially impacting the performance of the business transaction. The disadvantage is that it does not permit any decision that is made to be enforced immediately.</p></div>
+<div class="paragraph"><p>This example will show how:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+activity event analysis, using the Event Processor Network mechanism, can be used to implement business policies
+</p>
+</li>
+<li>
+<p>
+results from the business policies can be cached for reference by other applications
+</p>
+</li>
+<li>
+<p>
+platform specific interceptors can reference the results to impact the behavior of the business transaction (e.g. prevent suspended customers purchasing further items)
+</p>
+</li>
+</ul></div>
+<div class="sect3">
+<h4 id="_the_policy_2">The Policy</h4>
+<div class="paragraph"><p>There are three components that comprise <em>the policy</em> within this example.</p></div>
+<div class="sect4">
+<h5 id="_event_analysis">Event analysis</h5>
+<div class="paragraph"><p>The runtime governance infrastructure analyses the activity events generated by an executing business transaction using one or more Event Processor Networks (or EPN).</p></div>
+<div class="paragraph"><p>A standard EPN is deployed within the infrastructure to isolate the SOA events (e.g. request/responses being sent or received). This quickstart deploys another EPN that subscribes to the events produced by the standard EPN:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>{
+  "name" : "AssessCreditPolicyEPN",
+  "version" : "1",
+  "subscriptions" : [ {
+    "nodeName" : "AssessCredit",
+    "subject" : "SOAEvents"
+  } ],
+  "nodes" : [
+    {
+      "name" : "AssessCredit",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "predicate" : {
+        "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
+        "expression" : "event.serviceProvider &amp;&amp; !event.request &amp;&amp; event.serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\""
+      },
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
+        "script" : "AssessCredit.mvel",
+        "services" : {
+          "CacheManager" : {
+            "@class" : "org.overlord.rtgov.common.infinispan.service.InfinispanCacheManager"
+          }
+        }
+      }
+    }
+  ]
+}</code></pre>
+</div></div>
+<div class="paragraph"><p>This EPN subscribes to the published SOA events and applies the predicate which ensures that only events from a service provider interface, that are responses and are associated with the <code>OrderService</code> service, will be processed. Events that pass this predicate are then submitted to the <em>business policy</em> (defined in the MVEL script <em>AssessCredit.mvel</em>), which is:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>String customer=event.properties.get("customer");
+
+if (customer == null) {
+        return;
+}
+
+cm = epc.getService("CacheManager");
+
+// Attempt to lock the entry
+if (!cm.lock("Principals", customer)) {
+        epc.handle(new Exception("Unable to lock entry for principal '"+customer+"'"));
+
+        return;
+}
+
+// Access the cache of principals
+principals = cm.getCache("Principals");
+
+principal = principals.get(customer);
+
+if (principal == null) {
+        principal = new java.util.HashMap();
+}
+
+int current=principal.get("exposure");
+
+if (current == null) {
+        current = 0;
+}
+
+if (event.operation == "submitOrder") {
+
+        double total=event.properties.get("total");
+
+        int newtotal=current+total;
+
+        if (newtotal &gt; 150 &amp;&amp; current &lt;= 150) {
+                principal.put("suspended", Boolean.TRUE);
+        }
+
+        principal.put("exposure", newtotal);
+
+} else if (event.operation == "makePayment") {
+
+        double amount=event.properties.get("amount");
+
+        int newamount=current-amount;
+
+        if (newamount &lt;= 150 &amp;&amp; current &gt; 150) {
+                principal.put("suspended", Boolean.FALSE);
+        }
+
+        principal.put("exposure", newamount);
+}
+
+principals.put(customer, principal);
+
+epc.logDebug("Updated principal '"+customer+"': "+principals.get(customer));</code></pre>
+</div></div>
+<div class="paragraph"><p>This script uses the <em>CacheManager</em> service, configured within the EPN node, to obtain a cache called "Principals". This cache is used to store information about Principals as a map of properties. The implementation uses Infinispan, to enable the cache to be shared between other applications, as well as in a distributed/cluster environment (based on the infinispan configuration).</p></div>
+</div>
+<div class="sect4">
+<h5 id="_result_management">Result management</h5>
+<div class="paragraph"><p>As mentioned in the previous section, the results derived from the previous policy are stored in an Infinispan implemented cache called "Principals". To make this information available to runtime governance clients, we use the Active Collection mechanism - more specifically we define an Active Collection, as part of the standard installation, that wraps the Infinispan cache.</p></div>
+<div class="paragraph"><p>The configuration of the Active Collection Source is:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>[
+  {
+    ......
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.ActiveCollectionSource",
+    "name" : "Principals",
+    "type" : "Map",
+    "lazy" : true,
+    "visibility" : "Private",
+    "factory" : {
+        "@class" : "org.overlord.rtgov.active.collection.infinispan.InfinispanActiveCollectionFactory",
+        "cache" : "Principals"
+    }
+  }
+]</code></pre>
+</div></div>
+<div class="paragraph"><p>The <em>visibility</em> is marked as <strong>private</strong> to ensure that exposure information regarding customers is not publicly available via the Active Collection REST API.</p></div>
+</div>
+<div class="sect4">
+<h5 id="_the_enforcer">The enforcer</h5>
+<div class="paragraph"><p>The enforcement is provided by a specific Switchyard Auditor implementation (PolicyEnforcer) that is included with the order management application. The main part of this auditor is:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    public void beforeCall(Processors processor, org.apache.camel.Exchange exch) {
+        ....
+
+        if (_principals != null) {
+            org.switchyard.bus.camel.CamelMessage mesg=(org.switchyard.bus.camel.CamelMessage)exch.getIn();
+
+            if (mesg == null) {
+                LOG.severe("Could not obtain message for phase ("+phase+") and exchange: "+exch);
+                return;
+            }
+
+            org.switchyard.Context context=new org.switchyard.bus.camel.CamelCompositeContext(exch, mesg);
+
+            java.util.Set&lt;Property&gt; contextProps=context.getProperties(
+                    org.switchyard.Scope.MESSAGE);
+
+            Property p=null;
+
+            for (Property prop : contextProps) {
+                if (prop.getName().equals("org.switchyard.contentType")) {
+                    p = prop;
+                    break;
+                }
+            }
+
+            if (p != null &amp;&amp; p.getValue().toString().equals(
+                            "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder")) {
+
+                String customer=getCustomer(mesg);
+
+                if (customer != null) {
+                    if (_principals.containsKey(customer)) {
+
+                        @SuppressWarnings("unchecked")
+                        java.util.Map&lt;String,java.io.Serializable&gt; props=
+                                (java.util.Map&lt;String,java.io.Serializable&gt;)
+                                        _principals.get(customer);
+
+                        // Check if customer is suspended
+                        if (props.containsKey("suspended")
+                                &amp;&amp; props.get("suspended").equals(Boolean.TRUE)) {
+                            throw new RuntimeException("Customer '"+customer
+                                            +"' has been suspended");
+                        }
+                    }
+
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("*********** Policy Enforcer: customer '"
+                                +customer+"' has not been suspended");
+                        LOG.fine("*********** Principal: "+_principals.get(customer));
+                    }
+                } else {
+                    LOG.warning("Unable to find customer name");
+                }
+            }
+        }</code></pre>
+</div></div>
+<div class="paragraph"><p>The variable <em>_principals</em> refers to an Active Map used to maintain information about the principal (i.e. the customer in this case). This information is updated using the policy rule defined in the previous section.</p></div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_installation_2">Installation</h4>
+<div class="paragraph"><p>To install the example, the first step is to start the Switchyard server using the following command from the <code>bin</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    ./standalone.sh -c standalone-full.xml</code></pre>
+</div></div>
+<div class="paragraph"><p>The next step is to install the example Switchyard application, achieved by running the following command from the <code>${rtgov}/samples/ordermgmt</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    mvn jboss-as:deploy</code></pre>
+</div></div>
+<div class="paragraph"><p>Then change to the <code>${rtgov}/samples/policy/async</code> folder and run the same command again.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_running_the_example_2">Running the Example</h4>
+<div class="paragraph"><p>To demonstrate the asynchronous policy enforcement, we will send the following message to the example Switchyard application at the following URL: <a href="http://localhost:8080/demo-orders/OrderService">http://localhost:8080/demo-orders/OrderService</a></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+    &lt;soap:Body&gt;
+        &lt;orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"&gt;
+            &lt;order&gt;
+                &lt;orderId&gt;1&lt;/orderId&gt;
+                &lt;itemId&gt;BUTTER&lt;/itemId&gt;
+                &lt;quantity&gt;100&lt;/quantity&gt;
+                 &lt;customer&gt;Fred&lt;/customer&gt;
+            &lt;/order&gt;
+        &lt;/orders:submitOrder&gt;
+    &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div></div>
+<div class="paragraph"><p>The message can be sent using an appropriate SOAP client (e.g. SOAP-UI) or by running the test client available with the Switchyard application, by running the following command from the <code>${rtgov}/samples/ordermgmt/app</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mvn exec:java -Dreq=order1</code></pre>
+</div></div>
+<div class="paragraph"><p>This will result in the following response, indicating that the purchase was successful, as well as identifying the total cost of the purchase (i.e. 125).</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+   &lt;SOAP-ENV:Header/&gt;
+   &lt;SOAP-ENV:Body&gt;
+      &lt;orders:submitOrderResponse xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"&gt;
+         &lt;orderAck&gt;
+            &lt;orderId&gt;1&lt;/orderId&gt;
+            &lt;accepted&gt;true&lt;/accepted&gt;
+            &lt;status&gt;Order Accepted&lt;/status&gt;
+            &lt;customer&gt;Fred&lt;/customer&gt;
+            &lt;total&gt;125.0&lt;/total&gt;
+         &lt;/orderAck&gt;
+      &lt;/orders:submitOrderResponse&gt;
+   &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;</code></pre>
+</div></div>
+<div class="paragraph"><p>You may recall from the overview above that if the customer&#8217;s debt exceeds the threshold of 150 then the customer would be suspended. Therefore if the same request is issued again, resulting in another total of 125, then the overall exposure regarding this customer is now 250.</p></div>
+<div class="paragraph"><p>If we then attempt to issue the same request a third time, this time we will receive a SOAP fault from the server. This is due to the fact that the PolicyEnforcer auditor has intercepted the request, and detected that the customer is now suspended.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+   &lt;SOAP-ENV:Header/&gt;
+   &lt;SOAP-ENV:Body&gt;
+      &lt;SOAP-ENV:Fault&gt;
+         &lt;faultcode&gt;SOAP-ENV:Server&lt;/faultcode&gt;
+         &lt;faultstring&gt;Customer 'Fred' has been suspended&lt;/faultstring&gt;
+      &lt;/SOAP-ENV:Fault&gt;
+   &lt;/SOAP-ENV:Body&gt;
+&lt;/SOAP-ENV:Envelope&gt;</code></pre>
+</div></div>
+<div class="paragraph"><p>If we now send a "makePayment" request as follows to the same URL:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:switchyard-quickstart-demo:orders:1.0"&gt;
+   &lt;soapenv:Header/&gt;
+   &lt;soapenv:Body&gt;
+      &lt;urn:makePayment&gt;
+         &lt;payment&gt;
+            &lt;customer&gt;Fred&lt;/customer&gt;
+            &lt;amount&gt;200&lt;/amount&gt;
+         &lt;/payment&gt;
+      &lt;/urn:makePayment&gt;
+   &lt;/soapenv:Body&gt;
+&lt;/soapenv:Envelope&gt;</code></pre>
+</div></div>
+<div class="paragraph"><p>This can be sent using a suitable SOAP client (e.g. SOAP-UI) or the test client in the order management app:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mvn exec:java -Dreq=fredpay</code></pre>
+</div></div>
+<div class="paragraph"><p>This will result in the customer being unsuspended, as it removes 200 from their current exposure (leaving 50). To confirm this, try sending the "submitOrder" request again.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_summary_2">Summary</h4>
+<div class="paragraph"><p>This quickstart example demonstrates how a policy enforcement mechanism can be provided using a combination of the Runtime Governance infrastructure and platform specific interceptors.</p></div>
+<div class="paragraph"><p>This particular example uses an asynchronous approach to evaluate the business policies, only enforcing the policy based on a summary result from the decision making process. The benefit of this approach is that it can be more efficient, and reduce the performance impact on the business transaction being policed. The disadvantage is that decisions are made after the fact, so leaves a tiny window of opportunity for invalid transactions to be performed.</p></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_sla">SLA</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_monitor">Monitor</h3>
+<div class="paragraph"><p>This example, located in the <code>samples/sla/monitor</code> folder,  demonstrates an approach to provide "Service Level Agreement" monitoring. This example makes uses of the example Switchyard application located in the <code>samples/ordermgmt</code> folder.</p></div>
+<div class="sect3">
+<h4 id="_overview">Overview</h4>
+<div class="paragraph"><p>This example will show how:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+activity event analysis, using the Event Processor Network mechanism, can be used to implement Service Level Agreements
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+uses the Complex Event Processing (CEP) based event processor (using Drools Fusion)
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+impending or actual SLA violations can be reported for the attention of end users, via
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+JMX notifications
+</p>
+</li>
+<li>
+<p>
+REST service
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+to build a custom application to access the analysis results
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This example shows a simple Service Level Agreement that checks whether a service response time exceeds expected levels. The CEP rule detects whether a situation of interest has occurred, and if so, creates a <code>org.overlord.rtgov.analytics.situation.Situation</code> object and initializes it with the appropriate description/severity information, before forwarding it back into the EPN. This results in the "Situation" object being published as a notification on the "Situations" subject.</p></div>
+<div class="paragraph"><p>The CEP rule is:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>import org.overlord.rtgov.analytics.service.ResponseTime
+import org.overlord.rtgov.analytics.situation.Situation
+
+global org.overlord.rtgov.ep.EPContext epc
+
+declare ResponseTime
+    @role( event )
+end
+
+rule "check for SLA violations"
+when
+    $rt : ResponseTime() from entry-point "ServiceResponseTimes"
+then
+
+        if ($rt.getAverage() &gt; 200) {
+                epc.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
+
+                Situation situation=new Situation();
+
+                situation.setType("SLA Violation");
+                situation.setSubject(Situation.createSubject($rt.getServiceType(), $rt.getOperation(),
+                                                $rt.getFault()));
+                situation.setTimestamp(System.currentTimeMillis());
+
+                situation.getProperties().putAll($rt.getProperties());
+
+                if ($rt.getRequestId() != null) {
+                        situation.getActivityTypeIds().add($rt.getRequestId());
+                }
+                if ($rt.getResponseId() != null) {
+                        situation.getActivityTypeIds().add($rt.getResponseId());
+                }
+
+                situation.getContext().addAll($rt.getContext());
+
+                String serviceName=$rt.getServiceType();
+
+                if (serviceName.startsWith("{")) {
+                        serviceName = javax.xml.namespace.QName.valueOf(serviceName).getLocalPart();
+                }
+
+                if ($rt.getAverage() &gt; 400) {
+                        situation.setDescription(serviceName+" exceeded maximum response time of 400 ms");
+                        situation.setSeverity(Situation.Severity.Critical);
+                } else if ($rt.getAverage() &gt; 320) {
+                        situation.setDescription(serviceName+" exceeded response time of 320 ms");
+                        situation.setSeverity(Situation.Severity.High);
+                } else if ($rt.getAverage() &gt; 260) {
+                        situation.setDescription(serviceName+" exceeded response time of 260 ms");
+                        situation.setSeverity(Situation.Severity.Medium);
+                } else {
+                        situation.setDescription(serviceName+" exceeded response time of 200 ms");
+                        situation.setSeverity(Situation.Severity.Low);
+                }
+
+                epc.handle(situation);
+        }
+
+end</code></pre>
+</div></div>
+<div class="paragraph"><p>The "out of the box" active collection configuration is pre-initialized with a collection for the <code>org.overlord.rtgov.analytics.situation.Situation</code> objects, subscribing to the "Situations" subject from the Event Processor Network. Therefore any detected SLA violations will automatically be stored in this collection (accessible via a RESTful service), and reported to the associated JMX notifier.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_installation_3">Installation</h4>
+<div class="paragraph"><p>To install the example, the first step is to start the Switchyard server using the following command from the <code>bin</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    ./standalone.sh -c standalone-full.xml</code></pre>
+</div></div>
+<div class="paragraph"><p>The next step is to install the example Switchyard application, achieved by running the following command from the <code>${rtgov}/samples/ordermgmt</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    mvn jboss-as:deploy</code></pre>
+</div></div>
+<div class="paragraph"><p>Then run the same command from the <code>${rtgov}/samples/sla/epn</code> and <code>${rtgov}/samples/sla/monitor</code> folders.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_running_the_example_3">Running the Example</h4>
+<div class="paragraph"><p>To demonstrate a Service Level Agreement violation, we will send the following message to the example Switchyard application at the following URL: <a href="http://localhost:8080/demo-orders/OrderService">http://localhost:8080/demo-orders/OrderService</a></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+   &lt;soap:Body&gt;
+      &lt;orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"&gt;
+         &lt;order&gt;
+            &lt;orderId&gt;3&lt;/orderId&gt;
+            &lt;itemId&gt;JAM&lt;/itemId&gt;
+            &lt;quantity&gt;400&lt;/quantity&gt;
+            &lt;customer&gt;Fred&lt;/customer&gt;
+         &lt;/order&gt;
+      &lt;/orders:submitOrder&gt;
+   &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div></div>
+<div class="paragraph"><p>The message can be sent using an appropriate SOAP client (e.g. SOAP-UI) or by running the test client available with the Switchyard application, by running the following command from the <code>${rtgov}/samples/ordermgmt/app</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mvn exec:java -Dreq=order3</code></pre>
+</div></div>
+<div class="paragraph"><p>The <em>itemId</em> of "JAM" causes a delay to be introduced in the service, resulting in a SLA violation being detected. This violation can be viewed using two approaches:</p></div>
+<div class="sect4">
+<h5 id="_rest_service">REST Service</h5>
+<div class="paragraph"><p>Using a suitable REST client, send the following POST to: <a href="http://localhost:8080/overlord-rtgov/acm/query">http://localhost:8080/overlord-rtgov/acm/query</a> (using content-type of "application/json", username is <em>admin</em> and password is <em>overlord</em>)</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>{
+    "collection" : "Situations"
+}</code></pre>
+</div></div>
+<div class="paragraph"><p>This will result in the following response:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/RESTSituationsQuery.png" alt="images/RESTSituationsQuery.png" />
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_jmx_console">JMX Console</h5>
+<div class="paragraph"><p>The <em>Situations</em> active collection source also generates JMX notifications that can be subscribed to using a suitable JMX management application. For example, using JConsole we can view the SLA violation:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/JMXConsoleSituations.png" alt="images/JMXConsoleSituations.png" />
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_accessing_results_within_a_custom_application">Accessing results within a custom application</h5>
+<div class="paragraph"><p>As well as having access to the information via REST or JMX, it may also be desirable to have more direct access to the active collection results. This section describes the custom app defined in the <code>${rtgov}/samples/sla/monitor</code> folder.</p></div>
+<div class="paragraph"><p>The following code shows how the custom application initializes access to the relevant active collections:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>@Path("/monitor")
+@ApplicationScoped
+public class SLAMonitor {
+
+    private static final String SERVICE_RESPONSE_TIMES = "ServiceResponseTimes";
+    private static final String SITUATIONS = "Situations";
+
+    private static final Logger LOG=Logger.getLogger(SLAMonitor.class.getName());
+
+    private ActiveCollectionManager _acmManager=null;
+
+    private ActiveList _serviceResponseTime=null;
+    private ActiveList _situations=null;
+
+    /**
+     * This is the default constructor.
+     */
+    public SLAMonitor() {
+
+        try {
+            _acmManager = ActiveCollectionManagerAccessor.getActiveCollectionManager();
+
+            _serviceResponseTime = (ActiveList)
+                    _acmManager.getActiveCollection(SERVICE_RESPONSE_TIMES);
+
+            _situations = (ActiveList)
+                    _acmManager.getActiveCollection(SITUATIONS);
+
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to initialize active collection manager", e);
+        }
+
+    }</code></pre>
+</div></div>
+<div class="paragraph"><p>Then when the REST request is received (e.g. for SLA violations defined as Situations),</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    @GET
+    @Path("/situations")
+    @Produces("application/json")
+    public java.util.List&lt;Situation&gt; getSituations() {
+        java.util.List&lt;Situation&gt; ret=new java.util.ArrayList&lt;Situation&gt;();
+
+        for (Object obj : _situations) {
+            if (obj instanceof Situation) {
+                ret.add((Situation)obj);
+            }
+        }
+
+        return (ret);
+    }</code></pre>
+</div></div>
+<div class="paragraph"><p>To see the SLA violations, send a REST GET request to: <a href="http://localhost:8080/slamonitor-monitor/monitor/situations">http://localhost:8080/slamonitor-monitor/monitor/situations</a></p></div>
+<div class="paragraph"><p>This will return the following information:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/SLAMonitorRESTSituations.png" alt="images/SLAMonitorRESTSituations.png" />
+</div>
+</div>
+<div class="paragraph"><p>It is also possible to request the list of response time information from the same custom service, using the URL: <a href="http://localhost:8080/slamonitor-monitor/monitor/responseTimes?operation=submitOrder">http://localhost:8080/slamonitor-monitor/monitor/responseTimes?operation=submitOrder</a></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/SLAMonitorRESTResponseTimes.png" alt="images/SLAMonitorRESTResponseTimes.png" />
+</div>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">If no query parameter is provided, then response times for all operations will be returned.</td>
+</tr></table>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_summary_3">Summary</h4>
+<div class="paragraph"><p>This quickstart demonstrates how Service Level Agreements can be policed using rules defined in an Event Processor Network, and reporting to end users using the pre-configured "Situations" active collection.</p></div>
+<div class="paragraph"><p>The rule used in this example is simple, detecting whether the response time associated with an operation on a service exceeds a particular level. However more complex temporal rules could be defined to identify the latency between any two points in a business transaction flow.</p></div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_report">Report</h3>
+<div class="paragraph"><p>This example, located in the <code>samples/sla/report</code> folder, demonstrates how to provide pluggable reports that can access information in the activity store. This particular example uses the activity information to compile a Service Level Agreement report, highlighting violations above a specified response time.</p></div>
+<div class="sect3">
+<h4 id="_overview_2">Overview</h4>
+<div class="paragraph"><p>This example will show how:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+to configure a pluggable report
+</p>
+</li>
+<li>
+<p>
+to generate the report via a REST API
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This example provides a simple Service Level Agreement report, based on identifying service invocations that exceed a specified maximum response time over an optionally specified averaged duration. If the averaged duration is not specified, then each service invocation will be checked to determine if it exceeded the maximum response time - and if so, get added to the report. If the averaged duration is specified, then when an invocation is detected (that exceeds the max response time), then all other suitable invocations within the specified duration are averaged to determine if the response time overall still exceeds the specified maximum. This is to ensure that periodic spikes are not unnecessarily reported.</p></div>
+<div class="paragraph"><p>It is also possible to optionally specify a business calendar, which can be used to determine the business period in which activities are of interest. If SLA violations occur outside the specified business calendar, then they are not relevant.</p></div>
+<div class="paragraph"><p>The report definition is:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>[
+  {
+    "name" : "SLAReport",
+    "generator" : {
+      "@class" : "org.overlord.rtgov.reports.MVELReportGenerator",
+       "scriptLocation" : "SLAReport.mvel"
+    }
+  }
+]</code></pre>
+</div></div>
+<div class="paragraph"><p>with the MVEL based report generator script:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>/**
+ * SLA Report
+ *
+ * Properties:
+ *              serviceType (string)    - the service type
+ *              operation (string)              - the optional operation name, if not specified then checks all ops on service
+ *              principal (string)              - the optional principal
+ *              start (long)                    - the start date/time
+ *              end     (long)                          - the end date/time
+ *              maxResponseTime (long)  - the maximum response time before SLA violated
+ *              averagedDuration (long) - optional duration over which response times should be averaged
+ *              calendar (string)               - the optional calendar name
+ *              timezone (string)               - the optional timezone
+ */
+
+import org.overlord.rtgov.reports.model.Report;
+import org.overlord.rtgov.reports.model.Tabular;
+import org.overlord.rtgov.reports.model.Tabular.Header;
+import org.overlord.rtgov.reports.model.Tabular.Row;
+import org.overlord.rtgov.reports.model.Tabular.Summary;
+import org.overlord.rtgov.activity.server.ActivityStore;
+import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.activity.model.soa.RequestReceived;
+import org.overlord.rtgov.activity.model.soa.ResponseSent;
+
+// FUNCTION DEFINITIONS
+
+def calcResponseTime(request, pos, activities) {
+        ResponseSent response=null;
+
+        // Find accompanying response
+        for (int j=pos+1; response == null &amp;&amp; j &lt; activities.size(); j++) {
+
+                if (activities.get(j) instanceof ResponseSent &amp;&amp;
+                                activities.get(j).getReplyToId() != null &amp;&amp;
+                                activities.get(j).getReplyToId().equals(request.getMessageId())) {
+                        response = activities.get(j);
+                }
+        }
+
+        context.logDebug("Checking response time for req="+request+" resp="+response);
+
+        if (response != null) {
+                context.logDebug("Reponse time="+(response.timestamp-request.timestamp));
+                return (response.timestamp - request.timestamp);
+        }
+
+        return 0;
+}
+
+// MAIN SCRIPT
+
+// Get the relevant properties
+start = properties.get("start");
+end = properties.get("end");
+long maxResponseTime = Long.parseLong(properties.get("maxResponseTime"));
+long averagedDuration = properties.containsKey("averagedDuration") ? Long.parseLong(properties.get("averagedDuration")) : 0;
+
+// Create date formatter based on optionally specified timezone
+java.text.DateFormat formatter=java.text.DateFormat.getDateTimeInstance(java.text.DateFormat.MEDIUM, java.text.DateFormat.FULL);
+
+java.util.TimeZone tz=null;
+if (properties.containsKey("timezone")) {
+        tz = java.util.TimeZone.getTimeZone(properties.get("timezone"));
+}
+if (tz == null) {
+        tz = java.util.TimeZone.getDefault();
+}
+
+formatter.setTimeZone(tz);
+
+// Obtain the activity store
+activityStore = context.getService(ActivityStore);
+
+if (activityStore == null) {
+        context.logError("Failed to obtain activity store");
+        return;
+}
+
+// Obtain the calendar
+calendar = context.getCalendar(properties.get("calendar"), properties.get("timezone"));
+
+// Query activity store for events related to service, optional operation, date/time range and optional principal
+QuerySpec qs=new QuerySpec();
+qs.setExpression("SELECT at FROM ActivityType at WHERE at.timestamp &gt;= "+start+" AND at.timestamp &lt;= "+end+" ORDER BY at.timestamp");
+
+activities=activityStore.query(qs);
+
+// Initialize the report
+report = new Report().setTitle("SLA Report")
+                .setCreated(formatter.format(new java.util.Date(System.currentTimeMillis())));
+
+section = new Tabular();
+report.sections.add(section);
+
+section.header = new Header();
+section.header.columnNames.add("Date/Time");
+section.header.columnNames.add("Response Time(ms)");
+
+// Generate the report contents
+long ignoreUntil=0;
+long totalViolation=0;
+
+for (int i=0; i &lt; activities.size(); i++) {
+        activity = activities.get(i);
+
+        // Check if we should ignore this activity, due to being part of
+        // a previously identified time window where a SLA violation occurred
+        if (activity.timestamp &gt;= ignoreUntil) {
+
+                if (activity instanceof RequestReceived) {
+
+                        // Check if invocation is within working hours
+                        if (calendar == null || calendar.isWorkingDateTime(activity.timestamp)) {
+
+                                long respTime=calcResponseTime(activity, i, activities);
+
+                                // Check if response time violates the SLA
+                                if (respTime &gt; maxResponseTime) {
+                                        context.logInfo("Potential SLA violation detected, response time="+respTime);
+
+                                        count = 1;
+
+                                        if (averagedDuration &gt; 0) {
+
+                                                for (int k=i+1; k &lt; activities.size(); k++) {
+
+                                                        // Check if activity is within the 'averaged duration' timeframe
+                                                        if (activities.get(k).timestamp &lt;= (activity.timestamp+averagedDuration)) {
+
+                                                                if (activities.get(k) instanceof RequestReceived) {
+                                                                        long subRespTime=calcResponseTime(activities.get(k), k, activities);
+
+                                                                        if (subRespTime &gt; 0) {
+                                                                                respTime += subRespTime;
+                                                                                count++;
+                                                                        }
+                                                                }
+                                                        } else {
+                                                                // Skip to the end
+                                                                k = activities.size();
+                                                        }
+                                                }
+
+                                                // Average the response time over the duration
+                                                respTime /= count;
+                                        }
+
+                                        // Check if violation should be reported
+                                        if (respTime &gt; maxResponseTime) {
+                                                context.logWarning("SLA violation detected, response time="+respTime);
+
+                                                row = new Row();
+
+                                                row.values.add(formatter.format(new java.util.Date(activity.timestamp)));
+                                                row.values.add(respTime);
+
+                                                section.rows.add(row);
+
+                                                if (averagedDuration &gt; 0) {
+                                                        // Don't check any interactions that occur within the
+                                                        // duration already flagged as a SLA violation
+                                                        ignoreUntil = activity.timestamp + averagedDuration;
+
+                                                        totalViolation += averagedDuration;
+                                                }
+                                        }
+                                }
+                        }
+                }
+        }
+}
+
+// Produce summary
+if (totalViolation &gt; 0) {
+        section.summary = new Summary();
+        section.summary.values.add("Total time (ms)");
+        section.summary.values.add(totalViolation);
+
+        if (calendar != null) {
+                totalWorking = calendar.getWorkingDuration(start, end);
+
+                if (totalWorking &gt; 0) {
+                        section.summary.properties.put("ViolationPercentage",
+                                        Math.round((totalViolation*10000.0)/totalWorking)/100.0);
+                }
+        }
+}
+
+return report;</code></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Currently the report parameters <em>serviceType</em>, <em>operation</em> and <em>principal</em> are not used.</td>
+</tr></table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_installation_4">Installation</h4>
+<div class="paragraph"><p>To install the example, the first step is to start the Switchyard server using the following command from the <code>bin</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>    ./standalone.sh -c standalone-full.xml</code></pre>
+</div></div>
+<div class="paragraph"><p>Then run the same command from the <code>${rtgov}/samples/sla/report</code> folder.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_running_the_example_4">Running the Example</h4>
+<div class="paragraph"><p>To demonstrate a Service Level Agreement report, we will need to create some relevant activities that can be reported upon. Send multiple instances of the following messages to the example Switchyard application at the following URL: <a href="http://localhost:8080/demo-orders/OrderService">http://localhost:8080/demo-orders/OrderService</a></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+   &lt;soap:Body&gt;
+      &lt;orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"&gt;
+         &lt;order&gt;
+            &lt;orderId&gt;1&lt;/orderId&gt;
+            &lt;itemId&gt;BUTTER&lt;/itemId&gt;
+            &lt;quantity&gt;100&lt;/quantity&gt;
+            &lt;customer&gt;Fred&lt;/customer&gt;
+         &lt;/order&gt;
+      &lt;/orders:submitOrder&gt;
+   &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;
+
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;
+   &lt;soap:Body&gt;
+      &lt;orders:submitOrder xmlns:orders="urn:switchyard-quickstart-demo:orders:1.0"&gt;
+         &lt;order&gt;
+            &lt;orderId&gt;3&lt;/orderId&gt;
+            &lt;itemId&gt;JAM&lt;/itemId&gt;
+            &lt;quantity&gt;100&lt;/quantity&gt;
+            &lt;customer&gt;Fred&lt;/customer&gt;
+         &lt;/order&gt;
+      &lt;/orders:submitOrder&gt;
+   &lt;/soap:Body&gt;
+&lt;/soap:Envelope&gt;</code></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Send quite a few of the second message, as this is the one that will result in SLA violations.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>The message can be sent using an appropriate SOAP client (e.g. SOAP-UI) or by running the test client available with the Switchyard application, by running the following commands from the <code>${rtgov}/samples/ordermgmt/app</code> folder:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>mvn exec:java -Dreq=order1
+mvn exec:java -Dreq=order3</code></pre>
+</div></div>
+<div class="paragraph"><p>To generate a report, we will send a GET request to the following URL:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>http://localhost:8080/overlord-rtgov/report/generate?report=SLAReport&amp;startDay=1&amp;startMonth=1&amp;startYear=2013&amp;endDay=31&amp;endMonth=12&amp;endYear=2013&amp;maxResponseTime=400&amp;averagedDuration=450</code></pre>
+</div></div>
+<div class="paragraph"><p>(using the Basic Authentication username <em>admin</em> and password <em>overlord</em>).</p></div>
+<div class="paragraph"><p>This will return a report (with name <em>SLAReport</em>) containing violations that occur within the year 2013. If you wish to experiment with the default business calendar, then append "&amp;calendar=Default" to the end of the URL. This will also identify what percentage of the business working period has been impacted by the SLA violations.</p></div>
+</div>
+<div class="sect3">
+<h4 id="_summary_4">Summary</h4>
+<div class="paragraph"><p>This quickstart demonstrates how report definitions can be deployed to the Runtime Governance infrastructure and invoked to generate a report instance via a REST service.</p></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-07-17 09:49:04 BST
+</div>
+</div>
+</body>
+</html>

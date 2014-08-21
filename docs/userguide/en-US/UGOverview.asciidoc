@@ -1,0 +1,12 @@
+== Overview
+
+This section provides an overview of the Runtime Governance architecture.
+
+The architecture is separated into four distinct areas, with components that bridge between these areas:
+
+* Activity Collector - this component is optional, and can be embedded within an executing environment to manage the collection of information
+* Activity Server - this component provides a store and query API for activity information. If not using the Activity Collector, then activity information can be reported directly to the server via a suitable binding (e.g. REST).
+* Event Processor Network - this component can be used to analyse the activity information. Each network can be configured with a set of event processing nodes, to filter, transform and analyse the events, to produce relevant rules.
+* Active Collection - this component is responsible for maintaining an active representation of information being collected. UI components can then access this information via REST services to present the information to users (e.g. via gadgets)
+
+This document will explain how a user can configure these components to work together to build a Runtime Governance solution to realtime monitoring of executing business transactions.

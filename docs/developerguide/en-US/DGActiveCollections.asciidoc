@@ -1,0 +1,253 @@
+== Active Collections
+
+The Active Collection mechanism provides a means of actively managing a collection of information. For a more details explanation of the mechanism, see the User Guide.
+
+This section explains how to:
+
+* implement an Active Collection Source, which can be used to subscribe to a source of information which can result in data being inserted, updated and removed from an associated active collection.
+* implement an Active Change Listener that can associated with an Active Collection Source, and automatically notified of changes to an associated Active Collection
+* write a custom application for accessing Active Collections
+
+
+=== Active Collection Source
+
+The Active Collection Source can be considered the adapter between the actual source of events/information and the Active Collection. The Active Collection Source is responsible for managing the insertion, update and deletion of the objects within the associated Active Collection, based on situations that occur in the source.
+
+An example of a derived Active Collection Source implementation, that is packaged with the infrastructure, can be used to listen for events produced by nodes in an Event Processor Network and insert these events in the Active Collection.
+
+
+To create a new type of Active Collection Source, simply derive a class from the +org.overlord.rtgov.active.collection.ActiveCollectionSource+ class and implement the following methods:
+
+[options="header"]
+|=======================
+| Method | Description
+| void init() | This method is invoked when the Active Collection Source is registered, and should be used to create the 'subscription' to the relevant source of information. The implementation of this method MUST call the init() method on the super class first.
+| void close() | This method is invoked when the Active Collection Source is unregistered, and should be used to unsubscribe from the source of information. The implementation of this method MUST call the close() method on the super class first.
+|=======================
+
+When a situation occurs on the source, that requires a change in the associated Active Collection, then the derived implementation can call one of the follow methods on the Active Collection Source:
+
+[options="header"]
+|=======================
+| Method | Description
+| public void insert(Object key, Object value) | This method is called to insert a new element into the collection. The value is the information to be inserted. The key is potentially optional, depending on the nature of the active collection:
+
+List - the key is optional. If specified, then it MUST be an integer representing the index where the value should be inserted.
+
+Map - the key represents the map key to be associated with the value, and is therefore not optional.
+| public void update(Object key, Object value) | This method is called to update an existing element within the collection. The value is the information to be updated. The key is potentially optional, depending on the nature of the active collection:
+
+List - the key is optional. If specified, then it MUST be an integer representing the index of the value to be updated. If not specified, then the value will be used to locate the index within the list.
+
+Map - the key represents the map key associated with the value, and is therefore not optional.
+| public void remove(Object key, Object value) | This method is called to remove an element from the collection. The value is the information to be updated. The key is potentially optional, depending on the nature of the active collection:
+
+List - the key is optional. If specified, then it MUST be an integer representing the index of the value to be removed. If not specified, then the value will be used to locate the index within the list.
+
+Map - the key represents the map key associated with the value, and is therefore not optional. However in this situation the value is optional.
+|=======================
+
+
+=== Active Change Listeners
+
+This section explains how to implement a listener to deal with changes that occur within an Active Collection.
+
+The first sub-section details with general implementations of this interface, that may be used within custom applications. The second sub-section will deal with a specific type of listener that can be configured with an Active Change Source (discussed in the previous section), and automatically initialized when the Active Change Source is registered.
+
+==== Active Change Listener
+
+The +org.overlord.rtgov.active.collection.ActiveChangeListener+ interface can be implemented by any component that is interested in being informed when a change occurs to an associated Active Collection. The Active Collection API supports add and remove methods to register and unregister these active change listeners.
+
+The methods that need to be implemented for an active change listener are:
+
+[options="header"]
+|=======================
+| Method | Description
+| void inserted(Object key, Object value) | Called when a new value is inserted into the collection, with the key being dependent upon the type of collection:
+
+List - the key will be the index
+
+Map - the key will be the key information used in the map's key/value pair
+| void updated(Object key, Object value) | Called when an existing value is updated within the collection, with the key being dependent upon the type of collection:
+
+List - the key will be the index
+
+Map - the key will be the key information used in the map's key/value pair
+| void removed(Object key, Object value) | Called when an existing value is removed from the collection, with the key being dependent upon the type of collection:
+
+List - the key will be the index
+
+Map - the key will be the key information used in the map's key/value pair
+|=======================
+
+
+==== Abstract Implementation
+
+If the active change listener implementation is derived from the +org.overlord.rtgov.active.collection.AbstractActiveChangeListener+ abstract class then it can be registered with the Active Collection Source configuration, and automatically initialized when the source is registered.
+
+The benefit of this approach is that it does not require the user to write custom code to register the Active Collection Listener against the Active Collection.
+
+An example of this type of implementation is the +org.overlord.rtgov.active.collection.jmx.JMXNotifier+ which automatically generates JMX notifications when an object is added to the associated active collection.
+
+The implementations derived from this abstract active change listener implementation are no different from order active change listener implementations, with the exception that they can be serialized as part of the Active Collection Source configuration, and they support lifecycle methods for initialization and closing:
+
+[options="header"]
+|=======================
+| Method | Description
+| void init() | This method can be overridden to initialize the active change listener implementation. The super class init() method MUST be called first.
+| void close() | This method can be overridden to close the active change listener implementation. The super class close() method MUST be called first.
+|=======================
+
+
+=== Accessing Active Collections
+
+This section explains how to:
+
+* retrieve an existing active collection
+* create a derived active collection
+* register for active change notifications
+
+==== Retrieve an Active Collection
+
+There are two ways to retrieve an active collection.
+
+
+===== Directly accessing the ActiveCollectionManager
+
+As discussed in a previous section, Active Collections are created as a bi-product of registering an Active Collection Source. The Active Collection Source is registered with an Active Collection Manager, which creates the collection to be updated from the source. This Active Collection then becomes available for applications to retrieve from the manager, for example:
+
+----
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveCollectionManagerAccessor;
+import org.overlord.rtgov.active.collection.ActiveList;
+
+.....
+
+ActiveCollectionManager acmManager=ActiveCollectionManagerAccessor.getActiveCollectionManager();
+
+ActiveList list = (ActiveList)
+          acmManager.getActiveCollection(listName);
+----
+
+This is the approach used to retrieve what can be considered "top level" active collections. These are the collections directly maintained by the Active Collection Manager, each with an associated Active Collection Source defining the origin of the collection changes. The following section shows how further active collections can be derived from these "top level" collections, to refine the information.
+
+The maven dependency required to access the ActiveCollectionManager and active collections is:
+
+----
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+----
+
+
+
+===== Injectable Collection Manager
+
+The other approach is aimed at simplifying the use of active collections from within a client application. It offers a simple API, and associated default implementation, that can be injected using CDI. Under the covers, it simply performs the same tasks as described in the previous section.
+
+----
+    @Inject
+    private org.overlord.rtgov.client.CollectionManager _collectionManager=null;
+
+    private org.overlord.rtgov.active.collection.ActiveMap _principals=null;
+
+    protected void init() {
+
+        if (_collectionManager != null) {
+            _principals = _collectionManager.getMap(PRINCIPALS);
+        }
+
+        .......
+    }
+----
+
+If injection is not possible (e.g. when using SwitchYard Auditors), then a default implementation can be directly instantiated with the class +org.overlord.rtgov.client.DefaultCollectionManager+.
+
+The maven dependencies required to access the CollectionManager, and the subsequent active collections, are:
+
+----
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-client</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+----
+
+
+
+
+==== Create a Derived Active Collection
+
+The "top level" active collections defined in the previous section reflect the information changes as identified by their associated Active Collection Source. However in some situations, only a subset of the information is of interest to an application. For these situations, it is possible to 'derive' a child active collection by specifying:
+
+* parent - the parent collection from which the child may be derived. Although this will generally be the name of a "top level" collection, it is possible to derive a collection from another child collection, enabling a tree to be formed.
+* predicate - a predicate is specified to determine whether information in a parent collection (and subsequently its changes), are relevant to the child collection.
+* properties - used to initialize the derived collection.
+
+Currently the only property that can be set is a boolean named 'active', which defaults to true.
+
+If the 'active' property is true, then when a child collection is initially created, the predicate will be used to filter the contents of the parent collection to identify the initial subset of values that are relevant for the child collection. Once initialized, the child collection effectively subscribes to the change notifications of the parent collection, and uses the predicate to determine whether the change is applicable, and if so, applies the change to the child collection.
+
+If the 'active' property is false, then whenever the derived collection is queried, the predicate will be applied to the parent collection to obtain the current set of results. This configuration should only be used where the predicate is based on volatile information, and therefore the results in the derived collection would be changing independently of changes applied to the parent collection.
+
+----
+import org.overlord.rtgov.active.collection.predicate.Predicate;
+import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.active.collection.ActiveList;
+
+.....
+
+Predicate predicate=.....;
+
+ActiveList parent = (ActiveList)acmManager.getActiveCollection(parentName);
+
+if (parent != null) {
+	java.util.Map<String,Object> properties=.....;
+
+        alist = (ActiveList)acmManager.create(childName,
+                    parent, predicate, properties);
+}
+----
+
+
+==== Register for Active Change Notifications
+
+Once an Active Collection has been retrieved (or created in the case of a child collection), then the information can be accessed using methods appropriate to the collection type, e.g. list or map.
+
+However being active collections, an important source of information is the change notifications, to enable the application to understand what changes are occuring and when.
+
+To receive change notifications, the application needs to register an Active Change Listener (discussed in the previous sections). This can be achieved using the '+addActiveChangeListener+' method on the collection, and simularly use the '+removeActiveChangeListener+' method to unregister for change notifications.
+
+For example,
+
+----
+import org.overlord.rtgov.active.collection.ActiveList;
+import org.overlord.rtgov.active.collection.ActiveChangeListener;
+
+.....
+
+ActiveList list=.....;
+
+list.addActiveChangeListener(new ActiveChangeListener() {
+    public void inserted(Object key, Object value) {
+        ....
+    }
+    public void updated(Object key, Object value) {
+        ....
+    }
+    public void removed(Object key, Object value) {
+        ....
+    }
+});
+----
+
+

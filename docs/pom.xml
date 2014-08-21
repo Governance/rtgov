@@ -14,8 +14,11 @@
 	</parent>
 
 	<modules>
+		<module>developerguide</module>
 		<module>javadoc</module>
+		<module>quickstartguide</module>
 		<module>restapi</module>
+		<module>userguide</module>
 	</modules>
 
 </project>

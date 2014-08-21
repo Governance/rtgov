@@ -1,0 +1,845 @@
+== Reporting Activity Information
+
+There are two ways in which activity information can be collected for further processing by the Runtime Governance server.
+
+. Integrating an 'activity collector' into the execution environment. This will intercept activities and automatically report them to the Runtime Governance server.
+. Manually report the activity information to the Runtime Governance server through a publicly available API (e.g. REST service)
+
+This section will explain how to use both approaches.
+
+=== Integrated Activity Collector
+
+This section will discuss how an integrated activity collector can be used to automatically collect, pre-process and optionally validate activity events before finally reporting them to the server.
+
+
+==== Supported Environments
+
+The current version of Runtime Governance only supports the SwitchYard open source SOA platform. To collect activity events from this environment, simply install either the full server (if the execution and governance server are running co-located) or the client installation profile (if reporting events to another server).
+
+
+==== Information Processor
+
+To enable the Runtime Governance infrastructure, and the user policies/rules that are defined within it, to make the most effective use of the activities that are reported, it is necessary to pre-process certain events to extract relevant information for use in:
+
+* correlating activity events to a particular business transaction instance
+
+* highlighting important properties that may need to be used in business policies
+
+Extracting the property information is important for various reasons:
+
+* it enables the business policies to remain independent of the specific information format used, and thus more efficiently access the key details (i.e. as properties)
+
+* it is important to control what information is distributed within the actvity events, for both size (i.e. performance) and security/privacy reasons.
+
+By default, information content should not be distributed unless an information processor has been defined to explicitly indicate how that information should be represented (if at all) within the activity event.
+
+This section explains how information processors can be configured and deployed along side the business applications they are monitoring.
+
+
+===== Defining the Information Processors
+
+The Information Processor can be defined as an object model or specified as a JSON representation for packaging in a suitable form, and subsequently de-serialized when deployed to the governed execution environment.
+
+The following is an example of the JSON representation of a list of Information Processors. This particular example accompanies the Order Management sample:
+
+----
+[{
+	"name":"OrderManagementIP",
+	"version":"1",
+	"typeProcessors":{
+		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrder":{
+			"contexts":[{
+				"type":"Conversation",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"order/orderId"
+				}
+			}],
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"order/customer"
+				}
+			},{
+				"name":"item",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"order/itemId"
+				}
+			}]
+		},
+		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse":{
+			"contexts":[{
+				"type":"Conversation",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"orderAck/orderId"
+				}
+			}],
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"orderAck/customer"
+				}
+			},{
+				"name":"total",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"orderAck/total"
+				}
+			}]
+		},
+		"java:org.switchyard.quickstarts.demos.orders.Order":{
+			"contexts":[{
+				"type":"Conversation",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"orderId"
+				}
+			}],
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"customer"
+				}
+			},{
+				"name":"itemId",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"itemId"
+				}
+			}]
+		},
+		"java:org.switchyard.quickstarts.demos.orders.OrderAck":{
+			"contexts":[{
+				"type":"Conversation",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"orderId"
+				}
+			}],
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"customer"
+				}
+			},{
+				"name":"total",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"total"
+				}
+			}]
+		},
+		"{urn:switchyard-quickstart-demo:orders:1.0}makePayment":{
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"payment/customer"
+				}
+			},{
+				"name":"amount",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"payment/amount"
+				}
+			}]
+		},
+		"{urn:switchyard-quickstart-demo:orders:1.0}makePaymentResponse":{
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"receipt/customer"
+				}
+			},{
+				"name":"amount",
+				"evaluator":{
+					"type":"xpath",
+					"expression":"receipt/amount"
+				}
+			}]
+		},
+		"java:org.switchyard.quickstarts.demos.orders.Receipt":{
+			"properties":[{
+				"name":"customer",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"customer"
+				}
+			},{
+				"name":"amount",
+				"evaluator":{
+					"type":"mvel",
+					"expression":"amount"
+				}
+			}]
+		},
+		"java:org.switchyard.quickstarts.demos.orders.ItemNotFoundException":{
+			"script":{
+				"type":"mvel",
+				"expression":"activity.fault = \"ItemNotFound\""
+			}
+		}
+	}
+}]
+----
+
+This example illustrates the configuration of a single Information Processor with the top level elements:
+
+[options="header"]
+|=======================
+| Field | Description
+| name | The name of the Information Processor.
+| version | The version of the Information Processor. If multiple versions of the same named Information Processor
+are installed, only the newest version will be used. Versions can be expressed using three schemes:
+
+Numeric - i.e. simply define the version as a number
+
+Dot Format - i.e. 1.5.1.Final
+
+Any alpha, numeric and symbols.
+
+| typeProcessors | The map of type processors - one per type, with the type name being the map key.
+|=======================
+
+_When comparing versions, for example when determining whether a newly deployed Information Processor has a higher version than an existing one with the same name, then initially the versions will be compared as numeric values. If either are not numeric, then they will be compared using dot format, with each field being compared first as numeric values, and if not based on lexical comparison. If both fields don't have a dot, then they will just be compared lexically._
+
+
+*Type Processor*
+
+The type processor element is associated with a particular information type (i.e. as its key). The fields associated with this component are:
+
+[options="header"]
+|=======================
+| Field | Description
+| contexts | The list of context evaluators.
+| properties | The list of property evaluators.
+| script | An optional script evaluator that is used to do any other processing that may be required, such as setting additional properties in the activity event that are not necessarily derived from message content information.
+| transformer | An optional transformer that determines how this information type will be represented within an activity event.
+|=======================
+
+_Context Evaluator_
+
+The fields associated with the Context Evaluator component are:
+
+[options="header"]
+|=======================
+| Field | Description
+| type | The context type, e.g. Conversation, Endpoint, Message or Link. These types are explained below.
+| timeframe | The number of milliseconds associated with a _Link_ context type. If not specified, then the context is assumed to represent the destination of the link, so the source of the link must define the timeframe.
+| header | The optional header name. If not defined, then the expression will be applied to the information content to obtain the context value.
+| evaluator | The expression evaluator used to derived the context value. See further down for details.
+|=======================
+
+The context types represent different ways in which the activity events can be related to each other or to a logical grouping (e.g. business transaction). Not all activity events need to be associated directly with a global business transaction id. They can be indirectly associated based on transitive correlation - e.g. activity 1 is associated with the global business transaction id, activity 2 is associated with activity 1 by a message context type, and activity 3 is associated with activity 2 based on an endpoint correlation id. All three activity events will be collectively correlated to the business transaction id.
+
+An explanation of the different context types is,
+
+[options="header"]
+|=======================
+| Context Type | Explanation
+| Conversation | A conversation identifier can be used to correlate activity events to a business transaction associated with a globally unique identifer (e.g. an order id).
+| Endpoint | A globally unique identifier associated with one endpoint in a business transaction. For example, a process instance id associated with the business process executing within a service playing a particular role in the business transaction.
+| Message | The globally unique identify of a message being sent from one party to another.
+| Link | A temporal link between a source and destination activity. The temporal nature of the association is intended to enable non-globally unique details to be used to correlate activities, where the id is considered unique within the defined timeframe.
+|=======================
+
+
+
+_Property Evaluator_
+
+The fields associated with the Property Evaluator component are:
+
+[options="header"]
+|=======================
+| Field | Description
+| name | The property name being initialized.
+| header | The optional header name. If not defined, then the expression will be applied to the information content to obtain the property value.
+| evaluator | The expression evaluator used to derive the property value. See further down for details.
+|=======================
+
+
+_Expression Evaluator_
+
+In the context and property evaluator components, they reference an expression evaluator that is used to derive their value. The expression evaluator has the following fields:
+
+[options="header"]
+|=======================
+| Field | Description
+| type | The type of expression evaluator to use. Currently only support *mvel* or *xpath*.
+| expression | The expression to evaluate.
+| optional | Optional field that indicates whether the value being extracted by the expression is optional. The default is false. If a value is not optional, but the expression fails to locate a value, then an error will be reported
+|=======================
+
+These expressions operate on the information being processed, to return a string value to be applied to the appropriate context or property.
+
+
+_Script_
+
+The script field of the Type Processor has the following fields:
+
+[options="header"]
+|=======================
+| Field | Description
+| type | The type of script evaluator to use. Currently only support *mvel*.
+| expression | The expression to evaluate.
+|=======================
+
+The MVEL script evaluator is supplied two variables for its use:
+
+* information - The information being processed
+* activity - The activity event
+
+An example of how this script can be used is shown in the example above, associated with the _ItemNotFoundException_. In this case, the message on the wire does not carry the fault name, so the information processor is used to set the 'fault' field on the activity event.
+
+
+_Transformer_
+
+The transformer field of the Type Processor has the following fields:
+
+[options="header"]
+|=======================
+| Field | Description
+| type | The type of transformer to use. Currently support *serialize* and *mvel*.
+|=======================
+
+The _serialize_ transformer does not take any other properties. It simply attempts to convert the representation of the information into a textual form for inclusion in the activity event. So this transformer type can be used where the complete information content is required.
+
+The _mvel_ transformer takes the following additional fields:
+
+The MVEL transformer script is supplied the following variable for its use:
+
+[options="header"]
+|=======================
+| Field | Description
+| expression | The mvel expression to transform the supplied information.
+|=======================
+
+The MVEL transformer is supplied the following variable for its use:
+
+* information - The information being processed
+
+For example, to include the content of the submitOrder message:
+
+----
+	"typeProcessors":{
+		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrder":{
+			....
+			"transformer":{
+				"type":"serialize"
+			}
+		},
+----
+
+
+===== Registering the Information Processors
+
+*JEE Container*
+
+The Information Processors are deployed within the JEE container as a WAR file with the following structure:
+
+----
+warfile
+|
+|-META-INF
+|    |- beans.xml
+|
+|-WEB-INF
+|    |-classes
+|    |    |-ip.json
+|    |    |-<custom classes/resources>
+|    |
+|    |-lib
+|       |-ip-loader-jee.jar
+|       |-<additional libraries>
+----
+
+The +ip.json+ file contains the JSON representation of the Information Processor configuration.
+
+The +ip-loader-jee.jar+ acts as a bootstrapper to load and register the Information Processors.
+
+If custom classes are defined, then the associated classes and resources can be defined in the +WEB-INF/classes+ folder or within additional libraries located in the +WEB-INF/lib+ folder.
+
+A maven pom.xml that will create this structure is:
+
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>....</groupId>
+	<artifactId>....</artifactId>
+	<version>....</version>
+	<packaging>war</packaging>
+	<name>....</name>
+
+	<properties>
+		<rtgov.version>....</rtgov.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>ip-loader-jee</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+		....
+	</dependencies>
+
+</project>
+----
+
+If deploying in JBoss Application Server, then the following fragment also needs to be included, to define the dependency on the core Overlord Runtime Governance modules:
+
+----
+.....
+	<build>
+		<finalName>....</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+ 					<archive>
+						<manifestEntries>
+							<Dependencies>deployment.overlord-rtgov.war</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	.....
+----
+
+*OSGi Container*
+
+The Information Processors are deployed within the OSGi container as a JAR file with the following structure:
+
+----
+jarfile
+|
+|-META-INF
+|    |- MANIFEST.MF
+|
+|-ip.json
+|-ip-loader-osgi.jar
+|-<custom classes/resources>
+|-<additional libraries>
+----
+
+The +ip.json+ file contains the JSON representation of the Information Processor configuration.
+
+The +ip-loader-osgi.jar+ acts as a bootstrapper to load and register the Information Processors.
+
+If custom classes are defined, then any associated classes, resources and additional libraries are located in the top level folder.
+
+A maven pom.xml that will create this structure is:
+
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>....</groupId>
+	<artifactId>....</artifactId>
+	<version>....</version>
+	<packaging>war</packaging>
+	<name>....</name>
+
+	<properties>
+		<rtgov.version>....</rtgov.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>ip-loader-osgi</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+		....
+	</dependencies>
+
+	<build>
+		<finalName>....</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Bundle-Activator>org.overlord.rtgov.activity.processor.loader.osgi.IPActivator</Bundle-Activator>
+						<Import-Package>
+							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,
+                            ....,
+							*
+						</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+----
+
+
+==== Activity Validation
+
+The Activity Validator mechanism provides the means to install event processing capabilities within the activity collection environment (i.e. co-located with the execution of the business transaction).
+
+The main reason for performing analysis of the activity events at this stage in the runtime governance lifecycle is to enable the analysis to potential block the business transaction. For an example of such a case, please see the synchronous policy sample.
+
+In some execution environments these validators can be implicitly called as part of collecting the activity events. However in some environments these validators need to be explicitly invoked, as they impact the execution behaviour. The SwitchYard environment is an example of this later environment, where an 'interceptor' needs to be explicitly included within the SwitchYard application, which is responsible for invoking the validation capability and reacting to any issues it detects. To see how to configure such an interceptor, please see the synchronous policy sample.
+
+
+===== Defining the Activity Validators
+
+The Activity Validator can be defined as an object model or specified as a JSON representation for packaging in a suitable form, and subsequently de-serialized when deployed to the governed execution environment.
+
+The following is an example of the JSON representation of a list of Activity Validators. This particular example is from the synchronous policy sample:
+
+----
+[{
+  "name" : "RestrictUsage",
+  "version" : "1",
+  "predicate" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELPredicate",
+    "expression" : "event instanceof org.overlord.rtgov.activity.model.soa.RequestReceived && event.serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\""
+  },
+  "eventProcessor" : {
+    "@class" : "org.overlord.rtgov.ep.mvel.MVELEventProcessor",
+    "script" : "VerifyLastUsage.mvel",
+    "services" : {
+      "CacheManager" : {
+        "@class" : "org.overlord.rtgov.common.infinispan.service.InfinispanCacheManager"
+      }
+    }
+  }
+}]
+----
+
+This example illustrates the configuration of a single Activity Validator with the top level elements:
+
+[options="header"]
+|=======================
+| Field | Description
+| name | The name of the Activity Validator.
+| version | The version of the Activity Validator. If multiple versions of the same named Activity Validator
+are installed, only the newest version will be used. Versions can be expressed using three schemes:
+
+Numeric - i.e. simply define the version as a number
+
+Dot Format - i.e. 1.5.1.Final
+
+Any alpha, numeric and symbols.
+
+| predicate | The optional implementation of the +org.overlord.rtgov.ep.Predicate+ interface, used to determine if the activity event is relevant and therefore
+should be supplied to the event processor
+| eventProcessor | The implementation of the +org.overlord.rtgov.ep.EventProcessor+ interface, that is used to analyse the activity event
+|=======================
+
+_When comparing versions, for example when determining whether a newly deployed Activity Validator has a higher version than an existing one with the same name, then initially the versions will be compared as numeric values. If either are not numeric, then they will be compared using dot format, with each field being compared first as numeric values, and if not based on lexical comparison. If both fields don't have a dot, then they will just be compared lexically._
+
+
+
+===== Registering the Activity Validators
+
+*JEE Container*
+
+The Activity Validators are deployed within the JEE container as a WAR file with the following structure:
+
+----
+warfile
+|
+|-META-INF
+|    |- beans.xml
+|
+|-WEB-INF
+|    |-classes
+|    |    |-av.json
+|    |    |-<custom classes/resources>
+|    |
+|    |-lib
+|       |-av-loader-jee.jar
+|       |-<additional libraries>
+----
+
+The +av.json+ file contains the JSON representation of the Activity Validator configuration.
+
+The +av-loader-jee.jar+ acts as a bootstrapper to load and register the Activity Validators.
+
+If custom classes are defined, then the associated classes and resources can be defined in the +WEB-INF/classes+ folder or within additional libraries located in the +WEB-INF/lib+ folder.
+
+A maven pom.xml that will create this structure is:
+
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>....</groupId>
+	<artifactId>....</artifactId>
+	<version>....</version>
+	<packaging>war</packaging>
+	<name>....</name>
+
+	<properties>
+		<rtgov.version>....</rtgov.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>av-loader-jee</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+		....
+	</dependencies>
+
+</project>
+----
+
+If deploying in JBoss Application Server, then the following fragment also needs to be included, to define the dependency on the core Overlord Runtime Governance modules:
+
+----
+.....
+	<build>
+		<finalName>....</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+ 					<archive>
+						<manifestEntries>
+							<Dependencies>deployment.overlord-rtgov.war</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	.....
+----
+
+*OSGi Container*
+
+The Activity Validators are deployed within the OSGi container as a JAR file with the following structure:
+
+----
+jarfile
+|
+|-META-INF
+|    |- MANIFEST.MF
+|
+|-av.json
+|-av-loader-osgi.jar
+|-<custom classes/resources>
+|-<additional libraries>
+----
+
+The +av.json+ file contains the JSON representation of the Activity Validator configuration.
+
+The +av-loader-osgi.jar+ acts as a bootstrapper to load and register the Activity Validators.
+
+If custom classes are defined, then any associated classes, resources and additional libraries can be located in the top level folder.
+
+A maven pom.xml that will create this structure is:
+
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>....</groupId>
+	<artifactId>....</artifactId>
+	<version>....</version>
+	<packaging>war</packaging>
+	<name>....</name>
+
+	<properties>
+		<rtgov.version>....</rtgov.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>av-loader-osgi</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+		....
+	</dependencies>
+
+	<build>
+		<finalName>....</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Bundle-Activator>org.overlord.rtgov.activity.validator.loader.osgi.AVActivator</Bundle-Activator>
+						<Import-Package>
+							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,
+                            .....;
+							*
+						</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+----
+
+=== Reporting and Querying Activity Events via REST
+
+This section explains how activity information can be reported to, and queried from, the Activity Server via a RESTful service.
+
+==== Reporting Activity Information
+
+POST request to URL: +<host>/overlord-rtgov/activity/store+
+
+The service uses basic authentication, with the default username +admin+ and password +overlord+.
+
+The request contains the list of ActivityUnit objects encoded in JSON. (See +org.overlord.rtgov.activity.model.ActivityUnit+ class within the API documentation, as the root component of this configuration). For example,
+
+----
+[{
+    "id":"TestId1",
+    "activityTypes":[{
+        "type":"RequestSent",
+        "context":[{
+            "value":"12345"
+        },{
+            "value":"abc123",
+            "type":"Endpoint"
+        },{
+            "value":"ABC123",
+            "type":"Message"
+        }],
+        "content":"....",
+        "serviceType":"{http://service}OrderService",
+        "operation":"buy",
+        "fault":"MyFault",
+        "messageType":"{http://message}OrderRequest",
+        "timestamp":1347028592880
+    },{
+        "type":"ResponseReceived",
+        "context":[{
+            "value":"12345"
+        },{
+            "value":"ABC124",
+            "type":"Message"
+        }],
+        "content":"....",
+        "serviceType":"{http://service}OrderService",
+        "operation":"buy",
+        "fault":"OutOfStock",
+        "messageType":"{http://message}OutOfStock",
+        "replyToId":"ABC123",
+        "timestamp":1347028593010
+    }],
+    "origin":{
+        "host":"Saturn",
+        "principal":"Fred",
+        "node":"Saturn1",
+        "thread":"Thread-1"
+    }
+},{
+    .....
+}]
+----
+
+==== Querying Activity Events using an Expression
+
+POST request to URL: +<host>/overlord-rtgov/activity/query+
+
+The service uses basic authentication, with the default username +admin+ and password +overlord+.
+
+The request contains the JSON encoding of the Query Specification (see API documentation for+org.overlord.rtgov.activity.server.QuerySpec+) which has the following properties:
+
+
+[options="header"]
+|=======================
+| Property | Description
+| fromTimestamp | Optionally specifies the start date/time for the activity units required. If not specified, then the query will apply to activity units from the first one recorded.
+| toTimestamp | Optionally specifies the end date/time for the activity units  required. If not specified, then the query will relate up to the most recently recorded activity units.
+| expression | An optional expression that can be used to specify the activity events of interest.
+| format | Optionally specifies the format of the expression. The value must be supported by the configured activity store. The only supported format currently is "jpql" (Java Persistence Query Language).
+|=======================
+
+The response contains a list of ActivityType objects encoded in JSON, which would be similar in form to the example shown above when recording a list of activity units. (See API documentation for +org.overlord.rtgov.activity.model.ActivityType+).
+
+==== Retrieving an Activity Unit
+
+GET request to URL: +<host>/overlord-rtgov/activity/unit?id=<unitId>+
+
+The service uses basic authentication, with the default username +admin+ and password +overlord+.
+
+The <unitId> represents the identifier associated with the ActivityUnit that is being retrieved encoded in JSON. (See API documentation for +org.overlord.rtgov.activity.model.ActivityUnit+).
+
+==== Retrieve Activity Events associated with a Context Value
+
+GET request to URL: +<host>/overlord-rtgov/activity/events?type=<contextType>&value=<identifier>+
+
+The service uses basic authentication, with the default username +admin+ and password +overlord+.
+
+The <contextType> represents the context type, e.g. Conversation, Endpoint, Message or Link. This is explained in the Information Processor section of this chapter, or see the API documentation for +org.overlord.rtgov.activity.model.Context.Type+.
+
+The <identifier> represents the correlation value associated with the ActivityType(s) that are being retrieved.
+
+Two additional optional query parameters can be provided, +start+ being the start timestamp, and +end+ for the end timestamp. These parameters can be used to scope the time period of the query.
+
+The response is a list of ActivityType objects (see +org.overlord.rtgov.activity.model.ActivityType+ in the API documentation) encoded in JSON.
+
+
+
+

@@ -1,0 +1,740 @@
+== Accessing Derived Information
+
+
+=== Configuring Active Collections
+
+An Active Collection is similar to a standard collection, but with the ability to report change notifications when items are inserted, updated or removed. The other main difference is that they cannot be directly updated - their contents is managed by an Active Collection Source which acts as an adapter between the collection and the originating source of the information.
+
+
+This section will explain how to define an Active Collection Source and register it to indirectly create an Active Collection.
+
+==== Defining the Source
+
+The source can be defined as an object model or specified as a JSON representation for packaging in a suitable form, and subsequently de-serialized when deployed to the runtime governance server.
+
+
+The following is an example of the JSON representation that defines a list of Active Collection Sources - so more than one source can be specified with a single configuration:
+
+----
+[
+  {
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "ServiceResponseTimes",
+    "type" : "List",
+    "itemExpiration" : 0,
+    "maxItems" : 100,
+    "subject" : "ServiceResponseTimes",
+    "aggregationDuration" : 1000,
+    "groupBy" : "serviceType + \":\" + operation + \":\" + fault",
+    "aggregationScript" : "AggregateServiceResponseTime.mvel"
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "ServiceDefinitions",
+    "type" : "Map",
+    "itemExpiration" : 0,
+    "maxItems" : 100,
+    "subject" : "ServiceDefinitions",
+    "scheduledScript" : "TidyServiceDefinitions.mvel",
+    "scheduledInterval" : 60000,
+    "properties" : {
+        "maxSnapshots" : 5
+    },
+    "maintenanceScript" : "MaintainServiceDefinitions.mvel"
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "Situations",
+    "type" : "List",
+    "itemExpiration" : 40000,
+    "maxItems" : 0,
+    "subject" : "Situations",
+    "activeChangeListeners" : [ {
+        "@class" : "org.overlord.rtgov.active.collection.jmx.JMXNotifier",
+    	"objectName" : "overlord.rtgov.services:name=Situations",
+    	"descriptionScript" : "SituationDescription.mvel",
+    	"insertTypeScript" : "SituationType.mvel"
+	} ],
+	"derived": [ {
+		"name": "FilteredSituations",
+		"predicate": {
+			"type": "MVEL",
+			"expression": "map = context.getMap(\"IgnoredSituationSubjects\"); if (map == null) { return false; } return !map.containsKey(subject);"
+		},
+	    "properties" : {
+	        "active" : false
+	    }
+	} ]
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.ActiveCollectionSource",
+    "name" : "IgnoredSituationSubjects",
+    "type" : "Map",
+    "lazy" : true,
+    "factory" : {
+        "@class" : "org.overlord.rtgov.active.collection.infinispan.InfinispanActiveCollectionFactory",
+        "cache" : "IgnoredSituationSubjects"
+    }
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.ActiveCollectionSource",
+    "name" : "Principals",
+    "type" : "Map",
+    "lazy" : true,
+    "visibility" : "Private",
+    "factory" : {
+        "@class" : "org.overlord.rtgov.active.collection.infinispan.InfinispanActiveCollectionFactory",
+        "cache" : "Principals"
+    }
+  }
+]
+----
+
+
+This configuration shows the definition of multiple Active Collection Sources. The top level elements for a source, that are common to all active collection sources, are:
+
+[options="header"]
+|=======================
+| Field | Description
+| @class | This attribute defines the Java class implementing the Active Collection Source. This class must be directly or indirectly derived from +org.overlord.rtgov.active.collection.ActiveCollectionSource+.
+| name | The name of the Active Collection that will be created and associated with this source.
+| type | The type of active collection. The currently supported values (as defined in the +org.overlord.rtgov.active.collection.ActiveCollectionType+ enum are:
+
+List (default)
+
+Map
+| visibility | The visibility of active collection, i.e. whether accessible via the remote access mechanisms such as REST. The currently supported values (as defined in the +org.overlord.rtgov.active.collection.ActiveCollectionVisibility+ enum are:
+
+Public (default)
+
+Private
+| lazy | Whether active collection should be created on startup, or lazily instantiated upon first use. The default is false.
+| itemExpiration | If not zero, then defines the number of milliseconds until an item in the collection should expire (i.e. be removed).
+| maxItems | If not zero, defines the maximum number of items that the collection should hold. If an insertion causes the size of the collection to increase above this value, then the oldest item should be removed.
+| aggregationDuration | The duration (in milliseconds) over which the information will be aggregated.
+| groupBy | An expression defining the key to be used to categorize the information being aggregated. The expression can use properties associated with the information being aggregated.
+| aggregationScript | The MVEL script to be used to aggregate the information. An example will be shown in a following sub-section.
+| scheduledInterval | The interval (in milliseconds) between the invocation of the scheduled script.
+| scheduledScript | The MVEL script invoked at a fixed interval to perform routine tasks on the collection.
+| maintenanceScript | By default, events received by the active collection source will be inserted into the associated active collection. If a MVEL maintenance script is specified, then it will be invoked to manage the way in which the received information will be applied to the active collection.
+| properties | A set of properties that can be access by the various scripts.
+| derived | An optional list of definitions for derived collections that will be created with the top level active collection, and retained regardless of whether any users are currently accessing them. (Normally when a derived collection is created dynamically on demand, once it has served its purpose, it will be cleaned up). The definition will be explained below.
+| activeChangeListeners | The list of active change listeners that should be instantiated and automatically registered with the Active Collection. The listeners must be derived from the Java class +org.overlord.rtgov.active.collection.AbstractActiveChangeListener+.
+| factory | The optional factory for creating the active collection, derived from the class +org.overlord.rtgov.active.collection.ActiveCollectionFactory+.
+|=======================
+
+The additional attributes associated with the +EPNActiveCollectionSource+ implementation will be discussed in a later section.
+
+===== Scripts
+
+*Aggregation*
+
+The aggregation script is used to (as the name suggests) aggregate information being provided by the source, before being applied to the collection. The values available to the MVEL script are:
+
+[options="header"]
+|=======================
+| Variable | Description
+| events | The list of events to be aggregated.
+|=======================
+
+The aggregated result will be returned from the script.
+
+*Scheduled*
+
+The scheduled script is used to perform regular tasks on the active collection, independent of any information being applied to the collection. The values available to the MVEL script are:
+
+[options="header"]
+|=======================
+| Variable | Description
+| acs | The active collection source.
+| acs.properties | The properties configured for the active collection source.
+| variables | A map associated with the active collection source that can be used by the scripts to cache information.
+|=======================
+
+*Maintenance*
+
+The maintenance script is used to manage how new information presented to the source is applied to the active collection. If no script is defined, then the information will be inserted by default. The values available to the MVEL script are:
+
+[options="header"]
+|=======================
+| Variable | Description
+| acs | The active collection source.
+| acs.properties | The properties configured for the active collection source.
+| key | The key for the information being inserted. May be null.
+| value | The value for the information being inserted.
+| variables | A map associated with the active collection source that can be used by the scripts to cache information.
+|=======================
+
+An example script, showing how these variables can be used is:
+
+----
+int maxSnapshots=acs.properties.get("maxSnapshots");
+
+snapshots = variables.get("snapshots");
+
+if (snapshots == null) {
+	snapshots = new java.util.ArrayList();
+	variables.put("snapshots", snapshots);
+}
+
+// Update the current snapshot
+currentSnapshot = variables.get("currentSnapshot");
+
+if (currentSnapshot == null) {
+	currentSnapshot = new java.util.HashMap();
+}
+
+snapshots.add(new java.util.HashMap(currentSnapshot));
+
+currentSnapshot.clear();
+
+// Remove any snapshots above the number configured
+while (snapshots.size() > maxSnapshots) {
+	snapshot = snapshots.remove(0);
+}
+
+// Merge snapshots
+merged = org.overlord.rtgov.analytics.util.ServiceDefinitionUtil.mergeSnapshots(snapshots);
+
+// Update existing, and remove definitions no longer relevant
+foreach (entry : acs.activeCollection) {
+	org.overlord.rtgov.analytics.service.ServiceDefinition sd=null;
+	
+	if (merged.containsKey(entry.key)) {
+		acs.update(entry.key, merged.get(entry.key));
+	} else {
+		acs.remove(entry.key, entry.value);
+	}
+	
+	merged.remove(entry.key);
+}
+
+// Add new definitions
+for (key : merged.keySet()) {
+	acs.insert(key, merged.get(key));
+}
+----
+
+This example shows the script accessing the Active Collection Source and its properties, as well as accessing (and updating) the 'variables' cache associated with the source.
+
+
+===== Derived Active Collections
+
+The _derived_ element defines a list of derived active collection definitions that will be instantiated with the active collection.
+
+The fields associated with this component are:
+
+[options="header"]
+|=======================
+| Field | Description
+| name | The derived active collection's name.
+| predicate | The predicate that will determine what subset of entries from the parent collection should be available within the derived collection.
+| properties | Properties that will be passed to the derived active collection.
+|=======================
+
+The following properties can be defined:
+
+[options="header"]
+|=======================
+| Property | Description
+| active | This optional property indicates whether the derived collection should be actively maintained (i.e. active = true), which is the default, or whether the contents should be determined when a query is performed. The main reason for setting this property to false is due to the predicate being based on volatile information, and therefore the contents needs to be evaluated at the time it is requested.
+|=======================
+
+
+===== Active Change Listeners
+
+The _activeChangeListeners_ element defines a list of Active Change Listener implementations that will be instantiated and registered with the active collection.
+
+
+The fields associated with this component are:
+
+[options="header"]
+|=======================
+| Field | Description
+| @class | The Java class that provides the listener implementation and is directly or indirectly derived from +org.overlord.rtgov.active.collection.AbstractActiveChangeListener+.
+|=======================
+
+The remaining attributes in the example above will be discussed in a subsequent section related to reporting results via JMX notifications.
+
+
+===== Factory
+
+The _factory_ element defines an Active Collection Factory implementation that will be used to create the active collection.
+
+The fields associated with this component are:
+
+[options="header"]
+|=======================
+| Field | Description
+| @class | The Java class that provides the factory implementation and is directly or indirectly derived from +org.overlord.rtgov.active.collection.ActiveCollectionFactory+.
+|=======================
+
+The current list of factory implementations are defined below.
+
+*Infinispan*
+
+The fields associated with the +org.overlord.rtgov.active.collection.infinispan.InfinispanActiveCollectionFactory+ component are:
+
+[options="header"]
+|=======================
+| Field | Description
+| cache | The name of the cache to be presented as an Active Map.
+| container | The optional JNDI name used to obtain the cache container. If not defined, then the default container will be obtained from the 'infinispan.container' property from +overlord-rtgov.properties+ file in the +$JBOSS_HOME/standalone/configuration+ folder. If the default container is not defined, then a default cache manager will be instantiated.
+|=======================
+
+
+==== Registering the Source
+
+
+===== JEE Container
+
+The Active Collection Source is deployed within the JEE container as a WAR file with the following structure:
+
+----
+warfile
+|
+|-META-INF
+|    |- beans.xml
+|
+|-WEB-INF
+|    |-classes
+|    |    |-acs.json
+|    |    |-<custom classes/resources>
+|    |
+|    |-lib
+|       |-acs-loader-jee.jar
+|       |-<additional libraries>
+----
+
+The +acs.json+ file contains the JSON representation of the Active Collection Source configuration.
+
+The +acs-loader-jee.jar+ acts as a bootstrapper to load and register the Active Collection Source.
+
+If custom active collection source and/or active change listeners are defined, then the associated classes and resources can be defined in the +WEB-INF/classes+ folder or within additional libraries located in the +WEB-INF/lib+ folder.
+
+A maven pom.xml that will create this structure is:
+
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>....</groupId>
+	<artifactId>....</artifactId>
+	<version>....</version>
+	<packaging>war</packaging>
+	<name>....</name>
+
+	<properties>
+		<rtgov.version>....</rtgov.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>acs-loader-jee</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+		....
+	</dependencies>
+
+</project>
+----
+
+If deploying in JBoss Application Server, then the following fragment also needs to be included, to define the dependency on the core Overlord rtgov modules:
+
+----
+.....
+	<build>
+		<finalName>....</finalName>
+		<plugins>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+ 					<archive>
+						<manifestEntries>
+							<Dependencies>deployment.overlord-rtgov.war</Dependencies>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	.....
+----
+
+
+===== OSGi Container
+
+The Active Collection Source is deployed within the OSGi container as a JAR file with the following structure:
+
+----
+jarfile
+|
+|-META-INF
+|    |- beans.xml
+|
+|-acs.json
+|-acs-loader-osgi.jar
+|-<custom classes/resources>
+|-<additional libraries>
+----
+
+The +acs.json+ file contains the JSON representation of the Active Collection Source configuration.
+
+The +acs-loader-osgi.jar+ acts as a bootstrapper to load and register the Active Collection Source.
+
+If custom active collection source and/or active change listeners are defined, then the associated classes, resources and additional libraries can be located in the top level folder.
+
+A maven pom.xml that will create this structure is:
+
+----
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<groupId>....</groupId>
+	<artifactId>....</artifactId>
+	<version>....</version>
+	<packaging>war</packaging>
+	<name>....</name>
+
+	<properties>
+		<rtgov.version>....</rtgov.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection</artifactId>
+			<version>${rtgov.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>acs-loader-osgi</artifactId>
+			<version>${rtgov.version}</version>
+		</dependency>
+		....
+	</dependencies>
+
+	<build>
+		<finalName>....</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+ 				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Bundle-Activator>org.overlord.rtgov.acs.loader.osgi.ACSActivator</Bundle-Activator>
+						<Import-Package>
+							!javax.inject.*,!javax.enterprise.*,!javax.persistence.*,
+                            ....,
+                            *
+						</Import-Package>
+						<Embed-Dependency>*;scope=compile|runtime</Embed-Dependency>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
+----
+
+
+=== Presenting Results from an Event Processor Network
+
+As discussed in the preceding section, an Active Collection Source can be configured to obtain information from an Event Processor Network, which is then placed in the associated Active Collection. This section will explain in more detail how this can be done using the specific Active Collection Source implementation.
+
+----
+[
+  {
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "Situations",
+    "type" : "List",
+    "itemExpiration" : 40000,
+    "maxItems" : 0,
+    "subject" : "Situations",
+    "activeChangeListeners" : [ {
+        "@class" : "org.overlord.rtgov.active.collection.jmx.JMXNotifier",
+    	"objectName" : "overlord.rtgov.services:name=Situations",
+    	"descriptionScript" : "SituationDescription.mvel",
+    	"insertTypeScript" : "SituationType.mvel"
+    } ],
+    "derived": [ {
+        "name": "FilteredSituations",
+        "predicate": {
+            "type": "MVEL",
+            "expression": "map = context.getMap(\"IgnoredSituationSubjects\"); if (map == null) { return false; } return !map.containsKey(subject);"
+        },
+        "properties" : {
+            "active" : false
+        }
+    } ]
+  }
+]
+----
+
+This configuration shows an example of an Active Collection Source using the +org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource+ implementation. The additional fields associated with this implementation are:
+
+[options="header"]
+|=======================
+| Field | Description
+| subject | The EPN subject upon which the information has been published.
+|=======================
+
+
+An example Event Processor Network configuration that will publish information on the subject (e.g. 'Situations') specified in the Active Collection Source configuration above is:
+
+----
+{
+  "name" : "SLAMonitorEPN",
+  "version" : "${project.version}",
+  "subscriptions" : [ {
+    "nodeName" : "SLAViolations",
+    "subject" : "ServiceResponseTimes"
+  } ],
+  "nodes" : [
+    {
+      "name" : "SLAViolations",
+      "sourceNodes" : [ ],
+      "destinationSubjects" : [ "Situations" ],
+      "maxRetries" : 3,
+      "retryInterval" : 0,
+      "eventProcessor" : {
+        "@class" : "org.overlord.rtgov.ep.drools.DroolsEventProcessor",
+        "ruleName" : "SLAViolation",
+        "parameters" : {
+        	"levels" : [
+        		{
+        			"threshold" : 400,
+        			"severity" : "Critical"
+        		},
+        		{
+        			"threshold" : 320,
+        			"severity" : "High"
+        		},
+        		{
+        			"threshold" : 260,
+        			"severity" : "Medium"
+        		},
+        		{
+        			"threshold" : 200,
+        			"severity" : "Low"
+        		}
+        	]
+        }
+      },
+      "predicate" : null,
+      "notifications" : [ {
+      	 "type" : "Processed",
+      	 "subject" : "SituationsProcessed"
+      },{
+      	 "type" : "Results",
+      	 "subject" : "Situations"
+      } ]
+    }
+  ]
+}
+----
+
+=== Publishing Active Collection Contents as JMX Notifications
+
+----
+[
+  .....
+ {
+   .....
+   "activeChangeListeners" : [ {
+     "@class" : "org.overlord.rtgov.active.collection.jmx.JMXNotifier",
+     "objectName" : "overlord.sample.slamonitor:name=SLAViolations",
+     "insertType" : "SLAViolation"
+   } ],
+   .....
+ }
+]
+----
+
+This configuration shows the use of the JMXNotifier active change listener implementation. This implementation has the following additional fields:
+
+[options="header"]
+|=======================
+| Field | Description
+| objectName | The MBean (JMX) object name to be used to report the notification.
+| descriptionScript | The MVEL script that can be used to derive the 'description' field on the notification. If not defined, then the information's 'toString()' value will be used.
+| insertType | The 'type' field for the notification when performing an insert.
+| insertTypeScript | An optional MVEL script that can be used to derive the 'type' field for an insert.
+| updateType | The optional 'type' field for the notification when performing an update.
+| updateTypeScript | An optional MVEL script that can be used to derive the 'type' field for an update.
+| removeType | The optional 'type' field for the notification when performing a removal.
+| removeTypeScript | An optional MVEL script that can be used to derive the 'type' field for a remove.
+|=======================
+
+The following JConsole snapshot shows this JMXNotifier in action, reporting SLA violations from the associated active collection:
+
+image::images/JMXNotifier.png[]
+
+
+=== Querying Active Collections via REST
+
+The Active Collections configured within the runtime governance server can be accessed via a REST service, by POSTing the JSON representation of a query specification to the URL: +<host>/overlord-rtgov/acm/query+
+
+This service used basic authentication, with a default username +admin+ and password +overlord+.
+
+The Query Specification (see +org.overlord.rtgov.active.collection.QuerySpec+ in the API documentation) is comprised of the following information:
+
+[options="header"]
+|=======================
+| Attribute | Description
+| collection | The active collection name.
+| predicate | Optional. If defined with the parent name, then can be used to derive a child collection that filters its parent's content (and notifications) based on the predicate.
+| parent | Optional. If deriving a child collection, this field defines the parent active collection from which it will be derived.
+| maxItems | Defines the maximum number of items that should be returned in the result, or 0 if unrestricted.
+| truncate | If a maximum number of items is specified, then this field can be used to indicate whether the '*Start*' or '*End*' of the collection should be truncated.
+| style | Allows control over how the results are returned. The value '*Normal*' means as it appears in the collection. The value '*Reversed*' means the order of the contents should be reversed.
+| properties | Map of key/value pairs, used when creating a derived collection. Currently the only relevant property is a boolean called 'active', defaults to true, which can be used to force queries on the derived collection to be evaluated when information requested, in situations where the predicate is based on volatile information.
+|=======================
+
+The collection field defines the name of the collection - either an existing collection name, or if defining the 'predicate' and 'parent' fields, then this field defines the name of the derived collection to be created.
+
+The predicate field refers to a component that implements a predicate interface - the implementation is defined based on the 'type' field. Currently only a MVEL based implementation exists, with a single field 'expression' defining the predicate as a string.
+
+
+For example,
+
+----
+{
+    "parent" : "ServiceResponseTimes",
+    "maxItems" : 5000,
+    "collection" : "OrderServiceSRT",
+    "predicate" : {
+        "type" : "MVEL",
+        "expression" : "serviceType == \"{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService\" && operation == \"submitOrder\""
+    },
+    "truncate" : "End",
+    "style" : "Reversed"
+}
+----
+
+If the Active Collection Manager (ACM) does not have a collection named 'OrderServiceSRT', then it will use the supplied defaults to create the derived collection. If the collection already exists, then the contents will simply be returned, allowing multiple users to share the same collection.
+
+The list of objects returned by the query will be represented in JSON.
+
+
+=== Pre-Defined Active Collections
+
+This section describes the list of Active Collections that are provided "out of the box".
+
+==== ServiceResponseTimes
+
+This active collection is a +list+ of +org.overlord.rtgov.analytics.service.ResponseTime+ objects.
+
+The response times represent an aggregation of the metrics for a particular service, operation and response/fault, over a configured period. For more details please see the API documentation.
+
+==== Situations
+
+This active collection is a +list+ of +org.overlord.rtgov.analytics.situation.Situation+ objects.
+
+The Situation object represents a 'situation of interest' that has been detected within the Event Processor Network, and needs to be highlighted to end users. For more information on this class, please see the API documentation.
+
+This active collection configuration also publishes it contents via a JMX notifier, based on the following configuration details:
+
+----
+[
+  {
+    ........
+  },{
+    "@class" : "org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource",
+    "name" : "Situations",
+    "type" : "List",
+    "itemExpiration" : 40000,
+    "maxItems" : 0,
+    "subject" : "Situations",
+    "activeChangeListeners" : [ {
+        "@class" : "org.overlord.rtgov.active.collection.jmx.JMXNotifier",
+    	"objectName" : "overlord.rtgov:name=Situations",
+    	"descriptionScript" : "SituationDescription.mvel",
+    	"insertTypeScript" : "SituationType.mvel"
+    } ],
+    .......
+  }
+]
+----
+
+==== ServiceDefinitions
+
+This active collection is a +map+ of Service Type name to +org.overlord.rtgov.analytics.service.ServiceDefinition+ objects. More details on this class can be found in the API documentation.
+
+An example of a service definition, represented in JSON is:
+
+----
+{
+    "serviceType":"{http://www.jboss.org/examples}OrderService",
+    "operations":[{
+        "name":"buy",
+        "metrics":{
+            "count":30,
+            "average":1666,
+            "min":500,
+            "max":2500
+        },
+        "requestResponse":{
+            "metrics":{
+                "count":10,
+                "average":1000,
+                "min":500,
+                "max":1500
+            },
+            "invocations":[{
+                "serviceType":"{http://www.jboss.org/examples}CreditAgencyService",
+                "metrics":{
+                    "count":10,
+                    "average":500,
+                    "min":250,
+                    "max":750
+                },
+                "operation":"checkCredit"
+            }]
+        },
+        "requestFaults":[{
+            "fault":"UnknownCustomer",
+            "metrics":{
+                "count":20,
+                "average":2000,
+                "min":1500,
+                "max":2500
+             }
+        }]
+    }],
+    "metrics":{
+        "count":30,
+        "average":1666,
+        "min":500,
+        "max":2500
+    }
+}
+----
+
+The list of service definitions returned from this active collection, and the information they represent (e.g. consumed services), represents a near term view of the service activity based on the configuration details defined in the collection's active collection source. Therefore, if (for example) a service has not invoked one of its consumed services within the time period of interest, then its details will not show in the service definition.
+
+This information is simply intended to show the service activity that has occurred in the recent history, as a means of monitoring the real-time situation to deal with emerging problems.
+
+The duration over which the information is retained is determined by two properties in the ServiceDefinitions active collection source configuration - the "scheduledInterval" (in milliseconds) which dictates how often a snapshot of the current service definition information is stored, and the "maxSnapshots" property which defines the maximum number of snapshots that should be used. So the duration of information retained can be calculated as the _scheduled interval multiplied by the maximum number of snapshots_.
+
+
+==== Principals
+
+This active collection is a +map+ of Principal name to a map of named properties. This information is used to convey details captured (or derived) regarding a 'principal'. A principal can represent a user, group or organization.
+
+
