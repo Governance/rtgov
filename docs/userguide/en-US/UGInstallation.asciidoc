@@ -1,0 +1,525 @@
+== Installation
+
+This section will describe how to install Overlord Runtime Governance in different environments.
+
+=== Setup the target environment
+
+This section provides information about how to setup the target environments in which rtgov can be installed.
+
+==== JBoss EAP
+
+* Download the http://www.jboss.org/jbossas/downloads/[JBoss EAP] distribution (version 6.1 and 6.3 are currently supported), and unpack it in a suitable location.
+
+* If using rtgov with switchyard, then download http://www.jboss.org/switchyard/downloads[SwitchYard] (version 2.0.0.Final or higher) and install it into the JBoss EAP environment. We recommend using the switchyard installer, which can be unpacked in a temporary location, and run 'ant' in the root folder to be prompted for the location of the JBoss EAP environment.
+
+NOTE: If switchyard is not installed, then you won't be able to use the quickstarts, which are based around providing runtime governance for a switchyard application.
+
+==== Fuse
+
+* Download the http://www.jboss.org/products/fuse/download/[Fuse] distribution (version 6.1), and unpack it in a suitable location.
+
+
+=== Install RTGov
+
+This section describes how to install Overlord Runtime Governance (RTGov).
+
+* Download the latest release of RTGov from the http://www.jboss.org/overlord[Overlord website], then unpack the distribution into a suitable location.
+
+* Download http://ant.apache.org/bindownload.cgi[Apache Ant] and follow the installation instructions.
+
+* The final step is to perform the installation of Overlord Runtime Governance using ant. To do the installation, use the following command from the root folder of the installation:
+
+----
+ant [ -Dappserver.id=<target> ] [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
+----
+
+The _<target>_ represents the target environment into which rtgov is being installed:
+
+[options="header"]
+|=======================
+| Value | Description
+| jboss-eap-6 | This is the default value. Target environment is JBoss EAP 6.x
+| fuse-6.1 | Target environment is JBoss Fuse 6.1
+|=======================
+
+If the _<root-folder>_ is not explicitly provided on the command line, then the user will be prompted for the information.
+
+The _<installation-type>_ value can be:
+
+[options="header"]
+|=======================
+| Value | Description
+| all | This will result in the full server configuration being installed into the server, including activity collector (for obtaining activities generated within that server), activity server (for receiving activity information whether from a remote client or internal activity collector), event processor network (to analyse the events), active collections (to maintain result information) and a collection of REST services to support remote access to the information. This is the default value.
+| client | This will result in only the activity collector functionality being installed, using a RESTful client to communicate with a remote Runtime Governance server.
+|=======================
+
+To uninstall, simply perform the following command in the root folder of the installation:
+
+----
+ant uninstall [ -Dappserver.id=<target> ] [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
+----
+
+
+=== Post-installation steps
+
+==== JBoss EAP
+
+To start the server, go to the EAP +bin+ folder and run:
+
+----
+./standalone.sh -c standalone-full.xml
+----
+
+==== Fuse
+
+* Configure RTGov in the Fuse distribution
+
+Add the JBoss public maven repository to the file +etc/org.ops4j.pax.url.mvn.cfg+, by appending the following URL to the _org.ops4j.pax.url.mvn.repositories_ property:
+
+----
+    https://repository.jboss.org/nexus/content/groups/public@id=jboss.public
+----
+
+NOTE: Beta - currently need to update the +JMSEPNManager.password+ property, in _overlord-rtgov.properties_ file to be the password entered during 
+
+
+* Start the fuse console, using the +bin/fuse+ command, and then enter the following commands:
+
+----
+features:addurl mvn:org.overlord.rtgov/overlord-rtgov-features-fuse6/<version>/xml/features
+----
+
+NOTE: <version> in the first command should be replaced by the RTGov version that you wish to use, e.g. 2.0.0.Final.
+
+If wanting to install the 'all' profile (representing the RTGov server and co-located activity collector), then run:
+
+----
+features:install rtgov-all
+----
+
+However, if just wanting to install the 'client' profile (co-located activity collector), then run:
+
+----
+features:install rtgov-client
+----
+
+If using SwitchYard, then also run:
+
+----
+features:install rtgov-switchyard
+----
+
+This registers the event listener on SwitchYard, to capture activity and report it to RTGov.
+
+
+=== Configuration
+
+The configuration properties for the Runtime Governance capability are common across all platforms. However their location varies:
+
+[options="header"]
+|=======================
+| Value | Description
+| jboss-eap-6 | The properties are found in the _standalone*.xml_ files in the _<root>/standalone/configuration_ folder, or _domain.xml_ file in _<root>/domain/configuration_ folder. The properties are defined under a 'configuration' element with an attribute "name='overlord-rtgov'".
+| fuse-6.1 | The properties are found in the _<root>/etc/overlord-rtgov.properties_ file.
+|=======================
+
+Although there will be some properties that are independent of the installation type, some will be specific and therefore are listed in separate sections below.
+
+_Common_
+
+The common properties available across all installation types are:
+
+[options="header"]
+|=======================
+| Property | Description
+| collectionEnabled | This property will determine whether activity information is collected when the server is initially started. This value can be changed at runtime using the ActivityCollector MBean (see the chapter on _Managing the Infrastructure_).
+| ActivityServerLogger.activityListQueueSize | This property defines the queue size for pending activity lists, that are awaiting being reported to the Activity Server.
+| ActivityServerLogger.durationBetweenFailureReports | To avoid logs being overlorded with failure reports, failures will only be reported once within the defined time interval (in milliseconds).
+| ActivityServerLogger.freeActivityListQueueSize | This property defines the queue size to manage free activity lists that can be reused.
+| ActivityServerLogger.maxThreads | This property is an integer that represents the maximum number of threads that should be used to report activity events to the server (whether remote or embedded).
+| BatchedActivityUnitLogger.maxTimeInterval | The maximum wait interval (in milliseconds) before sending any held activity units to the Activity Server.
+| BatchedActivityUnitLogger.maxUnitCount | The maximum number of activity units that should be held before sending as a batch to the Activity Server.
+|=======================
+
+_All Type_
+
+[options="header"]
+|=======================
+| Property | Description
+| ActiveCollectionManager.houseKeepingInterval | Time interval (in milliseconds) between house keeping tasks being invoked.
+| ActivityStore.class | The class associated with the Activity Store implementation to be used.
+| Elasticsearch.server | URL to the Elasticsearch server (HTTP port).
+| infinispan.container | The infinispan container to use.
+| MVELSeverityAnalyzer.scriptLocation | Optional location of a MVEL script used to determine severity levels for nodes and links within the service overview diagram.
+| SituationStore.class | The class associated with the Situation Store implementation to be used.
+|=======================
+
+NOTE: Activity and Situation Store implementation specific properties will be discussed in the database section below.
+
+_Client Type_
+
+This installation type is used to configure an execution environment that will be sending its activity information to a remote Runtime Governance server using REST. The relevant properties are:
+
+[options="header"]
+|=======================
+| Property | Description
+| RESTActivityServer.serverURL | This is the URL of the activity server collecting the activity events.
+| RESTActivityServer.serverUsername | The username used to access the REST service.
+| RESTActivityServer.serverPassword | The password used to access the REST service.
+|=======================
+
+
+==== Database
+
+This section described the configuration of the supported database options.
+
+===== Elasticsearch
+
+NOTE: This is the default "out of the box" configuration.
+
+To use Elasticsearch as the Activity and Situation Store implementation, the following property values need to be defined:
+
+----
+ActivityStore.class=org.overlord.rtgov.activity.store.elasticsearch.ElasticsearchActivityStore
+SituationStore.class=org.overlord.rtgov.analytics.situation.store.elasticsearch.ElasticsearchSituationStore
+----
+
+with the additional support properties:
+
+[options="header"]
+|=======================
+| Property | Description
+| Elasticsearch.hosts | List of <host>:<port> values representing nodes in the Elasticsearch cluster, the port representing the TCP transport connection. Default value is: localhost:9300
+| Elasticsearch.schedule | When using batched mode, the interval (in milliseconds) between updates being sent to the Elasticsearch server.
+|=======================
+
+
+===== SQL
+
+To use a SQL database as the Activity and Situation Store implementation, the following property values need to be defined:
+
+[options="header"]
+|=======================
+| Property | Value
+| ActivityStore.class | +org.overlord.rtgov.activity.store.jpa.JPAActivityStore+
+| SituationStore.class | +org.overlord.rtgov.analytics.situation.store.jpa.JPASituationStore+
+|=======================
+
+with the additional support properties:
+
+[options="header"]
+|=======================
+| Property | Description
+| JPAActivityStore.jndi.datasource | The JNDI name used to retrieve the datasource.
+| JPAEventProcessor.jndi.datasource | The JNDI name used to retrieve the datasource.
+| JPASituationStore.jndi.datasource | The JNDI name used to retrieve the datasource.
+| JpaStore.jtaPlatform | The JTA platform Java implementation class.
+|=======================
+
+
+WARNING: As of RTGov 2.x, Elasticsearch is the main supported implementation of the Activity and Situation Store.
+
+
+=== Test the installation using the samples
+
+When RTGov has been installed, try out the samples to get an understanding of its capabilities, and check that your environment has been correctly installed/configured.
+
+==== JBoss EAP
+
+To install the samples into JBoss EAP go to the +samples+ folder in the distribution. You will need to install http://maven.apache.org/download.cgi[Apache Maven] to be able to use the examples.
+
+The key examples are explained below. Each quickstart also has a readme providing the instructions for use.
+
+===== Order Management
+
+The +samples/ordermgmt+ folder contains examples related to an Order Management system implemented using a SwitchYard application.
+
+The +samples/ordermgmt/app+ folder contains the switchyard application, with some additional interceptors to execute policies synchronously (see Activity Validators section for more information, and the Synchronous Policy quickstart more a specific example of its use).
+
+The +samples/ordermgmt/epn+ folder contains an Event Processor Network (see later section for details) that is used to convert switchyard application exceptions into "Situations", which is a form of alert used by the Runtime Governance platform.
+
+The +samples/ordermgmt/ip+ folder contains an Information Processor (see later sectoin for details) that is used to extract additional information from message payloads, that will be useful when analysing the activity events.
+
+===== Policy
+
+The +samples/policy/sync+ folder contains a policy that is invoked synchronously - it determines whether a user has invoked the service more than once every two seconds, and if so, blocks the service invocation.
+
+The +samples/policy/async+ folder contains a policy for asynchronously calculating the debt associated with a customer, and suspending their account if it goes above a defined level. The suspended status of the customer is checked when they next invoke the service, and the service invocation blocked if they have been suspended.
+
+===== SLA
+
+The +samples/sla/epn+ folder contains a policy for determining whether a Service Level Agreement has been violated, and if so, reported as a _Situation_.
+
+The +samples/sla/monitor+ folder contains a webapp that directly integrates with the RTGov components.
+
+
+==== Fuse
+
+To try out the samples in Fuse, you will need to start up the Fuse console.
+
+===== Order Management
+
+To install an OSGi application to provide a simple order management capabilty, with an Event Processor Network to convert exceptions into _Situations_, run the following command from the fuse console:
+
+----
+features:install rtgov-samples-ordermgmt-epn
+----
+
+Send some requests to the order management service, at the URL _http://localhost:8181/cxf/orderservice/orders/submit_, with basic authentication username=admin, password=admin (as defined in the +etc/user.properties+ file). For example, send the message:
+
+----
+{"orderId":"1","itemId":"BUTTER","quantity":100,"customer":"Fred"}
+----
+
+which should return the result:
+
+----
+{
+    "total": 125,
+    "accepted": true,
+    "customer": "Fred",
+    "orderId": "1",
+    "status": "Order Accepted"
+}
+----
+
+If you then send:
+
+----
+{"orderId":"6","itemId":"ERROR","quantity":100,"customer":"Fred"}
+----
+
+you will get the response:
+
+----
+Failed with an error
+----
+
+and a _Situation_ will be created in the RTGov UI.
+
+
+===== Detect Service Level Agreement (SLA) Violations
+
+To install a policy that will check for SLA violations, run the following command from the fuse console:
+
+----
+features:install rtgov-samples-sla
+----
+
+Send some requests to the order management service, at the URL _http://localhost:8181/cxf/orderservice/orders/submit_, with basic authentication username=admin, password=admin (as defined in the +etc/user.properties+ file). For example, send the message:
+
+----
+{"orderId":"3","itemId":"JAM","quantity":100,"customer":"Fred"}
+----
+
+which should return the result after a slight delay:
+
+----
+{
+    "total": 240,
+    "accepted": true,
+    "customer": "Fred",
+    "orderId": "3",
+    "status": "Order Accepted"
+}
+----
+
+The delay is caused by the request for itemId _JAM_, and results in the policy detecting a SLA violation which are reported as two _Situation_ events that can be viewed in the RTGov UI.
+
+
+===== Synchronous Policy Enforcement
+
+To install a policy that will be evaluated immediately, to prevent a customer from invoking a service more than once within two seconds, run the following comand from the fuse console:
+
+----
+features:install rtgov-samples-policy-sync
+----
+
+Send the following request twice in quick succession, to the order management service at the URL _http://localhost:8181/cxf/orderservice/orders/submit_, with basic authentication username=admin, password=admin (as defined in the +etc/user.properties+ file): 
+----
+{"orderId":"1","itemId":"BUTTER","quantity":100,"customer":"Fred"}
+----
+
+The first request will return the expected:
+
+----
+{
+    "total": 125,
+    "accepted": true,
+    "customer": "Fred",
+    "orderId": "1",
+    "status": "Order Accepted"
+}
+----
+
+However the second invocation (if performed within two seconds of the first) will return:
+
+----
+Customer 'Fred' cannot perform more than one request every 2 seconds
+----
+
+
+===== Asynchronous Policy Enforcement
+
+To install a policy that will evaluate a customer's debt level, and suspend their account if it becomes too high, run the following comand from the fuse console:
+
+----
+features:install rtgov-samples-policy-async
+----
+
+Send some requests to the order management service, at the URL _http://localhost:8181/cxf/orderservice/orders/submit_, with basic authentication username=admin, password=admin (as defined in the +etc/user.properties+ file). For example, send the message:
+
+----
+{"orderId":"1","itemId":"BUTTER","quantity":100,"customer":"Fred"}
+----
+
+When the credit limit has been reached, the customer will be suspended, resulting in a response "Customer 'Fred' has been suspended".
+
+If we then sent the following request, to clear some of customer Fred's debt:
+
+----
+{"amount":400,"customer":"Fred"}
+----
+
+we will then be able to send further order requests.
+
+
+=== JBoss EAP Specific Information
+
+==== SQL Database
+
+The database is defined by the datasource configuration located here: +$JBOSS_HOME/standalone/deployment/overlord-rtgov/rtgov-ds.xml+ as part of the 'server' installation type.
+
+The default SQL database is the H2 file based database, and is created during the installation of the 'all' type.
+
+NOTE: The following sections discuss changes to the +standalone-full.xml+ configuration file. If using a clustered
+environment, then these changes should be applied to the +standalone-full-ha.xml+ instead.
+
+
+*MySQL*
+
+* Create the folder +$JBossAS/modules/mysql/main+.
+* Put the MySQL driver jar in the +$JBossAS/modules/mysql/main+ folder, e.g. mysql-connector-java-5.1.12.jar.
+* Create a module.xml file, within the +$JBossAS/modules/mysql/main+ folder, with the contents:
+[source,xml]
+----
+<module xmlns="urn:jboss:module:1.1" name="mysql">
+   <resources>
+     <resource-root path="mysql-connector-java-5.1.12.jar"/>
+   </resources>
+   <dependencies>
+     <module name="javax.api"/>
+     <module name="javax.transaction.api"/>
+   </dependencies>
+</module>
+----
+
+* Edit the +$JBossAS/standalone/configuration/standalone-full.xml+ file to include the MySQL driver:
+
+[source,xml]
+----
+<subsystem xmlns="urn:jboss:domain:datasources:1.0">
+        <datasources>
+            .....
+            <drivers>
+                ...
+                <driver name="mysql" module="mysql">
+                    <xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
+                </driver>
+            </drivers>
+        </datasources>
+    </subsystem>
+----
+
+* Update the rtgov datasource file, +$JBossAS/standalone/deployments/overlord-rtgov/rtgov-ds.xml+, the contents should be:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>  
+<datasources>
+	<datasource jndi-name="java:jboss/datasource/OverlordRTGov" pool-name="OverlordRTGov" enabled="true" use-java-context="true">
+		<connection-url>jdbc:mysql://localhost:3306/rtgov</connection-url>
+		<driver>mysql</driver>
+		<security>
+			<user-name>root</user-name>
+			<password></password>
+		</security>
+	</datasource>
+</datasources>
+----
+
+
+*Postgres*
+
+* Create the +$JBossAS/modules/org/postgresql/main+ folder.
+* Put the postgresql driver jar in the +$JBossAS/modules/org/postgresql/main+ folder, e.g. postgresql-9.1-902.jdbc4.jar.
+* Create a module.xml file, within the +$JBossAS/modules/org/postgresql/main+ folder, with the contents:
+[source,xml]
+----
+<module xmlns="urn:jboss:module:1.1" name="org.postgresql">
+   <resources>
+     <resource-root path="postgresql-9.1-902.jdbc4.jar"/>
+   </resources>
+   <dependencies>
+     <module name="javax.api"/>
+     <module name="javax.transaction.api"/>
+   </dependencies>
+</module>
+----
+
+* Edit the +$JBossAS/standalone/configuration/standalone-full.xml+ file to include the PostgresSQL driver:
+
+[source,xml]
+----
+<subsystem xmlns="urn:jboss:domain:datasources:1.0">
+        <datasources>
+            .....
+            <drivers>
+                ...
+                <driver name="postgresql" module="org.postgresql">
+                    <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
+                </driver>
+            </drivers>
+        </datasources>
+    </subsystem>
+----
+
+* Update the rtgov datasource file, +$JBossAS/standalone/deployments/overlord-rtgov/rtgov-ds.xml+, the contents should be:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>  
+<datasources>
+        <datasource jndi-name="java:jboss/datasource/OverlordRTGov" pool-name="OverlordRTGov" enabled="true" use-java-context="true">
+		<connection-url>jdbc:postgresql://localhost:5432/rtgov</connection-url>
+		<driver>postgresql</driver>
+		<security>
+			<user-name>....</user-name>
+			<password>....</password>
+		</security>
+	</datasource>
+</datasources>
+----
+
+
+
+==== Caching
+
+The EPN and Active Collection mechanisms both have the ability to make use of caching provided by infinispan. When running the server in clustered mode (i.e. with +standalone-full-ha.xml+).
+
+First step is to uncomment the 'infinispan.container' property in the +overlord-rtgov.properties+ file and set it to the JNDI name of the cache container ('java:jboss/infinispan/container/rtgov' in the example below). This property represents the default cache container to be used by EPN and Active Collection Source configurations that do not explicitly provide a container JNDI name.
+
+The next step is to create the cache container configuration, and the specific caches, under the 'infinispan' subsystem in the +standalone-full-ha.xml+ file. As an example, the following cache entry for the "Principals" cache has been defined, for use with the Policy Enforcement examples:
+
+----
+            <cache-container name="rtgov" jndi-name="java:jboss/infinispan/container/rtgov" start="EAGER">
+                <transport lock-timeout="60000"/>
+                <replicated-cache name="Principals" mode="SYNC">
+                    <locking isolation="REPEATABLE_READ"/>
+                    <transaction mode="FULL_XA" locking="PESSIMISTIC"/>
+                </replicated-cache>
+            </cache-container>
+----
+
+
+

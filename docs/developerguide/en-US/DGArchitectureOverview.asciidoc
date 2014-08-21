@@ -1,0 +1,94 @@
+== Architecture Overview
+
+This section will outline the architecture of the Runtime Governance architecture, prior to going into further details in the following sections.
+
+
+=== Introduction
+
+The main goal of this architecture is provide a modular and loose coupled solution for processing business activity information in real-time.
+
+The architecture is comprised of the following four areas:
+
+* Activity Collector - collect activity events as efficiently as possible
+* Activity Server (and Store) - central activity event store and query
+* Event Processor Network - generic event analysis, used to process the activity events
+* Active Collections - active information management, used to post-process and cache information for end-user applications
+
+The only mandatory part of this architecture could be considered the Activity Server, as it provides the central hub for storing and querying activity events. This means that the way in which events are processed, or presented to end users/applications could be replaced with other possibly more appropriate technology for a particular target environment.
+
+Equally, the Event Processor Network and Active Collection mechanisms are information agnostic, so can be used to process and/or manage the presentation of any type of information.
+
+
+=== Collection and Reporting
+
+The first stage of the architecture performs the functions illustrated in this diagram:
+
+image::images/SAM1ActivityReporting.png[]
+
+
+==== Collection
+
+The "Activity Collector" is an optional part of the architecture that is responsible for collecting information from the execution infrastructure as efficiently as possible.
+
+The activity events associated with a particular thread are collected as a group, contained within an Activity Unit, to provide an implicit correlation of the activities that are associated with the same business transaction. Where relevant, the activity events may also be pre-processed to extract relevant context and property information prior to it being reported to the server.
+
+Activity Units are then batched into further groups, and reported to the Activity Server at regular time intervals or if the batch gets too large.
+
+
+Where the Activity Collector and Activity Server are co-located within the same execution environment, the Activity Units will be reported directly. Where the Activity Server is running remotely, then suitable connectors will be used to report the information. Current implementations exist for REST.
+
+
+==== Reporting
+
+The Activity Server provides a public API for reporting a list of Activity Units. This API can either be accessed directly (e.g. as a CDI component), or remotely via REST or JMS.
+
+The Activity Server has three main responsibilities:
+* Ensure Ids are set and consistent
+* Store the events in a repository
+* Notify other interested modules
+
+The last two responsibilities are discussed in the following sections.
+
+
+
+==== Storage
+
+This component simply records the activity events in a persistent store. A variety of implementations may be provided, including JPA, NoSQL variants, etc.
+
+
+==== Notification
+
+This component is simply an API used by other modules that are interested in being notified when activity events are reported.
+
+
+
+=== Event Processing/Analysis
+
+The following diagram illustrates how a node within an Event Processor Network functions to process the inbound event information.
+
+image::images/SAM2EventProcessorNetwork.png[]
+
+The Event Processor Network (EPN) is a graph based mechanism for  processing a series of events. In the context of the infrastructure,  one or more networks can be registered to receive the activity  information (as notifications) from the Activity Server and process it  (filter, transform, analyse, etc) using whatever means is appropriate.
+
+Each network defines a graph of nodes connected by links that transfer  the results from the source node to the target node. The graphs can  subscribe to event subjects, to identify the information they are  interested in, and nominate the node(s) within the network that will  process the information received on that subject. The nodes can also  publish their results to event subjects, for other networks to further  process - so this provides a decoupled way for networks to exchange information.
+
+Each node defines an optional predicate, that can be used to determine  whether the event is of interest, and an event processor to perform the  actual task. An example of an "out of the box" event processor is one  used to trigger rules (using Drools) to process the events.
+
+The Event Processor Network (EPN) can be versioned, so that when a new  version of a network is deployed, any events that are being processed by  the old version will continue to be processed using that network, while  new events being dispatched to the network will be handled by the newer  version. This overcomes any potential issues where the structure of the  network changes between versions.
+
+The nodes can also be configured to generate different levels of  notification, which can be used by other applications/components to  observe the information being processed through the network (e.g. events  that passed the predicate evaluation, results from the event processor,  etc.). These notifications are distributed to named "notification subjects", enabling observing components to remain decoupled from the details of which (or how many) networks/nodes are producing results for that subject.
+
+
+=== Active Collections
+
+The Active Collection mechanism provides a capability for storing processed events (and derived analysis information) in a manner that can be accessed by end users, as well as enable those end users/applications to be actively notified when any changes occur.
+
+image::images/SAM3ServiceActivityPresentation.png[]
+
+The Active Collection mechanism is a variation on the standard  collection concept, where interested parties can register interest in changes that occur to the contents of a collection (e.g. list, map,  etc). This is one of the mechanisms that will be used to maintain information that is to be presented to users (e.g. via the Gadget Server).
+
+The information within a particular Active Collection is managed by an Active Collection Source, which effectively acts as an adapter between the actual source of the information and the Active Collection. For example, an "out of the box" implementation of an Active Collection Source is provided to observe different types of information produced by an Event Processor Network.
+
+The generic Active Collection Source implementation includes the ability to aggregate information which is then stored as a summary within the Active Collection, perform routine maintenance tasks and tidy up collection entries based on configured criteria (e.g. max size of the collection, max duration an item should exist in the collection, etc).
+
+As well as creating these 'top level' active collections, associated with configured Active Collection Sources, it is also possible to create derived (child) collections from these 'top level' collections. These derived collections have a predicate that determines whether an entry in the parent collection is relevant to the child collection. This can be used to manage specific sub-sets, and essentially provides an 'active query' mechanism, enabling interested clients to observe changes to that child collection.

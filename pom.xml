@@ -81,7 +81,6 @@
 		<version.org.kie>6.1.0.Beta4</version.org.kie>
         <version.org.apache.lucene>4.7.2</version.org.apache.lucene> <!-- Required to override parent bom version -->
         <version.org.jboss.remotingjmx>1.1.0.Final</version.org.jboss.remotingjmx>
-		<version.org.overlord.rtgov.docs>2.0.0-SNAPSHOT</version.org.overlord.rtgov.docs>
 		<version.org.overlord.overlord-commons>2.0.8.Final</version.org.overlord.overlord-commons>
 		<version.org.picketbox>4.0.19.SP4</version.org.picketbox>
 		<version.org.picketlink>2.5.3.SP4</version.org.picketlink>
@@ -679,25 +678,25 @@
 			    <groupId>org.overlord.rtgov.docs</groupId>
 			    <artifactId>rtgov-developerguide</artifactId>
                 <type>jdocbook</type>
-			    <version>${version.org.overlord.rtgov.docs}</version>
+			    <version>${project.version}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
 			    <artifactId>rtgov-userguide</artifactId>
                 <type>jdocbook</type>
-			    <version>${version.org.overlord.rtgov.docs}</version>
+			    <version>${project.version}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
 			    <artifactId>rtgov-javadoc</artifactId>
                 <type>javadoc</type>
-			    <version>${version.org.overlord.rtgov.docs}</version>
+			    <version>${project.version}</version>
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.docs</groupId>
 			    <artifactId>rtgov-restapi</artifactId>
                 <type>zip</type>
-			    <version>${version.org.overlord.rtgov.docs}</version>
+			    <version>${project.version}</version>
 		    </dependency>
 
 			<!-- Other dependencies -->

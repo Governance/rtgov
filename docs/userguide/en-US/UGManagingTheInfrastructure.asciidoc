@@ -1,0 +1,127 @@
+== Managing The Infrastructure
+
+=== Managing the Activity Collector
+
+The Activity Collector mechanism is responsible for collecting activity event information from within a particular execution environment and reporting it as efficiently as possible to the Activity Server.
+
+This section explains how different Activity Collector implementations may be administered.
+
+==== Activity Collector
+
+_Object Name:_ overlord.rtgov.collector:name=ActivityCollector
+
+The activity collector has the following configuration properties:
+
+[options="header"]
+|=======================
+| Property | Description
+| CollectionEnabled | A boolean property that can be used to enable or disable activity collection within the server.
+|=======================
+
+
+==== Activity Logger
+
+_Object Name:_ overlord.rtgov.collector:name=ActivityLogger
+
+This component uses a batching capability to enable the information to be sent to the Activity Server as efficiently as possible. This mechanism has the following configuration properties:
+
+[options="header"]
+|=======================
+| Property | Description
+| MaxUnitCount | The maximum number of activity units that should be batched before sending the group to the Activity Server.
+| MaxTimeInterval | The maximum amount of time (in milliseconds) before sending the batch of events to the server.
+|=======================
+
+The maximum number of items takes precedence, so if it is reached before the defined interval, then the events will be sent to the server.
+
+If the collector is running within a JEE environment, then these properties can be set via a JMX, e.g. using the JConsole:
+
+image::images/ActivityCollectorJMXAttributes.png[]
+
+The component also provides a 'read-only' property:
+
+[options="header"]
+|=======================
+| Property | Description
+| PendingActivityUnits | This value indicates how many logger messages are waiting to be sent to the server. This can be used to guage how busy the collector is, and whether it is getting backed up.
+|=======================
+
+=== Managing the Event Processor Networks
+
+There are two aspects to managing the Event Processor Network mechanism, the 'manager' component and the networks themselves. This section will outline the management capabilities associated with both.
+
+
+==== Event Processor Network Manager
+
+_Object Name:_ overlord.rtgov.networks:name=EPNManager
+
+The Event Processor Network Manager is the component responsible for registering and initializing the Event Processor Networks within a containing environment.
+
+If supported, the manager's attributes and notifications can be exposed via JMX. Currently the attributes that are available:
+
+[options="header"]
+|=======================
+| Attribute | Description
+| NumberOfNetworks | This attribute defines the number of networks registered in the manager.
+|=======================
+
+==== Event Processor Networks
+
+_Object Name:_ overlord.rtgov.networks:name=<name>,version=<version>
+
+When a network is registered, if within a JEE environment, it will also be registered as a managed bean, and therefore available via JMX. Each network provides the following attributes:
+
+[options="header"]
+|=======================
+| Attribute | Description
+| LastAccessed | When the network was last used to process an event. This can be used to determine when it is safe to remove/unregister a network.
+| Name | The name of the network.
+| Version | The version of the network.
+|=======================
+
+For example, using the JConsole:
+
+image::images/EPNJMXAttributes.png[]
+
+=== Managing the Active Collections
+
+
+There are two aspects to managing the Active Collections mechanism, the 'manager' component and the collections themselves. This section will outline the management capabilities associated with both.
+
+
+==== Active Collection Manager
+
+_Object Name:_ overlord.rtgov.collections:name=CollectionManager
+
+The Active Collection Manager is the component responsible for registering and initializing the Active Collection Sources within a containing environment.
+
+If supported, the manager's attributes and notifications can be exposed via JMX. Currently the attributes that are available:
+
+[options="header"]
+|=======================
+| Attribute | Description
+| HouseKeepingInterval | The number of milliseconds between each house keeping cycle. The house keeping refers to removing items from collections if they are either expired, or the maximum number of elements in the collection has been reached.
+|=======================
+
+==== Active Collections
+
+_Object Name:_ overlord.rtgov.collections:name=<ActiveCollectionSourceName>
+
+When a source is registered resulting in an Active Collection being created, if within a JEE environment, the Active Collection will also be registered as a managed bean, and therefore available via JMX. Each collection provides the following attributes:
+
+[options="header"]
+|=======================
+| Attribute | Description
+| HighWaterMark | If the number of items in the collection reaches this value, then a warning will be issued. If zero, then does not apply.
+| ItemExpiration | The number of milliseconds before an item in the collection should be removed. If zero, then does not apply.
+| MaxItems | The maximum number of items that should be in the collection. If zero, then does not apply.
+| Name | The name of the Active Collection.
+| Size | The number of items in the collection.
+|=======================
+
+For example, using the JConsole: 
+
+image::images/ActiveCollectionJMXAttributes.png[]
+
+
+

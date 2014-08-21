@@ -1,0 +1,53 @@
+== Event Processing
+
+The EventProcessor, and supporting components, can be used either directly within the Activity Collection mechanism or from nodes within an Event Processor Network. This section of the Developer Guide will discuss how custom Predicates and Event Processors are defined.
+
+=== Custom Predicate
+
+The +org.overlord.rtgov.ep.Predicate+ abstract class is responsible for determining whether an event is suitable to be processed by a particular node within the Event Processor Network.
+
+To create a custom implementation simply derive a class from the Predicate abstract class. This class provides the following methods:
+
+[options="header"]
+|=======================
+| Method | Description
+| void init() | This method is called when the predicate is first initialized as part of the Event Processor Network. A custom implementation does not need to override this method if not required.
+| boolean evaluate(Object event) | This method determines whether the supplied event should be processed by the node.
+|=======================
+
+
+=== Custom Event Processor
+
+The +org.overlord.rtgov.ep.EventProcessor+ abstract class is responsible for processing an event routed to a particular node within the Event Processor Network.
+
+To create a custom implementation simply derive a class from the EventProcessor abstract class. This class provides the following methods:
+
+[options="header"]
+|=======================
+| Method | Description
+| java.util.Map<String,Service> services getServices() | This method returns the map of services available to the Event Processor.
+| void setServices(java.util.Map<String,Service> services) | This method sets the map of services available to the Event Processor.
+| java.util.Map<String,Object> services getParameters() | This method returns the map of parameters available to the Event Processor.
+| void setParameters(java.util.Map<String,Object> parameters) | This method sets the map of parameters available to the Event Processor.
+| void init() | This method is called when the event processor is first initialized as part of the Event Processor Network. A custom implementation does not need to override this method if not required.
+| Serializable process(String source, Serializable event, int retriesLeft) throws Exception | This method processes the supplied event, indicating the source of the event and how many retries are left (so that suitable error handling can be performed in no more retries remain.
+|=======================
+
+=== Custom Services
+
+The +org.overlord.rtgov.common.service.Service+ abstract class is used to provide services for use by event processors, e.g. CacheManager.
+
+To create a custom implementation simply derive a class from the Service abstract class. This class provides the following methods:
+
+[options="header"]
+|=======================
+| Method | Description
+| void init() | This method is called when the service is first initialized. A custom implementation does not need to override this method if not required.
+|=======================
+
+
+=== Packaging
+
+The custom predicate and/or event processor implementations must be available to the classloader when an Event Processor Network or Activity Validator referencing the implementations is loaded. This can either be achieved by packaging the implementations with the Event Processor Network or Activity Validator configuration, or by installing them in a common location used by the container in which the Event Processor Network/Activity Validator is being loaded.
+
+
