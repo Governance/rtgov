@@ -14,6 +14,12 @@
 
     <dependencies>
 		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-services</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
 			<scope>provided</scope>
