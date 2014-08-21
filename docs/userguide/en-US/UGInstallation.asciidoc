@@ -80,8 +80,6 @@ Add the JBoss public maven repository to the file +etc/org.ops4j.pax.url.mvn.cfg
     https://repository.jboss.org/nexus/content/groups/public@id=jboss.public
 ----
 
-NOTE: Beta - currently need to update the +JMSEPNManager.password+ property, in _overlord-rtgov.properties_ file to be the password entered during 
-
 
 * Start the fuse console, using the +bin/fuse+ command, and then enter the following commands:
 
@@ -110,6 +108,8 @@ features:install rtgov-switchyard
 ----
 
 This registers the event listener on SwitchYard, to capture activity and report it to RTGov.
+
+NOTE: Currently you may need to restart fuse after installing rtgov with switchyard.
 
 
 === Configuration
