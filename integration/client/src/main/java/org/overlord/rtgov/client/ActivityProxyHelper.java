@@ -114,20 +114,15 @@ public final class ActivityProxyHelper {
                 String respId=null;
                 boolean scopeStarted=false;
                 boolean supportedMethod=!method.getName().equals("toString");
+                Throwable excResp=null;
                 
-                /*
-                try {
-                    supportedMethod = (intf.getMethod(method.getName(), method.getParameterTypes()) != null);
-                } catch (Throwable t) {
-                    // Ignore
-                }
-                */
-
                 if (supportedMethod) {
-                    // Check if initial activity in thread
-                    if (!_collector.isScopeActive()) {
-                        _collector.startScope();
-                        scopeStarted = true;
+                    synchronized (_collector) {
+                        // Check if initial activity in thread
+                        if (!_collector.isScopeActive()) {
+                            _collector.startScope();
+                            scopeStarted = true;
+                        }
                     }
                     
                     // Create a unique identifier for the request and response
@@ -170,22 +165,26 @@ public final class ActivityProxyHelper {
                         rs.setContent(content);
                         rs.setMessageType(mesgType);
                         
-                        _collector.validate(rs);
+                        try {
+                            _collector.validate(rs);
 
-                        _collector.record(rs);
+                            _collector.record(rs);
+                        } catch (Throwable t) {
+                            excResp = t;
+                        }
                     }
                 }
                 
                 // Invoke the target method
                 String respContent=null;
                 Object resp=null;
-                Throwable excResp=null;
                 
-                try {
-                    resp = method.invoke(callee, args);
-                   
-                } catch (java.lang.reflect.InvocationTargetException e) {
-                    excResp = e.getCause();
+                if (excResp == null) {
+                    try {
+                        resp = method.invoke(callee, args);                       
+                    } catch (java.lang.reflect.InvocationTargetException e) {
+                        excResp = e.getCause();
+                    }
                 }
                 
                 if (supportedMethod) {
@@ -228,7 +227,9 @@ public final class ActivityProxyHelper {
                     
                     // Check if final activity in thread
                     if (scopeStarted) {
-                        _collector.endScope();
+                        synchronized (_collector) {
+                            _collector.endScope();
+                        }
                     }
                 }
                 
@@ -307,20 +308,19 @@ public final class ActivityProxyHelper {
                 String respId=null;
                 boolean scopeStarted=false;                    
                 boolean supportedMethod=!method.getName().equals("toString");
+                Throwable excResp=null;
                 
-                /*
-                try {
-                    supportedMethod = (intf.getMethod(method.getName(), method.getParameterTypes()) != null);
-                } catch (Throwable t) {
-                    // Ignore
-                }
-                */
-
                 if (supportedMethod) {             
                     // Check if initial activity in thread
-                    if (!_collector.isScopeActive()) {
-                        _collector.startScope();
-                        scopeStarted = true;
+                    synchronized (_collector) {
+                        if (!_collector.isScopeActive()) {
+                            _collector.startScope();
+                            scopeStarted = true;
+                            
+                            if (LOG.isLoggable(Level.FINEST)) {
+                                LOG.finest("Starting scope");
+                            }
+                        }
                     }
                     
                     // Create a unique identifier for the request and response
@@ -362,22 +362,26 @@ public final class ActivityProxyHelper {
                         rr.setContent(content);
                         rr.setMessageType(mesgType);
                         
-                        _collector.validate(rr);
-                        
-                        _collector.record(rr);
+                        try {
+                            _collector.validate(rr);
+                            
+                            _collector.record(rr);
+                        } catch (Throwable t) {
+                            excResp = t;
+                        }
                     }
                 }
                 
                 // Invoke the target method
                 String respContent=null;
                 Object resp=null;
-                Throwable excResp=null;
                 
-                try {
-                    resp = method.invoke(callee, args);
-                    
-                } catch (java.lang.reflect.InvocationTargetException e) {
-                    excResp = e.getCause();
+                if (excResp == null) {
+                    try {
+                        resp = method.invoke(callee, args);                    
+                    } catch (java.lang.reflect.InvocationTargetException e) {
+                        excResp = e.getCause();
+                    }
                 }
                 
                 if (supportedMethod) {
@@ -420,7 +424,13 @@ public final class ActivityProxyHelper {
                     
                     // Check if final activity in thread
                     if (scopeStarted) {
-                        _collector.endScope();
+                        synchronized (_collector) {                            
+                            if (LOG.isLoggable(Level.FINEST)) {
+                                LOG.finest("Ending scope");
+                            }
+
+                            _collector.endScope();
+                        }
                     }
                 }
                 
