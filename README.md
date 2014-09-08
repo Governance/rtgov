@@ -50,6 +50,15 @@ To generate the javadocs and REST API documentation, include the **docs** profil
 The javadocs will be generated to the docs/javadoc/target folder, and the REST API docs in the docs/restapi/target folder.
 
 
+### Building RTGov UI for deploying to FSW 6.0
+
+To generate the RTGov UI war for use in FSW 6.0, you will need to include the profile **fsw60**:
+
+**mvn clean install -Pfsw60**
+
+The overlord-rtgov-ui.war is located in the ui/overlord-rtgov-ui-fsw60/target.
+
+
 ## Contributing
 
 Instructions on setting up an Eclipse development environment can be found here: https://github.com/Governance/rtgov/wiki/Setting-Up-Eclipse-Development-Environment
