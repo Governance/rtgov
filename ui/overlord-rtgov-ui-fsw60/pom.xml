@@ -10,6 +10,10 @@
   <packaging>war</packaging>
   <name>Overlord RTGov::UI::FSW60</name>
 
+  <properties>
+		<version.org.switchyard>1.0.0.Final</version.org.switchyard>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.overlord.rtgov.ui</groupId>
