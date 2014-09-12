@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.jboss.integration-platform</groupId>
 		<artifactId>jboss-integration-platform-parent</artifactId>
-		<version>6.0.0.CR9</version>
+		<version>6.0.0.CR12</version>
 	</parent>
 
 	<scm>
@@ -37,6 +37,10 @@
 		<version.org.jboss.spec.jboss-javaee-6.0>1.0.0.Final</version.org.jboss.spec.jboss-javaee-6.0>
 		<jbossas.version>7.2.0.Final</jbossas.version>
 		<version.org.overlord.overlord-commons>2.0.8-SNAPSHOT</version.org.overlord.overlord-commons>
+
+		<!-- Override as current IP BOM version causes drools rule load issues -->
+		<version.org.mvel>2.2.1.Final</version.org.mvel>
+
 	</properties>
 
 	<modules>
@@ -51,7 +55,7 @@
 			<dependency>
 				<groupId>org.jboss.integration-platform</groupId>
 				<artifactId>jboss-integration-platform-bom</artifactId>
-				<version>6.0.0.CR9</version>
+				<version>6.0.0.CR12</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -161,6 +165,13 @@
 				<artifactId>jboss-javaee-6.0</artifactId>
 				<version>${version.org.jboss.spec.jboss-javaee-6.0}</version>
 				<type>pom</type>
+			</dependency>
+
+			<!-- IP BOM Overrides -->
+			<dependency>
+				<groupId>org.mvel</groupId>
+				<artifactId>mvel2</artifactId>
+				<version>${version.org.mvel}</version>
 			</dependency>
 
 		</dependencies>

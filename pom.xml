@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.jboss.integration-platform</groupId>
 		<artifactId>jboss-integration-platform-parent</artifactId>
-		<version>6.0.0.CR9</version>
+		<version>6.0.0.CR12</version>
 	</parent>
 
 	<scm>
@@ -67,7 +67,7 @@
 	<properties>
 		<version.ch.qos.cal10n>0.7.4</version.ch.qos.cal10n>
 		<version.org.apache.commons.commons-lang3>3.1</version.org.apache.commons.commons-lang3>
-		<version.org.drools>6.1.0.Beta4</version.org.drools>
+		<version.org.drools>6.1.0.Final</version.org.drools>
 		<version.org.elasticsearch>1.1.0</version.org.elasticsearch>
         <version.org.codehaus.enunciate>1.28</version.org.codehaus.enunciate>
 		<version.org.jboss.errai>2.4.3.Final</version.org.jboss.errai>
@@ -78,7 +78,7 @@
         <version.org.eclipse.jetty>6.1.25</version.org.eclipse.jetty>
 		<version.org.jboss.naming>5.0.3.GA</version.org.jboss.naming>
 		<version.javax.servlet.jsp-api>2.0</version.javax.servlet.jsp-api>
-		<version.org.kie>6.1.0.Beta4</version.org.kie>
+		<version.org.kie>6.1.0.Final</version.org.kie>
         <version.org.apache.lucene>4.7.2</version.org.apache.lucene> <!-- Required to override parent bom version -->
         <version.org.jboss.remotingjmx>1.1.0.Final</version.org.jboss.remotingjmx>
 		<version.org.overlord.overlord-commons>2.0.8.Final</version.org.overlord.overlord-commons>
@@ -87,6 +87,11 @@
 		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>
 		<version.org.switchyard>2.0.0.Alpha2</version.org.switchyard>
 
+		<!-- Override as current IP BOM version causes drools rule load issues -->
+		<version.org.mvel>2.2.1.Final</version.org.mvel>
+
+		<version.org.jboss.as>7.4.0.Final-redhat-19</version.org.jboss.as>
+		
 		<version.org.jboss.msc.jboss-msc>1.0.4.GA</version.org.jboss.msc.jboss-msc>
 
 	</properties>
@@ -126,7 +131,7 @@
 			<dependency>
 				<groupId>org.jboss.integration-platform</groupId>
 				<artifactId>jboss-integration-platform-bom</artifactId>
-				<version>6.0.0.CR9</version>
+				<version>6.0.0.CR12</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -1133,6 +1138,24 @@
 				<version>${version.org.codehaus.enunciate}</version>
 		    </dependency>
 
+		    <!-- IP BOM Overrides -->
+		    <dependency>
+				<groupId>org.mvel</groupId>
+				<artifactId>mvel2</artifactId>
+				<version>${version.org.mvel}</version>
+		    </dependency>
+
+		    <dependency>
+				<groupId>org.jboss.as</groupId>
+				<artifactId>jboss-as-naming</artifactId>
+				<version>${version.org.jboss.as}</version>
+		    </dependency>            
+		    <dependency>
+				<groupId>org.jboss.as</groupId>
+				<artifactId>jboss-as-server</artifactId>
+				<version>${version.org.jboss.as}</version>
+		    </dependency>            
+
 		</dependencies>
 	</dependencyManagement>
 
@@ -1267,6 +1290,19 @@
 	        <id>jboss-public-repository-group</id>
 	        <name>JBoss Public Maven Repository Group</name>
 	        <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+	        <releases>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	        </releases>
+	        <snapshots>
+	            <enabled>true</enabled>
+	            <updatePolicy>never</updatePolicy>
+	        </snapshots>
+	    </repository>
+	    <repository>
+	        <id>redhat-techpreview-repository-group</id>
+	        <name>RedHat Tech Preview Maven Repository Group</name>
+	        <url>http://maven.repository.redhat.com/techpreview/all</url>
 	        <releases>
 	            <enabled>true</enabled>
 	            <updatePolicy>never</updatePolicy>
