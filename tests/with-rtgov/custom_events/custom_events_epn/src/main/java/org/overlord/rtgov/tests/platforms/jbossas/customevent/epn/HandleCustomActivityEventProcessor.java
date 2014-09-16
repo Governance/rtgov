@@ -44,6 +44,9 @@ public class HandleCustomActivityEventProcessor extends org.overlord.rtgov.ep.Ev
                 
                 if (rr.getProperties().containsKey("item")
                         && rr.getProperties().get("item").equals("JAM")) {
+                    
+                    System.out.println(">>> FOUND CUSTOM ACTIVITY WITH item=JAM");
+                    
                     ret = event;
                 }
             }

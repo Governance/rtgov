@@ -122,7 +122,8 @@ public abstract class AbstractInformationProcessorManager implements Information
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Process: processor="+processor
                         +" type="+type+" info="+info
-                        +" actType="+actType);
+                        +" actType="+actType
+                        +" headers="+headers);
         }
 
         synchronized (_informationProcessorIndex) {
