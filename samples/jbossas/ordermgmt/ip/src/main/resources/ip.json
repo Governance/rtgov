@@ -7,20 +7,20 @@
 				"type":"Conversation",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"order/orderId"
+					"expression":"order/orderId/text()"
 				}
 			}],
 			"properties":[{
 				"name":"customer",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"order/customer"
+					"expression":"order/customer/text()"
 				}
 			},{
 				"name":"item",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"order/itemId"
+					"expression":"order/itemId/text()"
 				}
 			},{
 				"name":"contentType",
@@ -39,20 +39,20 @@
 				"type":"Conversation",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"orderAck/orderId"
+					"expression":"orderAck/orderId/text()"
 				}
 			}],
 			"properties":[{
 				"name":"customer",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"orderAck/customer"
+					"expression":"orderAck/customer/text()"
 				}
 			},{
 				"name":"total",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"orderAck/total"
+					"expression":"orderAck/total/text()"
 				}
 			}]
 		},
@@ -105,13 +105,13 @@
 				"name":"customer",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"payment/customer"
+					"expression":"payment/customer/text()"
 				}
 			},{
 				"name":"amount",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"payment/amount"
+					"expression":"payment/amount/text()"
 				}
 			}]
 		},
@@ -120,13 +120,13 @@
 				"name":"customer",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"receipt/customer"
+					"expression":"receipt/customer/text()"
 				}
 			},{
 				"name":"amount",
 				"evaluator":{
 					"type":"xpath",
-					"expression":"receipt/amount"
+					"expression":"receipt/amount/text()"
 				}
 			}]
 		},

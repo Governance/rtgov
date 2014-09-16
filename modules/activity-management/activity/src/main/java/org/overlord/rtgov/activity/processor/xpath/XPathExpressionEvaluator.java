@@ -174,7 +174,28 @@ public class XPathExpressionEvaluator extends ExpressionEvaluator {
                     }                   
                 }
                 
-                ret = _domXPath.stringValueOf(information);
+                Object resultNode = _domXPath.selectSingleNode(information);
+                
+                if (resultNode instanceof org.w3c.dom.Node) {
+                    
+                    if (resultNode instanceof org.w3c.dom.Text) {
+                        ret = ((org.w3c.dom.Text)resultNode).getNodeValue();
+                    } else {
+                        java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
+                        
+                        javax.xml.transform.dom.DOMSource source=
+                                new javax.xml.transform.dom.DOMSource((org.w3c.dom.Node)resultNode);
+                        javax.xml.transform.stream.StreamResult result=
+                                new javax.xml.transform.stream.StreamResult(baos);
+                        
+                        javax.xml.transform.Transformer transformer=
+                                javax.xml.transform.TransformerFactory.newInstance().newTransformer();
+                            
+                        transformer.transform(source, result);
+
+                        ret = new String(baos.toByteArray());
+                    }
+                }
                 
             } else {
                 
