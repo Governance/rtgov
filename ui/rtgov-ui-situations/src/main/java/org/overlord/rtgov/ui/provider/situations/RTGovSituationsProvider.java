@@ -28,6 +28,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.overlord.rtgov.active.collection.ActiveChangeListener;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionListener;
@@ -78,7 +79,9 @@ import com.google.common.base.Throwables;
  */
 public class RTGovSituationsProvider implements SituationsProvider, ActiveChangeListener {
 
-	private static final String PROVIDER_NAME = "rtgov"; //$NON-NLS-1$
+    private static final ObjectMapper MAPPER=new ObjectMapper();
+
+    private static final String PROVIDER_NAME = "rtgov"; //$NON-NLS-1$
 	
 	// Active collection name
 	private static final String SITUATIONS = "Situations"; //$NON-NLS-1$
@@ -405,6 +408,17 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     					&& ((RPCActivityType)at).getContent() != null) {
     				ret = new MessageBean();
     				ret.setContent(((RPCActivityType)at).getContent());
+    				
+    				// Handle header properties that need to be copied over
+    				configureHeaders(ret, at);
+    				
+    				// Associate principal with the message
+    				ret.setPrincipal(((RPCActivityType)at).getPrincipal());
+    				
+    				if (ret.getPrincipal() == null && au.getOrigin() != null) {
+    				    ret.setPrincipal(au.getOrigin().getPrincipal());
+    				}
+
     				break;
     			}
 			} catch (Exception e) {
@@ -413,6 +427,60 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 		}
 		
     	return (ret);
+    }
+    
+    /**
+     * This method copies the header properties from the activity type into the message
+     * bean.
+     * 
+     * @param mb Messag bean
+     * @param at The activity type
+     */
+    protected static void configureHeaders(MessageBean mb, ActivityType at) throws UiException {
+        if (at != null && at.getProperties().containsKey(ActivityType.HEADER_PROPERTY)) {
+            String prop=at.getProperties().get(ActivityType.HEADER_PROPERTY);
+            
+            try {
+                @SuppressWarnings("unchecked")
+                java.util.Map<String,String> headers=MAPPER.readValue(prop.getBytes(), java.util.Map.class);
+                
+                for (String key : headers.keySet()) {
+                    if (!isHeaderFormatProperty(key)) {
+                        String format=headers.get(getFormatProperty(key));
+                        
+                        if (format != null) {
+                            mb.getHeaders().put(key, headers.get(key));
+                            mb.getHeaderFormats().put(key, format);
+                        }
+                    }
+                }
+                
+            } catch (Exception e) {
+                throw new UiException("Failed to configure header properties for message resubmission", e);                
+            }
+        }
+    }
+    
+    /**
+     * This method determines whether a property name represents a header property format
+     * rather than a header property itself.
+     * 
+     * @param headerName The property name
+     * @return Whether a header property format
+     */
+    protected static boolean isHeaderFormatProperty(String headerName) {
+        return (headerName.endsWith(ActivityType.HEADER_FORMAT_SUFFIX));
+    }
+    
+    /**
+     * This method determines the property name to use to store the
+     * header value's original format.
+     * 
+     * @param headerName The header name
+     * @return The format property name
+     */
+    protected static String getFormatProperty(String headerName) {
+        return (headerName+ActivityType.HEADER_FORMAT_SUFFIX);
     }
     
     /**

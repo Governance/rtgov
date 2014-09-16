@@ -17,6 +17,7 @@ package org.overlord.rtgov.ui.provider.situations;
 
 import java.util.Date;
 
+import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.ui.client.model.NameValuePairBean;
@@ -28,6 +29,11 @@ import org.overlord.rtgov.ui.client.model.SituationEventBean;
  *
  */
 public class RTGovSituationsUtil {
+
+    /**
+     * Prefix identifying internal rtgov properties.
+     */
+    public static final String RTGOV_PROPERTY_PREFIX="rtgov.";
 
     /**
      * Constructor.
@@ -54,7 +60,12 @@ public class RTGovSituationsUtil {
     	ret.setDescription(situation.getDescription());
     	
         // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
-    	ret.getProperties().putAll(situation.getProperties());
+    	for (String key : situation.getProperties().keySet()) {
+    	    // RTGOV-499 When FSW6.0 support no longer required, use constant on ActivityType
+    	    if (!key.startsWith(RTGOV_PROPERTY_PREFIX)) {
+    	        ret.getProperties().put(key, situation.getProperties().get(key));
+    	    }
+    	}
     	
     	for (Context context : situation.getContext()) {
             if (context.getType() == null) {

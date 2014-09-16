@@ -24,6 +24,11 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 public class MessageBean {
 
     private String _content=null;
+    
+    private java.util.Map<String,String> _headers=new java.util.HashMap<String,String>();
+    private java.util.Map<String,String> _headerFormats=new java.util.HashMap<String,String>();    
+    
+    private String _principal=null;
 
     /**
      * Constructor.
@@ -45,5 +50,54 @@ public class MessageBean {
         _content = contents;
     }
 
+    /**
+     * This method returns the headers.
+     * 
+     * @return The headers
+     */
+    public java.util.Map<String,String> getHeaders() {
+        return (_headers);
+    }
+    
+    /**
+     * This method sets the headers.
+     * 
+     * @param headers The headers
+     */
+    public void setHeaders(java.util.Map<String,String> headers) {
+        _headers = headers;
+    }
+
+    /**
+     * This method returns the header formats.
+     * 
+     * @return The header formats
+     */
+    public java.util.Map<String,String> getHeaderFormats() {
+        return (_headerFormats);
+    }
+    
+    /**
+     * This method sets the header formats.
+     * 
+     * @param headerFormats The header formats
+     */
+    public void setHeaderFormats(java.util.Map<String,String> headerFormats) {
+        _headerFormats = headerFormats;
+    }
+
+    /**
+     * @return the principal
+     */
+    public String getPrincipal() {
+        return _principal;
+    }
+
+    /**
+     * @param principal the principal
+     */
+    public void setPrincipal(String principal) {
+        _principal = principal;
+    }
 
 }

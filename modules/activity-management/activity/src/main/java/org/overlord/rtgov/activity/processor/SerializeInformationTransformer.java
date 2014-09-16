@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 
 import javax.xml.transform.dom.DOMSource;
 
+import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.util.ActivityUtil;
 
 /**
@@ -30,11 +31,113 @@ public class SerializeInformationTransformer extends InformationTransformer {
 
     private static final Logger LOG=Logger.getLogger(SerializeInformationTransformer.class.getName());
     
+    private boolean _includeHeaders=false;
+    
+    /**
+     * This method sets whether headers should be included with the
+     * serialized representation.
+     * 
+     * @param b Whether headers should be included
+     */
+    public void setIncludeHeaders(boolean b) {
+        _includeHeaders = b;
+    }
+    
+    /**
+     * This method indicates whether headers will be included
+     * with the serialized representation.
+     * 
+     * @return Whether headers will be included
+     */
+    public boolean getIncludeHeaders() {
+        return (_includeHeaders);
+    }
+    
     /**
      * {@inheritDoc}
      */
-    public String transform(Object information) {
+    public String transform(Object information, java.util.Map<String, Object> headers, ActivityType activityType) {
+        String ret=transformToString(information, false);
         
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Transform headers? '"+getIncludeHeaders());
+        }
+        
+        if (getIncludeHeaders()) {
+            
+            if (headers == null) {
+                if (LOG.isLoggable(Level.FINEST)) {
+                    LOG.finest("Configuration indicates to include headers, but no headers supplied");
+                }
+            } else if (activityType == null) {
+                LOG.severe("Cannot include headers as no activity type supplied");
+            } else {
+                java.util.Iterator<String> iter=headers.keySet().iterator();
+                java.util.Map<String,String> actHeaders=new java.util.HashMap<String,String>();
+                
+                while (iter.hasNext()) {
+                    String headerName=iter.next();
+                    Object headerValue=headers.get(headerName);
+                    
+                    // Get transformed value
+                    String transformed=transformToString(headerValue, true);
+                    
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.finest("Transformed header='"+headerName+"' value='"+headerValue+"' into='"+transformed+"'");
+                    }
+                    
+                    if (transformed != null) {
+                        // Determine format if need to reconstruct message
+                        String encoding="text";
+                        
+                        if (headerValue instanceof org.w3c.dom.Node || headerValue instanceof DOMSource) {
+                            encoding = "dom";
+                        }
+                        
+                        // Store properties
+                        actHeaders.put(headerName, transformed);
+                        actHeaders.put(getFormatProperty(headerName), encoding);
+                    }
+                }
+                
+                if (actHeaders.size() > 0) {
+                    try {
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Add headers="+actHeaders);
+                        }
+                        
+                        activityType.getProperties().put(ActivityType.HEADER_PROPERTY,
+                                ActivityUtil.objectToJSONString(actHeaders));
+                    } catch (Exception e) {
+                        LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
+                                "activity.Messages").getString("ACTIVITY-20"), e);
+                    }
+                }
+            }
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * This method determines the property name to use to store the
+     * header value's original format.
+     * 
+     * @param headerName The header name
+     * @return The format property name
+     */
+    protected String getFormatProperty(String headerName) {
+        return (headerName+ActivityType.HEADER_FORMAT_SUFFIX);
+    }
+    
+    /**
+     * This method converts the supplied information to a string representation.
+     * 
+     * @param information The information
+     * @param header Whether the information is a header value
+     * @return The string representation
+     */
+    protected String transformToString(Object information, boolean header) {
         if (information instanceof String) {
             return ((String)information);
             
@@ -63,7 +166,7 @@ public class SerializeInformationTransformer extends InformationTransformer {
                     LOG.log(Level.SEVERE, "Failed to transformer DOM information '"+information+"'", e);
                 }           
     
-            } else {
+            } else if (!header) {
                 try {
                     return (ActivityUtil.objectToJSONString(information));
                 } catch (Exception e) {

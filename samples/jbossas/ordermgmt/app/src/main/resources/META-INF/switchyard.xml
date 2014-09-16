@@ -6,6 +6,7 @@
                 <wsdl>wsdl/OrderService.wsdl</wsdl>
                 <socketAddr>:18001</socketAddr>
                 <contextPath>demo-orders</contextPath>
+                <contextMapper includes=".*" soapHeadersType="DOM"/>
             </binding.soap>
             <binding.sca/>
         </service>

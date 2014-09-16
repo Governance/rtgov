@@ -42,6 +42,8 @@ then
 						RequestReceived rr=(RequestReceived)$au.getActivityTypes().get(j);
 
 						if (rr.getMessageId().equals(rs.getReplyToId())) {
+							situation.getProperties().putAll(rr.getProperties());
+							situation.getContext().addAll(rr.getContext());
 							situation.getActivityTypeIds().add(ActivityTypeId.createId(rr));
 							break;
 						}

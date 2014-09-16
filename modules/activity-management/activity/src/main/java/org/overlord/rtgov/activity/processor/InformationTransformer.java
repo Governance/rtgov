@@ -18,6 +18,7 @@ package org.overlord.rtgov.activity.processor;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 import org.codehaus.jackson.annotate.JsonSubTypes.Type;
+import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.processor.mvel.MVELInformationTransformer;
 
 /**
@@ -44,7 +45,25 @@ public abstract class InformationTransformer {
      * @param information The information
      * @return The result, or null if unable to transform
      */
-    public abstract String transform(Object information);
+    @Deprecated
+    public String transform(Object information) {
+        return (transform(information, null, null));
+    }
+    
+    /**
+     * This method transforms the supplied information and
+     * returns the textual representation of the result. The optional
+     * activity type can be used to guide the transformation, or
+     * the transformer can update properties on the activity type.
+     * 
+     * @param information The information
+     * @param headers The optional header information
+     * @param activityType The optional activity type
+     * @return The result, or null if unable to transform
+     */
+    public String transform(Object information, java.util.Map<String, Object> headers, ActivityType activityType) {
+        return (null);
+    }
     
     /**
      * This method closes the information transformer.

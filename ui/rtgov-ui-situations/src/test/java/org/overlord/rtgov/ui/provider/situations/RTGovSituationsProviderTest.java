@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.overlord.rtgov.active.collection.ActiveList;
+import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
@@ -305,8 +306,49 @@ public class RTGovSituationsProviderTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Get situation failed: "+e.getMessage());
-		}
-		
-		
+		}		
 	}
+
+    @Test
+    public void testConfigureHeaders() {
+        ActivityType at=new RequestReceived();        
+        at.getProperties().put(ActivityType.HEADER_PROPERTY, 
+                "{\"org.switchyard.messageId\":\"ID-gbrown-redhat-44429-1410962996621-0-1\","
+                + "\"org.switchyard.messageId/format\":\"text\","
+                + "\"org.switchyard.soap.messageName\":\"submitOrder\","
+                + "\"org.switchyard.soap.messageName/format\":\"text\","
+                + "\"{http://www.projectoverlord.io/example/}ExampleHeaderValue\":"
+                + "\"<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?><m:ExampleHeaderValue "
+                + "xmlns:m=\\\"http://www.projectoverlord.io/example/\\\"><m:ExampleHeaderNode>1234"
+                + "</m:ExampleHeaderNode></m:ExampleHeaderValue>\","
+                + "\"{http://www.projectoverlord.io/example/}ExampleHeaderValue/format\":\"dom\","
+                + "\"Accept/format\":\"text\","
+                + "\"Accept\":"
+                + "\"text/xml, text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2\"}");
+        
+        MessageBean mb=new MessageBean();
+        
+        try {
+            RTGovSituationsProvider.configureHeaders(mb, at);
+        } catch (Exception e) {
+            fail("Failed to configure headers: "+e.getMessage());
+        }
+        
+        if (mb.getHeaders().size() != 4) {
+            fail("Expecting 4 headers: "+mb.getHeaders().size());
+        }
+        
+        String messageName=mb.getHeaders().get("org.switchyard.soap.messageName");
+        
+        assertEquals("Message name not as expected", messageName, "submitOrder");
+        
+        if (mb.getHeaderFormats().size() != 4) {
+            fail("Expecting 4 header formats: "+mb.getHeaderFormats().size());
+        }
+        
+        assertEquals("Message name format not as expected", mb.getHeaderFormats().get("org.switchyard.soap.messageName"), "text");
+        
+        assertEquals("Example header value format not as expected", mb.getHeaderFormats().get(
+                "{http://www.projectoverlord.io/example/}ExampleHeaderValue"), "dom");
+    }
 }

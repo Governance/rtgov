@@ -16,6 +16,7 @@
 package org.overlord.rtgov.activity.processor.mvel;
 
 import org.mvel2.MVEL;
+import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.processor.InformationTransformer;
 
 /**
@@ -60,9 +61,11 @@ public class MVELInformationTransformer extends InformationTransformer {
     /**
      * {@inheritDoc}
      */
-    public String transform(Object information) {
+    public String transform(Object information, java.util.Map<String, Object> headers, ActivityType activityType) {
         java.util.Map<String,Object> vars=new java.util.HashMap<String, Object>();
         vars.put("information", information);
+        vars.put("headers", headers);
+        vars.put("activity", activityType);
         
         Object result=MVEL.executeExpression(_compiledExpression, vars);  
         

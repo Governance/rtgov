@@ -164,10 +164,14 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
      */
     @Override
     public void resubmit(String situationId, String message) throws UiException {
-    	MessageBean mb=new MessageBean();
-    	mb.setContent(message);
+        SituationBean sb=_provider.getSituation(situationId);
+        
+        // Use retrieved message as potentially contains header properties, so
+        // just overwrite the new content being resubmitted
+        MessageBean mb=sb.getMessage();
+        mb.setContent(message);
     	
-    	_provider.resubmit(situationId, mb);
+        _provider.resubmit(situationId, mb);
     }
     
     /**
