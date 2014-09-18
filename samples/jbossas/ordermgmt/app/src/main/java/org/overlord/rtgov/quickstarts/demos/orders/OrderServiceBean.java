@@ -19,6 +19,7 @@ package org.overlord.rtgov.quickstarts.demos.orders;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import org.switchyard.Context;
 import org.switchyard.component.bean.Reference;
 import org.switchyard.component.bean.Service;
 
@@ -36,11 +37,17 @@ public class OrderServiceBean implements OrderService {
     @Inject @Reference
     private LogisticsService _logistics;
     
+    @Inject
+    private Context _context;
+
     /**
      * {@inheritDoc}
      */
     @Override
     public OrderAck submitOrder(Order order) {
+        
+        System.out.println("ORDER EXAMPLE HEADER: "+_context.getPropertyValue("{http://www.projectoverlord.io/example/}ExampleHeaderValue"));
+        
         // Create an order ack
         OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId())
                         .setCustomer(order.getCustomer());

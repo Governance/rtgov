@@ -77,6 +77,22 @@ import org.overlord.rtgov.activity.model.soa.ResponseSent;
 public abstract class ActivityType implements java.io.Externalizable {
 
     private static final int VERSION = 1;
+    
+    /**
+     * Prefix identifying internal rtgov properties.
+     */
+    public static final String RTGOV_PROPERTY_PREFIX="rtgov.";
+    
+    /**
+     * Property representing message header information.
+     */
+    public static final String HEADER_PROPERTY=RTGOV_PROPERTY_PREFIX+"headers";
+    
+    /**
+     * Constant defining the property name suffix representing a header
+     * value (original) format.
+     */
+    public static final String HEADER_FORMAT_SUFFIX="/format";
 
     private String _unitId=null;
     private int _unitIndex=0;

@@ -171,7 +171,7 @@ public class TypeProcessor {
         }
         
         if (getTransformer() != null) {
-            ret = getTransformer().transform(information);
+            ret = getTransformer().transform(information, headers, actType);
         }
         
         return (ret);

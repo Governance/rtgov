@@ -309,7 +309,7 @@ The transformer field of the Type Processor has the following fields:
 | type | The type of transformer to use. Currently support *serialize* and *mvel*.
 |=======================
 
-The _serialize_ transformer does not take any other properties. It simply attempts to convert the representation of the information into a textual form for inclusion in the activity event. So this transformer type can be used where the complete information content is required.
+The _serialize_ transformer can take one optional additional boolean field _includeHeaders_ (with default value false). This transformer simply attempts to convert the representation of the information into a textual form for inclusion in the activity event. So this transformer type can be used where the complete information content is required. If the optional 'includeHeaders' field is specified as 'true', then any header values that accompany the message that are represented as either String or DOM, will be serialized in an internal property, which can then be used by tooling (e.g. the resubmission capability in the RTGov UI).
 
 The _mvel_ transformer takes the following additional fields:
 

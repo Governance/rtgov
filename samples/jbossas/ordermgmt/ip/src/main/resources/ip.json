@@ -31,7 +31,8 @@
 				}
 			}],
 			"transformer":{
-				"type":"serialize"
+				"type":"serialize",
+				"includeHeaders":true
 			}
 		},
 		"{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse":{

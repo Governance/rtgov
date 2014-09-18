@@ -15,6 +15,11 @@
  */
 package org.overlord.rtgov.internal.switchyard.exchange;
 
+import java.util.Set;
+
+import org.switchyard.Property;
+import org.switchyard.Scope;
+
 /**
  * This class provides a wrapper around the switchyard context to present a
  * map interface.
@@ -56,6 +61,22 @@ public class PropertyAccessor extends java.util.HashMap<String,Object> {
         
         if (_context != null && key instanceof String) {
             ret = _context.getPropertyValue((String)key);
+        }
+        
+        return (ret);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Set<String> keySet() {
+        java.util.Set<String> ret=new java.util.HashSet<String>();
+        
+        if (_context != null) {
+            for (Property prop : _context.getProperties(Scope.MESSAGE)) {
+                ret.add(prop.getName());
+            }
         }
         
         return (ret);

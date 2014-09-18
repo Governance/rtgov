@@ -64,9 +64,12 @@ import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.provider.ServicesProvider;
+import org.switchyard.Property;
+import org.switchyard.Scope;
 import org.switchyard.remote.RemoteInvoker;
 import org.switchyard.remote.RemoteMessage;
 import org.switchyard.remote.http.HttpInvoker;
+import org.switchyard.remote.http.HttpInvokerLabel;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -335,7 +338,17 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 				// Create the request message
 				RemoteMessage rm = new RemoteMessage();
 				rm.setService(javax.xml.namespace.QName.valueOf(service)).setOperation(operation).setContent(content);
-		
+				
+				// Check if header properties need to be initialized
+				if (message.getHeaders().size() > 0) {
+				    for (String headerName : message.getHeaders().keySet()) {
+				        String value=message.getHeaders().get(headerName);
+				        String format=message.getHeaderFormats().get(headerName);
+				        
+				        configureHeader(rm, headerName, value, format);
+				    }
+				}
+				
 				// Invoke the service
 				RemoteMessage reply = invoker.invoke(rm);
 				if (reply.isFault()) {
@@ -358,6 +371,49 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 			// Report exception
 			throw new UiException(exc);
 		}
+	}
+	
+	/**
+	 * This method configures the supplied header property, in the appropriate format, on the
+	 * supplied remote message.
+	 * 
+	 * @param rm The remote message
+	 * @param headerName The header name
+	 * @param value The value
+	 * @param format The required format (text, dom, etc.)
+	 * @throws UiException Failed to configure header property
+	 */
+	protected void configureHeader(RemoteMessage rm, String headerName, String value, String format)
+	                                    throws UiException{
+        Object propValue=value;
+	    
+        if (format != null && format.equals("dom")) {
+	        
+            try {
+                // Convert to DOM
+                javax.xml.parsers.DocumentBuilderFactory factory=
+                        javax.xml.parsers.DocumentBuilderFactory.newInstance();
+                
+                factory.setNamespaceAware(true);
+                
+                javax.xml.parsers.DocumentBuilder builder=
+                        factory.newDocumentBuilder();
+                
+                java.io.InputStream is=
+                        new java.io.ByteArrayInputStream(value.getBytes());
+                
+                org.w3c.dom.Document doc=builder.parse(is);
+                
+                is.close();
+                
+                propValue = doc.getDocumentElement();
+            } catch (Exception e) {
+                throw new UiException("Failed to configure header '"+headerName+"'", e);
+            }
+        }
+	    
+        Property prop=rm.getContext().setProperty(headerName, propValue, Scope.MESSAGE);
+        prop.addLabels(HttpInvokerLabel.HEADER.label());
 	}
 	
 	/**
