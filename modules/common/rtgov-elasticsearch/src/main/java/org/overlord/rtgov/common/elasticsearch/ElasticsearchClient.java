@@ -291,6 +291,8 @@ public class ElasticsearchClient {
                             }
                             try {
                                 initClient(service.getClient());
+                            } catch (org.elasticsearch.indices.IndexAlreadyExistsException iaee) {
+                                LOG.info("Elasticsearch indexes already exist");
                             } catch (Exception e) {
                                 LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
                                         "rtgov-elasticsearch.Messages").getString("RTGOV-ELASTICSEARCH-3"), e);
