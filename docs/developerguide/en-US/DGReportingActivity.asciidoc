@@ -113,22 +113,23 @@ The _Activity Collector_ is an embedded component that can be used to accumulate
 
 ==== Finding the Activity Collector
 
-Locating the Activity Collector will be dependent upon the environment. This section outlines the different approaches that may be used.
-
-===== JEE Environment
-
-In a JEE environment, the Activity Collector is obtained using the following code:
+The Activity Collector can be obtained using the Service Registry as follows:
 
 ----
-import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.overlord.rtgov.activity.collector.ActivityCollectorAccessor;
-
+ActivityCollector activityCollector=null;
 ....
 
-ActivityCollector activityCollector = ActivityCollectorAccessor.getActivityCollector();
-----
+ServiceRegistryUtil.addServiceListener(ActivityCollector.class, new ServiceListener<ActivityCollector>() {
 
-The accessor is initialized with an instance of the ActivityCollector when it is instantiated by the system (e.g. CDI). If an instance has not been initialized when this method is invoked, then the client will be blocked for a short period of time, waiting for the instance. If the instance has not been initialized after this period, then a null will be returned.
+    public void registered(ActivityCollector service) {
+        activityCollector = service;
+    }
+
+    public void unregistered(ActivityCollector service) {
+        activityCollector = null;
+    }            
+});
+----
 
 
 ==== Pre-Processing Activity Information
@@ -285,15 +286,15 @@ import org.overlord.rtgov.activity.server.rest.client.RESTActivityServer;
 
 .....
 
-        RESTActivityServer restc=new RESTActivityServer();
-        restc.setServerURL(_activityServerURL);
+RESTActivityServer restc=new RESTActivityServer();
+restc.setServerURL(_activityServerURL);
 
-        ActivityServerLogger activityUnitLogger=new ActivityServerLogger();
-        activityUnitLogger.setActivityServer(restc);
+ActivityServerLogger activityUnitLogger=new ActivityServerLogger();
+activityUnitLogger.setActivityServer(restc);
 
-        activityUnitLogger.init();
+activityUnitLogger.init();
 
-        _collector.setActivityUnitLogger(activityUnitLogger);
+_collector.setActivityUnitLogger(activityUnitLogger);
 ----
 
 This shows a situation where an embedded Activity Collector is being initialized with an Activity Server Logger, which uses the REST Activity Server client implementation.
@@ -387,17 +388,33 @@ This section will show the different ways this information can be recorded, usin
 TIP: Where possible, the Activity Collector mechanism described in the previous section should be used to aggregate and record the activity information, as this is more efficient that each system individually reporting events to the server.
 
 
-===== Direct Injection
+===== Java API
 
-The simpliest approach is to leverage CDI or OSGi (blueprint) to directly inject the Activity Server implementation.
+First step is to obtain a reference to the Activity Server,
 
 ----
 import org.overlord.rtgov.activity.server.ActivityServer;
 
 ....
 
-@Inject
 private ActivityServer _activityServer=null;
+
+....
+
+// Get ActivityServer asynchronously
+ServiceRegistryUtil.addServiceListener(ActivityServer.class, new ServiceListener<ActivityServer>() {
+
+    public void registered(ActivityServer service) {
+        _activityServer = service;
+    }
+
+    public void unregistered(ActivityServer service) {
+        _activityServer = null;
+    }            
+});
+
+// Or synchronously
+_activityServer = ServiceRegistryUtil.getSingleService(ActivityServer.class);
 ----
 
 Once the reference to the Activity Server has been obtained, then call the +store+ method to record a list of Activity Units.
@@ -427,40 +444,39 @@ The Activity Server can be accessed as RESTful service, e.g.
 import org.codehaus.jackson.map.ObjectMapper;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 
-
 .....
 
-        java.util.List<ActivityUnit> activities=........
-        java.net.URL storeUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/store
+java.util.List<ActivityUnit> activities=........
+java.net.URL storeUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/store
 
-        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) storeUrl.openConnection();
+java.net.HttpURLConnection connection = (java.net.HttpURLConnection) storeUrl.openConnection();
 
-        String userPassword = username + ":" + password;
-        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
-        
-        connection.setRequestProperty("Authorization", "Basic " + encoding);
+String userPassword = username + ":" + password;
+String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
 
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
-        connection.setUseCaches(false);
-        connection.setAllowUserInteraction(false);
-        connection.setRequestProperty("Content-Type", "application/json");
+connection.setRequestProperty("Authorization", "Basic " + encoding);
 
-        java.io.OutputStream os=connection.getOutputStream();
+connection.setRequestMethod("POST");
+connection.setDoOutput(true);
+connection.setDoInput(true);
+connection.setUseCaches(false);
+connection.setAllowUserInteraction(false);
+connection.setRequestProperty("Content-Type", "application/json");
 
-        ObjectMapper mapper=new ObjectMapper();    // Use jackson to serialize the activity units
-        mapper.writeValue(os, activities);
+java.io.OutputStream os=connection.getOutputStream();
 
-        os.flush();
-        os.close();
+ObjectMapper mapper=new ObjectMapper();    // Use jackson to serialize the activity units
+mapper.writeValue(os, activities);
 
-        java.io.InputStream is=connection.getInputStream();
+os.flush();
+os.close();
 
-        byte[] result=new byte[is.available()];
+java.io.InputStream is=connection.getInputStream();
 
-        is.read(result);
-        is.close();
+byte[] result=new byte[is.available()];
+
+is.read(result);
+is.close();
 ----
 
 See the REST API information in the docs folder of the distribution.
@@ -473,9 +489,9 @@ a grouping of Activity Events that occurred within the same business transaction
 ways this information can be queried, using a variety of bindings.
 
 
-===== Direct Injection
+===== Java API
 
-The simpliest approach is to leverage CDI or OSGi (blueprint) to obtain a reference to the Activity Server. Once the reference to the Activity Server has been obtained, then invoke the +getActivityUnit+ method to retrieve the required information.
+Once the reference to the Activity Server has been obtained (as shown previously), then invoke the +getActivityUnit+ method to retrieve the required information.
 
 ----
 import org.overlord.rtgov.activity.model.ActivityUnit;
@@ -495,29 +511,29 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 
-
 .....
-        java.net.URL queryUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/unit?id=<id>
 
-        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) queryUrl.openConnection();
+java.net.URL queryUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/unit?id=<id>
 
-        String userPassword = username + ":" + password;
-        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
-        
-        connection.setRequestProperty("Authorization", "Basic " + encoding);
+java.net.HttpURLConnection connection = (java.net.HttpURLConnection) queryUrl.openConnection();
 
-        connection.setRequestMethod("GET");
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
-        connection.setUseCaches(false);
-        connection.setAllowUserInteraction(false);
-        connection.setRequestProperty("Content-Type", "application/json");
+String userPassword = username + ":" + password;
+String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
 
-        java.io.InputStream is=connection.getInputStream();
+connection.setRequestProperty("Authorization", "Basic " + encoding);
 
-        ActivityUnit au = mapper.readValue(is, ActivityUnit.class);
+connection.setRequestMethod("GET");
+connection.setDoOutput(true);
+connection.setDoInput(true);
+connection.setUseCaches(false);
+connection.setAllowUserInteraction(false);
+connection.setRequestProperty("Content-Type", "application/json");
 
-        is.close();
+java.io.InputStream is=connection.getInputStream();
+
+ActivityUnit au = mapper.readValue(is, ActivityUnit.class);
+
+is.close();
 ----
 
 See the REST API documentation in the docs folder of the distribution.
@@ -529,10 +545,9 @@ The Activity Server can be used to query a list of Activity Type (events) from t
 This section will show the different ways this information can be queried, using a variety of bindings.
 
 
-===== Direct Injection
+===== Java API
 
-The simpliest approach is to leverage CDI or OSGi (blueprint) to obtain a reference to the Activity Server.
-Once the reference to the Activity Server has been obtained, then the +getActivityTypes+ method can be invoked to
+Once the reference to the Activity Server has been obtained (as described previously), then the +getActivityTypes+ method can be invoked to
 obtain the list of events.
 
 ----
@@ -563,31 +578,31 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.overlord.rtgov.activity.model.ActivityType;
 
-
 .....
-        java.net.URL queryUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/events?type=<type>&value=<value>
 
-        // Note: add optional query parameters &from=<fromTimestamp>&to=<toTimestamp> to define a time frame
+java.net.URL queryUrl = new java.net.URL(....);   // <host>/overlord-rtgov/activity/events?type=<type>&value=<value>
 
-        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) queryUrl.openConnection();
+// Note: add optional query parameters &from=<fromTimestamp>&to=<toTimestamp> to define a time frame
 
-        String userPassword = username + ":" + password;
-        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
-        
-        connection.setRequestProperty("Authorization", "Basic " + encoding);
+java.net.HttpURLConnection connection = (java.net.HttpURLConnection) queryUrl.openConnection();
 
-        connection.setRequestMethod("GET");
-        connection.setDoOutput(true);
-        connection.setDoInput(true);
-        connection.setUseCaches(false);
-        connection.setAllowUserInteraction(false);
-        connection.setRequestProperty("Content-Type", "application/json");
+String userPassword = username + ":" + password;
+String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
 
-        java.io.InputStream is=connection.getInputStream();
+connection.setRequestProperty("Authorization", "Basic " + encoding);
 
-        java.util.List<ActivityType> activities = mapper.readValue(is, new TypeReference<java.util.List<ActivityType>>() {});
+connection.setRequestMethod("GET");
+connection.setDoOutput(true);
+connection.setDoInput(true);
+connection.setUseCaches(false);
+connection.setAllowUserInteraction(false);
+connection.setRequestProperty("Content-Type", "application/json");
 
-        is.close();
+java.io.InputStream is=connection.getInputStream();
+
+java.util.List<ActivityType> activities = mapper.readValue(is, new TypeReference<java.util.List<ActivityType>>() {});
+
+is.close();
 ----
 
 See the REST API documentation in the docs folder of the distribution.
