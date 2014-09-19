@@ -189,9 +189,65 @@ with the additional support properties:
 [options="header"]
 |=======================
 | Property | Description
-| Elasticsearch.hosts | List of <host>:<port> values representing nodes in the Elasticsearch cluster, the port representing the TCP transport connection. Default value is: localhost:9300
+| Elasticsearch.hosts | Either has value "embedded" (the default), or a list of <host>:<port> values representing nodes in the Elasticsearch cluster, the port representing the TCP transport connection.
 | Elasticsearch.schedule | When using batched mode, the interval (in milliseconds) between updates being sent to the Elasticsearch server.
 |=======================
+
+
+The following information describes the Elasticsearch clustering options that are supported with RTGov. For more information please see http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/modules-node.html
+
+Out of the box, RTGov starts up with an in-VM Elasticsearch node for convenience. Such a setup is not recommended for a production environment for the following reasons:
+
+* Elasticsearch running on the same JVM could result in resource contention, e.g. memory or cpu, which could impact the application performance
+
+* In a clustered or load-balanced environment we would require Elasticsearch to persist the data to the same cluster
+
+ 
+RTGov does not attempt to wrap or hide the standard Elasticsearch configurations. If you know how to tweak and tune an Elasticsearch node then these configuration changes can be applied to the rtgov configuration. If you want to learn how to configure and tune Elasticsearch then please reference the Elasticsearch documentation at http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-configuration.html
+
+Some of those configuration properties that may need to be changed include:
+
+* _cluster.name_: Cluster name identifies your cluster for auto-discovery. If you're running multiple clusters on the same network, make sure you're using unique names
+* _node.name_: Node names are generated dynamically on startup, so you're relieved from configuring them manually. However you can tie a node to a specific name
+* _path.data_: Path to directory where to store index data allocated for this node
+ 
+
+There are 3 ways Elasticsearch cluster communication can be configured within RTGov:
+
+_Local Elasticsearch embedded server_
+
+----
+node.local=true
+----
+
+This configuration does not communicate outside of the VM, only performing discovery of Elasticsearch nodes started on the same same VM. 
+
+_Client only with no local data_
+
+When you start an Elasticsearch client, the most important decision is whether it should hold data or not. In other words, should indices and shards be allocated to it. Many times we would like to have the clients just be clients, without shards being allocated to them. This is simple to configure by setting either:
+
+----
+node.data=false
+----
+
+and/or
+
+----
+node.client=true
+----
+
+With this configuration, the client is cluster aware and can route its data to the responsible shards avoiding a double hop.
+
+
+_Clustered client with local data_
+
+This is the default "out of the box" configuration for RTGov. This starts a simple Elasticsearch node that can hold data and also join other Elasticsearch nodes in a cluster.
+
+----
+node.data=true
+node.client=false
+node.local=true
+----
 
 
 ===== SQL
