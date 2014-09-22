@@ -203,7 +203,16 @@ Out of the box, RTGov starts up with an in-VM Elasticsearch node for convenience
 * In a clustered or load-balanced environment we would require Elasticsearch to persist the data to the same cluster
 
  
-RTGov does not attempt to wrap or hide the standard Elasticsearch configurations. If you know how to tweak and tune an Elasticsearch node then these configuration changes can be applied to the rtgov configuration. If you want to learn how to configure and tune Elasticsearch then please reference the Elasticsearch documentation at http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-configuration.html
+RTGov does not attempt to wrap or hide the standard Elasticsearch configurations. If you know how to tweak and tune an Elasticsearch node then these configuration changes can be applied to the appropriate location (dependent upon platform): 
+
+[options="header"]
+|=======================
+| Value | Description
+| jboss-eap-6 | The properties are found in the _standalone*.xml_ files in the _<root>/standalone/configuration_ folder, or _domain.xml_ file in _<root>/domain/configuration_ folder. The properties are defined under a 'configuration' element with an attribute "name='overlord-rtgov-elasticsearch'".
+| fuse-6.1 | The properties are found in the _<root>/etc/overlord-rtgov-elasticsearch.properties_ file.
+|=======================
+
+If you want to learn how to configure and tune Elasticsearch then please reference the Elasticsearch documentation at http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-configuration.html
 
 Some of those configuration properties that may need to be changed include:
 
