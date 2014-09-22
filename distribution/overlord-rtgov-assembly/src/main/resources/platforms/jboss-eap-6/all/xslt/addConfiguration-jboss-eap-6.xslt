@@ -76,7 +76,7 @@
         <xsl:element name="properties" namespace="urn:jboss:domain:overlord-configuration:1.0">
           <xsl:element name="property" namespace="urn:jboss:domain:overlord-configuration:1.0">
             <xsl:attribute name="name">path.data</xsl:attribute>
-            <xsl:attribute name="value">../elasticsearch</xsl:attribute>
+            <xsl:attribute name="value">${jboss.server.data.dir}/elasticsearch</xsl:attribute>
           </xsl:element>
           <xsl:element name="property" namespace="urn:jboss:domain:overlord-configuration:1.0">
             <xsl:attribute name="name">node.data</xsl:attribute>
