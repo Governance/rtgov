@@ -74,7 +74,7 @@ public class RESTCallTraceServer {
     /**
      * This method returns the call trace for the specified context.
      * 
-     * @param type The context type
+     * @param type The context type (Conversation, Endpoint, Message, Link)
      * @param value The context value
      * @return The call trace for the context
      * @throws Exception Failed to obtain call trace

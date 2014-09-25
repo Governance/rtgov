@@ -33,6 +33,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import org.codehaus.enunciate.jaxrs.TypeHint;
+
 /**
  * This class represents the RESTful interface to the active collection server.
  *
@@ -114,44 +116,43 @@ public class RESTActiveCollectionServer {
     @Path("/query")
     @Consumes("application/json")
     @Produces("application/json")
-    public String query(QuerySpec qspec) throws Exception {
+    public String query(@TypeHint(QuerySpec.class) String qspec) throws Exception {
         String ret="";
         
         init();
         
         if (LOG.isLoggable(Level.FINEST)) {
-            String text=null;
-            
-            if (qspec != null) {
-                byte[] b=ActiveCollectionUtil.serializeQuerySpec(qspec);
-                text = new String(b);
-            }
-
-            LOG.finest("Active Collection query="+text);        
+            LOG.finest("Active Collection JSON Query="+qspec);        
+        }
+        
+        QuerySpec qs=ActiveCollectionUtil.deserializeQuerySpec(qspec.getBytes());
+        
+        if (LOG.isLoggable(Level.FINEST)) {
+            LOG.finest("Active Collection Query="+qs);        
         }
         
         if (_acmManager == null) {
             throw new Exception("Active Collection Manager is not available");
         }
         
-        ActiveCollection actColl = _acmManager.getActiveCollection(qspec.getCollection());
+        ActiveCollection actColl = _acmManager.getActiveCollection(qs.getCollection());
         
         if (actColl == null) {
             
-            if (qspec.getParent() == null || qspec.getPredicate() == null) {
-                throw new Exception("Collection '"+qspec.getCollection()
+            if (qs.getParent() == null || qs.getPredicate() == null) {
+                throw new Exception("Collection '"+qs.getCollection()
                         +"' does not exist, and either the parent or "
                         +"predicate have not been defined");
             }
             
             // Try to get parent collection
-            ActiveCollection parent = _acmManager.getActiveCollection(qspec.getParent());
+            ActiveCollection parent = _acmManager.getActiveCollection(qs.getParent());
             
             if (parent != null) {
-                actColl = _acmManager.create(qspec.getCollection(),
-                                parent, qspec.getPredicate(), qspec.getProperties());
+                actColl = _acmManager.create(qs.getCollection(),
+                                parent, qs.getPredicate(), qs.getProperties());
             } else {
-                throw new Exception("Unknown parent collection '"+qspec.getParent()+"'");
+                throw new Exception("Unknown parent collection '"+qs.getParent()+"'");
             }
         }
 
@@ -159,7 +160,7 @@ public class RESTActiveCollectionServer {
             
             // Check if active collection is public
             if (actColl.getVisibility() != ActiveCollectionVisibility.Public) {
-                LOG.warning("Attempt to access restricted collection: "+qspec);
+                LOG.warning("Attempt to access restricted collection: "+qs);
                 throw new Exception("Access to collection is restricted");
             }
             
@@ -172,7 +173,7 @@ public class RESTActiveCollectionServer {
                 out.write("[".getBytes());
             }
 
-            java.util.List<Object> results=actColl.query(qspec);
+            java.util.List<Object> results=actColl.query(qs);
             
             for (Object obj : results) {
                 MAPPER.writeValue(out, obj);

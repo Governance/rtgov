@@ -254,7 +254,7 @@ public class RESTActivityServer {
     @Path("/store")
     @Consumes("application/json")
     @Produces("text/plain")
-    public Response store(java.util.List<ActivityUnit> acts) throws Exception {
+    public Response store(@TypeHint(ActivityUnit.class) java.util.List<ActivityUnit> acts) throws Exception {
         init();
         
         if (LOG.isLoggable(Level.FINEST)) {
