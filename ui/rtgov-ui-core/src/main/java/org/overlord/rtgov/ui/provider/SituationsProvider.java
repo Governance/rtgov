@@ -111,7 +111,7 @@ public interface SituationsProvider {
   
 	public void assign(final String situationId, final String userName) throws UiException;
 	
-	public void close(final String situationId) throws UiException;
+	public void unassign(final String situationId) throws UiException;
 	
 	public void updateResolutionState(final String situationId, final ResolutionState resolutionState)
 									throws UiException;

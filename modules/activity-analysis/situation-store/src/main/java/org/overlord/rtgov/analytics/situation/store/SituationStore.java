@@ -104,12 +104,12 @@ public interface SituationStore {
     public void assignSituation(String situationId, String userName) throws Exception;
     
     /**
-     * This method closes a situation.
+     * This method unassigns a situation.
      * 
      * @param situationId The situation id
-     * @throws Exception Failed to close the situation
+     * @throws Exception Failed to unassign the situation
      */
-    public void closeSituation(String situationId) throws Exception;
+    public void unassignSituation(String situationId) throws Exception;
     
     /**
      * This method updates the resolution state of a situation.

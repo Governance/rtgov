@@ -280,7 +280,7 @@ public class JPASituationStoreTest {
 		_situationStore.assignSituation(situation.getId(), "junit");
 		Situation reload = _situationStore.getSituation(situation.getId());
 		assertEquals("junit",reload.getSituationProperties().get("assignedTo"));
-		_situationStore.closeSituation(situation.getId());
+		_situationStore.unassignSituation(situation.getId());
 		reload = _situationStore.getSituation(situation.getId());
 		assertFalse(reload.getSituationProperties().containsKey("assignedTo"));
 	}
@@ -312,7 +312,7 @@ public class JPASituationStoreTest {
 		_situationStore.updateResolutionState(situation.getId(),IN_PROGRESS);
 		Situation reload = _situationStore.getSituation(situation.getId());
 		assertEquals("junit",reload.getSituationProperties().get(SituationStore.ASSIGNED_TO_PROPERTY));
-		_situationStore.closeSituation(situation.getId());
+		_situationStore.unassignSituation(situation.getId());
 		reload = _situationStore.getSituation(situation.getId());
 		assertFalse(reload.getSituationProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY));
 		assertFalse(reload.getSituationProperties().containsKey(SituationStore.ASSIGNED_TO_PROPERTY));

@@ -691,9 +691,9 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	}
 
 	@Override
-	public void close(String situationId) throws UiException {
+	public void unassign(String situationId) throws UiException {
 		try {
-			_situationStore.closeSituation(situationId);
+			_situationStore.unassignSituation(situationId);
 		} catch (Exception e) {
 			throw new UiException(e);
 		}

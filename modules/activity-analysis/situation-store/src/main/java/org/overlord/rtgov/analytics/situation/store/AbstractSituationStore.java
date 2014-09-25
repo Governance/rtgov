@@ -61,16 +61,16 @@ public abstract class AbstractSituationStore implements SituationStore {
     /**
      * {@inheritDoc}
      */
-    public void closeSituation(final String situationId) {
-        doCloseSituation(getSituation(situationId));   
+    public void unassignSituation(final String situationId) {
+        doUnassignSituation(getSituation(situationId));   
     }
     
     /**
-     * Close the situation.
+     * Unassign the situation.
      * 
      * @param situationId Id
      */
-    protected void doCloseSituation(final Situation situation) {
+    protected void doUnassignSituation(final Situation situation) {
         // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
         java.util.Map<String, String> properties = situation.getProperties();
         properties.remove(ASSIGNED_TO_PROPERTY);

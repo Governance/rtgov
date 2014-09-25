@@ -260,11 +260,11 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
     /**
      * {@inheritDoc}
      */
-    public void closeSituation(final String situationId) {
+    public void unassignSituation(final String situationId) {
         Situation sit=getSituation(situationId);
         
         if (sit != null) {
-            doCloseSituation(sit);
+            doUnassignSituation(sit);
             
             // Save the updated situation
             _client.update(situationId, ElasticsearchClient.convertTypeToJson(sit));

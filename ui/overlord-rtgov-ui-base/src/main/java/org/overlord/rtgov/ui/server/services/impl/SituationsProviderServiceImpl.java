@@ -188,8 +188,8 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
 	}
 
 	@Override
-	public void close(String situationId) throws UiException {
-		_provider.close(situationId);
+	public void unassign(String situationId) throws UiException {
+		_provider.unassign(situationId);
 	}
 
 	@Override

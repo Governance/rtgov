@@ -232,10 +232,10 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
     /**
      * {@inheritDoc}
      */
-    public void closeSituation(final String situationId) {
+    public void unassignSituation(final String situationId) {
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
-                doCloseSituation(loadSituation(s, situationId));
+                doUnassignSituation(loadSituation(s, situationId));
                 return null;
             }
         });

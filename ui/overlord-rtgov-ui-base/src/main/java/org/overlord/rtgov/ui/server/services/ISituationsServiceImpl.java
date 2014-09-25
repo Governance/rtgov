@@ -72,7 +72,7 @@ public interface ISituationsServiceImpl {
      * @param situationId
      * @throws UiException
      */
-    void close(String situationId) throws UiException;
+    void unassign(String situationId) throws UiException;
 
     /**
      * Updates a situation's resolutionState.
