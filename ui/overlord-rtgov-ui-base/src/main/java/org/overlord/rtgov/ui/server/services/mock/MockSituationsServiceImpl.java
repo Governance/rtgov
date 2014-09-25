@@ -398,7 +398,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
     }
 
 	@Override
-	public void close(String situationId) throws UiException {
+	public void unassign(String situationId) throws UiException {
 		SituationSummaryBean situationSummaryBean = idToSituation.get(situationId);
 		Map<String, String> properties = situationSummaryBean.getProperties();
 		properties.remove("assignedTo");

@@ -131,8 +131,8 @@ public class SituationDetailsPage extends AbstractPage {
     InlineLabel resubmitDetails;
     @Inject @DataField("btn-assign")
     Button assignButton;
-    @Inject @DataField("btn-close")
-    Button closeButton;
+    @Inject @DataField("btn-unassign")
+    Button unassignButton;
     @Inject @DataField("btn-start")
     Button startButton;
     @Inject @DataField("btn-stop")
@@ -229,7 +229,7 @@ public class SituationDetailsPage extends AbstractPage {
 			} else {
 				assignButton.getElement().removeClassName("hide");
 			}
-			closeButton.getElement().removeClassName("hide"); //$NON-NLS-1$
+			unassignButton.getElement().removeClassName("hide"); //$NON-NLS-1$
 			ResolutionState resolutionState = ResolutionState.valueOf(situation.getResolutionState());
 			if (ResolutionState.UNRESOLVED == resolutionState
 					|| ResolutionState.WAITING == resolutionState
@@ -251,7 +251,7 @@ public class SituationDetailsPage extends AbstractPage {
 				reopenButton.getElement().addClassName("hide");
 			}
         } else {
-        	closeButton.getElement().addClassName("hide"); 
+        	unassignButton.getElement().addClassName("hide"); 
         	startButton.getElement().addClassName("hide");
         	reopenButton.getElement().addClassName("hide");
         	stopButton.getElement().addClassName("hide");
@@ -305,9 +305,9 @@ public class SituationDetailsPage extends AbstractPage {
 		loadSituationAndUpdatePageData();
 	}
 
-	@EventHandler("btn-close")
-	protected void onDeassignButtonClick(ClickEvent event) {
-		situationsService.close(id, voidInvocationHandler);
+	@EventHandler("btn-unassign")
+	protected void onUnassignButtonClick(ClickEvent event) {
+		situationsService.unassign(id, voidInvocationHandler);
 		loadSituationAndUpdatePageData();
 	}
 

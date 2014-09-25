@@ -956,7 +956,7 @@ public class ElasticsearchSituationStoreTest {
         
         assertEquals("junit",reload.getSituationProperties().get("assignedTo"));
         
-        _elasticsearchSituationStore.closeSituation(situation.getId());
+        _elasticsearchSituationStore.unassignSituation(situation.getId());
         
         reload = _elasticsearchSituationStore.getSituation(situation.getId());
         
@@ -1014,7 +1014,7 @@ public class ElasticsearchSituationStoreTest {
         
         assertEquals("junit",reload.getSituationProperties().get(SituationStore.ASSIGNED_TO_PROPERTY));
         
-        _elasticsearchSituationStore.closeSituation(situation.getId());
+        _elasticsearchSituationStore.unassignSituation(situation.getId());
         
         reload = _elasticsearchSituationStore.getSituation(situation.getId());
         

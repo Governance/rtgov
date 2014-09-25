@@ -65,7 +65,7 @@ public interface ISituationsService {
      * @param situationId
      * @throws UiException
      */
-    public void deassign(String situationId) throws UiException;
+    public void unassign(String situationId) throws UiException;
 
     /**
      * Updates a situation with the given resolutionState.

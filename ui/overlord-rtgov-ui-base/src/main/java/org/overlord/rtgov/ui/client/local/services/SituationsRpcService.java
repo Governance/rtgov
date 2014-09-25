@@ -132,13 +132,13 @@ public class SituationsRpcService {
     }
     
     /**
-     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#deassign(String)
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#unassign(String)
      */
-    public void close(String situationId, IRpcServiceInvocationHandler<Void> handler) {
+    public void unassign(String situationId, IRpcServiceInvocationHandler<Void> handler) {
         RemoteCallback<Void> successCallback = new DelegatingRemoteCallback<Void>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteSituationsService.call(successCallback, errorCallback).deassign(situationId);
+            remoteSituationsService.call(successCallback, errorCallback).unassign(situationId);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }

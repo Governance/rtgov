@@ -88,8 +88,8 @@ public class SituationsService implements ISituationsService {
 	}
 
 	@Override
-	public void deassign(String situationId) throws UiException {
-		impl.close(situationId);
+	public void unassign(String situationId) throws UiException {
+		impl.unassign(situationId);
 	}
 
 	@Override

@@ -146,7 +146,7 @@ public class RTGovSituationsProviderTest {
 			public void assignSituation(String situationId, String userName) throws Exception {
 				throw new Exception("Fail");
 			}
-			public void closeSituation(String situationId) throws Exception {
+			public void unassignSituation(String situationId) throws Exception {
 				throw new Exception("Fail");
 			}
 			public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception {
@@ -268,7 +268,7 @@ public class RTGovSituationsProviderTest {
 			public void assignSituation(String situationId, String userName) throws Exception {
 				throw new Exception("Fail");
 			}
-			public void closeSituation(String situationId) throws Exception {
+			public void unassignSituation(String situationId) throws Exception {
 				throw new Exception("Fail");
 			}
 			public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception {
