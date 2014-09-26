@@ -312,19 +312,10 @@ public class RTGovSituationsProviderTest {
     @Test
     public void testConfigureHeaders() {
         ActivityType at=new RequestReceived();        
-        at.getProperties().put(ActivityType.HEADER_PROPERTY, 
-                "{\"org.switchyard.messageId\":\"ID-gbrown-redhat-44429-1410962996621-0-1\","
-                + "\"org.switchyard.messageId/format\":\"text\","
-                + "\"org.switchyard.soap.messageName\":\"submitOrder\","
-                + "\"org.switchyard.soap.messageName/format\":\"text\","
-                + "\"{http://www.projectoverlord.io/example/}ExampleHeaderValue\":"
-                + "\"<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?><m:ExampleHeaderValue "
-                + "xmlns:m=\\\"http://www.projectoverlord.io/example/\\\"><m:ExampleHeaderNode>1234"
-                + "</m:ExampleHeaderNode></m:ExampleHeaderValue>\","
-                + "\"{http://www.projectoverlord.io/example/}ExampleHeaderValue/format\":\"dom\","
-                + "\"Accept/format\":\"text\","
-                + "\"Accept\":"
-                + "\"text/xml, text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2\"}");
+        at.getProperties().put(ActivityType.HEADER_FORMAT_PROPERTY_PREFIX+"header1", "dom");
+        at.getProperties().put("header1", "header1value");
+        at.getProperties().put(ActivityType.HEADER_FORMAT_PROPERTY_PREFIX+"header2", "text");
+        at.getProperties().put("header2", "header2value");
         
         MessageBean mb=new MessageBean();
         
@@ -334,21 +325,19 @@ public class RTGovSituationsProviderTest {
             fail("Failed to configure headers: "+e.getMessage());
         }
         
-        if (mb.getHeaders().size() != 4) {
-            fail("Expecting 4 headers: "+mb.getHeaders().size());
+        if (mb.getHeaders().size() != 2) {
+            fail("Expecting 2 headers: "+mb.getHeaders().size());
         }
         
-        String messageName=mb.getHeaders().get("org.switchyard.soap.messageName");
+        String h1=mb.getHeaders().get("header1");
         
-        assertEquals("Message name not as expected", messageName, "submitOrder");
+        assertEquals("Header 1 not as expected", h1, "header1value");
         
-        if (mb.getHeaderFormats().size() != 4) {
-            fail("Expecting 4 header formats: "+mb.getHeaderFormats().size());
+        if (mb.getHeaderFormats().size() != 2) {
+            fail("Expecting 2 header formats: "+mb.getHeaderFormats().size());
         }
         
-        assertEquals("Message name format not as expected", mb.getHeaderFormats().get("org.switchyard.soap.messageName"), "text");
+        assertEquals("Header 2 format not as expected", mb.getHeaderFormats().get("header2"), "text");
         
-        assertEquals("Example header value format not as expected", mb.getHeaderFormats().get(
-                "{http://www.projectoverlord.io/example/}ExampleHeaderValue"), "dom");
     }
 }

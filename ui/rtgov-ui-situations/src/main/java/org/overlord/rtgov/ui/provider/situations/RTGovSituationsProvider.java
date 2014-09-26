@@ -28,7 +28,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.overlord.rtgov.active.collection.ActiveChangeListener;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionListener;
@@ -78,8 +77,6 @@ import com.google.common.base.Throwables;
  *
  */
 public class RTGovSituationsProvider implements SituationsProvider, ActiveChangeListener {
-
-    private static final ObjectMapper MAPPER=new ObjectMapper();
 
     private static final String PROVIDER_NAME = "rtgov"; //$NON-NLS-1$
 	
@@ -437,50 +434,39 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
      * @param at The activity type
      */
     protected static void configureHeaders(MessageBean mb, ActivityType at) throws UiException {
-        if (at != null && at.getProperties().containsKey(ActivityType.HEADER_PROPERTY)) {
-            String prop=at.getProperties().get(ActivityType.HEADER_PROPERTY);
-            
-            try {
-                @SuppressWarnings("unchecked")
-                java.util.Map<String,String> headers=MAPPER.readValue(prop.getBytes(), java.util.Map.class);
-                
-                for (String key : headers.keySet()) {
-                    if (!isHeaderFormatProperty(key)) {
-                        String format=headers.get(getFormatProperty(key));
-                        
-                        if (format != null) {
-                            mb.getHeaders().put(key, headers.get(key));
-                            mb.getHeaderFormats().put(key, format);
-                        }
+        if (at != null) {
+            for (String key : at.getProperties().keySet()) {
+                if (isHeaderFormatProperty(key)) {
+                    String format=at.getProperties().get(key);
+                    String propName=getPropertyName(key);
+                    
+                    if (format != null) {
+                        mb.getHeaders().put(propName, at.getProperties().get(propName));
+                        mb.getHeaderFormats().put(propName, format);
                     }
                 }
-                
-            } catch (Exception e) {
-                throw new UiException("Failed to configure header properties for message resubmission", e);                
             }
         }
     }
     
     /**
-     * This method determines whether a property name represents a header property format
-     * rather than a header property itself.
+     * This method determines whether a property name represents a header property.
      * 
      * @param headerName The property name
-     * @return Whether a header property format
+     * @return Whether a header property
      */
     protected static boolean isHeaderFormatProperty(String headerName) {
-        return (headerName.endsWith(ActivityType.HEADER_FORMAT_SUFFIX));
+        return (headerName.startsWith(ActivityType.HEADER_FORMAT_PROPERTY_PREFIX));
     }
     
     /**
-     * This method determines the property name to use to store the
-     * header value's original format.
+     * This method returns the property name associated with the header.
      * 
-     * @param headerName The header name
-     * @return The format property name
+     * @param headerName The property name
+     * @return The property name associated with the header name
      */
-    protected static String getFormatProperty(String headerName) {
-        return (headerName+ActivityType.HEADER_FORMAT_SUFFIX);
+    protected static String getPropertyName(String headerName) {
+        return (headerName.substring(ActivityType.HEADER_FORMAT_PROPERTY_PREFIX.length()));
     }
     
     /**
