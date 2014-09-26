@@ -73,7 +73,6 @@ public class SerializeInformationTransformer extends InformationTransformer {
                 LOG.severe("Cannot include headers as no activity type supplied");
             } else {
                 java.util.Iterator<String> iter=headers.keySet().iterator();
-                java.util.Map<String,String> actHeaders=new java.util.HashMap<String,String>();
                 
                 while (iter.hasNext()) {
                     String headerName=iter.next();
@@ -95,22 +94,8 @@ public class SerializeInformationTransformer extends InformationTransformer {
                         }
                         
                         // Store properties
-                        actHeaders.put(headerName, transformed);
-                        actHeaders.put(getFormatProperty(headerName), encoding);
-                    }
-                }
-                
-                if (actHeaders.size() > 0) {
-                    try {
-                        if (LOG.isLoggable(Level.FINEST)) {
-                            LOG.finest("Add headers="+actHeaders);
-                        }
-                        
-                        activityType.getProperties().put(ActivityType.HEADER_PROPERTY,
-                                ActivityUtil.objectToJSONString(actHeaders));
-                    } catch (Exception e) {
-                        LOG.log(Level.SEVERE, java.util.PropertyResourceBundle.getBundle(
-                                "activity.Messages").getString("ACTIVITY-20"), e);
+                        activityType.getProperties().put(headerName, transformed);
+                        activityType.getProperties().put(getHeaderFormatPropertyName(headerName), encoding);
                     }
                 }
             }
@@ -126,8 +111,8 @@ public class SerializeInformationTransformer extends InformationTransformer {
      * @param headerName The header name
      * @return The format property name
      */
-    protected String getFormatProperty(String headerName) {
-        return (headerName+ActivityType.HEADER_FORMAT_SUFFIX);
+    protected String getHeaderFormatPropertyName(String headerName) {
+        return (ActivityType.HEADER_FORMAT_PROPERTY_PREFIX+headerName);
     }
     
     /**
