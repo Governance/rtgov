@@ -266,9 +266,13 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
      */
     protected synchronized void initJMS(boolean onInit) {        
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Initialise JMS (onInit="+onInit+")");
+            LOG.finest("Initialise JMS (onInit="+onInit+", initialized="+_initialized+")");
         }
             
+        if (_initialized) {
+            return;
+        }
+        
         // Check if connection factory initialized
         if (_connectionFactory == null) {
             try {
@@ -310,7 +314,6 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                 if (LOG.isLoggable(Level.FINEST)) {
                     LOG.finest("Initialised session="+_session);
                 }
-
                 if (_epnEventsDestination == null && _epnEventsDestinationName != null) {
                     _epnEventsDestination = _session.createQueue(_epnEventsDestinationName);                    
                     if (LOG.isLoggable(Level.FINEST)) {
@@ -318,7 +321,6 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                                                 +_epnEventsDestination);
                     }
                 }
-                
                 if (_epnNotificationsDestination == null && _epnNotificationsDestinationName != null) {
                     _epnNotificationsDestination = _session.createTopic(_epnNotificationsDestinationName);                    
                     if (LOG.isLoggable(Level.FINEST)) {
@@ -334,8 +336,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
         if (_epnEventsDestination == null) {
             try {                    
                 InitialContext context=new InitialContext();                
-                _epnEventsDestination = (Destination)context.lookup("java:/EPNEvents");
-                
+                _epnEventsDestination = (Destination)context.lookup("java:/EPNEvents");                
                 if (LOG.isLoggable(Level.FINEST)) {
                     LOG.finest("Initialised events destination="+_epnEventsDestination);
                 }
@@ -370,8 +371,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
 
                 if (_initConsumers) {
                     _eventsConsumer = _session.createConsumer(_epnEventsDestination);
-                    _notificationsConsumer = _session.createConsumer(_epnNotificationsDestination);
-                    
+                    _notificationsConsumer = _session.createConsumer(_epnNotificationsDestination);                    
                     _eventsConsumer.setMessageListener(new MessageListener() {
                         public void onMessage(Message message) {
                             try {
@@ -381,8 +381,7 @@ public class JMSEPNManagerImpl extends AbstractEPNManager implements JMSEPNManag
                                         "epn-jms.Messages").getString("EPN-JMS-7"), e);
                             }
                         }
-                    });
-                    
+                    });                    
                     _notificationsConsumer.setMessageListener(new MessageListener() {
                         public void onMessage(Message message) {
                             try {
