@@ -362,6 +362,11 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 				exc = null;
 				
 				continue;
+			} catch (NullPointerException npe) {
+				if (LOG.isLoggable(Level.FINE)) {
+					LOG.fine("Remote invocation of switchyard service["+service+"] operation["
+							+operation+"] failed to deserialize response");
+				}
 			} catch (java.io.IOException e) {
 				exc = e;
 			}

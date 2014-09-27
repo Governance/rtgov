@@ -217,9 +217,9 @@ public class JBossASSLAMonitorTest {
             
         	System.err.println("PROPS="+properties);
 
-        	// 8 properties, including the 'rtgov.headers' property
-        	if (properties.size() != 8) {
-                fail("Expecting 8 entries in property list: "+properties.size());
+        	// 13 properties, including the 'header' properties
+        	if (properties.size() != 13) {
+                fail("Expecting 13 entries in property list: "+properties.size());
             }
             
             if (!properties.containsKey("customer")) {
