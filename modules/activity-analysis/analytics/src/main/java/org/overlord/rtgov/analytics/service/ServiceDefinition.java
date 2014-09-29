@@ -34,9 +34,10 @@ public class ServiceDefinition implements java.io.Externalizable {
     
     private static final Logger LOG=Logger.getLogger(ServiceDefinition.class.getName());
 
-    private static final int VERSION = 1;
-
+    private static final int VERSION = 2;
     private String _serviceType=null;
+    private boolean _internal=false;
+    
     private java.util.List<InterfaceDefinition> _interfaces=
                     new java.util.ArrayList<InterfaceDefinition>();
     private java.util.List<Context> _contexts=new java.util.ArrayList<Context>();
@@ -57,6 +58,7 @@ public class ServiceDefinition implements java.io.Externalizable {
         ServiceDefinition ret=new ServiceDefinition();
         
         ret.setServiceType(_serviceType);
+        ret.setInternal(_internal);
         
         // Copy contexts
         for (Context c : _contexts) {
@@ -82,6 +84,25 @@ public class ServiceDefinition implements java.io.Externalizable {
      */
     public String getServiceType() {
         return (_serviceType);
+    }
+    
+    /**
+     * This method sets whether the service is internal (i.e. not publicly
+     * available).
+     * 
+     * @param b Whether the service is internal
+     */
+    public void setInternal(boolean b) {
+        _internal = b;
+    }
+    
+    /**
+     * This method identifies whether the service is internal.
+     * 
+     * @return Whether the service is internal
+     */
+    public boolean getInternal() {
+        return (_internal);
     }
     
     /**
@@ -197,6 +218,11 @@ public class ServiceDefinition implements java.io.Externalizable {
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Pre-merge this=["+this+"] with=["+sd+"]");
         }
+        
+        // If one instance indicates the service is internal, then set the internal flag
+        if (sd.getInternal()) {
+            sd.setInternal(true);
+        }
 
         // Examine operation definitions - merge existing and
         // transfer undefined
@@ -285,6 +311,9 @@ public class ServiceDefinition implements java.io.Externalizable {
         for (int i=0; i < _history.size(); i++) {
             out.writeObject(_history.get(i));
         }
+        
+        // Serialize version 2 additional elements
+        out.writeBoolean(_internal);
     }
 
     /**
@@ -292,7 +321,7 @@ public class ServiceDefinition implements java.io.Externalizable {
      */
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
-        in.readInt(); // Consume version, as not required for now
+        int version=in.readInt();
         
         _serviceType = (String)in.readObject();
         
@@ -309,6 +338,11 @@ public class ServiceDefinition implements java.io.Externalizable {
         len = in.readInt();
         for (int i=0; i < len; i++) {
             _history.add((InvocationMetric)in.readObject());
+        }
+        
+        // Deserialize version 2 additional elements
+        if (version >= 2) {
+            _internal = in.readBoolean();
         }
     }
 }

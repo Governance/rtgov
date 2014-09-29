@@ -28,6 +28,14 @@
         3
       ],
       "list": {
+        "0": {
+          "type": "querystring",
+          "query": "internal: \"true\"",
+          "mandate": "mustNot",
+          "active": true,
+          "alias": "",
+          "id": 0
+        },
         "1": {
           "type": "time",
           "field": "timestamp",
@@ -40,6 +48,7 @@
         }
       },
       "ids": [
+        0,
         1
       ]
     }
@@ -353,7 +362,8 @@
             "serviceType",
             "operation",
             "fault",
-            "timestamp"
+            "timestamp",
+            "properties.gateway"
           ],
           "highlight": [],
           "sortable": true,

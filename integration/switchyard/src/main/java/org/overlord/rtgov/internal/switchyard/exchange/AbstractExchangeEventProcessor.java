@@ -251,6 +251,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                         recvd.getProperties().put(GATEWAY_PROPERTY, bm.getType());
                     }
                 }
+            } else {
+                recvd.setInternal(true);
             }
             
             record(mesg, contentType, recvd, securityContext, exch); 
@@ -337,6 +339,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                         sent.getProperties().put(GATEWAY_PROPERTY, bm.getType());
                     }
                 }
+            } else {
+                sent.setInternal(true);
             }
             
             // RTGOV-262 Check if replyTo id not set, due to exception - if so, then

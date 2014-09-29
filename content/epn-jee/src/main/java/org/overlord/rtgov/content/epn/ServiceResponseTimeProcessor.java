@@ -100,6 +100,7 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
         rt.setServiceType(sdef.getServiceType());
         rt.setInterface(idef.getInterface());
         rt.setOperation(opdef.getName());
+        rt.setInternal(sdef.getInternal());
         
         if (mep instanceof RequestFaultDefinition) {
             rt.setFault(((RequestFaultDefinition)mep).getFault());
