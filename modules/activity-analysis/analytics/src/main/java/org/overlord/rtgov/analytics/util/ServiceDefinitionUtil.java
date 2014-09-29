@@ -289,6 +289,7 @@ public final class ServiceDefinitionUtil {
         if (sd == null) {
             sd = new ServiceDefinition();
             sd.setServiceType(rqr.getServiceType());
+            sd.setInternal(rqr.getInternal() || rps.getInternal()); // Mark service as internal if either request or response are
             sdefs.put(rqr.getServiceType(), sd);
         }
         

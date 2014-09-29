@@ -29,12 +29,13 @@ import org.overlord.rtgov.activity.model.Context;
  */
 public class ResponseTime implements java.io.Externalizable {
 
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
     private String _interface=null;
     private String _operation=null;
     private String _fault=null;
     private String _serviceType=null;
+    private boolean _internal=false;
     private long _avg=0;
     private long _max=0;
     private long _min=0;
@@ -146,6 +147,25 @@ public class ResponseTime implements java.io.Externalizable {
      */
     public String getServiceType() {
         return (_serviceType);
+    }
+    
+    /**
+     * This method sets whether the service is internal (i.e. not publicly
+     * available).
+     * 
+     * @param b Whether the service is internal
+     */
+    public void setInternal(boolean b) {
+        _internal = b;
+    }
+    
+    /**
+     * This method identifies whether the service is internal.
+     * 
+     * @return Whether the service is internal
+     */
+    public boolean getInternal() {
+        return (_internal);
     }
     
     /**
@@ -324,6 +344,9 @@ public class ResponseTime implements java.io.Externalizable {
         for (int i=0; i < _contexts.size(); i++) {
             out.writeObject(_contexts.get(i));
         }
+        
+        // Serialize version 2 additional elements
+        out.writeBoolean(_internal);
     }
 
     /**
@@ -332,7 +355,7 @@ public class ResponseTime implements java.io.Externalizable {
     @SuppressWarnings("unchecked")
     public void readExternal(ObjectInput in) throws IOException,
             ClassNotFoundException {
-        in.readInt(); // Consume version, as not required for now
+        int version=in.readInt();
         
         _interface = (String)in.readObject();
         _operation = (String)in.readObject();
@@ -350,6 +373,11 @@ public class ResponseTime implements java.io.Externalizable {
         int len = in.readInt();
         for (int i=0; i < len; i++) {
             _contexts.add((Context)in.readObject());
+        }
+        
+        // Deserialize version 2 additional elements
+        if (version >= 2) {
+            _internal = in.readBoolean();
         }
     }
 }
