@@ -19,7 +19,7 @@ import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
  * This interface represents the capability for recording
- * activity information from a JEE application.
+ * activity information from an application.
  *
  */
 public interface ActivityReporter {

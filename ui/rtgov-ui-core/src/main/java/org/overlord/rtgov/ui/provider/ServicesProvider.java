@@ -17,7 +17,6 @@ package org.overlord.rtgov.ui.provider;
 
 import java.util.List;
 
-import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
@@ -48,29 +47,6 @@ public interface ServicesProvider {
 	 */
 	public boolean isServiceKnown(String service);
  
-    /**
-     * This method determines whether this provider support's a resubmit of the
-     * supplied service operation.
-     * 
-     * @param service The service
-     * @param operation The operation
-     * @return Whether this provider support's a resubmit for the given service
-     *         and operation
-     * @throws UiException Failed to test if service operation can be resubmitted
-     */
-    public boolean isResubmitSupported(String service, String operation) throws UiException;
-
-	/**
-	 * This method resubmits the supplied message to the target service
-	 * and operation.
-	 * 
-	 * @param service The service
-	 * @param operation The operation
-	 * @param message The message
-	 * @throws UiException Failed to resubmit the message
-	 */
-	public void resubmit(String service, String operation, MessageBean message) throws UiException;
-
 	/**
 	 * This method returns the list of application names.
 	 * 
@@ -106,4 +82,13 @@ public interface ServicesProvider {
      */
     public ReferenceBean getReference(String uuid) throws UiException;
 
+    /**
+     * This method retrieves the action provider for the supplied
+     * type. If no action provider exists, then a null will be returned.
+     * 
+     * @param actionType The action type
+     * @return The action provider, or null if not supported
+     */
+    public <T extends ActionProvider> T getAction(Class<T> actionType);
+    
 }

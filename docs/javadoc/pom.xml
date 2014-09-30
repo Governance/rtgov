@@ -108,8 +108,12 @@
 								<packages>org.overlord.rtgov.call.trace:org.overlord.rtgov.call.trace.descriptors:org.overlord.rtgov.call.trace.model:org.overlord.rtgov.call.trace.util:org.overlord.rtgov.reports:org.overlord.rtgov.reports.model:org.overlord.rtgov.reports.util:org.overlord.rtgov.service.dependency:org.overlord.rtgov.service.dependency.layout:org.overlord.rtgov.service.dependency.presentation:org.overlord.rtgov.service.dependency.svg:org.overlord.rtgov.situation.manager</packages>
 							</group>
 							<group>
-								<title>Integration Support</title>
+								<title>Runtime Integration</title>
 								<packages>org.overlord.rtgov.client*</packages>
+							</group>
+							<group>
+								<title>UI Integration</title>
+								<packages>org.overlord.rtgov.ui.*</packages>
 							</group>
 						</groups>
 					</configuration>
@@ -130,6 +134,14 @@
                                 <mkdir dir="${project.build.directory}/sources" />
                                 <copy todir="${project.build.directory}/sources">
                                     <fileset dir="../../modules">
+                                        <include name="**/src/main/java/**/*.java" />
+                                        <exclude name="**/internal/**" />
+                                    </fileset>
+                                    <fileset dir="../../integration/client">
+                                        <include name="**/src/main/java/**/*.java" />
+                                        <exclude name="**/internal/**" />
+                                    </fileset>
+                                    <fileset dir="../../ui/rtgov-ui-core">
                                         <include name="**/src/main/java/**/*.java" />
                                         <exclude name="**/internal/**" />
                                     </fileset>

@@ -25,7 +25,7 @@ import org.overlord.rtgov.activity.model.ActivityType;
 
 /**
  * This interface represents the capability for validating
- * activity information from a JEE application.
+ * activity information from an application.
  *
  */
 public class DefaultActivityValidator implements ActivityValidator {

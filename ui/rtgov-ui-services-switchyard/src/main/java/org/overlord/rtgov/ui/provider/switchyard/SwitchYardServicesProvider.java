@@ -32,16 +32,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.management.AttributeList;
-import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.dom.DOMSource;
 
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
@@ -55,7 +51,6 @@ import org.overlord.rtgov.service.dependency.ServiceGraph;
 import org.overlord.rtgov.service.dependency.layout.ServiceGraphLayoutImpl;
 import org.overlord.rtgov.service.dependency.svg.SVGServiceGraphGenerator;
 import org.overlord.rtgov.ui.client.model.BindingBean;
-import org.overlord.rtgov.ui.client.model.MessageBean;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
@@ -63,13 +58,8 @@ import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
 import org.overlord.rtgov.ui.client.model.UiException;
-import org.overlord.rtgov.ui.provider.ServicesProvider;
-import org.switchyard.Property;
-import org.switchyard.Scope;
-import org.switchyard.remote.RemoteInvoker;
-import org.switchyard.remote.RemoteMessage;
-import org.switchyard.remote.http.HttpInvoker;
-import org.switchyard.remote.http.HttpInvokerLabel;
+import org.overlord.rtgov.ui.provider.AbstractServicesProvider;
+import org.overlord.rtgov.ui.provider.ResubmitActionProvider;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -81,9 +71,9 @@ import com.google.common.collect.Sets;
  * interface obtaining its information via JMX.
  *
  */
-public class SwitchYardServicesProvider implements ServicesProvider {
+public class SwitchYardServicesProvider extends AbstractServicesProvider {
 	
-	private static final String BINDING_TYPE_SCA = "sca";
+	protected static final String BINDING_TYPE_SCA = "sca";
 
 	private static final Logger LOG=Logger.getLogger(SwitchYardServicesProvider.class.getName());
 	
@@ -110,6 +100,7 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 
     private static final char ESCAPE_CHAR = '\\';
     private static final char SEPARATOR_CHAR = ':';
+
     /**
      * The constructor.
      */
@@ -119,6 +110,8 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		_jmxUrl = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_URL);
 		_jmxUsername = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_USERNAME);
 		_jmxPassword = RTGovProperties.getProperties().getProperty(SWITCHYARD_JMX_PASSWORD);
+		
+		registerAction(ResubmitActionProvider.class, new SwitchYardResubmitActionProvider(this));
     }
     
 	/**
@@ -142,32 +135,15 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		return (true);
 	}
 
-	@Override
-	public boolean isResubmitSupported(String service, String operation) throws UiException {
-		try {
-			Map<String, BindingBean> serviceBindings = getServiceBindings(service);
-			for (String btype : serviceBindings.keySet()) {
-			    if (btype.equalsIgnoreCase(BINDING_TYPE_SCA)) {
-			        return (true);
-			    }
-			}
-			return (false);
-		} catch (InstanceNotFoundException infe) {
-		    return (false);
-		} catch (Exception e) {
-			throw new UiException(i18n.format("SwitchYardServicesProvider.IsResubmitSupported", service, operation), e);
-		}
-	}
-
-	private Map<String, BindingBean> getReferenceBindings(String service) throws Exception {
+	protected Map<String, BindingBean> getReferenceBindings(String service) throws Exception {
 		return getBindings("Reference", service);
 	}
 
-	private Map<String, BindingBean> getServiceBindings(String service) throws Exception {
+	protected Map<String, BindingBean> getServiceBindings(String service) throws Exception {
 		return getBindings("Service", service);
 	}
 
-	private Map<String, BindingBean> getBindings(String type, String service) throws Exception {
+	protected Map<String, BindingBean> getBindings(String type, String service) throws Exception {
 		Map<String, BindingBean> result = Maps.newHashMapWithExpectedSize(2);
 		MBeanServerConnection mBeanServerConnection = getMBeanServerConnection();
 		AttributeList attributeList = mBeanServerConnection.getAttributes(new ObjectName("org.switchyard.admin:type="
@@ -305,122 +281,6 @@ public class SwitchYardServicesProvider implements ServicesProvider {
 		return (_jmxPassword);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void resubmit(String service, String operation, MessageBean message) throws UiException {
-
-		// Currently assumes message is xml
-		org.w3c.dom.Document doc=null;
-		
-		try {
-			DocumentBuilder builder=DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			
-			java.io.InputStream is=new java.io.ByteArrayInputStream(message.getContent().getBytes());
-			
-			doc = builder.parse(is);
-			
-			is.close();
-		} catch (Exception e) {
-			throw new UiException(e);
-		}
-
-		Object content=new DOMSource(doc.getDocumentElement());
-
-		java.util.List<String> urls=getURLList();
-		Exception exc=null;
-		
-		for (int i=0; i < urls.size(); i++) {
-			try {
-				// Create a new remote client invoker
-				RemoteInvoker invoker = new HttpInvoker(urls.get(i));
-				
-				// Create the request message
-				RemoteMessage rm = new RemoteMessage();
-				rm.setService(javax.xml.namespace.QName.valueOf(service)).setOperation(operation).setContent(content);
-				
-				// Check if header properties need to be initialized
-				if (message.getHeaders().size() > 0) {
-				    for (String headerName : message.getHeaders().keySet()) {
-				        String value=message.getHeaders().get(headerName);
-				        String format=message.getHeaderFormats().get(headerName);
-				        
-				        configureHeader(rm, headerName, value, format);
-				    }
-				}
-				
-				// Invoke the service
-				RemoteMessage reply = invoker.invoke(rm);
-				if (reply.isFault()) {
-					if (reply.getContent() instanceof Exception) {
-						throw new UiException((Exception)reply.getContent());
-					}
-					throw new UiException("Fault response received: "+reply.getContent());
-				}
-				
-				// Clear previous exceptions
-				exc = null;
-				
-				continue;
-			} catch (NullPointerException npe) {
-				if (LOG.isLoggable(Level.FINE)) {
-					LOG.fine("Remote invocation of switchyard service["+service+"] operation["
-							+operation+"] failed to deserialize response");
-				}
-			} catch (java.io.IOException e) {
-				exc = e;
-			}
-		}
-		
-		if (exc != null) {
-			// Report exception
-			throw new UiException(exc);
-		}
-	}
-	
-	/**
-	 * This method configures the supplied header property, in the appropriate format, on the
-	 * supplied remote message.
-	 * 
-	 * @param rm The remote message
-	 * @param headerName The header name
-	 * @param value The value
-	 * @param format The required format (text, dom, etc.)
-	 * @throws UiException Failed to configure header property
-	 */
-	protected void configureHeader(RemoteMessage rm, String headerName, String value, String format)
-	                                    throws UiException{
-        Object propValue=value;
-	    
-        if (format != null && format.equals("dom")) {
-	        
-            try {
-                // Convert to DOM
-                javax.xml.parsers.DocumentBuilderFactory factory=
-                        javax.xml.parsers.DocumentBuilderFactory.newInstance();
-                
-                factory.setNamespaceAware(true);
-                
-                javax.xml.parsers.DocumentBuilder builder=
-                        factory.newDocumentBuilder();
-                
-                java.io.InputStream is=
-                        new java.io.ByteArrayInputStream(value.getBytes());
-                
-                org.w3c.dom.Document doc=builder.parse(is);
-                
-                is.close();
-                
-                propValue = doc.getDocumentElement();
-            } catch (Exception e) {
-                throw new UiException("Failed to configure header '"+headerName+"'", e);
-            }
-        }
-	    
-        Property prop=rm.getContext().setProperty(headerName, propValue, Scope.MESSAGE);
-        prop.addLabels(HttpInvokerLabel.HEADER.label());
-	}
-	
 	/**
 	 * This method returns the mbean server connection.
 	 * 
