@@ -21,9 +21,8 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.ui.client.model.Constants;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
@@ -46,9 +45,15 @@ public class ServicesProviderServiceImpl implements IServicesServiceImpl {
 
 	private static final int SERVICES_PER_PAGE=10;
 
-	@Inject
-	private Instance<ServicesProvider> _providers;
+	private java.util.Set<ServicesProvider> _providers;
 
+	/**
+	 * The default constructor.
+	 */
+	public ServicesProviderServiceImpl() {
+	    _providers = ServiceRegistryUtil.getServices(ServicesProvider.class);	    
+	}
+	
 	/**
      * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#getApplicationNames()
      */

@@ -25,9 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveChangeListener;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionListener;
@@ -63,6 +62,7 @@ import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 import org.overlord.rtgov.ui.client.model.UiException;
+import org.overlord.rtgov.ui.provider.ResubmitActionProvider;
 import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.overlord.rtgov.ui.provider.SituationEventListener;
 import org.overlord.rtgov.ui.provider.SituationsProvider;
@@ -93,10 +93,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 
 	private SituationStore _situationStore;
 
-	@Inject
-	private Instance<ServicesProvider> _injectedProviders;
-	
-	private java.util.List<ServicesProvider> _providers=new java.util.ArrayList<ServicesProvider>();
+	private java.util.Set<ServicesProvider> _providers=null;
 	
 	private java.util.List<SituationEventListener> _listeners=new java.util.ArrayList<SituationEventListener>();
 
@@ -110,11 +107,11 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     }
     
     /**
-     * This method returns the list of services providers.
+     * This method returns the set of services providers.
      * 
      * @return The providers
      */
-    protected java.util.List<ServicesProvider> getProviders() {
+    protected java.util.Set<ServicesProvider> getProviders() {
     	return (_providers);
     }
     
@@ -201,12 +198,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
             _situationStore = SituationStoreFactory.getSituationStore();
         }
         
-    	if (_injectedProviders != null) {
-    		// Copy any injected providers into the provider list
-    		for (ServicesProvider sp : _injectedProviders) {
-    			_providers.add(sp);
-    		}
-    	}
+    	_providers = ServiceRegistryUtil.getServices(ServicesProvider.class); 
     	
     	if (_callTraceService != null) {
     		// Overwrite any existing activity server to ensure using the
@@ -580,11 +572,16 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         }
 
         try {
-            // TODO: Change to specify service, rather than situation - also
-            // possibly locate the provider appropriate for the service rather than situation
-            serviceProvider.get().resubmit(operationName.getService(), operationName.getOperation(), message);
+            ResubmitActionProvider resubmit=serviceProvider.get().getAction(ResubmitActionProvider.class);
             
-            _situationStore.recordSuccessfulResubmit(situation.getId(), userName);
+            if (resubmit == null) {
+                _situationStore.recordResubmitFailure(situation.getId(),
+                        i18n.format("RTGovSituationsProvider.ResubmitNotSupported"), userName);
+            } else {
+                resubmit.resubmit(operationName.getService(), operationName.getOperation(), message);
+            
+                _situationStore.recordSuccessfulResubmit(situation.getId(), userName);
+            }
         } catch (Exception exception) {
             _situationStore.recordResubmitFailure(situation.getId(),
                     Throwables.getStackTraceAsString(exception), userName);
@@ -784,7 +781,13 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 		@Override
 		public boolean apply(ServicesProvider input) {
 			try {
-				return input.isResubmitSupported(operationName.getService(), operationName.getOperation());
+			    ResubmitActionProvider resubmit=input.getAction(ResubmitActionProvider.class);
+			    
+			    if (resubmit == null) {
+			        return false;
+			    }
+			    
+				return resubmit.isResubmitSupported(operationName.getService(), operationName.getOperation());
 			} catch (UiException e) {
 				Throwables.propagate(e);
 			}

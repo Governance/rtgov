@@ -27,7 +27,7 @@ import org.overlord.rtgov.activity.model.app.LogMessage;
 
 /**
  * This interface represents the capability for recording
- * activity information from a JEE application.
+ * activity information from an application.
  *
  */
 public class DefaultActivityReporter implements ActivityReporter {
