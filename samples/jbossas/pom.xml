@@ -36,8 +36,8 @@
 		<version.javax.javaee-api>6.0</version.javax.javaee-api>
 		<version.org.jboss.spec.jboss-javaee-6.0>1.0.0.Final</version.org.jboss.spec.jboss-javaee-6.0>
 		<jbossas.version>7.2.0.Final</jbossas.version>
-		<version.org.overlord.overlord-commons>2.0.8-SNAPSHOT</version.org.overlord.overlord-commons>
-		<version.org.switchyard>2.0.0.Alpha2</version.org.switchyard>
+		<version.org.overlord.overlord-commons>2.0.8.Final</version.org.overlord.overlord-commons>
+		<version.org.switchyard>2.0.0.Alpha3</version.org.switchyard>
 
 		<!-- Override as current IP BOM version causes drools rule load issues -->
 		<version.org.mvel>2.2.1.Final</version.org.mvel>

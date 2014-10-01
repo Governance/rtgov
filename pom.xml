@@ -84,7 +84,7 @@
 		<version.org.picketbox>4.0.19.SP4</version.org.picketbox>
 		<version.org.picketlink>2.5.3.SP4</version.org.picketlink>
 		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>
-		<version.org.switchyard>2.0.0.Alpha2</version.org.switchyard>
+		<version.org.switchyard>2.0.0.Alpha3</version.org.switchyard>
 
 		<!-- Override as current IP BOM version causes drools rule load issues -->
 		<version.org.mvel>2.2.1.Final</version.org.mvel>
