@@ -440,7 +440,7 @@ Send some requests to the order management service, at the URL _http://localhost
 
 When the credit limit has been reached, the customer will be suspended, resulting in a response "Customer 'Fred' has been suspended".
 
-If we then sent the following request, to clear some of customer Fred's debt:
+If we then sent the following request, to the URL _http://localhost:8181/cxf/orderservice/orders/pay_, to clear some of customer Fred's debt:
 
 ----
 {"amount":400,"customer":"Fred"}
