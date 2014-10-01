@@ -19,13 +19,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
-import org.overlord.rtgov.common.util.BeanResolverUtil;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -64,9 +64,8 @@ public class RESTActivityServer {
      */
     @PostConstruct
     public void init() {
-        // Only access CDI if service not set, to support both OSGi and CDI
         if (_activityServer == null) {
-            _activityServer = BeanResolverUtil.getBean(ActivityServer.class);
+            _activityServer = ServiceRegistryUtil.getSingleService(ActivityServer.class);
         }
     }
     
