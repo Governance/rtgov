@@ -3,6 +3,7 @@
         "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
+    <distributable/> 
     <display-name>Runtime Governance</display-name>
 
     <servlet>
