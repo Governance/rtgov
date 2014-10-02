@@ -16,7 +16,6 @@
 		<module>activity-analysis</module>
 		<module>activity-management</module>
 		<module>event-processor-network</module>
-		<module>ui</module>
 	</modules>
 
 	<dependencies>
