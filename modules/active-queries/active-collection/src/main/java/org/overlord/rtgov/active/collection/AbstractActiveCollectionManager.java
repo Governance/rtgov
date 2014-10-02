@@ -56,6 +56,8 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
     
     private ACManagement _management;
     
+    private boolean _initialized=false;
+    
     /**
      * The default constructor.
      */
@@ -68,14 +70,20 @@ public abstract class AbstractActiveCollectionManager implements ActiveCollectio
      * This method initializes the Active Collection Manager.
      */
     @ServiceInit
-    public void init() {
+    public synchronized void init() {
+
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Initialize active collection manager");
+            LOG.fine("Initialize active collection manager (initialised already? "+_initialized+")");
         }
-        _houseKeeper = new HouseKeeper();
-        
-        _management = new ACManagement(this);
-        _management.init();
+
+        if (!_initialized) {
+            _houseKeeper = new HouseKeeper();
+
+            _management = new ACManagement(this);
+            _management.init();
+
+            _initialized = true;
+        }
     }
     
     /**
