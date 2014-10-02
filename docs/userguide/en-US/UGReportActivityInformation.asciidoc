@@ -14,8 +14,63 @@ This section will discuss how an integrated activity collector can be used to au
 
 ==== Supported Environments
 
-The current version of Runtime Governance only supports the SwitchYard open source SOA platform. To collect activity events from this environment, simply install either the full server (if the execution and governance server are running co-located) or the client installation profile (if reporting events to another server).
+This section discusses the environments that currently support integrated activity collectors.
 
+===== SwitchYard
+
+To collect activity events from a SwitchYard environment, simply install either the full server (if the execution and governance server are running co-located) or the client installation profile (if reporting events to another server).
+
+===== OSGi Application
+
+To collect activity events from an OSGi application, a proxy can be used to intercept inbound and outbound invocations on a service, and report the activity to an embedded activity collector within the OSGi container. These proxies can be wired into an OSGi application using blueprint, e.g.
+
+----
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <service interface="org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderService"
+    						ref="orderServiceProxy" />
+
+    <bean id="orderServiceProxy" class="org.overlord.rtgov.client.ActivityProxyHelper"
+    			factory-method="createServiceProxy" >
+    	<argument value="org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderService" />
+    	<argument ref="orderServiceBean" />
+   	</bean>
+
+    <bean id="orderServiceBean" class="org.overlord.rtgov.quickstarts.demos.ordermgmt.orderservice.OrderServiceBean" >
+       	<property name="inventoryService" ref="inventoryServiceProxy"/>
+       	<property name="logisticsService" ref="logisticsServiceProxy"/>
+    </bean>
+
+    <bean id="inventoryServiceProxy" class="org.overlord.rtgov.client.ActivityProxyHelper"
+    			factory-method="createClientProxy" >
+    	<argument value="org.overlord.rtgov.quickstarts.demos.ordermgmt.inventoryservice.InventoryService" />
+    	<argument ref="orderServiceBean" />
+    	<argument ref="inventoryServiceBean" />
+   	</bean>
+
+    <bean id="logisticsServiceProxy" class="org.overlord.rtgov.client.ActivityProxyHelper"
+    			factory-method="createClientProxy" >
+    	<argument value="org.overlord.rtgov.quickstarts.demos.ordermgmt.logisticsservice.LogisticsService" />
+    	<argument ref="orderServiceBean" />
+    	<argument ref="logisticsServiceBean" />
+   	</bean>
+
+    <reference id="inventoryServiceBean"
+               interface="org.overlord.rtgov.quickstarts.demos.ordermgmt.inventoryservice.InventoryService">
+    </reference>
+
+    <reference id="logisticsServiceBean"
+               interface="org.overlord.rtgov.quickstarts.demos.ordermgmt.logisticsservice.LogisticsService">
+    </reference>
+
+</blueprint>
+----
+
+The service interface is associated with a bean representing the service proxy, created using the *createServiceProxy* static factory method on the class _org.overlord.rtgov.client.ActivityProxyHelper_.
+
+Similarly, the outbound relationships from the service to other OSGi components are established via a 'client' proxy, using the *createClientProxy* static factory method on the _org.overlord.rtgov.client.ActivityProxyHelper_ class.
 
 ==== Information Processor
 
