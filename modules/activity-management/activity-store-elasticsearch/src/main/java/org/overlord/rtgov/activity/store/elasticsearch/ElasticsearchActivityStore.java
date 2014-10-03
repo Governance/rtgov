@@ -18,8 +18,10 @@ package org.overlord.rtgov.activity.store.elasticsearch;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequestBuilder;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -57,10 +59,10 @@ public class ElasticsearchActivityStore implements ActivityStore {
     private static String ACTIVITYSTORE_UNIT_INDEX = "ActivityStore.Elasticsearch.index";
     private static String ACTIVITYSTORE_UNIT_TYPE = "ActivityStore.Elasticsearch.type";
     private static String ACTIVITYSTORE_RESPONSE_SIZE = "ActivityStore.Elasticsearch.responseSize";
-    
-    private static int DEFAULT_RESPONSE_SIZE = 100000;
+    private static String ACTIVITYSTORE_TIMEOUT = "ActivityStore.Elasticsearch.timeout";
     
     private int _responseSize;
+    private long _timeout;
     
     private ElasticsearchClient _client=new ElasticsearchClient();
 
@@ -78,7 +80,8 @@ public class ElasticsearchActivityStore implements ActivityStore {
         _client.setIndex(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_INDEX, "rtgov"));
         _client.setType(RTGovProperties.getProperty(ACTIVITYSTORE_UNIT_TYPE, "activity"));
         
-        _responseSize = RTGovProperties.getPropertyAsInteger(ACTIVITYSTORE_RESPONSE_SIZE, DEFAULT_RESPONSE_SIZE);
+        _responseSize = RTGovProperties.getPropertyAsInteger(ACTIVITYSTORE_RESPONSE_SIZE, 0);
+        _timeout = RTGovProperties.getPropertyAsLong(ACTIVITYSTORE_TIMEOUT, 0L);
         
         try {
             _client.init();
@@ -164,12 +167,12 @@ public class ElasticsearchActivityStore implements ActivityStore {
                 ActivityUnit ret=ElasticsearchClient.<ActivityUnit>convertJsonToType(jsonDoc, ActivityUnit.class);
                 
                 // Retrieve the activity types associated with the activity unit
-                SearchResponse response=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
+                SearchRequestBuilder request=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
                         .setTypes(_client.getType()+"type")
                         .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                        .setSize(_responseSize)
-                        .setQuery(QueryBuilders.matchQuery("unitId", id))
-                        .execute().actionGet();
+                        .setQuery(QueryBuilders.matchQuery("unitId", id));
+                
+                SearchResponse response = search(request);
         
                 // Using iterator instead of using index, as caused out of range exception,
                 // so not sure if results are unstable
@@ -223,11 +226,12 @@ public class ElasticsearchActivityStore implements ActivityStore {
                                 context.getValue())).must(QueryBuilders.matchQuery("context.type", context.getType()))
         );
 
-        SearchResponse response = _client.getElasticsearchClient().prepareSearch(
+        SearchRequestBuilder request = _client.getElasticsearchClient().prepareSearch(
                 _client.getIndex()).setTypes(_client.getType() + "type")
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setSize(_responseSize)
-                .setQuery(b2).execute().actionGet();
+                .setQuery(b2);
+        
+        SearchResponse response = search(request);
         
         if (response.isTimedOut()) {
             throw new Exception(MessageFormat.format(
@@ -288,11 +292,13 @@ public class ElasticsearchActivityStore implements ActivityStore {
                 );
         }
 
-        SearchResponse response = _client.getElasticsearchClient().prepareSearch(
+        SearchRequestBuilder request = _client.getElasticsearchClient().prepareSearch(
                 _client.getIndex()).setTypes(_client.getType() + "type")
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setSize(_responseSize)
-                .setQuery(b2).execute().actionGet();
+                .setQuery(b2);
+        
+        SearchResponse response = search(request);
+        
         if (response.isTimedOut()) {
             throw new Exception(MessageFormat.format(
                     java.util.PropertyResourceBundle.getBundle(
@@ -306,6 +312,25 @@ public class ElasticsearchActivityStore implements ActivityStore {
                                 ActivityType.class));
         }
         return list;
+    }
+    
+    /**
+     * This method performs a search after applying some optional constraints
+     * on the response size and timeout.
+     * 
+     * @param request The request
+     * @return The search response
+     */
+    protected SearchResponse search(SearchRequestBuilder request) {
+        if (_responseSize > 0) {
+            request.setSize(_responseSize);
+        }
+        
+        if (_timeout > 0) {
+            request.setTimeout(TimeValue.timeValueMillis(_timeout));
+        }
+
+        return (request.execute().actionGet());
     }
 
     /**

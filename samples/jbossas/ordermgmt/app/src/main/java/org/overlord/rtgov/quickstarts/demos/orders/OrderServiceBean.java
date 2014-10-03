@@ -46,7 +46,10 @@ public class OrderServiceBean implements OrderService {
     @Override
     public OrderAck submitOrder(Order order) {
         
-        System.out.println("ORDER EXAMPLE HEADER: "+_context.getPropertyValue("{http://www.projectoverlord.io/example/}ExampleHeaderValue"));
+        Object prop=_context.getPropertyValue("{http://www.projectoverlord.io/example/}ExampleHeaderValue");
+        if (prop != null) {
+            System.out.println("ORDER EXAMPLE HEADER: "+prop);
+        }
         
         // Create an order ack
         OrderAck orderAck = new OrderAck().setOrderId(order.getOrderId())
