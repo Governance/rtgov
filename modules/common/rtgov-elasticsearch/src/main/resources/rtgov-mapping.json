@@ -23,18 +23,21 @@
                     "include_in_root": true,
 
                     "properties": {
-                        "principle": {
-                            "type": "string"
-
+                        "principal": {
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "thread": {
-                            "type": "string"
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "host": {
-                            "type": "string"
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "node": {
-                            "type": "string"
+                            "type": "string",
+                            "index": "not_analyzed"
                         }
                     }
                 }
@@ -60,10 +63,9 @@
                     "type": "string",
                     "index": "not_analyzed"
                 },
-
                 "unitId": {
-                    "type": "string"
-
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "unitIndex": {
                     "type": "integer"
@@ -78,8 +80,8 @@
                     "include_in_root": true,
                     "properties": {
                         "type": {
-                            "type": "string"
-
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "value": {
                             "type": "string",
@@ -93,8 +95,6 @@
 
                 }
             }
-
-
         },
         "responsetime": {
             "date_detection" : false,
@@ -106,13 +106,16 @@
             },
             "properties": {
                 "operation": {
-                    "type": "string"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "interface": {
-                    "type": "string"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "fault": {
-                    "type": "string"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "serviceType": {
                     "type": "string",
@@ -134,8 +137,8 @@
 
                     "properties": {
                         "unitId": {
-                            "type": "string"
-
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "unitIndex": {
                             "type": "integer"
@@ -149,8 +152,8 @@
 
                     "properties": {
                         "unitId": {
-                            "type": "string"
-
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "unitIndex": {
                             "type": "integer"
@@ -164,8 +167,8 @@
 
                     "properties": {
                         "type": {
-                            "type": "string"
-
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "value": {
                             "type": "string",
@@ -174,16 +177,12 @@
                         "timeframe": {
                             "type": "long"
                         }
-
                     }
-
                 },
                 "timestamp": {
                     "type": "date",
                     "format": "yyyy/MM/dd HH:mm:ss"
                 }
-
-
             }
         },
         "situation": {
@@ -197,10 +196,12 @@
             "properties": {
 
                 "id": {
-                    "type": "string"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "type": {
-                    "type": "string"
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "subject": {
                     "type": "string"
@@ -213,8 +214,8 @@
                     "format": "yyyy/MM/dd HH:mm:ss"
                 },
                 "severity": {
-                    "type": "string"
-
+                    "type": "string",
+                    "index": "not_analyzed"
                 },
                 "activityTypeIds": {
                     "type": "nested",
@@ -223,14 +224,13 @@
 
                     "properties": {
                         "unitId": {
-                            "type": "string"
-
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "unitIndex": {
                             "type": "integer"
                         }
                     }
-
                 },
                 "context": {
                     "type": "nested",
@@ -239,8 +239,8 @@
 
                     "properties": {
                         "type": {
-                            "type": "string"
-
+                            "type": "string",
+                            "index": "not_analyzed"
                         },
                         "value": {
                             "type": "string",
@@ -249,16 +249,8 @@
                         "timeframe": {
                             "type": "long"
                         }
-
                     }
-
-                },
-
-                "serviceType": {
-                    "type": "string",
-                    "index": "not_analyzed"
                 }
-
             }
         }
     }

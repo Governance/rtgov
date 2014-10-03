@@ -21,8 +21,10 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -50,12 +52,12 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
     private static String SITUATIONSTORE_UNIT_INDEX = "SituationStore.Elasticsearch.index";
     private static String SITUATIONSTORE_UNIT_TYPE = "SituationStore.Elasticsearch.type";
     private static String SITUATIONSTORE_RESPONSE_SIZE = "SituationStore.Elasticsearch.responseSize";
+    private static String SITUATIONSTORE_TIMEOUT = "SituationStore.Elasticsearch.timeout";
 
     private static final int PROPERTY_VALUE_MAX_LENGTH = 250;
 
-    private static int DEFAULT_RESPONSE_SIZE = 100000;
-    
     private int _responseSize;
+    private long _timeout;
     
     private ElasticsearchClient _client=new ElasticsearchClient();
     
@@ -73,7 +75,8 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
         _client.setIndex(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_INDEX, "rtgov"));
         _client.setType(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_TYPE, "situation"));
         
-        _responseSize = RTGovProperties.getPropertyAsInteger(SITUATIONSTORE_RESPONSE_SIZE, DEFAULT_RESPONSE_SIZE);
+        _responseSize = RTGovProperties.getPropertyAsInteger(SITUATIONSTORE_RESPONSE_SIZE, 0);
+        _timeout = RTGovProperties.getPropertyAsLong(SITUATIONSTORE_TIMEOUT, 0L);
         
         try {
             _client.init();
@@ -147,16 +150,24 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
     public List<Situation> getSituations(final SituationsQuery sitQuery) {        
         List<Situation> situations = new java.util.ArrayList<Situation>();
         
-        SearchResponse response=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
+        SearchRequestBuilder request=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
                         .setTypes(_client.getType())
                         .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                        .setSize(_responseSize)
-                        .setQuery(getQueryBuilder(sitQuery))
-                        .execute().actionGet();
+                        .setQuery(getQueryBuilder(sitQuery));
+        
+        if (_responseSize > 0) {
+            request.setSize(_responseSize);
+        }
+        
+        if (_timeout > 0) {
+            request.setTimeout(TimeValue.timeValueMillis(_timeout));
+        }
+        
+        SearchResponse response=request.execute().actionGet();
         
         long num=response.getHits().getTotalHits();
         
-        if (num > _responseSize) {
+        if (_responseSize > 0 && num > _responseSize) {
             num = _responseSize;
         }
         

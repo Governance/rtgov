@@ -191,6 +191,10 @@ with the additional support properties:
 | Property | Description
 | Elasticsearch.hosts | Either has value "embedded" (the default), or a list of <host>:<port> values representing nodes in the Elasticsearch cluster, the port representing the TCP transport connection.
 | Elasticsearch.schedule | When using batched mode, the interval (in milliseconds) between updates being sent to the Elasticsearch server.
+| Elasticsearch.ActivityStore.responseSize | Optional maximum size for the response.
+| Elasticsearch.ActivityStore.timeout | Optional "best effort" timeout value (milliseconds).
+| Elasticsearch.SituationStore.responseSize | Optional maximum size for the response.
+| Elasticsearch.SituationStore.timeout | Optional "best effort" timeout value (milliseconds).
 |=======================
 
 
