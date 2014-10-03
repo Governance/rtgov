@@ -21,7 +21,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.common.unit.TimeValue;
@@ -56,6 +55,9 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
 
     private static final int PROPERTY_VALUE_MAX_LENGTH = 250;
 
+    private static int DEFAULT_RESPONSE_SIZE = 100000;
+    private static long DEFAULT_TIMEOUT = 10000L;
+    
     private int _responseSize;
     private long _timeout;
     
@@ -75,8 +77,8 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
         _client.setIndex(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_INDEX, "rtgov"));
         _client.setType(RTGovProperties.getProperty(SITUATIONSTORE_UNIT_TYPE, "situation"));
         
-        _responseSize = RTGovProperties.getPropertyAsInteger(SITUATIONSTORE_RESPONSE_SIZE, 0);
-        _timeout = RTGovProperties.getPropertyAsLong(SITUATIONSTORE_TIMEOUT, 0L);
+        _responseSize = RTGovProperties.getPropertyAsInteger(SITUATIONSTORE_RESPONSE_SIZE, DEFAULT_RESPONSE_SIZE);
+        _timeout = RTGovProperties.getPropertyAsLong(SITUATIONSTORE_TIMEOUT, DEFAULT_TIMEOUT);
         
         try {
             _client.init();
@@ -150,24 +152,17 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
     public List<Situation> getSituations(final SituationsQuery sitQuery) {        
         List<Situation> situations = new java.util.ArrayList<Situation>();
         
-        SearchRequestBuilder request=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
+        SearchResponse response=_client.getElasticsearchClient().prepareSearch(_client.getIndex())
                         .setTypes(_client.getType())
                         .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                        .setQuery(getQueryBuilder(sitQuery));
-        
-        if (_responseSize > 0) {
-            request.setSize(_responseSize);
-        }
-        
-        if (_timeout > 0) {
-            request.setTimeout(TimeValue.timeValueMillis(_timeout));
-        }
-        
-        SearchResponse response=request.execute().actionGet();
+                        .setTimeout(TimeValue.timeValueMillis(_timeout))
+                        .setSize(_responseSize)
+                        .setQuery(getQueryBuilder(sitQuery))
+                        .execute().actionGet();
         
         long num=response.getHits().getTotalHits();
         
-        if (_responseSize > 0 && num > _responseSize) {
+        if (num > _responseSize) {
             num = _responseSize;
         }
         
