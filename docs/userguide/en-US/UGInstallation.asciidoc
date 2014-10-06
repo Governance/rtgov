@@ -1,46 +1,26 @@
 == Installation
 
+=== Setup Target Environment
+
 This section will describe how to install Overlord Runtime Governance in different environments.
-
-=== Setup the target environment
-
-This section provides information about how to setup the target environments in which rtgov can be installed.
 
 ==== JBoss EAP
 
 * Download the http://www.jboss.org/jbossas/downloads/[JBoss EAP] distribution (version 6.1 and 6.3 are currently supported), and unpack it in a suitable location.
 
+* Download http://ant.apache.org/bindownload.cgi[Apache Ant] and follow the installation instructions.
+
 * If using rtgov with switchyard, then download http://www.jboss.org/switchyard/downloads[SwitchYard] (version 2.0.0.Final or higher) and install it into the JBoss EAP environment. We recommend using the switchyard installer, which can be unpacked in a temporary location, and run 'ant' in the root folder to be prompted for the location of the JBoss EAP environment.
 
 NOTE: If switchyard is not installed, then you won't be able to use the quickstarts, which are based around providing runtime governance for a switchyard application.
 
-==== Fuse
-
-* Download the http://www.jboss.org/products/fuse/download/[Fuse] distribution (version 6.1), and unpack it in a suitable location.
-
-
-=== Install RTGov
-
-This section describes how to install Overlord Runtime Governance (RTGov).
-
 * Download the latest release of RTGov from the http://www.jboss.org/overlord[Overlord website], then unpack the distribution into a suitable location.
-
-* Download http://ant.apache.org/bindownload.cgi[Apache Ant] and follow the installation instructions.
 
 * The final step is to perform the installation of Overlord Runtime Governance using ant. To do the installation, use the following command from the root folder of the installation:
 
 ----
-ant [ -Dappserver.id=<target> ] [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
+ant [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
 ----
-
-The _<target>_ represents the target environment into which rtgov is being installed:
-
-[options="header"]
-|=======================
-| Value | Description
-| jboss-eap-6 | This is the default value. Target environment is JBoss EAP 6.x
-| fuse-6.1 | Target environment is JBoss Fuse 6.1
-|=======================
 
 If the _<root-folder>_ is not explicitly provided on the command line, then the user will be prompted for the information.
 
@@ -56,13 +36,8 @@ The _<installation-type>_ value can be:
 To uninstall, simply perform the following command in the root folder of the installation:
 
 ----
-ant uninstall [ -Dappserver.id=<target> ] [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
+ant uninstall [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
 ----
-
-
-=== Post-installation steps
-
-==== JBoss EAP
 
 To start the server, go to the EAP +bin+ folder and run:
 
@@ -72,7 +47,12 @@ To start the server, go to the EAP +bin+ folder and run:
 
 ==== Fuse
 
-* Configure RTGov in the Fuse distribution
+* Download the http://www.jboss.org/products/fuse/download/[Fuse] distribution (version 6.1), and unpack it in a suitable location.
+
+NOTE: Due to some issues with the fuse 6.1 distribution, it is necessary to patch the environment. Download the zip file attached
+to the article https://developer.jboss.org/wiki/RTGovDeploymentOnFuse61WithAndWithoutFabric and unpack it over the fuse environment.
+
+* Configure JBoss Nexus
 
 Add the JBoss public maven repository to the file +etc/org.ops4j.pax.url.mvn.cfg+, by appending the following URL to the _org.ops4j.pax.url.mvn.repositories_ property:
 
@@ -80,11 +60,11 @@ Add the JBoss public maven repository to the file +etc/org.ops4j.pax.url.mvn.cfg
     https://repository.jboss.org/nexus/content/groups/public@id=jboss.public
 ----
 
-
 * Start the fuse console, using the +bin/fuse+ command, and then enter the following commands:
 
 ----
 features:addurl mvn:org.overlord.rtgov/overlord-rtgov-features-fuse6/<version>/xml/features
+features:install rtgov-karaf-commands
 ----
 
 NOTE: <version> in the first command should be replaced by the RTGov version that you wish to use, e.g. 2.0.0.Final.
@@ -92,14 +72,20 @@ NOTE: <version> in the first command should be replaced by the RTGov version tha
 If wanting to install the 'all' profile (representing the RTGov server and co-located activity collector), then run:
 
 ----
+overlord:rtgov:all:configure <password>
 features:install rtgov-all
 ----
+
+where <password> is the overlord administration password for this rtgov environment.
 
 However, if just wanting to install the 'client' profile (co-located activity collector), then run:
 
 ----
+overlord:rtgov:client:configure <username> <password>
 features:install rtgov-client
 ----
+
+where <username> and <password> are the credentials of the rtgov server environment that this client environment will report activity information to. The <password> is also used to configure the local overlord keystore used to hold the remote rtgov server's credentials.
 
 If using SwitchYard, then also run:
 
@@ -109,10 +95,9 @@ features:install rtgov-switchyard
 
 This registers the event listener on SwitchYard, to capture activity and report it to RTGov.
 
-NOTE: Currently you may need to restart fuse after installing rtgov with switchyard.
 
 
-=== Configuration
+=== Further Configuration
 
 The configuration properties for the Runtime Governance capability are common across all platforms. However their location varies:
 
