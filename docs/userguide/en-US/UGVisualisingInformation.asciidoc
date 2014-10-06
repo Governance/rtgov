@@ -125,7 +125,14 @@ It is also possible to colour code response time information associated with par
 
 This table shows the list of services. Each service is listed with the number of invocations (count) and actions that can be used to focus or exclude the particular service from the information being viewed.
 
-NOTE: The service invocation count is based on the information available after all filters have been applied. This means it is possible to identify how many invocations of a particular service have been performed by setting the timeframe (see 'Changing the Time Frame and Refresh Cycle') or filters on other properties (e.g. customer, host, etc). 
+NOTE: The service invocation count is based on the information available after all filters have been applied. This means it is possible to identify how many invocations of a particular service have been performed by setting the timeframe (see 'Changing the Time Frame and Refresh Cycle') or filters on other properties (e.g. customer, host, etc).
+
+By default, the services listed in the table are related to _public_ services. However if a service is marked as *internal*, then they will be excluded using the following filter:
+
+image::images/RTGovUIAnalyticsFilterInternal.png[]
+
+To include the internal services in the service table, simply disable this filter by unchecking the filter.
+
 
 ===== Faults
 
