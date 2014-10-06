@@ -46,6 +46,11 @@
 			<artifactId>overlord-rtgov-bundles-elasticsearch</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-karaf-commands</artifactId>
+		</dependency>
+
 		<!-- RTGov Activity -->
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
@@ -513,6 +518,24 @@
 										<include>org.overlord.rtgov:overlord-rtgov-bundles-elasticsearch:*</include>
 									</includes>
 								</feature>
+								<!-- The S-RAMP Fuse Installer -->
+								<feature>
+									<name>rtgov-karaf-commands</name>
+									<version>${project.version}</version>
+									<comment>RTGov installation (Karaf commands)</comment>
+									<dependsOnFeatures>
+									    <!-- Note: DO NOT include the rtgov-dependencies.  We want http (jetty) to be refreshed only when
+									    installing the s-ramp feature.  The karaf-commands add items to jetty.xml, users.properties, etc.
+									    that must be present BEFORE the refresh. -->
+									    <feature>
+									        <name>overlord-commons</name>
+									        <version>${version.org.overlord.overlord-commons}</version>
+									    </feature>
+									</dependsOnFeatures>
+									<includes>
+									    <include>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</include>
+									</includes>
+								</feature>
 								<feature>
 									<name>rtgov-event-processor</name>
 									<version>${project.version}</version>
@@ -678,7 +701,7 @@
 									</includes>
 								</feature>
 								<feature>
-									<name>rtgov-ui</name>
+									<name>rtgov-ui</name>	
 									<version>${project.version}</version>
 									<comment>RTGov UI</comment>
 									<dependsOnFeatures>
