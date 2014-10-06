@@ -80,7 +80,7 @@
 		<version.org.kie>6.1.0.Final</version.org.kie>
         <version.org.apache.lucene>4.9.0</version.org.apache.lucene> <!-- Required to override parent bom version -->
         <version.org.jboss.remotingjmx>1.1.0.Final</version.org.jboss.remotingjmx>
-		<version.org.overlord.overlord-commons>2.0.8.Final</version.org.overlord.overlord-commons>
+		<version.org.overlord.overlord-commons>2.0.11.Final</version.org.overlord.overlord-commons>
 		<version.org.picketbox>4.0.19.SP4</version.org.picketbox>
 		<version.org.picketlink>2.5.3.SP4</version.org.picketlink>
 		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>
@@ -155,12 +155,17 @@
                 <artifactId>rtgov-elasticsearch</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.overlord.rtgov.common</groupId>
                 <artifactId>rtgov-jpa</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+		    <dependency>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-karaf-commands</artifactId>
+			    <version>${project.version}</version>
+		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.active-queries</groupId>
 			    <artifactId>active-collection</artifactId>
@@ -790,6 +795,11 @@
 	     		<artifactId>overlord-commons-codec</artifactId>
 	                <version>${version.org.overlord.overlord-commons}</version>
 	        </dependency> 
+	      <dependency>
+		<groupId>org.overlord</groupId>
+		<artifactId>overlord-commons-karaf-commands</artifactId>
+		<version>${version.org.overlord.overlord-commons}</version>
+	      </dependency>
             <dependency>
                 <groupId>org.overlord</groupId>
                 <artifactId>overlord-commons-gwt</artifactId>

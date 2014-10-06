@@ -17,6 +17,7 @@
 		<module>overlord-rtgov-assembly</module>
 		<module>overlord-rtgov-features-fuse6</module>
 		<module>overlord-rtgov-profiles-fabric</module>
+		<module>overlord-rtgov-karaf-commands</module>
 	</modules>
 
 </project>

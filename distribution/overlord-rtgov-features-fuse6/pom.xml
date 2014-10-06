@@ -46,6 +46,11 @@
 			<artifactId>overlord-rtgov-bundles-elasticsearch</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-karaf-commands</artifactId>
+		</dependency>
+
 		<!-- RTGov Activity -->
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
@@ -491,6 +496,7 @@
 										<exclude>org.apache.santuario:xmlsec:*</exclude>
 										<exclude>org.elasticsearch:elasticsearch:*</exclude>
 										<exclude>org.apache.lucene:*:*</exclude>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
 									</excludes>
 								</feature>
 								<feature>
@@ -512,6 +518,27 @@
 										<include>org.overlord.rtgov.common:*:*</include>
 										<include>org.overlord.rtgov:overlord-rtgov-bundles-elasticsearch:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
+								</feature>
+								<!-- The S-RAMP Fuse Installer -->
+								<feature>
+								  <name>rtgov-karaf-commands</name>
+								  <version>${project.version}</version>
+								  <comment>RTGov installation (Karaf commands)</comment>
+								  <dependsOnFeatures>
+								    <!-- Note: DO NOT include the rtgov-dependencies.  We want http (jetty) to be refreshed only when
+								    installing the s-ramp feature.  The karaf-commands add items to jetty.xml, users.properties, etc.
+								    that must be present BEFORE the refresh. -->
+								    <feature>
+								      <name>overlord-commons</name>
+								      <version>${version.org.overlord.overlord-commons}</version>
+								    </feature>
+								  </dependsOnFeatures>
+								  <includes>
+								    <include>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</include>
+								  </includes>
 								</feature>
 								<feature>
 									<name>rtgov-event-processor</name>
@@ -529,6 +556,9 @@
 									<includes>
 										<include>org.overlord.rtgov.event-processor:*:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-activity</name>
@@ -549,6 +579,9 @@
 										<include>org.overlord.rtgov.activity-analysis:analytics:*</include>
 										<include>org.overlord.rtgov.activity-analysis:situation-store:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-activity-server</name>
@@ -563,6 +596,9 @@
 									<includes>
 										<include>org.overlord.rtgov.activity-management:activity-server-jee:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-event-processor-network</name>
@@ -583,6 +619,9 @@
 										<include>org.overlord.rtgov.event-processor-network:epn-jms:*</include>
 										<include>org.overlord.rtgov.event-processor-network:epn-jms-activemq:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-active-queries</name>
@@ -597,6 +636,9 @@
 									<includes>
 										<include>org.overlord.rtgov.active-queries:active-collection:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-active-queries-server</name>
@@ -612,6 +654,9 @@
 										<include>org.overlord.rtgov.active-queries:active-collection-jee:*</include>
 										<include>org.overlord.rtgov.active-queries:active-collection-infinispan:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-services</name>
@@ -638,6 +683,9 @@
 										<include>org.overlord.rtgov.activity-analysis:situation-manager:*</include>
 										<include>org.overlord.rtgov:overlord-rtgov-all-fuse6:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-server</name>
@@ -676,9 +724,12 @@
 										<include>org.overlord.rtgov.activity-analysis:situation-store-jpa:*</include>
                                         -->
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
-									<name>rtgov-ui</name>
+									<name>rtgov-ui</name>	
 									<version>${project.version}</version>
 									<comment>RTGov UI</comment>
 									<dependsOnFeatures>
@@ -690,6 +741,9 @@
 									<includes>
 										<include>org.overlord.rtgov.ui:overlord-rtgov-ui-fuse6:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-all</name>
@@ -709,6 +763,9 @@
 										<include>org.overlord.rtgov.content:overlord-rtgov-epn-osgi:*</include>
 										<include>org.overlord.rtgov.content:overlord-rtgov-acs-osgi:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-client</name>
@@ -735,6 +792,9 @@
 										<include>org.overlord.rtgov.integration:rtgov-osgi:*</include>
 										<include>org.overlord.rtgov.activity-management:activity-server-restc:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-switchyard</name>
@@ -749,6 +809,9 @@
 									<includes>
 										<include>org.overlord.rtgov.integration:rtgov-switchyard:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-samples-policy-async</name>
@@ -758,6 +821,9 @@
 										<include>org.overlord.rtgov.samples.karaf.policy:samples-karaf-policy-async-av:*</include>
 										<include>org.overlord.rtgov.samples.karaf.policy:samples-karaf-policy-async-epn:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-samples-policy-sync</name>
@@ -766,6 +832,9 @@
 									<includes>
 										<include>org.overlord.rtgov.samples.karaf.policy:samples-karaf-policy-sync:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-samples-sla</name>
@@ -787,6 +856,9 @@
 										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-orderservice-rests:*</include>
 										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-ip:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 								<feature>
 									<name>rtgov-samples-ordermgmt-epn</name>
@@ -801,6 +873,9 @@
 									<includes>
 										<include>org.overlord.rtgov.samples.karaf.ordermgmt:samples-karaf-ordermgmt-epn:*</include>
 									</includes>
+									<excludes>
+										<exclude>org.overlord.rtgov:overlord-rtgov-karaf-commands:*</exclude>
+									</excludes>
 								</feature>
 							</features>
 						</configuration>
