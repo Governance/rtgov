@@ -496,6 +496,25 @@
 										<exclude>org.apache.santuario:xmlsec:*</exclude>
 										<exclude>org.elasticsearch:elasticsearch:*</exclude>
 										<exclude>org.apache.lucene:*:*</exclude>
+										<exclude>org.overlord:overlord-commons-*:*</exclude>
+										<exclude>commons-configuration:commons-configuration:*</exclude>
+										<exclude>commons-collections:commons-collections:*</exclude>
+										<exclude>org.bouncycastle:*:*</exclude>
+										<exclude>xalan:*:*</exclude>
+										<exclude>xml-apis:xml-apis:*</exclude>
+										<exclude>org.picketlink:*:*</exclude>
+										<exclude>org.jboss.security:jbossxacml:*</exclude>
+										<exclude>org.picketbox:picketbox:*</exclude>
+										<exclude>commons-io:commons-io:*</exclude>
+										<exclude>commons-digester:commons-digester:*</exclude>
+										<exclude>commons-beanutils:commons-beanutils:*</exclude>
+										<exclude>commons-jxpath:commons-jxpath:*</exclude>
+										<exclude>org.jboss.logging:jboss-logging:*</exclude>
+										<exclude>org.jdom:jdom:*</exclude>
+										<exclude>org.apache.ant:*:*</exclude>
+										<exclude>commons-lang:commons-lang:*</exclude>
+										<exclude>com.sun.xml.bind:jaxb-impl:*</exclude>
+										<exclude>commons-codec:commons-codec:*</exclude>
 									</excludes>
 								</feature>
 								<feature>

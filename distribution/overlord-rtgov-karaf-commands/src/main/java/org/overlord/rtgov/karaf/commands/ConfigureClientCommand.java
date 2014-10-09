@@ -57,7 +57,7 @@ public class ConfigureClientCommand extends AbstractFuseCommand {
     protected Object doExecute() throws Exception {
         LOGGER.info(Messages.getString("configure.command.executed")); //$NON-NLS-1$
 
-        File srcFile = new File(karafConfigPath + "overlord-rtgov.properties"); //$NON-NLS-1$
+        File srcFile = new File(karafConfigPath + ConfigureConstants.RTGOV_PROPERTIES_FILE_NAME); //$NON-NLS-1$
         if (!srcFile.exists()) {
             // Calls the overlord commons configure commamd
             OverlordCommonsConfigureCommand overlordConfigure = new OverlordCommonsConfigureCommand();
@@ -69,7 +69,7 @@ public class ConfigureClientCommand extends AbstractFuseCommand {
             // copy the rtgov.properties file and add the properties related the
             // user and password
             Properties rtgovProps = new Properties();
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("/client/overlord-rtgov.properties");
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("/client/" + ConfigureConstants.RTGOV_PROPERTIES_FILE_NAME);
             String encryptedPassword = "${crypt:" + AesEncrypter.encrypt(_password) + "}"; //$NON-NLS-1$ //$NON-NLS-2$
             OutputStream os = null;
             try {
@@ -95,7 +95,7 @@ public class ConfigureClientCommand extends AbstractFuseCommand {
         return null;
     }
 
-    private class OverlordCommonsConfigureCommand extends AbstractConfigureCommand {
+    protected class OverlordCommonsConfigureCommand extends AbstractConfigureCommand {
 
         /**
          * Sets the password.
