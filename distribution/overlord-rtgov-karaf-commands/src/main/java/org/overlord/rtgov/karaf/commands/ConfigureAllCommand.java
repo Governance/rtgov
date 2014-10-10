@@ -51,7 +51,7 @@ public class ConfigureAllCommand extends AbstractConfigureCommand {
         // Copy the required files
         LOGGER.debug(Messages.getString("configure.command.copying.files")); //$NON-NLS-1$
         copyFile("all/overlord-rtgov-elasticsearch.properties", "overlord-rtgov-elasticsearch.properties"); //$NON-NLS-1$ $NON-NLS-2$
-        copyFile("all/overlord-rtgov.properties", "overlord-rtgov.properties"); //$NON-NLS-1$ $NON-NLS-2$
+        copyFile("all/" + ConfigureConstants.RTGOV_PROPERTIES_FILE_NAME, ConfigureConstants.RTGOV_PROPERTIES_FILE_NAME); //$NON-NLS-1$ $NON-NLS-2$
         File dir = new File(karafConfigPath + "overlord-apps"); //$NON-NLS-1$
         if (!dir.exists()) {
             dir.mkdir();
