@@ -47,6 +47,11 @@
       <artifactId>rtgov-ui-services-switchyard</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.overlord.rtgov.common</groupId>
+      <artifactId>rtgov-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.overlord.rtgov.activity-management</groupId>
       <artifactId>activity</artifactId>
       <scope>provided</scope>
@@ -95,6 +100,11 @@
 	</dependency>
     
     <!-- Third Party libs -->
+	<dependency>
+      <groupId>org.switchyard</groupId>
+	  <artifactId>switchyard-api</artifactId>
+	</dependency>
+
 	<dependency>
 	  <groupId>org.jboss.remotingjmx</groupId>
 	  <artifactId>remoting-jmx</artifactId>

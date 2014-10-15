@@ -13,6 +13,10 @@
 		<version>2.1.0-SNAPSHOT</version>
 	</parent>
 
+    <properties>
+        <enforcer.skip>true</enforcer.skip>
+    </properties>
+
 	<profiles>
 		<profile>
 			<activation>

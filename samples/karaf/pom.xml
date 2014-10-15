@@ -41,6 +41,7 @@
 		<!-- Override as current IP BOM version causes drools rule load issues -->
 		<version.org.mvel>2.2.1.Final</version.org.mvel>
 
+        <enforcer.skip>true</enforcer.skip>
 	</properties>
 
 	<modules>

@@ -62,6 +62,10 @@
     <!-- Some additional dependencies to include in the WAR -->
     <dependency>
       <groupId>org.jboss.weld.servlet</groupId>
+      <artifactId>weld-servlet</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.weld.servlet</groupId>
       <artifactId>weld-servlet-core</artifactId>
     </dependency>
     <dependency>

@@ -87,6 +87,11 @@
             <artifactId>overlord-commons-config</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.overlord.rtgov.common</groupId>
