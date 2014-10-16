@@ -9,6 +9,11 @@
   <groupId>org.overlord.rtgov.ui</groupId>
   <artifactId>overlord-rtgov-ui-dev-server</artifactId>
   <name>Overlord RTGov::UI::Dev Server</name>
+	
+	<properties>
+        <!-- TODO: RTGOV-601 -->
+        <enforcer.skip>true</enforcer.skip>
+	</properties>
 
   <dependencies>
     <dependency>

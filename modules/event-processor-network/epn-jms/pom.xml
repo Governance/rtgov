@@ -21,6 +21,14 @@
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-services</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.overlord.rtgov.common</groupId>
+		    <artifactId>rtgov-common</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.jboss.spec.javax.jms</groupId>

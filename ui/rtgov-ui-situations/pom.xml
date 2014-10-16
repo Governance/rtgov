@@ -47,6 +47,16 @@
 	        <artifactId>call-trace</artifactId>
 	        <scope>provided</scope>
 	    </dependency>
+	    <dependency>
+	        <groupId>com.google.guava</groupId>
+	        <artifactId>guava</artifactId>
+	        <scope>provided</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.overlord</groupId>
+	        <artifactId>overlord-commons-services</artifactId>
+	        <scope>provided</scope>
+	    </dependency>
 
         <!-- Dependency required due to jdk bug when built in hudson -->
         <dependency>
