@@ -338,6 +338,10 @@ footer hr {
   padding: 0px;
 }
 
+#servicegraph svg {
+  width: 100%;
+}
+
 .overlord-actions {
   border: 1px solid rgb(211, 211, 211);
   border-top-left-radius: 5px;
