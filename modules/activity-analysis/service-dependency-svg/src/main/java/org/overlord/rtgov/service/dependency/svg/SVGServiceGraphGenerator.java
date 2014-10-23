@@ -43,6 +43,10 @@ import org.overlord.rtgov.service.dependency.presentation.SeverityAnalyzer;
  */
 public class SVGServiceGraphGenerator {
     
+    private static final int MIN_HEIGHT = 400;
+
+    private static final int HORIZONTAL_PADDING = 100;
+
     private static final Logger LOG=Logger.getLogger(SVGServiceGraphGenerator.class.getName());
 
     private SeverityAnalyzer _severityAnalyzer=null;
@@ -103,6 +107,23 @@ public class SVGServiceGraphGenerator {
         
         if (doc != null) {
             org.w3c.dom.Element container=doc.getDocumentElement();
+            
+            // Set the width and height
+            container.setAttribute("width", "100%");
+            
+            int height=(Integer)sg.getProperties().get(ServiceGraphLayout.HEIGHT);
+            
+            height += HORIZONTAL_PADDING;
+
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("SVG height = "+height);
+            }
+            
+            if (height < MIN_HEIGHT) {
+                height = MIN_HEIGHT;
+            }
+            
+            container.setAttribute("height", ""+height);
             
             org.w3c.dom.Node insertPoint=null;
             
