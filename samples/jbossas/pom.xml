@@ -38,6 +38,7 @@
 		<jbossas.version>7.2.0.Final</jbossas.version>
 		<version.org.overlord.overlord-commons>2.0.11.Final</version.org.overlord.overlord-commons>
 		<version.org.switchyard>2.0.0.Alpha3</version.org.switchyard>
+		<version.wildfly.maven>1.0.2.Final</version.wildfly.maven>
 
 		<!-- Override as current IP BOM version causes drools rule load issues -->
 		<version.org.mvel>2.2.1.Final</version.org.mvel>
@@ -237,6 +238,15 @@
 				<plugin>
 					<groupId>org.jboss.as.plugins</groupId>
 					<artifactId>jboss-as-maven-plugin</artifactId>
+					<configuration>
+						<skip>true</skip>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.wildfly.plugins</groupId>
+					<artifactId>wildfly-maven-plugin</artifactId>
+					<version>${version.wildfly.maven}</version>
 					<configuration>
 						<skip>true</skip>
 					</configuration>

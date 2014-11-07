@@ -7,11 +7,13 @@ for extracting information that may be required in subsequent event processing.
 
 To deploy the quickstart, after the server has been started, run:
 
-	mvn jboss-as:deploy
+	mvn jboss-as:deploy (for EAP)
+	mvn wildfly:deploy (for Wildfly)
 
 To undeploy the quickstart, run:
 
-	mvn jboss-as:undeploy
+	mvn jboss-as:undeploy (for EAP)
+	mvn wildfly:undeploy (for Wildfly)
 
 
 NOTE: This quickstart can be deployed with the profile(s): client or server (needs to be co-located with

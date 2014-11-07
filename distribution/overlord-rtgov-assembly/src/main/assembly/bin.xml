@@ -231,6 +231,78 @@
 			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
 		</dependencySet>
 
+		<!-- WILDFLY-8 'all' profile -->
+
+		<dependencySet>
+			<outputDirectory>platforms/wildfly-8/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-all-wildfly8:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/wildfly-8/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.ui:overlord-rtgov-ui-wildfly8:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-ui.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/wildfly-8/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
+		</dependencySet>
+
+		<dependencySet>
+			<outputDirectory>platforms/wildfly-8/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.content:overlord-rtgov-epn-jee:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-epn.war</outputFileNameMapping>
+		</dependencySet>
+
+		<dependencySet>
+			<outputDirectory>platforms/wildfly-8/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.content:overlord-rtgov-acs-jee:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-acs.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/wildfly-8/all/jdbc/drivers</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>com.h2database:h2</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+
+		<!-- WILDFLY-8 'client' profile -->
+
+		<dependencySet>
+			<outputDirectory>platforms/wildfly-8/client/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-client-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/wildfly-8/client/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
+		</dependencySet>
+
 		<!-- Extras -->
 
 		<dependencySet>

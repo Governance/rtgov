@@ -25,6 +25,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-all-wildfly8</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
 			<artifactId>overlord-rtgov-switchyard-eap6</artifactId>
 			<type>war</type>
 		</dependency>
@@ -44,6 +49,11 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.ui</groupId>
 			<artifactId>overlord-rtgov-ui-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.ui</groupId>
+			<artifactId>overlord-rtgov-ui-wildfly8</artifactId>
 			<type>war</type>
 		</dependency>
 

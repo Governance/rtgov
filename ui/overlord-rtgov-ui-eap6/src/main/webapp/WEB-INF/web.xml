@@ -110,44 +110,4 @@
     </servlet-mapping>
     
 
-  <filter>
-    <filter-name>AuthenticationFilter</filter-name>
-    <filter-class>org.overlord.commons.auth.filters.SamlSPFilter</filter-class>
-    <init-param>
-      <param-name>ROLES</param-name>
-      <param-value>overlorduser</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>AuthenticationFilter</filter-name>
-    <url-pattern>*.html</url-pattern>
-  </filter-mapping>
-  
-  <filter>
-    <filter-name>PicketLinkAuthWrapperFilter</filter-name>
-    <filter-class>org.overlord.commons.auth.filters.PicketLinkAuthWrapperFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>PicketLinkAuthWrapperFilter</filter-name>
-    <url-pattern>*</url-pattern>
-  </filter-mapping>
-
-  <filter>
-    <filter-name>PostAuthenticationRedirectFilter</filter-name>
-    <filter-class>org.overlord.commons.gwt.server.filters.PostAuthenticationRedirectFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>PostAuthenticationRedirectFilter</filter-name>
-    <url-pattern>*</url-pattern>
-  </filter-mapping>
-
-  <filter>
-    <filter-name>HttpRequestThreadLocalFilter</filter-name>
-    <filter-class>org.overlord.commons.auth.filters.HttpRequestThreadLocalFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>HttpRequestThreadLocalFilter</filter-name>
-    <url-pattern>*</url-pattern>
-  </filter-mapping>
-
 </web-app>
