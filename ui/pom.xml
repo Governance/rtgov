@@ -18,10 +18,10 @@
 		<module>rtgov-ui-services-switchyard</module>
 		<module>rtgov-ui-situations</module>
 		<module>overlord-rtgov-ui-base</module>
-		<module>overlord-rtgov-ui-dev-server</module>
+		<!--module>overlord-rtgov-ui-dev-server</module-->
 		<module>overlord-rtgov-ui-eap6</module>
-		<module>overlord-rtgov-ui-jetty8</module>
-		<module>overlord-rtgov-ui-fuse6</module>
+		<!--module>overlord-rtgov-ui-jetty8</module>
+		<module>overlord-rtgov-ui-fuse6</module-->
 	</modules>
 
     <profiles>

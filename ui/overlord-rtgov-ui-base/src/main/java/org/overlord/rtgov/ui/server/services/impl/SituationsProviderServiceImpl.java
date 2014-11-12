@@ -163,7 +163,7 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
      * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
      */
     @Override
-    public void resubmit(String situationId, String message) throws UiException {
+    public void resubmit(String situationId, String message, String username) throws UiException {
         SituationBean sb=_provider.getSituation(situationId);
         
         // Use retrieved message as potentially contains header properties, so
@@ -171,15 +171,15 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
         MessageBean mb=sb.getMessage();
         mb.setContent(message);
     	
-        _provider.resubmit(situationId, mb);
+        _provider.resubmit(situationId, mb, username);
     }
     
     /**
      * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#resubmit(SituationsFilterBean)
      */
     @Override
-    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException {
-        return _provider.resubmit(situationsFilterBean);
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) throws UiException {
+        return _provider.resubmit(situationsFilterBean, username);
     }
 
 	@Override

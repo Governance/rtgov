@@ -5,9 +5,6 @@
       http://java.sun.com/xml/ns/javaee
       http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 
-	<interceptors>
-		<class>org.overlord.rtgov.ui.server.interceptors.UserContextInterceptor</class>
-	</interceptors>
     <alternatives>
         <class>org.overlord.rtgov.ui.server.services.impl.SituationsProviderServiceImpl</class>
         <class>org.overlord.rtgov.ui.server.services.impl.ServicesProviderServiceImpl</class>

@@ -42,7 +42,7 @@ import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceWidget;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationContextTable;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationPropertiesTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
-import org.overlord.rtgov.ui.client.local.services.SituationsRpcService;
+import org.overlord.rtgov.ui.client.local.services.SituationsServiceCaller;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcServiceInvocationHandlerAdapter;
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
@@ -74,7 +74,7 @@ public class SituationDetailsPage extends AbstractPage {
     @Inject
     protected ClientMessages i18n;
     @Inject
-    protected SituationsRpcService situationsService;
+    protected SituationsServiceCaller situationsService;
     @Inject
     protected NotificationService notificationService;
     @Inject

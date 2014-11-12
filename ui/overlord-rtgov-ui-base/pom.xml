@@ -21,6 +21,10 @@
       <artifactId>rtgov-ui-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.overlord.rtgov.common</groupId>
+      <artifactId>rtgov-common</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.overlord.rtgov.activity-analysis</groupId>
       <artifactId>situation-store</artifactId>
       <scope>provided</scope>
@@ -49,6 +53,11 @@
     </dependency>
 
     <!-- Third Party Dependencies -->
+    <dependency>
+      <groupId>org.jboss.errai</groupId>
+      <artifactId>errai-jaxrs-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>org.picketlink</groupId>
       <artifactId>picketlink-federation</artifactId>
@@ -86,6 +95,7 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-bus</artifactId>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>javax.inject</groupId>
@@ -100,6 +110,7 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-ioc</artifactId>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>javax.inject</groupId>
@@ -114,23 +125,29 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-data-binding</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-ui</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-navigation</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-tools</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-common</artifactId>
+      <scope>provided</scope>
     </dependency>
+    
     <dependency>
       <groupId>org.mvel</groupId>
       <artifactId>mvel2</artifactId>
@@ -140,6 +157,7 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-cdi-client</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -149,6 +167,7 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-weld-integration</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Weld -->

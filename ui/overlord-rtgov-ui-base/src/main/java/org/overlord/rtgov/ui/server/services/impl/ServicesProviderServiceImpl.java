@@ -23,13 +23,14 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
 import org.overlord.commons.services.ServiceRegistryUtil;
+import org.overlord.rtgov.ui.client.model.ApplicationListBean;
 import org.overlord.rtgov.ui.client.model.Constants;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
-import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.ServicesSearchBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.overlord.rtgov.ui.server.services.IServicesServiceImpl;
@@ -58,43 +59,45 @@ public class ServicesProviderServiceImpl implements IServicesServiceImpl {
      * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#getApplicationNames()
      */
     @Override
-    public List<QName> getApplicationNames() throws UiException {
+    public ApplicationListBean getApplicationNames() throws UiException {
         final List<QName> apps = new ArrayList<QName>();
 
         for (ServicesProvider sp : _providers) {
         	apps.addAll(sp.getApplicationNames());
         }
+        
+        ApplicationListBean ret=new ApplicationListBean();
+        ret.setApplicationNames(apps);
 
-        return apps;
+        return ret;
     }
 
     /**
      * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#findServices(org.overlord.rtgov.ui.client.model.ServicesFilterBean, int)
      */
     @Override
-    public ServiceResultSetBean findServices(final ServicesFilterBean filters, final int page,
-            final String sortColumn, final boolean ascending) throws UiException {
+    public ServiceResultSetBean findServices(final ServicesSearchBean search) throws UiException {
         final ServiceResultSetBean serviceResult = new ServiceResultSetBean();
         final ArrayList<ServiceSummaryBean> services = new ArrayList<ServiceSummaryBean>();
 
         for (ServicesProvider sp : _providers) {
-        	services.addAll(sp.findServices(filters));
+        	services.addAll(sp.findServices(search.getFilters()));
         }
         
         int total=services.size();
         
         // Sort based on column and direction
-        if (sortColumn != null) {
+        if (search.getSortColumnId() != null) {
         	java.util.Comparator<ServiceSummaryBean> comp=null;
         	
-            if (sortColumn.equals(Constants.SORT_COLID_NAME)) {
+            if (search.getSortColumnId().equals(Constants.SORT_COLID_NAME)) {
     	        comp = new java.util.Comparator<ServiceSummaryBean>() {
     	
     				@Override
     				public int compare(ServiceSummaryBean o1,
     						ServiceSummaryBean o2) {
     					int ret=o1.getName().compareTo(o2.getName());
-    					if (!ascending) {
+    					if (!search.isSortAscending()) {
     						ret = 0 - ret;
     					}
     					return ret;
@@ -107,7 +110,7 @@ public class ServicesProviderServiceImpl implements IServicesServiceImpl {
         	}
         }
         
-        int startIndex=(SERVICES_PER_PAGE*(page-1));
+        int startIndex=(SERVICES_PER_PAGE*(search.getPage()-1));
         
         if (services.size() >= startIndex) {
         	// Remove initial entries
@@ -126,7 +129,7 @@ public class ServicesProviderServiceImpl implements IServicesServiceImpl {
         
         serviceResult.setServices(services);
         serviceResult.setItemsPerPage(SERVICES_PER_PAGE);
-        serviceResult.setStartIndex((page-1)*SERVICES_PER_PAGE);
+        serviceResult.setStartIndex((search.getPage()-1)*SERVICES_PER_PAGE);
         serviceResult.setTotalResults(total);
 
         return serviceResult;

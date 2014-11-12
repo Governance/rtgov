@@ -66,7 +66,6 @@ import org.overlord.rtgov.ui.provider.ResubmitActionProvider;
 import org.overlord.rtgov.ui.provider.ServicesProvider;
 import org.overlord.rtgov.ui.provider.SituationEventListener;
 import org.overlord.rtgov.ui.provider.SituationsProvider;
-import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
@@ -549,15 +548,15 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
      * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
      */
     @Override
-    public void resubmit(String situationId, MessageBean message) throws UiException {
+    public void resubmit(String situationId, MessageBean message, String username) throws UiException {
         Situation situation=_situationStore.getSituation(situationId);
         if (situation == null) {
             throw new UiException(i18n.format("RTGovSituationsProvider.SitNotFound", situationId)); //$NON-NLS-1$
         }
-        resubmitInternal(situation, message);
+        resubmitInternal(situation, message, username);
     }
 
-    private void resubmitInternal(Situation situation, MessageBean message) throws UiException {
+    private void resubmitInternal(Situation situation, MessageBean message, String username) throws UiException {
         final ServiceOperationName operationName = getServiceOperationName(situation);
         Optional<ServicesProvider> serviceProvider = tryFind(_providers, new IsResubmitSupported(
                 operationName));
@@ -565,26 +564,20 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
             throw new UiException(i18n.format("RTGovSituationsProvider.ResubmitProviderNotFound", situation.getId())); //$NON-NLS-1$
         }
 
-        String userName=null;
-        
-        if (IUserContext.Holder.getUserPrincipal() != null) {
-            userName = IUserContext.Holder.getUserPrincipal().getName();
-        }
-
         try {
             ResubmitActionProvider resubmit=serviceProvider.get().getAction(ResubmitActionProvider.class);
             
             if (resubmit == null) {
                 _situationStore.recordResubmitFailure(situation.getId(),
-                        i18n.format("RTGovSituationsProvider.ResubmitNotSupported"), userName);
+                        i18n.format("RTGovSituationsProvider.ResubmitNotSupported"), username);
             } else {
                 resubmit.resubmit(operationName.getService(), operationName.getOperation(), message);
             
-                _situationStore.recordSuccessfulResubmit(situation.getId(), userName);
+                _situationStore.recordSuccessfulResubmit(situation.getId(), username);
             }
         } catch (Exception exception) {
             _situationStore.recordResubmitFailure(situation.getId(),
-                    Throwables.getStackTraceAsString(exception), userName);
+                    Throwables.getStackTraceAsString(exception), username);
             throw new UiException(
                     i18n.format(
                             "RTGovSituationsProvider.ResubmitFailed", situation.getId() + ":" + exception.getLocalizedMessage()), exception); //$NON-NLS-1$
@@ -592,7 +585,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     }
     
     @Override
-    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException {
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) throws UiException {
         int processedCount = 0, failedCount = 0, ignoredCount = 0;
         List<Situation> situationIdToactivityTypeIds = _situationStore
                 .getSituations(createQuery(situationsFilterBean));
@@ -604,7 +597,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
             }
             try {
                 processedCount++;
-                resubmitInternal(situation, message);
+                resubmitInternal(situation, message, username);
             } catch (UiException uiException) {
                 failedCount++;
             }

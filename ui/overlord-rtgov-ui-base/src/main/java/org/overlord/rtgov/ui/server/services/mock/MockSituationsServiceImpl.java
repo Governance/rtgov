@@ -52,7 +52,6 @@ import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 import org.overlord.rtgov.ui.client.model.UiException;
-import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 import org.overlord.rtgov.ui.server.services.ISituationsServiceImpl;
 
 import com.google.common.base.Predicate;
@@ -373,14 +372,14 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
      * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
      */
 	@Override
-	public void resubmit(String situationId, String message) throws UiException {
+	public void resubmit(String situationId, String message, String username) throws UiException {
 		// Do nothing!
 		System.out.println("Resubmitted message for situation: " + situationId); //$NON-NLS-1$
 		System.out.println(message);
 		SituationSummaryBean situationSummaryBean = idToSituation.get(situationId);
 		Map<String, String> properties = situationSummaryBean.getProperties();
-		if (IUserContext.Holder.getUserPrincipal() != null) {
-			properties.put("resubmitBy", IUserContext.Holder.getUserPrincipal().getName());
+		if (username != null) {
+			properties.put("resubmitBy", username);
 		}
 		properties.put("resubmitAt", Long.toString(currentTimeMillis()));
 		if ("Success".equals(properties.get("resubmitResult"))) {
@@ -414,7 +413,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
 	}
 
     @Override
-    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) {
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) {
         BatchRetryResult batchRetryResult = new BatchRetryResult();
         batchRetryResult.setProcessedCount(4);
         batchRetryResult.setFailedCount(2);

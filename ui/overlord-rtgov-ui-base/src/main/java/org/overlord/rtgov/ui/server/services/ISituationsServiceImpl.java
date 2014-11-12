@@ -17,7 +17,6 @@ package org.overlord.rtgov.ui.server.services;
 
 import java.io.OutputStream;
 
-import org.jboss.errai.bus.server.annotations.Remote;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.SituationBean;
@@ -30,7 +29,6 @@ import org.overlord.rtgov.ui.client.model.UiException;
  *
  * @author eric.wittmann@redhat.com
  */
-@Remote
 public interface ISituationsServiceImpl {
 
     /**
@@ -57,7 +55,7 @@ public interface ISituationsServiceImpl {
      * @param message
      * @throws UiException
      */
-    public void resubmit(String situationId, String message) throws UiException;
+    public void resubmit(String situationId, String message, String username) throws UiException;
     
     /**
      * Assigns a situation to the currently logged in user.
@@ -84,9 +82,10 @@ public interface ISituationsServiceImpl {
 	/**
      * Resubmits all message matching the given filter criteria.
      * @param situationsFilterBean
+     * @param username The user performing the resubmit
      * @throws UiException
      */
-    BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
+    BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) throws UiException;
 
     /**
      * Export the content of all message's matching the given filter criteria.

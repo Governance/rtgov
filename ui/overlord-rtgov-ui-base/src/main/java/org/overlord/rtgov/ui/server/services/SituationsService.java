@@ -15,10 +15,9 @@
  */
 package org.overlord.rtgov.ui.server.services;
 
-import static org.jboss.errai.bus.server.api.RpcContext.getServletRequest;
-
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.SecurityContext;
 
 import org.jboss.errai.bus.server.annotations.Service;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
@@ -28,7 +27,6 @@ import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.model.SituationsFilterBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
-import org.overlord.rtgov.ui.server.interceptors.IUserContext;
 
 /**
  * Concrete implementation of the situations service.
@@ -36,10 +34,11 @@ import org.overlord.rtgov.ui.server.interceptors.IUserContext;
  * @author eric.wittmann@redhat.com
  */
 @Service
-@IUserContext.Binding
 public class SituationsService implements ISituationsService {
 
     @Inject ISituationsServiceImpl impl;
+    
+    @Context SecurityContext securityContext;
 
     /**
      * Constructor.
@@ -61,13 +60,12 @@ public class SituationsService implements ISituationsService {
      */
 	@Override
 	public SituationBean get(String situationId) throws UiException {
-		HttpServletRequest servletRequest = (HttpServletRequest) getServletRequest();
 		SituationBean situationBean = impl.get(situationId);
 		if (situationBean.getAssignedTo() != null
-				&& situationBean.getAssignedTo().equals(servletRequest.getRemoteUser())) {
+				&& situationBean.getAssignedTo().equals(securityContext.getUserPrincipal().getName())) {
 			situationBean.setAssignedToCurrentUser(true);
 		}
-		if (servletRequest.isUserInRole("ROLE_ADMIN")) {
+		if (securityContext.isUserInRole("ROLE_ADMIN")) {
 			situationBean.setTakeoverPossible(true);
 		}
 		return situationBean;
@@ -78,13 +76,12 @@ public class SituationsService implements ISituationsService {
      */
     @Override
     public void resubmit(String situationId, String message) throws UiException {
-        impl.resubmit(situationId, message);
+        impl.resubmit(situationId, message, securityContext.getUserPrincipal().getName());
     }
 
 	@Override
 	public void assign(String situationId) throws UiException {
-		HttpServletRequest servletRequest = (HttpServletRequest) getServletRequest();
-		impl.assign(situationId, servletRequest.getRemoteUser());
+		impl.assign(situationId, securityContext.getUserPrincipal().getName());
 	}
 
 	@Override
@@ -99,7 +96,7 @@ public class SituationsService implements ISituationsService {
 
     @Override
     public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException {
-        return impl.resubmit(situationsFilterBean);
+        return impl.resubmit(situationsFilterBean, securityContext.getUserPrincipal().getName());
     }
 
     @Override
