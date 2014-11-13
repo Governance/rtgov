@@ -23,11 +23,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
-import org.jboss.errai.bus.client.api.base.MessageBuilder;
-import org.jboss.errai.bus.client.api.messaging.Message;
-import org.jboss.errai.bus.client.api.messaging.MessageBus;
-import org.jboss.errai.bus.client.api.messaging.MessageCallback;
-import org.jboss.errai.bus.client.api.messaging.RequestDispatcher;
 import org.overlord.rtgov.ui.client.local.animations.FadeOutAnimation;
 import org.overlord.rtgov.ui.client.local.animations.MoveAnimation;
 import org.overlord.rtgov.ui.client.local.events.MouseInEvent;
@@ -59,10 +54,6 @@ import com.google.gwt.user.client.ui.Widget;
 public class NotificationService {
 
     @Inject
-    private MessageBus bus;
-    @Inject
-    private RequestDispatcher dispatcher;
-    @Inject
     private RootPanel rootPanel;
     @Inject
     private Instance<NotificationWidget> notificationWidgetFactory;
@@ -81,6 +72,7 @@ public class NotificationService {
      */
     @PostConstruct
     private void onPostConstruct() {
+        /* TODO: RTGOV-611
         bus.subscribe("NotificationService", new MessageCallback() { //$NON-NLS-1$
             @Override
             public void callback(Message message) {
@@ -88,6 +80,7 @@ public class NotificationService {
                 doNotify(notification);
             }
         });
+        */
     }
 
     /**
@@ -223,12 +216,14 @@ public class NotificationService {
      * @param notification
      */
     protected void sendNotification(NotificationBean notification) {
+        /* TODO: RTGOV-611
         MessageBuilder.createMessage()
             .toSubject("NotificationService") //$NON-NLS-1$
             .signalling()
             .withValue(notification)
             .noErrorHandling()
             .sendNowWith(dispatcher);
+        */
     }
 
     /**

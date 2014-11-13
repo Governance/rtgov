@@ -52,11 +52,6 @@
 
   <!-- Servlets -->
   <servlet>
-    <servlet-name>ErraiServlet</servlet-name>
-    <servlet-class>org.jboss.errai.bus.server.servlet.DefaultBlockingServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet>
     <servlet-name>SituationsExportServlet</servlet-name>
     <servlet-class>org.overlord.rtgov.ui.server.servlet.SituationsExportServlet</servlet-class>
     <load-on-startup>2</load-on-startup>
@@ -65,14 +60,6 @@
     <servlet-name>SituationsExportServlet</servlet-name>
     <url-pattern>/situations/export</url-pattern>
   </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ErraiServlet</servlet-name>
-    <url-pattern>*.erraiBus</url-pattern>
-  </servlet-mapping>
-  <context-param>
-    <param-name>errai.properties</param-name>
-    <param-value>/WEB-INF/errai.properties</param-value>
-  </context-param>
   <context-param>
     <param-name>login.config</param-name>
     <param-value>/WEB-INF/login.config</param-value>
@@ -104,6 +91,24 @@
         <servlet-name>ElasticsearchRESTServer</servlet-name>
         <url-pattern>/elasticsearch/*</url-pattern>
     </servlet-mapping>
+   
+    
+    <servlet>
+        <servlet-name>RESTServer</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>org.overlord.rtgov.ui.server.services.RTGovApplication</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>RESTServer</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+    
 
   <filter>
     <filter-name>AuthenticationFilter</filter-name>

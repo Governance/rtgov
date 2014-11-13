@@ -15,16 +15,13 @@
  */
 package org.overlord.rtgov.ui.server.services;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
-import org.jboss.errai.bus.server.annotations.Service;
-import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ApplicationListBean;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
-import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.ServicesSearchBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.client.shared.services.IServicesService;
 
@@ -33,7 +30,6 @@ import org.overlord.rtgov.ui.client.shared.services.IServicesService;
  *
  * @author eric.wittmann@redhat.com
  */
-@Service
 public class ServicesService implements IServicesService {
 
     @Inject IServicesServiceImpl impl;
@@ -48,7 +44,7 @@ public class ServicesService implements IServicesService {
      * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#getApplicationNames()
      */
     @Override
-    public List<QName> getApplicationNames() throws UiException {
+    public ApplicationListBean getApplicationNames() throws UiException {
         return impl.getApplicationNames();
     }
 
@@ -56,24 +52,23 @@ public class ServicesService implements IServicesService {
      * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#findServices(org.overlord.rtgov.ui.client.model.ServicesFilterBean, int, java.lang.String, boolean)
      */
     @Override
-    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
-            boolean ascending) throws UiException {
-        return impl.findServices(filters, page, sortColumn, ascending);
+    public ServiceResultSetBean findServices(ServicesSearchBean search) throws UiException {
+        return impl.findServices(search);
     }
 
     /**
      * @see org.overlord.dtgov.ui.client.shared.services.IServicesService#getService(java.lang.String)
      */
     @Override
-    public ServiceBean getService(String uuid) throws UiException {
-        return impl.getService(uuid);
+    public ServiceBean getService(String id) throws UiException {
+        return impl.getService(id);
     }
 
     /**
      * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#getReference(java.lang.String)
      */
     @Override
-    public ReferenceBean getReference(String referenceId) throws UiException {
-        return impl.getReference(referenceId);
+    public ReferenceBean getReference(String id) throws UiException {
+        return impl.getReference(id);
     }
 }

@@ -130,6 +130,7 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-jboss-as-support</artifactId>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <artifactId>xml-apis</artifactId>
@@ -197,6 +198,7 @@
                 <exclude>WEB-INF/lib/cal10n-api*.jar</exclude>
                 <exclude>WEB-INF/lib/errai-cdi-jetty*.jar</exclude>
                 <exclude>WEB-INF/lib/errai-tools*.jar</exclude>
+                <exclude>WEB-INF/lib/errai*.jar</exclude>
                 <exclude>WEB-INF/lib/geronimo-spec-jta*.jar</exclude>
                 <exclude>WEB-INF/lib/javassist*.jar</exclude>
                 <exclude>WEB-INF/lib/jboss-interceptors-api*.jar</exclude>

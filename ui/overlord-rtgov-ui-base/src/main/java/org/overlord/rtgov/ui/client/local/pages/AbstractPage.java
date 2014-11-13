@@ -16,9 +16,7 @@
 package org.overlord.rtgov.ui.client.local.pages;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
-import org.jboss.errai.bus.client.api.ClientMessageBus;
 import org.jboss.errai.enterprise.client.cdi.api.CDI;
 import org.jboss.errai.ui.nav.client.local.HistoryToken;
 import org.jboss.errai.ui.nav.client.local.PageShowing;
@@ -34,9 +32,6 @@ import com.google.gwt.user.client.ui.Composite;
  * @author eric.wittmann@redhat.com
  */
 public abstract class AbstractPage extends Composite {
-
-    @Inject
-    protected ClientMessageBus bus;
 
     /**
      * Constructor.

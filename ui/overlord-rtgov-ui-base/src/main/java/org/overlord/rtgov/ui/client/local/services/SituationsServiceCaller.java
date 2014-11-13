@@ -38,7 +38,7 @@ import org.overlord.rtgov.ui.client.shared.services.ISituationsService;
  * @author eric.wittmann@redhat.com
  */
 @ApplicationScoped
-public class SituationsRpcService {
+public class SituationsServiceCaller {
 
     @Inject
     private Caller<ISituationsService> remoteSituationsService;
@@ -46,7 +46,7 @@ public class SituationsRpcService {
     /**
      * Constructor.
      */
-    public SituationsRpcService() {
+    public SituationsServiceCaller() {
     }
 
     /**

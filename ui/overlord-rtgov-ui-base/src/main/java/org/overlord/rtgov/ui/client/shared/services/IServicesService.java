@@ -15,14 +15,19 @@
  */
 package org.overlord.rtgov.ui.client.shared.services;
 
-import java.util.List;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
-import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ApplicationListBean;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
-import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.ServicesSearchBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 
 /**
@@ -30,38 +35,50 @@ import org.overlord.rtgov.ui.client.model.UiException;
  *
  * @author eric.wittmann@redhat.com
  */
-@Remote
+@Path("/rest/services")
 public interface IServicesService {
 
     /**
      * Return a list of all application names.
      * @throws UiException
      */
-    public List<QName> getApplicationNames() throws UiException;
+    @GET
+    @Path("applications")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ApplicationListBean getApplicationNames() throws UiException;
 
     /**
-     * Search for services using the given filters.
-     * @param filters
+     * Search for services using the given search criteria.
+     * @param search
      * @param page
      * @param sortColumn
      * @param ascending
      * @throws UiException
      */
-    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
-            boolean ascending) throws UiException;
+    @POST
+    @Path("search")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ServiceResultSetBean findServices(ServicesSearchBean search) throws UiException;
 
     /**
-     * Fetches a full service by its name.
-     * @param serviceId
+     * Fetches a full service by its id.
+     * @param id
      * @throws UiException
      */
-    public ServiceBean getService(String serviceId) throws UiException;
+    @GET
+    @Path("service")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ServiceBean getService(@QueryParam("id") String id) throws UiException;
 
     /**
-     * Fetches a full component service by its name.
-     * @param referenceId
+     * Fetches a full reference by its id.
+     * @param id
      * @throws UiException
      */
-    public ReferenceBean getReference(String referenceId) throws UiException;
+    @GET
+    @Path("reference")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ReferenceBean getReference(@QueryParam("id") String id) throws UiException;
 
 }

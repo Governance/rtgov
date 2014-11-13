@@ -15,8 +15,6 @@
  */
 package org.overlord.rtgov.ui.client.local.services;
 
-import java.util.List;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -26,11 +24,12 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingErrorCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.DelegatingRemoteCallback;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
-import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ApplicationListBean;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.ServicesSearchBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.client.shared.services.IServicesService;
 
@@ -40,7 +39,7 @@ import org.overlord.rtgov.ui.client.shared.services.IServicesService;
  * @author eric.wittmann@redhat.com
  */
 @ApplicationScoped
-public class ServicesRpcService {
+public class ServicesServiceCaller {
 
     @Inject
     private Caller<IServicesService> remoteServicesService;
@@ -48,14 +47,14 @@ public class ServicesRpcService {
     /**
      * Constructor.
      */
-    public ServicesRpcService() {
+    public ServicesServiceCaller() {
     }
 
     /**
      * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#getApplicationNames()
      */
-    public void getApplicationNames(final IRpcServiceInvocationHandler<List<QName>> handler) {
-        RemoteCallback<List<QName>> successCallback = new DelegatingRemoteCallback<List<QName>>(handler);
+    public void getApplicationNames(final IRpcServiceInvocationHandler<ApplicationListBean> handler) {
+        RemoteCallback<ApplicationListBean> successCallback = new DelegatingRemoteCallback<ApplicationListBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
             remoteServicesService.call(successCallback, errorCallback).getApplicationNames();
@@ -75,7 +74,13 @@ public class ServicesRpcService {
         RemoteCallback<ServiceResultSetBean> successCallback = new DelegatingRemoteCallback<ServiceResultSetBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).findServices(filters, page, sortColumn, ascending);
+            ServicesSearchBean search=new ServicesSearchBean();
+            search.setFilters(filters);
+            search.setPage(page);
+            search.setSortColumnId(sortColumn);
+            search.setSortAscending(ascending);
+            
+            remoteServicesService.call(successCallback, errorCallback).findServices(search);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }
@@ -84,11 +89,11 @@ public class ServicesRpcService {
     /**
      * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#getService(String)
      */
-    public void getService(String serviceId, IRpcServiceInvocationHandler<ServiceBean> handler) {
+    public void getService(String id, IRpcServiceInvocationHandler<ServiceBean> handler) {
         RemoteCallback<ServiceBean> successCallback = new DelegatingRemoteCallback<ServiceBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).getService(serviceId);
+            remoteServicesService.call(successCallback, errorCallback).getService(id);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }
@@ -97,11 +102,11 @@ public class ServicesRpcService {
     /**
      * @see org.overlord.rtgov.ui.client.shared.services.IServicesService#getReference(String)
      */
-    public void getReference(String referenceId, IRpcServiceInvocationHandler<ReferenceBean> handler) {
+    public void getReference(String id, IRpcServiceInvocationHandler<ReferenceBean> handler) {
         RemoteCallback<ReferenceBean> successCallback = new DelegatingRemoteCallback<ReferenceBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).getReference(referenceId);
+            remoteServicesService.call(successCallback, errorCallback).getReference(id);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }

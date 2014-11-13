@@ -19,10 +19,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.jboss.errai.bus.client.ErraiBus;
-import org.jboss.errai.bus.client.api.base.MessageBuilder;
-import org.jboss.errai.bus.client.api.messaging.Message;
-import org.jboss.errai.bus.client.api.messaging.MessageCallback;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.PageHiding;
 import org.jboss.errai.ui.nav.client.local.PageShown;
@@ -38,7 +34,7 @@ import org.overlord.rtgov.ui.client.local.pages.situations.SituationFilters;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationTable;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationWatcherEvents;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
-import org.overlord.rtgov.ui.client.local.services.SituationsRpcService;
+import org.overlord.rtgov.ui.client.local.services.SituationsServiceCaller;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcServiceInvocationHandlerAdapter;
 import org.overlord.rtgov.ui.client.local.widgets.ToggleSwitch;
@@ -75,7 +71,7 @@ public class SituationsPage extends AbstractPage {
     @Inject
     protected ClientMessages i18n;
     @Inject
-    protected SituationsRpcService situationsService;
+    protected SituationsServiceCaller situationsService;
     @Inject
     protected NotificationService notificationService;
 
@@ -139,6 +135,8 @@ public class SituationsPage extends AbstractPage {
     @PageShown
     public void onPageShown() {
         GWT.log("Subscribing to SitWatch topic."); //$NON-NLS-1$
+        
+        /* TODO: RTGOV-611
         bus.subscribe("SitWatch", new MessageCallback() { //$NON-NLS-1$
             @Override
             public void callback(Message message) {
@@ -146,6 +144,7 @@ public class SituationsPage extends AbstractPage {
                 onNewSituation(sitEvent);
             }
         });
+        */
     }
 
     /**
@@ -154,7 +153,7 @@ public class SituationsPage extends AbstractPage {
     @PageHiding
     public void onPageHiding() {
         GWT.log("Unsubscribing *from* SitWatch topic."); //$NON-NLS-1$
-        bus.unsubscribeAll("SitWatch"); //$NON-NLS-1$
+        //bus.unsubscribeAll("SitWatch"); //$NON-NLS-1$
     }
 
     /**
@@ -376,12 +375,14 @@ public class SituationsPage extends AbstractPage {
         SituationsFilterBean situationsFilterBean = applyActionToFilteredRowsOnly ? filtersPanel.getValue()
                 : new SituationsFilterBean();
         String exportKey = String.valueOf(System.currentTimeMillis());
+        /* TODO: RTGOV-615
         MessageBuilder.createMessage().toSubject("situations/export").with("exportKey", exportKey)
                 .with("exportFilter", situationsFilterBean).noErrorHandling().sendNowWith(ErraiBus.get());
         UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
         String exportLocation = urlBuilder.setPath("rtgov-ui/situations/export")
                 .setParameter("_k", exportKey).buildString();
         Window.open(exportLocation, "_blank", "");
+        */
     }
 
     @EventHandler("deleteSituations")

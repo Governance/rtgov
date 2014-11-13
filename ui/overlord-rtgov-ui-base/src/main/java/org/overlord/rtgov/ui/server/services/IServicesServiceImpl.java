@@ -15,14 +15,11 @@
  */
 package org.overlord.rtgov.ui.server.services;
 
-import java.util.List;
-
-import org.jboss.errai.bus.server.annotations.Remote;
-import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ApplicationListBean;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
-import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.ServicesSearchBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 
 /**
@@ -30,25 +27,20 @@ import org.overlord.rtgov.ui.client.model.UiException;
  *
  * @author eric.wittmann@redhat.com
  */
-@Remote
 public interface IServicesServiceImpl {
 
     /**
      * Return a list of all application names.
      * @throws UiException
      */
-    public List<QName> getApplicationNames() throws UiException;
+    public ApplicationListBean getApplicationNames() throws UiException;
 
     /**
      * Search for services using the given filters.
-     * @param filters
-     * @param page
-     * @param sortColumn
-     * @param ascending
+     * @param search
      * @throws UiException
      */
-    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
-            boolean ascending) throws UiException;
+    public ServiceResultSetBean findServices(ServicesSearchBean search) throws UiException;
 
     /**
      * Fetches a full service by its name.

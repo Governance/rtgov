@@ -21,6 +21,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 
+import org.overlord.rtgov.ui.client.model.ApplicationListBean;
 import org.overlord.rtgov.ui.client.model.BindingBean;
 import org.overlord.rtgov.ui.client.model.QName;
 import org.overlord.rtgov.ui.client.model.ReferenceBean;
@@ -28,7 +29,7 @@ import org.overlord.rtgov.ui.client.model.ReferenceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServiceBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
-import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
+import org.overlord.rtgov.ui.client.model.ServicesSearchBean;
 import org.overlord.rtgov.ui.client.model.UiException;
 import org.overlord.rtgov.ui.server.services.IServicesServiceImpl;
 
@@ -53,19 +54,21 @@ public class MockServicesServiceImpl implements IServicesServiceImpl {
      * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#getApplicationNames()
      */
     @Override
-    public List<QName> getApplicationNames() throws UiException {
+    public ApplicationListBean getApplicationNames() throws UiException {
         List<QName> apps = new ArrayList<QName>();
         apps.add(new QName("urn:jboss:demos:applications", "Contract")); //$NON-NLS-1$ //$NON-NLS-2$
         apps.add(new QName("urn:jboss:demos:applications", "GGRL")); //$NON-NLS-1$ //$NON-NLS-2$
-        return apps;
+        
+        ApplicationListBean ret=new ApplicationListBean();
+        ret.setApplicationNames(apps);
+        return ret;
     }
 
     /**
      * @see org.overlord.rtgov.ui.server.services.IServicesServiceImpl#findServices(org.overlord.rtgov.ui.client.model.ServicesFilterBean, int, java.lang.String, boolean)
      */
     @Override
-    public ServiceResultSetBean findServices(ServicesFilterBean filters, int page, String sortColumn,
-            boolean ascending) throws UiException {
+    public ServiceResultSetBean findServices(ServicesSearchBean search) throws UiException {
         ServiceResultSetBean rval = new ServiceResultSetBean();
         ArrayList<ServiceSummaryBean> services = new ArrayList<ServiceSummaryBean>();
         rval.setServices(services);

@@ -19,8 +19,6 @@ import javax.enterprise.inject.Alternative;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import org.jboss.errai.bus.client.api.base.MessageBuilder;
-import org.jboss.errai.bus.client.api.messaging.RequestDispatcher;
 import org.overlord.rtgov.ui.client.model.SituationEventBean;
 import org.overlord.rtgov.ui.provider.SituationEventListener;
 import org.overlord.rtgov.ui.provider.SituationsProvider;
@@ -33,9 +31,6 @@ import org.overlord.rtgov.ui.server.services.ISituationEventGenerator;
 @Singleton
 @Alternative
 public class SituationEventGenerator implements ISituationEventGenerator {
-
-	@Inject
-    private RequestDispatcher _dispatcher;
 
 	@Inject
 	private SituationsProvider _provider;
@@ -51,6 +46,8 @@ public class SituationEventGenerator implements ISituationEventGenerator {
      */
 	@Override
 	public void start() {
+	    
+	    /* TODO: RTGOV-611
 		_provider.addSituationEventListener(new SituationEventListener() {
 
 			@Override
@@ -64,6 +61,7 @@ public class SituationEventGenerator implements ISituationEventGenerator {
 			}
 			
 		});
+		*/
 	}
 
 }

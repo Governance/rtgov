@@ -15,8 +15,6 @@
  */
 package org.overlord.rtgov.ui.client.local.pages;
 
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -34,10 +32,10 @@ import org.overlord.rtgov.ui.client.local.events.TableSortEvent;
 import org.overlord.rtgov.ui.client.local.pages.services.ServiceFilters;
 import org.overlord.rtgov.ui.client.local.pages.services.ServiceTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
-import org.overlord.rtgov.ui.client.local.services.ServicesRpcService;
+import org.overlord.rtgov.ui.client.local.services.ServicesServiceCaller;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
-import org.overlord.rtgov.ui.client.model.QName;
+import org.overlord.rtgov.ui.client.model.ApplicationListBean;
 import org.overlord.rtgov.ui.client.model.ServiceResultSetBean;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 import org.overlord.rtgov.ui.client.model.ServicesFilterBean;
@@ -62,7 +60,7 @@ public class ServicesPage extends AbstractPage {
     @Inject
     protected ClientMessages i18n;
     @Inject
-    protected ServicesRpcService servicesService;
+    protected ServicesServiceCaller servicesService;
     @Inject
     protected NotificationService notificationService;
 
@@ -105,10 +103,10 @@ public class ServicesPage extends AbstractPage {
      */
     @PageShown
     public void onPageShown() {
-        this.servicesService.getApplicationNames(new IRpcServiceInvocationHandler<List<QName>>() {
+        this.servicesService.getApplicationNames(new IRpcServiceInvocationHandler<ApplicationListBean>() {
             @Override
-            public void onReturn(List<QName> data) {
-                filtersPanel.setApplicationNames(data);
+            public void onReturn(ApplicationListBean data) {
+                filtersPanel.setApplicationNames(data.getApplicationNames());
             }
             @Override
             public void onError(Throwable error) {

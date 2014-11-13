@@ -32,7 +32,7 @@ import org.overlord.commons.gwt.client.local.widgets.HtmlSnippet;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
 import org.overlord.rtgov.ui.client.local.pages.services.ReferenceTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
-import org.overlord.rtgov.ui.client.local.services.ServicesRpcService;
+import org.overlord.rtgov.ui.client.local.services.ServicesServiceCaller;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingQNameLocalPartConverter;
@@ -56,7 +56,7 @@ public class ServiceDetailsPage extends AbstractPage {
     @Inject
     protected ClientMessages i18n;
     @Inject
-    protected ServicesRpcService servicesService;
+    protected ServicesServiceCaller servicesService;
     @Inject
     protected NotificationService notificationService;
 

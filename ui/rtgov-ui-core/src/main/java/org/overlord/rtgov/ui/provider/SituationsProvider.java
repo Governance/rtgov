@@ -76,9 +76,10 @@ public interface SituationsProvider {
      * 
      * @param situationId The situation id
      * @param message The message
+     * @param username The user performing the resubmit
      * @throws UiException
      */
-    public void resubmit(String situationId, MessageBean message) throws UiException;
+    public void resubmit(String situationId, MessageBean message, String username) throws UiException;
 
     /**
      * This method export all situation's matching the given filter criteria
@@ -93,11 +94,12 @@ public interface SituationsProvider {
      * This method resubmits all situation's matching the given filter criteria
      * 
      * @param filters The filters
+     * @param username The user doing the resubmit
      * @return The {@link BatchRetryResult}
      * @throws UiException
      *             Failed to search situations
      */
-    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) throws UiException;
 
     /**
      * This method deletes all situation's matching the given filter criteria
