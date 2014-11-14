@@ -70,7 +70,13 @@ public class JEEActivityServer implements ActivityServer {
                     LOG.fine("User transaction="+_tx);
                 }
             } catch (NamingException e) {
-                LOG.log(Level.SEVERE, "Failed to get UserTransaction", e);
+                if (e.getCause() instanceof IllegalStateException) {
+                    if (LOG.isLoggable(Level.FINEST)) {
+                        LOG.log(Level.FINEST, "UserTransaction not available - probably due to container managed txn", e);
+                    }
+                } else {
+                    LOG.log(Level.SEVERE, "Failed to get UserTransaction", e);
+                }
             }
         }
         

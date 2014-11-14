@@ -16,6 +16,7 @@
     <condition property="appserver.id.valid">
       <or>
         <equals arg1="${appserver.id}" arg2="jboss-eap-6" />
+        <equals arg1="${appserver.id}" arg2="wildfly-8" />
         <equals arg1="${appserver.id}" arg2="fuse-6.1" />
       </or>
     </condition>
@@ -27,6 +28,10 @@
         <and>
           <available file="jboss-modules.jar" filepath="${path}" />
           <equals arg1="${appserver.id}" arg2="jboss-eap-6" />
+        </and>
+        <and>
+          <available file="jboss-modules.jar" filepath="${path}" />
+          <equals arg1="${appserver.id}" arg2="wildfly-8" />
         </and>
         <and>
           <available file="fuse" filepath="${path}/bin" />

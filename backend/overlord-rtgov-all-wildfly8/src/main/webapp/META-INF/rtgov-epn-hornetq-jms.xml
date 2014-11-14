@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messaging-deployment xmlns="urn:jboss:messaging-deployment:1.0">
+    <hornetq-server>
+        <jms-destinations>
+            <jms-queue name="EPNEvents">
+                <entry name="EPNEvents"/>
+            </jms-queue>
+            <jms-topic name="EPNNotifications">
+                <entry name="EPNNotifications"/>
+            </jms-topic>
+         </jms-destinations>
+    </hornetq-server>
+</messaging-deployment>

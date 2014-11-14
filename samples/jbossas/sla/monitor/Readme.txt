@@ -9,7 +9,8 @@ Information Processor, as well as the SLA Event Processor Network.
 
 To deploy the quickstart, after the server has been started, run:
 
-	mvn jboss-as:deploy
+	mvn jboss-as:deploy (for EAP)
+	mvn wildfly:deploy (for Wildfly)
 
 To run the example, generate some situations (e.g. run the example 'order3' request in the ordermgmt/app
 folder). Then using a REST client, issue the following GET:
@@ -20,7 +21,8 @@ This will return the situations currently available in the 'Situations' active c
 
 To undeploy the quickstart, run:
 
-	mvn jboss-as:undeploy
+	mvn jboss-as:undeploy (for EAP)
+	mvn wildfly:undeploy (for Wildfly)
 
 
 NOTE: This quickstart can be deployed with the profile(s): server

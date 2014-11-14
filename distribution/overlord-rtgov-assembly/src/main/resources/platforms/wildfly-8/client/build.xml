@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="RTGovClient">
+
+	<target name="install" >
+        <copy todir="${path}/standalone/deployments/rtgov" >
+            <fileset dir="deployments" />
+        </copy>
+        <copy todir="${path}/standalone/configuration" >
+            <fileset dir="configuration" />
+        </copy>
+		
+	</target>
+
+	<target name="uninstall" >
+		<delete dir="${path}/standalone/deployments/rtgov"/>
+		<delete file="${path}/standalone/configuration/overlord-rtgov.properties"/>
+	</target>
+
+</project>
+ 

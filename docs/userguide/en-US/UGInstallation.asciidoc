@@ -4,13 +4,13 @@
 
 This section will describe how to install Overlord Runtime Governance in different environments.
 
-==== JBoss EAP
+==== JBoss EAP or Wildfly
 
-* Download the http://www.jboss.org/jbossas/downloads/[JBoss EAP] distribution (version 6.1 and 6.3 are currently supported), and unpack it in a suitable location.
+* Download the App Server: http://www.jboss.org/jbossas/downloads/[JBoss EAP] distribution (version 6.1 and 6.3 are currently supported) or http://wildfly.org/downloads/[Wildfly] distribution (version 8.1), and unpack it in a suitable location.
 
 * Download http://ant.apache.org/bindownload.cgi[Apache Ant] and follow the installation instructions.
 
-* If using rtgov with switchyard, then download http://www.jboss.org/switchyard/downloads[SwitchYard] (version 2.0.0.Final or higher) and install it into the JBoss EAP environment. We recommend using the switchyard installer, which can be unpacked in a temporary location, and run 'ant' in the root folder to be prompted for the location of the JBoss EAP environment.
+* If using rtgov with switchyard, then download http://www.jboss.org/switchyard/downloads[SwitchYard] (version 2.0.0.Final or higher) and install it into the JBoss EAP environment. We recommend using the switchyard installer, which can be unpacked in a temporary location, and run 'ant' in the root folder to be prompted for the location of the JBoss EAP or Wildfly environment.
 
 NOTE: If switchyard is not installed, then you won't be able to use the quickstarts, which are based around providing runtime governance for a switchyard application.
 
@@ -19,8 +19,10 @@ NOTE: If switchyard is not installed, then you won't be able to use the quicksta
 * The final step is to perform the installation of Overlord Runtime Governance using ant. To do the installation, use the following command from the root folder of the installation:
 
 ----
-ant [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
+ant -Dappserver.id=<appserver-id> [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
 ----
+
+The _<appserver-id>_ can either be +jboss-eap-6+ or +wildfly-8+.
 
 If the _<root-folder>_ is not explicitly provided on the command line, then the user will be prompted for the information.
 
@@ -36,7 +38,7 @@ The _<installation-type>_ value can be:
 To uninstall, simply perform the following command in the root folder of the installation:
 
 ----
-ant uninstall [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
+ant uninstall -Dappserver.id=<appserver-id> [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
 ----
 
 To start the server, go to the EAP +bin+ folder and run:

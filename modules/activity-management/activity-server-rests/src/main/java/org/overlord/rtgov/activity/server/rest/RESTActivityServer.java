@@ -253,12 +253,14 @@ public class RESTActivityServer {
     @Path("/store")
     @Consumes("application/json")
     @Produces("text/plain")
-    public Response store(@TypeHint(ActivityUnit.class) java.util.List<ActivityUnit> acts) throws Exception {
+    public Response store(@TypeHint(ActivityUnit.class) String acts) throws Exception {
         init();
         
+        java.util.List<ActivityUnit> activities=
+                ActivityUtil.deserializeActivityUnitList(acts.getBytes());
+        
         if (LOG.isLoggable(Level.FINEST)) {
-            byte[] b=ActivityUtil.serializeActivityUnitList(acts);
-            LOG.finest("Store "+acts.size()+" activities: "+new String(b));        
+            LOG.finest("Store "+activities.size()+" activities: "+acts);        
         }
         
         if (_activityServer == null) {
@@ -266,7 +268,7 @@ public class RESTActivityServer {
         }
 
         try {
-            _activityServer.store(acts);
+            _activityServer.store(activities);
             
             return Response.status(Status.OK).entity("Activities stored").build();
         } catch (Exception e) {
