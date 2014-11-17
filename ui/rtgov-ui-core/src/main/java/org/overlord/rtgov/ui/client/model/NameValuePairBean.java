@@ -23,8 +23,8 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class NameValuePairBean {
 
-    private String _name=null;
-    private String _value=null;
+    private String name=null;
+    private String value=null;
 
     /**
      * Constructor.
@@ -39,36 +39,36 @@ public class NameValuePairBean {
      * @param value The value
      */
     public NameValuePairBean(String name, String value) {
-        _name = name;
-        _value = value;
+        this.name = name;
+        this.value = value;
     }
 
     /**
      * @return the name
      */
     public String getName() {
-        return _name;
+        return name;
     }
 
     /**
      * @param name the name
      */
     public void setName(String name) {
-        _name = name;
+        this.name = name;
     }
 
     /**
      * @return the value
      */
     public String getValue() {
-        return _value;
+        return value;
     }
 
     /**
      * @param value the value
      */
     public void setValue(String value) {
-        _value = value;
+        this.value = value;
     }
 
 }

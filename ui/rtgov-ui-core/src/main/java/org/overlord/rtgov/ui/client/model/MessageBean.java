@@ -23,12 +23,12 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 @Portable
 public class MessageBean {
 
-    private String _content=null;
+    private String content=null;
     
-    private java.util.Map<String,String> _headers=new java.util.HashMap<String,String>();
-    private java.util.Map<String,String> _headerFormats=new java.util.HashMap<String,String>();    
+    private java.util.Map<String,String> headers=new java.util.HashMap<String,String>();
+    private java.util.Map<String,String> headerFormats=new java.util.HashMap<String,String>();    
     
-    private String _principal=null;
+    private String principal=null;
 
     /**
      * Constructor.
@@ -40,14 +40,14 @@ public class MessageBean {
      * @return the contents
      */
     public String getContent() {
-        return _content;
+        return content;
     }
 
     /**
      * @param contents the contents
      */
     public void setContent(String contents) {
-        _content = contents;
+        this.content = contents;
     }
 
     /**
@@ -56,7 +56,7 @@ public class MessageBean {
      * @return The headers
      */
     public java.util.Map<String,String> getHeaders() {
-        return (_headers);
+        return (headers);
     }
     
     /**
@@ -65,7 +65,7 @@ public class MessageBean {
      * @param headers The headers
      */
     public void setHeaders(java.util.Map<String,String> headers) {
-        _headers = headers;
+        this.headers = headers;
     }
 
     /**
@@ -74,7 +74,7 @@ public class MessageBean {
      * @return The header formats
      */
     public java.util.Map<String,String> getHeaderFormats() {
-        return (_headerFormats);
+        return (headerFormats);
     }
     
     /**
@@ -83,21 +83,21 @@ public class MessageBean {
      * @param headerFormats The header formats
      */
     public void setHeaderFormats(java.util.Map<String,String> headerFormats) {
-        _headerFormats = headerFormats;
+        this.headerFormats = headerFormats;
     }
 
     /**
      * @return the principal
      */
     public String getPrincipal() {
-        return _principal;
+        return principal;
     }
 
     /**
      * @param principal the principal
      */
     public void setPrincipal(String principal) {
-        _principal = principal;
+        this.principal = principal;
     }
 
 }

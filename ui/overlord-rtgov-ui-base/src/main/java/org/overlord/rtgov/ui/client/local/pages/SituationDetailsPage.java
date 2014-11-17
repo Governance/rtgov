@@ -210,20 +210,20 @@ public class SituationDetailsPage extends AbstractPage {
         }
         resubmitButton.setEnabled(situation.isResubmitPossible());
         messageEditor.setReadOnly(!situation.isResubmitPossible());
-        if (situation.getResubmitBy() != null) {
+        if (situation.resubmitBy() != null) {
             resubmitDetails.setText(i18n.format("situation-details.resubmit-details",
-                    situation.getResubmitBy(), situation.getResubmitAt(), situation.getResubmitResult()));
-            resubmitDetails.setTitle(situation.getResubmitErrorMessage());
+                    situation.resubmitBy(), situation.resubmitAt(), situation.resubmitResult()));
+            resubmitDetails.setTitle(situation.resubmitErrorMessage());
         } else {
             resubmitDetails.setTitle("");
             resubmitDetails.setText("");
         }
-        if (situation.isResubmitError()) {
+        if (situation.resubmitError()) {
             resubmitDetails.getElement().addClassName("text-error"); //$NON-NLS-1$
         } else {
             resubmitDetails.getElement().removeClassName("text-error"); //$NON-NLS-1$
         }
-		if (situation.isAssignedToCurrentUser() || (situation.getAssignedTo() != null && situation.isTakeoverPossible())) {
+		if (situation.isAssignedToCurrentUser() || (situation.assignedTo() != null && situation.isTakeoverPossible())) {
 			if (situation.isAssignedToCurrentUser()) {
 				assignButton.getElement().addClassName("hide");
 			} else {

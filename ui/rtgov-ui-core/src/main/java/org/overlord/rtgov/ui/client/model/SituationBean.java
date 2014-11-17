@@ -126,7 +126,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
 
 	/**
 	 *
-	 * @return whether this {@link Sitatuion} can be taken over by the currently logged-in user
+	 * @return whether this {@link Situation} can be taken over by the currently logged-in user
 	 */
 	public boolean isTakeoverPossible() {
 		return isTakeoverPossible;
@@ -135,14 +135,14 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     /**
      * @return The name of the user who has resubmitted this situation
      */
-	public String getResubmitBy() {
+	public String resubmitBy() {
 		return getProperties().get("resubmitBy");
 	}
 
     /**
      * @return The date and time of the last resubmit
      */
-    public String getResubmitAt() {
+    public String resubmitAt() {
         if (!getProperties().containsKey("resubmitAt")) {
             return null;
         }
@@ -153,7 +153,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     /**
      * @return The error message of the last resubmit failure or null
      */
-    public String getResubmitResult() {
+    public String resubmitResult() {
         return getProperties().get("resubmitResult");
     }
 
@@ -161,7 +161,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
      *
      * @return true if the last resubmit failed
      */
-    public boolean isResubmitError() {
+    public boolean resubmitError() {
         return getProperties().containsKey("resubmitResult")
                 && !"Success".equals(getProperties().get("resubmitResult"));
     }
@@ -170,7 +170,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
      *
      * @return The error message for the last resubmit
      */
-    public String getResubmitErrorMessage() {
+    public String resubmitErrorMessage() {
         return getProperties().get("resubmitErrorMessage");
     }
 
