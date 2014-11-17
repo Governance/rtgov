@@ -25,7 +25,7 @@ If no parameters are defined, then the defaults are:
     path: no default - will request path from user
 
 
-For more information on using Runtime Governance, see http://www.jboss.org/overlord/documentation/rtgov
+For more information on using Runtime Governance, see http://docs.jboss.org/overlord/rtgov/
 
 Next step - try out some of the quickstarts in the samples folder.
 
