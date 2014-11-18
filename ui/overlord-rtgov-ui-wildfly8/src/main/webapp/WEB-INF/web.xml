@@ -69,19 +69,6 @@
     <param-value>/WEB-INF/users.properties</param-value>
   </context-param>
 
-  <servlet>
-    <servlet-name>OverlordHeaderDataJS</servlet-name>
-    <servlet-class>org.overlord.commons.ui.header.OverlordHeaderDataJS</servlet-class>
-    <init-param>
-        <param-name>app-id</param-name>
-        <param-value>rtgov-ui</param-value>
-    </init-param>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>OverlordHeaderDataJS</servlet-name>
-    <url-pattern>/js/overlord-header-data.js</url-pattern>
-  </servlet-mapping>
-
     <servlet>
         <servlet-name>ElasticsearchRESTServer</servlet-name>
         <servlet-class>org.overlord.rtgov.elasticsearch.rest.ElasticsearchRESTServer</servlet-class>
@@ -92,7 +79,6 @@
         <url-pattern>/elasticsearch/*</url-pattern>
     </servlet-mapping>
    
-    
     <servlet>
         <servlet-name>RESTServer</servlet-name>
         <servlet-class>
@@ -109,4 +95,28 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
     
+    <!-- Security -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>rtgov-ui</web-resource-name>
+            <url-pattern>/index.html</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>rtgov-ui-analytics</web-resource-name>
+            <url-pattern>/analytics.html</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>user</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>governance</realm-name>
+    </login-config>
+
+    <security-role>
+        <role-name>user</role-name>
+    </security-role>
+
 </web-app>
