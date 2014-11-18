@@ -30,7 +30,7 @@ public class ApplicationListBean implements Serializable {
 
     private static final long serialVersionUID = ApplicationListBean.class.hashCode();
 
-    private List<QName> appNames = new ArrayList<QName>();
+    private List<QName> applicationNames = new ArrayList<QName>();
 
     /**
      * Constructor.
@@ -42,14 +42,14 @@ public class ApplicationListBean implements Serializable {
      * @return the application names
      */
     public List<QName> getApplicationNames() {
-        return appNames;
+        return applicationNames;
     }
 
     /**
      * @param appNames the application names to set
      */
     public void setApplicationNames(List<QName> appNames) {
-        this.appNames = appNames;
+        this.applicationNames = appNames;
     }
 
 }
