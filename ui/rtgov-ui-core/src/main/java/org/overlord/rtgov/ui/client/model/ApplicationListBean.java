@@ -16,6 +16,7 @@
 package org.overlord.rtgov.ui.client.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -29,7 +30,7 @@ public class ApplicationListBean implements Serializable {
 
     private static final long serialVersionUID = ApplicationListBean.class.hashCode();
 
-    private List<QName> appNames;
+    private List<QName> appNames = new ArrayList<QName>();
 
     /**
      * Constructor.

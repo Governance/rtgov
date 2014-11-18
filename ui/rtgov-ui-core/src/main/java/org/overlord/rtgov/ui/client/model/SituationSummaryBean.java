@@ -155,10 +155,14 @@ public class SituationSummaryBean {
         return resolutionState;
     }
     
+    public void setResolutionState(String state) {
+        // No op
+    }
+    
     /**
 	 * @return the assignedTo User
 	 */
-    public String getAssignedTo() {
+    public String assignedTo() {
         String assignedTo = null;
         if (properties != null && properties.get("assignedTo") != null) {
         	assignedTo = properties.get("assignedTo");

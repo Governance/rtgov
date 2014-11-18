@@ -61,8 +61,8 @@ public class SituationsService implements ISituationsService {
 	@Override
 	public SituationBean get(String situationId) throws UiException {
 		SituationBean situationBean = impl.get(situationId);
-		if (situationBean.getAssignedTo() != null
-				&& situationBean.getAssignedTo().equals(securityContext.getUserPrincipal().getName())) {
+		if (situationBean.assignedTo() != null
+				&& situationBean.assignedTo().equals(securityContext.getUserPrincipal().getName())) {
 			situationBean.setAssignedToCurrentUser(true);
 		}
 		if (securityContext.isUserInRole("ROLE_ADMIN")) {
