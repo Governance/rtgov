@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="RTGovClient" basedir="." default="install" >
+
+  <target name="get-appserver.id-path" unless="path" >
+    <echo message=" " />
+    <echo message=" Please tell us where app server is located (full path)." />
+    <echo message=" " />
+    <input message="Path to app server: " addproperty="path" />
+  </target>
+
+  <target name="setup" depends="get-appserver.id-path" >
+
+    <condition property="path.valid">
+          <available file="jboss-modules.jar" filepath="${path}" />
+    </condition>
+    <fail message="Failed to find app server at: ${path}" 
+              unless="path.valid" />
+
+  </target>
+
+	<target name="install" depends="setup" >
+        <copy todir="${path}/standalone/deployments/rtgov" >
+            <fileset dir="deployments" />
+        </copy>
+        <copy todir="${path}/standalone/configuration" >
+            <fileset dir="configuration" />
+        </copy>
+		
+	</target>
+
+	<target name="uninstall" depends="setup" >
+		<delete dir="${path}/standalone/deployments/rtgov"/>
+		<delete file="${path}/standalone/configuration/overlord-rtgov.properties"/>
+	</target>
+
+</project>
+ 

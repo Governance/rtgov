@@ -7,11 +7,13 @@ build and run them, can be found in the individual Readme.txt files with the qui
 To build and deploy all of the deloyable quickstarts, simply use the following command from this folder, after the
 server has been started:
 
-	mvn jboss-as:deploy
+	mvn jboss-as:deploy (for EAP)
+	mvn wildfly:deploy (for Wildfly)
 
 and to undeploy:
 
-	mvn jboss-as:undeploy
+	mvn jboss-as:undeploy (for EAP)
+	mvn wildfly:undeploy (for Wildfly)
 
 
 

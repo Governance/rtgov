@@ -15,9 +15,22 @@
 
 	<modules>
 		<module>app</module>
-		<module>epn</module>
 		<module>ip</module>
 	</modules>
+
+    <profiles>
+        <profile>
+            <id>server</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/epn</exists>
+                </file>
+            </activation>
+	        <modules>
+		        <module>epn</module>
+	        </modules>
+        </profile>
+    </profiles>
 
 </project>
 

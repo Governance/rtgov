@@ -24,6 +24,25 @@
 			<artifactId>collector-activity-server</artifactId>
 		</dependency>
 		
+        <!-- Activity Validator modules -->
+
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-keyvaluestore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-jpa</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-drools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mvel</artifactId>
+		</dependency>
+		
 		<!-- Activity Server modules -->
 		
 		<dependency>
@@ -36,13 +55,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-jee</artifactId>
-		</dependency>
-
-		<!-- Overlord commons -->
-		
-		<dependency>
-			<groupId>org.overlord</groupId>
-			<artifactId>overlord-commons-config</artifactId>
 		</dependency>
 
 		<!-- Client -->
@@ -87,13 +99,6 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		
-        <!-- PicketLink -->
-
-        <dependency>
-            <groupId>org.picketlink</groupId>
-            <artifactId>picketlink-federation</artifactId>
-        </dependency>
-
 		<!-- Test dependencies -->
 		
 		<dependency>

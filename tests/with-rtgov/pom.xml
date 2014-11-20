@@ -26,7 +26,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.overlord.rtgov</groupId>
-			<artifactId>overlord-rtgov-distribution-assembly</artifactId>
+			<artifactId>overlord-rtgov-dist-all-eap6</artifactId>
 			<type>zip</type>
 			<scope>provided</scope>
 		</dependency>

@@ -37,16 +37,6 @@
         <dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-drools</artifactId>
-			<exclusions>
-                <exclusion>
-                    <groupId>org.kie</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.drools</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
@@ -68,14 +58,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>situation-store</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>service-dependency</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>service-dependency-svg</artifactId>
 		</dependency>
 
 		<!-- Collector modules -->
