@@ -517,7 +517,25 @@
 
 		    <dependency>
 			    <groupId>org.overlord.rtgov</groupId>
-			    <artifactId>overlord-rtgov-distribution-assembly</artifactId>
+			    <artifactId>overlord-rtgov-dist-all-eap6</artifactId>
+                <version>${project.version}</version>
+			    <type>zip</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-dist-all-wildfly8</artifactId>
+                <version>${project.version}</version>
+			    <type>zip</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-dist-client-eap6</artifactId>
+                <version>${project.version}</version>
+			    <type>zip</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-dist-client-wildfly8</artifactId>
                 <version>${project.version}</version>
 			    <type>zip</type>
 		    </dependency>
@@ -665,6 +683,12 @@
 		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov</groupId>
+			    <artifactId>overlord-rtgov-client-wildfly8</artifactId>
+                <version>${project.version}</version>
+			    <type>war</type>
+		    </dependency>
+		    <dependency>
+			    <groupId>org.overlord.rtgov</groupId>
 			    <artifactId>overlord-rtgov-switchyard-eap6</artifactId>
                 <version>${project.version}</version>
 			    <type>war</type>
@@ -751,11 +775,6 @@
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-services</artifactId>
-				<version>${version.org.overlord.overlord-commons}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.overlord</groupId>
-				<artifactId>overlord-commons-osgi</artifactId>
 				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
@@ -1144,13 +1163,6 @@
 				<groupId>ch.qos.cal10n</groupId>
 				<artifactId>cal10n-api</artifactId>
 				<version>${version.ch.qos.cal10n}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.kie</groupId>
-				<artifactId>kie-eap-distributions-bpms-layer</artifactId>
-				<version>${version.org.kie}</version>
-				<type>zip</type>
 			</dependency>
 
 		    <dependency>

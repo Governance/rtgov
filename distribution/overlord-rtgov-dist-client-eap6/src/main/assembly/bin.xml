@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - 2012-3 Red Hat Inc. and/or its affiliates and other contributors.
+ - 
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -
+ - http://www.apache.org/licenses/LICENSE-2.0
+ -
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+ -->
+<assembly>
+	<!-- id typically identifies the "type" (src vs bin etc) of the assembly -->
+	<id>bin</id>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<formats>
+		<format>zip</format>
+	</formats>
+
+	<fileSets>
+
+		<!--Copy files from template -->	
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+
+		<!-- Copy samples -->
+		<fileSet>
+			<directory>../../samples/jbossas</directory>
+			<outputDirectory>samples</outputDirectory>
+			<excludes>
+				<exclude>**/.*</exclude>
+				<exclude>**/target/**</exclude>
+				<exclude>**/bin/**</exclude>
+				<exclude>**/.settings/**</exclude>
+				<exclude>**/*epn/**</exclude>
+				<exclude>**/sla/**</exclude>
+			</excludes>
+		</fileSet>
+
+	</fileSets>
+    
+	<dependencySets>
+
+        <dependencySet>
+              <outputDirectory>lib</outputDirectory>
+	      <includes>    
+		    <include>org.apache.ant:ant:jar</include>
+		    <include>org.apache.ant:ant-launcher:jar</include>
+	      </includes>
+	      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+	      <useProjectArtifact>false</useProjectArtifact>
+	      <useProjectAttachments>false</useProjectAttachments>
+	      <useTransitiveDependencies>false</useTransitiveDependencies>
+	      <useTransitiveFiltering>false</useTransitiveFiltering>
+	      <directoryMode>0755</directoryMode>
+	      <fileMode>0755</fileMode>
+        </dependencySet>
+
+        <!-- Documentation -->
+        <dependencySet>
+            <outputDirectory>docs/developerguide</outputDirectory>
+            <includes>
+                <include>org.overlord.rtgov.docs:rtgov-developerguide:jdocbook</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>docs/userguide</outputDirectory>
+            <includes>
+                <include>org.overlord.rtgov.docs:rtgov-userguide:jdocbook</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>docs/javadoc</outputDirectory>
+            <includes>
+                <include>org.overlord.rtgov.docs:rtgov-javadoc:javadoc</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>docs/restapi</outputDirectory>
+            <includes>
+                <include>org.overlord.rtgov.docs:rtgov-restapi:zip</include>
+            </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <excludes>
+                    <exclude>**/META-INF/**</exclude>
+                </excludes>
+            </unpackOptions>
+        </dependencySet>
+
+		<!-- JBOSS-EAP-6 'client' profile -->
+
+		<dependencySet>
+			<outputDirectory>deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-client-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
+		</dependencySet>
+
+	</dependencySets>
+
+</assembly>

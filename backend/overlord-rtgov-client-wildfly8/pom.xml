@@ -1,0 +1,125 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  	<modelVersion>4.0.0</modelVersion>
+	<artifactId>overlord-rtgov-client-wildfly8</artifactId>
+	<packaging>war</packaging>
+	<version>2.1.0-SNAPSHOT</version>
+	<name>Overlord RTGov::Backend::Client Wildfly8</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>backend</artifactId>
+		<version>2.1.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>		
+		<!-- Collector modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-client-jee</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>collector-activity-server</artifactId>
+		</dependency>
+
+        <!-- Activity Validator modules -->
+
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-keyvaluestore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-jpa</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-drools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mvel</artifactId>
+		</dependency>
+		
+		<!-- Activity Server modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity-server-restc</artifactId>
+		</dependency>
+
+		<!-- Active collection modules -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-jee</artifactId>
+		</dependency>
+
+		<!-- Client -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-client</artifactId>
+		</dependency>
+	
+		<!-- JBossAS Specific -->
+		
+		<dependency>
+			<groupId>org.overlord.rtgov.integration</groupId>
+			<artifactId>rtgov-jbossas</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-infinispan</artifactId>
+		</dependency>
+		
+		<!-- Overlord commons -->
+		
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-io</groupId>
+					<artifactId>commons-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-configuration</groupId>
+					<artifactId>commons-configuration</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- Apache Commons Codec - included to override EAP version due to RTGOV-237 -->
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		
+		<!-- Test dependencies -->
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

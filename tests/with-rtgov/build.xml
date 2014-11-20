@@ -16,12 +16,10 @@
         </ant>
 
         <echo message="Install RTGOV into EAP (${eap.dist})" />
-        <unzip src="${org.overlord.rtgov:overlord-rtgov-distribution-assembly:zip}" dest="${path}" />
+        <unzip src="${org.overlord.rtgov:overlord-rtgov-dist-all-eap6:zip}" dest="${path}" />
 
-        <ant antfile="${path}/overlord-rtgov-${rtgov.version}/build.xml" dir="${path}/overlord-rtgov-${rtgov.version}" >
-            <property name="appserver.id" value="jboss-eap-6"/>
+        <ant antfile="${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/build.xml" dir="${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}" >
             <property name="path" value="${path}"/>
-            <property name="overlord-commons.admin.password" value=".overlord1" />
         </ant>
     </target>
 

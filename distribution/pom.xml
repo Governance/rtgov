@@ -13,11 +13,17 @@
 	</parent>
 
 	<modules>
-		<module>bundles</module>
+		<module>overlord-rtgov-dist-all-eap6</module>
+		<module>overlord-rtgov-dist-all-wildfly8</module>
+		<module>overlord-rtgov-dist-client-eap6</module>
+		<module>overlord-rtgov-dist-client-wildfly8</module>
+<!-- Currently disabled until fuse/fabric supported again
 		<module>overlord-rtgov-assembly</module>
+		<module>bundles</module>
 		<module>overlord-rtgov-features-fuse6</module>
 		<module>overlord-rtgov-profiles-fabric</module>
 		<module>overlord-rtgov-karaf-commands</module>
+-->
 	</modules>
 
 </project>

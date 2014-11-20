@@ -50,8 +50,21 @@
 		<module>activityclient</module>
 		<module>ordermgmt</module>
 		<module>policy</module>
-		<module>sla</module>
 	</modules>
+
+    <profiles>
+        <profile>
+            <id>server</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/sla</exists>
+                </file>
+            </activation>
+	        <modules>
+		        <module>sla</module>
+	        </modules>
+        </profile>
+    </profiles>
 
 	<dependencyManagement>
 		<dependencies>

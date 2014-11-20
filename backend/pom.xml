@@ -15,8 +15,11 @@
 	<modules>
 		<module>overlord-rtgov-all-eap6</module>
 		<module>overlord-rtgov-all-wildfly8</module>
+<!-- Disabled until fuse supported again
 		<module>overlord-rtgov-all-fuse6</module>
+-->
 		<module>overlord-rtgov-client-eap6</module>
+		<module>overlord-rtgov-client-wildfly8</module>
 		<module>overlord-rtgov-switchyard-eap6</module>
 	</modules>
 

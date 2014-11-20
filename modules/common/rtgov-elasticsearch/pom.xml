@@ -94,12 +94,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.overlord.rtgov.common</groupId>
-            <artifactId>rtgov-common</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <scope>provided</scope>

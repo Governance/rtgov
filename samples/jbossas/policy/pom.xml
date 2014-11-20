@@ -15,9 +15,22 @@
 
 	<modules>
 		<module>async-av</module>
-		<module>async-epn</module>
 		<module>sync</module>
 	</modules>
+
+    <profiles>
+        <profile>
+            <id>server</id>
+            <activation>
+                <file>
+                    <exists>${basedir}/async-epn</exists>
+                </file>
+            </activation>
+	        <modules>
+		        <module>async-epn</module>
+	        </modules>
+        </profile>
+    </profiles>
 
 </project>
 

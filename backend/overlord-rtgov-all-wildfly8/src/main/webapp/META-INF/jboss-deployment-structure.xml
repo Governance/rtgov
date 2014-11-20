@@ -23,7 +23,6 @@
       <module name="org.apache.commons.lang" export="true" />
       <module name="org.codehaus.jackson.jackson-core-asl" export="true" />
       <module name="org.codehaus.jackson.jackson-mapper-asl" export="true" />
-      <module name="org.mvel" export="true" />
       <module name="org.hibernate" export="true" />
       <module name="org.infinispan" export="true" />
       <module name="org.jaxen" />

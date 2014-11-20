@@ -1,0 +1,124 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>overlord-rtgov-dist-all-eap6</artifactId>
+	<packaging>pom</packaging>
+	<name>Overlord RTGov::Distribution::All EAP6</name>
+
+	<parent>
+		<groupId>org.overlord.rtgov</groupId>
+		<artifactId>distribution</artifactId>
+		<version>2.1.0-SNAPSHOT</version>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-all-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov</groupId>
+			<artifactId>overlord-rtgov-switchyard-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.content</groupId>
+			<artifactId>overlord-rtgov-epn-jee</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.content</groupId>
+			<artifactId>overlord-rtgov-acs-jee</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.ui</groupId>
+			<artifactId>overlord-rtgov-ui-eap6</artifactId>
+			<type>war</type>
+		</dependency>
+
+		<!-- Database drivers -->
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>
+
+        <!-- Documentation -->
+		<dependency>
+			<groupId>org.overlord.rtgov.docs</groupId>
+			<artifactId>rtgov-developerguide</artifactId>
+            <type>jdocbook</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.docs</groupId>
+			<artifactId>rtgov-userguide</artifactId>
+            <type>jdocbook</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.docs</groupId>
+			<artifactId>rtgov-javadoc</artifactId>
+            <type>javadoc</type>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.docs</groupId>
+			<artifactId>rtgov-restapi</artifactId>
+            <type>zip</type>
+		</dependency>
+
+		<!--Other dependencies-->
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+		</dependency>  
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant-launcher</artifactId>
+		</dependency>  
+	</dependencies> 
+
+	<build>
+		<resources>
+			<resource>
+ 				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <!-- Entry needed to enable jdocbook unzipping -->
+                        <groupId>org.jboss.maven.plugins</groupId>
+                        <artifactId>maven-jdocbook-plugin</artifactId>
+                        <version>2.3.8</version>
+                    </dependency>
+                </dependencies>
+				<executions>
+					<execution>
+						<id>bin</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptors>
+								<descriptor>src/main/assembly/bin.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
