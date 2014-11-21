@@ -49,7 +49,7 @@
 	<dependencySets>
 
         <dependencySet>
-              <outputDirectory>lib</outputDirectory>
+              <outputDirectory>dist/lib</outputDirectory>
 	      <includes>    
 		    <include>org.apache.ant:ant:jar</include>
 		    <include>org.apache.ant:ant-launcher:jar</include>
@@ -140,7 +140,7 @@
 		<!-- Wildfly8 'client' profile -->
 
 		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
+			<outputDirectory>dist/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov:overlord-rtgov-client-wildfly8:war</include>
@@ -148,7 +148,7 @@
 			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
+			<outputDirectory>dist/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>

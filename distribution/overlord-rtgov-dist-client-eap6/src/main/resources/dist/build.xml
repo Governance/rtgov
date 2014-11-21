@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="RTGovClient" basedir="." default="install" >
 
-  <target name="get-appserver.id-path" unless="path" >
+  <target name="get-path" unless="path" >
     <echo message=" " />
     <echo message=" Please tell us where app server is located (full path)." />
     <echo message=" " />
     <input message="Path to app server: " addproperty="path" />
   </target>
 
-  <target name="setup" depends="get-appserver.id-path" >
+  <target name="setup" depends="get-path" >
 
     <condition property="path.valid">
           <available file="jboss-modules.jar" filepath="${path}" />

@@ -1,1 +1,1 @@
-java -jar lib/ant-launcher.jar $*
+java -jar dist/lib/ant-launcher.jar -buildfile dist/build.xml $*
