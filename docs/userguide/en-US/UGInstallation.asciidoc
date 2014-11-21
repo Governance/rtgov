@@ -8,107 +8,55 @@ This section will describe how to install Overlord Runtime Governance in differe
 
 * Download the App Server: http://www.jboss.org/jbossas/downloads/[JBoss EAP] distribution (version 6.1 and 6.3 are currently supported) or http://wildfly.org/downloads/[Wildfly] distribution (version 8.1), and unpack it in a suitable location.
 
-* Download http://ant.apache.org/bindownload.cgi[Apache Ant] and follow the installation instructions.
-
-* If using rtgov with switchyard, then download http://www.jboss.org/switchyard/downloads[SwitchYard] (version 2.0.0.Final or higher) and install it into the JBoss EAP environment. We recommend using the switchyard installer, which can be unpacked in a temporary location, and run 'ant' in the root folder to be prompted for the location of the JBoss EAP or Wildfly environment.
+* If using rtgov with switchyard, then download http://www.jboss.org/switchyard/downloads[SwitchYard] (version 2.0.0.Final or higher) and install it into the JBoss EAP/Wildfly environment. We recommend using the switchyard installer, which can be unpacked in a temporary location, and run 'ant' in the root folder to be prompted for the location of the JBoss EAP or Wildfly environment.
 
 NOTE: If switchyard is not installed, then you won't be able to use the quickstarts, which are based around providing runtime governance for a switchyard application.
 
-* Download the latest release of RTGov from the http://www.jboss.org/overlord[Overlord website], then unpack the distribution into a suitable location.
+* Download the latest release of RTGov from the http://www.jboss.org/overlord[Overlord website], choosing the appropriate distribution for the target container and installation type (e.g. client only or all). Unpack the distribution into a suitable location.
 
-* The final step is to perform the installation of Overlord Runtime Governance using ant. To do the installation, use the following command from the root folder of the installation:
-
-----
-ant -Dappserver.id=<appserver-id> [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
-----
-
-The _<appserver-id>_ can either be +jboss-eap-6+ or +wildfly-8+.
-
-If the _<root-folder>_ is not explicitly provided on the command line, then the user will be prompted for the information.
-
-The _<installation-type>_ value can be:
+Note: The difference between the installation types is,
 
 [options="header"]
 |=======================
 | Value | Description
-| all | This will result in the full server configuration being installed into the server, including activity collector (for obtaining activities generated within that server), activity server (for receiving activity information whether from a remote client or internal activity collector), event processor network (to analyse the events), active collections (to maintain result information) and a collection of REST services to support remote access to the information. This is the default value.
 | client | This will result in only the activity collector functionality being installed, using a RESTful client to communicate with a remote Runtime Governance server.
+| all | This will result in the full server configuration being installed into the server, including activity collector (for obtaining activities generated within that server), activity server (for receiving activity information whether from a remote client or internal activity collector), event processor network (to analyse the events), active collections (to maintain result information) and a collection of REST services to support remote access to the information. This is the default value.
 |=======================
+
+* The final step is to perform the installation of Overlord Runtime Governance. To do the installation, use the following command from the root folder of the installation:
+
+----
+./install.sh [ -Dpath=<location> ]
+----
+
+The _<location>_ represents the folder where the JBoss EAP or Wildfly environment exists. If the _<location>_ is not explicitly provided on the command line, then the user will be prompted for the information.
 
 To uninstall, simply perform the following command in the root folder of the installation:
 
 ----
-ant uninstall -Dappserver.id=<appserver-id> [ -Dpath=<root-folder> ] [ -Dtype=<installation-type> ]
+./uninstall.sh [ -Dpath=<location> ]
 ----
 
-To start the server, go to the EAP +bin+ folder and run:
+To start the server, go to the EAP/Wildfly +bin+ folder and run:
 
 ----
 ./standalone.sh -c standalone-full.xml
 ----
 
-==== Fuse
+The final step is to configure KeyCloak with the Governance realm. This is achieved by following these steps:
 
-* Download the http://www.jboss.org/products/fuse/download/[Fuse] distribution (version 6.1), and unpack it in a suitable location.
+* Enter the URL http://localhost:8080/auth/admin/master/console/#/create/realm into your browser
 
-NOTE: Due to some issues with the fuse 6.1 distribution, it is necessary to patch the environment. Download the zip file attached
-to the article https://developer.jboss.org/wiki/RTGovDeploymentOnFuse61WithAndWithoutFabric and unpack it over the fuse environment.
+* If first time using KeyCloak on the server, then enter the username 'admin' and password 'admin. You will then be prompted to enter a new password (twice) for the admin user.
 
-* Configure JBoss Nexus
+* When the create realm page is displayed, it will offer the ability to upload a realm definition. Select the button and when a file dialog appears, navigate to the _dist_ folder within the RTGov distribution and select the _governance-realm.json_ file.
 
-Add the JBoss public maven repository to the file +etc/org.ops4j.pax.url.mvn.cfg+, by appending the following URL to the _org.ops4j.pax.url.mvn.repositories_ property:
-
-----
-    https://repository.jboss.org/nexus/content/groups/public@id=jboss.public
-----
-
-* Start the fuse console, using the +bin/fuse+ command, and then enter the following commands:
-
-----
-features:addurl mvn:org.overlord.rtgov/overlord-rtgov-features-fuse6/<version>/xml/features
-features:install rtgov-karaf-commands
-----
-
-NOTE: <version> in the first command should be replaced by the RTGov version that you wish to use, e.g. 2.0.0.Final.
-
-If wanting to install the 'all' profile (representing the RTGov server and co-located activity collector), then run:
-
-----
-overlord:rtgov:all:configure <password>
-features:install rtgov-all
-----
-
-where <password> is the overlord administration password for this rtgov environment.
-
-However, if just wanting to install the 'client' profile (co-located activity collector), then run:
-
-----
-overlord:rtgov:client:configure <username> <password>
-features:install rtgov-client
-----
-
-where <username> and <password> are the credentials of the rtgov server environment that this client environment will report activity information to. The <password> is also used to configure the local overlord keystore used to hold the remote rtgov server's credentials.
-
-If using SwitchYard, then also run:
-
-----
-features:install rtgov-switchyard
-----
-
-This registers the event listener on SwitchYard, to capture activity and report it to RTGov.
-
+* Once the realm has been uploaded successfully, you will be able to log in to the RTGov UI (http://localhost:8080/rtgov-ui) using the username 'admin' and password 'admin'
 
 
 === Further Configuration
 
-The configuration properties for the Runtime Governance capability are common across all platforms. However their location varies:
-
-[options="header"]
-|=======================
-| Value | Description
-| jboss-eap-6 | The properties are found in the _standalone*.xml_ files in the _<root>/standalone/configuration_ folder, or _domain.xml_ file in _<root>/domain/configuration_ folder. The properties are defined under a 'configuration' element with an attribute "name='overlord-rtgov'".
-| fuse-6.1 | The properties are found in the _<root>/etc/overlord-rtgov.properties_ file.
-|=======================
+The configuration properties for the Runtime Governance capability are found in the _<root>/standalone/configuration/overlord-rtgov.properties_ file.
 
 Although there will be some properties that are independent of the installation type, some will be specific and therefore are listed in separate sections below.
 

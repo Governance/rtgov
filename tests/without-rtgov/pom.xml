@@ -18,15 +18,6 @@
 		<module>event-processor-network</module>
 	</modules>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.overlord.rtgov</groupId>
-			<artifactId>overlord-rtgov-distribution-assembly</artifactId>
-			<type>zip</type>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>

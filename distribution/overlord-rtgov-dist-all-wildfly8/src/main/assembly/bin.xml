@@ -28,6 +28,9 @@
 		<fileSet>
 			<directory>src/main/resources</directory>
 			<outputDirectory>/</outputDirectory>
+            <filtered>true</filtered>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
 		</fileSet>
 
 		<!-- Copy samples -->
@@ -47,8 +50,29 @@
 	<dependencySets>
 
         <dependencySet>
-              <outputDirectory>lib</outputDirectory>
-	      <includes>    
+            <outputDirectory>dist</outputDirectory>
+	        <includes>
+              <include>org.keycloak:keycloak-war-dist-all:zip</include>
+	        </includes>
+            <useProjectArtifact>false</useProjectArtifact>
+            <useProjectAttachments>false</useProjectAttachments>
+            <useTransitiveDependencies>false</useTransitiveDependencies>
+            <useTransitiveFiltering>false</useTransitiveFiltering>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+            <unpack>true</unpack>
+            <unpackOptions>
+                <includes>
+                    <include>**/configuration/**</include>
+                    <include>**/deployments/**</include>
+                    <include>**/keycloak-wildfly-adapter-dist-*.zip</include>
+                </includes>
+            </unpackOptions>
+        </dependencySet>
+
+        <dependencySet>
+              <outputDirectory>dist/lib</outputDirectory>
+	      <includes>
 		    <include>org.apache.ant:ant:jar</include>
 		    <include>org.apache.ant:ant-launcher:jar</include>
 	      </includes>
@@ -135,10 +159,10 @@
             </unpackOptions>
         </dependencySet>
 
-		<!-- WILDFLY-8 'all' profile -->
+		<!-- JBOSS-EAP-6 'all' profile -->
 
 		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
+			<outputDirectory>dist/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov:overlord-rtgov-all-wildfly8:war</include>
@@ -146,7 +170,7 @@
 			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
+			<outputDirectory>dist/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov.ui:overlord-rtgov-ui-wildfly8:war</include>
@@ -154,7 +178,7 @@
 			<outputFileNameMapping>overlord-rtgov-ui.war</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
+			<outputDirectory>dist/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>
@@ -163,7 +187,7 @@
 		</dependencySet>
 
 		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
+			<outputDirectory>dist/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov.content:overlord-rtgov-epn-jee:war</include>
@@ -172,7 +196,7 @@
 		</dependencySet>
 
 		<dependencySet>
-			<outputDirectory>deployments</outputDirectory>
+			<outputDirectory>dist/deployments</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>org.overlord.rtgov.content:overlord-rtgov-acs-jee:war</include>
@@ -180,7 +204,7 @@
 			<outputFileNameMapping>overlord-rtgov-acs.war</outputFileNameMapping>
 		</dependencySet>
 		<dependencySet>
-			<outputDirectory>jdbc/drivers</outputDirectory>
+			<outputDirectory>dist/jdbc/drivers</outputDirectory>
 			<unpack>false</unpack>
 			<includes>
 				<include>com.h2database:h2</include>

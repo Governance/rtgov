@@ -18,7 +18,7 @@
         <echo message="Install RTGOV into EAP (${eap.dist})" />
         <unzip src="${org.overlord.rtgov:overlord-rtgov-dist-all-eap6:zip}" dest="${path}" />
 
-        <ant antfile="${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/build.xml" dir="${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}" >
+        <ant antfile="${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/dist/build.xml" dir="${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/dist" >
             <property name="path" value="${path}"/>
         </ant>
     </target>
