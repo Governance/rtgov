@@ -2,7 +2,7 @@
 <!-- XSLT file to add the security domains to the standalone.xml -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
     xmlns:kc="urn:jboss:domain:keycloak:1.0"
-    exclude-result-prefixes="oc">
+    exclude-result-prefixes="kc">
 
   <xsl:output xmlns:xalan="http://xml.apache.org/xalan" method="xml" encoding="UTF-8" indent="yes"
     xalan:indent-amount="2" />
