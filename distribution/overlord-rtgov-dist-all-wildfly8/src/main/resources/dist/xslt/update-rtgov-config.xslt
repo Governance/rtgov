@@ -15,8 +15,9 @@
       <xsl:element name="realm" namespace="urn:jboss:domain:keycloak:1.0">
         <xsl:attribute name="name">governance</xsl:attribute>
         <xsl:element name="realm-public-key" namespace="urn:jboss:domain:keycloak:1.0">MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrVrCuTtArbgaZzL1hvh0xtL5mc7o0NqPVnYXkLvgcwiC3BjLGw1tGEGoJaXDuSaRllobm53JBhjx33UNv+5z/UMG4kytBWxheNVKnL6GgqlNabMaFfPLPCF8kAgKnsi79NMo+n6KnSY8YeUmec/p2vjO2NjsSAVcWEQMVhJ31LwIDAQAB</xsl:element>
-        <xsl:element name="auth-server-url" namespace="urn:jboss:domain:keycloak:1.0">/auth</xsl:element>
+        <xsl:element name="auth-server-url" namespace="urn:jboss:domain:keycloak:1.0">http://localhost:8080/auth</xsl:element>
         <xsl:element name="ssl-required" namespace="urn:jboss:domain:keycloak:1.0">none</xsl:element>
+        <xsl:element name="principal-attribute" namespace="urn:jboss:domain:keycloak:1.0">preferred_username</xsl:element>
       </xsl:element>
       <!-- Secure Deployment Config -->
       <xsl:element name="secure-deployment" namespace="urn:jboss:domain:keycloak:1.0">
