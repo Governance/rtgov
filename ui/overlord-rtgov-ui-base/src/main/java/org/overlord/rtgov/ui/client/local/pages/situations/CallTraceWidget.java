@@ -102,6 +102,13 @@ public class CallTraceWidget extends Widget implements HasValue<CallTraceBean>, 
     @Override
     public void setValue(CallTraceBean value, boolean fireEvents) {
         if (value != null) {
+            // Clear previous trace
+            nodeMap.clear();
+            nodeIdCounter = 0;
+            while (getElement().getFirstChild() != null) {
+                getElement().removeChild(getElement().getFirstChild());
+            }
+            
             List<TraceNodeBean> tasks = value.getTasks();
             for (TraceNodeBean task : tasks) {
                 LIElement li = createTreeNode(task);
