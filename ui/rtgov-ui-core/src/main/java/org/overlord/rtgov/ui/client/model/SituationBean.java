@@ -39,9 +39,9 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     private java.util.List<NameValuePairBean> context = new java.util.ArrayList<NameValuePairBean>();
     private MessageBean message;
     private CallTraceBean callTrace;
-    private boolean isAssignedToCurrentUser;
-    private boolean isTakeoverPossible;
-    private boolean isResubmitPossible;
+    private boolean assignedToCurrentUser;
+    private boolean takeoverPossible;
+    private boolean resubmitPossible;
 
     /**
      * Constructor.
@@ -106,14 +106,14 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
      * @return whether this situation is assigned to the currently logged-in user
      */
 	public boolean isAssignedToCurrentUser() {
-		return isAssignedToCurrentUser;
+		return assignedToCurrentUser;
 	}
 
 	/**
 	 * @param isAssignedToCurrentUser
 	 */
 	public void setAssignedToCurrentUser(boolean isAssignedToCurrentUser) {
-		this.isAssignedToCurrentUser = isAssignedToCurrentUser;
+		this.assignedToCurrentUser = isAssignedToCurrentUser;
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
 	 * @param isTakeoverPossible
 	 */
 	public void setTakeoverPossible(boolean isTakeoverPossible) {
-		this.isTakeoverPossible = isTakeoverPossible;
+		this.takeoverPossible = isTakeoverPossible;
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
 	 * @return whether this {@link Situation} can be taken over by the currently logged-in user
 	 */
 	public boolean isTakeoverPossible() {
-		return isTakeoverPossible;
+		return takeoverPossible;
 	}
 
     /**
@@ -178,13 +178,13 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
      * @return the isResubmitPossible
      */
     public boolean isResubmitPossible() {
-        return isResubmitPossible;
+        return resubmitPossible;
     }
 
     /**
      * @param isResubmitPossible the isResubmitPossible to set
      */
     public void setResubmitPossible(boolean isResubmitPossible) {
-        this.isResubmitPossible = isResubmitPossible;
+        this.resubmitPossible = isResubmitPossible;
     }
 }
