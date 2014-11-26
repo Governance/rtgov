@@ -374,15 +374,31 @@ public class SituationsPage extends AbstractPage {
     public void onExportClick(ClickEvent event) {
         SituationsFilterBean situationsFilterBean = applyActionToFilteredRowsOnly ? filtersPanel.getValue()
                 : new SituationsFilterBean();
-        String exportKey = String.valueOf(System.currentTimeMillis());
-        /* TODO: RTGOV-615
-        MessageBuilder.createMessage().toSubject("situations/export").with("exportKey", exportKey)
-                .with("exportFilter", situationsFilterBean).noErrorHandling().sendNowWith(ErraiBus.get());
-        UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
-        String exportLocation = urlBuilder.setPath("rtgov-ui/situations/export")
-                .setParameter("_k", exportKey).buildString();
-        Window.open(exportLocation, "_blank", "");
-        */
+        final NotificationBean notificationBean = notificationService.startProgressNotification(
+                i18n.format("situation.export-message-title"), //$NON-NLS-1$
+                i18n.format("situation.export-message-msg")); //$NON-NLS-1$
+        situationsService.filter(situationsFilterBean, new RpcServiceInvocationHandlerAdapter<String>() {
+            @Override
+            public void doOnReturn(String id) {
+                UrlBuilder urlBuilder = Window.Location.createUrlBuilder();
+                String exportLocation = urlBuilder.setPath("rtgov-ui/rest/situations/export")
+                        .setParameter("id", id).buildString();
+                Window.open(exportLocation, "_blank", "");
+            }
+
+            @Override
+            public void doOnError(Throwable error) {
+                notificationService.completeProgressNotification(notificationBean.getUuid(),
+                        i18n.format("situation.export-error"), //$NON-NLS-1$
+                        error);
+            }
+            
+            @Override
+            public void doOnComplete(
+                    org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcResult<String> result) {
+            }
+
+        });
     }
 
     @EventHandler("deleteSituations")

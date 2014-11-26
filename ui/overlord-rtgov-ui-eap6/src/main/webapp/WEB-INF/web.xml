@@ -51,15 +51,6 @@
   </filter-mapping>
 
   <!-- Servlets -->
-  <servlet>
-    <servlet-name>SituationsExportServlet</servlet-name>
-    <servlet-class>org.overlord.rtgov.ui.server.servlet.SituationsExportServlet</servlet-class>
-    <load-on-startup>2</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SituationsExportServlet</servlet-name>
-    <url-pattern>/situations/export</url-pattern>
-  </servlet-mapping>
   <context-param>
     <param-name>login.config</param-name>
     <param-value>/WEB-INF/login.config</param-value>

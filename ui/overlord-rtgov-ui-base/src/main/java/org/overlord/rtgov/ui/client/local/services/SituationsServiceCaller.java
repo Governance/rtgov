@@ -160,4 +160,30 @@ public class SituationsServiceCaller {
 		}
 	}
 
+    /**
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#filter(SituationsFilterBean)
+     */
+    public void filter(SituationsFilterBean situationsFilterBean, IRpcServiceInvocationHandler<String> handler) {
+        RemoteCallback<String> successCallback = new DelegatingRemoteCallback<String>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteSituationsService.call(successCallback, errorCallback).filter(situationsFilterBean);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+    
+    /**
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#export(String)
+     */
+    public void export(String id, IRpcServiceInvocationHandler<String> handler) {
+        RemoteCallback<String> successCallback = new DelegatingRemoteCallback<String>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteSituationsService.call(successCallback, errorCallback).export(id);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+    
 }
