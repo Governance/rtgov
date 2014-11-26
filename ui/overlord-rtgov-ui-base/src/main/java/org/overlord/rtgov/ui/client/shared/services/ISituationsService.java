@@ -24,6 +24,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.SituationBean;
@@ -125,5 +126,26 @@ public interface ISituationsService {
     @Path("delete")
     @Consumes(MediaType.APPLICATION_JSON)
     public int delete(SituationsFilterBean situationsFilterBean) throws UiException;
+    
+    /**
+     * This method registers a situations filter. The associated id is returned.
+     * @param situationsFilterBean
+     * @return The filter id
+     * @throws UiException
+     */
+    @POST
+    @Path("filter")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String filter(SituationsFilterBean situationsFilterBean) throws UiException;
+    
+    /**
+     * Export the situations that match the filter associated with the
+     * supplied id.
+     * @param id The filter id
+     * @throws UiException
+     */
+    @GET
+    @Path("export")
+    public Response export(@QueryParam("id") String id) throws UiException;
 
 }
