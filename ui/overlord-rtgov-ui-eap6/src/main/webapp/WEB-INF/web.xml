@@ -105,6 +105,18 @@
             <web-resource-name>rtgov-ui-analytics</web-resource-name>
             <url-pattern>/analytics.html</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>rtgov-elasticsearch</web-resource-name>
+            <url-pattern>/elasticsearch/*</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>rtgov-rest</web-resource-name>
+            <url-pattern>/rest/*</url-pattern>
+        </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>rtgov-situations</web-resource-name>
+            <url-pattern>/situations/*</url-pattern>
+        </web-resource-collection>
         <auth-constraint>
             <role-name>user</role-name>
         </auth-constraint>
