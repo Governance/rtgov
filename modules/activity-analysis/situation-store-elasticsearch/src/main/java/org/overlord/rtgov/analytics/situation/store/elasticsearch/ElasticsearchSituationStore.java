@@ -25,6 +25,8 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.FilterBuilder;
+import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -45,6 +47,8 @@ import org.overlord.rtgov.common.util.RTGovProperties;
  * 
  */
 public class ElasticsearchSituationStore extends AbstractSituationStore implements SituationStore {
+
+    private static final String RESOLUTION_STATE_UNRESOLVED = "unresolved";
 
     private static final Logger LOG = Logger.getLogger(ElasticsearchSituationStore.class.getName());
 
@@ -186,12 +190,17 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
     
     protected QueryBuilder getQueryBuilder(SituationsQuery sitQuery) {
         QueryBuilder qb=QueryBuilders.matchAllQuery();
+        FilterBuilder filter=null;
         
         if (sitQuery != null) {
             BoolQueryBuilder bool=QueryBuilders.boolQuery();
             
             if (!isNullOrEmpty(sitQuery.getResolutionState())) {
-                bool.must(QueryBuilders.matchQuery("properties."+SituationStore.RESOLUTION_STATE_PROPERTY, sitQuery.getResolutionState()));
+                if (sitQuery.getResolutionState().equalsIgnoreCase(RESOLUTION_STATE_UNRESOLVED)) {
+                    filter = FilterBuilders.missingFilter("properties."+SituationStore.RESOLUTION_STATE_PROPERTY);
+                } else {
+                    bool.must(QueryBuilders.matchQuery("properties."+SituationStore.RESOLUTION_STATE_PROPERTY, sitQuery.getResolutionState()));
+                }
             }
             
             if (sitQuery.getProperties() != null && !sitQuery.getProperties().isEmpty()) {
@@ -233,6 +242,10 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
             if (bool.hasClauses()) {
                 qb = bool;
             }
+        }
+        
+        if (filter != null) {
+            return (QueryBuilders.filteredQuery(qb, filter));
         }
         
         return (qb);
