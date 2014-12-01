@@ -104,4 +104,24 @@
         <url-pattern>/report/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Security -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>rtgov</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>user</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>governance</realm-name>
+    </login-config>
+
+    <security-role>
+        <role-name>user</role-name>
+    </security-role>
+
 </web-app>
