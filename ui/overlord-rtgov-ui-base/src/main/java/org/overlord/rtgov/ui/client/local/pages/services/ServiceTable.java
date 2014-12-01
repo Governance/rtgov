@@ -27,6 +27,7 @@ import org.overlord.rtgov.ui.client.model.Constants;
 import org.overlord.rtgov.ui.client.model.ServiceSummaryBean;
 
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.Label;
 
@@ -84,11 +85,16 @@ public class ServiceTable extends SortableTemplatedWidgetTable {
 		add(rowIdx, 0, name);
 		add(rowIdx, 1, application);
 		add(rowIdx, 2, interf4ce);
+		
+		HorizontalPanel panel=new HorizontalPanel();
+		
 		for (BindingBean bindingBean : serviceSummaryBean.getBindings()) {
 			Label bindingLabel = new Label(bindingBean.getType());
 			bindingLabel.setStyleName(!bindingBean.isActive() ? "alert-danger" : "alert-success");
-			add(rowIdx, 3, bindingLabel);
+			panel.add(bindingLabel);
 		}
+		
+		add(rowIdx, 3, panel);
 	}
 
 }
