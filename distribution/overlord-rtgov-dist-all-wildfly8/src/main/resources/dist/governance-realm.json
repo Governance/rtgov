@@ -53,6 +53,12 @@
                 "/rtgov-ui/*"
             ],
             "secret": "password"
+        },
+        {
+            "name": "overlord-rtgov",
+            "enabled": true,
+            "baseUrl": "/overlord-rtgov",
+            "secret": "password"
         }
     ]
 }
