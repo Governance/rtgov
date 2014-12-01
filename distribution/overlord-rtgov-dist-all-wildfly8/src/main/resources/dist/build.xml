@@ -37,10 +37,10 @@
         <unzip src="keycloak-war-dist-all-${version.org.keycloak}/adapters/keycloak-${platform}-adapter-dist-${version.org.keycloak}.zip" dest="${path}"/>
 
         <property name="overlord-rtgov.dir.xslt" location="xslt" />
-        <transformConfig config="${path}/standalone/configuration/standalone.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="update-keycloak-config" />
-        <transformConfig config="${path}/standalone/configuration/standalone-full.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="update-keycloak-config" />
-        <transformConfig config="${path}/standalone/configuration/standalone-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="update-keycloak-config" />
-        <transformConfig config="${path}/standalone/configuration/standalone-full-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="update-keycloak-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-keycloak-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-full.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-keycloak-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-keycloak-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-full-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-keycloak-config" />
 
     </target>
 
@@ -56,10 +56,14 @@
 		</copy>
 
         <property name="overlord-rtgov.dir.xslt" location="xslt" />
-        <transformConfig config="${path}/standalone/configuration/standalone.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="update-rtgov-config" />
-        <transformConfig config="${path}/standalone/configuration/standalone-full.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="update-rtgov-config" />
-        <transformConfig config="${path}/standalone/configuration/standalone-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="update-rtgov-config" />
-        <transformConfig config="${path}/standalone/configuration/standalone-full-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="update-rtgov-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-governance-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-full.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-governance-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-governance-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-full-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-governance-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-rtgov-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-full.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-rtgov-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-rtgov-config" />
+        <transformConfig config="${path}/standalone/configuration/standalone-full-ha.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-rtgov-config" />
 
 	</target>
 	
