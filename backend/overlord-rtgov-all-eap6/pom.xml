@@ -134,6 +134,10 @@
 		</dependency>		
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>
+			<artifactId>active-collection-wss</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.overlord.rtgov.active-queries</groupId>
 			<artifactId>active-collection-infinispan</artifactId>
 		</dependency>		
 		

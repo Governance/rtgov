@@ -19,6 +19,7 @@
 		<module>active-collection-infinispan</module>
 		<module>active-collection-jee</module>
 		<module>active-collection-rests</module>
+		<module>active-collection-wss</module>
 		<module>acs-epn</module>
 		<module>acs-loader-jee</module>
 		<module>acs-loader-osgi</module>
