@@ -46,6 +46,16 @@
       <groupId>org.overlord.rtgov.activity-analysis</groupId>
       <artifactId>situation-store-jpa</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.overlord.rtgov.active-queries</groupId>
+      <artifactId>active-collection-wss</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.overlord.rtgov.active-queries</groupId>
+          <artifactId>active-collection</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     
     	<dependency>
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>

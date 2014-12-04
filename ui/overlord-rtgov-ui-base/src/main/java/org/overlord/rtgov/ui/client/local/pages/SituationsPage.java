@@ -54,9 +54,18 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+
+import elemental.client.Browser;
+import elemental.events.Event;
+import elemental.events.EventListener;
+import elemental.html.WebSocket;
 
 /**
  * The "Situations" page.
@@ -122,6 +131,8 @@ public class SituationsPage extends AbstractPage {
 
     private int currentPage = 1;
     private int numEvents = 0;
+    
+    private WebSocket webSocket;
 
     /**
      * Constructor.
@@ -134,17 +145,41 @@ public class SituationsPage extends AbstractPage {
      */
     @PageShown
     public void onPageShown() {
-        GWT.log("Subscribing to SitWatch topic."); //$NON-NLS-1$
+        GWT.log("Subscribing to websocket for Situation notifications"); //$NON-NLS-1$
         
-        /* TODO: RTGOV-611
-        bus.subscribe("SitWatch", new MessageCallback() { //$NON-NLS-1$
+        elemental.html.Window window = Browser.getWindow();
+        webSocket =  window.newWebSocket("ws://"+window.getLocation().getHost()+"/rtgov-ui/acmws"); //$NON-NLS-1$
+        
+        webSocket.setOnopen(new EventListener() {
             @Override
-            public void callback(Message message) {
-                SituationEventBean sitEvent = message.get(SituationEventBean.class, "situation"); //$NON-NLS-1$
-                onNewSituation(sitEvent);
-            }
+            public void handleEvent(Event evt) {                
+                webSocket.send("{\"register\":{\"collection\":\"Situations\"}}");
+            }            
         });
-        */
+        
+        webSocket.setOnmessage(new EventListener() {
+
+            @Override
+            public void handleEvent(Event evt) {
+                Object data=((elemental.events.MessageEvent)evt).getData();
+                
+                JSONObject notification=(JSONObject)JSONParser.parseStrict((String)data);
+                
+                if (((JSONString)notification.get("type")).stringValue().equals("Insert")) {
+                    SituationEventBean bean=new SituationEventBean();
+                    JSONObject value=(JSONObject)notification.get("value");
+                    
+                    bean.setSituationId(((JSONString)value.get("id")).stringValue());
+                    bean.setSeverity(((JSONString)value.get("severity")).stringValue());
+                    bean.setSubject(((JSONString)value.get("subject")).stringValue());
+                    bean.setType(((JSONString)value.get("type")).stringValue());
+                    bean.setTimestamp(new java.util.Date());
+                    
+                    onNewSituation(bean);
+                }
+            }
+            
+        });
     }
 
     /**
@@ -152,8 +187,11 @@ public class SituationsPage extends AbstractPage {
      */
     @PageHiding
     public void onPageHiding() {
-        GWT.log("Unsubscribing *from* SitWatch topic."); //$NON-NLS-1$
-        //bus.unsubscribeAll("SitWatch"); //$NON-NLS-1$
+        GWT.log("Closing websocket for Situation notifcations"); //$NON-NLS-1$
+        
+        if (webSocket != null) {
+            webSocket.close();
+        }
     }
 
     /**

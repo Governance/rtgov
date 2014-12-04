@@ -13,7 +13,7 @@
       <xsl:apply-templates select="./node()|./text()" />
       <!-- Extension Config -->
       <xsl:element name="extension" namespace="{$currentNS}">
-        <xsl:attribute name="module">org.keycloak.keycloak-as7-subsystem</xsl:attribute>
+        <xsl:attribute name="module">org.keycloak.keycloak-subsystem</xsl:attribute>
       </xsl:element>
     </xsl:element>
   </xsl:template>

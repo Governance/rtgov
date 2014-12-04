@@ -180,6 +180,11 @@
       <artifactId>gwt-user</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.gwt</groupId>
+      <artifactId>gwt-elemental</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- Runtime / Container dependencies -->
     <dependency>
