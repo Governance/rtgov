@@ -399,8 +399,8 @@ As previously mentioned, all EventProcessor implementations can define the follo
 | Field | Description
 | services | The optional map of names to services. The current service types are listed at the bottom of this section.
 | parameters | The optional map of names to parameters. These parameters can be used to customize the behaviour of an event processor.
+| asynchronous | This optional and *experimental* boolean flag enables an event processor to produce its results asynchronously. This has been added to support CEP, and currently means any results are processed as individual events which may be less efficient.
 |=======================
-
 
 Although custom event processors can be defined, there are some "out of the box" implementations. These are discussed in the following sub-sections.
 
@@ -412,6 +412,8 @@ The Drools Event Processor implementation (+org.overlord.rtgov.ep.drools.DroolsE
 |=======================
 | Field | Description
 | ruleName | The name of the rule, used to locate the rule definition in a file called "<ruleName>.drl".
+| eventProcessingMode | This optional field identifies the event processing mode. Valid values are _cloud_ (default) and _stream_. If _stream_ is chosen, then you will also need to set the _asynchronous_ property to _true_.
+| clockType | The optional clock type. Valid values are _realtime_ (default) and _pseudo_.
 |=======================
 
 An example of such a rule is:
