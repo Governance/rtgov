@@ -28,9 +28,23 @@
 		<fileSet>
 			<directory>src/main/resources</directory>
 			<outputDirectory>/</outputDirectory>
+            <directoryMode>0755</directoryMode>
+            <fileMode>0755</fileMode>
+			<excludes>
+				<exclude>**/build.xml</exclude>
+			</excludes>
+		</fileSet>
+
+		<!--Copy filtered build.xml from template -->	
+		<fileSet>
+			<directory>src/main/resources/dist</directory>
+			<outputDirectory>/dist</outputDirectory>
             <filtered>true</filtered>
             <directoryMode>0755</directoryMode>
             <fileMode>0755</fileMode>
+			<includes>
+				<include>build.xml</include>
+			</includes>
 		</fileSet>
 
 		<!-- Copy samples -->
