@@ -18,12 +18,12 @@ package org.overlord.rtgov.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.commons.services.ServiceListener;
-import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.ActiveMap;
+import org.overlord.rtgov.common.registry.ServiceListener;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This interface provides access to active collections.

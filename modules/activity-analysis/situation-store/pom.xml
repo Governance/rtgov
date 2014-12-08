@@ -29,11 +29,6 @@
 	        <artifactId>analytics</artifactId>
 	        <scope>provided</scope>
 	    </dependency>
-	    <dependency>
-	        <groupId>org.overlord</groupId>
-	        <artifactId>overlord-commons-services</artifactId>
-	        <scope>provided</scope>
-	    </dependency>
 
 	    <!-- Third Party libs -->
 

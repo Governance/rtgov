@@ -27,10 +27,10 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 
-import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.util.ActivityValidatorUtil;
 import org.overlord.rtgov.activity.validator.ActivityValidator;
 import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class provides the capability to load Activity Validators from a
@@ -49,7 +49,7 @@ public class JEEAVLoader {
     
     private java.util.List<ActivityValidator> _activityValidators=null;
     
-    private org.overlord.commons.services.ServiceListener<ActivityValidatorManager> _listener;
+    private org.overlord.rtgov.common.registry.ServiceListener<ActivityValidatorManager> _listener;
 
     /**
      * The constructor.
@@ -62,7 +62,7 @@ public class JEEAVLoader {
      */
     @PostConstruct
     public void init() {
-        _listener = new org.overlord.commons.services.ServiceListener<ActivityValidatorManager>() {
+        _listener = new org.overlord.rtgov.common.registry.ServiceListener<ActivityValidatorManager>() {
 
             @Override
             public void registered(ActivityValidatorManager service) {

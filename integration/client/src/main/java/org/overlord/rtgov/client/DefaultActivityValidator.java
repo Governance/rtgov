@@ -18,10 +18,10 @@ package org.overlord.rtgov.client;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.commons.services.ServiceListener;
-import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.common.registry.ServiceListener;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This interface represents the capability for validating

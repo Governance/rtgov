@@ -19,13 +19,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.command.ActiveChangeNotification;
 import org.overlord.rtgov.active.collection.command.ActiveChangeNotification.ActiveChangeType;
 import org.overlord.rtgov.active.collection.command.ActiveCollectionCommand;
 import org.overlord.rtgov.active.collection.ActiveChangeListener;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -49,7 +49,7 @@ public class WSActiveCollectionServer {
 
     private ActiveCollectionManager _acmManager=null;
     
-    private org.overlord.commons.services.ServiceListener<ActiveCollectionManager> _listener;
+    private org.overlord.rtgov.common.registry.ServiceListener<ActiveCollectionManager> _listener;
     
     private java.util.Map<String, ACMListener> _acmListeners=new java.util.HashMap<String, ACMListener>();
 
@@ -64,7 +64,7 @@ public class WSActiveCollectionServer {
      */
     @PostConstruct
     public void init() {
-        _listener = new org.overlord.commons.services.ServiceListener<ActiveCollectionManager>() {
+        _listener = new org.overlord.rtgov.common.registry.ServiceListener<ActiveCollectionManager>() {
 
             @Override
             public void registered(ActiveCollectionManager service) {

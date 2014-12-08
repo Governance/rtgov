@@ -20,12 +20,12 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.processor.InformationProcessor;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 import org.overlord.rtgov.activity.processor.validation.IPValidationListener;
 import org.overlord.rtgov.activity.processor.validation.IPValidator;
 import org.overlord.rtgov.activity.util.InformationProcessorUtil;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class provides the capability to load Information Processors from a
@@ -40,13 +40,13 @@ public class IPActivator implements BundleActivator {
     
     private java.util.List<InformationProcessor> _informationProcessors=null;
     
-    private org.overlord.commons.services.ServiceListener<InformationProcessorManager> _listener;
+    private org.overlord.rtgov.common.registry.ServiceListener<InformationProcessorManager> _listener;
 
     /**
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        _listener = new org.overlord.commons.services.ServiceListener<InformationProcessorManager>() {
+        _listener = new org.overlord.rtgov.common.registry.ServiceListener<InformationProcessorManager>() {
 
             @Override
             public void registered(InformationProcessorManager service) {

@@ -154,7 +154,6 @@
 				<include>org.overlord:overlord-commons-auth:jar</include>
 				<include>org.overlord:overlord-commons-auth-jboss7:jar</include>
 				<include>org.overlord:overlord-commons-auth-tomcat7:jar</include>
-				<include>org.overlord:overlord-commons-services:jar</include>
 				<include>org.overlord:overlord-commons-ant:jar</include>
 				<include>org.overlord:overlord-commons-codec:jar</include>
 			</includes>

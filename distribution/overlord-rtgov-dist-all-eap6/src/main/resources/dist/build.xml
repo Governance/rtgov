@@ -34,7 +34,7 @@
 			<fileset dir="keycloak-war-dist-all-${version.org.keycloak}/configuration" />
 		</copy>
 
-        <unzip src="keycloak-war-dist-all-${version.org.keycloak}/adapters/keycloak-${platform}-adapter-dist-${version.org.keycloak}.zip" dest="${path}"/>
+        <unzip src="keycloak-${platform}-adapter-dist-${version.org.keycloak}.zip" dest="${path}"/>
 
         <property name="overlord-rtgov.dir.xslt" location="xslt" />
         <transformConfig config="${path}/standalone/configuration/standalone.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-keycloak-config" />

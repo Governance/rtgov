@@ -18,9 +18,9 @@ package org.overlord.rtgov.activity.validator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.commons.services.ServiceClose;
-import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.model.ActivityType;
+import org.overlord.rtgov.common.registry.ServiceClose;
+import org.overlord.rtgov.common.registry.ServiceInit;
 import org.overlord.rtgov.common.util.VersionUtil;
 
 /**

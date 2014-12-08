@@ -16,7 +16,8 @@
 package org.overlord.rtgov.internal.common.elasticsearch;
 
 import org.apache.commons.configuration.Configuration;
-import org.overlord.commons.config.ConfigurationFactory;
+import org.overlord.rtgov.common.config.ConfigurationFactory;
+
 import java.util.Iterator;
 import java.util.Properties;
 

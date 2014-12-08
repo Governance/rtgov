@@ -67,6 +67,7 @@
 	<properties>
 		<version.ch.qos.cal10n>0.7.4</version.ch.qos.cal10n>
 		<version.org.apache.commons.commons-lang3>3.1</version.org.apache.commons.commons-lang3>
+        <version.org.apache.commons.commons-io>1.3.2</version.org.apache.commons.commons-io>
 		<version.org.drools>6.1.0.Final</version.org.drools>
 		<version.org.elasticsearch>1.3.2</version.org.elasticsearch>
         <version.org.codehaus.enunciate>1.28</version.org.codehaus.enunciate>
@@ -87,7 +88,7 @@
 		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>
 		<version.org.switchyard>2.0.0.Alpha3</version.org.switchyard>
 		<version.org.jboss.errai>2.4.4.Final</version.org.jboss.errai>
-		<version.org.keycloak>1.1.0.Beta2-SNAPSHOT</version.org.keycloak>
+		<version.org.keycloak>1.1.0.Beta2</version.org.keycloak>
 
 		<!-- Override as current IP BOM version causes drools rule load issues -->
 		<version.org.mvel>2.2.1.Final</version.org.mvel>
@@ -781,11 +782,6 @@
 			</dependency>
 			<dependency>
 				<groupId>org.overlord</groupId>
-				<artifactId>overlord-commons-services</artifactId>
-				<version>${version.org.overlord.overlord-commons}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth</artifactId>
 				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
@@ -802,11 +798,6 @@
 			<dependency>
 				<groupId>org.overlord</groupId>
 				<artifactId>overlord-commons-auth-tomcat7</artifactId>
-				<version>${version.org.overlord.overlord-commons}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.overlord</groupId>
-				<artifactId>overlord-commons-config</artifactId>
 				<version>${version.org.overlord.overlord-commons}</version>
 			</dependency>
 			<dependency>
@@ -1037,6 +1028,18 @@
                 <version>${version.org.keycloak}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-eap6-adapter-dist</artifactId>
+                <version>${version.org.keycloak}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.keycloak</groupId>
+                <artifactId>keycloak-wildfly-adapter-dist</artifactId>
+                <version>${version.org.keycloak}</version>
+                <type>zip</type>
+            </dependency>
 
 			<dependency>
 				<groupId>org.jboss.naming</groupId>
@@ -1149,6 +1152,11 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${version.org.apache.commons.commons-lang3}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${version.org.apache.commons.commons-io}</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>

@@ -73,10 +73,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.overlord</groupId>
-			<artifactId>overlord-commons-services</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord</groupId>
 			<artifactId>overlord-commons-auth</artifactId>
 		</dependency>
 		<dependency>
