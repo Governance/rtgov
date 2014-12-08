@@ -14,13 +14,13 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.overlord.rtgov.activity-management</groupId>
-			<artifactId>activity</artifactId>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-common</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.overlord</groupId>
-			<artifactId>overlord-commons-services</artifactId>
+			<groupId>org.overlord.rtgov.activity-management</groupId>
+			<artifactId>activity</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		

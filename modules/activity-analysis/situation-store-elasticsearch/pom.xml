@@ -38,11 +38,6 @@
 	        <artifactId>situation-store</artifactId>
 	        <scope>provided</scope>
 	    </dependency>
-	    <dependency>
-	        <groupId>org.overlord</groupId>
-	        <artifactId>overlord-commons-services</artifactId>
-	        <scope>provided</scope>
-	    </dependency>
 
         <dependency>
             <groupId>org.elasticsearch</groupId>
@@ -61,6 +56,11 @@
 			<artifactId>guava</artifactId>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>test</scope>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

@@ -25,8 +25,6 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
-import org.overlord.commons.services.ServiceClose;
-import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
@@ -34,6 +32,8 @@ import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.server.QuerySpec;
 import org.overlord.rtgov.activity.util.ActivityUtil;
 import org.overlord.rtgov.common.elasticsearch.ElasticsearchClient;
+import org.overlord.rtgov.common.registry.ServiceClose;
+import org.overlord.rtgov.common.registry.ServiceInit;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.text.MessageFormat;

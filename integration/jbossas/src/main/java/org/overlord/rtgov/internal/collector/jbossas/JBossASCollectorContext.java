@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
 
-import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.collector.CollectorContext;
+import org.overlord.rtgov.common.registry.ServiceInit;
 
 /**
  * This class provides context information regarding the

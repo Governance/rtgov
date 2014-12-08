@@ -20,9 +20,7 @@ package org.overlord.rtgov.epn;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.commons.services.ServiceRegistryUtil;
-
-//import org.overlord.commons.services.ServiceRegistryUtil;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class provides access to the EPN Manager once an appropriate

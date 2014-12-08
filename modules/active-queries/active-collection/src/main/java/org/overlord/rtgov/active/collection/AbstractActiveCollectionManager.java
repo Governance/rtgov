@@ -20,9 +20,9 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.commons.services.ServiceClose;
-import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
+import org.overlord.rtgov.common.registry.ServiceClose;
+import org.overlord.rtgov.common.registry.ServiceInit;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.internal.active.collection.ACManagement;
 

@@ -26,10 +26,6 @@
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.overlord</groupId>
-			<artifactId>overlord-commons-services</artifactId>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

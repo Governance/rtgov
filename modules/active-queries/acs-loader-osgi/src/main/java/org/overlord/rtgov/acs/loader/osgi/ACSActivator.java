@@ -20,11 +20,11 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.AbstractACSLoader;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class provides the activator capability for an Active Collection Source.
@@ -38,13 +38,13 @@ public class ACSActivator extends AbstractACSLoader implements BundleActivator {
     
     private java.util.List<ActiveCollectionSource> _activeCollectionSources=null;
 
-    private org.overlord.commons.services.ServiceListener<ActiveCollectionManager> _listener;
+    private org.overlord.rtgov.common.registry.ServiceListener<ActiveCollectionManager> _listener;
     
     /**
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        _listener = new org.overlord.commons.services.ServiceListener<ActiveCollectionManager>() {
+        _listener = new org.overlord.rtgov.common.registry.ServiceListener<ActiveCollectionManager>() {
 
             @Override
             public void registered(ActiveCollectionManager service) {

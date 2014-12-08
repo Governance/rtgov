@@ -23,15 +23,15 @@ import javax.transaction.Synchronization;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
-import org.overlord.commons.services.ServiceClose;
-import org.overlord.commons.services.ServiceInit;
-import org.overlord.commons.services.ServiceListener;
-import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
+import org.overlord.rtgov.common.registry.ServiceClose;
+import org.overlord.rtgov.common.registry.ServiceInit;
+import org.overlord.rtgov.common.registry.ServiceListener;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**

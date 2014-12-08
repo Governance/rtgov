@@ -20,12 +20,6 @@
       <artifactId>overlord-rtgov-ui-base</artifactId>
       <classifier>classes</classifier>
       <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-            <groupId>org.overlord</groupId>
-            <artifactId>overlord-commons-services</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <!-- The base WAR being extended -->
     <dependency>

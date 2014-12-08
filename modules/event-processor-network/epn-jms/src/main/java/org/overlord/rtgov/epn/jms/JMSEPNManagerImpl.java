@@ -31,8 +31,8 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.naming.InitialContext;
 
-import org.overlord.commons.services.ServiceClose;
-import org.overlord.commons.services.ServiceInit;
+import org.overlord.rtgov.common.registry.ServiceClose;
+import org.overlord.rtgov.common.registry.ServiceInit;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.epn.AbstractEPNManager;
 import org.overlord.rtgov.epn.Channel;

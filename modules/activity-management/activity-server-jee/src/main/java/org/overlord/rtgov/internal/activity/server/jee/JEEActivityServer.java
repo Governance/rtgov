@@ -25,9 +25,6 @@ import javax.naming.NamingException;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
 
-import org.overlord.commons.services.ServiceInit;
-import org.overlord.commons.services.ServiceListener;
-import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
@@ -36,6 +33,9 @@ import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.server.ActivityStore;
 import org.overlord.rtgov.activity.server.ActivityStoreFactory;
 import org.overlord.rtgov.activity.server.QuerySpec;
+import org.overlord.rtgov.common.registry.ServiceInit;
+import org.overlord.rtgov.common.registry.ServiceListener;
+import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class represents the JEE implementation of the activity server.

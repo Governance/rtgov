@@ -21,6 +21,24 @@
         <ant antfile="${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/dist/build.xml" dir="${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/dist" >
             <property name="path" value="${path}"/>
         </ant>
+
+        <echo message="Start server" />
+        <exec executable="/bin/bash" spawn="true">
+            <arg value="${path}/bin/standalone.sh"/>
+            <arg value="-c"/>
+            <arg value="standalone-full.xml"/>
+        </exec>
+
+        <sleep minutes="1" />
+
+        <echo message="Import KeyCloak governance realm" />
+
+        <echo message="Stop server" />
+        <exec executable="/bin/bash">
+            <arg value="${path}/bin/jboss-cli.sh"/>
+            <arg value="--connect"/>
+            <arg value="--command=:shutdown"/>
+        </exec>
     </target>
 
 </project>

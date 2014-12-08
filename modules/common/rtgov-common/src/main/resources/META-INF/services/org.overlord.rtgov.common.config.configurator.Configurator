@@ -1,0 +1,6 @@
+org.overlord.rtgov.common.config.configurator.UserHomeConfigurator
+org.overlord.rtgov.common.config.configurator.JndiConfigurator
+org.overlord.rtgov.common.config.configurator.JbossConfigurator
+org.overlord.rtgov.common.config.configurator.FuseConfigurator
+org.overlord.rtgov.common.config.configurator.TomcatConfigurator
+org.overlord.rtgov.common.config.configurator.JettyConfigurator
