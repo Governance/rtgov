@@ -15,6 +15,9 @@
  */
 package org.overlord.rtgov.ui.server.services;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.inject.Inject;
 
 import org.overlord.rtgov.ui.client.model.ApplicationListBean;
@@ -31,6 +34,8 @@ import org.overlord.rtgov.ui.client.shared.services.IServicesService;
  * @author eric.wittmann@redhat.com
  */
 public class ServicesService implements IServicesService {
+    
+    private static final Logger LOG=Logger.getLogger(ServicesService.class.getName());
 
     @Inject IServicesServiceImpl impl;
 
@@ -61,6 +66,11 @@ public class ServicesService implements IServicesService {
      */
     @Override
     public ServiceBean getService(String id) throws UiException {
+        try {
+            id = java.net.URLDecoder.decode(id, "UTF-8");
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to decode id", e);
+        }
         return impl.getService(id);
     }
 
@@ -69,6 +79,11 @@ public class ServicesService implements IServicesService {
      */
     @Override
     public ReferenceBean getReference(String id) throws UiException {
+        try {
+            id = java.net.URLDecoder.decode(id, "UTF-8");
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Failed to decode id", e);
+        }
         return impl.getReference(id);
     }
 }
