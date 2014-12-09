@@ -93,7 +93,8 @@ public class ServicesServiceCaller {
         RemoteCallback<ServiceBean> successCallback = new DelegatingRemoteCallback<ServiceBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).getService(id);
+            String encodedId=com.google.gwt.http.client.URL.encode(id);
+            remoteServicesService.call(successCallback, errorCallback).getService(encodedId);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }
@@ -106,7 +107,8 @@ public class ServicesServiceCaller {
         RemoteCallback<ReferenceBean> successCallback = new DelegatingRemoteCallback<ReferenceBean>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
-            remoteServicesService.call(successCallback, errorCallback).getReference(id);
+            String encodedId=com.google.gwt.http.client.URL.encode(id);
+            remoteServicesService.call(successCallback, errorCallback).getReference(encodedId);
         } catch (UiException e) {
             errorCallback.error(null, e);
         }
