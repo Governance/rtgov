@@ -15,9 +15,7 @@
  */
 package org.overlord.rtgov.tests.platforms.jbossas.servicedependency;
 
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import javax.xml.soap.MessageFactory;
@@ -115,8 +113,6 @@ public class JBossASServiceDependencyServiceTest {
 
     public static String getServiceOverview() throws Exception {
         
-        Authenticator.setDefault(new DefaultAuthenticator());
-        
         URL getUrl = new URL("http://localhost:8080/overlord-rtgov/service/dependency/overview");
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("GET");
@@ -127,6 +123,8 @@ public class JBossASServiceDependencyServiceTest {
         connection.setAllowUserInteraction(false);
         connection.setRequestProperty("Content-Type",
                     "application/json");
+        
+        initAuth(connection);
 
         java.io.InputStream is=connection.getInputStream();
         
@@ -140,10 +138,19 @@ public class JBossASServiceDependencyServiceTest {
         return (result);
     }
     
-    static class DefaultAuthenticator extends Authenticator {
-
-        public PasswordAuthentication getPasswordAuthentication () {
-            return new PasswordAuthentication ("admin", ".overlord1".toCharArray());
+    protected static void initAuth(HttpURLConnection connection) {
+        String userPassword = "admin:admin";
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        StringBuffer buf=new StringBuffer(encoding);
+        
+        for (int i=0; i < buf.length(); i++) {
+            if (Character.isWhitespace(buf.charAt(i))) {
+                buf.deleteCharAt(i);
+                i--;
+            }
         }
+        
+        connection.setRequestProperty("Authorization", "Basic " + buf.toString());
     }
 }

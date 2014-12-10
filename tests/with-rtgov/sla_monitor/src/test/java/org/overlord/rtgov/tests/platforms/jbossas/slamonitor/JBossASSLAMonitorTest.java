@@ -16,9 +16,7 @@
 package org.overlord.rtgov.tests.platforms.jbossas.slamonitor;
 
 import java.io.Serializable;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import javax.xml.soap.MessageFactory;
@@ -684,8 +682,6 @@ public class JBossASSLAMonitorTest {
     }
     
     public static java.util.List<?> performACMQuery(QuerySpec qs) throws Exception {
-        Authenticator.setDefault(new DefaultAuthenticator());
-        
         URL getUrl = new URL("http://localhost:8080/overlord-rtgov/acm/query");
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("POST");
@@ -696,6 +692,8 @@ public class JBossASSLAMonitorTest {
         connection.setAllowUserInteraction(false);
         connection.setRequestProperty("Content-Type",
                     "application/json");
+        
+        initAuth(connection);
 
         java.io.OutputStream os=connection.getOutputStream();
         
@@ -733,14 +731,12 @@ public class JBossASSLAMonitorTest {
         
         String urlStr="http://localhost:8080/slamonitor/monitor/situations";
         
-        Authenticator.setDefault(new DefaultAuthenticator());
-        
         URL getUrl = new URL(urlStr);
         
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("GET");
         System.out.println("Content-Type: " + connection.getContentType());
-
+        
         java.io.InputStream is=connection.getInputStream();
         
         ret = MAPPER.readValue(is, java.util.List.class);
@@ -767,14 +763,12 @@ public class JBossASSLAMonitorTest {
             urlStr += "?"+query;
         }
         
-        Authenticator.setDefault(new DefaultAuthenticator());
-        
         URL getUrl = new URL(urlStr);
         
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("GET");
         System.out.println("Content-Type: " + connection.getContentType());
-
+        
         java.io.InputStream is=connection.getInputStream();
         
         ret = MAPPER.readValue(is, java.util.List.class);
@@ -806,10 +800,19 @@ public class JBossASSLAMonitorTest {
         }
     }
     
-    static class DefaultAuthenticator extends Authenticator {
-
-        public PasswordAuthentication getPasswordAuthentication () {
-            return new PasswordAuthentication ("admin", ".overlord1".toCharArray());
+    protected static void initAuth(HttpURLConnection connection) {
+        String userPassword = "admin:admin";
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        StringBuffer buf=new StringBuffer(encoding);
+        
+        for (int i=0; i < buf.length(); i++) {
+            if (Character.isWhitespace(buf.charAt(i))) {
+                buf.deleteCharAt(i);
+                i--;
+            }
         }
+        
+        connection.setRequestProperty("Authorization", "Basic " + buf.toString());
     }
 }
