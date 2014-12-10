@@ -15,11 +15,8 @@
  */
 package org.overlord.rtgov.tests.platforms.jbossas.calltrace;
 
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.util.UUID;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConnection;
@@ -229,8 +226,6 @@ public class JBossASCallTraceServiceTest {
 
     public static String getCallTrace(String id) throws Exception {
         
-        Authenticator.setDefault(new DefaultAuthenticator());
-        
         URL getUrl = new URL("http://localhost:8080/overlord-rtgov/call/trace/instance?value="+id);
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("GET");
@@ -241,6 +236,8 @@ public class JBossASCallTraceServiceTest {
         connection.setAllowUserInteraction(false);
         connection.setRequestProperty("Content-Type",
                     "application/json");
+        
+        initAuth(connection);
 
         java.io.InputStream is=connection.getInputStream();
         
@@ -256,10 +253,19 @@ public class JBossASCallTraceServiceTest {
         return (result);
     }
     
-    static class DefaultAuthenticator extends Authenticator {
-
-        public PasswordAuthentication getPasswordAuthentication () {
-            return new PasswordAuthentication ("admin", ".overlord1".toCharArray());
+    protected static void initAuth(HttpURLConnection connection) {
+        String userPassword = "admin:admin";
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        StringBuffer buf=new StringBuffer(encoding);
+        
+        for (int i=0; i < buf.length(); i++) {
+            if (Character.isWhitespace(buf.charAt(i))) {
+                buf.deleteCharAt(i);
+                i--;
+            }
         }
+        
+        connection.setRequestProperty("Authorization", "Basic " + buf.toString());
     }
 }

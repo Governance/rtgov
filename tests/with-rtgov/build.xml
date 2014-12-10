@@ -22,16 +22,15 @@
             <property name="path" value="${path}"/>
         </ant>
 
-        <echo message="Start server" />
+        <echo message="Start server to import KeyCloak governance realm" />
         <exec executable="/bin/bash" spawn="true">
             <arg value="${path}/bin/standalone.sh"/>
             <arg value="-c"/>
             <arg value="standalone-full.xml"/>
+            <arg value="-Dkeycloak.import=${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/dist/governance-realm.json"/>
         </exec>
 
         <sleep minutes="1" />
-
-        <echo message="Import KeyCloak governance realm" />
 
         <echo message="Stop server" />
         <exec executable="/bin/bash">

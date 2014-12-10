@@ -15,9 +15,7 @@
  */
 package org.overlord.rtgov.tests.platforms.jbossas.situationmgr;
 
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import javax.xml.soap.MessageFactory;
@@ -181,7 +179,6 @@ public class JBossASSituationManagerServiceTest {
     }
 
     public static java.util.List<?> performACMQuery(QuerySpec qs) throws Exception {
-        Authenticator.setDefault(new DefaultAuthenticator());
         
         URL getUrl = new URL("http://localhost:8080/overlord-rtgov/acm/query");
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
@@ -193,6 +190,8 @@ public class JBossASSituationManagerServiceTest {
         connection.setAllowUserInteraction(false);
         connection.setRequestProperty("Content-Type",
                     "application/json");
+        
+        initAuth(connection);
 
         java.io.OutputStream os=connection.getOutputStream();
         
@@ -217,8 +216,6 @@ public class JBossASSituationManagerServiceTest {
     }
     
     public static void ignore(IgnoreSubject ignore) throws Exception {
-        Authenticator.setDefault(new DefaultAuthenticator());
-        
         URL getUrl = new URL("http://localhost:8080/overlord-rtgov/situation/manager/ignore");
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("POST");
@@ -229,6 +226,8 @@ public class JBossASSituationManagerServiceTest {
         connection.setAllowUserInteraction(false);
         connection.setRequestProperty("Content-Type",
                     "application/json");
+        
+        initAuth(connection);
 
         java.io.OutputStream os=connection.getOutputStream();
         
@@ -253,8 +252,6 @@ public class JBossASSituationManagerServiceTest {
     }
     
     public static void observe(String subject) throws Exception {
-        Authenticator.setDefault(new DefaultAuthenticator());
-        
         URL getUrl = new URL("http://localhost:8080/overlord-rtgov/situation/manager/observe");
         HttpURLConnection connection = (HttpURLConnection) getUrl.openConnection();
         connection.setRequestMethod("POST");
@@ -265,6 +262,8 @@ public class JBossASSituationManagerServiceTest {
         connection.setAllowUserInteraction(false);
         connection.setRequestProperty("Content-Type",
                     "application/json");
+        
+        initAuth(connection);
 
         java.io.OutputStream os=connection.getOutputStream();
         
@@ -288,10 +287,19 @@ public class JBossASSituationManagerServiceTest {
         
     }
     
-    static class DefaultAuthenticator extends Authenticator {
-
-        public PasswordAuthentication getPasswordAuthentication () {
-            return new PasswordAuthentication ("admin", ".overlord1".toCharArray());
+    protected static void initAuth(HttpURLConnection connection) {
+        String userPassword = "admin:admin";
+        String encoding = org.apache.commons.codec.binary.Base64.encodeBase64String(userPassword.getBytes());
+        
+        StringBuffer buf=new StringBuffer(encoding);
+        
+        for (int i=0; i < buf.length(); i++) {
+            if (Character.isWhitespace(buf.charAt(i))) {
+                buf.deleteCharAt(i);
+                i--;
+            }
         }
+        
+        connection.setRequestProperty("Authorization", "Basic " + buf.toString());
     }
 }
