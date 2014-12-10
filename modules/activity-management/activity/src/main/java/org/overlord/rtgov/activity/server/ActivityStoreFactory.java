@@ -54,7 +54,7 @@ public final class ActivityStoreFactory {
      * 
      * @return The activity store
      */
-    public static synchronized ActivityStore getActivityStore() {
+    public static ActivityStore getActivityStore() {
         if (_instance == null) {
             java.util.Set<ActivityStore> services=ServiceRegistryUtil.getServices(ActivityStore.class);
             String clsName=(String)RTGovProperties.getProperties().get(ACTIVITY_STORE_CLASS);
@@ -63,10 +63,13 @@ public final class ActivityStoreFactory {
                 if (LOG.isLoggable(Level.FINEST)) {
                     LOG.finest("Checking activity store impl="+as);
                 }
-                if (as.getClass().getName().equals(clsName)) {
-                    _instance = as;
-                    if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.finest("Found activity store impl="+as);
+                if (as.getClass().getName().equals(clsName)) {                    
+                    // Only overwrite if instance not set
+                    if (_instance == null) {
+                        _instance = as;                        
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Found activity store impl="+as);
+                        }
                     }
                     break;
                 }
