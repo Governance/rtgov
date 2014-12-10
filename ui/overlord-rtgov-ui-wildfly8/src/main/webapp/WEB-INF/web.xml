@@ -109,8 +109,8 @@
             <url-pattern>/situations/*</url-pattern>
         </web-resource-collection>
         <web-resource-collection>
-            <web-resource-name>rtgov-ws</web-resource-name>
-            <url-pattern>/shout</url-pattern>
+            <web-resource-name>rtgov-acmws</web-resource-name>
+            <url-pattern>/acmws</url-pattern>
         </web-resource-collection>
         <auth-constraint>
             <role-name>user</role-name>
