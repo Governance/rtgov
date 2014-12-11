@@ -141,10 +141,11 @@ public class SituationsPage extends AbstractPage {
     }
 
     /**
-     * Called whenver the page is shown.
+     * Initialize the websocket
      */
-    @PageShown
-    public void onPageShown() {
+    // RTGOV-632 Move initial websocket setup until after table initialized to avoid concurrent
+    // request for access code on server side (EAP issue)
+    protected void initWebSocket() {
         GWT.log("Subscribing to websocket for Situation notifications"); //$NON-NLS-1$
         
         elemental.html.Window window = Browser.getWindow();
@@ -276,8 +277,8 @@ public class SituationsPage extends AbstractPage {
      */
     @Override
     protected void onPageShowing() {
-        // Kick off an artifact search
         doSearch();
+        
         // Refresh the artifact filters
         filtersPanel.refresh();
     }
@@ -304,6 +305,12 @@ public class SituationsPage extends AbstractPage {
                 updateTable(data);
                 updatePager(data);
                 resetSituationWatcher();
+                
+                // RTGOV-632 Move initial websocket setup until after table initialized to avoid concurrent
+                // request for access code on server side (EAP issue)
+                if (webSocket == null) {
+                    initWebSocket();
+                }
             }
             @Override
             public void onError(Throwable error) {

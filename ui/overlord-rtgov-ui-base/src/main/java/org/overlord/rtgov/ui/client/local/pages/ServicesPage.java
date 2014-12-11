@@ -107,6 +107,10 @@ public class ServicesPage extends AbstractPage {
             @Override
             public void onReturn(ApplicationListBean data) {
                 filtersPanel.setApplicationNames(data.getApplicationNames());
+                
+                // RTGOV-632 Move initial search until app names are loaded to avoid concurrent
+                // request for access code on server side (EAP issue)
+                doServicesSearch();
             }
             @Override
             public void onError(Throwable error) {
@@ -161,7 +165,9 @@ public class ServicesPage extends AbstractPage {
      */
     @Override
     protected void onPageShowing() {
-        doServicesSearch();
+        // RTGOV-632 Move initial search until app names are loaded to avoid concurrent
+        // request for access code on server side (EAP issue)
+        //doServicesSearch();
         filtersPanel.refresh();
     }
 
