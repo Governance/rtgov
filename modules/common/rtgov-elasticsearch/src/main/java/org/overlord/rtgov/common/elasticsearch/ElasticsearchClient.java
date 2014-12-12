@@ -270,14 +270,17 @@ public class ElasticsearchClient {
          * quick fix for integration tests. if hosts property set to "embedded" then a local node is start.
          * maven dependencies need to be defined correctly for this to work
          */
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        //ClassLoader cl = Thread.currentThread().getContextClassLoader();
         
         Client client=null;
-
-        try {
+        
+        // TODO: RTGOV-575 disabled tccl currently while OSGi not supported - but need to find a suitable
+        // solution to enable index files to be retrieved from deployed module.
+        
+        //try {
             // Need to use the classloader for Elasticsearch to pick up the property files when
             // running in an OSGi environment
-            Thread.currentThread().setContextClassLoader(TransportClient.class.getClassLoader());
+            //Thread.currentThread().setContextClassLoader(TransportClient.class.getClassLoader());
 
             if (_hosts.startsWith("embedded")) {
                 try {
@@ -331,9 +334,9 @@ public class ElasticsearchClient {
                 
                 client = c;
             }
-        } finally {
-            Thread.currentThread().setContextClassLoader(cl);
-        }
+        //} finally {
+            //Thread.currentThread().setContextClassLoader(cl);
+        //}
         
         // Initialize outside temporary context classloader scope
         if (client != null) {
