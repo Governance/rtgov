@@ -18,7 +18,7 @@ package org.overlord.rtgov.analytics.situation.store;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**

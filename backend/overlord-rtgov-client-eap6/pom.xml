@@ -75,6 +75,23 @@
 			<artifactId>rtgov-infinispan</artifactId>
 		</dependency>
 		
+        <!-- Overlord Commons -->
+
+        <dependency>
+            <groupId>org.overlord</groupId>
+            <artifactId>overlord-commons-config</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-configuration</groupId>
+                    <artifactId>commons-configuration</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 		<!-- Apache Commons Codec - included to override EAP version due to RTGOV-237 -->
 
 		<dependency>

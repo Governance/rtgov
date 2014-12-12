@@ -27,11 +27,11 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.AbstractACSLoader;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class provides the capability to load an Active Collection Source from a
@@ -50,7 +50,7 @@ public class JEEACSLoader extends AbstractACSLoader {
 
     private java.util.List<ActiveCollectionSource> _activeCollectionSources=null;
     
-    private org.overlord.rtgov.common.registry.ServiceListener<ActiveCollectionManager> _listener;
+    private org.overlord.commons.services.ServiceListener<ActiveCollectionManager> _listener;
 
     /**
      * The constructor.
@@ -64,7 +64,7 @@ public class JEEACSLoader extends AbstractACSLoader {
     @PostConstruct
     public void init() {
         
-        _listener = new org.overlord.rtgov.common.registry.ServiceListener<ActiveCollectionManager>() {
+        _listener = new org.overlord.commons.services.ServiceListener<ActiveCollectionManager>() {
 
             @Override
             public void registered(ActiveCollectionManager service) {

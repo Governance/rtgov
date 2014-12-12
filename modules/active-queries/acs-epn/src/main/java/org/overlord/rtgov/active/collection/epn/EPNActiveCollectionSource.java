@@ -18,9 +18,9 @@ package org.overlord.rtgov.active.collection.epn;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.ActiveCollectionContext;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 import org.overlord.rtgov.epn.ContextualNotificationListener;
 import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.EventList;
@@ -41,7 +41,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
 
     private EPNACSNotificationListener _listener=null;
     
-    private org.overlord.rtgov.common.registry.ServiceListener<EPNManager> _epnManagerListener;
+    private org.overlord.commons.services.ServiceListener<EPNManager> _epnManagerListener;
     
     /**
      * This method sets the subject.
@@ -72,7 +72,7 @@ public class EPNActiveCollectionSource extends ActiveCollectionSource {
             LOG.fine("Initializing EPN Active Collection Source");
         }
 
-        _epnManagerListener = new org.overlord.rtgov.common.registry.ServiceListener<EPNManager>() {
+        _epnManagerListener = new org.overlord.commons.services.ServiceListener<EPNManager>() {
 
             @Override
             public void registered(EPNManager service) {

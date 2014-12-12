@@ -22,10 +22,10 @@ import java.util.logging.Logger;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.activity.collector.AbstractActivityCollector;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.overlord.rtgov.common.registry.ServiceClose;
-import org.overlord.rtgov.common.registry.ServiceInit;
 
 /**
  * This class provides a JEE implementation of the activity

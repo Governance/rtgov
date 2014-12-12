@@ -18,6 +18,11 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-services</artifactId>
+            <scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-common</artifactId>
 			<scope>provided</scope>

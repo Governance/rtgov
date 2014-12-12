@@ -20,7 +20,7 @@ package org.overlord.rtgov.activity.collector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
+import org.overlord.commons.services.ServiceRegistryUtil;
 
 /**
  * This class provides access to the Activity Collector once an appropriate

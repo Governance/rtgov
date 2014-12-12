@@ -18,6 +18,16 @@
             <artifactId>rtgov-common</artifactId>
             <scope>provided</scope>
         </dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-services</artifactId>
+            <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-config</artifactId>
+            <scope>provided</scope>
+		</dependency>
 
 <!-- GPB TEMP DEPENDENCY ON OSGI -->
 		<dependency>

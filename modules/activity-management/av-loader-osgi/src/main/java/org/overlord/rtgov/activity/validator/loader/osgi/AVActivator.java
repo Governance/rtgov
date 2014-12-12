@@ -20,10 +20,10 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.util.ActivityValidatorUtil;
 import org.overlord.rtgov.activity.validator.ActivityValidator;
 import org.overlord.rtgov.activity.validator.ActivityValidatorManager;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class provides the capability to load Activity Validators from a
@@ -38,13 +38,13 @@ public class AVActivator implements BundleActivator {
     
     private java.util.List<ActivityValidator> _activityValidators=null;
     
-    private org.overlord.rtgov.common.registry.ServiceListener<ActivityValidatorManager> _listener;
+    private org.overlord.commons.services.ServiceListener<ActivityValidatorManager> _listener;
 
     /**
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        _listener = new org.overlord.rtgov.common.registry.ServiceListener<ActivityValidatorManager>() {
+        _listener = new org.overlord.commons.services.ServiceListener<ActivityValidatorManager>() {
 
             @Override
             public void registered(ActivityValidatorManager service) {

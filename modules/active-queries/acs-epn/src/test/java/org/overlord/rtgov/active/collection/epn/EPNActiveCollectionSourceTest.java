@@ -20,10 +20,10 @@ import static org.junit.Assert.*;
 import java.io.Serializable;
 
 import org.junit.Test;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollectionType;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.epn.EPNActiveCollectionSource;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.EventList;
 

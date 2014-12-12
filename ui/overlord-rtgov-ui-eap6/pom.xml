@@ -16,6 +16,12 @@
       <artifactId>overlord-rtgov-ui-base</artifactId>
       <classifier>classes</classifier>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.overlord</groupId>
+          <artifactId>overlord-commons-services</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- The base WAR being extended -->
     <dependency>
@@ -54,6 +60,12 @@
     	<dependency>
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
 	        <artifactId>analytics</artifactId>
+	        <exclusions>
+	            <exclusion>
+	                <groupId>org.overlord</groupId>
+	                <artifactId>overlord-commons-services</artifactId>
+	            </exclusion>
+	        </exclusions>
 	    </dependency>
     	<dependency>
 	        <groupId>org.overlord.rtgov.activity-analysis</groupId>
@@ -205,6 +217,8 @@
                 <exclude>WEB-INF/lib/resteasy*.jar</exclude>
                 <exclude>WEB-INF/lib/jaxb-*.jar</exclude>
                 <exclude>WEB-INF/lib/netty*.jar</exclude>
+                <exclude>WEB-INF/lib/xercesImpl*.jar</exclude>
+                <exclude>WEB-INF/lib/overlord-commons-services-*.jar</exclude>
                 <exclude>WEB-INF/lib/xercesImpl*.jar</exclude>
                 <exclude>WEB-INF/classes/org/overlord/rtgov/ui/server/services/mock/*</exclude>
               </excludes>

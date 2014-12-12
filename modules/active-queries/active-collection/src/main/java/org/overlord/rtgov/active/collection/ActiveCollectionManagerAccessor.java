@@ -20,7 +20,7 @@ package org.overlord.rtgov.active.collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
+import org.overlord.commons.services.ServiceRegistryUtil;
 
 /**
  * This class provides access to the Active Collection Manager once an appropriate

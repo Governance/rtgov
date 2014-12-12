@@ -30,9 +30,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.overlord.rtgov.common.registry.ServiceListener;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class is responsible for registering the configured set of

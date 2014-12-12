@@ -88,9 +88,6 @@ public class CallTraceRESTTest {
                     Maven.resolver().resolve("org.overlord.rtgov.activity-analysis:call-trace:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.content.services:call-trace-rests:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord:overlord-commons-services:"+commonsversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.overlord:overlord-commons-auth:"+commonsversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.overlord:overlord-commons-auth-jboss7:"+commonsversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.overlord:overlord-commons-auth-tomcat7:"+commonsversion).withoutTransitivity().asSingleFile(),
                     //Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()

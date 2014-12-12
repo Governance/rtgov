@@ -17,9 +17,9 @@ package org.overlord.rtgov.analytics.situation.store.osgi;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationStoreFactory;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class provides the activator capability for the analytics bundle.
@@ -27,13 +27,13 @@ import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
  */
 public class Activator implements BundleActivator {
     
-    private org.overlord.rtgov.common.registry.ServiceListener<SituationStore> _listener;
+    private org.overlord.commons.services.ServiceListener<SituationStore> _listener;
     
     /**
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        _listener = new org.overlord.rtgov.common.registry.ServiceListener<SituationStore>() {
+        _listener = new org.overlord.commons.services.ServiceListener<SituationStore>() {
 
             @Override
             public void registered(SituationStore service) {

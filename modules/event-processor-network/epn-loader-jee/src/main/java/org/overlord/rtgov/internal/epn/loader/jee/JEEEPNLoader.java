@@ -27,7 +27,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.epn.AbstractEPNLoader;
 import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.Network;
@@ -50,7 +50,7 @@ public class JEEEPNLoader extends AbstractEPNLoader {
 
     private Network _network=null;
     
-    private org.overlord.rtgov.common.registry.ServiceListener<EPNManager> _listener;
+    private org.overlord.commons.services.ServiceListener<EPNManager> _listener;
 
     /**
      * The constructor.
@@ -63,7 +63,7 @@ public class JEEEPNLoader extends AbstractEPNLoader {
      */
     @PostConstruct
     public void init() {
-        _listener = new org.overlord.rtgov.common.registry.ServiceListener<EPNManager>() {
+        _listener = new org.overlord.commons.services.ServiceListener<EPNManager>() {
 
             @Override
             public void registered(EPNManager service) {
