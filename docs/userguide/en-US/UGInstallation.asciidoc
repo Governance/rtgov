@@ -12,7 +12,7 @@ This section will describe how to install Overlord Runtime Governance in differe
 
 NOTE: If switchyard is not installed, then you won't be able to use the quickstarts, which are based around providing runtime governance for a switchyard application.
 
-* Download the latest release of RTGov from the http://www.jboss.org/overlord[Overlord website], choosing the appropriate distribution for the target container and installation type (e.g. client only or all). Unpack the distribution into a suitable location.
+* Download the latest release of RTGov from the http://www.projectoverlord.io[Overlord website], choosing the appropriate distribution for the target container and installation type (e.g. client only or all). Unpack the distribution into a suitable location.
 
 Note: The difference between the installation types is,
 
@@ -50,6 +50,13 @@ The final step is to configure KeyCloak with the Governance realm. This is achie
 * If first time using KeyCloak on the server, then enter the username 'admin' and password 'admin. You will then be prompted to enter a new password (twice) for the admin user.
 
 * When the create realm page is displayed, it will offer the ability to upload a realm definition. Select the button and when a file dialog appears, navigate to the _dist_ folder within the RTGov distribution and select the _governance-realm.json_ file.
+
+You can also import this governance realm by providing the file as an option when starting the server, e.g.
+
+----
+./standalone.sh -c standalone-full.xml -Dkeycloak.import=<path-to-distribution>/dist/governance-realm.json
+----
+
 
 * Once the realm has been uploaded successfully, you will be able to log in to the RTGov UI (http://localhost:8080/rtgov-ui) using the username 'admin' and password 'admin'
 
@@ -147,8 +154,7 @@ RTGov does not attempt to wrap or hide the standard Elasticsearch configurations
 [options="header"]
 |=======================
 | Value | Description
-| jboss-eap-6 | The properties are found in the _standalone*.xml_ files in the _<root>/standalone/configuration_ folder, or _domain.xml_ file in _<root>/domain/configuration_ folder. The properties are defined under a 'configuration' element with an attribute "name='overlord-rtgov-elasticsearch'".
-| fuse-6.1 | The properties are found in the _<root>/etc/overlord-rtgov-elasticsearch.properties_ file.
+| EAP or Wildfly | The configuration properties for the Runtime Governance capability are found in the _<root>/standalone/configuration/overlord-rtgov.properties_ file.
 |=======================
 
 If you want to learn how to configure and tune Elasticsearch then please reference the Elasticsearch documentation at http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/setup-configuration.html
@@ -255,137 +261,6 @@ The +samples/policy/async+ folder contains a policy for asynchronously calculati
 The +samples/sla/epn+ folder contains a policy for determining whether a Service Level Agreement has been violated, and if so, reported as a _Situation_.
 
 The +samples/sla/monitor+ folder contains a webapp that directly integrates with the RTGov components.
-
-
-==== Fuse
-
-To try out the samples in Fuse, you will need to start up the Fuse console.
-
-===== Order Management
-
-To install an OSGi application to provide a simple order management capabilty, with an Event Processor Network to convert exceptions into _Situations_, run the following command from the fuse console:
-
-----
-features:install rtgov-samples-ordermgmt-epn
-----
-
-Send some requests to the order management service, at the URL _http://localhost:8181/cxf/orderservice/orders/submit_, with basic authentication username=admin, password=admin (as defined in the +etc/user.properties+ file). For example, send the message:
-
-----
-{"orderId":"1","itemId":"BUTTER","quantity":100,"customer":"Fred"}
-----
-
-which should return the result:
-
-----
-{
-    "total": 125,
-    "accepted": true,
-    "customer": "Fred",
-    "orderId": "1",
-    "status": "Order Accepted"
-}
-----
-
-If you then send:
-
-----
-{"orderId":"6","itemId":"ERROR","quantity":100,"customer":"Fred"}
-----
-
-you will get the response:
-
-----
-Failed with an error
-----
-
-and a _Situation_ will be created in the RTGov UI.
-
-
-===== Detect Service Level Agreement (SLA) Violations
-
-To install a policy that will check for SLA violations, run the following command from the fuse console:
-
-----
-features:install rtgov-samples-sla
-----
-
-Send some requests to the order management service, at the URL _http://localhost:8181/cxf/orderservice/orders/submit_, with basic authentication username=admin, password=admin (as defined in the +etc/user.properties+ file). For example, send the message:
-
-----
-{"orderId":"3","itemId":"JAM","quantity":100,"customer":"Fred"}
-----
-
-which should return the result after a slight delay:
-
-----
-{
-    "total": 240,
-    "accepted": true,
-    "customer": "Fred",
-    "orderId": "3",
-    "status": "Order Accepted"
-}
-----
-
-The delay is caused by the request for itemId _JAM_, and results in the policy detecting a SLA violation which are reported as two _Situation_ events that can be viewed in the RTGov UI.
-
-
-===== Synchronous Policy Enforcement
-
-To install a policy that will be evaluated immediately, to prevent a customer from invoking a service more than once within two seconds, run the following comand from the fuse console:
-
-----
-features:install rtgov-samples-policy-sync
-----
-
-Send the following request twice in quick succession, to the order management service at the URL _http://localhost:8181/cxf/orderservice/orders/submit_, with basic authentication username=admin, password=admin (as defined in the +etc/user.properties+ file): 
-----
-{"orderId":"1","itemId":"BUTTER","quantity":100,"customer":"Fred"}
-----
-
-The first request will return the expected:
-
-----
-{
-    "total": 125,
-    "accepted": true,
-    "customer": "Fred",
-    "orderId": "1",
-    "status": "Order Accepted"
-}
-----
-
-However the second invocation (if performed within two seconds of the first) will return:
-
-----
-Customer 'Fred' cannot perform more than one request every 2 seconds
-----
-
-
-===== Asynchronous Policy Enforcement
-
-To install a policy that will evaluate a customer's debt level, and suspend their account if it becomes too high, run the following comand from the fuse console:
-
-----
-features:install rtgov-samples-policy-async
-----
-
-Send some requests to the order management service, at the URL _http://localhost:8181/cxf/orderservice/orders/submit_, with basic authentication username=admin, password=admin (as defined in the +etc/user.properties+ file). For example, send the message:
-
-----
-{"orderId":"1","itemId":"BUTTER","quantity":100,"customer":"Fred"}
-----
-
-When the credit limit has been reached, the customer will be suspended, resulting in a response "Customer 'Fred' has been suspended".
-
-If we then sent the following request, to the URL _http://localhost:8181/cxf/orderservice/orders/pay_, to clear some of customer Fred's debt:
-
-----
-{"amount":400,"customer":"Fred"}
-----
-
-we will then be able to send further order requests.
 
 
 === JBoss EAP Specific Information
