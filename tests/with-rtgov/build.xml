@@ -22,22 +22,31 @@
             <property name="path" value="${path}"/>
         </ant>
 
-        <echo message="Start server to import KeyCloak governance realm" />
-        <exec executable="/bin/bash" spawn="true">
-            <arg value="${path}/bin/standalone.sh"/>
-            <arg value="-c"/>
-            <arg value="standalone-full.xml"/>
-            <arg value="-Dkeycloak.import=${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/dist/governance-realm.json"/>
-        </exec>
+        <parallel>
+            <sequential>
+                <echo message="Start server to import KeyCloak governance realm" />
+                <exec executable="/bin/bash" spawn="true">
+                    <arg value="${path}/bin/standalone.sh"/>
+                    <arg value="-c"/>
+                    <arg value="standalone-full.xml"/>
+                    <arg value="-Dkeycloak.import=${path}/overlord-rtgov-dist-all-eap6-${rtgov.version}/dist/governance-realm.json"/>
+                </exec>
+            </sequential>
+            <sequential>
+                <waitfor maxwait="3" maxwaitunit="minute">
+                    <socket server="localhost" port="9990" />
+                </waitfor>
+                <sleep seconds="30" />
 
-        <sleep minutes="1" />
+                <echo message="Stop server" />
+                <exec executable="/bin/bash">
+                    <arg value="${path}/bin/jboss-cli.sh"/>
+                    <arg value="--connect"/>
+                    <arg value="--command=:shutdown"/>
+                </exec>
+            </sequential>
+        </parallel>
 
-        <echo message="Stop server" />
-        <exec executable="/bin/bash">
-            <arg value="${path}/bin/jboss-cli.sh"/>
-            <arg value="--connect"/>
-            <arg value="--command=:shutdown"/>
-        </exec>
     </target>
 
 </project>

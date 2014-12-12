@@ -83,7 +83,6 @@ public class ElasticsearchActivityStoreTest {
             System.setProperty("elasticsearch.config", "ElasticsearchActivityStoreTest-es.properties");
             _properties = new Properties();
             _properties.setProperty("Elasticsearch.hosts", HOST + ":" + 9300);
-            //_properties.setProperty("Elasticsearch.hosts", host);
             _properties.setProperty("Elasticsearch.schedule", "3000");
             _properties.setProperty("ActivityStore.Elasticsearch.type", TYPE);
             _properties.setProperty("ActivityStore.Elasticsearch.index", INDEX);
