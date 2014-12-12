@@ -301,38 +301,92 @@ public class SituationDetailsPage extends AbstractPage {
     
 	@EventHandler("btn-assign")
 	protected void onAssignButtonClick(ClickEvent event) {
-		situationsService.assign(id, voidInvocationHandler);
-		loadSituationAndUpdatePageData();
+		situationsService.assign(id, new IRpcServiceInvocationHandler<Void>() {
+
+            @Override
+            public void onReturn(Void data) {
+                loadSituationAndUpdatePageData();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+            }		    
+		});
 	}
 
 	@EventHandler("btn-unassign")
 	protected void onUnassignButtonClick(ClickEvent event) {
-		situationsService.unassign(id, voidInvocationHandler);
-		loadSituationAndUpdatePageData();
+        situationsService.unassign(id, new IRpcServiceInvocationHandler<Void>() {
+
+            @Override
+            public void onReturn(Void data) {
+                loadSituationAndUpdatePageData();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+            }           
+        });
 	}
 
 	@EventHandler("btn-start")
 	protected void onStartButtonClick(ClickEvent event) {
-		situationsService.updateResolutionState(id, IN_PROGRESS.name(), voidInvocationHandler);
-		loadSituationAndUpdatePageData();
+		situationsService.updateResolutionState(id, IN_PROGRESS.name(), new IRpcServiceInvocationHandler<Void>() {
+
+            @Override
+            public void onReturn(Void data) {
+                loadSituationAndUpdatePageData();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+            }           
+        });
 	}
 
 	@EventHandler("btn-stop")
 	protected void onStopButtonClick(ClickEvent event) {
-		situationsService.updateResolutionState(id, WAITING.name(), voidInvocationHandler);
-		loadSituationAndUpdatePageData();
+        situationsService.updateResolutionState(id, WAITING.name(), new IRpcServiceInvocationHandler<Void>() {
+
+            @Override
+            public void onReturn(Void data) {
+                loadSituationAndUpdatePageData();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+            }           
+        });
 	}
 
 	@EventHandler("btn-resolve")
 	protected void onResolveButtonClick(ClickEvent event) {
-		situationsService.updateResolutionState(id, RESOLVED.name(), voidInvocationHandler);
-		loadSituationAndUpdatePageData();
+        situationsService.updateResolutionState(id, RESOLVED.name(), new IRpcServiceInvocationHandler<Void>() {
+
+            @Override
+            public void onReturn(Void data) {
+                loadSituationAndUpdatePageData();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+            }           
+        });
 	}
 
 	@EventHandler("btn-reopen")
 	protected void onReopenButtonClick(ClickEvent event) {
-		situationsService.updateResolutionState(id, REOPENED.name(), voidInvocationHandler);
-		loadSituationAndUpdatePageData();
+        situationsService.updateResolutionState(id, REOPENED.name(), new IRpcServiceInvocationHandler<Void>() {
+
+            @Override
+            public void onReturn(Void data) {
+                loadSituationAndUpdatePageData();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+            }           
+        });
 	}
 
 }

@@ -18,7 +18,6 @@ package org.overlord.rtgov.ui.client.shared.services;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -72,7 +71,7 @@ public interface ISituationsService {
      * @param message
      * @throws UiException
      */
-    @PUT
+    @POST
     @Path("resubmit/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public void resubmit(@PathParam("id") String situationId, String message) throws UiException;
@@ -83,7 +82,7 @@ public interface ISituationsService {
      * @param situationId
      * @throws UiException
      */
-    @PUT
+    @POST
     @Path("assign/{id}")
     public void assign(@PathParam("id") String situationId) throws UiException;
     
@@ -92,7 +91,7 @@ public interface ISituationsService {
      * @param situationId
      * @throws UiException
      */
-    @PUT
+    @POST
     @Path("unassign/{id}")
     public void unassign(@PathParam("id") String situationId) throws UiException;
 
@@ -101,7 +100,7 @@ public interface ISituationsService {
      * @param situationId
      * @throws UiException
      */
-    @PUT
+    @POST
     @Path("resolution/{id}")
     @Consumes(MediaType.TEXT_PLAIN)
 	public void updateResolutionState(@PathParam("id") String situationId, String resolutionState) throws UiException;
