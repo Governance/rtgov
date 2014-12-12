@@ -27,12 +27,12 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.processor.InformationProcessor;
 import org.overlord.rtgov.activity.processor.InformationProcessorManager;
 import org.overlord.rtgov.activity.processor.validation.IPValidationListener;
 import org.overlord.rtgov.activity.processor.validation.IPValidator;
 import org.overlord.rtgov.activity.util.InformationProcessorUtil;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This class provides the capability to load Information Processors from a
@@ -51,7 +51,7 @@ public class JEEIPLoader {
     
     private java.util.List<InformationProcessor> _informationProcessors=null;
     
-    private org.overlord.rtgov.common.registry.ServiceListener<InformationProcessorManager> _listener;
+    private org.overlord.commons.services.ServiceListener<InformationProcessorManager> _listener;
 
     /**
      * The constructor.
@@ -65,7 +65,7 @@ public class JEEIPLoader {
     @PostConstruct
     public void init() {
         
-        _listener = new org.overlord.rtgov.common.registry.ServiceListener<InformationProcessorManager>() {
+        _listener = new org.overlord.commons.services.ServiceListener<InformationProcessorManager>() {
 
             @Override
             public void registered(InformationProcessorManager service) {

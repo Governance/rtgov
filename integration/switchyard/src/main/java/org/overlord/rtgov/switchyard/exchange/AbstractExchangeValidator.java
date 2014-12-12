@@ -23,14 +23,14 @@ import javax.naming.InitialContext;
 import javax.transaction.TransactionManager;
 import javax.xml.namespace.QName;
 
+import org.overlord.commons.services.ServiceListener;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.soa.RPCActivityType;
 import org.overlord.rtgov.activity.model.soa.RequestReceived;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.model.soa.ResponseSent;
 import org.overlord.rtgov.activity.collector.ActivityCollector;
-import org.overlord.rtgov.common.registry.ServiceListener;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.internal.switchyard.exchange.PropertyAccessor;
 import org.switchyard.Exchange;

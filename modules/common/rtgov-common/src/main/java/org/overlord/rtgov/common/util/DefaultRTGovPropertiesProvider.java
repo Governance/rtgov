@@ -19,7 +19,7 @@ import java.util.Iterator;
 import java.util.Properties;
 
 import org.apache.commons.configuration.Configuration;
-import org.overlord.rtgov.common.config.ConfigurationFactory;
+import org.overlord.commons.config.ConfigurationFactory;
 
 /**
  * This class provides the default properties provider.

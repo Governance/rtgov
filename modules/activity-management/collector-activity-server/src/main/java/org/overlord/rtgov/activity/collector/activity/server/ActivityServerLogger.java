@@ -26,12 +26,12 @@ import javax.management.Notification;
 import javax.management.NotificationFilter;
 import javax.management.NotificationListener;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.server.ActivityServer;
 import org.overlord.rtgov.activity.collector.BatchedActivityUnitLogger;
-import org.overlord.rtgov.common.registry.ServiceClose;
-import org.overlord.rtgov.common.registry.ServiceInit;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**

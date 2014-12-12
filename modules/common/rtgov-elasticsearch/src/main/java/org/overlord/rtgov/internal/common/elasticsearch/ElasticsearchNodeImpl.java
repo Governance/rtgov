@@ -20,9 +20,9 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.common.elasticsearch.ElasticsearchNode;
-import org.overlord.rtgov.common.registry.ServiceClose;
-import org.overlord.rtgov.common.registry.ServiceInit;
 
 import java.util.Properties;
 import java.util.logging.Level;

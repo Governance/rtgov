@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.server.ActivityNotifier;
-import org.overlord.rtgov.common.registry.ServiceClose;
-import org.overlord.rtgov.common.registry.ServiceInit;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 import org.overlord.rtgov.epn.EPNManager;
 
 /**

@@ -24,13 +24,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.ActiveList;
 import org.overlord.rtgov.active.collection.predicate.MVEL;
 import org.overlord.rtgov.active.collection.predicate.Predicate;
 import org.overlord.rtgov.analytics.service.ResponseTime;
 import org.overlord.rtgov.analytics.situation.Situation;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 /**
  * This is the custom event monitor that receives node notifications

@@ -30,6 +30,8 @@ import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.overlord.commons.services.ServiceClose;
+import org.overlord.commons.services.ServiceInit;
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
@@ -37,8 +39,6 @@ import org.overlord.rtgov.analytics.situation.store.AbstractSituationStore;
 import org.overlord.rtgov.analytics.situation.store.ResolutionState;
 import org.overlord.rtgov.analytics.util.SituationUtil;
 import org.overlord.rtgov.common.elasticsearch.ElasticsearchClient;
-import org.overlord.rtgov.common.registry.ServiceClose;
-import org.overlord.rtgov.common.registry.ServiceInit;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 /**

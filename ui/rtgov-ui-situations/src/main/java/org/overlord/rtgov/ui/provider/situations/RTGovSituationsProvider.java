@@ -26,6 +26,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveChangeListener;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionListener;
@@ -52,7 +53,6 @@ import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.Task;
 import org.overlord.rtgov.call.trace.model.TraceNode;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.CallTraceBean;
 import org.overlord.rtgov.ui.client.model.MessageBean;

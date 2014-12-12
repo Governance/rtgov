@@ -33,7 +33,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentFactory;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.common.util.RTGovProperties;
 
 import java.io.InputStream;
@@ -112,7 +112,7 @@ public class ElasticsearchClient {
 
     private static final long ELASTICSEARCH_SCHEDULE_DEFAULT = 30000;
     
-    private org.overlord.rtgov.common.registry.ServiceListener<ElasticsearchNode> _listener=null;
+    private org.overlord.commons.services.ServiceListener<ElasticsearchNode> _listener=null;
 
     /**
      * schedule to persist the items  to elasticsearch.
@@ -285,7 +285,7 @@ public class ElasticsearchClient {
             if (_hosts.startsWith("embedded")) {
                 try {
                     // Obtain the Elasticsearch client                    
-                    _listener = new org.overlord.rtgov.common.registry.ServiceListener<ElasticsearchNode>() {
+                    _listener = new org.overlord.commons.services.ServiceListener<ElasticsearchNode>() {
 
                         @Override
                         public void registered(ElasticsearchNode service) {

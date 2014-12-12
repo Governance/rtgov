@@ -19,12 +19,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.ActiveCollection;
 import org.overlord.rtgov.active.collection.ActiveCollectionManager;
 import org.overlord.rtgov.active.collection.ActiveCollectionVisibility;
 import org.overlord.rtgov.active.collection.QuerySpec;
 import org.overlord.rtgov.active.collection.util.ActiveCollectionUtil;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -49,7 +49,7 @@ public class RESTActiveCollectionServer {
 
     private ActiveCollectionManager _acmManager=null;
     
-    private org.overlord.rtgov.common.registry.ServiceListener<ActiveCollectionManager> _listener;
+    private org.overlord.commons.services.ServiceListener<ActiveCollectionManager> _listener;
 
     /**
      * This is the default constructor.
@@ -62,7 +62,7 @@ public class RESTActiveCollectionServer {
      */
     @PostConstruct
     public void init() {
-        _listener = new org.overlord.rtgov.common.registry.ServiceListener<ActiveCollectionManager>() {
+        _listener = new org.overlord.commons.services.ServiceListener<ActiveCollectionManager>() {
 
             @Override
             public void registered(ActiveCollectionManager service) {

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.epn.AbstractEPNLoader;
 import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.Network;
@@ -39,13 +39,13 @@ public class EPNActivator extends AbstractEPNLoader implements BundleActivator {
 
     private Network _network=null;
     
-    private org.overlord.rtgov.common.registry.ServiceListener<EPNManager> _listener;
+    private org.overlord.commons.services.ServiceListener<EPNManager> _listener;
     
     /**
      * {@inheritDoc}
      */
     public void start(final BundleContext context) throws Exception {
-        _listener = new org.overlord.rtgov.common.registry.ServiceListener<EPNManager>() {
+        _listener = new org.overlord.commons.services.ServiceListener<EPNManager>() {
 
             @Override
             public void registered(EPNManager service) {

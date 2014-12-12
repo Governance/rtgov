@@ -26,7 +26,7 @@ import javax.ejb.TransactionManagementType;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 
-import org.overlord.rtgov.common.registry.ServiceRegistryUtil;
+import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.epn.EPNManager;
 import org.overlord.rtgov.epn.jms.JMSEPNManager;
 
