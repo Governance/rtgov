@@ -23,6 +23,7 @@
       <module name="org.jboss.resteasy.resteasy-jaxrs" />
       <module name="org.apache.httpcomponents" />
       <module name="org.jboss.as.controller" />
+      <module name="org.osgi.core" optional="true" />
       <module name="deployment.overlord-rtgov.war" services="export" />
     </dependencies>
     <exclude-subsystems>
