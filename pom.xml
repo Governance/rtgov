@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.1.0-SNAPSHOT</version>
+	<version>2.1.0.Beta1</version>
 	<packaging>pom</packaging>
 	<name>Overlord RTGov</name>
 	<url>http://www.jboss.org/overlord</url>
@@ -82,7 +82,7 @@
 		<version.org.kie>6.1.0.Final</version.org.kie>
         <version.org.apache.lucene>4.9.0</version.org.apache.lucene> <!-- Required to override parent bom version -->
         <version.org.jboss.remotingjmx>1.1.0.Final</version.org.jboss.remotingjmx>
-		<version.org.overlord.overlord-commons>3.0.0-SNAPSHOT</version.org.overlord.overlord-commons>
+		<version.org.overlord.overlord-commons>3.0.0.Final</version.org.overlord.overlord-commons>
 		<version.org.picketbox>4.0.19.SP4</version.org.picketbox>
 		<version.org.picketlink>2.5.3.SP4</version.org.picketlink>
 		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>

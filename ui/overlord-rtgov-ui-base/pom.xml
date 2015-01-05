@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.overlord.rtgov</groupId>
     <artifactId>ui</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
+    <version>2.1.0.Beta1</version>
   </parent>
   <groupId>org.overlord.rtgov.ui</groupId>
   <artifactId>overlord-rtgov-ui-base</artifactId>
@@ -204,7 +204,7 @@
           <classesClassifier>classes</classesClassifier>
           <warName>${project.artifactId}</warName>
           <outputFileNameMapping>@{artifactId}@-@{baseVersion}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
-          <packagingExcludes>**/javax/**/*.*,**/client/local/**/*.class,**/rebel.xml</packagingExcludes>
+          <packagingExcludes>**/javax/**/*.*,**/client/local/**/*.class,**/rebel.xml,**/ServerMarshallingFactoryImpl*</packagingExcludes>
           <webResources>
             <resource>
               <directory>target/${kibana.distribution.version}</directory>
