@@ -17,7 +17,6 @@ package org.overlord.rtgov.activity.util;
 
 import static org.junit.Assert.*;
 
-import org.codehaus.jackson.JsonNode;
 import org.junit.Test;
 import org.overlord.rtgov.activity.model.ActivityUnit;
 import org.overlord.rtgov.activity.model.Context;
@@ -25,6 +24,8 @@ import org.overlord.rtgov.activity.model.Origin;
 import org.overlord.rtgov.activity.model.soa.RequestSent;
 import org.overlord.rtgov.activity.model.soa.ResponseReceived;
 import org.overlord.rtgov.activity.util.ActivityUtil;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class ActivityUtilTest {
 

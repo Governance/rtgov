@@ -15,7 +15,7 @@
  */
 package org.overlord.rtgov.ep;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * This class represents the predicate applied to an

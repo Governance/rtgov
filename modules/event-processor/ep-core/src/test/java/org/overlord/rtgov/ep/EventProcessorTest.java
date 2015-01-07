@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 public class EventProcessorTest {

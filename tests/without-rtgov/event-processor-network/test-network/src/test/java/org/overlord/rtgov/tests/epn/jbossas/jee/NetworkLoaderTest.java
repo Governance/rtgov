@@ -60,8 +60,8 @@ public class NetworkLoaderTest {
                     Maven.resolver().resolve("org.overlord.rtgov.event-processor:ep-core:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.event-processor-network:epn-container-jee:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.common:rtgov-common:"+rtgovversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-core:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-databind:"+jacksonversion).withoutTransitivity().asSingleFile()
              );
     }
 

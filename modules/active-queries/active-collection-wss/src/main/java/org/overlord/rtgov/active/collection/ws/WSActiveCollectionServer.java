@@ -18,7 +18,7 @@ package org.overlord.rtgov.active.collection.ws;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.overlord.commons.services.ServiceRegistryUtil;
 import org.overlord.rtgov.active.collection.command.ActiveChangeNotification;
 import org.overlord.rtgov.active.collection.command.ActiveChangeNotification.ActiveChangeType;

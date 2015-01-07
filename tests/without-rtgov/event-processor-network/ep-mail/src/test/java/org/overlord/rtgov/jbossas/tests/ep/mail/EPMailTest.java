@@ -49,8 +49,8 @@ public class EPMailTest {
                     Maven.resolver().resolve("org.overlord.rtgov.event-processor:ep-core:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.event-processor:ep-mail:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.mvel:mvel2:"+mvelversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-core:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-databind:"+jacksonversion).withoutTransitivity().asSingleFile()
              )
              .addAsLibraries(Maven.resolver().resolve("org.overlord.rtgov.common:rtgov-common:"+rtgovversion).withTransitivity().asFile());
     }

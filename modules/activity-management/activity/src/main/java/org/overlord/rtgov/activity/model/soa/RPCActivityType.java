@@ -22,7 +22,7 @@ import java.io.ObjectOutput;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.activity.model.common.MessageExchange;
 

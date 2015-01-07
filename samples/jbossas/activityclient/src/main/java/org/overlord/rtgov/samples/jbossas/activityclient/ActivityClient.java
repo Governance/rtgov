@@ -20,10 +20,10 @@ import java.util.Scanner;
 
 import javax.transaction.TransactionManager;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import org.overlord.rtgov.activity.collector.ActivityCollector;
 import org.overlord.rtgov.activity.collector.CollectorContext;
 import org.overlord.rtgov.activity.collector.activity.server.ActivityServerLogger;
@@ -57,11 +57,8 @@ public class ActivityClient {
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
     static {
-        SerializationConfig config=MAPPER.getSerializationConfig()
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-        
-        MAPPER.setSerializationConfig(config);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
     }
     
     /**

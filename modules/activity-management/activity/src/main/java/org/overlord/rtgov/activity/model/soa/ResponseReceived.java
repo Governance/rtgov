@@ -22,7 +22,7 @@ import java.io.ObjectOutput;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * This activity type represents a received request.

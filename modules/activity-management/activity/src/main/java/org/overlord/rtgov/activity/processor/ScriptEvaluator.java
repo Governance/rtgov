@@ -15,9 +15,9 @@
  */
 package org.overlord.rtgov.activity.processor;
 
-import org.codehaus.jackson.annotate.JsonSubTypes;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.annotate.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.processor.mvel.MVELScriptEvaluator;
 
