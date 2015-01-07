@@ -17,9 +17,9 @@ package org.overlord.rtgov.call.trace.util;
 
 import java.beans.PropertyDescriptor;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.overlord.rtgov.call.trace.model.CallTrace;
 
 /**
@@ -32,11 +32,8 @@ public final class CallTraceUtil {
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
     static {
-        SerializationConfig config=MAPPER.getSerializationConfig()
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-        
-        MAPPER.setSerializationConfig(config);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
     }
     
     /**

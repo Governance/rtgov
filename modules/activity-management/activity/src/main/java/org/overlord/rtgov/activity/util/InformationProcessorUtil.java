@@ -15,11 +15,11 @@
  */
 package org.overlord.rtgov.activity.util;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import org.overlord.rtgov.activity.processor.InformationProcessor;
 
 /**
@@ -37,11 +37,8 @@ public final class InformationProcessorUtil {
     private static ObjectWriter IPLIST_WRITER=null;
 
     static {
-        SerializationConfig config=MAPPER.getSerializationConfig()
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-        
-        MAPPER.setSerializationConfig(config);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         
         IPLIST_WRITER = MAPPER.writerWithType(INFORMATION_PROCESSOR_LIST);
     }

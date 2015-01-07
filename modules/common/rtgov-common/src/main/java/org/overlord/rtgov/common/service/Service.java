@@ -18,7 +18,7 @@ package org.overlord.rtgov.common.service;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * This abstract class defines a service that is available to

@@ -89,8 +89,9 @@ public class CallTraceRESTTest {
                     Maven.resolver().resolve("org.overlord.rtgov.content.services:call-trace-rests:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord:overlord-commons-services:"+commonsversion).withoutTransitivity().asSingleFile(),
                     //Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile()
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-core:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-databind:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-annotations:"+jacksonversion).withoutTransitivity().asSingleFile()
             ).addAsLibraries(Maven.resolver().resolve("org.overlord:overlord-commons-config:"+commonsversion).withTransitivity().asFile()
             ).addAsLibraries(Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withTransitivity().asFile()
             ).addAsLibraries(Maven.resolver().resolve("commons-lang:commons-lang:"+langversion).withTransitivity().asFile());

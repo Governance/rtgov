@@ -19,8 +19,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Properties;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -48,9 +49,7 @@ public class ActivityServerRESTTest {
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
     static {
-        SerializationConfig config=MAPPER.getSerializationConfig().with(SerializationConfig.Feature.INDENT_OUTPUT);
-        
-        MAPPER.setSerializationConfig(config);
+        MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     @Deployment
@@ -73,8 +72,9 @@ public class ActivityServerRESTTest {
                     Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-store-mem:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.overlord.rtgov.activity-management:activity-server-rests:"+rtgovversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("commons-configuration:commons-configuration:"+configversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.codehaus.jackson:jackson-core-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
-                    Maven.resolver().resolve("org.codehaus.jackson:jackson-mapper-asl:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-core:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-databind:"+jacksonversion).withoutTransitivity().asSingleFile(),
+                    Maven.resolver().resolve("com.fasterxml.jackson.core:jackson-annotations:"+jacksonversion).withoutTransitivity().asSingleFile(),
                     Maven.resolver().resolve("org.mvel:mvel2:"+mvelversion).withoutTransitivity().asSingleFile())
             .addAsLibraries(Maven.resolver().resolve("org.overlord:overlord-commons-config:"+commonsversion).withTransitivity().asFile())
             .addAsLibraries(Maven.resolver().resolve("org.overlord:overlord-commons-services:"+commonsversion).withTransitivity().asFile());

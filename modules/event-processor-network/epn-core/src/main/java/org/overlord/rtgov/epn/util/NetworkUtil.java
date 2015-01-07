@@ -15,9 +15,10 @@
  */
 package org.overlord.rtgov.epn.util;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
 import org.overlord.rtgov.epn.Network;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * This class provides utility functions for the EPN
@@ -29,9 +30,7 @@ public final class NetworkUtil {
     private static final ObjectMapper MAPPER=new ObjectMapper();
     
     static {
-        SerializationConfig config=MAPPER.getSerializationConfig().with(SerializationConfig.Feature.INDENT_OUTPUT);
-        
-        MAPPER.setSerializationConfig(config);
+        MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     /**

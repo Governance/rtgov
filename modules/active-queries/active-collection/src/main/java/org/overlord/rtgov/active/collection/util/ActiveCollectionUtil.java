@@ -15,9 +15,10 @@
  */
 package org.overlord.rtgov.active.collection.util;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.core.type.TypeReference;
+
 import org.overlord.rtgov.active.collection.ActiveCollectionSource;
 import org.overlord.rtgov.active.collection.QuerySpec;
 
@@ -34,9 +35,7 @@ public final class ActiveCollectionUtil {
                         new TypeReference<java.util.List<ActiveCollectionSource>>() { };
     
     static {
-        SerializationConfig config=MAPPER.getSerializationConfig().with(SerializationConfig.Feature.INDENT_OUTPUT);
-        
-        MAPPER.setSerializationConfig(config);
+        MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
     /**

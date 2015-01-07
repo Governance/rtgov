@@ -15,11 +15,9 @@
  */
 package org.overlord.rtgov.analytics.util;
 
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.DeserializationConfig.Feature;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 import org.overlord.rtgov.analytics.situation.IgnoreSubject;
 import org.overlord.rtgov.analytics.situation.Situation;
 
@@ -32,15 +30,7 @@ public final class SituationUtil {
     private static final ObjectMapper MAPPER=new ObjectMapper();
 
     static {
-        SerializationConfig config=MAPPER.getSerializationConfig()
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-        
-        DeserializationConfig config2=MAPPER.getDeserializationConfig()
-                .without(Feature.FAIL_ON_UNKNOWN_PROPERTIES);
-        
-        MAPPER.setSerializationConfig(config);
-        MAPPER.setDeserializationConfig(config2);
+        MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
     }
     
     /**

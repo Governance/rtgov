@@ -16,9 +16,10 @@
 package org.overlord.rtgov.common.elasticsearch;
 
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
@@ -56,11 +57,8 @@ public class ElasticsearchClient {
     protected static final ObjectMapper MAPPER = new ObjectMapper();
 
     static {
-        SerializationConfig config = MAPPER.getSerializationConfig()
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_NULL)
-                .withSerializationInclusion(JsonSerialize.Inclusion.NON_DEFAULT);
-
-        MAPPER.setSerializationConfig(config);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
     }
 
     /**

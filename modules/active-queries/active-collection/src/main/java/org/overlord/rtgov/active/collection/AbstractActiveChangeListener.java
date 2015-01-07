@@ -15,7 +15,7 @@
  */
 package org.overlord.rtgov.active.collection;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * This class defines an abstract active change listener. The

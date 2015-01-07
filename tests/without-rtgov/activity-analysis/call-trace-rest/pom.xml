@@ -56,14 +56,18 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-core-asl</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
 		</dependency>
 		<dependency>
 		    <groupId>javax</groupId>
@@ -134,7 +138,7 @@
 						</property>
 						<property>
 							<name>jackson.version</name>
-							<value>${version.org.codehaus.jackson}</value>
+							<value>${version.com.fasterxml.jackson}</value>
 						</property>
 						<property>
 							<name>commons-configuration.version</name>

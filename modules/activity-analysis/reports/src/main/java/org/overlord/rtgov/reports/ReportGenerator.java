@@ -15,7 +15,7 @@
  */
 package org.overlord.rtgov.reports;
 
-import org.codehaus.jackson.annotate.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.overlord.rtgov.reports.model.Report;
 
 /**
