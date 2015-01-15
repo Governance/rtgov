@@ -185,7 +185,6 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <!-- Runtime / Container dependencies -->
