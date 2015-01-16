@@ -83,10 +83,10 @@ public class ElasticsearchSituationStoreTest {
 
             _properties = new Properties();
             _properties.setProperty("Elasticsearch.hosts", HOST + ":" + 9300);
-            _properties.setProperty("Elasticsearch.hosts", "embedded");
             _properties.setProperty("Elasticsearch.schedule", "3000");
             _properties.setProperty("SituationStore.Elasticsearch.type", TYPE);
             _properties.setProperty("SituationStore.Elasticsearch.index", INDEX);
+            _properties.setProperty("elasticsearch.config", "ElasticsearchSituationStoreTest-es.properties");
         }
 
         public String getProperty(String name) {
@@ -137,9 +137,9 @@ public class ElasticsearchSituationStoreTest {
         } else {
             c = new TransportClient().addTransportAddress(new InetSocketTransportAddress(HOST, PORT));
         }
+
         // remove index.
         if (c.admin().indices().prepareExists(INDEX).execute().actionGet().isExists()) {
-
             c.admin().indices().prepareDelete(INDEX).execute().actionGet();
         }
         
