@@ -343,6 +343,58 @@ public class ElasticsearchSituationStoreTest {
     }
 
     @Test
+    public void testQuerySituationsResolutionStateUnresolved() {
+        try {
+            Situation s1=new Situation();
+            s1.setId(SITUATION_ID_1);
+            s1.setTimestamp(System.currentTimeMillis());
+            _elasticsearchSituationStore.store(s1);
+
+            Situation s2=new Situation();
+            s2.setId(SITUATION_ID_2);
+            s2.setTimestamp(System.currentTimeMillis()+100);
+            s2.getSituationProperties().put(SituationStore.RESOLUTION_STATE_PROPERTY, ResolutionState.RESOLVED.name());
+            _elasticsearchSituationStore.store(s2);
+            
+            // Need to delay to allow situations to be index, and therefore become searchable
+            synchronized (this) {
+                wait(2000);                
+            }
+        } catch (Exception e) {
+
+            fail("Could not store situation " + e);
+        }
+        
+        try {
+            SituationsQuery query=new SituationsQuery();
+            query.setResolutionState(ResolutionState.UNRESOLVED.name());
+            
+            java.util.List<Situation> sits = _elasticsearchSituationStore.getSituations(query);
+            if (sits != null) {
+                if (sits.size() != 1) {
+                    fail("Expecting 1 situations: "+sits.size());
+                }
+                
+                if (!sits.get(0).getId().equals(SITUATION_ID_1)) {
+                    fail("Expecting entry 1 to have id '"+SITUATION_ID_1+"', but got: "+sits.get(0).getId());
+                }
+           } else {
+                fail("Situations list is null");
+            }
+        } catch (Exception e) {
+            fail("Failed to get situation: " + e);
+
+        }
+        
+        try {
+            _elasticsearchSituationStore.getClient().remove(SITUATION_ID_1);
+            _elasticsearchSituationStore.getClient().remove(SITUATION_ID_2);
+        } catch (Exception e) {
+            fail("Could not remove situation" + e);
+        }
+    }
+
+    @Test
     public void testQuerySituationsHost() {
         try {
             Situation s1=new Situation();
