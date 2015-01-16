@@ -51,7 +51,7 @@ public final class SituationStoreFactory {
      * 
      * @return The situation store
      */
-    public static synchronized SituationStore getSituationStore() {
+    public static SituationStore getSituationStore() {
         if (_instance == null) {
             java.util.Set<SituationStore> services=ServiceRegistryUtil.getServices(SituationStore.class);
             String clsName=(String)RTGovProperties.getProperties().get(SITUATION_STORE_CLASS);
@@ -61,9 +61,12 @@ public final class SituationStoreFactory {
                     LOG.finest("Checking situation store impl="+sits);
                 }
                 if (sits.getClass().getName().equals(clsName)) {
-                    _instance = sits;
-                    if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.finest("Found situation store impl="+sits);
+                    // Only overwrite if instance not set
+                    if (_instance == null) {
+                        _instance = sits;
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.finest("Found situation store impl="+sits);
+                        }
                     }
                     break;
                 }
