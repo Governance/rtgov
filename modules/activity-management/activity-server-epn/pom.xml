@@ -9,10 +9,14 @@
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
 		<artifactId>activity-management</artifactId>
-		<version>2.0.0.Final</version>
+		<version>2.0.2-SNAPSHOT</version>
 	</parent>
   
 	<dependencies>
+		<dependency>
+			<groupId>org.overlord.rtgov.common</groupId>
+			<artifactId>rtgov-common</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-management</groupId>
 			<artifactId>activity</artifactId>
@@ -20,6 +24,10 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor-network</groupId>
 			<artifactId>epn-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-services</artifactId>
 		</dependency>
 
 		<dependency>

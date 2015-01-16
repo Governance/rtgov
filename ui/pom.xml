@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>org.overlord.rtgov</groupId>
 		<artifactId>parent</artifactId>
-		<version>2.0.0.Final</version>
+		<version>2.0.2-SNAPSHOT</version>
 	</parent>
 
 	<modules>
@@ -18,7 +18,7 @@
 		<module>rtgov-ui-services-switchyard</module>
 		<module>rtgov-ui-situations</module>
 		<module>overlord-rtgov-ui-base</module>
-		<module>overlord-rtgov-ui-dev-server</module>
+		<!-- module>overlord-rtgov-ui-dev-server</module -->
 		<module>overlord-rtgov-ui-eap6</module>
 		<module>overlord-rtgov-ui-jetty8</module>
 		<module>overlord-rtgov-ui-fuse6</module>

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov.samples.karaf</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.0.0.Final</version>
+	<version>2.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Overlord RTGov::Samples::Karaf</name>
 	<url>http://www.overlord.org</url>
@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.jboss.integration-platform</groupId>
 		<artifactId>jboss-integration-platform-parent</artifactId>
-		<version>6.0.0.CR12</version>
+		<version>6.0.0.CR22</version>
 	</parent>
 
 	<scm>
@@ -36,11 +36,12 @@
 		<version.javax.javaee-api>6.0</version.javax.javaee-api>
 		<version.org.jboss.spec.jboss-javaee-6.0>1.0.0.Final</version.org.jboss.spec.jboss-javaee-6.0>
 		<jbossas.version>7.2.0.Final</jbossas.version>
-		<version.org.overlord.overlord-commons>2.0.11.Final</version.org.overlord.overlord-commons>
+		<version.org.overlord.overlord-commons>2.0.12.Final</version.org.overlord.overlord-commons>
 
 		<!-- Override as current IP BOM version causes drools rule load issues -->
 		<version.org.mvel>2.2.1.Final</version.org.mvel>
 
+        <enforcer.skip>true</enforcer.skip>
 	</properties>
 
 	<modules>
@@ -55,7 +56,7 @@
 			<dependency>
 				<groupId>org.jboss.integration-platform</groupId>
 				<artifactId>jboss-integration-platform-bom</artifactId>
-				<version>6.0.0.CR12</version>
+				<version>6.0.0.CR22</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

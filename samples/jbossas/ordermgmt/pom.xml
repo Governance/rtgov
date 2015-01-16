@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>org.overlord.rtgov.samples.jbossas</groupId>
 		<artifactId>parent</artifactId>
-		<version>2.0.0.Final</version>
+		<version>2.0.2-SNAPSHOT</version>
 	</parent>
 
 	<modules>

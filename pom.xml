@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.0.0.Final</version>
+	<version>2.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Overlord RTGov</name>
 	<url>http://www.jboss.org/overlord</url>
@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.jboss.integration-platform</groupId>
 		<artifactId>jboss-integration-platform-parent</artifactId>
-		<version>6.0.0.CR12</version>
+		<version>6.0.0.CR22</version>
 	</parent>
 
 	<scm>
@@ -67,6 +67,7 @@
 	<properties>
 		<version.ch.qos.cal10n>0.7.4</version.ch.qos.cal10n>
 		<version.org.apache.commons.commons-lang3>3.1</version.org.apache.commons.commons-lang3>
+        <version.org.apache.commons.commons-io>1.3.2</version.org.apache.commons.commons-io>
 		<version.org.drools>6.1.0.Final</version.org.drools>
 		<version.org.elasticsearch>1.3.2</version.org.elasticsearch>
         <version.org.codehaus.enunciate>1.28</version.org.codehaus.enunciate>
@@ -80,11 +81,11 @@
 		<version.org.kie>6.1.0.Final</version.org.kie>
         <version.org.apache.lucene>4.9.0</version.org.apache.lucene> <!-- Required to override parent bom version -->
         <version.org.jboss.remotingjmx>1.1.0.Final</version.org.jboss.remotingjmx>
-		<version.org.overlord.overlord-commons>2.0.11.Final</version.org.overlord.overlord-commons>
+		<version.org.overlord.overlord-commons>2.0.12.Final</version.org.overlord.overlord-commons>
 		<version.org.picketbox>4.0.19.SP4</version.org.picketbox>
 		<version.org.picketlink>2.5.3.SP4</version.org.picketlink>
 		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>
-		<version.org.switchyard>2.0.0.Alpha3</version.org.switchyard>
+		<version.org.switchyard>2.0.0.Beta1</version.org.switchyard>
 
 		<!-- Override as current IP BOM version causes drools rule load issues -->
 		<version.org.mvel>2.2.1.Final</version.org.mvel>
@@ -92,6 +93,10 @@
 		<version.org.jboss.as>7.4.0.Final-redhat-19</version.org.jboss.as>
 		
 		<version.org.jboss.msc.jboss-msc>1.0.4.GA</version.org.jboss.msc.jboss-msc>
+
+        <!-- Removed from IP BOM -->
+        <version.org.jboss.errai>2.4.4.Final</version.org.jboss.errai>
+        <version.com.google.guava>13.0.1</version.com.google.guava>
 
         <!-- BOM verson 1.2.14 causes "Manifest not present in the first entry of the zip" error
             when installing in Karaf -->
@@ -134,7 +139,7 @@
 			<dependency>
 				<groupId>org.jboss.integration-platform</groupId>
 				<artifactId>jboss-integration-platform-bom</artifactId>
-				<version>6.0.0.CR12</version>
+				<version>6.0.0.CR22</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -986,6 +991,97 @@
 			    <artifactId>switchyard-demo-multiApp-order-service</artifactId>
 				<version>${version.org.switchyard}</version>
 		    </dependency>
+
+		    <dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${version.com.google.guava}</version>
+		    </dependency>
+
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-common</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-cdi-jetty</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-ioc</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-cdi-client</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-javax-enterprise</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-weld-integration</artifactId>
+				<version>${version.org.jboss.errai}</version>
+				<exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-jdk14</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-simple</artifactId>
+                    </exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-ui</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-navigation</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-data-binding</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-marshalling</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-bus</artifactId>
+				<version>${version.org.jboss.errai}</version>
+				<exclusions>
+                    <exclusion>
+                        <groupId>javax.inject</groupId>
+                        <artifactId>javax.inject</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.annotation</groupId>
+                        <artifactId>jsr250-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                    </exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.errai</groupId>
+				<artifactId>errai-jboss-as-support</artifactId>
+				<version>${version.org.jboss.errai}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>org.jboss.naming</groupId>
