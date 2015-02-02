@@ -17,16 +17,12 @@
   <deployment>
     <dependencies>
       <module name="org.jboss.as.web" />
-      <module name="org.drools" export="true" />
       <module name="org.apache.commons.codec" />
       <module name="javaee.api" export="true" />
       <module name="org.apache.commons.configuration" export="true" />
       <module name="org.apache.commons.lang" export="true" />
       <module name="org.codehaus.jackson.jackson-core-asl" export="true" />
       <module name="org.codehaus.jackson.jackson-mapper-asl" export="true" />
-      <module name="org.kie" export="true" />
-      <module name="org.jbpm" export="true" />
-      <module name="org.mvel" export="true" />
       <module name="org.hibernate" export="true" />
       <module name="org.infinispan" export="true" />
       <module name="org.jaxen" />

@@ -31,6 +31,29 @@
 			<artifactId>activity-server-restc</artifactId>
 		</dependency>
 
+        <!-- Event processor modules -->
+
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.event-processor</groupId>
+            <artifactId>ep-keyvaluestore</artifactId>
+        </dependency>
+        <dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-drools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mvel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mail</artifactId>
+		</dependency>
+
 		<!-- Active collection modules -->
 		
 		<dependency>
@@ -62,6 +85,25 @@
 			<groupId>org.overlord.rtgov.common</groupId>
 			<artifactId>rtgov-infinispan</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.overlord.rtgov.common</groupId>
+            <artifactId>rtgov-elasticsearch</artifactId>
+        </dependency>
+
+        <!-- Elasticsearch Specific: eventually defined a jboss module -->
+
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
 		
 		<!-- Overlord commons -->
 		

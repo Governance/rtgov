@@ -231,17 +231,6 @@
 			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
 		</dependencySet>
 
-		<!-- Extras -->
-
-		<dependencySet>
-			<outputDirectory>platforms/extras</outputDirectory>
-			<unpack>false</unpack>
-			<includes>
-				<include>org.kie:kie-eap-distributions-bpms-layer:zip</include>
-			</includes>
-			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-		</dependencySet>
-
 	</dependencySets>
 
 </assembly>
