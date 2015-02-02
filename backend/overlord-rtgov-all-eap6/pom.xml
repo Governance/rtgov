@@ -37,20 +37,14 @@
         <dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-drools</artifactId>
-			<exclusions>
-                <exclusion>
-                    <groupId>org.kie</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.drools</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.event-processor</groupId>
 			<artifactId>ep-mvel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.overlord.rtgov.event-processor</groupId>
+			<artifactId>ep-mail</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.overlord.rtgov.active-queries</groupId>

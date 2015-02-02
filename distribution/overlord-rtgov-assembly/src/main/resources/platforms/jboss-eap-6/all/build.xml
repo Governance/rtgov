@@ -5,25 +5,7 @@
 	<property file="jdbc/${database}.properties" />
     <property name="overlord-commons.path" location="../../overlord-commons" />
 
-	<property name="bpms.layer" value="kie-eap-distributions-bpms-layer.zip" />
-
-	<target name="check-install-bpms">
-		<condition property="install.bpms">
-            <and>
-			    <not>
-				    <available file="${path}/modules/system/layers/bpms"/>
-			    </not>
-				<available file="${basedir}/../../extras/${bpms.layer}"/>
-            </and>
-		</condition>
-	</target>
-
-	<target name="bpms-layer-deploy" depends="check-install-bpms" if="install.bpms" >
-		<echo message="**** Installing BPMS dependencies ****" />
-        <unzip src="${basedir}/../../extras/${bpms.layer}" dest="${path}"/>
-	</target>
-
-	<target name="install" depends="create.schema, bpms-layer-deploy" >
+	<target name="install" depends="create.schema" >
 		<ant antfile="build.xml" target="install"
 				dir="${overlord-commons.path}" >
 			<property name="overlord-commons.appserver.dir" location="${path}" />
