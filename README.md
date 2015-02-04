@@ -29,6 +29,10 @@ From the root folder, build the distribution using:
 
 Once the build has completed, the distribution can be found in the release/jbossas/distribution/target folder.
 
+NOTE: When building from source for the first time, you should include the _-Pdocs_ option, as the documentation will be required to build the distribution.
+
+It is recommended that you have MAVEN_OPTS set to the following: -Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m
+
 ### Integration tests for EAP
 
 If the following environment variables have been defined, then the integration tests will automatically
