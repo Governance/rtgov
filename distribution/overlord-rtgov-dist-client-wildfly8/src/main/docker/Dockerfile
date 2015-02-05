@@ -18,4 +18,4 @@ RUN cd $HOME \
 
 
 ENTRYPOINT ["/opt/jboss/wildfly/bin/standalone.sh"]
-CMD ["-c", "standalone-full.xml", "--debug"]
+CMD []
