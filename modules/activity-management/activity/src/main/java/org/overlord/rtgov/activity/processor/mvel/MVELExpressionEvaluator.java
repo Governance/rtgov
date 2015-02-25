@@ -41,7 +41,7 @@ public class MVELExpressionEvaluator extends ExpressionEvaluator {
      * {@inheritDoc}
      */
     public String evaluate(Object information) {
-        Object result=MVEL.executeExpression(_compiledExpression, information);
+        Object result=MVEL.executeExpression(_compiledExpression, information, new java.util.HashMap<String,Object>());
         
         if (result != null) {
             return (result.toString());
