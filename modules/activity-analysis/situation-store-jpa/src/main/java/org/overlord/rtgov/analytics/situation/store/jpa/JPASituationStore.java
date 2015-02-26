@@ -70,7 +70,7 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
     /**
      * {@inheritDoc}
      */
-    public void store(final Situation situation) throws Exception {
+    protected void doStore(final Situation situation) throws Exception {
         _jpaStore.withJpa(new JpaWork<Void>() {
             public Void perform(Session s) {
                 if (LOG.isLoggable(Level.FINEST)) {

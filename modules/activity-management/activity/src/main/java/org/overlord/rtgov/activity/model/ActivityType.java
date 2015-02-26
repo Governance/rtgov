@@ -83,6 +83,11 @@ public abstract class ActivityType implements java.io.Externalizable {
      */
     public static final String HEADER_FORMAT_PROPERTY_PREFIX="_header-format_";
 
+    /**
+     * Property representing a RTGov header value.
+     */
+    public static final String RTGOV_PROPERTY_PREFIX="_rtgov_";
+
     private String _unitId=null;
     private int _unitIndex=0;
     

@@ -88,10 +88,26 @@ public class SituationTable extends SortableTemplatedWidgetTable {
         DateTimeFormat format = DateTimeFormat.getFormat(i18n.format("dateTime-format")); //$NON-NLS-1$
 
         FlowPanel icon = new FlowPanel();
-        icon.getElement().setClassName("icon"); //$NON-NLS-1$
-        icon.getElement().addClassName("icon-severity-" + situationSummaryBean.getSeverity()); //$NON-NLS-1$
+        
+        com.google.gwt.user.client.ui.Label iconLabel=new com.google.gwt.user.client.ui.Label();
+        iconLabel.getElement().setClassName("icon"); //$NON-NLS-1$
+        iconLabel.getElement().addClassName("icon-severity-" + situationSummaryBean.getSeverity()); //$NON-NLS-1$
+        
+        icon.add(iconLabel);
+        
+        if (situationSummaryBean.getResubmissionFailureTotalCount() > 0) {
+            String text="<font color=\"red\">["+situationSummaryBean.getResubmissionFailureTotalCount()+"]</font>";
+            
+            com.google.gwt.user.client.ui.HTML html=new com.google.gwt.user.client.ui.HTML();
+            
+            html.setHTML(text);
+            
+            icon.add(html);
+        }        
+        
         Anchor type = toDetailsPageLinkFactory.get("id", situationSummaryBean.getSituationId()); //$NON-NLS-1$
         type.setText(situationSummaryBean.getType());
+        
         InlineLabel resolutionState = new InlineLabel(situationSummaryBean.getResolutionState());
         InlineLabel subject = new InlineLabel(situationSummaryBean.getSubject());
         InlineLabel description = new InlineLabel(situationSummaryBean.getDescription());

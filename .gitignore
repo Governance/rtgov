@@ -4,6 +4,7 @@ bin/
 .idea
 .classpath
 .project
+.tern-project
 .settings/
 .bpmn2/
 *.ipr

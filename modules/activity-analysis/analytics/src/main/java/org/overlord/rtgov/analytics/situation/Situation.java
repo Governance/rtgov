@@ -34,6 +34,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.Context;
 
@@ -393,6 +394,24 @@ public class Situation implements java.io.Externalizable {
         }
         
         return (ret);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object obj) {
+        if (obj instanceof Situation) {
+            return (_id.equals(((Situation)obj).getId()));
+        }
+        
+        return (false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return (_id.hashCode());
     }
     
     /**

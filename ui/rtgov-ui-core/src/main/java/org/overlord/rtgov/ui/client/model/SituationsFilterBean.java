@@ -36,6 +36,7 @@ public class SituationsFilterBean {
     private String description;
     private String subject;
     private String properties;
+    private boolean rootOnly=true;
 
     /**
      * Constructor.
@@ -100,6 +101,13 @@ public class SituationsFilterBean {
     }
 
     /**
+     * @return whether only root situations
+     */
+    public boolean isRootOnly() {
+        return rootOnly;
+    }
+    
+    /**
      * @param severity the severity to set
      */
     public SituationsFilterBean setSeverity(String severity) {
@@ -160,6 +168,14 @@ public class SituationsFilterBean {
      */
     public SituationsFilterBean setProperties(String host) {
         this.properties = host;
+        return this;
+    }
+    
+    /**
+     * @param b whether root situations only
+     */
+    public SituationsFilterBean setRootOnly(boolean b) {
+        this.rootOnly = b;
         return this;
     }
 
