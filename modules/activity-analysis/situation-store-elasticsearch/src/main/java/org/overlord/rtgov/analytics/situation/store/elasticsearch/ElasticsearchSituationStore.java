@@ -113,7 +113,7 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
     /**
      * {@inheritDoc}
      */
-    public void store(final Situation situation) throws Exception {
+    protected void doStore(final Situation situation) throws Exception {
         
         if (_client != null) {
             _client.add(situation.getId(), ElasticsearchClient.convertTypeToJson(situation));

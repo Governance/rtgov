@@ -134,13 +134,18 @@ public class RTGovSituationsProviderTest {
 				throw new AssertionError("Fail");
 			}
 			public java.util.List<Situation> getSituations(SituationsQuery query) {
-				if (!query.getType().equals(TEST_TYPE)) {
-					throw new AssertionError("Unexpected query type: "+query.getType());
-				}
-				Situation s1=new Situation();
-				s1.setSubject(TEST_SUBJECT);
-				java.util.List<Situation> ret=new java.util.ArrayList<Situation>();
-				ret.add(s1);
+                java.util.List<Situation> ret=new java.util.ArrayList<Situation>();
+			    if (query.getType() == null
+			            && query.getProperties().containsKey(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID)) {
+			        // Resubmission failure query so ignore
+			    } else {
+    				if (!query.getType().equals(TEST_TYPE)) {
+    					throw new AssertionError("Unexpected query type: "+query.getType());
+    				}
+    				Situation s1=new Situation();
+    				s1.setSubject(TEST_SUBJECT);
+    				ret.add(s1);
+			    }
 				return (ret);
 			}
 			public void assignSituation(String situationId, String userName) throws Exception {
@@ -163,6 +168,8 @@ public class RTGovSituationsProviderTest {
 
             public int delete(SituationsQuery query) {
                 return 0;
+            };
+            public void delete(Situation sit) {
             };
             public void store(Situation situation) throws Exception {
             };
@@ -263,7 +270,7 @@ public class RTGovSituationsProviderTest {
 				return (ret);
 			}
 			public java.util.List<Situation> getSituations(SituationsQuery query) {
-				throw new AssertionError("Fail");
+				return java.util.Collections.<Situation>emptyList();
 			}
 			public void assignSituation(String situationId, String userName) throws Exception {
 				throw new Exception("Fail");
@@ -285,6 +292,8 @@ public class RTGovSituationsProviderTest {
             public int delete(SituationsQuery query) {
                 return 0;
             }
+            public void delete(Situation sit) {
+            };
             public void store(Situation situation) throws Exception {
             };
 		};

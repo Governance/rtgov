@@ -29,6 +29,7 @@ import org.jboss.errai.databinding.client.api.InitialState;
 import org.jboss.errai.ui.nav.client.local.Page;
 import org.jboss.errai.ui.nav.client.local.PageState;
 import org.jboss.errai.ui.nav.client.local.TransitionAnchor;
+import org.jboss.errai.ui.nav.client.local.TransitionTo;
 import org.jboss.errai.ui.shared.api.annotations.AutoBound;
 import org.jboss.errai.ui.shared.api.annotations.Bound;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -41,6 +42,7 @@ import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceDetails;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceWidget;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationContextTable;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationPropertiesTable;
+import org.overlord.rtgov.ui.client.local.pages.situations.UnsortableSituationTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.SituationsServiceCaller;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
@@ -50,10 +52,14 @@ import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
 import org.overlord.rtgov.ui.client.model.NotificationBean;
 import org.overlord.rtgov.ui.client.model.SituationBean;
+import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
 import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.ui.Anchor;
@@ -110,7 +116,13 @@ public class SituationDetailsPage extends AbstractPage {
     InlineLabel resolutionState;
     @Inject @DataField @Bound(property="description")
     InlineLabel description;
+    
+    @Inject @DataField("btn-resubmitted-situation")
+    Button resubmittedSituationButton;
 
+    @Inject 
+    TransitionTo<SituationDetailsPage> resubmittedSituationLink;
+    
     @Inject @DataField("properties-table") @Bound(property="properties")
     SituationPropertiesTable propertiesTable;
     @Inject @DataField("context-table") @Bound(property="context")
@@ -141,10 +153,18 @@ public class SituationDetailsPage extends AbstractPage {
     Button resolveButton;
     @Inject @DataField("btn-reopen")
     Button reopenButton;
+    
+    @Inject @DataField("resubmitFailuresTab")
+    Anchor resubmitFailuresTabAnchor;
+
+    @Inject @DataField("resubmit-failures-table")
+    protected UnsortableSituationTable resubmitFailuresTable;
 
     @Inject @DataField("situation-details-loading-spinner")
     protected HtmlSnippet loading;
     protected Element pageContent;
+    
+    String resubmittedId=null;
 
     /**
      * Constructor.
@@ -166,6 +186,10 @@ public class SituationDetailsPage extends AbstractPage {
                 onCallTraceNodeSelected(event.getSelectedItem());
             }
         });
+        
+        // Hide column 1 when in mobile mode.
+        resubmitFailuresTable.setColumnClasses(1, "desktop-only"); //$NON-NLS-1$
+
     }
 
     /**
@@ -195,7 +219,7 @@ public class SituationDetailsPage extends AbstractPage {
      * Called when the situation is loaded.
      * @param situation
      */
-    protected void updateMetaData(SituationBean situation) {
+    protected void updateMetaData(final SituationBean situation) {
         this.situation.setModel(situation, InitialState.FROM_MODEL);
         severity.setStyleName("icon"); //$NON-NLS-1$
         severity.addStyleName("details-icon"); //$NON-NLS-1$
@@ -208,8 +232,10 @@ public class SituationDetailsPage extends AbstractPage {
         } else {
             messageEditor.setValue(""); //$NON-NLS-1$
         }
-        resubmitButton.setEnabled(situation.isResubmitPossible());
-        messageEditor.setReadOnly(!situation.isResubmitPossible());
+        resubmitButton.setEnabled(situation.isResubmitPossible()
+                        && !situation.getSituationId().equals(resubmittedId));
+        messageEditor.setReadOnly(!situation.isResubmitPossible()
+                        && !situation.getSituationId().equals(resubmittedId));
         if (situation.resubmitBy() != null) {
             resubmitDetails.setText(i18n.format("situation-details.resubmit-details",
                     situation.resubmitBy(), situation.resubmitAt(), situation.resubmitResult()));
@@ -258,6 +284,22 @@ public class SituationDetailsPage extends AbstractPage {
         	resolveButton.getElement().addClassName("hide");
         	assignButton.getElement().removeClassName("hide"); 
         }
+		
+		if (situation.getResubmittedSituationId() == null) {
+		    resubmittedSituationButton.getElement().addClassName("hide");
+		}
+		
+        this.resubmitFailuresTable.clear();
+        
+        if (situation.getResubmitSituations().size() > 0) {
+            for (SituationSummaryBean summaryBean : situation.getResubmitSituations()) {
+                this.resubmitFailuresTable.addRow(summaryBean);
+            }
+            this.resubmitFailuresTable.setVisible(true);
+            this.resubmitFailuresTabAnchor.setVisible(true);
+        } else {
+            this.resubmitFailuresTabAnchor.setVisible(false);
+        }
     }
 
     /**
@@ -270,6 +312,17 @@ public class SituationDetailsPage extends AbstractPage {
     }
 
     /**
+     * Called when the user clicks the Resubmit button.
+     * @param event
+     */
+    @EventHandler("btn-resubmitted-situation")
+    protected void onResubmittedSituationClick(ClickEvent event) {
+        HashMultimap<String,String> map=HashMultimap.<String,String>create();
+        map.put("id", situation.getModel().getResubmittedSituationId());
+        resubmittedSituationLink.go(map);
+    }
+    
+   /**
      * Called when the user clicks the Resubmit button.
      * @param event
      */
@@ -294,6 +347,7 @@ public class SituationDetailsPage extends AbstractPage {
             }
             @Override
             public void doOnComplete(RpcResult<Void> result) {
+                resubmittedId = situation.getModel().getSituationId();
                 loadSituationAndUpdatePageData();
             }
         });

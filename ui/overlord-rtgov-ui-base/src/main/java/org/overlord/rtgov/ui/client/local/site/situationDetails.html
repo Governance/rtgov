@@ -66,6 +66,7 @@
               <li class="active"><a href="#details" data-toggle="tab" data-i18n-key="details">Details</a></li>
               <li><a href="#calltrace" data-toggle="tab" data-i18n-key="call-trace">Call Trace</a></li>
               <li><a href="#message" data-toggle="tab" data-field="messageTab" data-i18n-key="message">Message</a></li>
+              <li><a href="#resubmitfailures" data-toggle="tab" data-field="resubmitFailuresTab" data-i18n-key="resubmit-failures">Resubmit Failures</a></li>
             </ul>
             <div class="tab-content">
               <!-- Tab: Details -->
@@ -85,6 +86,7 @@
                     <div class="details-meta-data-section-label" data-i18n-key="application">Timestamp:</div>
                     <div data-field="timestamp" class="details-meta-data-section-value" data-role="dummy">urn:jboss:demos:applications</div>
                     <div class="clearfix"></div>
+					<button data-field="btn-resubmitted-situation" class="btn" name="ResubmittedSituation" data-i18n-key="resubmitted-situation">Resubmitted Situation</button>                    <div class="clearfix"></div>
                     <div class="divider-20"></div>
                     <div class="details-meta-data-section-header" data-i18n-key="description">Description</div>
                     <div class="clearfix"></div>
@@ -263,6 +265,70 @@
               </div>
               <!-- /Tab:Message -->
               
+              <!-- Tab:ResubmitFailures -->
+              <div class="container-fluid tab-pane fade" id="resubmitfailures">
+ 
+                <div class="clearfix"></div>
+                <div class="span12">
+                  <div class="row-fluid situations">
+                    <table data-field="resubmit-failures-table" class="overlord-table table table-striped table-condensed table-hover">
+                    <thead>
+                      <tr>
+                        <th data-i18n-key="severity-column"><!-- Severity (icon) -->!</th>
+                        <th data-i18n-key="type">Type</th>
+                        <th data-i18n-key="resolutionState">Status</th>
+                        <th data-i18n-key="subject">Subject</th>
+                        <th data-i18n-key="timestamp">Timestamp</th>
+                        <th data-i18n-key="description">Description</th>
+                        <th style="width: 38px"></th>
+                      </tr>
+                    </thead>
+                    <tbody data-role="dummy">
+                      <tr>
+                        <td><div class="icon icon-severity-critical"></div></td>
+                        <td><a href="situationDetails.html">Rate Limit Exceeded</a></td>
+                        <td>Open</td>
+                        <td>{urn:namespace}ImportantService|VeryImportantOperation</td>
+                        <td>08/20/2013 @ 5:22:47</td>
+                        <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                        <td>
+                          <div>
+                            <a href="#" data-toggle="popover" data-placement="left" data-html="true" data-original-title="Properties" data-trigger="hover" data-content="&lt;table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>&lt;tbody>&lt;tr>&lt;td>Property 1:&lt;/td>&lt;td>Property One Value&lt;/td>&lt;/tr>&lt;tr>&lt;td>Property 2:&lt;/td>&lt;td>Property Two Value&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>"><div class="icon icon-properties"></div></a>
+                            <a href="#" data-toggle="popover" data-placement="left" data-html="true" data-original-title="Context" data-trigger="hover" data-content="&lt;table class='table table-condensed table-hover table-striped' style='border-right: 1px solid rgb(211, 211, 211); border-bottom: 1px solid rgb(211, 211, 211);'>&lt;tbody>&lt;tr>&lt;td>Context 1:&lt;/td>&lt;td>Context One Value&lt;/td>&lt;/tr>&lt;tr>&lt;td>Context 2:&lt;/td>&lt;td>Context Two Value&lt;/td>&lt;/tr>&lt;/tbody>&lt;/table>"><div class="icon icon-context"></div></a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td><div class="icon icon-severity-high"></div></td>
+                        <td><a href="situationDetails.html">SLA Violation</a></td>
+                        <td>In Progress</td>
+                        <td>{urn:namespace}ServiceA|OperationB</td>
+                        <td>08/19/2013 @ 14:33:47</td>
+                        <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                      </tr>
+                      <tr>
+                        <td><div class="icon icon-severity-high"></div></td>
+                        <td><a href="situationDetails.html">SLA Violation</a></td>
+                        <td>Reopened</td>
+                        <td>{urn:namespace}ServiceA|OperationB</td>
+                        <td>08/19/2013 @ 14:35:47</td>
+                        <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                      </tr>
+                      <tr>
+                        <td><div class="icon icon-severity-low"></div></td>
+                        <td><a href="situationDetails.html">Rate Limit Approaching</a></td>
+                        <td>Closed</td>
+                        <td>{urn:namespace}SomeService|AnotherOperation</td>
+                        <td>08/15/2013 @ 12:11:42</td>
+                        <td>Some description of the Situation goes here in this column so that it can be read by the user.</td>
+                      </tr>
+                    </tbody>
+                    </table>
+                  </div>
+                </div>
+              
+              </div>
+              <!-- /Tab:ResubmitFailures -->
             </div>
             <!-- /tab-content -->
           </div>  <!-- /situation-details -->

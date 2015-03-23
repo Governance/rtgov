@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.analytics.situation.Situation;
 
 /**
@@ -31,11 +32,40 @@ public abstract class AbstractSituationStore implements SituationStore {
 
     private static final Logger LOG=Logger.getLogger(AbstractSituationStore.class.getName());
 
+    private static final String INTERNAL_SITIUATION_PROPERTY_PREFIX=ActivityType.RTGOV_PROPERTY_PREFIX
+                                    +Situation.class.getSimpleName()+"_";
+    
     /**
      * The situation repository constructor.
      */
     public AbstractSituationStore() {
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void store(Situation situation) throws Exception {
+        
+        // Pre-process properties to determine if any internal 'situation' properties
+        // need to be promoted to public (as part of RTGOV-645) - leave the internal
+        // property for now, as provides indication of values when situation created
+        for (String key : situation.getSituationProperties().keySet()) {
+            if (key.startsWith(INTERNAL_SITIUATION_PROPERTY_PREFIX)) {
+                String newKey=key.substring(INTERNAL_SITIUATION_PROPERTY_PREFIX.length());
+                situation.getSituationProperties().put(newKey, situation.getSituationProperties().get(key));
+            }
+        }
+        
+        doStore(situation);
+    }
+    
+    /**
+     * This method implements the 'store' functionality.
+     * 
+     * @param situation The situation to store
+     * @throws Exception Failed to store
+     */
+    protected abstract void doStore(Situation situation) throws Exception;
     
     /**
      * {@inheritDoc}
@@ -165,6 +195,11 @@ public abstract class AbstractSituationStore implements SituationStore {
         }
         
         return (situations.size());
+    }
+    
+    @Override
+    public void delete(final Situation situation) {
+        doDelete(situation);
     }
     
     /**
