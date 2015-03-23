@@ -55,9 +55,10 @@ public interface ISituationsServiceImpl {
      * Resubmits a message.
      * @param situationId
      * @param message
+     * @param username
      * @throws UiException
      */
-    public void resubmit(String situationId, String message) throws UiException;
+    public void resubmit(String situationId, String message, String username) throws UiException;
     
     /**
      * Assigns a situation to the currently logged in user.
@@ -84,9 +85,10 @@ public interface ISituationsServiceImpl {
 	/**
      * Resubmits all message matching the given filter criteria.
      * @param situationsFilterBean
+     * @param username
      * @throws UiException
      */
-    BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
+    BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) throws UiException;
 
     /**
      * Export the content of all message's matching the given filter criteria.

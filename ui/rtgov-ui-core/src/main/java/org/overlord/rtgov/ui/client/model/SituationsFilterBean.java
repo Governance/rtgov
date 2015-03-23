@@ -36,6 +36,7 @@ public class SituationsFilterBean {
     private String description;
     private String subject;
     private String properties;
+    private boolean rootOnly=true;
 
     /**
      * Constructor.
@@ -97,6 +98,13 @@ public class SituationsFilterBean {
      */
     public String getProperties() {
         return properties;
+    }
+
+    /**
+    * @return whether only root situations
+    */
+    public boolean isRootOnly() {
+        return rootOnly;
     }
 
     /**
@@ -163,7 +171,15 @@ public class SituationsFilterBean {
         return this;
     }
 
-	/* (non-Javadoc)
+    /**
+    * @param b whether root situations only
+    */
+    public SituationsFilterBean setRootOnly(boolean b) {
+        this.rootOnly = b;
+        return this;
+    }
+    
+    /* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override

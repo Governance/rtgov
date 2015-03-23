@@ -373,7 +373,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
      * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#resubmit(java.lang.String, java.lang.String)
      */
 	@Override
-	public void resubmit(String situationId, String message) throws UiException {
+	public void resubmit(String situationId, String message, String username) throws UiException {
 		// Do nothing!
 		System.out.println("Resubmitted message for situation: " + situationId); //$NON-NLS-1$
 		System.out.println(message);
@@ -414,7 +414,7 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
 	}
 
     @Override
-    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) {
+    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) {
         BatchRetryResult batchRetryResult = new BatchRetryResult();
         batchRetryResult.setProcessedCount(4);
         batchRetryResult.setFailedCount(2);
