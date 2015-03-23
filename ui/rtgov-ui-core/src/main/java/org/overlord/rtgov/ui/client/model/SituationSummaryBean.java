@@ -39,6 +39,7 @@ public class SituationSummaryBean {
     private Date timestamp;
     private String description;
     private Map<String, String> properties = new HashMap<String, String>();
+    private int resubmissionFailureTotalCount;
 
     /**
      * Constructor.
@@ -96,6 +97,13 @@ public class SituationSummaryBean {
     }
 
     /**
+    * @return the resubmission failure total count
+    */
+    public int getResubmissionFailureTotalCount() {
+        return resubmissionFailureTotalCount;
+    }
+
+    /**
      * @param situationId the situationId to set
      */
     public void setSituationId(String situationId) {
@@ -144,6 +152,13 @@ public class SituationSummaryBean {
         this.properties = properties;
     }
 
+    /**
+    * @param count the total count of resubmission failures
+    */
+    public void setResubmissionFailureTotalCount(int count) {
+        this.resubmissionFailureTotalCount = count;
+    }
+    
     /**
 	 * @return the resolutionState
 	 */

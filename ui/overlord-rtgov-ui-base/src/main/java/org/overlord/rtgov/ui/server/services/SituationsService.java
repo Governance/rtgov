@@ -78,7 +78,8 @@ public class SituationsService implements ISituationsService {
      */
     @Override
     public void resubmit(String situationId, String message) throws UiException {
-        impl.resubmit(situationId, message);
+        HttpServletRequest servletRequest = (HttpServletRequest) getServletRequest();
+        impl.resubmit(situationId, message, servletRequest.getRemoteUser());
     }
 
 	@Override
@@ -99,7 +100,8 @@ public class SituationsService implements ISituationsService {
 
     @Override
     public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException {
-        return impl.resubmit(situationsFilterBean);
+        HttpServletRequest servletRequest = (HttpServletRequest) getServletRequest();
+        return impl.resubmit(situationsFilterBean, servletRequest.getRemoteUser());
     }
 
     @Override

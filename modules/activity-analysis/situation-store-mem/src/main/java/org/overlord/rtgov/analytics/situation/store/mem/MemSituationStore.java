@@ -39,7 +39,7 @@ public class MemSituationStore extends AbstractSituationStore implements Situati
     /**
      * {@inheritDoc}
      */
-    public void store(Situation situation) {
+    protected void doStore(Situation situation) {
         _situations.add(situation);
     }
     

@@ -398,6 +398,24 @@ public class Situation implements java.io.Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean equals(Object obj) {
+        if (obj instanceof Situation) {
+            return (_id.equals(((Situation)obj).getId()));
+        }
+        
+        return (false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return (_id.hashCode());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public String toString() {
         return ("Situation '"+_description+"' of type="+_type+" subject="
                     +_subject+ " severity=" + _severity + " "+new java.util.Date(_timestamp));

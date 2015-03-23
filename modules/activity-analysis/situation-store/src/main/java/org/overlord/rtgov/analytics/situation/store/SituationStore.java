@@ -147,4 +147,12 @@ public interface SituationStore {
      * @return The number of deleted situations
      */
     public int delete(SituationsQuery query);
+
+    /**
+     * This method deletes the supplied situation.
+     * 
+     * @param situation The situation
+     */
+    public void delete(Situation situation);
+    
 }

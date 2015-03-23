@@ -413,7 +413,7 @@ public class SituationsPage extends AbstractPage {
             @Override
             public void doOnComplete(
                     org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcResult<Integer> result) {
-                doSearch();
+                situationsTable.clear();
             }
 
         });
