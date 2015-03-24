@@ -124,7 +124,7 @@ public interface ISituationsService {
     @POST
     @Path("delete")
     @Consumes(MediaType.APPLICATION_JSON)
-    public int delete(SituationsFilterBean situationsFilterBean) throws UiException;
+    public String delete(SituationsFilterBean situationsFilterBean) throws UiException;
     
     /**
      * This method registers a situations filter. The associated id is returned.

@@ -456,9 +456,9 @@ public class SituationsPage extends AbstractPage {
         final NotificationBean notificationBean = notificationService.startProgressNotification(
                 i18n.format("situation.delete-message-title"), //$NON-NLS-1$
                 i18n.format("situation.delete-message-msg")); //$NON-NLS-1$
-        situationsService.delete(situationsFilterBean, new RpcServiceInvocationHandlerAdapter<Integer>() {
+        situationsService.delete(situationsFilterBean, new RpcServiceInvocationHandlerAdapter<String>() {
             @Override
-            public void doOnReturn(Integer deleteCount) {
+            public void doOnReturn(String deleteCount) {
                 notificationService.completeProgressNotification(notificationBean.getUuid(),
                         i18n.format("situation.message-deleted"), //$NON-NLS-1$
                         i18n.format("situation.delete-result", deleteCount)); //$NON-NLS-1$
@@ -473,7 +473,7 @@ public class SituationsPage extends AbstractPage {
             
             @Override
             public void doOnComplete(
-                    org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcResult<Integer> result) {
+                    org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcResult<String> result) {
                 situationsTable.clear();
             }
 
