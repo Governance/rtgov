@@ -94,7 +94,7 @@ public class NotificationService {
         bean.setType(NotificationType.notification);
         bean.setTitle(title);
         bean.setMessage(message);
-        sendNotification(bean);
+        doNotify(bean);
     }
 
     /**
@@ -110,7 +110,7 @@ public class NotificationService {
         bean.setTitle(title);
         bean.setMessage(message);
         bean.setException(exception);
-        sendNotification(bean);
+        doNotify(bean);
     }
 
     /**
@@ -148,7 +148,7 @@ public class NotificationService {
         bean.setType(NotificationType.progress);
         bean.setTitle(title);
         bean.setMessage(message);
-        sendNotification(bean);
+        doNotify(bean);
         return bean;
     }
 
@@ -164,7 +164,7 @@ public class NotificationService {
         bean.setType(NotificationType.progressCompleted);
         bean.setTitle(title);
         bean.setMessage(message);
-        sendNotification(bean);
+        doNotify(bean);
     }
 
     /**
@@ -179,7 +179,7 @@ public class NotificationService {
         bean.setType(NotificationType.progressCompleted);
         bean.setTitle(title);
         bean.setMessageWidget(widget);
-        sendNotification(bean);
+        doNotify(bean);
     }
 
     /**
@@ -194,7 +194,7 @@ public class NotificationService {
         bean.setType(NotificationType.progressErrored);
         bean.setTitle(title);
         bean.setException(error);
-        sendNotification(bean);
+        doNotify(bean);
     }
 
     /**
@@ -209,21 +209,6 @@ public class NotificationService {
         } else {
             completeProgressNotification(uuid, title, new UiException(error));
         }
-    }
-
-    /**
-     * Sends a notification (local/client only).
-     * @param notification
-     */
-    protected void sendNotification(NotificationBean notification) {
-        /* TODO: RTGOV-611
-        MessageBuilder.createMessage()
-            .toSubject("NotificationService") //$NON-NLS-1$
-            .signalling()
-            .withValue(notification)
-            .noErrorHandling()
-            .sendNowWith(dispatcher);
-        */
     }
 
     /**
