@@ -636,20 +636,6 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
             throw new UiException(i18n.format("RTGovSituationsProvider.SitNotFound", situationId)); //$NON-NLS-1$
         }
         
-        // RTGOV-645 - include situation id, assignTo and resolutionState in resubmission, in case
-        // further failures (resulting in linked situations) occur.
-        message.getHeaders().put(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID, situationId);
-        
-        if (situation.getSituationProperties().containsKey("assignedTo")) {
-            message.getHeaders().put(RTGovSituationsUtil.HEADER_ASSIGNED_TO,
-                    situation.getSituationProperties().get("assignedTo"));
-        }
-        
-        if (situation.getSituationProperties().containsKey("resolutionState")) {
-            message.getHeaders().put(RTGovSituationsUtil.HEADER_RESOLUTION_STATE,
-                    situation.getSituationProperties().get("resolutionState"));
-        }
-        
         resubmitInternal(situation, message, username);
     }
 
@@ -661,6 +647,20 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
             throw new UiException(i18n.format("RTGovSituationsProvider.ResubmitProviderNotFound", situation.getId())); //$NON-NLS-1$
         }
 
+        // RTGOV-645 - include situation id, assignTo and resolutionState in resubmission, in case
+        // further failures (resulting in linked situations) occur.
+        message.getHeaders().put(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID, situation.getId());
+        
+        if (situation.getSituationProperties().containsKey("assignedTo")) {
+            message.getHeaders().put(RTGovSituationsUtil.HEADER_ASSIGNED_TO,
+                    situation.getSituationProperties().get("assignedTo"));
+        }
+        
+        if (situation.getSituationProperties().containsKey("resolutionState")) {
+            message.getHeaders().put(RTGovSituationsUtil.HEADER_RESOLUTION_STATE,
+                    situation.getSituationProperties().get("resolutionState"));
+        }
+        
         try {
             ResubmitActionProvider resubmit=serviceProvider.get().getAction(ResubmitActionProvider.class);
             
