@@ -119,8 +119,8 @@ public class SituationsService implements ISituationsService {
     }
 
     @Override
-    public int delete(SituationsFilterBean situationsFilterBean) throws UiException {
-        return impl.delete(situationsFilterBean);
+    public String delete(SituationsFilterBean situationsFilterBean) throws UiException {
+        return ""+impl.delete(situationsFilterBean);
     }
 
     /**

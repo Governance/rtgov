@@ -108,8 +108,8 @@ public class SituationsServiceCaller {
     /**
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#delete(SituationsFilterBean)
      */
-    public void delete(SituationsFilterBean situationsFilterBean, IRpcServiceInvocationHandler<Integer> handler) {
-        RemoteCallback<Integer> successCallback = new DelegatingRemoteCallback<Integer>(handler);
+    public void delete(SituationsFilterBean situationsFilterBean, IRpcServiceInvocationHandler<String> handler) {
+        RemoteCallback<String> successCallback = new DelegatingRemoteCallback<String>(handler);
         ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
         try {
             remoteSituationsService.call(successCallback, errorCallback).delete(situationsFilterBean);
