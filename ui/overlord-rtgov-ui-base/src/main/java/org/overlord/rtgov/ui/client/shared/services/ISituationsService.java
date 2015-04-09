@@ -117,6 +117,21 @@ public interface ISituationsService {
     public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
 
     /**
+     * Retrieve the resubmit failures associated with a situation.
+     * @param situationId
+     * @param page
+     * @param sortColumn
+     * @param ascending
+     * @throws UiException
+     */
+    @POST
+    @Path("resubmitfailures/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public SituationResultSetBean getResubmitFailures(@PathParam("id") String situationId,
+            @QueryParam("page") int page, @QueryParam("sortColumn") String sortColumn,
+            @QueryParam("ascending") boolean ascending) throws UiException;
+
+    /**
      * Deletes all situation's matching the given filter.
      * @param situationsFilterBean
      * @throws UiException

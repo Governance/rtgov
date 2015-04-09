@@ -106,6 +106,23 @@ public class SituationsServiceCaller {
     }
 
     /**
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#getResubmitFailures(String, int, String, boolean)
+     */
+    public void getResubmitFailures(String situationId, int page, String sortColumn, boolean ascending,
+            final IRpcServiceInvocationHandler<SituationResultSetBean> handler) {
+        // TODO only allow one search at a time.  If another search comes in before the previous one
+        // finished, cancel the previous one.  In other words, only return the results of the *last*
+        // search performed.
+        RemoteCallback<SituationResultSetBean> successCallback = new DelegatingRemoteCallback<SituationResultSetBean>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteSituationsService.call(successCallback, errorCallback).getResubmitFailures(situationId, page, sortColumn, ascending);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+
+    /**
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#delete(SituationsFilterBean)
      */
     public void delete(SituationsFilterBean situationsFilterBean, IRpcServiceInvocationHandler<String> handler) {
