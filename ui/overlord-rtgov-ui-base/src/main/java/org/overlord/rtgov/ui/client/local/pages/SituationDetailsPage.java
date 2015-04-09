@@ -36,32 +36,38 @@ import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.overlord.commons.gwt.client.local.widgets.HtmlSnippet;
+import org.overlord.commons.gwt.client.local.widgets.Pager;
 import org.overlord.rtgov.ui.client.model.ResolutionState;
 import org.overlord.rtgov.ui.client.local.ClientMessages;
+import org.overlord.rtgov.ui.client.local.events.TableSortEvent;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceDetails;
 import org.overlord.rtgov.ui.client.local.pages.situations.CallTraceWidget;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationContextTable;
 import org.overlord.rtgov.ui.client.local.pages.situations.SituationPropertiesTable;
-import org.overlord.rtgov.ui.client.local.pages.situations.UnsortableSituationTable;
+import org.overlord.rtgov.ui.client.local.pages.situations.SituationTable;
 import org.overlord.rtgov.ui.client.local.services.NotificationService;
 import org.overlord.rtgov.ui.client.local.services.SituationsServiceCaller;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler;
 import org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcServiceInvocationHandlerAdapter;
 import org.overlord.rtgov.ui.client.local.util.DOMUtil;
 import org.overlord.rtgov.ui.client.local.util.DataBindingDateTimeConverter;
+import org.overlord.rtgov.ui.client.local.widgets.common.SortableTemplatedWidgetTable.SortColumn;
 import org.overlord.rtgov.ui.client.local.widgets.common.SourceEditor;
 import org.overlord.rtgov.ui.client.model.NotificationBean;
 import org.overlord.rtgov.ui.client.model.SituationBean;
+import org.overlord.rtgov.ui.client.model.SituationResultSetBean;
 import org.overlord.rtgov.ui.client.model.SituationSummaryBean;
 import org.overlord.rtgov.ui.client.model.TraceNodeBean;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -157,8 +163,24 @@ public class SituationDetailsPage extends AbstractPage {
     @Inject @DataField("resubmitFailuresTab")
     Anchor resubmitFailuresTabAnchor;
 
+    @Inject @DataField("btn-refresh")
+    protected Button refreshButton;
+
+    @Inject @DataField("resubmit-failures-none")
+    protected HtmlSnippet noDataMessage;
+    @Inject @DataField("resubmit-failures-searching")
+    protected HtmlSnippet searchInProgressMessage;
     @Inject @DataField("resubmit-failures-table")
-    protected UnsortableSituationTable resubmitFailuresTable;
+    protected SituationTable resubmitFailuresTable;
+
+    @Inject @DataField("resubmit-failures-pager")
+    protected Pager pager;
+    @DataField("resubmit-failures-range")
+    protected SpanElement rangeSpan = Document.get().createSpanElement();
+    @DataField("resubmit-failures-total")
+    protected SpanElement totalSpan = Document.get().createSpanElement();
+
+    private int currentPage = 1;
 
     @Inject @DataField("situation-details-loading-spinner")
     protected HtmlSnippet loading;
@@ -187,9 +209,34 @@ public class SituationDetailsPage extends AbstractPage {
             }
         });
         
+        pager.addValueChangeHandler(new ValueChangeHandler<Integer>() {
+            @Override
+            public void onValueChange(ValueChangeEvent<Integer> event) {
+                doRetrieveResubmitFailures(event.getValue());
+            }
+        });
+        resubmitFailuresTable.addTableSortHandler(new TableSortEvent.Handler() {
+            @Override
+            public void onTableSort(TableSortEvent event) {
+                doRetrieveResubmitFailures(currentPage);
+            }
+        });
+        
         // Hide column 1 when in mobile mode.
         resubmitFailuresTable.setColumnClasses(1, "desktop-only"); //$NON-NLS-1$
 
+        this.rangeSpan.setInnerText("?"); //$NON-NLS-1$
+        this.totalSpan.setInnerText("?"); //$NON-NLS-1$
+
+    }
+
+    /**
+     * Event handler that fires when the user clicks the refresh button.
+     * @param event
+     */
+    @EventHandler("btn-refresh")
+    public void onRefreshClick(ClickEvent event) {
+        doRetrieveResubmitFailures(currentPage);
     }
 
     /**
@@ -207,6 +254,10 @@ public class SituationDetailsPage extends AbstractPage {
             @Override
             public void onReturn(SituationBean data) {
                 updateMetaData(data);
+                
+                if (data.getResubmissionFailureTotalCount() > 0) {
+                    doRetrieveResubmitFailures();
+                }
             }
             @Override
             public void onError(Throwable error) {
@@ -291,11 +342,7 @@ public class SituationDetailsPage extends AbstractPage {
 		
         this.resubmitFailuresTable.clear();
         
-        if (situation.getResubmitSituations().size() > 0) {
-            for (SituationSummaryBean summaryBean : situation.getResubmitSituations()) {
-                this.resubmitFailuresTable.addRow(summaryBean);
-            }
-            this.resubmitFailuresTable.setVisible(true);
+        if (situation.getResubmissionFailureTotalCount() > 0) {
             this.resubmitFailuresTabAnchor.setVisible(true);
         } else {
             this.resubmitFailuresTabAnchor.setVisible(false);
@@ -442,5 +489,85 @@ public class SituationDetailsPage extends AbstractPage {
             }           
         });
 	}
+
+    /**
+     * Retrieve resubmit failures.
+     */
+    protected void doRetrieveResubmitFailures() {
+        doRetrieveResubmitFailures(1);
+    }
+
+    /**
+     * Retrieve resubmit failures for specified page.
+     * @param page
+     */
+    protected void doRetrieveResubmitFailures(int page) {
+        onRetrieveResubmitFailuresStarting();
+        currentPage = page;
+        SortColumn currentSortColumn = this.resubmitFailuresTable.getCurrentSortColumn();
+        situationsService.getResubmitFailures(id, page, currentSortColumn.columnId,
+                currentSortColumn.ascending, new IRpcServiceInvocationHandler<SituationResultSetBean>() {
+            @Override
+            public void onReturn(SituationResultSetBean data) {
+                updateTable(data);
+                updatePager(data);
+            }
+            @Override
+            public void onError(Throwable error) {
+                notificationService.sendErrorNotification(i18n.format("situations.error-loading"), error); //$NON-NLS-1$
+                noDataMessage.setVisible(true);
+                searchInProgressMessage.setVisible(false);
+            }
+        });
+    }
+
+    /**
+     * Called when a new retrieval is kicked off.
+     */
+    protected void onRetrieveResubmitFailuresStarting() {
+        this.pager.setVisible(false);
+        this.searchInProgressMessage.setVisible(true);
+        this.resubmitFailuresTable.setVisible(false);
+        this.noDataMessage.setVisible(false);
+        this.rangeSpan.setInnerText("?"); //$NON-NLS-1$
+        this.totalSpan.setInnerText("?"); //$NON-NLS-1$
+    }
+
+    /**
+     * Updates the table of resubmit failures with the given data.
+     * @param data
+     */
+    protected void updateTable(SituationResultSetBean data) {
+        this.resubmitFailuresTable.clear();
+        this.searchInProgressMessage.setVisible(false);
+        if (data.getSituations().size() > 0) {
+            for (SituationSummaryBean summaryBean : data.getSituations()) {
+                this.resubmitFailuresTable.addRow(summaryBean);
+            }
+            this.resubmitFailuresTable.setVisible(true);
+        } else {
+            this.noDataMessage.setVisible(true);
+        }
+    }
+
+    /**
+     * Updates the pager with the given data.
+     * @param data
+     */
+    protected void updatePager(SituationResultSetBean data) {
+        int numPages = ((int) (data.getTotalResults() / data.getItemsPerPage())) + (data.getTotalResults() % data.getItemsPerPage() == 0 ? 0 : 1);
+        int thisPage = (data.getStartIndex() / data.getItemsPerPage()) + 1;
+        this.pager.setNumPages(numPages);
+        this.pager.setPage(thisPage);
+        if (numPages > 1)
+            this.pager.setVisible(true);
+
+        int startIndex = data.getStartIndex() + 1;
+        int endIndex = startIndex + data.getSituations().size() - 1;
+        String rangeText = "" + startIndex + "-" + endIndex; //$NON-NLS-1$ //$NON-NLS-2$
+        String totalText = String.valueOf(data.getTotalResults());
+        this.rangeSpan.setInnerText(rangeText);
+        this.totalSpan.setInnerText(totalText);
+    }
 
 }

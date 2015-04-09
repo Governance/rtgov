@@ -43,7 +43,6 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     private boolean takeoverPossible;
     private boolean resubmitPossible;
     private String resubmittedSituationId;
-    private java.util.List<SituationSummaryBean> resubmitSituations = new java.util.ArrayList<SituationSummaryBean>();
 
     /**
      * Constructor.
@@ -208,17 +207,4 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
         return (this.resubmittedSituationId);
     }
 
-    /**
-     * @return the situations caused by a resubmit on this situation
-     */
-    public java.util.List<SituationSummaryBean> getResubmitSituations() {
-        return resubmitSituations;
-    }
-
-    /**
-     * @param resubmitSituations the situations caused by a resubmit on this situation
-     */
-    public void setResubmitSituations(java.util.List<SituationSummaryBean> resubmitSituations) {
-        this.resubmitSituations = resubmitSituations;
-    }
 }

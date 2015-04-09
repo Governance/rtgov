@@ -442,5 +442,12 @@ public class MockSituationsServiceImpl implements ISituationsServiceImpl {
         return 0;
     }
 
+    @Override
+    public SituationResultSetBean getResubmitFailures(String situationId, int page, String sortColumn,
+            boolean ascending) throws UiException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 
 }
