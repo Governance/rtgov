@@ -91,10 +91,22 @@ public interface ISituationsServiceImpl {
     BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) throws UiException;
 
     /**
+     * Retrieve resubmission failures for situation.
+     * @param situationId
+     * @param page
+     * @param sortColumn
+     * @param ascending
+     * @throws UiException
+     */
+    public SituationResultSetBean getResubmitFailures(String situationId, int page, String sortColumn,
+            boolean ascending) throws UiException;
+
+    /**
      * Export the content of all message's matching the given filter criteria.
      * @param situationsFilterBean
      */
     void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream);
+
     /**
      * Deletes all message matching the given filter criteria.
      * @param situationsFilterBean

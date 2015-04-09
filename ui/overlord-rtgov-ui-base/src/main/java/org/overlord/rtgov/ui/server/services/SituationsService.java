@@ -105,6 +105,12 @@ public class SituationsService implements ISituationsService {
     }
 
     @Override
+    public SituationResultSetBean getResubmitFailures(String situationId, int page, String sortColumn,
+            boolean ascending) throws UiException {
+        return impl.getResubmitFailures(situationId, page, sortColumn, ascending);
+    }
+
+    @Override
     public int delete(SituationsFilterBean situationsFilterBean) throws UiException {
         return impl.delete(situationsFilterBean);
     }

@@ -268,9 +268,24 @@
               <!-- Tab:ResubmitFailures -->
               <div class="container-fluid tab-pane fade" id="resubmitfailures">
  
-                <div class="clearfix"></div>
                 <div class="span12">
                   <div class="row-fluid situations">
+                    <div class="span12 overlord-actions">
+                      <button class="btn spacer" style="visibility:hidden"><i class="icon-refresh"></i></button>
+                      <button data-field="btn-refresh" class="btn pull-right"><i class="icon-refresh"></i></button>
+                      <div class="pull-right sp4n-label">
+                        <span data-i18n-key="displaying">Displaying</span>
+                        <span data-field="resubmit-failures-range" data-role="dummy">1-11</span>
+                        <span data-i18n-key="of">of</span>
+                        <span data-field="resubmit-failures-total" data-role="dummy">37</span>
+                      </div>
+                    </div>
+                    <div data-field="resubmit-failures-none" style="display:none" class="overlord-none">
+                      <span data-i18n-key="none-found">No situations found.</span>
+                    </div>
+                    <div data-field="resubmit-failures-searching" style="display:none" class="overlord-searching">
+                      <span class="spinner" data-i18n-key="finding-situations">Finding situations, please wait...</span>
+                    </div>
                     <table data-field="resubmit-failures-table" class="overlord-table table table-striped table-condensed table-hover">
                     <thead>
                       <tr>
@@ -324,6 +339,16 @@
                       </tr>
                     </tbody>
                     </table>
+                    <div data-field="resubmit-failures-pager" class="pagination overlord-pager" data-role="dummy">
+                      <ul>
+                        <li class="disabled"><a>&#x00AB;</a></li>
+                        <li class="active"><a>1</a></li>
+                        <li><a>2</a></li>
+                        <li><a>3</a></li>
+                        <li><a>4</a></li>
+                        <li><a>&#x00BB;</a></li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               

@@ -22,8 +22,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -373,24 +371,12 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	        
 	        // Check if other situations have been created based on the
 	        // resubmission of this situation's message
-	        java.util.List<Situation> resubsits=getResubmittedSituations(situationId, true);
+	        java.util.List<Situation> resubmits=getResubmittedSituations(situationId, true);
+	        ret.setResubmissionFailureTotalCount(resubmits.size());
 	        
 	        // If resubmit situations exist, then resubmit of this situation is not possible
-	        if (resubsits.size() == 0) {
+	        if (resubmits.size() == 0) {
 	            ret.setResubmitPossible(any(_providers, new IsResubmitSupported(situation)));
-	        } else {
-	            // Sort list of situations by timestamp
-	            Collections.sort(resubsits, new Comparator<Situation>() {
-
-	                @Override
-	                public int compare(Situation o1, Situation o2) {
-	                    return (int)(o1.getTimestamp() - o2.getTimestamp());
-	                }
-	            });
-	            
-	            for (Situation item : resubsits) {
-	                ret.getResubmitSituations().add(RTGovSituationsUtil.getSituationBean(item));
-	            }
 	        }
 
     	} catch (UiException uie) {
@@ -709,7 +695,25 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         }
         return new BatchRetryResult(processedCount, failedCount, ignoredCount);
     }
+
+    @Override
+    public java.util.List<SituationSummaryBean> getResubmitFailures(String situationId) throws UiException {
+        ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
+
+        try {
+            java.util.List<Situation> results=getResubmittedSituations(situationId, true);
     
+            for (Situation item : results) {
+                SituationSummaryBean ssb=RTGovSituationsUtil.getSituationBean(item);
+                
+                situations.add(ssb);                    
+            }
+        } catch (Exception e) {
+            throw new UiException(e);
+        }
+
+        return (situations);
+    }
     
     @Override
     public void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream) {

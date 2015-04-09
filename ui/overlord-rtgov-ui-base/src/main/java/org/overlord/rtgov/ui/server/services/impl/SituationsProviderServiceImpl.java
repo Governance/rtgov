@@ -182,7 +182,105 @@ public class SituationsProviderServiceImpl implements ISituationsServiceImpl {
         return _provider.resubmit(situationsFilterBean, username);
     }
 
-	@Override
+    /**
+     * @see org.overlord.rtgov.ui.server.services.ISituationsServiceImpl#getResubmitFailures(String, int, java.lang.String, boolean)
+     */
+    @Override
+    public SituationResultSetBean getResubmitFailures(String situationId, int page, String sortColumn,
+                            final boolean ascending) throws UiException {        
+        SituationResultSetBean rval = new SituationResultSetBean();
+        java.util.List<SituationSummaryBean> situations = _provider.getResubmitFailures(situationId);
+        
+        int total=situations.size();
+        
+        // Sort based on column and direction
+        if (sortColumn != null) {
+            java.util.Comparator<SituationSummaryBean> comp=null;
+            
+            if (sortColumn.equals(Constants.SORT_COLID_TIMESTAMP)) {
+                comp = new java.util.Comparator<SituationSummaryBean>() {
+
+                    @Override
+                    public int compare(SituationSummaryBean o1,
+                            SituationSummaryBean o2) {
+                        int ret=o1.getTimestamp().compareTo(o2.getTimestamp());
+                        if (!ascending) {
+                            ret = 0 - ret;
+                        }
+                        return ret;
+                    }
+                };
+            } else if (sortColumn.equals(Constants.SORT_COLID_SUBJECT)) {
+                comp = new java.util.Comparator<SituationSummaryBean>() {
+
+                    @Override
+                    public int compare(SituationSummaryBean o1,
+                            SituationSummaryBean o2) {
+                        int ret=o1.getSubject().compareTo(o2.getSubject());
+                        if (!ascending) {
+                            ret = 0 - ret;
+                        }
+                        return ret;
+                    }
+                };
+            } else if (sortColumn.equals(Constants.SORT_COLID_RESOLUTION_STATE)) {
+                comp = new java.util.Comparator<SituationSummaryBean>() {
+
+                    @Override
+                    public int compare(SituationSummaryBean o1, SituationSummaryBean o2) {
+                        int ret = o1.getResolutionState().compareTo(o2.getResolutionState());
+                        if (!ascending) {
+                            ret = 0 - ret;
+                        }
+                        return ret;
+                    }
+                };
+            } else if (sortColumn.equals(Constants.SORT_COLID_TYPE)) {
+                comp = new java.util.Comparator<SituationSummaryBean>() {
+
+                    @Override
+                    public int compare(SituationSummaryBean o1,
+                            SituationSummaryBean o2) {
+                        int ret=o1.getType().compareTo(o2.getType());
+                        if (!ascending) {
+                            ret = 0 - ret;
+                        }
+                        return ret;
+                    }
+                };
+            }
+
+            if (comp != null) {
+                Collections.sort(situations, comp);
+            }
+        }
+
+        int startIndex=(SITUATIONS_PER_PAGE*(page-1));
+       
+        if (situations.size() >= startIndex) {
+            // Remove initial entries
+            for (int i=0; i < startIndex; i++) {
+                situations.remove(0);
+            }
+            
+            // Remove trailing entries
+            while (situations.size() > SITUATIONS_PER_PAGE) {
+                situations.remove(SITUATIONS_PER_PAGE);
+            }
+            
+        } else {
+            situations.clear();
+        }
+        
+        rval.setSituations(situations);
+        rval.setItemsPerPage(SITUATIONS_PER_PAGE);
+        rval.setStartIndex((page-1)*SITUATIONS_PER_PAGE);
+        rval.setTotalResults(total);
+
+        return (rval);
+    }
+
+    @Override
 	public void assign(String situationId, String userName) throws UiException {
 		_provider.assign(situationId, userName);
 	}
