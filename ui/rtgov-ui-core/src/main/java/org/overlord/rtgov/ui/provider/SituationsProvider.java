@@ -81,6 +81,15 @@ public interface SituationsProvider {
     public void resubmit(String situationId, MessageBean message, String username) throws UiException;
 
     /**
+     * Retrieve the resubmission failures for the specified situation.
+     * 
+     * @param situationId The situation id
+     * @return The list of situation summaries
+     * @throws UiException Failed to retrieve resubmission failures
+     */
+    public java.util.List<SituationSummaryBean> getResubmitFailures(String situationId) throws UiException;
+
+    /**
      * This method export all situation's matching the given filter criteria
      * 
      * @param situationsFilterBean

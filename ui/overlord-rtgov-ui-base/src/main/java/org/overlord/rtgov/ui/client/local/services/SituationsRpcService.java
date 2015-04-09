@@ -106,6 +106,20 @@ public class SituationsRpcService {
     }
 
     /**
+     * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#search(SituationsFilterBean, int, String, boolean)
+     */
+    public void getResubmitFailures(String situationId, int page, String sortColumn, boolean ascending,
+            final IRpcServiceInvocationHandler<SituationResultSetBean> handler) {
+        RemoteCallback<SituationResultSetBean> successCallback = new DelegatingRemoteCallback<SituationResultSetBean>(handler);
+        ErrorCallback<?> errorCallback = new DelegatingErrorCallback(handler);
+        try {
+            remoteSituationsService.call(successCallback, errorCallback).getResubmitFailures(situationId, page, sortColumn, ascending);
+        } catch (UiException e) {
+            errorCallback.error(null, e);
+        }
+    }
+
+    /**
      * @see org.overlord.rtgov.ui.client.shared.services.ISituationsService#delete(SituationsFilterBean)
      */
     public void delete(SituationsFilterBean situationsFilterBean, IRpcServiceInvocationHandler<Integer> handler) {

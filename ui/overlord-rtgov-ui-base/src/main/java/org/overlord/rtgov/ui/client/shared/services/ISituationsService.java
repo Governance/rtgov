@@ -80,6 +80,17 @@ public interface ISituationsService {
      * @throws UiException
      */
     public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean) throws UiException;
+
+    /**
+     * Retrieve the resubmit failures associated with a situation.
+     * @param situationId
+     * @param page
+     * @param sortColumn
+     * @param ascending
+     * @throws UiException
+     */
+    public SituationResultSetBean getResubmitFailures(String situationId, int page, String sortColumn, boolean ascending) throws UiException;
+
     /**
      * Deletes all situation's matching the given filter.
      * @param situationsFilterBean
