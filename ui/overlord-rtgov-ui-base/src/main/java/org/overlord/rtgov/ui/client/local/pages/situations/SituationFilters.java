@@ -43,7 +43,7 @@ import com.google.gwt.user.client.ui.TextBox;
 @Templated("/org/overlord/rtgov/ui/client/local/site/situations.html#filter-sidebar")
 public class SituationFilters extends Composite implements HasValueChangeHandlers<SituationsFilterBean> {
 
-    private SituationsFilterBean currentState = new SituationsFilterBean();
+    private static SituationsFilterBean currentState = new SituationsFilterBean();
 
     // Owner, type, bundle name
     @Inject @DataField
@@ -77,6 +77,17 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
     @SuppressWarnings("unchecked")
     @PostConstruct
     protected void postConstruct() {
+
+        // Initialize filter
+        severity.setValue(currentState.getSeverity());
+        type.setValue(currentState.getType());
+        resolutionState.setValue(currentState.getResolutionState());
+        timestampFrom.setDateValue(currentState.getTimestampFrom());
+        timestampTo.setDateValue(currentState.getTimestampTo());
+        description.setValue(currentState.getDescription());
+        subject.setValue(currentState.getSubject());
+        properties.setValue(currentState.getProperties());
+        
         ClickHandler clearFilterHandler = new ClickHandler() {
             @Override
             public void onClick(ClickEvent event) {
