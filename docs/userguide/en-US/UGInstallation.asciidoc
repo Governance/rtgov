@@ -67,7 +67,7 @@ The configuration properties for the Runtime Governance capability are found in 
 
 Although there will be some properties that are independent of the installation type, some will be specific and therefore are listed in separate sections below.
 
-_Common_
+==== Common Properties
 
 The common properties available across all installation types are:
 
@@ -83,7 +83,7 @@ The common properties available across all installation types are:
 | BatchedActivityUnitLogger.maxUnitCount | The maximum number of activity units that should be held before sending as a batch to the Activity Server.
 |=======================
 
-_All Type_
+==== Properties specific to the full installation
 
 [options="header"]
 |=======================
@@ -98,7 +98,18 @@ _All Type_
 
 NOTE: Activity and Situation Store implementation specific properties will be discussed in the database section below.
 
-_Client Type_
+As part of the full installation, the RTGov UI is also installed, and includes the following additional properties:
+
+[options="header"]
+|=======================
+| Property | Description
+| SwitchYardServicesProvider.serverURLs | A comma separated list of URLs that can be used to resubmit messages to a SwitchYard server. The URLs are used with a round robin strategy. (The default values is http://localhost:8080)
+| SwitchYardServicesProvider.jmxURL | The URL for the remote MBeanServer connection. If no value is provided, then a local MBeanServer connection will be used.
+| SwitchYardServicesProvider.jmxUsername | Username for the remote MBeanServer connection.
+| SwitchYardServicesProvider.jmxPassword | Password for the remote MBeanServer connection.
+|=======================
+
+==== Properties specific to the _client only_ installation
 
 This installation type is used to configure an execution environment that will be sending its activity information to a remote Runtime Governance server using REST. The relevant properties are:
 
