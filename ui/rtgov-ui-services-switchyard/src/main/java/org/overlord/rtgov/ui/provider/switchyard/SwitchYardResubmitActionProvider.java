@@ -132,7 +132,7 @@ public class SwitchYardResubmitActionProvider extends ResubmitActionProvider {
 				// Clear previous exceptions
 				exc = null;
 				
-				continue;
+				break;
 			} catch (NullPointerException npe) {
 				if (LOG.isLoggable(Level.FINE)) {
 					LOG.fine("Remote invocation of switchyard service["+service+"] operation["
