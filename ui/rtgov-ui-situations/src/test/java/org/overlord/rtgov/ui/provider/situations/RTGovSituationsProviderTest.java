@@ -136,7 +136,7 @@ public class RTGovSituationsProviderTest {
 			public java.util.List<Situation> getSituations(SituationsQuery query) {
                 java.util.List<Situation> ret=new java.util.ArrayList<Situation>();
 			    if (query.getType() == null
-			            && query.getProperties().containsKey(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID)) {
+			            && query.getProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)) {
 			        // Resubmission failure query so ignore
 			    } else {
     				if (!query.getType().equals(TEST_TYPE)) {

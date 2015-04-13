@@ -53,6 +53,7 @@ import org.overlord.rtgov.call.trace.model.Call;
 import org.overlord.rtgov.call.trace.model.CallTrace;
 import org.overlord.rtgov.call.trace.model.Task;
 import org.overlord.rtgov.call.trace.model.TraceNode;
+import org.overlord.rtgov.common.util.RTGovProperties;
 import org.overlord.rtgov.ui.client.model.BatchRetryResult;
 import org.overlord.rtgov.ui.client.model.CallTraceBean;
 import org.overlord.rtgov.ui.client.model.MessageBean;
@@ -294,7 +295,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	    	    // Check if only root nodes, and if so filter out situations that
 	    	    // have been resubmitted
 	    	    if (!filters.isRootOnly()
-	    	            || !item.getProperties().containsKey(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID)) {
+	    	            || !item.getProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)) {
 	    	        SituationSummaryBean ssb=RTGovSituationsUtil.getSituationBean(item);
 	    	        
 	    	        // Identify resubmission failures
@@ -374,10 +375,15 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	        java.util.List<Situation> resubmits=getResubmittedSituations(situationId, true);
 	        ret.setResubmissionFailureTotalCount(resubmits.size());
 	        
-	        // If resubmit situations exist, then resubmit of this situation is not possible
-	        if (resubmits.size() == 0) {
+	        // If resubmit situations exist OR the situation is RESOLVED,
+	        // then resubmit of this situation is not possible
+	        if (resubmits.size() == 0
+	                && !ret.getResolutionState().equalsIgnoreCase(ResolutionState.RESOLVED.name())) {
 	            ret.setResubmitPossible(any(_providers, new IsResubmitSupported(situation)));
 	        }
+	        
+	        ret.setManualResolutionPossible(RTGovProperties.getPropertyAsBoolean("UI.manualResolution",
+	                                Boolean.TRUE));
 
     	} catch (UiException uie) {
     		throw uie;
@@ -415,7 +421,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     protected void queryResubmittedSituations(String situationId, boolean deep,
                                         java.util.List<Situation> results) {
         SituationsQuery query=new SituationsQuery();
-        query.getProperties().put(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID, situationId);
+        query.getProperties().put(Situation.RESUBMITTED_SITUATION_ID, situationId);
         
         java.util.List<Situation> resubmitted=_situationStore.getSituations(query);
         
@@ -423,8 +429,8 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
             
             // Need to double check id, as fuzzy 'like' used when retrieving situations based on
             // properties to enable partial strings to be provided.
-            if (!sit.getSituationProperties().containsKey(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID)
-                    || !sit.getSituationProperties().get(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID)
+            if (!sit.getSituationProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)
+                    || !sit.getSituationProperties().get(Situation.RESUBMITTED_SITUATION_ID)
                                 .equals(situationId)) {
                 continue;
             }
@@ -632,20 +638,28 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         if (!serviceProvider.isPresent()) {
             throw new UiException(i18n.format("RTGovSituationsProvider.ResubmitProviderNotFound", situation.getId())); //$NON-NLS-1$
         }
+        
+        // RTGOV-649 If situation resolved, then should not allow resubmit
+        if (situation.getSituationProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY)
+                && situation.getSituationProperties().get(SituationStore.RESOLUTION_STATE_PROPERTY)
+                .equalsIgnoreCase(ResolutionState.RESOLVED.name())) {
+            return;
+        }
+        
+        // RTGOV-649 Assign situation to current user
+        if (!situation.getSituationProperties().containsKey(SituationStore.ASSIGNED_TO_PROPERTY)
+                || !situation.getSituationProperties().get(SituationStore.ASSIGNED_TO_PROPERTY).equals(username)) {
+            assign(situation.getId(), username);
+        }
+        
+        // RTGOV-649 Set resolution state to RESOLVED on the assumption that the resubmit will
+        // fix the problem. If an immediate exception is received, then set it back to IN_PROGRESS,
+        // and if a subsequent situation is reported, then it can also be set back to IN_PROGRESS.
+        updateResolutionState(situation.getId(), ResolutionState.RESOLVED);
 
         // RTGOV-645 - include situation id, assignTo and resolutionState in resubmission, in case
         // further failures (resulting in linked situations) occur.
-        message.getHeaders().put(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID, situation.getId());
-        
-        if (situation.getSituationProperties().containsKey("assignedTo")) {
-            message.getHeaders().put(RTGovSituationsUtil.HEADER_ASSIGNED_TO,
-                    situation.getSituationProperties().get("assignedTo"));
-        }
-        
-        if (situation.getSituationProperties().containsKey("resolutionState")) {
-            message.getHeaders().put(RTGovSituationsUtil.HEADER_RESOLUTION_STATE,
-                    situation.getSituationProperties().get("resolutionState"));
-        }
+        message.getHeaders().put(Situation.RESUBMITTED_SITUATION_ID, situation.getId());
         
         try {
             ResubmitActionProvider resubmit=serviceProvider.get().getAction(ResubmitActionProvider.class);
@@ -659,6 +673,9 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
                 _situationStore.recordSuccessfulResubmit(situation.getId(), username);
             }
         } catch (Exception exception) {
+            // RTGOV-649 Set resolution state back to IN_PROGRESS
+            updateResolutionState(situation.getId(), ResolutionState.IN_PROGRESS);
+
             _situationStore.recordResubmitFailure(situation.getId(),
                     Throwables.getStackTraceAsString(exception), username);
             throw new UiException(
@@ -672,6 +689,14 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         int processedCount = 0, failedCount = 0, ignoredCount = 0;
         List<Situation> situationIdToactivityTypeIds = querySituations(situationsFilterBean);
         for (Situation situation : situationIdToactivityTypeIds) {
+            
+            // RTGOV-649 If situation resolved, then should not allow resubmit
+            if (situation.getSituationProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY)
+                    && situation.getSituationProperties().get(SituationStore.RESOLUTION_STATE_PROPERTY)
+                    .equalsIgnoreCase(ResolutionState.RESOLVED.name())) {
+                continue;
+            }
+
             // Check if situation is root, and has resubmission failures
             if (situationsFilterBean.isRootOnly()) {
                 java.util.List<Situation> resubmits=getResubmittedSituations(situation.getId(), true);
@@ -802,7 +827,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	    Situation root=original;
 	    
 	    if (original != null) {
-	        String parentId=original.getProperties().get(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID);
+	        String parentId=original.getProperties().get(Situation.RESUBMITTED_SITUATION_ID);
 	        
 	        while (parentId != null) {
 	            root = _situationStore.getSituation(parentId);
@@ -812,7 +837,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	                throw new UiException("Failed to locate parent situation");
 	            }
 	            
-	            parentId = root.getProperties().get(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID);
+	            parentId = root.getProperties().get(Situation.RESUBMITTED_SITUATION_ID);
 	        }
 	    }
 	    
@@ -905,7 +930,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         // Check if only root situations should be returned
         if (situationsFilterBean.isRootOnly()) {
             for (int i=results.size()-1; i >= 0; i--) {
-                if (results.get(i).getProperties().containsKey(RTGovSituationsUtil.HEADER_RESUBMITTED_SITUATION_ID)) {
+                if (results.get(i).getProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)) {
                     results.remove(i);
                 }
             }

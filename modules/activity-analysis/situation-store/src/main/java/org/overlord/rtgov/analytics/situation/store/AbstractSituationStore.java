@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.analytics.situation.Situation;
 
 /**
@@ -31,9 +30,6 @@ import org.overlord.rtgov.analytics.situation.Situation;
 public abstract class AbstractSituationStore implements SituationStore {
 
     private static final Logger LOG=Logger.getLogger(AbstractSituationStore.class.getName());
-
-    private static final String INTERNAL_SITIUATION_PROPERTY_PREFIX=ActivityType.RTGOV_PROPERTY_PREFIX
-            +Situation.class.getSimpleName()+"_";
     
     /**
      * The situation repository constructor.
@@ -46,17 +42,44 @@ public abstract class AbstractSituationStore implements SituationStore {
      */
     public void store(Situation situation) throws Exception {
         
-        // Pre-process properties to determine if any internal 'situation' properties
-        // need to be promoted to public (as part of RTGOV-645) - leave the internal
-        // property for now, as provides indication of values when situation created
-        for (String key : situation.getSituationProperties().keySet()) {
-            if (key.startsWith(INTERNAL_SITIUATION_PROPERTY_PREFIX)) {
-                String newKey=key.substring(INTERNAL_SITIUATION_PROPERTY_PREFIX.length());
-                situation.getSituationProperties().put(newKey, situation.getSituationProperties().get(key));
-            }
-        }
+        processResubmittedSituation(situation);
         
         doStore(situation);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public Situation getSituation(final String id) {
+        return (doGetSituation(id));
+    }
+    
+    protected abstract Situation doGetSituation(String id);
+
+    /**
+     * This method checks whether the situation is the result of a resubmission
+     * failure, and updates the parent situation accordingly.
+     * 
+     * @param situation The situation
+     * @throws Exception Failed to process
+     */
+    protected void processResubmittedSituation(Situation situation) throws Exception {
+        // RTGOV-649 Check if situation has a parent, and if so copy the
+        // assignment value, set the resolution state to IN_PROGRESS, and
+        // set the parent's resolution state to IN_PROGRESS.
+        if (situation.getSituationProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)) {
+            String parentId=situation.getSituationProperties().get(Situation.RESUBMITTED_SITUATION_ID);
+            
+            Situation parent=doGetSituation(parentId);
+            
+            if (parent != null) {
+                situation.getSituationProperties().put(ASSIGNED_TO_PROPERTY,
+                        parent.getSituationProperties().get(ASSIGNED_TO_PROPERTY));
+                situation.getSituationProperties().put(RESOLUTION_STATE_PROPERTY,
+                        ResolutionState.IN_PROGRESS.name());
+                updateResolutionState(parent.getId(), ResolutionState.IN_PROGRESS);
+            }
+        }
     }
     
     /**

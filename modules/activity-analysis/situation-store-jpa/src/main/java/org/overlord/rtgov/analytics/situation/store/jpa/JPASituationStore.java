@@ -85,7 +85,7 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
     /**
      * {@inheritDoc}
      */
-    public Situation getSituation(final String id) {
+    protected Situation doGetSituation(final String id) {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Get situation: "+id); //$NON-NLS-1$
         }
@@ -114,6 +114,11 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
      */
     @SuppressWarnings("unchecked")
     public List<Situation> getSituations(final SituationsQuery sitQuery) {
+        // RTGOV-649 Unfortunate work around as jpql query for no resolution state or state != resolved
+        // fails
+        boolean isOpen=sitQuery.getResolutionState() != null
+                && sitQuery.getResolutionState().equalsIgnoreCase(ResolutionState.OPEN.name());
+        
         final String queryString = createQuery("SELECT sit from Situation sit ", sitQuery);
         List<Situation> situations = _jpaStore.withJpa(new JpaWork<List<Situation>>() {
             public List<Situation> perform(Session s) {
@@ -121,6 +126,20 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
                 return query.list();
             }
         });
+        
+        if (isOpen) {
+            sitQuery.setResolutionState(ResolutionState.UNRESOLVED.name());
+            final String queryString2 = createQuery("SELECT sit from Situation sit ", sitQuery);
+            List<Situation> situations2 = _jpaStore.withJpa(new JpaWork<List<Situation>>() {
+                public List<Situation> perform(Session s) {
+                    Query query = s.createQuery(queryString2);
+                    return query.list();
+                }
+            });
+            
+            situations.addAll(situations2);
+        }
+        
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("Situations="+situations); //$NON-NLS-1$
         }
@@ -204,6 +223,13 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
             }
             if (ResolutionState.UNRESOLVED == ResolutionState.valueOf(sitQuery.getResolutionState())) {
                 queryString.append("'resolutionState' not in indices(sit.situationProperties)");
+                
+            // RTGOV-649 - not currently used as not working - so instread have to issue the query twice for now
+            } else if (ResolutionState.OPEN == ResolutionState.valueOf(sitQuery.getResolutionState())) {
+                queryString.append("('resolutionState' not in indices(sit.situationProperties) or "
+                        + "('resolutionState' in indices(sit.situationProperties) AND "
+                        + "sit.situationProperties['resolutionState']!='" + ResolutionState.RESOLVED.name()
+                        + "' ))");
             } else {
                 queryString.append("sit.situationProperties['resolutionState']='" + sitQuery.getResolutionState()
                         + "'");

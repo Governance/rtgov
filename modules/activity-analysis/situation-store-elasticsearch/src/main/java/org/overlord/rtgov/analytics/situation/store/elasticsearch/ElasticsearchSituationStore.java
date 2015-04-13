@@ -48,8 +48,6 @@ import org.overlord.rtgov.common.util.RTGovProperties;
  */
 public class ElasticsearchSituationStore extends AbstractSituationStore implements SituationStore {
 
-    private static final String RESOLUTION_STATE_UNRESOLVED = "unresolved";
-
     private static final Logger LOG = Logger.getLogger(ElasticsearchSituationStore.class.getName());
 
     private static String SITUATIONSTORE_UNIT_INDEX = "SituationStore.Elasticsearch.index";
@@ -123,7 +121,7 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
     /**
      * {@inheritDoc}
      */
-    public Situation getSituation(final String id) {
+    protected Situation doGetSituation(final String id) {
         Situation ret=null;
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -196,8 +194,10 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
             BoolQueryBuilder bool=QueryBuilders.boolQuery();
             
             if (!isNullOrEmpty(sitQuery.getResolutionState())) {
-                if (sitQuery.getResolutionState().equalsIgnoreCase(RESOLUTION_STATE_UNRESOLVED)) {
+                if (sitQuery.getResolutionState().equalsIgnoreCase(ResolutionState.UNRESOLVED.name())) {
                     filter = FilterBuilders.missingFilter("properties."+SituationStore.RESOLUTION_STATE_PROPERTY);
+                } else if (sitQuery.getResolutionState().equalsIgnoreCase(ResolutionState.OPEN.name())) {
+                    bool.mustNot(QueryBuilders.matchQuery("properties."+SituationStore.RESOLUTION_STATE_PROPERTY, ResolutionState.RESOLVED.name()));
                 } else {
                     bool.must(QueryBuilders.matchQuery("properties."+SituationStore.RESOLUTION_STATE_PROPERTY, sitQuery.getResolutionState()));
                 }

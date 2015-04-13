@@ -44,6 +44,7 @@ import com.google.gwt.user.client.ui.TextBox;
 public class SituationFilters extends Composite implements HasValueChangeHandlers<SituationsFilterBean> {
 
     private static SituationsFilterBean currentState = new SituationsFilterBean();
+    private static boolean initialized=false;
 
     // Owner, type, bundle name
     @Inject @DataField
@@ -87,6 +88,15 @@ public class SituationFilters extends Composite implements HasValueChangeHandler
         description.setValue(currentState.getDescription());
         subject.setValue(currentState.getSubject());
         properties.setValue(currentState.getProperties());
+        
+        if (!initialized) {
+            // Only overwrite the resolution state when the filter
+            // is first displayed
+            resolutionState.setSelectedIndex(1);
+            currentState.setResolutionState(resolutionState.getValue());
+
+            initialized = true;
+        }
         
         ClickHandler clearFilterHandler = new ClickHandler() {
             @Override
