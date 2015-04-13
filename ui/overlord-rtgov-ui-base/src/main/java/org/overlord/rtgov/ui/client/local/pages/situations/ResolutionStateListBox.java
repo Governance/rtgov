@@ -38,11 +38,10 @@ public class ResolutionStateListBox extends AbstractFilterListBox {
     @Override
     protected void configureItems() {
         this.addItem(i18n.format("any"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        this.addItem(i18n.format("resolutionState.open"), ResolutionState.OPEN.name()); //$NON-NLS-1$ //$NON-NLS-2$
         this.addItem(i18n.format("resolutionState.unresolved"), ResolutionState.UNRESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
         this.addItem(i18n.format("resolutionState.resolved"), ResolutionState.RESOLVED.name()); //$NON-NLS-1$ //$NON-NLS-2$
         this.addItem(i18n.format("resolutionState.in_progress"), ResolutionState.IN_PROGRESS.name()); //$NON-NLS-1$ //$NON-NLS-2$
-        this.addItem(i18n.format("resolutionState.waiting"), ResolutionState.WAITING.name()); //$NON-NLS-1$ //$NON-NLS-2$
-        this.addItem(i18n.format("resolutionState.reopened"), ResolutionState.REOPENED.name()); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

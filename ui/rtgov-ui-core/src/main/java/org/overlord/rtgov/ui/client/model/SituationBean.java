@@ -42,6 +42,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
     private boolean assignedToCurrentUser;
     private boolean takeoverPossible;
     private boolean resubmitPossible;
+    private boolean manualResolutionPossible;
     private String resubmittedSituationId;
 
     /**
@@ -187,6 +188,20 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
      */
     public void setResubmitPossible(boolean isResubmitPossible) {
         this.resubmitPossible = isResubmitPossible;
+    }
+    
+    /**
+     * @return the isManualResolutionPossible
+     */
+    public boolean isManualResolutionPossible() {
+        return manualResolutionPossible;
+    }
+
+    /**
+     * @param isManualResolutionPossible the isManualResolutionPossible to set
+     */
+    public void setManualResolutionPossible(boolean isManualResolutionPossible) {
+        this.manualResolutionPossible = isManualResolutionPossible;
     }
     
     /**

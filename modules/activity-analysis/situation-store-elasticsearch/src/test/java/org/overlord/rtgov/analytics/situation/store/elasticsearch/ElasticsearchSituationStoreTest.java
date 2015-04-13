@@ -395,6 +395,68 @@ public class ElasticsearchSituationStoreTest {
     }
 
     @Test
+    public void testQuerySituationsResolutionStateOpen() {
+        try {
+            Situation s1=new Situation();
+            s1.setId(SITUATION_ID_1);
+            s1.setTimestamp(System.currentTimeMillis());
+            _elasticsearchSituationStore.store(s1);
+
+            Situation s2=new Situation();
+            s2.setId(SITUATION_ID_2);
+            s2.setTimestamp(System.currentTimeMillis()+100);
+            s2.getSituationProperties().put(SituationStore.RESOLUTION_STATE_PROPERTY, ResolutionState.RESOLVED.name());
+            _elasticsearchSituationStore.store(s2);
+            
+            Situation s3=new Situation();
+            s3.setId(SITUATION_ID_3);
+            s3.setTimestamp(System.currentTimeMillis()+200);
+            s3.getSituationProperties().put(SituationStore.RESOLUTION_STATE_PROPERTY, ResolutionState.IN_PROGRESS.name());
+            _elasticsearchSituationStore.store(s3);
+            
+            // Need to delay to allow situations to be index, and therefore become searchable
+            synchronized (this) {
+                wait(2000);                
+            }
+        } catch (Exception e) {
+
+            fail("Could not store situation " + e);
+        }
+        
+        try {
+            SituationsQuery query=new SituationsQuery();
+            query.setResolutionState(ResolutionState.OPEN.name());
+            
+            java.util.List<Situation> sits = _elasticsearchSituationStore.getSituations(query);
+            if (sits != null) {
+                if (sits.size() != 2) {
+                    fail("Expecting 2 situations: "+sits.size());
+                }
+                
+                assertTrue(!sits.get(0).getSituationProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY)
+                        || !sits.get(0).getSituationProperties().get(
+                                SituationStore.RESOLUTION_STATE_PROPERTY).equalsIgnoreCase(ResolutionState.RESOLVED.name()));
+                assertTrue(!sits.get(1).getSituationProperties().containsKey(SituationStore.RESOLUTION_STATE_PROPERTY)
+                        || !sits.get(1).getSituationProperties().get(
+                                SituationStore.RESOLUTION_STATE_PROPERTY).equalsIgnoreCase(ResolutionState.RESOLVED.name()));
+            } else {
+                fail("Situations list is null");
+            }
+        } catch (Exception e) {
+            fail("Failed to get situation: " + e);
+
+        }
+        
+        try {
+            _elasticsearchSituationStore.getClient().remove(SITUATION_ID_1);
+            _elasticsearchSituationStore.getClient().remove(SITUATION_ID_2);
+            _elasticsearchSituationStore.getClient().remove(SITUATION_ID_3);
+        } catch (Exception e) {
+            fail("Could not remove situation" + e);
+        }
+    }
+
+    @Test
     public void testQuerySituationsHost() {
         try {
             Situation s1=new Situation();

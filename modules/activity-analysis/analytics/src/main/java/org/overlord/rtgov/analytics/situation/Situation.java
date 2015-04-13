@@ -35,6 +35,7 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import org.overlord.rtgov.activity.model.ActivityType;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.Context;
 
@@ -50,6 +51,11 @@ public class Situation implements java.io.Externalizable {
     
     private String _id=UUID.randomUUID().toString();
     
+    /**
+     * The property name used to defined the resubmitted situation id.
+     */
+    public static final String RESUBMITTED_SITUATION_ID = ActivityType.RTGOV_PROPERTY_PREFIX+"resubmittedSituationId";
+
     /**
      * The separator character between parts of the subject.
      */
