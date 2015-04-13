@@ -27,6 +27,11 @@ public enum ResolutionState {
     ANY,
     
     /**
+     * Open resolution state (any real state other than RESOLVED).
+     */
+    OPEN,
+    
+    /**
      * Null resolution state.
      */
     NULL,
@@ -44,15 +49,5 @@ public enum ResolutionState {
     /**
      * In-progress state.
      */
-    IN_PROGRESS,
-    
-    /**
-     * Waiting state.
-     */
-    WAITING,
-    
-    /**
-     * Re-opened state.
-     */
-    REOPENED;
+    IN_PROGRESS
 }

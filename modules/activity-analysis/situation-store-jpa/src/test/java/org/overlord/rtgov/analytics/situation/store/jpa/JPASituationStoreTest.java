@@ -68,11 +68,15 @@ public class JPASituationStoreTest {
     }
 
     @Test
-    public void getSituationsByResolutionState() throws Exception {
+    public void getSituationsByOpenResolutionState() throws Exception {
+        Situation unresolvedSituation = new Situation();
+        unresolvedSituation.setId("unresolvedSituation");
+        unresolvedSituation.setTimestamp(System.currentTimeMillis());
+        persist(unresolvedSituation);
         Situation openSituation = new Situation();
-        openSituation.setId("openSituation");
+        openSituation.setId("inprogressSituation");
         openSituation.setTimestamp(System.currentTimeMillis());
-        openSituation.getSituationProperties().put("resolutionState", ResolutionState.REOPENED.name());
+        openSituation.getSituationProperties().put("resolutionState", ResolutionState.IN_PROGRESS.name());
         persist(openSituation);
         Situation closedSituation = new Situation();
         closedSituation.setId("closedSituation");
@@ -80,10 +84,13 @@ public class JPASituationStoreTest {
         closedSituation.getSituationProperties().put("resolutionState", ResolutionState.RESOLVED.name());
         persist(closedSituation);
 
-        java.util.List<Situation> situations = findSituationsByFilterBean(openSituation);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setResolutionState(ResolutionState.OPEN.name());
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
-        Assert.assertTrue(1 == situations.size());
-        Assert.assertEquals(openSituation.getId(), situations.get(0).getId());
+        Assert.assertTrue(2 == situations.size());
+        Assert.assertTrue(situations.contains(unresolvedSituation));
+        Assert.assertTrue(situations.contains(openSituation));
     }
     
     @Test
@@ -331,14 +338,6 @@ public class JPASituationStoreTest {
 		assertEquals(ResolutionState.IN_PROGRESS.name(), reload.getSituationProperties().get(SituationStore.RESOLUTION_STATE_PROPERTY));
 	}
     
-    private java.util.List<Situation> findSituationsByFilterBean(Situation openSituation) throws Exception {
-        String resolutionState = openSituation.getSituationProperties().get("resolutionState");
-        SituationsQuery sitQuery = new SituationsQuery();
-        sitQuery.setResolutionState(resolutionState);
-        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
-        return situations;
-    }
-
 	@Test
 	public void recordResubmit() throws Exception {
 		Situation situation = new Situation();

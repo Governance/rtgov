@@ -36,23 +36,6 @@ public class RTGovSituationsUtil {
     public static final String INTERNAL_PROPERTY_PREFIX="_";
 
     /**
-     * The property name used to defined the resubmitted sitation id.
-     */
-    public static final String HEADER_RESUBMITTED_SITUATION_ID = ActivityType.RTGOV_PROPERTY_PREFIX+"resubmittedSituationId";
-
-    /**
-     * The property name used to defined the "assigned to" value.
-     */
-    public static final String HEADER_ASSIGNED_TO = ActivityType.RTGOV_PROPERTY_PREFIX+Situation.class.getSimpleName()
-                                    +INTERNAL_PROPERTY_PREFIX+"assignedTo";
-
-    /**
-     * The property name used to defined the "resolutionState" value.
-     */
-    public static final String HEADER_RESOLUTION_STATE = ActivityType.RTGOV_PROPERTY_PREFIX+Situation.class.getSimpleName()
-                                    +INTERNAL_PROPERTY_PREFIX+"resolutionState";
-
-    /**
      * Constructor.
      */
     private RTGovSituationsUtil() {
@@ -94,7 +77,7 @@ public class RTGovSituationsUtil {
     	    }
     	}
 
-        ret.setResubmittedSituationId(situation.getProperties().get(HEADER_RESUBMITTED_SITUATION_ID));
+        ret.setResubmittedSituationId(situation.getProperties().get(Situation.RESUBMITTED_SITUATION_ID));
 
         return (ret);
     }
