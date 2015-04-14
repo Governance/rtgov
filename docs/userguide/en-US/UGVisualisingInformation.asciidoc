@@ -36,6 +36,8 @@ image::images/RTGovUIServiceDependencies.png[]
 
 === Situations
 
+==== Situations List
+
 This section shows the _Situations_ that are reported when RTGov policies detect issues that need to be bought to the attention of users.
 
 image::images/RTGovUISituations.png[]
@@ -48,7 +50,7 @@ The list contains the following columns:
 
 * Type - identifies the nature of the situation (e.g. SLA Violation, Exception, etc).
 
-* Status - where the situation is in its lifeycycle (see further down for description of the lifecycle).
+* Status - where the situation is in its lifeycycle (see further down for description of the lifecycle). The status _Open_ represents all non-resolved states.
 
 * Subject - the subject of the situation, which will generally be a service type and operation, with optional fault name.
 
@@ -62,7 +64,7 @@ At the bottom left is a collapsed region containing controls for performing _bul
 
 image::images/RTGovUISituationsBulkActions.png[]
 
-These actions can operate either on the filtered situations (as shown here), or all situations. The actions themselves, from left to right, are _retry_ (i.e. resubmit an associated message to the target service), _export_ and _remove_.
+These actions can operate either on the filtered situations (as shown here), or all situations. The actions themselves, from left to right, are _resubmit_ (i.e. resubmit an associated message to the target service), _export_ and _remove_.
 
 When a new _Situation_ occurs, if the user is already viewing the situations page, then a small notification will be displayed in the top right corner:
 
@@ -74,7 +76,9 @@ image::images/RTGovUISituationsNotificationExpanded.png[]
 
 The user can either select one of the entries to navigate to it's details, or alternatively use the refresh button to update the list.
 
-To view the details associated with a _Situation_ in the list, select its type field, which will navigate to the details page:
+To view the details associated with a _Situation_ in the list, select its type field, which will navigate to the details page.
+
+==== Situation Details
 
 image::images/RTGovUISituationDetails.png[]
 
@@ -90,15 +94,30 @@ The optional _Message_ tab is displayed if the _Situation_ has an associated bus
 
 image::images/RTGovUISituationMessage.png[]
 
-If the service and operation, associated with the situation, supports resubmission of the messages (i.e. if a SwitchYard service, then it would need to have an SCA binding and the operation would need to be one-way), then the user will be able to edit the message content and press the _Resubmit_ button. This will result in resubmission information being displayed:
+If the service and operation, associated with the situation, supports resubmission of the messages (i.e. if a SwitchYard service, then it would need to have an SCA binding and the operation would need to be one-way), and the _Situation_ is not in a RESOLVED state, then the user will be able to edit the message content and press the _Resubmit_ button. This will result in resubmission information being displayed:
 
 image::images/RTGovUISituationMessageResubmitted.png[]
 
 ===== Situation Lifecycle
 
-The following diagram shows the lifecycle of a _Situation_. Transitions are controlled by appropriate buttons presented when viewing the situation details.
+The following diagram shows the lifecycle of a _Situation_. Transitions are controlled by the outcome of a resubmission associated with the situation, or appropriate buttons presented when viewing the situation details (if manual resolution is permitted).
 
 image::images/SituationLifecycle.png[]
+
+
+===== Situation Resubmission
+
+When a resubmission is performed, the outcome of the resubmission will be used to determine whether the associated _Situation_ can be automatically marked as RESOLVED (if successful) or IN_PROGRESS (if unsuccessful).
+
+Any subsequent situations created as a result of a resubmission failure will be associated with the _Situation_ that was resubmitted, effectively creating a tree of Situations (i.e. subsequent resubmission failures will then be defined as further nodes in the tree). However, only the top level _Situation_ will be shown within the list of situations.
+
+To indicate which of the situations in the list have associated Situations (due to resubmission failures), a numerical value will be placed in the first column:
+
+image::images/ResubmitNumber.png[]
+
+When selecting the details page for such a _Situation_, there will appear a new tab called _Resubmit Failures_, listing all of the situations directly or indirectly contained by the selected _Situation_ (i.e. a flattened tree).
+
+image::images/ResubmitFailures.png[]
 
 
 === Analytics
