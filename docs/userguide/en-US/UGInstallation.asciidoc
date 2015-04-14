@@ -150,6 +150,7 @@ As part of the full installation, the RTGov UI is also installed, and includes t
 | SwitchYardServicesProvider.jmxURL | The URL for the remote MBeanServer connection. If no value is provided, then a local MBeanServer connection will be used.
 | SwitchYardServicesProvider.jmxUsername | Username for the remote MBeanServer connection.
 | SwitchYardServicesProvider.jmxPassword | Password for the remote MBeanServer connection.
+| UI.manualResolution | Resolution state will automatically be changed based on the outcome of a resubmission, but this boolean property determines whether resolution state change buttons should be included on the Situation details page, to allow a user to manually change the state. The default value is "true". 
 |=======================
 
 ==== Properties specific to the _client only_ installation
