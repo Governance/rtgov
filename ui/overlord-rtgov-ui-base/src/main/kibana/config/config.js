@@ -21,7 +21,7 @@ function (Settings) {
      * kibana installed on. You probably want to set it to the FQDN of your
      * elasticsearch host
      */
-    elasticsearch: "http://"+window.location.host+"/rtgov-ui/elasticsearch",
+    elasticsearch: window.location.protocol+"//"+window.location.host+"/rtgov-ui/elasticsearch",
 
     /** @scratch /configuration/config.js/5
      * ==== default_route
