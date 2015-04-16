@@ -88,7 +88,7 @@
 		<version.javax.servlet.javax.servlet-api>3.0.1</version.javax.servlet.javax.servlet-api>
 		<version.org.switchyard>2.0.0.Alpha3</version.org.switchyard>
 		<version.org.jboss.errai>2.4.4.Final</version.org.jboss.errai>
-		<version.org.keycloak>1.2.0.Beta1-SNAPSHOT</version.org.keycloak>
+		<version.org.keycloak>1.2.0.Beta1</version.org.keycloak>
 
 		<!-- Override as current IP BOM version causes drools rule load issues -->
 		<version.org.mvel>2.2.1.Final</version.org.mvel>

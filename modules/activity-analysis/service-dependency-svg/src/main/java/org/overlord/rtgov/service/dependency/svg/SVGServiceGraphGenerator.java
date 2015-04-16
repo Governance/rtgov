@@ -254,9 +254,9 @@ public class SVGServiceGraphGenerator {
     
     /**
      * This method returns the description to be used for the
-     * invocation link.
+     * usage link.
      * 
-     * @param il The invocation link
+     * @param ul The usage link
      * @return The description
      */
     protected String getDescription(UsageLink ul) {
@@ -751,7 +751,7 @@ public class SVGServiceGraphGenerator {
      * 
      * @param opn The operation node
      * @param ratio The ratio
-     * @param doc The svg document
+     * @param container The container element
      * @param insertPoint The insertion point
      */
     protected void generateOperation(OperationNode opn, double ratio,

@@ -93,11 +93,11 @@ public interface SituationsProvider {
     /**
      * This method export all situation's matching the given filter criteria
      * 
-     * @param situationsFilterBean
+     * @param filters
      * @param outputStream
      *            Failed to search situations
      */
-    public void export(SituationsFilterBean situationsFilterBean, OutputStream outputStream);
+    public void export(SituationsFilterBean filters, OutputStream outputStream);
 
     /**
      * This method resubmits all situation's matching the given filter criteria
@@ -108,7 +108,7 @@ public interface SituationsProvider {
      * @throws UiException
      *             Failed to search situations
      */
-    public BatchRetryResult resubmit(SituationsFilterBean situationsFilterBean, String username) throws UiException;
+    public BatchRetryResult resubmit(SituationsFilterBean filters, String username) throws UiException;
 
     /**
      * This method deletes all situation's matching the given filter criteria
@@ -118,7 +118,7 @@ public interface SituationsProvider {
      * @throws UiException
      *             Failed to delete situations
      */
-    public int delete(SituationsFilterBean situationsFilterBean) throws UiException;
+    public int delete(SituationsFilterBean filters) throws UiException;
   
 	public void assign(final String situationId, final String userName) throws UiException;
 	

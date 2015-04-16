@@ -308,7 +308,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
      * @param key The optional key
      * @param value The value
      */
-    protected abstract void insert(Object key, Object value);
+    protected abstract void doInsert(Object key, Object value);
     
     /**
      * This method notifies interested listeners that the entry with the
@@ -339,7 +339,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
      * @param key The key
      * @param value The value
      */
-    protected abstract void update(Object key, Object value);
+    protected abstract void doUpdate(Object key, Object value);
     
     /**
      * This method notifies interested listeners that the entry with the
@@ -368,7 +368,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
      * @param key The optional key
      * @param value The value
      */
-    protected abstract void remove(Object key, Object value);
+    protected abstract void doRemove(Object key, Object value);
     
     /**
      * This method notifies interested listeners that the entry with the
@@ -483,7 +483,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
          */
         public void inserted(Object key, Object value) { 
             if (_predicate.evaluate(_context, value)) {
-                insert(key, value);
+                doInsert(key, value);
             }
         }
 
@@ -492,7 +492,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
          */
         public void updated(Object key, Object value) {
             if (_predicate.evaluate(_context, value)) {
-                update(key, value);
+                doUpdate(key, value);
             }
         }
 
@@ -501,7 +501,7 @@ public abstract class ActiveCollection implements ActiveCollectionMBean,
          */
         public void removed(Object key, Object value) {
             if (_predicate.evaluate(_context, value)) {
-                remove(key, value);
+                doRemove(key, value);
             }
         }
         

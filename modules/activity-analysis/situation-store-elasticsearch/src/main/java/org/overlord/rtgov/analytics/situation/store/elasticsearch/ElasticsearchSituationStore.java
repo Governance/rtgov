@@ -102,7 +102,7 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
     /**
      * This method sets the response size.
      * 
-     * @param size The size
+     * @return The size
      */
     protected int getResponseSize() {
         return (_responseSize);

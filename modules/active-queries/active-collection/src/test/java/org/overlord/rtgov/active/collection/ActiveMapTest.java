@@ -36,7 +36,7 @@ public class ActiveMapTest {
         TestActiveChangeListener l=new TestActiveChangeListener();
         map.addActiveChangeListener(l);
         
-        map.insert("1", new TestObject(1));
+        map.doInsert("1", new TestObject(1));
         
         java.util.Iterator<Object> iter=map.iterator();
         
@@ -84,9 +84,9 @@ public class ActiveMapTest {
         TestActiveChangeListener l=new TestActiveChangeListener();
         map.addActiveChangeListener(l);
         
-        map.insert("1", new TestObject(1));
+        map.doInsert("1", new TestObject(1));
         
-        map.update("1", new TestObject(2));
+        map.doUpdate("1", new TestObject(2));
         
         java.util.Iterator<Object> iter=map.iterator();
         
@@ -134,9 +134,9 @@ public class ActiveMapTest {
         TestActiveChangeListener l=new TestActiveChangeListener();
         map.addActiveChangeListener(l);
         
-        map.insert("1", new TestObject(1));
+        map.doInsert("1", new TestObject(1));
         
-        map.remove("1", null);
+        map.doRemove("1", null);
         
         java.util.Iterator<Object> iter=map.iterator();
         
@@ -168,7 +168,7 @@ public class ActiveMapTest {
         
         // Create initial list entries
         for (int i=0; i < 10; i++) {
-            map.insert(""+i, new TestObject(i));
+            map.doInsert(""+i, new TestObject(i));
         }
         
         Predicate predicate=new Predicate() {
@@ -193,7 +193,7 @@ public class ActiveMapTest {
         
         // Create initial list entries
         for (int i=0; i < 10; i++) {
-            map.insert(""+i, new TestObject(i));
+            map.doInsert(""+i, new TestObject(i));
         }
         
         Predicate predicate=new Predicate() {
@@ -210,8 +210,8 @@ public class ActiveMapTest {
         
         derived.addActiveChangeListener(l);
         
-        map.insert("10", new TestObject(11));
-        map.insert("11", new TestObject(12));
+        map.doInsert("10", new TestObject(11));
+        map.doInsert("11", new TestObject(12));
         
         if (derived.getSize() != 6) {
         	fail("Derived list should have 6 items: "+derived.getSize());
@@ -236,7 +236,7 @@ public class ActiveMapTest {
         int total=0;
         
         for (int i=0; i < 15; i++) {
-            map.insert(""+i, new TestObject(i));
+            map.doInsert(""+i, new TestObject(i));
             
             total += i;
         }
@@ -273,7 +273,7 @@ public class ActiveMapTest {
         
         // Create initial list entries
         for (int i=0; i < 10; i++) {
-            map.insert(""+i, new TestObject(i));
+            map.doInsert(""+i, new TestObject(i));
         }
         
         MVEL predicate=new MVEL();

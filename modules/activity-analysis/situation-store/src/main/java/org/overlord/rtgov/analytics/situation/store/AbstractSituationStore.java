@@ -100,7 +100,7 @@ public abstract class AbstractSituationStore implements SituationStore {
     /**
      * Assign the situation to the user.
      * 
-     * @param situationId The id
+     * @param situation The situation
      * @param userName The user
      */
     protected void doAssignSituation(final Situation situation, final String userName) {
@@ -121,7 +121,7 @@ public abstract class AbstractSituationStore implements SituationStore {
     /**
      * Unassign the situation.
      * 
-     * @param situationId Id
+     * @param situation The situation
      */
     protected void doUnassignSituation(final Situation situation) {
         // RTGOV-499: Use deprecated method until no longer needing to support FSW6.0
@@ -144,7 +144,7 @@ public abstract class AbstractSituationStore implements SituationStore {
     /**
      * Update the resolution state.
      * 
-     * @param situationId The id
+     * @param situation The situation
      * @param resolutionState The state
      */
     protected void doUpdateResolutionState(final Situation situation, final ResolutionState resolutionState) {
@@ -160,7 +160,7 @@ public abstract class AbstractSituationStore implements SituationStore {
     /**
      * Record successful resubmit.
      * 
-     * @param situationId The id
+     * @param situation The situation
      */
     protected void doRecordSuccessfulResubmit(final Situation situation, final String userName) {
         if (LOG.isLoggable(Level.FINEST)) {
@@ -183,7 +183,7 @@ public abstract class AbstractSituationStore implements SituationStore {
     /**
      * Record resubmit failure.
      * 
-     * @param situationId The id
+     * @param situation The situation
      * @param errorMessage The error
      * @param userName The optional user id who resubmitted the message
      */

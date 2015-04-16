@@ -748,7 +748,7 @@ public class ActiveCollectionSource {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("insert key="+key+" value="+value+" ac="+getActiveCollection());
         }
-        getActiveCollection().insert(key, value);
+        getActiveCollection().doInsert(key, value);
     }
 
     /**
@@ -765,7 +765,7 @@ public class ActiveCollectionSource {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("update key="+key+" value="+value+" ac="+getActiveCollection());
         }
-        getActiveCollection().update(key, value);        
+        getActiveCollection().doUpdate(key, value);        
     }
 
     /**
@@ -778,7 +778,7 @@ public class ActiveCollectionSource {
         if (LOG.isLoggable(Level.FINEST)) {
             LOG.finest("remove key="+key+" value="+value+" ac="+getActiveCollection());
         }
-        getActiveCollection().remove(key, value);
+        getActiveCollection().doRemove(key, value);
     }
     
     /**
