@@ -16,6 +16,7 @@
 package org.overlord.rtgov.ui.client.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -30,9 +31,9 @@ public class SituationResultSetBean implements Serializable {
 
     private static final long serialVersionUID = SituationResultSetBean.class.hashCode();
 
-    private List<SituationSummaryBean> situations;
+    private List<SituationSummaryBean> situations=new ArrayList<SituationSummaryBean>();
     private long totalResults;
-    private int itemsPerPage;
+    private int itemsPerPage=10;    // Default to 10
     private int startIndex;
 
     /**
