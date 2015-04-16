@@ -128,7 +128,7 @@ public class SituationBean extends SituationSummaryBean implements Serializable 
 
 	/**
 	 *
-	 * @return whether this {@link Situation} can be taken over by the currently logged-in user
+	 * @return whether this situation can be taken over by the currently logged-in user
 	 */
 	public boolean isTakeoverPossible() {
 		return takeoverPossible;

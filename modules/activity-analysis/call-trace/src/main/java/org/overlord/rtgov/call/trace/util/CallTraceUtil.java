@@ -19,6 +19,7 @@ import java.beans.PropertyDescriptor;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.overlord.rtgov.call.trace.model.CallTrace;
 
@@ -54,7 +55,7 @@ public final class CallTraceUtil {
         
         java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
         
-        MAPPER.writeValue(baos, node);
+        MAPPER.writer().with(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS).writeValue(baos, node);
         
         ret = baos.toByteArray();
         

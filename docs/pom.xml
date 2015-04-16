@@ -17,9 +17,19 @@
 		<module>developerguide</module>
 		<module>javadoc</module>
 		<module>quickstartguide</module>
-		<module>restapi</module>
 		<module>userguide</module>
 	</modules>
+	
+	<profiles>
+		<profile>
+			<activation>
+				<jdk>[1.6,1.8)</jdk>
+			</activation>
+			<modules>
+				<module>restapi</module>
+			</modules>
+		</profile>
+	</profiles>
 
 </project>
 

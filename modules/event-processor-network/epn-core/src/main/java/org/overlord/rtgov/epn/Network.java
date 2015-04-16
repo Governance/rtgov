@@ -324,7 +324,6 @@ public class Network implements NetworkMBean {
     /**
      * This method closes the network.
      * 
-     * @param container The container
      * @throws Exception Failed to close the network
      */
     protected void close() throws Exception {
