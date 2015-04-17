@@ -122,6 +122,11 @@ public class SwitchYardResubmitActionProvider extends ResubmitActionProvider {
 				
 				// Invoke the service
 				RemoteMessage reply = invoker.invoke(rm);
+				
+				if (reply == null) {
+				    throw new java.io.IOException("Unable to invoke service");
+				}
+				
 				if (reply.isFault()) {
 					if (reply.getContent() instanceof Exception) {
 						throw new UiException((Exception)reply.getContent());
