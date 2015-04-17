@@ -138,6 +138,16 @@ public class SwitchYardResubmitActionProvider extends ResubmitActionProvider {
 					LOG.fine("Remote invocation of switchyard service["+service+"] operation["
 							+operation+"] failed to deserialize response");
 				}
+
+				// RTGOV-650 Assume that response means successful resubmission, as due to npe
+				// we currently have no visibility of the response to determine either way.
+				// If the response indicates an error, this should result in another Situation
+				// being created, thus resetting the resolution state to IN_PROGRESS anyway.
+				
+				// Clear previous exceptions
+				exc = null;
+
+				break;
 			} catch (java.io.IOException e) {
 				exc = e;
 			}
