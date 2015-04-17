@@ -248,8 +248,20 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
      */
     public void assignSituation(final String situationId, final String userName) {
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(Session s) {
-                doAssignSituation(loadSituation(s, situationId), userName);
+            public Void perform(final Session s) {
+                doAssignSituation(situationId, userName,
+                        new SituationContext() {
+
+                            @Override
+                            public Situation get(String id) {
+                                return loadSituation(s, situationId);
+                            }
+
+                            @Override
+                            public void put(Situation situation) {
+                                s.update(situation);
+                            }                
+                });
                 return null;
             }
         });
@@ -260,8 +272,20 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
      */
     public void unassignSituation(final String situationId) {
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(Session s) {
-                doUnassignSituation(loadSituation(s, situationId));
+            public Void perform(final Session s) {
+                doUnassignSituation(situationId,
+                        new SituationContext() {
+
+                    @Override
+                    public Situation get(String id) {
+                        return loadSituation(s, situationId);
+                    }
+
+                    @Override
+                    public void put(Situation situation) {
+                        s.update(situation);
+                    }                
+                });
                 return null;
             }
         });
@@ -272,8 +296,20 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
      */
     public void updateResolutionState(final String situationId, final ResolutionState resolutionState) {
         _jpaStore.withJpa(new JpaWork<Void>() {
-            public Void perform(Session s) {
-                doUpdateResolutionState(loadSituation(s, situationId), resolutionState);
+            public Void perform(final Session s) {
+                doUpdateResolutionState(situationId, resolutionState,
+                        new SituationContext() {
+
+                    @Override
+                    public Situation get(String id) {
+                        return loadSituation(s, situationId);
+                    }
+
+                    @Override
+                    public void put(Situation situation) {
+                        s.update(situation);
+                    }                
+                });
                 return null;
             }
         });

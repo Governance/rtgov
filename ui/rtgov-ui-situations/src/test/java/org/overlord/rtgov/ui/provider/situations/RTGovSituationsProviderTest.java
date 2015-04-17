@@ -17,6 +17,9 @@ package org.overlord.rtgov.ui.provider.situations;
 
 import static org.junit.Assert.*;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.overlord.rtgov.active.collection.ActiveList;
@@ -172,6 +175,10 @@ public class RTGovSituationsProviderTest {
             public void delete(Situation sit) {
             };
             public void store(Situation situation) throws Exception {
+            }
+            @Override
+            public List<Situation> getResubmittedSituations(String situationId, boolean deep) {
+                return Collections.<Situation>emptyList();
             };
 		};
 		
@@ -295,6 +302,10 @@ public class RTGovSituationsProviderTest {
             public void delete(Situation sit) {
             };
             public void store(Situation situation) throws Exception {
+            }
+            @Override
+            public List<Situation> getResubmittedSituations(String situationId, boolean deep) {
+                return Collections.<Situation>emptyList();
             };
 		};
 		
