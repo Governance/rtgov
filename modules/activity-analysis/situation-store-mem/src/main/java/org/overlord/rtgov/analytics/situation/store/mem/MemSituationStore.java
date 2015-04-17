@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.overlord.rtgov.analytics.situation.Situation;
 import org.overlord.rtgov.analytics.situation.store.AbstractSituationStore;
+import org.overlord.rtgov.analytics.situation.store.ResolutionState;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 
@@ -76,6 +77,18 @@ public class MemSituationStore extends AbstractSituationStore implements Situati
      */
     protected void doDelete(Situation situation) {
         _situations.remove(situation);
+    }
+
+    @Override
+    public void assignSituation(String situationId, String userName) throws Exception {
+    }
+
+    @Override
+    public void unassignSituation(String situationId) throws Exception {
+    }
+
+    @Override
+    public void updateResolutionState(String situationId, ResolutionState resolutionState) throws Exception {
     }
 
 }

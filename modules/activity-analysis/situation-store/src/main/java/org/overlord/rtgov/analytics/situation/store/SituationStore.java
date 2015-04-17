@@ -140,6 +140,15 @@ public interface SituationStore {
     public void recordResubmitFailure(String situationId, String message, String userName);
 
     /**
+     * This method returns the resubmitted situations.
+     * 
+     * @param situationId The parent situation id
+     * @param deep Whether to traverse the tree (true) or just return the immediate child situations (false)
+     * @return The list of resubmitted situations
+     */
+    public java.util.List<Situation> getResubmittedSituations(String situationId, boolean deep);
+    
+    /**
      * This method deletes all situations that meet the criteria
      * specified in the query.
      * 

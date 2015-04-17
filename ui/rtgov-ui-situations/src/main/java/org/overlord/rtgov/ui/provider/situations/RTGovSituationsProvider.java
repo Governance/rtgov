@@ -295,11 +295,11 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	    	    // Check if only root nodes, and if so filter out situations that
 	    	    // have been resubmitted
 	    	    if (!filters.isRootOnly()
-	    	            || !item.getProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)) {
+	    	            || !item.getSituationProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)) {
 	    	        SituationSummaryBean ssb=RTGovSituationsUtil.getSituationBean(item);
 	    	        
 	    	        // Identify resubmission failures
-	    	        java.util.List<Situation> resubmitted=getResubmittedSituations(item.getId(), true);
+	    	        java.util.List<Situation> resubmitted=_situationStore.getResubmittedSituations(item.getId(), true);
 	    	        ssb.setResubmissionFailureTotalCount(resubmitted.size());
                     
                     situations.add(ssb);	    	        
@@ -372,7 +372,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	        
 	        // Check if other situations have been created based on the
 	        // resubmission of this situation's message
-	        java.util.List<Situation> resubmits=getResubmittedSituations(situationId, true);
+	        java.util.List<Situation> resubmits=_situationStore.getResubmittedSituations(situationId, true);
 	        ret.setResubmissionFailureTotalCount(resubmits.size());
 	        
 	        // If resubmit situations exist OR the situation is RESOLVED,
@@ -395,56 +395,6 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
     	return (ret);
     }
     
-    /**
-     * This method returns the resubmitted situations.
-     * 
-     * @param situationId The parent situation id
-     * @param deep Whether to traverse the tree (true) or just return the immediate child situations (false)
-     * @return The list of resubmitted situations
-     */
-    protected java.util.List<Situation> getResubmittedSituations(String situationId, boolean deep) {
-        java.util.List<Situation> results=new java.util.ArrayList<Situation>();
-        
-        queryResubmittedSituations(situationId, deep, results);
-        
-        return (results);
-    }
-    
-    /**
-     * This method queries the situation store to obtain situations resubmitted
-     * by the situation associated with the supplied id.
-     * 
-     * @param situationId The parent situation id
-     * @param deep Whether this should be done recursively
-     * @param results The list of situations
-     */
-    protected void queryResubmittedSituations(String situationId, boolean deep,
-                                        java.util.List<Situation> results) {
-        SituationsQuery query=new SituationsQuery();
-        query.getProperties().put(Situation.RESUBMITTED_SITUATION_ID, situationId);
-        
-        java.util.List<Situation> resubmitted=_situationStore.getSituations(query);
-        
-        for (Situation sit : resubmitted) {
-            
-            // Need to double check id, as fuzzy 'like' used when retrieving situations based on
-            // properties to enable partial strings to be provided.
-            if (!sit.getSituationProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)
-                    || !sit.getSituationProperties().get(Situation.RESUBMITTED_SITUATION_ID)
-                                .equals(situationId)) {
-                continue;
-            }
-            
-            if (!results.contains(sit)) {
-                results.add(sit);
-
-                if (deep) {
-                    queryResubmittedSituations(sit.getId(), deep, results);
-                }
-            }
-        }
-    }
-
     /**
      * This method checks whether a request message exists for the supplied
      * situation and if so, returns a MessageBean to represent it's content.
@@ -699,7 +649,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 
             // Check if situation is root, and has resubmission failures
             if (situationsFilterBean.isRootOnly()) {
-                java.util.List<Situation> resubmits=getResubmittedSituations(situation.getId(), true);
+                java.util.List<Situation> resubmits=_situationStore.getResubmittedSituations(situation.getId(), true);
                 
                 if (resubmits.size() > 0) {
                     situation = resubmits.get(resubmits.size()-1);
@@ -726,7 +676,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         ArrayList<SituationSummaryBean> situations = new ArrayList<SituationSummaryBean>();
 
         try {
-            java.util.List<Situation> results=getResubmittedSituations(situationId, true);
+            java.util.List<Situation> results=_situationStore.getResubmittedSituations(situationId, true);
     
             for (Situation item : results) {
                 SituationSummaryBean ssb=RTGovSituationsUtil.getSituationBean(item);
@@ -748,7 +698,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
             for (Situation situation : situations) {
                 // Check if situation is root, and has resubmission failures
                 if (situationsFilterBean.isRootOnly()) {
-                    java.util.List<Situation> resubmits=getResubmittedSituations(situation.getId(), true);
+                    java.util.List<Situation> resubmits=_situationStore.getResubmittedSituations(situation.getId(), true);
                     
                     if (resubmits.size() > 0) {
                         situation = resubmits.get(resubmits.size()-1);
@@ -846,82 +796,32 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
 	
 	@Override
 	public void assign(String situationId, final String userName) throws UiException {
-        SituationsAction action=new SituationsAction() {
-            @Override
-            public void perform(Situation situation) throws Exception {
-                _situationStore.assignSituation(situation.getId(), userName);
-            }
-        };
-        
-        Situation root=getRootSituation(situationId);
-        
-        if (root != null) {        
-            try {
-                performAction(root, action);
-            } catch (UiException uie) {
-                throw uie;
-            } catch (Exception e) {
-                throw new UiException(e);
-            }
+        try {
+            _situationStore.assignSituation(situationId, userName);
+        } catch (Exception e) {
+            throw new UiException(e);
         }
 	}
 
 	@Override
 	public void unassign(String situationId) throws UiException {
-        SituationsAction action=new SituationsAction() {
-            @Override
-            public void perform(Situation situation) throws Exception {
-                _situationStore.unassignSituation(situation.getId());
-            }
-        };
-        
-        Situation root=getRootSituation(situationId);
-        
-        if (root != null) {
-            try {
-                performAction(root, action);
-            } catch (UiException uie) {
-                throw uie;
-            } catch (Exception e) {
-                throw new UiException(e);
-            }
+        try {
+            _situationStore.unassignSituation(situationId);
+        } catch (Exception e) {
+            throw new UiException(e);
         }
 	}
 
 	@Override
 	public void updateResolutionState(String situationId, final ResolutionState resolutionState) throws UiException {
-	    SituationsAction action=new SituationsAction() {
-            @Override
-            public void perform(Situation situation) throws Exception {
-                _situationStore.updateResolutionState(situation.getId(),
-                        org.overlord.rtgov.analytics.situation.store.ResolutionState.valueOf(resolutionState.name()));
-            }
-	    };
-	    
-        Situation root=getRootSituation(situationId);
-        
-        if (root != null) {
-            try {
-                performAction(root, action);
-            } catch (UiException uie) {
-                throw uie;
-            } catch (Exception e) {
-                throw new UiException(e);
-            }
+        try {
+            _situationStore.updateResolutionState(situationId,
+                    org.overlord.rtgov.analytics.situation.store.ResolutionState.valueOf(resolutionState.name()));
+        } catch (Exception e) {
+            throw new UiException(e);
         }
 	}
 
-	protected void performAction(Situation root, SituationsAction action) throws Exception {
-	    action.perform(root);
-	    
-	    // Check if situation has child situations
-	    java.util.List<Situation> resubmitted=getResubmittedSituations(root.getId(), true);
-	    
-	    for (Situation sit : resubmitted) {
-	        action.perform(sit);
-	    }
-	}
-	
 	protected java.util.List<Situation> querySituations(SituationsFilterBean situationsFilterBean) {	    
         SituationsQuery query=createQuery(situationsFilterBean);
         
@@ -930,7 +830,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
         // Check if only root situations should be returned
         if (situationsFilterBean.isRootOnly()) {
             for (int i=results.size()-1; i >= 0; i--) {
-                if (results.get(i).getProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)) {
+                if (results.get(i).getSituationProperties().containsKey(Situation.RESUBMITTED_SITUATION_ID)) {
                     results.remove(i);
                 }
             }
@@ -954,7 +854,7 @@ public class RTGovSituationsProvider implements SituationsProvider, ActiveChange
                 
                 deletions.add(root);
                 
-                java.util.List<Situation> resubmitted=getResubmittedSituations(root.getId(), true);
+                java.util.List<Situation> resubmitted=_situationStore.getResubmittedSituations(root.getId(), true);
                 
                 deletions.addAll(resubmitted);
             }

@@ -266,44 +266,63 @@ public class ElasticsearchSituationStore extends AbstractSituationStore implemen
      * {@inheritDoc}
      */
     public void assignSituation(final String situationId, final String userName) {
-        Situation sit=getSituation(situationId);
-        
-        if (sit != null) {
-            doAssignSituation(sit, userName);
-            
-            // Save the updated situation
-            _client.update(situationId, ElasticsearchClient.convertTypeToJson(sit));
-        }
+        doAssignSituation(situationId, userName,
+                new SituationContext() {
+
+            @Override
+            public Situation get(String id) {
+                return doGetSituation(id);
+            }
+
+            @Override
+            public void put(Situation situation) {
+                saveSituation(situation);
+            }                
+        });
     }
 
     /**
      * {@inheritDoc}
      */
     public void unassignSituation(final String situationId) {
-        Situation sit=getSituation(situationId);
-        
-        if (sit != null) {
-            doUnassignSituation(sit);
-            
-            // Save the updated situation
-            _client.update(situationId, ElasticsearchClient.convertTypeToJson(sit));
-        }
+        doUnassignSituation(situationId,
+                new SituationContext() {
+
+            @Override
+            public Situation get(String id) {
+                return doGetSituation(id);
+            }
+
+            @Override
+            public void put(Situation situation) {
+                saveSituation(situation);
+            }                
+        });
     }
 
     /**
      * {@inheritDoc}
      */
     public void updateResolutionState(final String situationId, final ResolutionState resolutionState) {
-        Situation sit=getSituation(situationId);
-        
-        if (sit != null) {
-            doUpdateResolutionState(sit, resolutionState);
-            
-            // Save the updated situation
-            _client.update(situationId, ElasticsearchClient.convertTypeToJson(sit));
-        }
+        doUpdateResolutionState(situationId, resolutionState,
+                new SituationContext() {
+
+            @Override
+            public Situation get(String id) {
+                return doGetSituation(id);
+            }
+
+            @Override
+            public void put(Situation situation) {
+                saveSituation(situation);
+            }                
+        });
     }
 
+    protected void saveSituation(Situation situation) {  
+        _client.update(situation.getId(), ElasticsearchClient.convertTypeToJson(situation));
+    }
+    
     @Override
     public void recordSuccessfulResubmit(final String situationId, final String userName) {
         Situation sit=getSituation(situationId);
