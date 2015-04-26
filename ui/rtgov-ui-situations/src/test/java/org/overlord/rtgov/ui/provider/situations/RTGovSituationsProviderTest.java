@@ -57,7 +57,7 @@ public class RTGovSituationsProviderTest {
 		// inserts into collection.
 		ActiveList situations=new ActiveList("test") {
 			public boolean add(Object obj) {
-				insert(null, obj);
+				doInsert(null, obj);
 				return (true);
 			}
 		};

@@ -100,7 +100,7 @@ public class ActiveMap extends ActiveCollection
             Entry entry=(Entry)obj;
             
             if (predicate.evaluate(context, entry.getValue())) {
-                insert(entry.getKey(), entry.getValue());
+                doInsert(entry.getKey(), entry.getValue());
             }
         }
     }
@@ -180,7 +180,7 @@ public class ActiveMap extends ActiveCollection
      * {@inheritDoc}
      */
     @Override
-    protected void insert(Object key, Object value) {
+    protected void doInsert(Object key, Object value) {
         
         if (!isDerived() || isActive()) {
             synchronized (_map) {
@@ -206,7 +206,7 @@ public class ActiveMap extends ActiveCollection
      * {@inheritDoc}
      */
     @Override
-    protected void update(Object key, Object value) {
+    protected void doUpdate(Object key, Object value) {
         if (!isDerived() || isActive()) {
             synchronized (_map) {
                 if (key != null) {
@@ -231,7 +231,7 @@ public class ActiveMap extends ActiveCollection
      * {@inheritDoc}
      */
     @Override
-    protected void remove(Object key, Object value) {
+    protected void doRemove(Object key, Object value) {
         
         if (!isDerived() || isActive()) {
             synchronized (_map) {
@@ -323,7 +323,7 @@ public class ActiveMap extends ActiveCollection
                     int num=getSize()-getMaxItems();
                     
                     while (num > 0) {
-                        remove(0, null);
+                        doRemove(0, null);
                         num--;
                     }
                 }
@@ -341,7 +341,7 @@ public class ActiveMap extends ActiveCollection
                         if (_mapTimestamps.get(i) < expiration) {
                             // TODO: Could do bulk remove and then
                             // send notifications all at once???
-                            remove(i, null);
+                            doRemove(i, null);
                         }
                     }
                 }
