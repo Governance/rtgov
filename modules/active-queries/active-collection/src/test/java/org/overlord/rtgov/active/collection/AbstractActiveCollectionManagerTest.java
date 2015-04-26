@@ -321,7 +321,7 @@ public class AbstractActiveCollectionManagerTest {
         }
         
         for (int i=0; i < 12; i++) {
-            ac.insert(null, new String("Object "+i));
+            ac.doInsert(null, new String("Object "+i));
         }
         
         mgr.cleanup();
@@ -330,9 +330,9 @@ public class AbstractActiveCollectionManagerTest {
             fail("Warning should have been issued");
         }
         
-        ac.remove(0, null);
-        ac.remove(0, null);
-        ac.remove(0, null);
+        ac.doRemove(0, null);
+        ac.doRemove(0, null);
+        ac.doRemove(0, null);
         
         // Perform cleanup again - which should cause the warning flag to be removed
         mgr.cleanup();

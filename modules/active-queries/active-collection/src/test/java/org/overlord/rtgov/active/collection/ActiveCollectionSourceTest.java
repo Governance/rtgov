@@ -282,7 +282,7 @@ public class ActiveCollectionSourceTest {
         
         TestObject updateObject=new TestObject();
         
-        acs.getActiveCollection().insert(null, updateObject);
+        acs.getActiveCollection().doInsert(null, updateObject);
 
         TestActiveChangeListener l=new TestActiveChangeListener();
         
@@ -331,10 +331,10 @@ public class ActiveCollectionSourceTest {
         acs.setName(TEST_ACTIVE_LIST);
         
         TestObject to1=new TestObject(T_OBJ1, 50);        
-        acs.getActiveCollection().insert(null, to1);
+        acs.getActiveCollection().doInsert(null, to1);
 
         TestObject to2=new TestObject(T_OBJ2, 60);        
-        acs.getActiveCollection().insert(null, to2);
+        acs.getActiveCollection().doInsert(null, to2);
 
         TestActiveChangeListener l=new TestActiveChangeListener();
         
@@ -476,7 +476,7 @@ public class ActiveCollectionSourceTest {
         acs.getDerived().add(dd);
         
         final ActiveList testOtherList=new ActiveList(TEST_OTHER_LIST);
-        testOtherList.insert(null, T_OBJ2);
+        testOtherList.doInsert(null, T_OBJ2);
         
         final ActiveCollectionContext context=new ActiveCollectionContext() {
 

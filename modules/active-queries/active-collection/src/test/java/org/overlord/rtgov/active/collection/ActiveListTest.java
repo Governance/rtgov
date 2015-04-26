@@ -38,7 +38,7 @@ public class ActiveListTest {
         TestActiveChangeListener l=new TestActiveChangeListener();
         list.addActiveChangeListener(l);
         
-        list.insert(null, new TestObject(1));
+        list.doInsert(null, new TestObject(1));
         
         java.util.Iterator<Object> iter=list.iterator();
         
@@ -80,10 +80,10 @@ public class ActiveListTest {
         TestActiveChangeListener l=new TestActiveChangeListener();
         list.addActiveChangeListener(l);
         
-        list.insert(null, new TestObject(1));
-        list.insert(null, new TestObject(2));
+        list.doInsert(null, new TestObject(1));
+        list.doInsert(null, new TestObject(2));
         
-        list.insert(1, new TestObject(3));
+        list.doInsert(1, new TestObject(3));
         
         if (list.getSize() != 3) {
             fail("Should be 3 objects: "+list.getSize());
@@ -150,7 +150,7 @@ public class ActiveListTest {
 
         // Create list entries
         for (int i=0; i < 1000000; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         long writeTime=System.currentTimeMillis()-startTime;
@@ -177,7 +177,7 @@ public class ActiveListTest {
                 
                 if (to.getNumber() == 50000) {
                     // Apply a change to see if throws exception
-                    list.insert(null, new TestObject(1000000));
+                    list.doInsert(null, new TestObject(1000000));
                 }
             }
             fail("Expecting it to throw concurrent mod exception");
@@ -196,7 +196,7 @@ public class ActiveListTest {
 
         // Create list entries
         for (int i=0; i < 1000000; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         long writeTime=System.currentTimeMillis()-startTime;
@@ -223,7 +223,7 @@ public class ActiveListTest {
                 
                 if (to.getNumber() == 50000) {
                     // Apply a change to see if throws exception
-                    list.insert(null, new TestObject(1000000));
+                    list.doInsert(null, new TestObject(1000000));
                 }
             }
         } catch (java.util.ConcurrentModificationException cme) {
@@ -239,7 +239,7 @@ public class ActiveListTest {
         
         // Create initial list entries
         for (int i=0; i < 10; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         Predicate predicate=new Predicate() {
@@ -265,7 +265,7 @@ public class ActiveListTest {
         
         // Create initial list entries
         for (int i=0; i < 10; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         Predicate predicate=new Predicate() {
@@ -282,8 +282,8 @@ public class ActiveListTest {
         
         derived.addActiveChangeListener(l);
         
-        list.insert(null, new TestObject(11));
-        list.insert(null, new TestObject(12));
+        list.doInsert(null, new TestObject(11));
+        list.doInsert(null, new TestObject(12));
         
         if (derived.getSize() != 6) {
         	fail("Derived list should have 6 items: "+derived.getSize());
@@ -308,7 +308,7 @@ public class ActiveListTest {
         list.setMaxItems(10);
         
         for (int i=0; i < 15; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         if (list.getSize() != 15) {
@@ -353,7 +353,7 @@ public class ActiveListTest {
         long startTime1=System.currentTimeMillis();
         
         for (int i=0; i < testSize; i++) {
-            list1.insert(null, sourceList.get(i));
+            list1.doInsert(null, sourceList.get(i));
         }
         
         long without=(System.currentTimeMillis()-startTime1);
@@ -368,7 +368,7 @@ public class ActiveListTest {
         long startTime2=System.currentTimeMillis();
         
         for (int i=0; i < testSize; i++) {
-            list2.insert(null, sourceList.get(i));
+            list2.doInsert(null, sourceList.get(i));
         }
         
         long with=(System.currentTimeMillis()-startTime2);
@@ -395,7 +395,7 @@ public class ActiveListTest {
         list.setItemExpiration(2000);
         
         for (int i=0; i < 5; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         try {
@@ -407,7 +407,7 @@ public class ActiveListTest {
         }
         
         for (int i=0; i < 10; i++) {
-            list.insert(null, new TestObject(5+i));
+            list.doInsert(null, new TestObject(5+i));
         }
         
         if (list.getSize() != 15) {
@@ -433,7 +433,7 @@ public class ActiveListTest {
         list.addActiveChangeListener(l);
         
         for (int i=0; i < 15; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         if (list.getSize() != 15) {
@@ -458,7 +458,7 @@ public class ActiveListTest {
         list.addActiveChangeListener(l);
         
         for (int i=0; i < 15; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         if (list.getSize() != 15) {
@@ -483,7 +483,7 @@ public class ActiveListTest {
         list.addActiveChangeListener(l);
         
         for (int i=0; i < 15; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         if (list.getSize() != 15) {
@@ -510,7 +510,7 @@ public class ActiveListTest {
         list.addActiveChangeListener(l);
         
         for (int i=0; i < 15; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         if (list.getSize() != 15) {
@@ -542,7 +542,7 @@ public class ActiveListTest {
         list.addActiveChangeListener(l);
         
         for (int i=0; i < 15; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         if (list.getSize() != 15) {
@@ -574,7 +574,7 @@ public class ActiveListTest {
         list.addActiveChangeListener(l);
         
         for (int i=0; i < 15; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         if (list.getSize() != 15) {
@@ -606,7 +606,7 @@ public class ActiveListTest {
         list.addActiveChangeListener(l);
         
         for (int i=0; i < 15; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         if (list.getSize() != 15) {
@@ -638,7 +638,7 @@ public class ActiveListTest {
         
         // Create initial list entries
         for (int i=0; i < 10; i++) {
-            list.insert(null, new TestObject(i));
+            list.doInsert(null, new TestObject(i));
         }
         
         MVEL predicate=new MVEL();

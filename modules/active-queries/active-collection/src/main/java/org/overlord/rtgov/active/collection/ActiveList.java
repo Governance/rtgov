@@ -100,7 +100,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
             // Filter the parent list items, to determine which pass the predicate
             for (Object value : (ActiveList)parent) {
                 if (predicate.evaluate(context, value)) {
-                    insert(null, value);
+                    doInsert(null, value);
                 }
             }
         }
@@ -155,7 +155,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      * {@inheritDoc}
      */
     @Override
-    protected void insert(Object key, Object value) {
+    protected void doInsert(Object key, Object value) {
         
         // If top level active collection, or a derive collection that is being actively
         // maintained, then apply the insertion
@@ -191,7 +191,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      * {@inheritDoc}
      */
     @Override
-    protected void update(Object key, Object value) {
+    protected void doUpdate(Object key, Object value) {
         
         // If top level active collection, or a derive collection that is being actively
         // maintained, then apply the update
@@ -242,7 +242,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
      * {@inheritDoc}
      */
     @Override
-    protected void remove(Object key, Object value) {
+    protected void doRemove(Object key, Object value) {
 
         // If top level active collection, or a derive collection that is being actively
         // maintained, then apply the deletion
@@ -371,7 +371,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                     int num=getSize()-getMaxItems();
                     
                     while (num > 0) {
-                        remove(0, _list.get(0));
+                        doRemove(0, _list.get(0));
                         num--;
                     }
                 }
@@ -389,7 +389,7 @@ public class ActiveList extends ActiveCollection implements java.lang.Iterable<O
                         if (_listTimestamps.get(i) < expiration) {
                             // TODO: Could do bulk remove and then
                             // send notifications all at once???
-                            remove(i, _list.get(i));
+                            doRemove(i, _list.get(i));
                         }
                     }
                 }
