@@ -36,6 +36,7 @@ import org.junit.rules.TestName;
 import org.overlord.rtgov.activity.model.ActivityTypeId;
 import org.overlord.rtgov.activity.model.Context;
 import org.overlord.rtgov.analytics.situation.Situation;
+import org.overlord.rtgov.analytics.situation.Situation.Severity;
 import org.overlord.rtgov.analytics.situation.store.SituationStore;
 import org.overlord.rtgov.analytics.situation.store.SituationsQuery;
 import org.overlord.rtgov.analytics.situation.store.ResolutionState;
@@ -247,6 +248,28 @@ public class JPASituationStoreTest {
         java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
         Assert.assertNotNull(situations);
         Assert.assertTrue(situations.isEmpty());
+    }
+    
+    @Test
+    public void findSituationBySeverity() throws Exception {
+        Situation situation1 = new Situation();
+        situation1.setId(name.getMethodName()+"1");
+        situation1.setDescription(name.getMethodName().toLowerCase());
+        situation1.setTimestamp(System.currentTimeMillis());
+        situation1.setSeverity(Severity.Critical);
+        persist(situation1);
+        Situation situation2 = new Situation();
+        situation2.setId(name.getMethodName()+"2");
+        situation2.setDescription(name.getMethodName().toLowerCase());
+        situation2.setTimestamp(System.currentTimeMillis());
+        situation2.setSeverity(Severity.Low);
+        persist(situation2);
+        SituationsQuery sitQuery = new SituationsQuery();
+        sitQuery.setSeverity(Severity.Low);
+        java.util.List<Situation> situations = _situationStore.getSituations(sitQuery);
+        Assert.assertNotNull(situations);
+        Assert.assertTrue(situations.size()==1);
+        Assert.assertTrue(situations.get(0).getId().equals(name.getMethodName()+"2"));
     }
     
     @Test

@@ -136,8 +136,14 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
                     return query.list();
                 }
             });
-            
-            situations.addAll(situations2);
+
+            if (situations2 != null) {
+                if (situations != null) {
+                    situations.addAll(situations2);
+                } else {
+                    situations = situations2;
+                }
+            }
         }
         
         if (LOG.isLoggable(Level.FINEST)) {
@@ -162,7 +168,7 @@ public class JPASituationStore extends AbstractSituationStore implements Situati
         StringBuffer queryString = new StringBuffer();
 
         if (sitQuery.getSeverity() != null) {
-            queryString.append("sit.severity = :severity "); //$NON-NLS-1$
+            queryString.append("sit.severity = "+sitQuery.getSeverity().ordinal()+" "); //$NON-NLS-1$
         }
 
         if (!isNullOrEmpty(sitQuery.getSubject())) {
