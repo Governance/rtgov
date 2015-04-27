@@ -358,8 +358,7 @@ public class SituationsPage extends AbstractPage {
         int thisPage = (data.getStartIndex() / data.getItemsPerPage()) + 1;
         this.pager.setNumPages(numPages);
         this.pager.setPage(thisPage);
-        if (numPages > 1)
-            this.pager.setVisible(true);
+        this.pager.setVisible(numPages > 1);
 
         int startIndex = data.getStartIndex() + 1;
         int endIndex = startIndex + data.getSituations().size() - 1;
@@ -475,6 +474,7 @@ public class SituationsPage extends AbstractPage {
             public void doOnComplete(
                     org.overlord.rtgov.ui.client.local.services.rpc.IRpcServiceInvocationHandler.RpcResult<String> result) {
                 situationsTable.clear();
+                updatePager(new SituationResultSetBean());
             }
 
         });
