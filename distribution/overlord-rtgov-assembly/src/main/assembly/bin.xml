@@ -47,9 +47,9 @@
 	<dependencySets>
 
         <dependencySet>
-              <outputDirectory>lib</outputDirectory>
+          <outputDirectory>lib</outputDirectory>
 	      <includes>    
-		<include>commons-codec:commons-codec:jar</include>
+            <include>commons-codec:commons-codec:jar</include>
 	      </includes>
 	      <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 	      <useProjectArtifact>false</useProjectArtifact>
@@ -155,8 +155,82 @@
 				<include>org.overlord:overlord-commons-services:jar</include>
 				<include>org.overlord:overlord-commons-ant:jar</include>
 				<include>org.overlord:overlord-commons-codec:jar</include>
+				<include>commons-lang:commons-lang:jar</include>
+				<include>org.picketbox:picketbox:jar</include>
 			</includes>
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+
+		<!-- JBOSS-EAP-64 'all' profile -->
+
+		<dependencySet>
+			<outputDirectory>platforms/jboss-eap-64/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-all-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/jboss-eap-64/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.ui:overlord-rtgov-ui-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-ui.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/jboss-eap-64/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
+		</dependencySet>
+
+		<dependencySet>
+			<outputDirectory>platforms/jboss-eap-64/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.content:overlord-rtgov-epn-jee:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-epn.war</outputFileNameMapping>
+		</dependencySet>
+
+		<dependencySet>
+			<outputDirectory>platforms/jboss-eap-64/all/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.content:overlord-rtgov-acs-jee:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-acs.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/jboss-eap-64/all/jdbc/drivers</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>com.h2database:h2</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+		</dependencySet>
+
+		<!-- JBOSS-EAP-64 'client' profile -->
+
+		<dependencySet>
+			<outputDirectory>platforms/jboss-eap-64/client/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-client-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>platforms/jboss-eap-64/client/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov:overlord-rtgov-switchyard-eap6:war</include>
+			</includes>
+			<outputFileNameMapping>overlord-rtgov-switchyard.war</outputFileNameMapping>
 		</dependencySet>
 
 		<!-- JBOSS-EAP-6 'all' profile -->

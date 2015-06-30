@@ -2,7 +2,7 @@
 <project name="Install RTGov from distro" default="install">
 
   <property name="type" value="all" />
-  <property name="appserver.id" value="jboss-eap-6" />
+  <property name="appserver.id" value="jboss-eap-64" />
 
   <target name="get-appserver.id-path" unless="path" >
     <echo message=" " />
@@ -15,6 +15,7 @@
 
     <condition property="appserver.id.valid">
       <or>
+        <equals arg1="${appserver.id}" arg2="jboss-eap-64" />
         <equals arg1="${appserver.id}" arg2="jboss-eap-6" />
         <equals arg1="${appserver.id}" arg2="fuse-6.1" />
       </or>
@@ -24,6 +25,10 @@
 
     <condition property="path.valid">
       <or>
+        <and>
+          <available file="jboss-modules.jar" filepath="${path}" />
+          <equals arg1="${appserver.id}" arg2="jboss-eap-64" />
+        </and>
         <and>
           <available file="jboss-modules.jar" filepath="${path}" />
           <equals arg1="${appserver.id}" arg2="jboss-eap-6" />
