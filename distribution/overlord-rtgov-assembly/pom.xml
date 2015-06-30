@@ -81,10 +81,22 @@
 			<groupId>org.overlord</groupId>
 			<artifactId>overlord-commons-ant</artifactId>
 		</dependency>
-	        <dependency>
-	      		<groupId>org.overlord</groupId>
-	     		<artifactId>overlord-commons-codec</artifactId>
-	        </dependency> 
+		<dependency>
+			<groupId>org.overlord</groupId>
+			<artifactId>overlord-commons-codec</artifactId>
+		</dependency> 
+
+		<!-- Needed by CreateKeystore in overlord-commons-ant -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.picketbox</groupId>
+			<artifactId>picketbox</artifactId>
+		</dependency>
+
 		<!-- Database drivers -->
 
 		<dependency>
