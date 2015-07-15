@@ -17,7 +17,7 @@
 			<property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.path}/overlord-commons-auth-tomcat7.jar" />
 		    <property name="overlord-commons.ant.jar" value="${overlord-commons.path}/overlord-commons-ant.jar;${overlord-commons.path}/commons-lang.jar;${overlord-commons.path}/picketbox.jar" />
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
-			<property name="version.org.overlord.overlord-commons" value="2.0.14.Final" />
+			<property name="version.org.overlord.overlord-commons" value="2.0.15.Final" />
 			
 		</ant>
 
@@ -48,7 +48,7 @@
 			<property name="overlord-commons.auth.tomcat7.file" value="${overlord-commons.path}/overlord-commons-auth-tomcat7.jar" />
 		    <property name="overlord-commons.ant.jar" value="${overlord-commons.path}/overlord-commons-ant.jar" />
 			<!-- Temporary workaround - version needs to be correct in the called ant script -->
-			<property name="version.org.overlord.overlord-commons" value="2.0.11.Final" />
+			<property name="version.org.overlord.overlord-commons" value="2.0.15.Final" />
 			
 		</ant>
 
