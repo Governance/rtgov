@@ -194,7 +194,9 @@ To start the scope, simply invoke the +startScope+ method on the Activity Collec
 activityCollector.startScope();
 ----
 
-If the application does not know whether a scope has already been started, and only wishes to start a single scope (i.e. as nested scopes are not supported), then the following guard can be used:
+Multiple invocations of the +startScope+ method result in the creation of nested scopes.
+
+If the application does not know whether a scope has already been started, and only wishes to start a single scope (i.e. as nested scopes are not wanted), then the following guard can be used:
 
 ----
 boolean started=false;
@@ -215,6 +217,8 @@ if (started) {
     activityCollector.endScope();
 }
 ----
+
+If the +startScope+ was invoked multiple times, the +endScope+ method will end the most recently created (inner) scope.
 
 ==== Reporting an Activity Type
 
