@@ -94,6 +94,46 @@ public class AbstractActivityCollectorTest {
     }    
     
     @Test
+    public void testNestedScope() {
+        AbstractActivityCollector ac=new AbstractActivityCollector() {};
+        TestActivityLogger al=new TestActivityLogger();
+        TestCollectorContext cc=new TestCollectorContext();
+        
+        ac.setActivityUnitLogger(al);
+        ac.setCollectorContext(cc);
+        
+        if (ac.isScopeActive()) {
+            fail("Scope should not be active");
+        }
+        
+        // Start scope
+        ac.startScope();
+        // Start nested scope
+        ac.startScope();
+        
+        // Check for inner scope
+        if (!ac.isScopeActive()) {
+            fail("Scope should be active");
+        }
+        
+        // End nested scope
+        ac.endScope();
+
+        // Check for outer scope
+        if (!ac.isScopeActive()) {
+            fail("Scope should be active");
+        }
+
+        // End outer scope
+        ac.endScope();
+        
+        if (ac.isScopeActive()) {
+            fail("Scope should no longer be active");
+        }
+        
+    }
+    
+    @Test
     public void testAppControlledScope() {
         AbstractActivityCollector ac=new AbstractActivityCollector() {};
         TestActivityLogger al=new TestActivityLogger();
