@@ -15,6 +15,7 @@
  */
 package org.overlord.rtgov.activity.collector;
 
+import java.util.Stack;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,8 +56,43 @@ public abstract class AbstractActivityCollector implements ActivityCollector, Ab
     
     private ActivityValidatorManager _activityValidatorManager=null;
     
-    private java.lang.ThreadLocal<ActivityUnit> _activityUnit=new java.lang.ThreadLocal<ActivityUnit>();
-    
+    private ThreadLocalStack<ActivityUnit> _activityUnit = new ThreadLocalStack<ActivityUnit>();
+
+    class ThreadLocalStack<T> {
+        private java.lang.ThreadLocal<java.util.Stack<T>> _threadLocalStack = new ThreadLocal<java.util.Stack<T>>();
+
+        public T get() {
+            Stack<T> stack = _threadLocalStack.get();
+
+            if (stack == null || stack.isEmpty()) {
+                return null;
+            }
+
+            return stack.peek();
+        }
+
+        public void set(T value) {
+            Stack<T> stack = _threadLocalStack.get();
+
+            if (stack == null) {
+                _threadLocalStack.set(new Stack<T>());
+                stack = _threadLocalStack.get();
+            }
+
+            stack.push(value);
+        }
+
+        public void remove() {
+            Stack<T> stack = _threadLocalStack.get();
+
+            if (stack == null) {
+                return;
+            }
+
+            stack.pop();
+        }
+    }
+
     /**
      * The default constructor.
      */
@@ -264,11 +300,12 @@ public abstract class AbstractActivityCollector implements ActivityCollector, Ab
         
         ActivityUnit au=_activityUnit.get();
         
-        // Currently only starts a scope if none exists. However
-        // in the future may wish to support nested scopes.
-        if (au == null) {
-            startScope(createActivityUnit());
+        if (au != null) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.finest("Starting nested scope");
+            }
         }
+        startScope(createActivityUnit());
     }
     
     /**
