@@ -235,6 +235,22 @@
 			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
 
+		<dependencySet>
+			<outputDirectory>dist/deployments</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.overlord.rtgov.integration:rtgov-btm-wildfly:war</include>
+			</includes>
+			<outputFileNameMapping>rtgov-btm-wildfly.war</outputFileNameMapping>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>dist/data</outputDirectory>
+			<unpack>true</unpack>
+			<includes>
+				<include>org.hawkular.btm:hawkular-btm-btxn-instrumentation:jar</include>
+			</includes>
+		</dependencySet>
+
 	</dependencySets>
 
 </assembly>

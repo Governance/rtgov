@@ -1,0 +1,13 @@
+{
+  "businessTransactions": {
+    "swyd_multiApp": {
+      "description": "Switchyard MultiApp sample",
+      "filter": {
+        "inclusions": [
+          ".*[OrderRequestQueue]$"
+        ]
+      }
+    }
+
+  }
+}

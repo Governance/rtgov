@@ -1,0 +1,293 @@
+[ {
+  "activityTypes" : [ {
+    "type" : "RequestReceived",
+    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urn:submitOrder xmlns:urn=\"urn:switchyard-quickstart-demo:orders:1.0\">\n         <order>\n            <orderId>1</orderId>\n            <itemId>BUTTER</itemId>\n            <quantity>100</quantity>\n            <customer>Fred</customer>\n         </order>\n      </urn:submitOrder>\n",
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Conversation",
+      "value" : "1"
+    }, {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req1"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "internal" : false,
+    "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeGatewayName" : "text",
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "_header_format_org.switchyard.soap.messageName" : "text",
+      "customer" : "Fred",
+      "gateway" : "soap",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeGatewayName" : "_OrderService_soap_1",
+      "org.switchyard.exchangeInitiatedNS" : "30138547581797",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-1",
+      "org.switchyard.soap.messageName" : "submitOrder"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "timestamp" : 1438010617979,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 0
+  }, {
+    "type" : "RequestSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req2"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+    "internal" : true,
+    "messageType" : null,
+    "operation" : "lookupItem",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "customer" : "Fred",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeInitiatedNS" : "30139306930003",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-3"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+    "timestamp" : 1438010618362,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 1
+  }, {
+    "type" : "RequestReceived",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req2"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+    "internal" : true,
+    "messageType" : null,
+    "operation" : "lookupItem",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "customer" : "Fred",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeInitiatedNS" : "30139306930003",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-3"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+    "timestamp" : 1438010618362,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 2
+  }, {
+    "type" : "ResponseSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_resp2"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+    "internal" : true,
+    "messageType" : null,
+    "operation" : "lookupItem",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "customer" : "Fred",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeInitiatedNS" : "30139306930003",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-3"
+    },
+    "replyToId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req2",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+    "timestamp" : 1438010618394,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 3
+  }, {
+    "type" : "ResponseReceived",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_resp2"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+    "internal" : true,
+    "messageType" : null,
+    "operation" : "lookupItem",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "customer" : "Fred",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeInitiatedNS" : "30139306930003",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-3"
+    },
+    "replyToId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req2",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+    "timestamp" : 1438010618394,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 4
+  }, {
+    "type" : "RequestSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req3"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+    "internal" : true,
+    "messageType" : null,
+    "operation" : "deliver",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "customer" : "Fred",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeInitiatedNS" : "30139445391299",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-6"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+    "timestamp" : 1438010618498,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 5
+  }, {
+    "type" : "RequestReceived",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req3"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+    "internal" : true,
+    "messageType" : null,
+    "operation" : "deliver",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "customer" : "Fred",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeInitiatedNS" : "30139445391299",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-6"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+    "timestamp" : 1438010618498,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 6
+  }, {
+    "type" : "ResponseSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_resp3"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+    "internal" : true,
+    "messageType" : null,
+    "operation" : "deliver",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "customer" : "Fred",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeInitiatedNS" : "30139445391299",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-6"
+    },
+    "replyToId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req3",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+    "timestamp" : 1438010618502,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 7
+  }, {
+    "type" : "ResponseReceived",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_resp3"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+    "internal" : true,
+    "messageType" : null,
+    "operation" : "deliver",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "customer" : "Fred",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeInitiatedNS" : "30139445391299",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-6"
+    },
+    "replyToId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req3",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+    "timestamp" : 1438010618502,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 8
+  }, {
+    "type" : "ResponseSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Conversation",
+      "value" : "1"
+    }, {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_resp1"
+    } ],
+    "fault" : null,
+    "interface" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "_header_format_org.switchyard.exchangeGatewayName" : "text",
+      "_header_format_org.switchyard.exchangeInitiatedNS" : "text",
+      "_header_format_org.switchyard.messageId" : "text",
+      "_header_format_org.switchyard.soap.messageName" : "text",
+      "customer" : "Fred",
+      "gateway" : "soap",
+      "item" : "BUTTER",
+      "org.switchyard.exchangeGatewayName" : "_OrderService_soap_1",
+      "org.switchyard.exchangeInitiatedNS" : "30138547581797",
+      "org.switchyard.messageId" : "ID-localhost-localdomain-35000-1438010582036-0-1",
+      "org.switchyard.soap.messageName" : "submitOrder"
+    },
+    "replyToId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e_req1",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "timestamp" : 1438010618505,
+    "unitId" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+    "unitIndex" : 9
+  } ],
+  "id" : "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+  "origin" : {
+    "host" : "localhost.localdomain",
+    "node" : null,
+    "principal" : null,
+    "thread" : null
+  }
+} ]

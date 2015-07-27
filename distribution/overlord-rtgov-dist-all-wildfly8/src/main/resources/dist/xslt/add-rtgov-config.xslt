@@ -35,6 +35,18 @@
             <xsl:element name="enable-basic-auth" namespace="urn:jboss:domain:keycloak:1.0">true</xsl:element>
           </xsl:element>
       </xsl:if>
+      <xsl:if test="not(kc:secure-deployment[@name='rtgov-btm-wildfly.war'])">
+          <xsl:element name="secure-deployment" namespace="urn:jboss:domain:keycloak:1.0">
+            <xsl:attribute name="name">rtgov-btm-wildfly.war</xsl:attribute>
+            <xsl:element name="realm" namespace="urn:jboss:domain:keycloak:1.0">governance</xsl:element>
+            <xsl:element name="resource" namespace="urn:jboss:domain:keycloak:1.0">rtgov-btm</xsl:element>
+            <xsl:element name="credential" namespace="urn:jboss:domain:keycloak:1.0">
+                <xsl:attribute name="name">secret</xsl:attribute>
+                password
+            </xsl:element>
+            <xsl:element name="enable-basic-auth" namespace="urn:jboss:domain:keycloak:1.0">true</xsl:element>
+          </xsl:element>
+      </xsl:if>
     </xsl:element>
   </xsl:template>
 

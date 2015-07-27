@@ -54,6 +54,9 @@
 		<copy todir="${path}/standalone/configuration" >
 			<fileset dir="configuration" />
 		</copy>
+		<copy todir="${path}/standalone/data" >
+			<fileset dir="data" />
+		</copy>
 
         <property name="overlord-rtgov.dir.xslt" location="xslt" />
         <transformConfig config="${path}/standalone/configuration/standalone.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-governance-config" />
