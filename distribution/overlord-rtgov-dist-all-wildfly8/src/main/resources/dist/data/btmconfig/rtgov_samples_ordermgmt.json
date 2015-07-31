@@ -4,7 +4,8 @@
       "description": "Order Management example from RTGov",
       "filter": {
         "inclusions": [
-          "^https?://.*/demo-orders/OrderService$"
+          "^https?://.*/demo-orders/OrderService$",
+          "\\{urn:switchyard-quickstart-demo:orders:0.1.0\\}OrderService"
         ]
       },
       "processors": [{
@@ -16,19 +17,19 @@
           "name": "all",
           "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
           "actionType": "AddContent",
-          "action": "DOMHelper.serialize(values[0])"
+          "action": "XMLHelper.serialize(values[0])"
         },{
           "actionType": "AddCorrelationId",
           "scope": "Global",
-          "action": "DOMHelper.evaluate(\"order/orderId/text()\", values[0])"
+          "action": "XMLHelper.evaluate(\"order/orderId/text()\", values[0])"
         },{
           "name": "customer",
           "actionType": "SetProperty",
-          "action": "DOMHelper.evaluate(\"order/customer/text()\", values[0])"
+          "action": "XMLHelper.evaluate(\"order/customer/text()\", values[0])"
         },{
           "name": "item",
           "actionType": "SetProperty",
-          "action": "DOMHelper.evaluate(\"order/itemId/text()\", values[0])"
+          "action": "XMLHelper.evaluate(\"order/itemId/text()\", values[0])"
         }]
       },{
         "nodeType": "Service",
