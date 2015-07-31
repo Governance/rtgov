@@ -1,0 +1,147 @@
+[
+    {
+        "hostAddress": "127.0.0.1",
+        "hostName": "localhost.localdomain",
+        "id": "b4fda5e9-7749-4731-9dc3-acf7e3fff36e",
+        "name": "rtgov_samples_ordermgmt",
+        "nodes": [
+            {
+                "details": {
+                    "btm_source": "javax.servlet",
+                    "principal": null,
+                    "remoteAddr": "127.0.0.1",
+                    "remoteHost": "127.0.0.1"
+                },
+                "duration": 2304,
+                "endpointType": "HTTP",
+                "nodes": [
+                    {
+                        "correlationIds": [
+                            {
+                                "scope": "Global",
+                                "value": "1"
+                            }
+                        ],
+                        "details": {
+                            "btm_source": "org.switchyard",
+                            "internal": "false"
+                        },
+                        "duration": 526,
+                        "nodes": [
+                            {
+                                "details": {
+                                    "btm_source": "org.switchyard",
+                                    "internal": "true"
+                                },
+                                "duration": 32,
+                                "nodes": [],
+                                "operation": "lookupItem",
+                                "request": {
+                                    "content": {},
+                                    "headers": {
+                                        "org.switchyard.exchangeInitiatedNS": "30139306930003",
+                                        "org.switchyard.messageId": "ID-localhost-localdomain-35000-1438010582036-0-3"
+                                    }
+                                },
+                                "response": {
+                                    "content": {},
+                                    "headers": {
+                                        "CamelToEndpoint": "direct://%7Burn:switchyard-quickstart-demo:orders:0.1.0%7DOrderService/InventoryService",
+                                        "org.switchyard.bus.camel.intercept.Consumer": "before",
+                                        "org.switchyard.bus.camel.intercept.Provider": "before",
+                                        "org.switchyard.exchangeInitiatedNS": "30139306930003",
+                                        "org.switchyard.messageId": "ID-localhost-localdomain-35000-1438010582036-0-5",
+                                        "org.switchyard.relatesTo": "ID-localhost-localdomain-35000-1438010582036-0-3"
+                                    }
+                                },
+                                "startTime": 1438010618362,
+                                "type": "Service",
+                                "uri": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService"
+                            },
+                            {
+                                "details": {
+                                    "btm_source": "org.switchyard",
+                                    "internal": "true"
+                                },
+                                "duration": 4,
+                                "nodes": [],
+                                "operation": "deliver",
+                                "request": {
+                                    "content": {},
+                                    "headers": {
+                                        "org.switchyard.exchangeInitiatedNS": "30139445391299",
+                                        "org.switchyard.messageId": "ID-localhost-localdomain-35000-1438010582036-0-6"
+                                    }
+                                },
+                                "response": {
+                                    "content": {},
+                                    "headers": {
+                                        "CamelToEndpoint": "direct://%7Burn:switchyard-quickstart-demo:orders:0.1.0%7DOrderService/LogisticsService",
+                                        "org.switchyard.bus.camel.intercept.Consumer": "before",
+                                        "org.switchyard.bus.camel.intercept.Provider": "before",
+                                        "org.switchyard.exchangeInitiatedNS": "30139445391299",
+                                        "org.switchyard.messageId": "ID-localhost-localdomain-35000-1438010582036-0-8",
+                                        "org.switchyard.relatesTo": "ID-localhost-localdomain-35000-1438010582036-0-6"
+                                    }
+                                },
+                                "startTime": 1438010618498,
+                                "type": "Service",
+                                "uri": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService"
+                            }
+                        ],
+                        "operation": "submitOrder",
+                        "request": {
+                            "content": {
+                                "all": {
+                                    "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
+                                    "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urn:submitOrder xmlns:urn=\"urn:switchyard-quickstart-demo:orders:1.0\">\n         <order>\n            <orderId>1</orderId>\n            <itemId>BUTTER</itemId>\n            <quantity>100</quantity>\n            <customer>Fred</customer>\n         </order>\n      </urn:submitOrder>\n"
+                                }
+                            },
+                            "headers": {
+                                "org.switchyard.exchangeGatewayName": "_OrderService_soap_1",
+                                "org.switchyard.exchangeInitiatedNS": "30138547581797",
+                                "org.switchyard.messageId": "ID-localhost-localdomain-35000-1438010582036-0-1",
+                                "org.switchyard.soap.messageName": "submitOrder"
+                            }
+                        },
+                        "response": {
+                            "content": {},
+                            "headers": {
+                                "CamelToEndpoint": "direct://%7Burn:switchyard-quickstart-demo:orders:0.1.0%7DOrderService",
+                                "org.switchyard.bus.camel.intercept.Consumer": "before",
+                                "org.switchyard.bus.camel.intercept.Provider": "before",
+                                "org.switchyard.exchangeGatewayName": "_OrderService_soap_1",
+                                "org.switchyard.exchangeInitiatedNS": "30138547581797",
+                                "org.switchyard.messageId": "ID-localhost-localdomain-35000-1438010582036-0-9",
+                                "org.switchyard.relatesTo": "ID-localhost-localdomain-35000-1438010582036-0-1"
+                            }
+                        },
+                        "startTime": 1438010617979,
+                        "type": "Service",
+                        "uri": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService"
+                    }
+                ],
+                "request": {
+                    "content": {},
+                    "headers": {
+                        "Connection": "Keep-Alive",
+                        "Content-Length": "436",
+                        "Content-Type": "text/xml; charset=utf-8",
+                        "Host": "localhost:8080",
+                        "User-Agent": "Apache-HttpClient/4.3.5 (java 1.5)"
+                    }
+                },
+                "response": {
+                    "content": {}
+                },
+                "startTime": 1438010616529,
+                "type": "Consumer",
+                "uri": "http://localhost:8080/demo-orders/OrderService"
+            }
+        ],
+        "properties": {
+            "customer": "Fred",
+            "item": "BUTTER"
+        }
+    }
+]

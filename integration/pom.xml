@@ -14,6 +14,9 @@
 	</parent>
 
 	<modules>
+		<module>btm/gateway</module>
+		<module>btm/eap</module>
+		<module>btm/wildfly</module>
 		<module>client</module>
 		<module>jbossas</module>
 		<module>osgi</module>

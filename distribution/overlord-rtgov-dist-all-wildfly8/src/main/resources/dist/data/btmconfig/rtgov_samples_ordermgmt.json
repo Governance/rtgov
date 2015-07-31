@@ -1,0 +1,49 @@
+{
+  "businessTransactions": {
+    "rtgov_samples_ordermgmt": {
+      "description": "Order Management example from RTGov",
+      "filter": {
+        "inclusions": [
+          "^https?://.*/demo-orders/OrderService$"
+        ]
+      },
+      "processors": [{
+        "nodeType": "Service",
+        "request": "true",
+        "uriFilter": "^\\{urn:switchyard-quickstart-demo:orders:0.1.0\\}OrderService$",
+        "operation": "submitOrder",
+        "actions": [{
+          "name": "all",
+          "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
+          "actionType": "AddContent",
+          "action": "DOMHelper.serialize(values[0])"
+        },{
+          "actionType": "AddCorrelationId",
+          "scope": "Global",
+          "action": "DOMHelper.evaluate(\"order/orderId/text()\", values[0])"
+        },{
+          "name": "customer",
+          "actionType": "SetProperty",
+          "action": "DOMHelper.evaluate(\"order/customer/text()\", values[0])"
+        },{
+          "name": "item",
+          "actionType": "SetProperty",
+          "action": "DOMHelper.evaluate(\"order/itemId/text()\", values[0])"
+        }]
+      },{
+        "nodeType": "Service",
+        "request": "false",
+        "uriFilter": "^\\{urn:switchyard-quickstart-demo:orders:0.1.0\\}OrderService$",
+        "operation": "submitOrder",
+        "actions": [{
+          "name": "total",
+          "actionType": "SetProperty",
+          "action": "values[0].total"
+        }]
+      }]
+    }
+  },
+  "properties": {
+    "hawkular-btm.collector.onlynamed": "true"
+  }
+}

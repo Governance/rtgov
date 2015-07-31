@@ -57,6 +57,12 @@
             "enabled": true,
             "baseUrl": "/overlord-rtgov",
             "secret": "password"
+        },
+        {
+            "name": "rtgov-btm",
+            "enabled": true,
+            "baseUrl": "/hawkular/btm",
+            "secret": "password"
         }
     ]
 }
