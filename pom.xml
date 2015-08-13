@@ -1303,6 +1303,11 @@
 				<version>${version.org.hawkular.btm}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.hawkular.btm</groupId>
+				<artifactId>hawkular-btm-client-rest</artifactId>
+				<version>${version.org.hawkular.btm}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.overlord.rtgov.integration</groupId>
 				<artifactId>rtgov-btm-gateway</artifactId>
 				<version>${project.version}</version>

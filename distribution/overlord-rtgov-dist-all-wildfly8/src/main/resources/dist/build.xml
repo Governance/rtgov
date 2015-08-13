@@ -57,6 +57,13 @@
 		<copy todir="${path}/standalone/data" >
 			<fileset dir="data" />
 		</copy>
+		<copy todir="${path}/bin" >
+			<fileset file="scripts/btm-client-env.sh" />
+		</copy>
+		<chmod file="${path}/bin/btm-client-env.sh" perm="777"/>
+		<copy todir="${path}/standalone/lib" >
+			<fileset file="lib/hawkular-btm-client-rest.jar" />
+		</copy>
 
         <property name="overlord-rtgov.dir.xslt" location="xslt" />
         <transformConfig config="${path}/standalone/configuration/standalone.xml" stylesDir="${overlord-rtgov.dir.xslt}" styleName="add-governance-config" />

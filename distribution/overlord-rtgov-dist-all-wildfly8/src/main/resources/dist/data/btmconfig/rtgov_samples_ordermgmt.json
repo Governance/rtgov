@@ -17,19 +17,19 @@
           "name": "all",
           "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
           "actionType": "AddContent",
-          "action": "XMLHelper.serialize(values[0])"
+          "expression": "XMLHelper.serialize(values[0])"
         },{
           "actionType": "AddCorrelationId",
           "scope": "Global",
-          "action": "XMLHelper.evaluate(\"order/orderId/text()\", values[0])"
+          "expression": "XMLHelper.evaluate(\"order/orderId/text()\", values[0])"
         },{
           "name": "customer",
           "actionType": "SetProperty",
-          "action": "XMLHelper.evaluate(\"order/customer/text()\", values[0])"
+          "expression": "XMLHelper.evaluate(\"order/customer/text()\", values[0])"
         },{
           "name": "item",
           "actionType": "SetProperty",
-          "action": "XMLHelper.evaluate(\"order/itemId/text()\", values[0])"
+          "expression": "XMLHelper.evaluate(\"order/itemId/text()\", values[0])"
         }]
       },{
         "nodeType": "Service",
@@ -39,7 +39,7 @@
         "actions": [{
           "name": "total",
           "actionType": "SetProperty",
-          "action": "values[0].total"
+          "expression": "values[0].total"
         }]
       }]
     }
