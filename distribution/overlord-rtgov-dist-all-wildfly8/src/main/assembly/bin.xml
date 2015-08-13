@@ -32,6 +32,7 @@
             <fileMode>0755</fileMode>
 			<excludes>
 				<exclude>**/build.xml</exclude>
+				<exclude>**/*.sh</exclude>
 			</excludes>
 		</fileSet>
 
@@ -44,6 +45,17 @@
             <fileMode>0755</fileMode>
 			<includes>
 				<include>build.xml</include>
+			</includes>
+		</fileSet>
+
+		<!--Copy *.sh from template -->	
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>/</outputDirectory>
+			<directoryMode>0777</directoryMode>
+			<fileMode>0777</fileMode>
+			<includes>
+				<include>**/*.sh</include>
 			</includes>
 		</fileSet>
 
@@ -249,6 +261,14 @@
 			<includes>
 				<include>org.hawkular.btm:hawkular-btm-btxn-instrumentation:jar</include>
 			</includes>
+		</dependencySet>
+		<dependencySet>
+			<outputDirectory>dist/lib</outputDirectory>
+			<unpack>false</unpack>
+			<includes>
+				<include>org.hawkular.btm:hawkular-btm-client-rest:jar</include>
+			</includes>
+			<outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
 		</dependencySet>
 
 	</dependencySets>
