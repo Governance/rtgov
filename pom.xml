@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.overlord.rtgov</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.2.0-SNAPSHOT</version>
+	<version>2.2.0.Alpha1</version>
 	<packaging>pom</packaging>
 	<name>Overlord RTGov</name>
 	<url>http://www.jboss.org/overlord</url>
@@ -101,7 +101,7 @@
             when installing in Karaf -->
         <version.org.apache.ws.commons.axiom>1.2.12</version.org.apache.ws.commons.axiom>
 
-		<version.org.hawkular.btm>0.2.1.Final-SNAPSHOT</version.org.hawkular.btm>
+		<version.org.hawkular.btm>0.3.0.Final</version.org.hawkular.btm>
 	</properties>
 
 	<modules>
