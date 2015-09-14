@@ -165,6 +165,7 @@ public abstract class RPCActivityType extends MessageExchange implements java.io
      * 
      * @return Whether the service is internal
      */
+    @Transient
     public boolean getInternal() {
         return (_internal);
     }
