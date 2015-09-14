@@ -1,0 +1,231 @@
+[
+    {
+        "hostAddress": "127.0.0.1",
+        "hostName": "localhost.localdomain",
+        "id": "8c0b28ee-995f-441d-8760-55b2cfbb3b61",
+        "name": "swyd_multiApp",
+        "nodes": [
+            {
+                "baseTime": 8307898095168,
+                "correlationIds": [
+                    {
+                        "scope": "Interaction",
+                        "value": "6bab1004-3fe0-4ae5-a4e0-80b4a7829664"
+                    }
+                ],
+                "details": {
+                    "btm_serviceOperation": "submitOrder",
+                    "btm_serviceType": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderService",
+                    "btm_source": "javax.servlet",
+                    "principal": null,
+                    "remoteAddr": "127.0.0.1",
+                    "remoteHost": "127.0.0.1"
+                },
+                "duration": 989023485,
+                "endpointType": "HTTP",
+                "in": {
+                    "content": {}
+                },
+                "nodes": [
+                    {
+                        "baseTime": 8308245550770,
+                        "componentType": "Service",
+                        "details": {
+                            "btm_serviceInternal": "false",
+                            "btm_serviceOperation": "submitOrder",
+                            "btm_serviceType": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderService",
+                            "btm_source": "org.switchyard"
+                        },
+                        "duration": 212213156,
+                        "in": {
+                            "content": {}
+                        },
+                        "nodes": [
+                            {
+                                "baseTime": 8308250619992,
+                                "componentType": "Service",
+                                "details": {
+                                    "btm_serviceInternal": "true",
+                                    "btm_serviceOperation": "lookupItem",
+                                    "btm_serviceType": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderService/InventoryService",
+                                    "btm_source": "org.switchyard"
+                                },
+                                "duration": 51520433,
+                                "in": {
+                                    "content": {}
+                                },
+                                "nodes": [],
+                                "operation": "lookupItem",
+                                "out": {
+                                    "content": {}
+                                },
+                                "type": "Component",
+                                "uri": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderService/InventoryService"
+                            }
+                        ],
+                        "operation": "submitOrder",
+                        "out": {
+                            "content": {}
+                        },
+                        "type": "Component",
+                        "uri": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderService"
+                    }
+                ],
+                "type": "Consumer",
+                "uri": "http://localhost:8080/quickstart-demo-multiapp/OrderService"
+            }
+        ],
+        "startTime": 1442568849946
+    },
+    {
+        "hostAddress": "127.0.0.1",
+        "hostName": "localhost.localdomain",
+        "id": "4df97a32-e28f-4bdd-98d0-b83d86aa8213",
+        "name": "swyd_multiApp",
+        "nodes": [
+            {
+                "baseTime": 8306155226102,
+                "details": {
+                    "btm_serviceOperation": "submitOrder",
+                    "btm_serviceType": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderInput",
+                    "btm_source": "javax.jms"
+                },
+                "duration": 2792881492,
+                "endpointType": "MOM",
+                "in": {
+                    "content": {}
+                },
+                "nodes": [
+                    {
+                        "baseTime": 8306301278502,
+                        "componentType": "JmsQueue",
+                        "details": {
+                            "btm_source": "org.apache.camel"
+                        },
+                        "duration": 2594336425,
+                        "nodes": [
+                            {
+                                "baseTime": 8306457351806,
+                                "componentType": "SwitchYard",
+                                "details": {
+                                    "btm_source": "org.apache.camel"
+                                },
+                                "duration": 2438160573,
+                                "nodes": [
+                                    {
+                                        "baseTime": 8306615424234,
+                                        "componentType": "Service",
+                                        "details": {
+                                            "btm_serviceInternal": "false",
+                                            "btm_serviceOperation": "submitOrder",
+                                            "btm_serviceType": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderInput",
+                                            "btm_source": "org.switchyard"
+                                        },
+                                        "duration": 2278729782,
+                                        "in": {
+                                            "content": {}
+                                        },
+                                        "nodes": [
+                                            {
+                                                "baseTime": 8306719903114,
+                                                "componentType": "SwitchYard",
+                                                "details": {
+                                                    "btm_source": "org.apache.camel"
+                                                },
+                                                "duration": 2173995000,
+                                                "nodes": [
+                                                    {
+                                                        "baseTime": 8306720022555,
+                                                        "componentType": "SwitchYard",
+                                                        "details": {
+                                                            "btm_source": "org.apache.camel"
+                                                        },
+                                                        "duration": 2173569967,
+                                                        "nodes": [
+                                                            {
+                                                                "baseTime": 8306720398319,
+                                                                "componentType": "Service",
+                                                                "details": {
+                                                                    "btm_serviceInternal": "true",
+                                                                    "btm_serviceOperation": "submitOrder",
+                                                                    "btm_serviceType": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderInputComponent/OrderWebService",
+                                                                    "btm_source": "org.switchyard"
+                                                                },
+                                                                "duration": 2172073649,
+                                                                "in": {
+                                                                    "content": {}
+                                                                },
+                                                                "nodes": [
+                                                                    {
+                                                                        "baseTime": 8307384128635,
+                                                                        "correlationIds": [
+                                                                            {
+                                                                                "scope": "Interaction",
+                                                                                "value": "6bab1004-3fe0-4ae5-a4e0-80b4a7829664"
+                                                                            }
+                                                                        ],
+                                                                        "details": {
+                                                                            "btm_serviceOperation": "submitOrder",
+                                                                            "btm_serviceType": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderWebService",
+                                                                            "btm_source": "java.net",
+                                                                            "http_method": "POST"
+                                                                        },
+                                                                        "duration": 1481883743,
+                                                                        "endpointType": "HTTP",
+                                                                        "in": {
+                                                                            "content": {},
+                                                                            "headers": {
+                                                                                "Accept": "*/*",
+                                                                                "Content-Type": "text/xml; charset=UTF-8",
+                                                                                "SOAPAction": "\"urn:switchyard-quickstart-demo:multiapp:1.0\"",
+                                                                                "User-Agent": "Apache CXF 2.7.14.redhat-1"
+                                                                            }
+                                                                        },
+                                                                        "nodes": [],
+                                                                        "type": "Producer",
+                                                                        "uri": "http://localhost:8080/quickstart-demo-multiapp/OrderService"
+                                                                    }
+                                                                ],
+                                                                "operation": "submitOrder",
+                                                                "out": {
+                                                                    "content": {}
+                                                                },
+                                                                "type": "Component",
+                                                                "uri": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderInputComponent/OrderWebService"
+                                                            }
+                                                        ],
+                                                        "operation": null,
+                                                        "type": "Component",
+                                                        "uri": "switchyard://OrderWebService"
+                                                    }
+                                                ],
+                                                "operation": null,
+                                                "type": "Component",
+                                                "uri": "switchyard://OrderInput"
+                                            }
+                                        ],
+                                        "operation": "submitOrder",
+                                        "out": {
+                                            "content": {}
+                                        },
+                                        "type": "Component",
+                                        "uri": "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderInput"
+                                    }
+                                ],
+                                "operation": null,
+                                "type": "Component",
+                                "uri": "switchyard://OrderInput"
+                            }
+                        ],
+                        "operation": null,
+                        "type": "Component",
+                        "uri": "jms://OrderRequestQueue?connectionFactory=%23ConnectionFactory&replyTo=OrderReplyQueue"
+                    }
+                ],
+                "type": "Consumer",
+                "uri": "HornetQQueue[OrderRequestQueue]"
+            }
+        ],
+        "startTime": 1442568848188
+    }
+]

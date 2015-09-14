@@ -4,47 +4,42 @@
       "description": "Order Management example from RTGov",
       "filter": {
         "inclusions": [
-          "^https?://.*/demo-orders/OrderService$",
-          "\\{urn:switchyard-quickstart-demo:orders:0.1.0\\}OrderService"
+          "^https?://.*/demo-orders/OrderService$"
         ]
       },
       "processors": [{
-        "nodeType": "Service",
-        "request": "true",
-        "uriFilter": "^\\{urn:switchyard-quickstart-demo:orders:0.1.0\\}OrderService$",
-        "operation": "submitOrder",
+        "nodeType": "Consumer",
+        "direction": "In",
+        "uriFilter": "^https?://.*/demo-orders/OrderService$",
         "actions": [{
           "name": "all",
           "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
           "actionType": "AddContent",
-          "expression": "XMLHelper.serialize(values[0])"
+          "expression": "XMLHelper.serialize(XMLHelper.selectNode(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrder']/order\", values[0]))"
         },{
           "actionType": "AddCorrelationId",
           "scope": "Global",
-          "expression": "XMLHelper.evaluate(\"order/orderId/text()\", values[0])"
+          "expression": "XMLHelper.evaluate(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrder']/order/orderId/text()\", values[0])"
         },{
           "name": "customer",
           "actionType": "SetProperty",
-          "expression": "XMLHelper.evaluate(\"order/customer/text()\", values[0])"
+          "expression": "XMLHelper.evaluate(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrder']/order/customer/text()\", values[0])"
         },{
           "name": "item",
           "actionType": "SetProperty",
-          "expression": "XMLHelper.evaluate(\"order/itemId/text()\", values[0])"
+          "expression": "XMLHelper.evaluate(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrder']/order/itemId/text()\", values[0])"
         }]
       },{
-        "nodeType": "Service",
-        "request": "false",
-        "uriFilter": "^\\{urn:switchyard-quickstart-demo:orders:0.1.0\\}OrderService$",
-        "operation": "submitOrder",
+        "nodeType": "Consumer",
+        "direction": "Out",
+        "uriFilter": "^https?://.*/demo-orders/OrderService$",
         "actions": [{
-          "name": "total",
-          "actionType": "SetProperty",
-          "expression": "values[0].total"
+          "name": "all",
+          "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse",
+          "actionType": "AddContent",
+          "expression": "XMLHelper.serialize(XMLHelper.selectNode(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrderResponse']/orderAck\", values[0]))"
         }]
       }]
     }
-  },
-  "properties": {
-    "hawkular-btm.collector.onlynamed": "true"
   }
 }
