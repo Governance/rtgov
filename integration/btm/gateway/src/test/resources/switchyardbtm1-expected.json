@@ -1,0 +1,65 @@
+[ {
+  "activityTypes" : [ {
+    "type" : "RequestReceived",
+    "content" : "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order>\n            <orderId>1</orderId>\n            <itemId>BUTTER</itemId>\n            <quantity>100</quantity>\n            <customer>Fred</customer>\n         </order>\n",
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "1c4c95f7-aa9e-479f-a7f8-2ff13531091e_req0"
+    }, {
+      "timeframe" : 0,
+      "type" : "Conversation",
+      "value" : "1"
+    } ],
+    "fault" : null,
+    "interface" : "http://localhost:8080/demo-orders/OrderService",
+    "internal" : false,
+    "messageType" : "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "customer" : "Fred",
+      "gateway" : "HTTP",
+      "item" : "BUTTER"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "timestamp" : 1442502745059,
+    "unitId" : "1c4c95f7-aa9e-479f-a7f8-2ff13531091e",
+    "unitIndex" : 0
+  }, {
+    "type" : "ResponseSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "1c4c95f7-aa9e-479f-a7f8-2ff13531091e_resp0"
+    }, {
+      "timeframe" : 0,
+      "type" : "Conversation",
+      "value" : "1"
+    } ],
+    "fault" : null,
+    "interface" : "http://localhost:8080/demo-orders/OrderService",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "customer" : "Fred",
+      "gateway" : "HTTP",
+      "item" : "BUTTER"
+    },
+    "replyToId" : "1c4c95f7-aa9e-479f-a7f8-2ff13531091e_req0",
+    "serviceType" : "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+    "timestamp" : 1442502747413,
+    "unitId" : "1c4c95f7-aa9e-479f-a7f8-2ff13531091e",
+    "unitIndex" : 1
+  } ],
+  "id" : "1c4c95f7-aa9e-479f-a7f8-2ff13531091e",
+  "origin" : {
+    "host" : "localhost.localdomain",
+    "node" : null,
+    "principal" : null,
+    "thread" : null
+  }
+} ]

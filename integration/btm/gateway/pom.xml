@@ -61,6 +61,13 @@
 		    <artifactId>javaee-api</artifactId>
 		    <scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.overlord.rtgov.activity-analysis</groupId>
+			<artifactId>analytics</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

@@ -1,0 +1,112 @@
+[ {
+  "activityTypes" : [ {
+    "type" : "RequestReceived",
+    "content" : "Test In Value (Outer)",
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "a1f958de-b892-4ede-a74e-2914a096cd6b_req15"
+    } ],
+    "fault" : null,
+    "interface" : "http://outer",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : null,
+    "principal" : null,
+    "properties" : {
+      "gateway" : "HTTP"
+    },
+    "serviceType" : "TestOuterService",
+    "timestamp" : 1442575744430,
+    "unitId" : "a1f958de-b892-4ede-a74e-2914a096cd6b",
+    "unitIndex" : 0
+  }, {
+    "type" : "RequestSent",
+    "content" : "Test In Value (Inner)",
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "a1f958de-b892-4ede-a74e-2914a096cd6b_req18"
+    }, {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "c59d9316-576f-4c1e-9499-82f9df7917a8"
+    } ],
+    "fault" : null,
+    "interface" : "http://inner",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : null,
+    "principal" : null,
+    "properties" : {
+      "Accept" : "*/*",
+      "Content-Type" : "text/xml; charset=UTF-8",
+      "SOAPAction" : "\"urn:getAncestorLocation\"",
+      "User-Agent" : "Apache CXF 3.0.4",
+      "_header_format_Accept" : "text",
+      "_header_format_Content-Type" : "text",
+      "_header_format_SOAPAction" : "text",
+      "_header_format_User-Agent" : "text",
+      "gateway" : "HTTP"
+    },
+    "serviceType" : "TestInnerService",
+    "timestamp" : 1442575745431,
+    "unitId" : "a1f958de-b892-4ede-a74e-2914a096cd6b",
+    "unitIndex" : 1
+  }, {
+    "type" : "ResponseReceived",
+    "content" : "Test Out Value (Inner)",
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "a1f958de-b892-4ede-a74e-2914a096cd6b_resp18"
+    }, {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "c59d9316-576f-4c1e-9499-82f9df7917a8"
+    } ],
+    "fault" : null,
+    "interface" : "http://inner",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : null,
+    "principal" : null,
+    "properties" : {
+      "gateway" : "HTTP"
+    },
+    "replyToId" : "a1f958de-b892-4ede-a74e-2914a096cd6b_req18",
+    "serviceType" : "TestInnerService",
+    "timestamp" : 1442575746828,
+    "unitId" : "a1f958de-b892-4ede-a74e-2914a096cd6b",
+    "unitIndex" : 2
+  }, {
+    "type" : "ResponseSent",
+    "content" : "Test Out Value (Outer)",
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "a1f958de-b892-4ede-a74e-2914a096cd6b_resp15"
+    } ],
+    "fault" : null,
+    "interface" : "http://outer",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : null,
+    "principal" : null,
+    "properties" : {
+      "gateway" : "HTTP"
+    },
+    "replyToId" : "a1f958de-b892-4ede-a74e-2914a096cd6b_req15",
+    "serviceType" : "TestOuterService",
+    "timestamp" : 1442575747508,
+    "unitId" : "a1f958de-b892-4ede-a74e-2914a096cd6b",
+    "unitIndex" : 3
+  } ],
+  "id" : "a1f958de-b892-4ede-a74e-2914a096cd6b",
+  "origin" : {
+    "host" : "localhost.localdomain",
+    "node" : null,
+    "principal" : null,
+    "thread" : null
+  }
+} ]

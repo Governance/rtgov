@@ -1,0 +1,172 @@
+[ {
+  "activityTypes" : [ {
+    "type" : "RequestReceived",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "8c0b28ee-995f-441d-8760-55b2cfbb3b61_req4"
+    }, {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "6bab1004-3fe0-4ae5-a4e0-80b4a7829664"
+    } ],
+    "fault" : null,
+    "interface" : "http://localhost:8080/quickstart-demo-multiapp/OrderService",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "gateway" : "HTTP"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderService",
+    "timestamp" : 1442568849946,
+    "unitId" : "8c0b28ee-995f-441d-8760-55b2cfbb3b61",
+    "unitIndex" : 0
+  }, {
+    "type" : "ResponseSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "8c0b28ee-995f-441d-8760-55b2cfbb3b61_resp4"
+    }, {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "6bab1004-3fe0-4ae5-a4e0-80b4a7829664"
+    } ],
+    "fault" : null,
+    "interface" : "http://localhost:8080/quickstart-demo-multiapp/OrderService",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "gateway" : "HTTP"
+    },
+    "replyToId" : "8c0b28ee-995f-441d-8760-55b2cfbb3b61_req4",
+    "serviceType" : "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderService",
+    "timestamp" : 1442568850935,
+    "unitId" : "8c0b28ee-995f-441d-8760-55b2cfbb3b61",
+    "unitIndex" : 1
+  } ],
+  "id" : "8c0b28ee-995f-441d-8760-55b2cfbb3b61",
+  "origin" : {
+    "host" : "localhost.localdomain",
+    "node" : null,
+    "principal" : null,
+    "thread" : null
+  }
+}, {
+  "activityTypes" : [ {
+    "type" : "RequestReceived",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213_req7"
+    } ],
+    "fault" : null,
+    "interface" : "HornetQQueue[OrderRequestQueue]",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "gateway" : "MOM"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderInput",
+    "timestamp" : 1442568848188,
+    "unitId" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213",
+    "unitIndex" : 0
+  }, {
+    "type" : "RequestSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213_req14"
+    }, {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "6bab1004-3fe0-4ae5-a4e0-80b4a7829664"
+    } ],
+    "fault" : null,
+    "interface" : "http://localhost:8080/quickstart-demo-multiapp/OrderService",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "Accept" : "*/*",
+      "Content-Type" : "text/xml; charset=UTF-8",
+      "SOAPAction" : "\"urn:switchyard-quickstart-demo:multiapp:1.0\"",
+      "User-Agent" : "Apache CXF 2.7.14.redhat-1",
+      "_header_format_Accept" : "text",
+      "_header_format_Content-Type" : "text",
+      "_header_format_SOAPAction" : "text",
+      "_header_format_User-Agent" : "text",
+      "gateway" : "HTTP"
+    },
+    "serviceType" : "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderWebService",
+    "timestamp" : 1442568849416,
+    "unitId" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213",
+    "unitIndex" : 1
+  }, {
+    "type" : "ResponseReceived",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213_resp14"
+    }, {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "6bab1004-3fe0-4ae5-a4e0-80b4a7829664"
+    } ],
+    "fault" : null,
+    "interface" : "http://localhost:8080/quickstart-demo-multiapp/OrderService",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "gateway" : "HTTP"
+    },
+    "replyToId" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213_req14",
+    "serviceType" : "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderWebService",
+    "timestamp" : 1442568850898,
+    "unitId" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213",
+    "unitIndex" : 2
+  }, {
+    "type" : "ResponseSent",
+    "content" : null,
+    "context" : [ {
+      "timeframe" : 0,
+      "type" : "Message",
+      "value" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213_resp7"
+    } ],
+    "fault" : null,
+    "interface" : "HornetQQueue[OrderRequestQueue]",
+    "internal" : false,
+    "messageType" : null,
+    "operation" : "submitOrder",
+    "principal" : null,
+    "properties" : {
+      "gateway" : "MOM"
+    },
+    "replyToId" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213_req7",
+    "serviceType" : "{urn:switchyard-quickstart-demo:multiapp:0.1.0}OrderInput",
+    "timestamp" : 1442568850980,
+    "unitId" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213",
+    "unitIndex" : 3
+  } ],
+  "id" : "4df97a32-e28f-4bdd-98d0-b83d86aa8213",
+  "origin" : {
+    "host" : "localhost.localdomain",
+    "node" : null,
+    "principal" : null,
+    "thread" : null
+  }
+} ]

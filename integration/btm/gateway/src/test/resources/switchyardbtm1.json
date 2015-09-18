@@ -1,0 +1,110 @@
+[
+    {
+        "hostAddress": "127.0.0.1",
+        "hostName": "localhost.localdomain",
+        "id": "1c4c95f7-aa9e-479f-a7f8-2ff13531091e",
+        "name": "rtgov_samples_ordermgmt",
+        "nodes": [
+            {
+                "baseTime": 29494027806116,
+                "correlationIds": [
+                    {
+                        "scope": "Global",
+                        "value": "1"
+                    }
+                ],
+                "details": {
+                    "btm_serviceOperation": "submitOrder",
+                    "btm_serviceType": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+                    "btm_source": "javax.servlet",
+                    "principal": null,
+                    "remoteAddr": "127.0.0.1",
+                    "remoteHost": "127.0.0.1"
+                },
+                "duration": 2354983455,
+                "endpointType": "HTTP",
+                "in": {
+                    "content": {
+                        "all": {
+                            "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
+                            "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><order>\n            <orderId>1</orderId>\n            <itemId>BUTTER</itemId>\n            <quantity>100</quantity>\n            <customer>Fred</customer>\n         </order>\n"
+                        }
+                    }
+                },
+                "nodes": [
+                    {
+                        "baseTime": 29495195571540,
+                        "componentType": "Service",
+                        "details": {
+                            "btm_serviceInternal": "false",
+                            "btm_serviceOperation": "submitOrder",
+                            "btm_serviceType": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService",
+                            "btm_source": "org.switchyard"
+                        },
+                        "duration": 675894261,
+                        "in": {
+                            "content": {}
+                        },
+                        "nodes": [
+                            {
+                                "baseTime": 29495601911992,
+                                "componentType": "Service",
+                                "details": {
+                                    "btm_serviceInternal": "true",
+                                    "btm_serviceOperation": "lookupItem",
+                                    "btm_serviceType": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService",
+                                    "btm_source": "org.switchyard"
+                                },
+                                "duration": 69098514,
+                                "in": {
+                                    "content": {}
+                                },
+                                "nodes": [],
+                                "operation": "lookupItem",
+                                "out": {
+                                    "content": {}
+                                },
+                                "type": "Component",
+                                "uri": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/InventoryService"
+                            },
+                            {
+                                "baseTime": 29495852495678,
+                                "componentType": "Service",
+                                "details": {
+                                    "btm_serviceInternal": "true",
+                                    "btm_serviceOperation": "deliver",
+                                    "btm_serviceType": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService",
+                                    "btm_source": "org.switchyard"
+                                },
+                                "duration": 11787880,
+                                "in": {
+                                    "content": {}
+                                },
+                                "nodes": [],
+                                "operation": "deliver",
+                                "out": {
+                                    "content": {}
+                                },
+                                "type": "Component",
+                                "uri": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService/LogisticsService"
+                            }
+                        ],
+                        "operation": "submitOrder",
+                        "out": {
+                            "content": {}
+                        },
+                        "type": "Component",
+                        "uri": "{urn:switchyard-quickstart-demo:orders:0.1.0}OrderService"
+                    }
+                ],
+                "type": "Consumer",
+                "uri": "http://localhost:8080/demo-orders/OrderService"
+            }
+        ],
+        "properties": {
+            "customer": "Fred",
+            "item": "BUTTER"
+        },
+        "startTime": 1442502745059
+    }
+]

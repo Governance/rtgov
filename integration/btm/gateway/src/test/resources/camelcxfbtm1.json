@@ -1,0 +1,106 @@
+[
+    {
+        "hostAddress": "127.0.0.1",
+        "hostName": "localhost.localdomain",
+        "id": "a1f958de-b892-4ede-a74e-2914a096cd6b",
+        "name": "testcamelcxf",
+        "nodes": [
+            {
+                "baseTime": 15202398447989,
+                "details": {
+                    "btm_source": "org.apache.cxf",
+                    "btm_serviceType": "TestOuterService",
+                    "principal": null,
+                    "remoteAddr": "127.0.0.1",
+                    "remoteHost": "127.0.0.1"
+                },
+                "duration": 3078214666,
+                "endpointType": "HTTP",
+                "in": {
+                    "content": {
+                        "all": {
+                            "value": "Test In Value (Outer)"
+                        }
+                    }
+                },
+                "nodes": [
+                    {
+                        "baseTime": 15202984468257,
+                        "componentType": "CxfSpring",
+                        "details": {
+                            "btm_source": "org.apache.camel"
+                        },
+                        "duration": 2059631477,
+                        "nodes": [
+                            {
+                                "baseTime": 15203109880205,
+                                "componentType": "CxfSpring",
+                                "details": {
+                                    "btm_source": "org.apache.camel"
+                                },
+                                "duration": 1812907079,
+                                "nodes": [
+                                    {
+                                        "baseTime": 15203399817574,
+                                        "correlationIds": [
+                                            {
+                                                "scope": "Interaction",
+                                                "value": "c59d9316-576f-4c1e-9499-82f9df7917a8"
+                                            }
+                                        ],
+                                        "details": {
+                                            "btm_source": "java.net",
+                                            "btm_serviceType": "TestInnerService",
+                                            "http_method": "POST"
+                                        },
+                                        "duration": 1396748756,
+                                        "endpointType": "HTTP",
+                                        "in": {
+                                            "content": {
+                                                "all": {
+                                                    "value": "Test In Value (Inner)"
+                                                }
+                                            },
+                                            "headers": {
+                                                "Accept": "*/*",
+                                                "Content-Type": "text/xml; charset=UTF-8",
+                                                "SOAPAction": "\"urn:getAncestorLocation\"",
+                                                "User-Agent": "Apache CXF 3.0.4"
+                                            }
+                                        },
+                                        "nodes": [],
+                                        "out": {
+                                            "content": {
+                                                "all": {
+                                                    "value": "Test Out Value (Inner)"
+                                                }
+                                            }
+                                        },
+                                        "type": "Producer",
+                                        "uri": "http://inner"
+                                    }
+                                ],
+                                "operation": null,
+                                "type": "Component",
+                                "uri": "cxf://bean:callServiceEndpoint?dataFormat=PAYLOAD"
+                            }
+                        ],
+                        "operation": null,
+                        "type": "Component",
+                        "uri": "cxf://bean:serviceEndpoint?dataFormat=PAYLOAD"
+                    }
+                ],
+                "out": {
+                    "content": {
+                        "all": {
+                            "value": "Test Out Value (Outer)"
+                        }
+                    }
+                },
+                "type": "Consumer",
+                "uri": "http://outer"
+            }
+        ],
+        "startTime": 1442575744430
+    }
+]

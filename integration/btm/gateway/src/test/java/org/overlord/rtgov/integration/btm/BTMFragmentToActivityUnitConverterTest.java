@@ -17,11 +17,14 @@ package org.overlord.rtgov.integration.btm;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hawkular.btm.api.model.btxn.BusinessTransaction;
 import org.junit.Test;
 import org.overlord.rtgov.activity.model.ActivityUnit;
+import org.overlord.rtgov.analytics.service.ServiceDefinition;
+import org.overlord.rtgov.analytics.util.ServiceDefinitionUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -39,9 +42,29 @@ public class BTMFragmentToActivityUnitConverterTest {
             new TypeReference<java.util.List<BusinessTransaction>>() {
     };
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void testConvert() {
+    public void testConvertCamelCXF1() {
+        List<ActivityUnit> aus=testConvert("camelcxf", 1);
+
+        assertEquals(1, aus.size());
+
+        Collection<ServiceDefinition> sds = ServiceDefinitionUtil.derive(aus.get(0));
+        
+        assertEquals(1, sds.size());
+    }
+    
+    @Test
+    public void testConvertSwitchyard1() {
+        testConvert("switchyard", 1);
+    }
+    
+    @Test
+    public void testConvertSwitchyard2() {
+        testConvert("switchyard", 2);
+    }
+    
+    @SuppressWarnings("unchecked")
+    protected List<ActivityUnit> testConvert(String prefix, int num) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.enable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS);
@@ -49,7 +72,7 @@ public class BTMFragmentToActivityUnitConverterTest {
 
         BTMFragmentToActivityUnitConverter converter=new BTMFragmentToActivityUnitConverter();
 
-        java.io.InputStream is = ClassLoader.getSystemResourceAsStream("switchyardbtm.json");
+        java.io.InputStream is = ClassLoader.getSystemResourceAsStream(prefix+"btm"+num+".json");
         
         assertNotNull(is);
 
@@ -83,9 +106,9 @@ public class BTMFragmentToActivityUnitConverterTest {
             e.printStackTrace();
         }
         
-        System.out.println("RESULT="+result);
+        System.out.println("RESULT "+prefix+":"+num+"="+result);
         
-        is = ClassLoader.getSystemResourceAsStream("switchyardbtm-expected.json");
+        is = ClassLoader.getSystemResourceAsStream(prefix+"btm"+num+"-expected.json");
         
         assertNotNull(is);
 
@@ -101,6 +124,8 @@ public class BTMFragmentToActivityUnitConverterTest {
             e.printStackTrace();
             fail("Failed to load expected result: "+e);
         }
+        
+        return aus;
     }
 
 }
