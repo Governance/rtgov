@@ -382,6 +382,8 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                         recvd.getProperties().put(GATEWAY_PROPERTY, bm.getType());
                     }
                 }
+            } else {
+                recvd.setInternal(true);
             }
             
             record(mesg, contentType, recvd, securityContext, exch); 
