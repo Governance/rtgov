@@ -233,21 +233,6 @@
 			    <artifactId>call-trace</artifactId>
 			    <version>${project.version}</version>
 		    </dependency>
-		    <dependency>
-			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
-			    <artifactId>reports</artifactId>
-			    <version>${project.version}</version>
-		    </dependency>
-		    <dependency>
-			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
-			    <artifactId>reports-jee</artifactId>
-			    <version>${project.version}</version>
-		    </dependency>
-		    <dependency>
-			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
-			    <artifactId>reports-rests</artifactId>
-			    <version>${project.version}</version>
-		    </dependency>
             <dependency>
                 <groupId>org.overlord.rtgov.activity-management</groupId>
                 <artifactId>activity-store-elasticsearch</artifactId>
@@ -263,11 +248,6 @@
                 <artifactId>service-dependency-svg</artifactId>
                 <version>${project.version}</version>
             </dependency>
-		    <dependency>
-			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
-			    <artifactId>situation-manager</artifactId>
-			    <version>${project.version}</version>
-		    </dependency>
 		    <dependency>
 			    <groupId>org.overlord.rtgov.activity-analysis</groupId>
 			    <artifactId>situation-store</artifactId>
@@ -465,11 +445,6 @@
 			    <artifactId>service-dependency-rests</artifactId>
 			    <version>${project.version}</version>
                 <classifier>sources</classifier>
-		    </dependency>
-		    <dependency>
-			    <groupId>org.overlord.rtgov.content.services</groupId>
-			    <artifactId>situation-manager-rests</artifactId>
-			    <version>${project.version}</version>
 		    </dependency>
 
             <dependency>

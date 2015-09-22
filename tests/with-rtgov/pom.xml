@@ -19,7 +19,6 @@
 		<module>policy_async</module>
 		<module>policy_sync</module>
 		<module>service_dependency</module>
-		<module>situation_manager</module>
 		<module>sla_monitor</module>
 	</modules>
 
