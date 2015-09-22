@@ -15,7 +15,7 @@
           "name": "all",
           "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrder",
           "actionType": "AddContent",
-          "expression": "XMLHelper.serialize(XMLHelper.selectNode(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrder']/order\", values[0]))"
+          "expression": "XMLHelper.serialize(XMLHelper.selectNode(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrder']\", values[0]))"
         },{
           "actionType": "AddCorrelationId",
           "scope": "Global",
@@ -37,7 +37,19 @@
           "name": "all",
           "type": "{urn:switchyard-quickstart-demo:orders:1.0}submitOrderResponse",
           "actionType": "AddContent",
-          "expression": "XMLHelper.serialize(XMLHelper.selectNode(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrderResponse']/orderAck\", values[0]))"
+          "expression": "XMLHelper.serialize(XMLHelper.selectNode(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'submitOrderResponse']\", values[0]))"
+        }]
+      },{
+        "nodeType": "Consumer",
+        "direction": "Out",
+        "uriFilter": "^https?://.*/demo-orders/OrderService$",
+        "predicate": "XMLHelper.evaluate(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'Fault']\", values[0]) != null",
+        "actions": [{
+          "actionType": "SetFault",
+          "expression": "XMLHelper.evaluate(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'Fault']/faultcode/text()\", values[0])"
+        },{
+          "actionType": "SetFaultDescription",
+          "expression": "XMLHelper.evaluate(\"*[local-name() = 'Envelope']/*[local-name() = 'Body']/*[local-name() = 'Fault']/faultstring/text()\", values[0])"
         }]
       }]
     }
