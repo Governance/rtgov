@@ -143,7 +143,6 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
         
         ResponseTime rt=new ResponseTime();
         
-        rt.setServiceType(id.getServiceType());
         rt.setInterface(id.getInterface());
         rt.setOperation(id.getOperation());
         rt.setInternal(id.getInternal());
