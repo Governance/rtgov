@@ -16,13 +16,8 @@
 	<modules>
 		<module>analytics</module>
 		<module>call-trace</module>
-		<module>reports</module>
-		<module>reports-jee</module>
-		<module>reports-loader-jee</module>
-		<module>reports-rests</module>
 		<module>service-dependency</module>
 		<module>service-dependency-svg</module>
-		<module>situation-manager</module>
 		<module>situation-store</module>
 		<module>situation-store-elasticsearch</module>
 		<module>situation-store-jpa</module>

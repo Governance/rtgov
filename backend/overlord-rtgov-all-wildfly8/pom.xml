@@ -141,21 +141,6 @@
 			<artifactId>active-collection-infinispan</artifactId>
 		</dependency>		
 		
-		<!-- Report modules -->
-		
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>reports</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>reports-jee</artifactId>
-		</dependency>		
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>reports-rests</artifactId>
-		</dependency>		
-		
 		<!-- Services -->
 		
 		<dependency>
@@ -177,14 +162,6 @@
 		<dependency>
 			<groupId>org.overlord.rtgov.activity-analysis</groupId>
 			<artifactId>call-trace</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.content.services</groupId>
-			<artifactId>situation-manager-rests</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.overlord.rtgov.activity-analysis</groupId>
-			<artifactId>situation-manager</artifactId>
 		</dependency>
 		
 		<!-- Overlord commons -->
