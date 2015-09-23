@@ -18,6 +18,7 @@ package org.overlord.rtgov.content.epn;
 import java.io.Serializable;
 
 import org.overlord.rtgov.analytics.service.InterfaceDefinition;
+import org.overlord.rtgov.analytics.service.InvocationDefinition;
 import org.overlord.rtgov.analytics.service.MEPDefinition;
 import org.overlord.rtgov.analytics.service.OperationDefinition;
 import org.overlord.rtgov.analytics.service.RequestFaultDefinition;
@@ -101,6 +102,7 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
         rt.setInterface(idef.getInterface());
         rt.setOperation(opdef.getName());
         rt.setInternal(sdef.getInternal());
+        rt.setProvider(true);
         
         if (mep instanceof RequestFaultDefinition) {
             rt.setFault(((RequestFaultDefinition)mep).getFault());
@@ -121,6 +123,40 @@ public class ServiceResponseTimeProcessor extends org.overlord.rtgov.ep.EventPro
         
         // Obtain context information from the service definition
         rt.getContext().addAll(sdef.getContext());
+        
+        rts.add(rt);
+
+        // Check for invocations within the scope of this MEP
+        for (int i=0; i < mep.getInvocations().size(); i++) {
+            processInvocation(rts, mep.getInvocations().get(i));
+        }    
+    }
+
+    /**
+     * This method processes the invocation definition to extract the
+     * response time information.
+     * 
+     * @param rts The response time list
+     * @param id The invocation definition
+     */
+    protected void processInvocation(java.util.List<ResponseTime> rts, InvocationDefinition id) {
+        
+        ResponseTime rt=new ResponseTime();
+        
+        rt.setInterface(id.getInterface());
+        rt.setOperation(id.getOperation());
+        rt.setInternal(id.getInternal());
+        rt.setProvider(false);
+        
+        rt.setFault(id.getFault());
+        
+        rt.getProperties().putAll(id.getProperties());
+        
+        rt.setAverage(id.getMetrics().getAverage());
+        rt.setMin(id.getMetrics().getMin());
+        rt.setMax(id.getMetrics().getMax());
+        
+        rt.setTimestamp(System.currentTimeMillis());
         
         rts.add(rt);
     }

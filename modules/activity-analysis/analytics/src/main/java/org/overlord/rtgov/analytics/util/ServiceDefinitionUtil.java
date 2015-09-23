@@ -421,7 +421,11 @@ public final class ServiceDefinitionUtil {
             idef.setInterface(rqs.getInterface());
             idef.setOperation(rqs.getOperation());
             idef.setFault(rpr.getFault());
+            idef.setInternal(rqs.getInternal() || rpr.getInternal()); // Mark service as internal if either request or response are
             
+            idef.getProperties().putAll(rqs.getProperties());
+            idef.getProperties().putAll(rpr.getProperties());
+
             call.getInvocations().add(idef);
         }
         

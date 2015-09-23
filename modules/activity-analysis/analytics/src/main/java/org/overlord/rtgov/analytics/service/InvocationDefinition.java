@@ -27,12 +27,15 @@ import java.util.Collections;
  */
 public class InvocationDefinition implements java.io.Externalizable {
 
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     private String _interface=null;
     private String _serviceType=null;
     private String _operation=null;
     private String _fault=null;
+    private boolean _internal=false;
+    private java.util.Map<String,String> _properties=new java.util.HashMap<String,String>();
+
     private InvocationMetric _metrics=new InvocationMetric();
     private java.util.List<InvocationMetric> _history=
             new java.util.ArrayList<InvocationMetric>();
@@ -132,6 +135,43 @@ public class InvocationDefinition implements java.io.Externalizable {
     }
     
     /**
+     * This method sets whether the service is internal (i.e. not publicly
+     * available).
+     * 
+     * @param b Whether the service is internal
+     */
+    public void setInternal(boolean b) {
+        _internal = b;
+    }
+    
+    /**
+     * This method identifies whether the service is internal.
+     * 
+     * @return Whether the service is internal
+     */
+    public boolean getInternal() {
+        return (_internal);
+    }
+    
+    /**
+     * This method sets the properties.
+     * 
+     * @param props The properties
+     */
+    public void setProperties(java.util.Map<String,String> props) {
+        _properties = props;
+    }
+
+    /**
+     * This method gets the properties.
+     * 
+     * @return The properties
+     */
+    public java.util.Map<String,String> getProperties() {
+        return (_properties);
+    }
+
+    /**
      * This method returns the metrics for the invocation
      * definition.
      * 
@@ -189,6 +229,10 @@ public class InvocationDefinition implements java.io.Externalizable {
         for (int i=0; i < _history.size(); i++) {
             out.writeObject(_history.get(i));
         }
+        
+        // Version 3
+        out.writeBoolean(_internal);
+        out.writeObject(_properties);    
     }
 
     /**
@@ -211,6 +255,12 @@ public class InvocationDefinition implements java.io.Externalizable {
         int len = in.readInt();
         for (int i=0; i < len; i++) {
             _history.add((InvocationMetric)in.readObject());
+        }
+        
+        // Version 3
+        if (version > 2) {
+            _internal = in.readBoolean();
+            _properties = (java.util.Map<String, String>)in.readObject();
         }
     }
 }
