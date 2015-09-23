@@ -29,13 +29,14 @@ import org.overlord.rtgov.activity.model.Context;
  */
 public class ResponseTime implements java.io.Externalizable {
 
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     private String _interface=null;
     private String _operation=null;
     private String _fault=null;
     private String _serviceType=null;
     private boolean _internal=false;
+    private boolean _provider=true;
     private long _avg=0;
     private long _max=0;
     private long _min=0;
@@ -166,6 +167,26 @@ public class ResponseTime implements java.io.Externalizable {
      */
     public boolean getInternal() {
         return (_internal);
+    }
+    
+    /**
+     * This method sets whether the response time is for a service
+     * provider (or if not a client).
+     * 
+     * @param b Whether the response time is for a service provider
+     */
+    public void setProvider(boolean b) {
+        _provider = b;
+    }
+    
+    /**
+     * This method identifies whether the response time is for a service
+     * provider (or if not a client).
+     * 
+     * @return Whether the response time is for a service provider
+     */
+    public boolean getProvider() {
+        return (_provider);
     }
     
     /**
@@ -347,6 +368,9 @@ public class ResponseTime implements java.io.Externalizable {
         
         // Serialize version 2 additional elements
         out.writeBoolean(_internal);
+        
+        // Serialize version 3 additional elements
+        out.writeBoolean(_provider);
     }
 
     /**
@@ -378,6 +402,11 @@ public class ResponseTime implements java.io.Externalizable {
         // Deserialize version 2 additional elements
         if (version >= 2) {
             _internal = in.readBoolean();
+        }
+
+        // Deserialize version 3 additional elements
+        if (version >= 3) {
+            _provider = in.readBoolean();
         }
     }
 }
