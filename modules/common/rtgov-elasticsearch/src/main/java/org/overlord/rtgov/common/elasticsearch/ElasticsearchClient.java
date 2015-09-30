@@ -100,13 +100,13 @@ public class ElasticsearchClient {
     private String _index = null;
     private String _type = null;
 
-    private static final String ELASTICSEARCH_HOSTS_DEFAULT="embedded";
+    private static final String ELASTICSEARCH_HOSTS_DEFAULT = "embedded";
 
     private String _hosts = ELASTICSEARCH_HOSTS_DEFAULT;
     
-    private static final String ELASTICSEARCH_CLUSTER_NAME_DEFAULT="elasticsearch";
+    private static final String ELASTICSEARCH_CLUSTER_NAME_DEFAULT = "elasticsearch";
 
-    private String _clusterName = null;
+    private String _clusterName = ELASTICSEARCH_CLUSTER_NAME_DEFAULT;
 
     /**
      * bulkRequest. determines how many request should be sent to elastic search in bulk instead of singular requests
@@ -149,7 +149,7 @@ public class ElasticsearchClient {
         String schedule = RTGovProperties.getProperty(ELASTICSEARCH_SCHEDULE);
         
         String clusterName = RTGovProperties.getProperty(ELASTICSEARCH_CLUSTER_NAME);
-        if(clusterName != null) {
+        if (clusterName != null) {
             _clusterName = clusterName;
         }
 
