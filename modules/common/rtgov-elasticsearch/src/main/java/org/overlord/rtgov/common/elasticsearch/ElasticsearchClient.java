@@ -32,6 +32,8 @@ import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.overlord.commons.services.ServiceRegistryUtil;
@@ -72,6 +74,11 @@ public class ElasticsearchClient {
     public static final String ELASTICSEARCH_SCHEDULE = "Elasticsearch.schedule";
 
     /**
+     * Default Elasticsearch cluster name configuration.
+     */
+    public static final String ELASTICSEARCH_CLUSTER_NAME = "Elasticsearch.clusterName";
+
+    /**
      * Settings for the index this store is related to.
      */
     public static final String SETTINGS = "settings";
@@ -93,9 +100,13 @@ public class ElasticsearchClient {
     private String _index = null;
     private String _type = null;
 
-    private static final String ELASTICSEARCH_HOSTS_DEFAULT="embedded";
+    private static final String ELASTICSEARCH_HOSTS_DEFAULT = "embedded";
 
     private String _hosts = ELASTICSEARCH_HOSTS_DEFAULT;
+    
+    private static final String ELASTICSEARCH_CLUSTER_NAME_DEFAULT = "elasticsearch";
+
+    private String _clusterName = ELASTICSEARCH_CLUSTER_NAME_DEFAULT;
 
     /**
      * bulkRequest. determines how many request should be sent to elastic search in bulk instead of singular requests
@@ -136,6 +147,11 @@ public class ElasticsearchClient {
         }
 
         String schedule = RTGovProperties.getProperty(ELASTICSEARCH_SCHEDULE);
+        
+        String clusterName = RTGovProperties.getProperty(ELASTICSEARCH_CLUSTER_NAME);
+        if (clusterName != null) {
+            _clusterName = clusterName;
+        }
 
         if (schedule != null) {
             try {
@@ -317,7 +333,8 @@ public class ElasticsearchClient {
                 }
             } else {
                 String[] hostsArray = _hosts.split(",");
-                TransportClient c = new TransportClient();
+                Settings settings = ImmutableSettings.settingsBuilder().put("cluster.name", _clusterName).build();
+                TransportClient c = new TransportClient(settings);
                 
                 for (String aHostsArray : hostsArray) {
                     String s = aHostsArray.trim();
