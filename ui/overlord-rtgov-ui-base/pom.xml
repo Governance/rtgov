@@ -12,7 +12,7 @@
   <name>Overlord RTGov::UI::Base</name>
   
   <properties>
-  	<kibana.distribution.version>kibana-3.0.1</kibana.distribution.version>
+  	<kibana.distribution.version>kibana-3.1.2</kibana.distribution.version>
   </properties>
   
   <dependencies>
