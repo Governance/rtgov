@@ -46,7 +46,6 @@
 	</properties>
 
 	<modules>
-		<module>activityclient</module>
 		<module>ordermgmt</module>
 		<module>policy</module>
 		<module>sla</module>
