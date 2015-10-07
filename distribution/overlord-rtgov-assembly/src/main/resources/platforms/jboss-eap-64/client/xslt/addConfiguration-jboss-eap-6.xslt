@@ -19,8 +19,8 @@
         <xsl:attribute name="name">overlord-rtgov</xsl:attribute>
         <xsl:element name="properties" namespace="urn:jboss:domain:overlord-configuration:1.0">
           <xsl:element name="property" namespace="urn:jboss:domain:overlord-configuration:1.0">
-            <xsl:attribute name="name">collectionEnabled</xsl:attribute>
-            <xsl:attribute name="value">true</xsl:attribute>
+            <xsl:attribute name="name">ActivityCollector.enabled</xsl:attribute>
+            <xsl:attribute name="value">false</xsl:attribute>
           </xsl:element>
           <xsl:element name="property" namespace="urn:jboss:domain:overlord-configuration:1.0">
             <xsl:attribute name="name">ActivityServerLogger.maxThreads</xsl:attribute>

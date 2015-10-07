@@ -15,6 +15,10 @@
         <xsl:attribute name="name">overlord-rtgov.war</xsl:attribute>
         <xsl:attribute name="module">org.overlord.rtgov.eap.deployments</xsl:attribute>
       </xsl:element>
+      <xsl:element name="deployment" namespace="{$currentNS}">
+        <xsl:attribute name="name">overlord-rtgov-switchyard.war</xsl:attribute>
+        <xsl:attribute name="module">org.overlord.rtgov.eap.deployments</xsl:attribute>
+      </xsl:element>
     </xsl:element>
   </xsl:template>
 
