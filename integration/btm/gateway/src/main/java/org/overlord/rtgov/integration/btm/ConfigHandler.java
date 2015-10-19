@@ -32,13 +32,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-import org.hawkular.btm.api.model.admin.CollectorConfiguration;
-import org.hawkular.btm.api.services.AdminService;
+import org.hawkular.btm.api.model.config.CollectorConfiguration;
+import org.hawkular.btm.api.services.ConfigurationService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * REST interface for administration capabilities.
+ * REST interface for configyuration capabilities.
  *
  * @author gbrown
  *
@@ -46,12 +46,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Path("admin")
 @Consumes(APPLICATION_JSON)
 @Produces(APPLICATION_JSON)
-public class AdminHandler {
+public class ConfigHandler {
 
-    private static final Logger LOG = Logger.getLogger(AdminHandler.class.getName());
+    private static final Logger LOG = Logger.getLogger(ConfigHandler.class.getName());
 
     @Inject
-    private AdminService _adminService;
+    private ConfigurationService _configService;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -68,7 +68,7 @@ public class AdminHandler {
     public Response getConfiguration(@QueryParam("host") String host, @QueryParam("server") String server) {
 
         try {
-            CollectorConfiguration config = _adminService.getConfiguration(null,
+            CollectorConfiguration config = _configService.getCollector(null,
                     host, server);
 
             return Response.status(Response.Status.OK).entity(MAPPER.writeValueAsString(config))
