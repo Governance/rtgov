@@ -18,6 +18,10 @@
 			<groupId>org.overlord.rtgov.integration</groupId>
 			<artifactId>rtgov-btm-gateway</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.hawkular.btm</groupId>
+			<artifactId>hawkular-btm-config-service-inmemory</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

@@ -37,7 +37,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.hawkular.btm</groupId>
-			<artifactId>hawkular-btm-admin-service-inmemory</artifactId>
+			<artifactId>hawkular-btm-config-service-inmemory</artifactId>
 		</dependency>
 
 		<dependency>
