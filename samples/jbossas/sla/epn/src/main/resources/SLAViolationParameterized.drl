@@ -11,44 +11,45 @@ rule "check for SLA violations"
 when
     $rt : ResponseTime() from entry-point "ServiceResponseTimes" 
 then
-	
-	for (Object obj : (java.util.List)epc.getParameter("levels")) {
-		java.util.Map level=(java.util.Map)obj;
-		Integer threshold=(Integer)level.get("threshold");
+	if ($rt.getServiceType() != null) {
+		for (Object obj : (java.util.List)epc.getParameter("levels")) {
+			java.util.Map level=(java.util.Map)obj;
+			Integer threshold=(Integer)level.get("threshold");
 		
-		if ($rt.getAverage() > threshold) {
-			epc.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
+			if ($rt.getAverage() > threshold) {
+				epc.logError("\r\n\r\n**** RESPONSE TIME "+$rt.getAverage()+"ms EXCEEDED SLA FOR "+$rt.getServiceType()+" ****\r\n");
 			
-			Situation situation=new Situation();
+				Situation situation=new Situation();
 			
-			situation.setType("SLA Violation");
-			situation.setSubject(Situation.createSubject($rt.getServiceType(), $rt.getOperation(),
-							$rt.getFault()));
-			situation.setTimestamp(System.currentTimeMillis());
+				situation.setType("SLA Violation");
+				situation.setSubject(Situation.createSubject($rt.getServiceType(), $rt.getOperation(),
+								$rt.getFault()));
+				situation.setTimestamp(System.currentTimeMillis());
 			
-			situation.getProperties().putAll($rt.getProperties());
+				situation.getProperties().putAll($rt.getProperties());
 	
-			if ($rt.getRequestId() != null) {
-				situation.getActivityTypeIds().add($rt.getRequestId());
-			}
-			if ($rt.getResponseId() != null) {
-				situation.getActivityTypeIds().add($rt.getResponseId());
-			}
+				if ($rt.getRequestId() != null) {
+					situation.getActivityTypeIds().add($rt.getRequestId());
+				}
+				if ($rt.getResponseId() != null) {
+					situation.getActivityTypeIds().add($rt.getResponseId());
+				}
 			
-			situation.getContext().addAll($rt.getContext());
+				situation.getContext().addAll($rt.getContext());
 			
-			String serviceName=$rt.getServiceType();
+				String serviceName=$rt.getServiceType();
 			
-			if (serviceName.startsWith("{")) {
-				serviceName = javax.xml.namespace.QName.valueOf(serviceName).getLocalPart();
-			}
+				if (serviceName.startsWith("{")) {
+					serviceName = javax.xml.namespace.QName.valueOf(serviceName).getLocalPart();
+				}
 			
-			situation.setDescription(serviceName+" exceeded maximum response time of "+threshold+" ms");
-			situation.setSeverity(Situation.Severity.valueOf((String)level.get("severity")));
+				situation.setDescription(serviceName+" exceeded maximum response time of "+threshold+" ms");
+				situation.setSeverity(Situation.Severity.valueOf((String)level.get("severity")));
 			
-			epc.handle(situation);
+				epc.handle(situation);
 
-			break;
+				break;
+			}
 		}
 	}
 
