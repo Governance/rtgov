@@ -23,7 +23,9 @@ import org.apache.http.message.HeaderGroup;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.util.logging.Level;
@@ -122,22 +124,33 @@ public class ElasticsearchRESTServer extends HttpServlet {
     /** 
      * Copy response body data (the entity) from the proxy to the servlet client.
      * 
+     * Ensures that proxyInputStream will be closed in any case by closing the inputStream
+     * @see org.apache.http.HttpEntity.getContent()
+     * 
      * @param proxyResponse The response from the target server
      * @param servletResponse The response back to the client
      * @throws IOException Failed to copy content
      */
     protected void copyResponseContent(HttpResponse proxyResponse, HttpServletResponse servletResponse) throws IOException {
-        OutputStream servletOutputStream = servletResponse.getOutputStream();
+        InputStream proxyInputStream = null;
+        OutputStream servletOutputStream = null;
 
         try {
+            proxyInputStream = proxyResponse.getEntity().getContent();
+            servletOutputStream = servletResponse.getOutputStream();
+            
             proxyResponse.getEntity().writeTo(servletOutputStream);
-
         } finally {
-            try {
-                servletOutputStream.close();
-            } catch (Exception e) {
-                log(e.getMessage(),e);
-            }
+            secureCloseStream(proxyInputStream);
+            secureCloseStream(servletOutputStream);
+        }
+    }
+
+    private void secureCloseStream(Closeable servletOutputStream) {
+        try {
+            servletOutputStream.close();
+        } catch (Exception e) {
+            log(e.getMessage(),e);
         }
     }
 
