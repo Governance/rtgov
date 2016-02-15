@@ -38,6 +38,8 @@ import org.switchyard.config.model.composite.BindingModel;
 import org.switchyard.extensions.wsdl.WSDLService;
 import org.switchyard.label.BehaviorLabel;
 import org.switchyard.metadata.ExchangeContract;
+import org.switchyard.metadata.InOnlyService;
+import org.switchyard.metadata.InOutService;
 import org.switchyard.metadata.Registrant;
 import org.switchyard.metadata.ServiceInterface;
 import org.switchyard.extensions.java.JavaService;
@@ -413,6 +415,23 @@ public abstract class AbstractExchangeEventProcessor extends AbstractEventProces
                 ret = ((JavaService)intf).getJavaInterface().getName();
             } else if (WSDLService.TYPE.equals(intf.getType())) {
                 ret = ((WSDLService)intf).getPortType().toString();
+            } else if (intf instanceof InOnlyService) {
+                if (((InOnlyService)intf).getOperations().size() > 0) {
+                    ret = ((InOnlyService)intf).getOperations().iterator().next().getInputType().toString();
+                } else {
+                    LOG.warning("InOnly interface does not have an operation");
+                    ret = "esb";
+                }
+            } else if (intf instanceof InOutService) {
+                if (((InOutService)intf).getOperations().size() > 0) {
+                    ret = ((InOutService)intf).getOperations().iterator().next().getInputType().toString()
+                            + "->" + ((InOutService)intf).getOperations().iterator().next().getOutputType().toString();
+                } else {
+                    LOG.warning("InOut interface does not have an operation");
+                    ret = "esb";
+                }
+            } else {
+                LOG.severe("Unknown interface type: "+intf);
             }
         }
         
