@@ -32,9 +32,9 @@ public abstract class AbstractInformationProcessorManager implements Information
     
     private static final Logger LOG=Logger.getLogger(AbstractInformationProcessorManager.class.getName());
 
-    private java.util.Map<String,InformationProcessor> _informationProcessorIndex=
+    private static java.util.Map<String,InformationProcessor> _informationProcessorIndex=
             new java.util.HashMap<String,InformationProcessor>();
-    private java.util.List<InformationProcessor> _informationProcessors=
+    private static java.util.List<InformationProcessor> _informationProcessors=
                 new java.util.ArrayList<InformationProcessor>();
     
     /**
@@ -56,7 +56,7 @@ public abstract class AbstractInformationProcessorManager implements Information
     public void register(InformationProcessor ip) throws Exception {
         
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Register: information processor name="
+            LOG.fine("Register: information processor ("+hashCode()+") name="
                         +ip.getName()+" version="
                         +ip.getVersion()+" ip="+ip);
         }
@@ -120,7 +120,7 @@ public abstract class AbstractInformationProcessorManager implements Information
                     Object info, java.util.Map<String, Object> headers, ActivityType actType) {
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Process: processor="+processor
+            LOG.finest("Process: ("+hashCode()+") processor="+processor
                         +" type="+type+" info="+info
                         +" actType="+actType
                         +" headers="+headers);
@@ -144,7 +144,7 @@ public abstract class AbstractInformationProcessorManager implements Information
         }        
         
         if (LOG.isLoggable(Level.FINEST)) {
-            LOG.finest("Process: processor="+processor+" type="+type+" not supported");
+            LOG.finest("Process: ("+hashCode()+") processor="+processor+" type="+type+" not supported");
         }
 
         return (null);
@@ -155,7 +155,7 @@ public abstract class AbstractInformationProcessorManager implements Information
      */
     public void unregister(InformationProcessor ip) throws Exception {
         if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Unregister: information processor name="
+            LOG.fine("Unregister: ("+hashCode()+") information processor name="
                         +ip.getName()+" version="
                         +ip.getVersion()+" ip="+ip);
         }
