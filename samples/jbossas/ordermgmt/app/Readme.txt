@@ -25,6 +25,8 @@ The 'req' property specifies the name of the request SOAP XML file. Available va
 	order2 - Invalid order for LAPTOP, from customer Fred, due to item not being available
 	order3 - Valid order for JAM, from customer Fred, which results in a delay causing SLA violations
 	order4 - Valid order for BUTTER, from customer Joe
+	order5bad - Invalid order, resulting in a schema validation exception, converted into a 'Situation'
+			if ordermgmt/epn quickstart is deployed on the RTGov server
 	fredpay - Fred makes a payment
 
 The 'count' property represents the number of requests that will be sent - the default value is 1.
